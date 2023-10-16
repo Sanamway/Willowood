@@ -54,10 +54,10 @@ const UserInformation = () => {
           </div>
 
           {/* <div className="bg-gray-300"></div> */}
-          <div className="text-black  mb-20 mx-">
-            <div className="bg-gray-0 p-2  ">
-              <form className="max-w-[60%] mx-auto bg-white rounded shadow p-4">
-                <div className="mb-6">
+          <div className="text-black h-screen mb-20 ">
+            <div className="bg-gray-100 p-4   ">
+              <form className="max-w-1/2 mx-4 mt mb-4 bg-white rounded shadow p-4">
+                <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
                     User Name
                   </label>
@@ -68,17 +68,18 @@ const UserInformation = () => {
                     placeholder="Username"
                   />
                 </div>
-                <div className="mb-6">
+                <div className="mb-1">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="textareaField">
                     Address
                   </label>
                   <textarea
-                    className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  rows={4}
+                    className="w-full px-3 py-1.5  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     id="textareaField"
                     placeholder="Address"
                   ></textarea>
                 </div>
-                <div className="flex -mx-2 mb-6">
+                <div className="flex -mx-2 mb-4">
                   <div className="w-1/2 px-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="citySelect">
                       City
@@ -110,10 +111,10 @@ const UserInformation = () => {
                     </select>
                   </div>
                 </div>
-                <div className="flex -mx-2 mb-6">
+                <div className="flex -mx-2 mb-4">
                   <div className="w-1/2 px-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
-                      User
+                      User Status
                     </label>
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -142,34 +143,41 @@ const UserInformation = () => {
                     </select>
                   </div>
                 </div>
-                <div className="mb-6">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="emailField">
-                    Email
-                  </label>
-                  <input
-                    className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                    type="email"
-                    id="emailField"
-                    placeholder="Email"
-                  />
+                <div className="flex gap-4 items-center justify-between mb-4">
+                  <div className="w-1/2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="emailField">
+                      Email
+                    </label>
+                    <input
+                      className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      type="email"
+                      id="emailField"
+                      placeholder="Email"
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneField">
+                      Phone
+                    </label>
+                    <input
+                      className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      type="tel"
+                      id="phoneField"
+                      placeholder="Phone"
+                    />
+                  </div>
                 </div>
-                <div className="mb-6">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneField">
-                    Phone
-                  </label>
-                  <input
-                    className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                    type="tel"
-                    id="phoneField"
-                    placeholder="Phone"
-                  />
-                </div>
-                <button
+
+                {/* <button
                   className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   type="submit"
                 >
                   Submit
-                </button>
+                </button> */}
+                <div className="button flex items-center gap-3 mt-6">
+                <button className="bg-green-700 px-4 py-1 text-white">Save</button>
+                <button className="bg-yellow-500 px-4 py-1 text-white">Close</button>
+              </div>
               </form>
             </div>
           </div>
