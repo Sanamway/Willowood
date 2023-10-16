@@ -54,9 +54,9 @@ const UserInformation = () => {
           </div>
 
           {/* <div className="bg-gray-300"></div> */}
-          <div className="text-black h-screen mb-20 ">
-            <div className="bg-gray-100 p-4   ">
-              <form className="max-w-1/2 mx-4 mt mb-4 bg-white rounded shadow p-4">
+          <div className="text-black h-screen mb- ">
+            <div className="bg-gray-100 p-4  ">
+              <form className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4">
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
                     User Name
