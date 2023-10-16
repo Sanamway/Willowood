@@ -45,13 +45,11 @@ const AssignRole = () => {
             </div>
           </div>
 
-          <div className="bg-gray-100 py-4 rounded-sm">
-            <div className="text-black mx-12 ">
-              <div className="text-black flex gap-4">
+          <div className="bg-gray-100 py-4 h-screen rounded-sm">
+            <div className="text-black mx-12 bg-white p-4 ">
+              <div className="text-black flex items-center gap-4">
                 <h2 className=" text-md">Serial No.</h2>
-                <select name="" id="" className="flex">
-                  <option value="">Select</option>
-                </select>
+                <input disabled type="text" className="px-2 py-1 bg-gray-100 w-1/6" />
               </div>
               <div className=" text-black flex items-center justify-start gap-4 mt-4 ">
                 <div className="flex items-center justify-center gap-4 ">
