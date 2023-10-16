@@ -46,7 +46,7 @@ const ProductCategory = () => {
                   </div>
                   <div className="w-1/2 px-2 ">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                     <span className="text-red-500 px-1">*</span>Product Category
+                      <span className="text-red-500 px-1">*</span>Product Category
                     </label>
                     <input
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -72,29 +72,8 @@ const ProductCategory = () => {
                       <option value="user2">User 2</option>
                     </select>
                   </div>
-                  {/* <div className="w-1/2 px-2">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="statusSelect">
-                      Status
-                    </label>
-                    <select
-                      className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-gray-500"
-                      id="statusSelect"
-                    >
-                      <option value="" className="focus:outline-none focus:border-b bg-white">
-                        Option
-                      </option>
-                      <option value="status1">Status 1</option>
-                      <option value="status2">Status 2</option>
-                    </select>
-                  </div> */}
                 </div>
 
-                {/* <button
-                  className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
-                >
-                  Submit
-                </button> */}
                 <div className="button flex items-center gap-3 mt-6">
                   <button className="bg-green-700 px-4 py-1 text-white">Save</button>
                   <button className="bg-yellow-500 px-4 py-1 text-white">Close</button>
