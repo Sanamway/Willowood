@@ -1,16 +1,31 @@
 import React from "react";
 import Layout from "./Layout";
-import { AiFillFileExcel, AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
 const UserProfileForm = () => {
   const router = useRouter();
 
+  const menus = [
+    {
+      id: 1,
+      name: "Menu Admin Check This",
+    },
+    {
+      id: 2,
+      name: "Menu 2",
+    },
+    {
+      id: 3,
+      name: "Menu 3",
+    },
+    // Add more menus as needed
+  ];
+
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
         <div className="text-black flex items-center justify-between bg-white max-w-6/12 font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">Region</h2>
+          <h2 className="font-arial font-normal text-3xl  py-2">Zone</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <h2>
               <TiArrowBack
@@ -34,13 +49,13 @@ const UserProfileForm = () => {
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="inputField"
               >
-                Region ID
+                Zone Id
               </label>
               <input
                 className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                 type="text"
                 id="inputField"
-                placeholder="Region ID"
+                placeholder="Zone Id"
               />
             </div>
 
@@ -145,19 +160,7 @@ const UserProfileForm = () => {
                 placeholder="Zone"
               />
             </div>
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="phoneField"
-              >
-                Region
-              </label>
-              <input
-                className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                id="phoneField"
-                placeholder="Region"
-              />
-            </div>
+
             <button
               className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold w-24 rounded focus:outline-none focus:shadow-outline"
               type="submit"

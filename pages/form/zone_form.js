@@ -1,7 +1,7 @@
 import React from "react";
-import RegionForm from "@/components/RegionForm";
+import ZoneForm from "@/components/ZoneForm";
 const region_form = () => {
-  return <RegionForm />;
+  return <ZoneForm />;
 };
 
 export default region_form;
