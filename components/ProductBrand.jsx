@@ -3,14 +3,16 @@ import Layout from "./Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
-const ProductCategory = () => {
+
+const ProductBrand = () => {
+
   const router = useRouter();
   return (
     <>
       <Layout>
         <div className="h-screen overflow-auto w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-            <h2 className="font-arial font-normal text-3xl  py-2">Product Category </h2>
+            <h2 className="font-arial font-normal text-3xl  py-2">Product Segment </h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <h2>
                 <TiArrowBack
@@ -29,12 +31,12 @@ const ProductCategory = () => {
 
           {/* <div className="bg-gray-300"></div> */}
           <div className="text-black h-screen  ">
-            <div className="bg-gray-100 p-4  h-screen ">
+            <div className="bg-gray-100 p-4  h-sceen ">
               <form className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4">
                 <div className="flex -mx-2 mb-4 flex-col">
                   <div className="w-1/6 px-2 mb-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                      Category ID
+                      Brand Code 
                     </label>
                     <input
                       disabled
@@ -46,14 +48,31 @@ const ProductCategory = () => {
                   </div>
                   <div className="w-1/2 px-2 ">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                      <span className="text-red-500 px-1">*</span>Product Category
+                      <span className="text-red-500 px-1">*</span>Brand Name
                     </label>
                     <input
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                       type="text"
                       id="inputField"
-                      placeholder="Input Product Category"
+                      placeholder="Input Brand Name"
                     />
+                  </div>
+                </div>
+                <div className="flex -mx-2 mb-4">
+                  <div className="w-1/2 px-2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                      <span className="text-red-500 p-1">*</span>Product Segment
+                    </label>
+                    <select
+                      className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                      id="userSelect"
+                    >
+                      <option value="" className="focus:outline-none focus:border-b bg-white">
+                        {/* Option */}
+                      </option>
+                      <option value="user1">User 1</option>
+                      <option value="user2">User 2</option>
+                    </select>
                   </div>
                 </div>
                 <div className="flex -mx-2 mb-4">
@@ -87,4 +106,4 @@ const ProductCategory = () => {
   );
 };
 
-export default ProductCategory;
+export default ProductBrand;
