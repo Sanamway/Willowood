@@ -3,12 +3,35 @@ import Layout from "./Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
+import WillLog from "../public/Willowood.png";
+import Image from "next/image";
 
 const MaterialSkuInfo = () => {
-    const router = useRouter()
+  const router = useRouter();
+  const [selectedImages, setSelectedImages] = useState([]); // State to store selected images
+
+  const handleImageUpload = (e) => {
+    e.preventDefault();
+    const files = e.target.files;
+    const newImages = Array.from(files);
+
+    setSelectedImages((prevImages) => [...prevImages, ...newImages]);
+  };
+
+  const openFileInput = (e) => {
+    e.preventDefault();
+
+    const fileInput = document.getElementById("imageUpload");
+    fileInput.click();
+  };
+
+  const removeImage = (index) => {
+    setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
+
   return (
     <>
-     <Layout>
+      <Layout>
         <div className="h-screen overflow-auto w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">Material SKU Information </h2>
@@ -35,7 +58,7 @@ const MaterialSkuInfo = () => {
                 <div className="flex -mx-2 mb-4 flex-col">
                   <div className="w-1/6 px-2 mb-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                      Material Code 
+                      Material Code
                     </label>
                     <input
                       disabled
@@ -45,31 +68,74 @@ const MaterialSkuInfo = () => {
                       placeholder=""
                     />
                   </div>
-                  <div className="w-1/2 px-2 ">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                      <span className="text-red-500 px-1">*</span>Material Name
-                    </label>
-                    <input
-                      className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                      type="text"
-                      id="inputField"
-                      placeholder="Input Brand Name"
-                    />
+                  <div className="wrapban flex mr-12">
+                    <div className="group w-full">
+                      <div className="w-1/2 px-2 ">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+                          <span className="text-red-500 px-1">*</span>Material Name
+                        </label>
+                        <input
+                          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="inputField"
+                          placeholder="Input Brand Name"
+                        />
+                      </div>
+
+                      <div className="w-1/2 px-2 mt-2">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+                          <span className="text-red-500 px-1">*</span>Techincal Spec
+                        </label>
+                        <input
+                          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="inputField"
+                          placeholder="Input Brand Name"
+                        />
+                      </div>
+                    </div>
+                    <div className="banner ">
+                      <Image className="w-auto h-32" src={WillLog} alt="" />
+                    </div>
                   </div>
 
-                  <div className="w-1/2 px-2 mt-2">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                      <span className="text-red-500 px-1">*</span>Techincal Spec
+                  <div className="w-1/2 px-2 mt-3">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                      <span className="text-red-500 p-1">*</span>UOM
                     </label>
-                    <input
-                      className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                      type="text"
-                      id="inputField"
-                      placeholder="Input Brand Name"
-                    />
+                    <select
+                      className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                      id="userSelect"
+                    >
+                      <option value="" className="focus:outline-none focus:border-b bg-white">
+                        Select
+                      </option>
+                      <option value="user1">User 1</option>
+                      <option value="user2">User 2</option>
+                    </select>
                   </div>
                 </div>
-                <div className="flex -mx-2 mb-4">
+
+                {/* wrapper box */}
+                <div className="flex items-center w-full">
+                  {/* <div className="flex -mx-2 mb-4"> */}
+                  <div className="w-1/2 px-2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                      <span className="text-red-500 p-1">*</span>Product Category
+                    </label>
+                    <select
+                      className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                      id="userSelect"
+                    >
+                      <option value="" className="focus:outline-none focus:border-b bg-white">
+                        Select
+                      </option>
+                      <option value="user1">User 1</option>
+                      <option value="user2">User 2</option>
+                    </select>
+                  </div>
+                  {/* </div> */}
+                  {/* <div className="flex -mx-2 mb-4"> */}
                   <div className="w-1/2 px-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
                       <span className="text-red-500 p-1">*</span>Product Segment
@@ -79,29 +145,207 @@ const MaterialSkuInfo = () => {
                       id="userSelect"
                     >
                       <option value="" className="focus:outline-none focus:border-b bg-white">
-                        {/* Option */}
+                        Select
                       </option>
                       <option value="user1">User 1</option>
                       <option value="user2">User 2</option>
                     </select>
                   </div>
-                </div>
-                <div className="flex -mx-2 mb-4">
+                  {/* </div> */}
                   <div className="w-1/2 px-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
-                      <span className="text-red-500 p-1">*</span>Company
+                      <span className="text-red-500 p-1">*</span>Product Brand
                     </label>
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
                     >
                       <option value="" className="focus:outline-none focus:border-b bg-white">
-                        {/* Option */}
+                        Select
                       </option>
                       <option value="user1">User 1</option>
                       <option value="user2">User 2</option>
                     </select>
                   </div>
+                </div>
+
+                <div className=" secondWrapper flex items-center w-full">
+                  <div className="w-1/2 px-2 mt-2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                      <span className="text-red-500 p-1">*</span>Division
+                    </label>
+                    <select
+                      className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                      id="userSelect"
+                    >
+                      <option value="" className="focus:outline-none focus:border-b bg-white">
+                        Select
+                      </option>
+                      <option value="user1">User 1</option>
+                      <option value="user2">User 2</option>
+                    </select>
+                  </div>
+                  <div className="w-1/2 px-2 mt-2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                      <span className="text-red-500 p-1">*</span>Crop
+                    </label>
+                    <select
+                      className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                      id="userSelect"
+                    >
+                      <option value="" className="focus:outline-none focus:border-b bg-white">
+                        Select
+                      </option>
+                      <option value="user1">User 1</option>
+                      <option value="user2">User 2</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="thirdWrapper flex flex-col items-start justify-start w-full mt-4 py-1 px-4 border-b border-2 ">
+                  <h2 className="w-full my-2 ">Packging Standard Information</h2>
+                  <div className="flex w-full flex-wrap">
+                    <div className="w-1/6 px-1 mb-2">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+                        Gross Wt.
+                      </label>
+                      <input
+                        className="placeholder:text-xs w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        type="text"
+                        id="inputField"
+                        placeholder="Input Gross Wt."
+                      />
+                    </div>
+
+                    <div className="w-1/6 px-2 mb-2">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+                        Net Wt.
+                      </label>
+                      <input
+                        className="placeholder:text-xs w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        type="text"
+                        id="inputField"
+                        placeholder="Input Net Wt."
+                      />
+                    </div>
+
+                    <div className="w-1/4 px-2 mt-2">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                        <span className="text-red-500 p-1">*</span>Crop
+                      </label>
+                      <select
+                        className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                        id="userSelect"
+                      >
+                        <option value="" className="focus:outline-none focus:border-b bg-white">
+                          Select
+                        </option>
+                        <option value="user1">User 1</option>
+                        <option value="user2">User 2</option>
+                      </select>
+                    </div>
+
+                    <div className="w-1/6 px-2 mb-2">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+                        Pack Size
+                      </label>
+                      <input
+                        className=" placeholder:text-xs w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        type="text"
+                        id="inputField"
+                        placeholder="Input Pack Size"
+                      />
+                    </div>
+
+                    <div className="w-1/6 px-2 mb-2">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+                        Packing Des.
+                      </label>
+                      <input
+                        className=" placeholder:text-xs w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        type="text"
+                        id="inputField"
+                        placeholder="Input Packing Des"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-2 mb-2">
+                      <label className="block text-gray-700 text-sm font-bold " htmlFor="inputField">
+                        Batch Active
+                      </label>
+                      <input
+                        className=" px-1 py-1 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        type="radio"
+                        id="inputField"
+                        placeholder=""
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="w-1/2 px-2 mt-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                    <span className="text-red-500 p-1">*</span>Company
+                  </label>
+                  <select
+                    className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                    id="userSelect"
+                  >
+                    <option value="" className="focus:outline-none focus:border-b bg-white">
+                      Select
+                    </option>
+                    <option value="user1">User 1</option>
+                    <option value="user2">User 2</option>
+                  </select>
+                </div>
+
+                {/* <div className="w-1/2 px-2 mt-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                    <span className="text-red-500 p-1">*</span>Upload Image
+                  </label>
+                  <input
+                    type="file"
+                    className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                    id="userSelect"
+                  ></input>
+                </div> */}
+
+                <div className="w-1/2 px-2 mt-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="imageUpload">
+                    <span className="text-red-500 p-1">*</span>Upload Image
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    id="imageUpload"
+                    onChange={handleImageUpload}
+                  />
+                  <div className="borde border-gray-300 p-2 rounded mt-2 flex">
+                    {selectedImages.map((image, index) => (
+                      <div className="w-32 h-32  flex items-center justify-center gap-2 px-2">
+                        <div key={index} className="mb-2 relative">
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt={`Uploaded Image ${index}`}
+                            className="max-w-full"
+                          />
+                          <button
+                            onClick={() => removeImage(index)}
+                            className="bg-red-500 text-white px-2 py-1 rounded-full absolute top-2 right-2"
+                          >
+                            X
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    className="bg-indigo-500 hover-bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-2"
+                    onClick={openFileInput}
+                  >
+                    Select Image
+                  </button>
                 </div>
 
                 <div className="button flex items-center gap-3 mt-6">
@@ -114,7 +358,7 @@ const MaterialSkuInfo = () => {
         </div>
       </Layout>
     </>
-  )
-}
+  );
+};
 
-export default MaterialSkuInfo
+export default MaterialSkuInfo;
