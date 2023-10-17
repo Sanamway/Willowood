@@ -36,7 +36,7 @@ const CompanyInfo = () => {
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="inputField"
               >
-                Comapany Id
+                <small className="text-red-600">*</small> Comapany Id
               </label>
               <input
                 className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -50,7 +50,7 @@ const CompanyInfo = () => {
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="inputField"
               >
-                <small className="text-red">*</small> Company Name
+                <small className="text-red-600">*</small> Company Name
               </label>
               <input
                 className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -65,12 +65,12 @@ const CompanyInfo = () => {
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="textareaField"
                 >
-                  Crop Address
+                  <small className="text-red-600">*</small> Corporate Address
                 </label>
                 <textarea
                   className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                   id="textareaField"
-                  placeholder="Crop Address"
+                  placeholder="Corporate Address"
                   rows="6"
                 ></textarea>
               </div>
@@ -79,7 +79,7 @@ const CompanyInfo = () => {
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="textareaField"
                 >
-                  Sale. Address
+                  <small className="text-red-600">*</small> Sale. Address
                 </label>
                 <textarea
                   className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -98,7 +98,7 @@ const CompanyInfo = () => {
                       className="block text-gray-700 text-sm font-bold mb-2"
                       htmlFor="userSelect"
                     >
-                      City
+                      <small className="text-red-600">*</small> City
                     </label>
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -120,7 +120,7 @@ const CompanyInfo = () => {
                       className="block text-gray-700 text-sm font-bold mb-2"
                       htmlFor="userSelect"
                     ></label>
-                    State{" "}
+                    <small className="text-red-600">*</small> State{" "}
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
@@ -146,7 +146,7 @@ const CompanyInfo = () => {
                       className="block text-gray-700 text-sm font-bold mb-2"
                       htmlFor="userSelect"
                     >
-                      City
+                      <small className="text-red-600">*</small> City
                     </label>
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -168,7 +168,7 @@ const CompanyInfo = () => {
                       className="block text-gray-700 text-sm font-bold mb-2"
                       htmlFor="userSelect"
                     ></label>
-                    State{" "}
+                    <small className="text-red-600">*</small> State{" "}
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
@@ -193,7 +193,7 @@ const CompanyInfo = () => {
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="inputField"
                 >
-                  Mobile
+                  <small className="text-red-600">*</small> Mobile
                 </label>
                 <input
                   className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -207,7 +207,7 @@ const CompanyInfo = () => {
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="inputField"
                 >
-                  Email
+                  <small className="text-red-600">*</small> Email
                 </label>
                 <input
                   className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -222,7 +222,7 @@ const CompanyInfo = () => {
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="inputField"
               >
-                <small className="text-red">*</small> Contact Person
+                <small className="text-red-600">*</small> Contact Person
               </label>
               <input
                 className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -236,7 +236,7 @@ const CompanyInfo = () => {
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="inputField"
               >
-                GST Number
+                <small className="text-red-600">*</small> GST Number
               </label>
               <input
                 className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -245,19 +245,9 @@ const CompanyInfo = () => {
                 placeholder="GST Number"
               />
             </div>
-            <div className="flex flex-row gap-8">
-              <button
-                className="bg-green-700 hover:bg-indigo-700 text-white font-bold w-24 rounded focus:outline-none focus:shadow-outline mt-4"
-                type="submit"
-              >
-                <small className="text-sm">Save</small>
-              </button>
-              <button
-                className="bg-yellow-300 hover:bg-indigo-700 text-white font-bold w-24 rounded focus:outline-none focus:shadow-outline mt-4"
-                type="submit"
-              >
-                <small className="text-sm">Close</small>
-              </button>
+            <div className="button flex items-center gap-3 mt-6">
+              <div className="bg-green-700 px-4 py-1 text-white">Save</div>
+              <div className="bg-yellow-500 px-4 py-1 text-white">Close</div>
             </div>
           </form>
         </div>

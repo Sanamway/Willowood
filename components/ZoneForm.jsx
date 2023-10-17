@@ -2,6 +2,7 @@ import React from "react";
 import Layout from "./Layout";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
+import { AiTwotoneHome } from "react-icons/ai";
 const UserProfileForm = () => {
   const router = useRouter();
 
@@ -44,18 +45,18 @@ const UserProfileForm = () => {
 
         <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start w-full ">
           <form className=" bg-white rounded shadow p-4 w-full ">
-            <div className="mb-4">
+            <div className="mb-4 w-1/6">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="inputField"
               >
-                Zone Id
+                Zone ID
               </label>
               <input
                 className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                 type="text"
                 id="inputField"
-                placeholder="Zone Id"
+                placeholder="Zone ID"
               />
             </div>
 
@@ -65,7 +66,7 @@ const UserProfileForm = () => {
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="citySelect"
                 >
-                  Company
+                  <small className="text-red-600">*</small> Company
                 </label>
                 <select
                   className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -86,7 +87,7 @@ const UserProfileForm = () => {
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="stateSelect"
                 >
-                  Business Segment
+                  <small className="text-red-600">*</small> Business Segment
                 </label>
                 <select
                   className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -109,7 +110,7 @@ const UserProfileForm = () => {
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="userSelect"
                 >
-                  Unit Division
+                  <small className="text-red-600">*</small> Unit Division
                 </label>
                 <select
                   className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -128,37 +129,59 @@ const UserProfileForm = () => {
               <div className="w-1/2 px-2">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="statusSelect"
+                  htmlFor="emailField"
                 >
-                  Status
+                  <small className="text-red-600">*</small> Zone
                 </label>
-                <select
-                  className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-gray-500"
-                  id="statusSelect"
-                >
-                  <option
-                    value=""
-                    className="focus:outline-none focus:border-b bg-white"
-                  >
-                    Option
-                  </option>
-                  <option value="status1">Status 1</option>
-                  <option value="status2">Status 2</option>
-                </select>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  id="emailField"
+                  placeholder="Zone"
+                />
               </div>
             </div>
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="emailField"
-              >
-                Zone
-              </label>
-              <input
-                className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                id="emailField"
-                placeholder="Zone"
-              />
+            <div className="w-1/2 px-2">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="emailField"
+                >
+                  <small className="text-red-600">*</small> H.O.D Name
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  id="emailField"
+                  placeholder="H.O.D Name"
+                />
+              </div>
+            <div className="flex w-full justify-between gap-4 mt-4 mb-4">
+              <div className="w-full">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="inputField"
+                >
+                  <small className="text-red-600">*</small> Mobile
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  type="text"
+                  id="inputField"
+                  placeholder="Mobile"
+                />
+              </div>
+              <div className="w-full">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="inputField"
+                >
+                  <small className="text-red-600">*</small> Email
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  type="email"
+                  id="inputField"
+                  placeholder="Email"
+                />
+              </div>
             </div>
 
             <button
