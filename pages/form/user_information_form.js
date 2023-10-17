@@ -1,9 +1,11 @@
-import React from 'react'
-import UserInformation from '@/components/UserInformation'
+import React from "react";
+import UserInformation from "@/components/UserInformation";
 const user_information_form = () => {
   return (
-    <div>user_information_form</div>
-  )
-}
+    <>
+      <UserInformation></UserInformation>
+    </>
+  );
+};
 
-export default user_information_form
+export default user_information_form;
