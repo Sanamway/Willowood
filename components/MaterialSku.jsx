@@ -4,15 +4,14 @@ import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
 
-const ProductBrand = () => {
-
-  const router = useRouter();
+const MaterialSkuInfo = () => {
+    const router = useRouter()
   return (
     <>
-      <Layout>
+     <Layout>
         <div className="h-screen overflow-auto w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-            <h2 className="font-arial font-normal text-3xl  py-2">Product Brand </h2>
+            <h2 className="font-arial font-normal text-3xl  py-2">Material SKU Information </h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <h2>
                 <TiArrowBack
@@ -36,7 +35,7 @@ const ProductBrand = () => {
                 <div className="flex -mx-2 mb-4 flex-col">
                   <div className="w-1/6 px-2 mb-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                      Brand Code 
+                      Material Code 
                     </label>
                     <input
                       disabled
@@ -48,7 +47,19 @@ const ProductBrand = () => {
                   </div>
                   <div className="w-1/2 px-2 ">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                      <span className="text-red-500 px-1">*</span>Brand Name
+                      <span className="text-red-500 px-1">*</span>Material Name
+                    </label>
+                    <input
+                      className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      type="text"
+                      id="inputField"
+                      placeholder="Input Brand Name"
+                    />
+                  </div>
+
+                  <div className="w-1/2 px-2 mt-2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+                      <span className="text-red-500 px-1">*</span>Techincal Spec
                     </label>
                     <input
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -103,7 +114,7 @@ const ProductBrand = () => {
         </div>
       </Layout>
     </>
-  );
-};
+  )
+}
 
-export default ProductBrand;
+export default MaterialSkuInfo
