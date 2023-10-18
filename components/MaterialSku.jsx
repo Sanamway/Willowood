@@ -5,6 +5,7 @@ import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
 import WillLog from "../public/Willowood.png";
 import Image from "next/image";
+import Select from 'react-select'
 
 const MaterialSkuInfo = () => {
   const router = useRouter();
@@ -47,6 +48,11 @@ const MaterialSkuInfo = () => {
   const removeDocs = (index) => {
     selectedDocs((prevImages) => prevImages.filter((_, i) => i !== index));
   };
+
+  const options = [
+    { value: 'rabi', label: 'Rabi' },
+    { value: 'kharif', label: 'Kharif' },
+  ]
 
   return (
     <>
@@ -205,7 +211,7 @@ const MaterialSkuInfo = () => {
                     </select>
                   </div>
 
-                  <div className="w-1/2 px-2 mt-2">
+                  {/* <div className="w-1/2 px-2 mt-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
                       <span className="text-red-500 p-1">*</span>Crop
                     </label>
@@ -219,9 +225,19 @@ const MaterialSkuInfo = () => {
                       <option value="user1">User 1</option>
                       <option value="user2">User 2</option>
                     </select>
-                  </div>
+                  </div> */}
 
-                  
+                  <div className="w-1/2 px-2 mt-2 ">
+                    <label className="block border-none text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                      <span className="text-red-500 p-1">*</span>Crop
+                    </label>
+                    <Select
+                      options={options}
+                      isMulti
+                      className="basic-multi-select"
+                      classNamePrefix="select"
+                    />
+                  </div>
                 </div>
 
                 <div className="thirdWrapper flex flex-col items-start justify-start w-full mt-4 py-1 px-4 border-b border-2 ">
