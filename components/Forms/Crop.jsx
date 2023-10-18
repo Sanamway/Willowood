@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "./Layout";
+import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
@@ -42,27 +42,27 @@ const UserProfileForm = () => {
                 placeholder="Crop I.D"
               />
             </div>
-            <div className="w-1/2 px-2">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="inputField"
-                >
-                  <small className="text-red-600">*</small> Crop Name
-                </label>
-                <input
-                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                  type="text"
-                  id="inputField"
-                  placeholder="Crop Name"
-                />
-              </div>
+            <div className="w-1/2 mb-2">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="inputField"
+              >
+                <small className="text-red-600">*</small> Crop Name
+              </label>
+              <input
+                className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                type="text"
+                id="inputField"
+                placeholder="Crop Name"
+              />
+            </div>
             <div className="flex -mx-2 mb-4">
               <div className="w-1/2 px-2">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="citySelect"
                 >
-                  <small className="text-red-600">*</small> Session
+                  <small className="text-red-600 mt-2">*</small> Season
                 </label>
                 <select
                   className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"

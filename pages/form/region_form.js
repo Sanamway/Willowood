@@ -1,5 +1,5 @@
 import React from "react";
-import RegionForm from "@/components/RegionForm";
+import RegionForm from "@/components/Forms/RegionForm";
 const region_form = () => {
   return <RegionForm />;
 };

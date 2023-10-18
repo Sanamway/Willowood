@@ -1,6 +1,6 @@
 import React from "react";
 
-import Territory from "@/components/Territory";
+import Territory from "@/components/Forms/Territory";
 const territory_form = () => {
   return <Territory />;
 };

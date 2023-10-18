@@ -1,6 +1,6 @@
 import React from "react";
 
-import FarmerInfo from "@/components/FarmerInfo";
+import FarmerInfo from "@/components/Forms/FarmerInfo";
 const district_form = () => {
   return <FarmerInfo />;
 };

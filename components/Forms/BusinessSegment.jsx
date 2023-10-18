@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "./Layout";
+import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
@@ -9,8 +9,9 @@ const UserProfileForm = () => {
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
         <div className="text-black flex items-center justify-between bg-white max-w-6/12 font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2"> Session </h2>
-
+          <h2 className="font-arial font-normal text-3xl  py-2">
+            Business Segment
+          </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <h2>
               <TiArrowBack
@@ -34,7 +35,7 @@ const UserProfileForm = () => {
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="inputField"
               >
-                Session Id
+                B.G Id
               </label>
               <input
                 className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -44,19 +45,42 @@ const UserProfileForm = () => {
               />
             </div>
 
-            <div className="w-1/2 px-2">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="inputField"
-              >
-                <small className="text-red-600">*</small> Session Name
-              </label>
-              <input
-                className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                type="text"
-                id="inputField"
-                placeholder="Session Name"
-              />
+            <div className="flex -mx-2 mb-4">
+              <div className="w-1/2 px-2">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="citySelect"
+                >
+                  <small className="text-red-600">*</small> Company
+                </label>
+                <select
+                  className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                  id="citySelect"
+                >
+                  <option
+                    value=""
+                    className="focus:outline-none focus:border-b bg-white"
+                  >
+                    Option
+                  </option>
+                  <option value="city1">City 1</option>
+                  <option value="city2">City 2</option>
+                </select>
+              </div>
+              <div className="w-1/2 px-2">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="inputField"
+                >
+                  <small className="text-red-600">*</small> Business Segment
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  type="text"
+                  id="inputField"
+                  placeholder="Business Segment"
+                />
+              </div>
             </div>
             <div className="button flex items-center gap-3 mt-6">
               <div className="bg-green-700 px-4 py-1 text-white">Save</div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-import BusinessSegment from "@/components/BusinessSegment";
+import BusinessSegment from "@/components/Forms/BusinessSegment";
 const busineess_segement_form = () => {
   return <BusinessSegment  />;
 };

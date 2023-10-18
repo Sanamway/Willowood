@@ -1,6 +1,6 @@
 import React from "react";
 
-import Crop from "@/components/Crop";
+import Crop from "@/components/Forms/Crop";
 const crop_form = () => {
   return <Crop  />;
 };

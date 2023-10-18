@@ -1,6 +1,6 @@
 import React from "react";
 
-import BusinessUnitDivision from "@/components/BusinessUnitDivision";
+import BusinessUnitDivision from "@/components/Forms/BusinessUnitDivision";
 const business_unit_division = () => {
   return <BusinessUnitDivision />;
 };
