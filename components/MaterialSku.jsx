@@ -8,7 +8,8 @@ import Image from "next/image";
 
 const MaterialSkuInfo = () => {
   const router = useRouter();
-  const [selectedImages, setSelectedImages] = useState([]); // State to store selected images
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedDocs, setSelectedDocs] = useState([]);
 
   const handleImageUpload = (e) => {
     e.preventDefault();
@@ -18,6 +19,14 @@ const MaterialSkuInfo = () => {
     setSelectedImages((prevImages) => [...prevImages, ...newImages]);
   };
 
+  const handleDocsUpload = (e) => {
+    e.preventDefault();
+    const files = e.target.files;
+    const newDocs = Array.from(files);
+
+    setSelectedDocs((prevImages) => [...prevImages, ...newDocs]);
+  };
+
   const openFileInput = (e) => {
     e.preventDefault();
 
@@ -25,8 +34,18 @@ const MaterialSkuInfo = () => {
     fileInput.click();
   };
 
+  const openDocsInput = (e) => {
+    e.preventDefault();
+    const fileInput = document.getElementById("docsUpload");
+    fileInput.click();
+  };
+
   const removeImage = (index) => {
     setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
+
+  const removeDocs = (index) => {
+    selectedDocs((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
   return (
@@ -185,6 +204,7 @@ const MaterialSkuInfo = () => {
                       <option value="user2">User 2</option>
                     </select>
                   </div>
+
                   <div className="w-1/2 px-2 mt-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
                       <span className="text-red-500 p-1">*</span>Crop
@@ -200,6 +220,8 @@ const MaterialSkuInfo = () => {
                       <option value="user2">User 2</option>
                     </select>
                   </div>
+
+                  
                 </div>
 
                 <div className="thirdWrapper flex flex-col items-start justify-start w-full mt-4 py-1 px-4 border-b border-2 ">
@@ -231,7 +253,7 @@ const MaterialSkuInfo = () => {
 
                     <div className="w-1/4 px-2 mt-2">
                       <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
-                        <span className="text-red-500 p-1">*</span>Crop
+                        <span className="text-red-500 p-1">*</span>Weight UM
                       </label>
                       <select
                         className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -310,7 +332,7 @@ const MaterialSkuInfo = () => {
                   ></input>
                 </div> */}
 
-                <div className="w-1/2 px-2 mt-4">
+                <div className="uploadImageDiv w-1/2 px-2 mt-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="imageUpload">
                     <span className="text-red-500 p-1">*</span>Upload Image
                   </label>
@@ -345,6 +367,82 @@ const MaterialSkuInfo = () => {
                     onClick={openFileInput}
                   >
                     Select Image
+                  </button>
+                </div>
+
+                <div className="uplpoadDocs w-1/2 px-2 mt-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="imageUpload">
+                    <span className="text-red-500 p-1">*</span>Upload Documents
+                  </label>
+                  <input
+                    type="file"
+                    accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"
+                    className="hidden"
+                    id="docsUpload"
+                    onChange={handleDocsUpload}
+                  />
+                  <div className="borde border-gray-300 p-2 rounded mt-2 flex">
+                    {selectedDocs.map((image, index) => (
+                      <div className="w-32 h-32  flex items-center justify-center gap-2 px-2">
+                        <div key={index} className="mb-2 relative">
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt={`Uploaded Image ${index}`}
+                            className="max-w-full"
+                          />
+                          <button
+                            onClick={() => removeDocs(index)}
+                            className="bg-red-500 text-white px-2 py-1 rounded-full absolute top-2 right-2"
+                          >
+                            X
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    className="bg-indigo-500 hover-bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-2"
+                    onClick={openDocsInput}
+                  >
+                    Select Docs
+                  </button>
+                </div>
+
+                <div className="uplpoadVideos w-1/2 px-2 mt-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="imageUpload">
+                    <span className="text-red-500 p-1">*</span>Upload Video
+                  </label>
+                  <input
+                    type="file"
+                    accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"
+                    className="hidden"
+                    id="docsUpload"
+                    onChange={handleDocsUpload}
+                  />
+                  <div className="borde border-gray-300 p-2 rounded mt-2 flex">
+                    {selectedDocs.map((image, index) => (
+                      <div className="w-32 h-32  flex items-center justify-center gap-2 px-2">
+                        <div key={index} className="mb-2 relative">
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt={`Uploaded Image ${index}`}
+                            className="max-w-full"
+                          />
+                          <button
+                            onClick={() => removeDocs(index)}
+                            className="bg-red-500 text-white px-2 py-1 rounded-full absolute top-2 right-2"
+                          >
+                            X
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    className="bg-indigo-500 hover-bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-2"
+                    onClick={openDocsInput}
+                  >
+                    Select Video
                   </button>
                 </div>
 
