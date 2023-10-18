@@ -8,7 +8,7 @@ const FarmerInfo = () => {
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
-        <div className="flex flex-row justify-between h-[52px] px-5">
+        <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Farmer Info</h2>
           <span className="flex items-center gap-2 cursor-pointer">
             <TiArrowBack
@@ -144,12 +144,19 @@ const FarmerInfo = () => {
                 htmlFor="inputField"
               >
                 <small className="text-red-600">*</small> Village Name
-                <input
-                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
-                  type="text"
-                  id="inputField"
-                  placeholder="Village Name"
-                />
+                <select
+                  className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
+                  id="userSelect"
+                >
+                  <option
+                    value=""
+                    className="focus:outline-none focus:border-b bg-white"
+                  >
+                    Select
+                  </option>
+                  <option value="user1">User 1</option>
+                  <option value="user2">User 2</option>
+                </select>
               </label>
 
               <label
@@ -205,12 +212,19 @@ const FarmerInfo = () => {
                 htmlFor="inputField"
               >
                 <small className="text-red-600">*</small> District
-                <input
-                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
-                  type="text"
-                  id="inputField"
-                  placeholder="District"
-                />
+                <select
+                  className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
+                  id="userSelect"
+                >
+                  <option
+                    value=""
+                    className="focus:outline-none focus:border-b bg-white"
+                  >
+                    Select
+                  </option>
+                  <option value="user1">User 1</option>
+                  <option value="user2">User 2</option>
+                </select>
               </label>
             </div>
 
@@ -295,14 +309,17 @@ const FarmerInfo = () => {
                   <option value="user1">User 1</option>
                   <option value="user2">User 2</option>
                 </select>
-              </label>            
+              </label>
             </div>
 
             <span className="button flex items-center gap-3 mt-6">
-              <button className="bg-green-700 px-4 py-1 text-white">Save</button>
-              <button className="bg-yellow-500 px-4 py-1 text-white">Close</button>
+              <button className="bg-green-700 px-4 py-1 text-white">
+                Save
+              </button>
+              <button className="bg-yellow-500 px-4 py-1 text-white">
+                Close
+              </button>
             </span>
-
           </form>
         </div>
       </div>

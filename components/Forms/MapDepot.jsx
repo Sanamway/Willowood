@@ -31,21 +31,15 @@ const AssignRole = () => {
               Mapping Depot/Warehouse
             </h2>
             <div className="flex items-center gap-2 cursor-pointer">
-              <h2>
-                <TiArrowBack
-                  onClick={() => {
-                    router.push("/table/table_user_profile");
-                  }}
-                  className="text-gray-400"
-                  size={35}
-                ></TiArrowBack>
-              </h2>
-              <h2>
-                <AiTwotoneHome
-                  className="text-red-500"
-                  size={34}
-                ></AiTwotoneHome>
-              </h2>
+              <TiArrowBack
+                onClick={() => {
+                  router.push("/table/table_user_profile");
+                }}
+                className="text-gray-400"
+                size={35}
+              ></TiArrowBack>
+
+              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
             </div>
           </div>
 
@@ -56,11 +50,11 @@ const AssignRole = () => {
                 <div className="overflow-x-auto">
                   <table className="min-w-full">
                     <thead className="font-arial border-b">
-                      <tr className="border bg-gray-50 font-arial">
-                        <td className="px-2 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider ">
-                          SR NO.
+                      <tr className="border bg-gray-50  font-arial">
+                        <td className="px-2 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                          SR
                         </td>
-                        <td className="px-8 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                        <td className=" px-4 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                           Depot Name
                         </td>
                         <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
@@ -98,7 +92,7 @@ const AssignRole = () => {
                                 value=""
                                 className="focus:outline-none focus:border-b bg-white"
                               >
-                                {/* Option */}
+                                Option
                               </option>
                               <option value="user1">User 1</option>
                               <option value="user2">User 2</option>
@@ -116,12 +110,14 @@ const AssignRole = () => {
                     </tbody>
                   </table>
                 </div>
-                <div className="button flex items-center gap-3 mt-6">
-                  <div className="bg-green-700 px-4 py-1 text-white">Save</div>
-                  <div className="bg-yellow-500 px-4 py-1 text-white">
+                <span className="button flex items-center gap-3 mt-6">
+                  <button className="bg-green-700 px-4 py-1 text-white">
+                    Save
+                  </button>
+                  <button className="bg-yellow-500 px-4 py-1 text-white">
                     Close
-                  </div>
-                </div>
+                  </button>
+                </span>
               </div>
             </div>
           </div>
