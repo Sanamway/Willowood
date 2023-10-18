@@ -44,6 +44,15 @@ body {
   background-color: #15283c; 
 }
 
+.css-13cymwt-control{
+  border-bottom: 2px gray !important;
+  border-color: hsl(0, 0%, 80%);
+  border-radius: 0px !important;
+  border-style: solid;
+  border-width: 0px !important;
+}
+
+
 
 
 
