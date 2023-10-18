@@ -7,7 +7,7 @@ import WillLog from "../public/Willowood.png";
 import Image from "next/image";
 import Select from 'react-select'
 
-const MaterialSkuInfo = () => {
+const MaterialCatalog = () => {
   const router = useRouter();
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedDocs, setSelectedDocs] = useState([]);
@@ -59,7 +59,7 @@ const MaterialSkuInfo = () => {
       <Layout>
         <div className="h-screen overflow-auto w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-            <h2 className="font-arial font-normal text-3xl  py-2">Material SKU Information </h2>
+            <h2 className="font-arial font-normal text-3xl  py-2">Material SKU e-Catalog </h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <h2>
                 <TiArrowBack
@@ -240,86 +240,7 @@ const MaterialSkuInfo = () => {
                   </div>
                 </div>
 
-                <div className="thirdWrapper flex flex-col items-start justify-start w-full mt-4 py-1 px-4 border-b border-2 ">
-                  <h2 className="w-full my-2 ">Packging Standard Information</h2>
-                  <div className="flex w-full flex-wrap">
-                    <div className="w-1/6 px-1 mb-2">
-                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                        Gross Wt.
-                      </label>
-                      <input
-                        className="placeholder:text-xs w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                        type="text"
-                        id="inputField"
-                        placeholder="Input Gross Wt."
-                      />
-                    </div>
-
-                    <div className="w-1/6 px-2 mb-2">
-                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                        Net Wt.
-                      </label>
-                      <input
-                        className="placeholder:text-xs w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                        type="text"
-                        id="inputField"
-                        placeholder="Input Net Wt."
-                      />
-                    </div>
-
-                    <div className="w-1/4 px-2 mt-2">
-                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
-                        <span className="text-red-500 p-1">*</span>Weight UM
-                      </label>
-                      <select
-                        className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                        id="userSelect"
-                      >
-                        <option value="" className="focus:outline-none focus:border-b bg-white">
-                          Select
-                        </option>
-                        <option value="user1">User 1</option>
-                        <option value="user2">User 2</option>
-                      </select>
-                    </div>
-
-                    <div className="w-1/6 px-2 mb-2">
-                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                        Pack Size
-                      </label>
-                      <input
-                        className=" placeholder:text-xs w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                        type="text"
-                        id="inputField"
-                        placeholder="Input Pack Size"
-                      />
-                    </div>
-
-                    <div className="w-1/6 px-2 mb-2">
-                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                        Packing Des.
-                      </label>
-                      <input
-                        className=" placeholder:text-xs w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                        type="text"
-                        id="inputField"
-                        placeholder="Input Packing Des"
-                      />
-                    </div>
-
-                    <div className="flex items-center gap-2 mb-2">
-                      <label className="block text-gray-700 text-sm font-bold " htmlFor="inputField">
-                        Batch Active
-                      </label>
-                      <input
-                        className=" px-1 py-1 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                        type="radio"
-                        id="inputField"
-                        placeholder=""
-                      />
-                    </div>
-                  </div>
-                </div>
+               
 
                 <div className="w-1/2 px-2 mt-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
@@ -336,6 +257,7 @@ const MaterialSkuInfo = () => {
                     <option value="user2">User 2</option>
                   </select>
                 </div>
+                
 
                 {/* <div className="w-1/2 px-2 mt-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
@@ -475,4 +397,4 @@ const MaterialSkuInfo = () => {
   );
 };
 
-export default MaterialSkuInfo;
+export default MaterialCatalog;
