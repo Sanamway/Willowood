@@ -137,7 +137,7 @@ const UserProfileForm = () => {
                   </table>
                 </div>
                 <div className="button flex items-center gap-3 mt-6">
-                  <div className="bg-green-700 px-4 py-1 text-white">Save</div>
+                  <div className="bg-green-700 px-4 py-1 text-white">Update</div>
                   <div className="bg-yellow-500 px-4 py-1 text-white">Close</div>
                 </div>
               </div>

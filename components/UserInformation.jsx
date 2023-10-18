@@ -111,38 +111,7 @@ const UserInformation = () => {
                     </select>
                   </div>
                 </div>
-                <div className="flex -mx-2 mb-4">
-                  <div className="w-1/2 px-2">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
-                      User Status
-                    </label>
-                    <select
-                      className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                      id="userSelect"
-                    >
-                      <option value="" className="focus:outline-none focus:border-b bg-white">
-                        Option
-                      </option>
-                      <option value="user1">User 1</option>
-                      <option value="user2">User 2</option>
-                    </select>
-                  </div>
-                  <div className="w-1/2 px-2">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="statusSelect">
-                      Status
-                    </label>
-                    <select
-                      className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-gray-500"
-                      id="statusSelect"
-                    >
-                      <option value="" className="focus:outline-none focus:border-b bg-white">
-                        Option
-                      </option>
-                      <option value="status1">Status 1</option>
-                      <option value="status2">Status 2</option>
-                    </select>
-                  </div>
-                </div>
+               
                 <div className="flex gap-4 items-center justify-between mb-4">
                   <div className="w-1/2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="emailField">
@@ -157,14 +126,46 @@ const UserInformation = () => {
                   </div>
                   <div className="w-1/2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneField">
-                      Phone
+                      Mobile No
                     </label>
                     <input
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                       type="tel"
                       id="phoneField"
-                      placeholder="Phone"
+                      placeholder="Mobile"
                     />
+                  </div>
+                </div>
+                <div className="flex -mx-2 mb-4">
+                  <div className="w-1/2 px-2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                      User Profile
+                    </label>
+                    <select
+                      className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                      id="userSelect"
+                    >
+                      <option value="" className="focus:outline-none focus:border-b bg-white">
+                        Option
+                      </option>
+                      <option value="user1">User 1</option>
+                      <option value="user2">User 2</option>
+                    </select>
+                  </div>
+                  <div className="w-1/2 px-2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="statusSelect">
+                       Status
+                    </label>
+                    <select
+                      className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-gray-500"
+                      id="statusSelect"
+                    >
+                      <option value="" className="focus:outline-none focus:border-b bg-white">
+                        Option
+                      </option>
+                      <option value="status1">Status 1</option>
+                      <option value="status2">Status 2</option>
+                    </select>
                   </div>
                 </div>
 
