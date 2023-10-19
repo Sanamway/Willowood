@@ -102,7 +102,7 @@ const UserProfile = () => {
               </div>
 
               <div className="edit absolute top-2 right-4 flex items-center  ">
-                <h2 className="text-gray-400">Last Check in:{dateString}</h2>
+                <h2 className="text-gray-400">Last Check in:</h2>
                 {/* <BsThreeDotsVertical className="text-black cursor-pointer" size={25}></BsThreeDotsVertical> */}
               </div>
             </div>
