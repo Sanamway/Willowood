@@ -1,5 +1,5 @@
 import React from 'react'
-import UserInformation from '@/components/UserInformation'
+import UserInformation from '@/components/tables/UserInformation'
 const table_user_information = () => {
   return (
     <>
