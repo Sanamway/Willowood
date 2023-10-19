@@ -44,16 +44,16 @@ const UserInformation = () => {
       status: "enabled"
     },
     {
-        id: 4,
-        username: "Ironman",
-        address: "Address C",
-        city: "city C",
-        state: "state",
-        email: "email@email.com",
-        mobile: "84845485",
-        user_profile: "user C",
-        status: "enabled"
-      }
+      id: 4,
+      username: "Ironman",
+      address: "Address C",
+      city: "city C",
+      state: "state",
+      email: "email@email.com",
+      mobile: "84845485",
+      user_profile: "user C",
+      status: "enabled"
+    }
   ];
 
   return (
@@ -134,9 +134,6 @@ const UserInformation = () => {
                   <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     status
                   </th>
-
-                 
-                  
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">

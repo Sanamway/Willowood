@@ -51,9 +51,7 @@ const ProductCategory = () => {
             <h2>
               <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
             </h2>
-            {/* <h2>
-                <TiArrowBack className="text-gray-400" size={35}></TiArrowBack>
-              </h2> */}
+           
             <h2>
               <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
             </h2>
@@ -68,8 +66,8 @@ const ProductCategory = () => {
           </div>
         </div>
 
-        {/* <div className="bg-gray-300"></div> */}
-        <div className="overflow-x-auto text-black font-arial">
+        <div className="bg-white h-screen flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
           <table className="min-w-full divide-y border divide-gray-200">
             <thead className="border-b">
               <tr className="bg-gray-50 font-arial">
@@ -116,6 +114,7 @@ const ProductCategory = () => {
               ))}
             </tbody>
           </table>
+        </div>
         </div>
       </div>
     </Layout>

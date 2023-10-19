@@ -7,27 +7,24 @@ import { TbFileDownload } from "react-icons/tb";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
 
-const ProductBrand = () => {
+const AssignRole = () => {
   const router = useRouter();
 
   const dummyData = [
     {
       id: 1,
-      brand:"Brand A",
-      category: "Product A",
-      company: "Company A"
+      username:'username',
+      userprofile:"userprofile"
     },
     {
       id: 2,
-      brand:"Brand B",
-      category: "Product B",
-      company: "Company B"
+      username:'username',
+      userprofile:"userprofile"
     },
     {
       id: 3,
-      brand:"Brand C",
-      category: "Product C",
-      company: "Company C"
+      username:'username',
+      userprofile:"userprofile"
     }
   ];
 
@@ -35,7 +32,7 @@ const ProductBrand = () => {
     <Layout>
       <div className="h-screen overflow-auto w-full ">
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">Product Brand</h2>
+          <h2 className="font-arial font-normal text-3xl  py-2">Assign Role Profile to User</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
@@ -74,21 +71,16 @@ const ProductBrand = () => {
           <table className="min-w-full divide-y border divide-gray-200">
             <thead className="border-b">
               <tr className="bg-gray-50 font-arial">
-                <th className=" w-[12%] px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Action
                 </th>
-                <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Brand Code
+                <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  User Name
                 </th>
-                <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Brand Name
+                <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  User Profile
                 </th>
-                <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Product Segment
-                </th>
-                <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Company
-                </th>
+               
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200 text-xs">
@@ -114,9 +106,8 @@ const ProductBrand = () => {
                     <button className="b text-black hover:text-red-500 ml-2">Delete</button>
                   </td>
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.id}</td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.brand}</td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.category}</td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.company}</td>
+                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.username}</td>
+                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.userprofile}</td>
                 </tr>
               ))}
             </tbody>
@@ -128,4 +119,4 @@ const ProductBrand = () => {
   );
 };
 
-export default ProductBrand;
+export default AssignRole;
