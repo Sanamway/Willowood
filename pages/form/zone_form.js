@@ -1,5 +1,5 @@
 import React from "react";
-import ZoneForm from "@/components/ZoneForm";
+import ZoneForm from "@/components/Forms/ZoneForm";
 const region_form = () => {
   return <ZoneForm />;
 };

@@ -1,8 +1,8 @@
 import React from "react";
 
-import District from "@/components/Forms/District";
+import FarmerInfo from "@/components/Forms/FarmerInfo";
 const district_form = () => {
-  return <District />;
+  return <FarmerInfo />;
 };
 
 export default district_form;
