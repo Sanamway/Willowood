@@ -336,18 +336,6 @@ const MaterialSkuInfo = () => {
                     <option value="user2">User 2</option>
                   </select>
                 </div>
-
-                {/* <div className="w-1/2 px-2 mt-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
-                    <span className="text-red-500 p-1">*</span>Upload Image
-                  </label>
-                  <input
-                    type="file"
-                    className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                    id="userSelect"
-                  ></input>
-                </div> */}
-
                 <div className="uploadImageDiv w-1/2 px-2 mt-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="imageUpload">
                     <span className="text-red-500 p-1">*</span>Upload Image
