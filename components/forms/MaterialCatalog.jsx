@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Layout from "./Layout";
+import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
-import WillLog from "../public/Willowood.png";
+import WillLog from "../../public/Willowood.png";
 import Image from "next/image";
 import Select from 'react-select'
 
