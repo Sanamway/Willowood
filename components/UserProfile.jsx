@@ -52,9 +52,7 @@ const UserProfile = () => {
         <div className="text-black h-screen  ">
           <div className="bg-gray-100 pt-1  pb-10  ">
             <div className="relative flex rounded-lg bg-white mt-12 items-center justify-start max-w-full p-12 mx-20 gap-12 ">
-              <div className="flex ">
-                <Image className=" w-52 h-52 rounded-full" src={ProfImg}></Image>
-              </div>
+              
               <div className="flex flex-col flex-items-center justify-between">
                 <div className="grid grid-cols-2 w-full gap-4">
                   <div className="flex items-center">
