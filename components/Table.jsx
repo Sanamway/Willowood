@@ -15,7 +15,7 @@ const Table = () => {
         <div className="h-screen overflow-auto w-full ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">
-              Grid Table
+              User Profile
             </h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <div className="search gap-2 mx-8">
@@ -41,9 +41,9 @@ const Table = () => {
                   size={34}
                 ></TbFileDownload>
               </h2>
-              <h2>
+              {/* <h2>
                 <TiArrowBack className="text-gray-400" size={35}></TiArrowBack>
-              </h2>
+              </h2> */}
               <h2>
                 <AiTwotoneHome
                   className="text-red-500"
@@ -61,24 +61,22 @@ const Table = () => {
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
-                  <th className="px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className=" w-[12%] px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Action
                   </th>
-                  <th className="px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Sr No
                   </th>
-                  <th className="px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Company Name
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    User Profile
                   </th>
-                  <th className="px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Address
-                  </th>
+                 
                 </tr>
               </thead>
               <tbody className="bg-white divide-y  divide-gray-200 text-xs">
                 <tr className="dark:border-2">
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
-                    <button className="b text-black   hover:text-blue-500  ">
+                    <button onClick={()=>{router.push('/form/user_profile_form')}} className="b text-black   hover:text-blue-500  ">
                       View
                     </button>
                     <button onClick={()=>{router.push('/form/user_profile_form')}} className="b text-black hover:text-yellow-400 ml-2">
@@ -94,13 +92,11 @@ const Table = () => {
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                     Company A
                   </td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                    123 Main St
-                  </td>
+                 
                 </tr>
                 <tr>
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-xs ">
-                    <button className="b text-black   hover:text-blue-500  ">
+                    <button onClick={()=>{router.push('/form/user_profile_form')}} className="b text-black   hover:text-blue-500  ">
                       View
                     </button>
                     <button onClick={()=>{router.push('/form/user_profile_form')}} className="b text-black hover:text-yellow-400 ml-2">
@@ -116,13 +112,11 @@ const Table = () => {
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                     Company B
                   </td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                    456 Elm St
-                  </td>
+                 
                 </tr>
                 <tr>
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-xs  ">
-                    <button className="b text-black   hover:text-blue-500  ">
+                    <button onClick={()=>{router.push('/form/user_profile_form')}} className="b text-black   hover:text-blue-500  ">
                       View
                     </button>
                     <button onClick={()=>{router.push('/form/user_profile_form')}} className="b text-black hover:text-yellow-400 ml-2">
@@ -138,9 +132,7 @@ const Table = () => {
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                     Company C
                   </td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                    789 Oak St
-                  </td>
+                 
                 </tr>
               </tbody>
             </table>
