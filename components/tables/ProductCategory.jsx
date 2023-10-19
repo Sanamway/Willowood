@@ -59,7 +59,7 @@ const ProductCategory = () => {
             </h2>
             <button
               onClick={() => {
-                router.push("/form/user_profile_form");
+                router.push("/form/product_category");
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
