@@ -59,7 +59,7 @@ const ProductSegment = () => {
             </h2>
             <button
               onClick={() => {
-                router.push("/form/user_profile_form");
+                router.push("/form/product_segment");
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -93,7 +93,7 @@ const ProductSegment = () => {
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                     <button
                       onClick={() => {
-                        router.push("/form/product_category");
+                        router.push("/form/product_segment");
                       }}
                       className="b text-black   hover:text-blue-500  "
                     >
@@ -101,7 +101,7 @@ const ProductSegment = () => {
                     </button>
                     <button
                       onClick={() => {
-                        router.push("/form/product_category");
+                        router.push("/form/product_segment");
                       }}
                       className="b text-black hover:text-yellow-400 ml-2"
                     >
