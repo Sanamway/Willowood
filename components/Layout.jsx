@@ -30,78 +30,24 @@ const Layout = ({ children }) => {
   };
 
   const menuItems = [
-    { id: 1, label: "Menu Management", icon: AiOutlineHome, link: "/" },
+    { id: 1, label: "User Role Profile", icon: AiOutlineHome, link: "/table/table_user_profile" },
     { id: 2, label: "User Information", icon: BiUser, link: "/table/table_user_information" },
-    { id: 2.1, label: "User Profile", icon: BiUser, link: "/table/table_user_profile" },
-    { id: 2.2, label: "Role Profile", icon: BiUser, link: "/table/table_assign_role" },
+    { id: 2.1, label: "Assign Role Profile", icon: BiUser, link: "/table/table_assign_role" },
+    { id: 2.2, label: "User Assign Business", icon: BiUser, link: "/table/table_user_assign_business" },
+    { id: 2.2, label: "Company Information", icon: BiUser, link: "/table/table_company_information" },
+    { id: 2.2, label: "Business Division Segment", icon: BiUser, link: "/table/table_business_division_segment" },
+    { id: 2.2, label: "Business Unit Cluster", icon: BiUser, link: "/table/table_business_unit_cluster" },
+    { id: 2.2, label: "Business Zone", icon: BiUser, link: "/table/table_business_zone" },
+    { id: 2.2, label: "Region", icon: BiUser, link: "/table/table_region" },
+    { id: 2.2, label: "Territory", icon: BiUser, link: "/table/table_territory" },
+    { id: 2.2, label: "District", icon: BiUser, link: "/table/table_district" },
+    { id: 2.2, label: "Village", icon: BiUser, link: "/table/table_village" },
+    { id: 2.2, label: "Depot/Warehouse", icon: BiUser, link: "/table/table_depot" },
+    { id: 2.2, label: "Map Depot Warehouse", icon: BiUser, link: "/table/table_map_depot_warehouse" },
+    { id: 2.2, label: "Product Category", icon: BiUser, link: "/table/table_product_category" },
+    { id: 2.2, label: "Product Sement", icon: BiUser, link: "/table/table_product_segment" },
+    { id: 2.2, label: "Product Brand", icon: BiUser, link: "/table/table_product_brand" },
     { id: 2.3, label: "Material SKU", icon: BiUser, link: "/table/table_material_sku" },
-    { id: 2.4, label: "Product Segment", icon: BiUser, link: "/table/table_product_segment" }
-
-    // {
-    //   id: 3,
-    //   label: "Business Structure",
-    //   icon: BiSolidBusiness,
-    //   link: "/users"
-    // },
-
-    // {
-    //   id: 3.1,
-    //   label: "Company Information",
-    //   icon: BiSolidBusiness,
-    //   link: "/users"
-    // },
-
-    // {
-    //   id: 3.2,
-    //   label: "Business Division",
-    //   icon: BiSolidBusiness,
-    //   link: "/users"
-    // },
-
-    // {
-    //   id: 3.3,
-    //   label: "Business Zone",
-    //   icon: BiSolidBusiness,
-    //   link: "/users"
-    // },
-
-    // {
-    //   id: 3.4,
-    //   label: "Territory",
-    //   icon: BiSolidBusiness,
-    //   link: "/users"
-    // },
-    // {
-    //   id: 3,
-    //   label: "District",
-    //   icon: BiSolidBusiness,
-    //   link: "/users"
-    // },
-
-    // {
-    //   id: 4,
-    //   label: "Product Management",
-    //   icon: AiOutlinePropertySafety,
-    //   link: "/tutorials"
-    // },
-    // {
-    //   id: 5,
-    //   label: "MR Data Management",
-    //   icon: AiOutlinePropertySafety,
-    //   link: "/tutorials"
-    // },
-    // {
-    //   id: 6,
-    //   label: "Control Management",
-    //   icon: AiOutlinePropertySafety,
-    //   link: "/tutorials"
-    // },
-    // {
-    //   id: 7,
-    //   label: "Dummy Management",
-    //   icon: AiOutlinePropertySafety,
-    //   link: "/tutorials"
-    // }
   ];
 
   return (

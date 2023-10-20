@@ -82,7 +82,7 @@ const UserProfileForm = () => {
                 </div> */}
                  <div className="w-1/3 flex items-center justify-center">
                   <label className="w-full text-gray-700 text-sm font-bold mb-2" htmlFor="userName">
-                    <span className="text-red-500 p-1">*</span>User Name
+                    <span className="text-red-500 p-1">*</span>User Profile
                   </label>
                   <select
                     className="w-full px-3 py-2 border-b border-gray-500 rouded bg-white focus:outline-none focus:border-b focus-border-indigo-500"
