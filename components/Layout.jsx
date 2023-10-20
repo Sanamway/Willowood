@@ -14,8 +14,10 @@ import { AiOutlineHome, AiOutlinePropertySafety } from "react-icons/ai";
 import { BiUser, BiSolidBusiness } from "react-icons/bi";
 import Footer from "./Footer";
 import { Popover } from "@headlessui/react";
+import { useRouter } from "next/router";
 
 const Layout = ({ children }) => {
+  const router = useRouter();
   const [isOpen, setOpen] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -29,77 +31,77 @@ const Layout = ({ children }) => {
 
   const menuItems = [
     { id: 1, label: "Menu Management", icon: AiOutlineHome, link: "/" },
-    { id: 2, label: "User Management", icon: BiUser, link: "/posts" },
-    { id: 2.1, label: "User Profile", icon: BiUser, link: "/posts" },
-    { id: 2.2, label: "Role Profile", icon: BiUser, link: "/posts" },
-    { id: 2.3, label: "Manage User", icon: BiUser, link: "/posts" },
-    { id: 2.4, label: "User Permission", icon: BiUser, link: "/posts" },
+    { id: 2, label: "User Information", icon: BiUser, link: "/table/table_user_information" },
+    { id: 2.1, label: "User Profile", icon: BiUser, link: "/table/table_user_profile" },
+    { id: 2.2, label: "Role Profile", icon: BiUser, link: "/table/table_assign_role" },
+    { id: 2.3, label: "Material SKU", icon: BiUser, link: "/table/table_material_sku" },
+    { id: 2.4, label: "Product Segment", icon: BiUser, link: "/table/table_product_segment" }
 
-    {
-      id: 3,
-      label: "Business Structure",
-      icon: BiSolidBusiness,
-      link: "/users"
-    },
+    // {
+    //   id: 3,
+    //   label: "Business Structure",
+    //   icon: BiSolidBusiness,
+    //   link: "/users"
+    // },
 
-    {
-      id: 3.1,
-      label: "Company Information",
-      icon: BiSolidBusiness,
-      link: "/users"
-    },
+    // {
+    //   id: 3.1,
+    //   label: "Company Information",
+    //   icon: BiSolidBusiness,
+    //   link: "/users"
+    // },
 
-    {
-      id: 3.2,
-      label: "Business Division",
-      icon: BiSolidBusiness,
-      link: "/users"
-    },
+    // {
+    //   id: 3.2,
+    //   label: "Business Division",
+    //   icon: BiSolidBusiness,
+    //   link: "/users"
+    // },
 
-    {
-      id: 3.3,
-      label: "Business Zone",
-      icon: BiSolidBusiness,
-      link: "/users"
-    },
+    // {
+    //   id: 3.3,
+    //   label: "Business Zone",
+    //   icon: BiSolidBusiness,
+    //   link: "/users"
+    // },
 
-    {
-      id: 3.4,
-      label: "Territory",
-      icon: BiSolidBusiness,
-      link: "/users"
-    },
-    {
-      id: 3,
-      label: "District",
-      icon: BiSolidBusiness,
-      link: "/users"
-    },
+    // {
+    //   id: 3.4,
+    //   label: "Territory",
+    //   icon: BiSolidBusiness,
+    //   link: "/users"
+    // },
+    // {
+    //   id: 3,
+    //   label: "District",
+    //   icon: BiSolidBusiness,
+    //   link: "/users"
+    // },
 
-    {
-      id: 4,
-      label: "Product Management",
-      icon: AiOutlinePropertySafety,
-      link: "/tutorials"
-    },
-    {
-      id: 5,
-      label: "MR Data Management",
-      icon: AiOutlinePropertySafety,
-      link: "/tutorials"
-    },
-    {
-      id: 6,
-      label: "Control Management",
-      icon: AiOutlinePropertySafety,
-      link: "/tutorials"
-    },
-    {
-      id: 7,
-      label: "Dummy Management",
-      icon: AiOutlinePropertySafety,
-      link: "/tutorials"
-    }
+    // {
+    //   id: 4,
+    //   label: "Product Management",
+    //   icon: AiOutlinePropertySafety,
+    //   link: "/tutorials"
+    // },
+    // {
+    //   id: 5,
+    //   label: "MR Data Management",
+    //   icon: AiOutlinePropertySafety,
+    //   link: "/tutorials"
+    // },
+    // {
+    //   id: 6,
+    //   label: "Control Management",
+    //   icon: AiOutlinePropertySafety,
+    //   link: "/tutorials"
+    // },
+    // {
+    //   id: 7,
+    //   label: "Dummy Management",
+    //   icon: AiOutlinePropertySafety,
+    //   link: "/tutorials"
+    // }
   ];
 
   return (
@@ -146,7 +148,16 @@ const Layout = ({ children }) => {
                   <div className="">
                     <Icon></Icon>
                   </div>
-                  {!isOpen && <h2 className="">{menu.label}</h2>}
+                  {!isOpen && (
+                    <h2
+                      onClick={() => {
+                        router.push(menu.link);
+                      }}
+                      className=""
+                    >
+                      {menu.label}
+                    </h2>
+                  )}
                 </div>
               ))}
             </div>
@@ -175,40 +186,7 @@ const Layout = ({ children }) => {
                       <AiOutlineMail size={23}></AiOutlineMail>
                     </div>
                   </div>
-                  {/* <div className="bg-[#ff5722] h-full mx-0 font-arial relative">
-                    <div className="flex items-center px-4 py-[0.4rem] h-full gap-1">
-                      <Image
-                        src={Profile}
-                        alt=""
-                        className="h-10 w-10 object-cover border-2 border-yellow-500 rounded-full"
-                      />
-                      <div
-                        className="details flex  items-start justify-between gap-2 cursor-pointer "
-                        onClick={toggleDropdown}
-                      >
-                        <h2 className="font-normal font-arial text-sm">
-                          Uttam Aggarwal
-                        </h2>
-                        <IoIosArrowDown className="button"></IoIosArrowDown>
-                      </div>
-                    </div>
 
-                    {isDropdownOpen && (
-                      <div className="absolute right-2 mt-2 w-40 bg-white text-black border rounded-md shadow-md">
-                        <ul className="py-2 p text-text-black flex flex-col gap-2 px-4 font-Rale cursor-pointer">
-                          <li> My Profile</li>
-                          <li>Settings</li>
-                          <li>Help</li>
-                          <li>
-                            <div className="flex gap-1 items-center">
-                              Log out
-                              <MdLogout size={16}></MdLogout>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  </div> */}
                   <div className="bg-[#ff5722] h-full mx-0 font-arial relative">
                     <div className="flex items-center px-4 py-[0.4rem] h-full gap-1">
                       <Image
