@@ -5,6 +5,11 @@ import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
 const UserAssignBusiness = () => {
   const router = useRouter();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <>
       <Layout>
@@ -15,14 +20,18 @@ const UserAssignBusiness = () => {
               <h2>
                 <TiArrowBack
                   onClick={() => {
-                    router.push("/table/table_user_profile");
+                    router.push("/table/table_user_assign_business");
                   }}
                   className="text-gray-400"
                   size={35}
                 ></TiArrowBack>
               </h2>
               <h2>
-                <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+                <AiTwotoneHome
+                onClick={() => {
+                  router.push("/");
+                }} 
+                 className="text-red-500" size={34}></AiTwotoneHome>
               </h2>
             </div>
           </div>
@@ -158,7 +167,14 @@ const UserAssignBusiness = () => {
 
                 <div className="button flex items-center gap-3 mt-6">
                   <button className="bg-green-700 px-4 py-1 text-white">Save</button>
-                  <button className="bg-yellow-500 px-4 py-1 text-white">Close</button>
+                  <button
+                    onClick={() => {
+                      router.push("/table/table_user_assign_business");
+                    }}
+                    className="bg-yellow-500 px-4 py-1 text-white"
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>

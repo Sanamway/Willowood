@@ -1,9 +1,11 @@
 import React from "react";
-import Table from "@/components/Table";
+// import Table from "@/components/Table";
+import UserProfile from "@/components/tables/UserProfile";
 const grid = () => {
   return (
     <>
-        <Table></Table>
+        {/* <Table></Table> */}
+        <UserProfile></UserProfile>
     </>
   );
 };

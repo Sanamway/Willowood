@@ -5,6 +5,12 @@ import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
 const ProductCategory = () => {
   const router = useRouter();
+
+  const handleSubmit =(e)=>{
+    e.preventDefault()
+  }
+
+
   return (
     <>
       <Layout>
@@ -15,14 +21,16 @@ const ProductCategory = () => {
               <h2>
                 <TiArrowBack
                   onClick={() => {
-                    router.push("/table/table_user_profile");
+                    router.push("/table/table_product_category");
                   }}
                   className="text-gray-400"
                   size={35}
                 ></TiArrowBack>
               </h2>
               <h2>
-                <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+                <AiTwotoneHome onClick={() => {
+                    router.push("/");
+                  }}  className="text-red-500" size={34}></AiTwotoneHome>
               </h2>
             </div>
           </div>
@@ -30,7 +38,7 @@ const ProductCategory = () => {
           {/* <div className="bg-gray-300"></div> */}
           <div className="text-black h-screen  ">
             <div className="bg-gray-100 p-4  h-screen ">
-              <form className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4">
+              <form  onSubmit={handleSubmit} className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4">
                 <div className="flex -mx-2 mb-4 flex-col">
                   <div className="w-1/6 px-2 mb-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
@@ -76,7 +84,14 @@ const ProductCategory = () => {
 
                 <div className="button flex items-center gap-3 mt-6">
                   <button className="bg-green-700 px-4 py-1 text-white">Save</button>
-                  <button className="bg-yellow-500 px-4 py-1 text-white">Close</button>
+                  <button
+                    onClick={() => {
+                      router.push("/table/table_product_category");
+                    }}
+                    className="bg-yellow-500 px-4 py-1 text-white"
+                  >
+                    Close
+                  </button>
                 </div>
               </form>
             </div>

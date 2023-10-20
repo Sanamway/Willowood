@@ -68,11 +68,15 @@ const UserAssignBusiness = () => {
             </h2>
           
             <h2>
-              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome
+              onClick={() => {
+                router.push("/");
+              }} 
+               className="text-red-500" size={34}></AiTwotoneHome>
             </h2>
             <button
               onClick={() => {
-                router.push("/form/product_brand");
+                router.push("/form/user_assign_business");
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >

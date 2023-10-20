@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "./Layout";
+import Layout from "../Layout";
 import { AiFillFileExcel, AiTwotoneHome } from "react-icons/ai";
 import { BiArrowBack } from "react-icons/bi";
 import { TiArrowBack } from "react-icons/ti";
@@ -7,7 +7,7 @@ import { TbFileDownload } from "react-icons/tb";
 import {AiOutlineSearch} from 'react-icons/ai'
 import { useRouter } from "next/router";
 
-const Table = () => {
+const UserProfile = () => {
     const router = useRouter()
   return (
     <>
@@ -47,8 +47,8 @@ const Table = () => {
               <h2>
                 <AiTwotoneHome
                 onClick={() => {
-                  router.push("/");
-                }} 
+                    router.push("/");
+                  }} 
                   className="text-red-500"
                   size={34}
                 ></AiTwotoneHome>
@@ -146,4 +146,4 @@ const Table = () => {
   );
 };
 
-export default Table;
+export default UserProfile;

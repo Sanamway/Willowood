@@ -22,6 +22,12 @@ const UserProfileForm = () => {
     // Add more menus as needed
   ];
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission here
+    console.log(formData);
+  };
+
   return (
     <>
       <Layout>
@@ -39,7 +45,11 @@ const UserProfileForm = () => {
                 ></TiArrowBack>
               </h2>
               <h2>
-                <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+                <AiTwotoneHome 
+                onClick={() => {
+                  router.push("/");
+                }} 
+                className="text-red-500" size={34}></AiTwotoneHome>
               </h2>
             </div>
           </div>
@@ -52,7 +62,7 @@ const UserProfileForm = () => {
                 <input disabled type="text" className="px-2 py-1 bg-gray-100 w-1/6" />
               </div>
               <div className=" text-black flex items-center justify-start mt-4">
-                <div className="flex items-center justify-center gap-4 ">
+                {/* <div className="flex items-center justify-center gap-4 ">
                   <h1 className="">
                     User Profile<span className="text-red-500">*</span>
                   </h1>
@@ -68,6 +78,21 @@ const UserProfileForm = () => {
                     <option value="profile4">Regional Manager User</option>
                     <option value="profile4">Territory Manager User</option>
                     <option value="profile4">Marketing Represententative User</option>
+                  </select>
+                </div> */}
+                 <div className="w-1/3 flex items-center justify-center">
+                  <label className="w-full text-gray-700 text-sm font-bold mb-2" htmlFor="userName">
+                    <span className="text-red-500 p-1">*</span>User Name
+                  </label>
+                  <select
+                    className="w-full px-3 py-2 border-b border-gray-500 rouded bg-white focus:outline-none focus:border-b focus-border-indigo-500"
+                    id="userName"
+                  >
+                    <option value="" className="focus:outline-none focus:border-b bg-white">
+                      {/* Option */}
+                    </option>
+                    <option value="user1">User 1</option>
+                    <option value="user2">User 2</option>
                   </select>
                 </div>
               </div>
@@ -137,8 +162,10 @@ const UserProfileForm = () => {
                   </table>
                 </div>
                 <div className="button flex items-center gap-3 mt-6">
-                  <div className="bg-green-700 px-4 py-1 text-white">Update</div>
-                  <div className="bg-yellow-500 px-4 py-1 text-white">Close</div>
+                  <div className="bg-green-700 px-4 py-1 text-white">Save</div>
+                  <div  onClick={() => {
+                      router.push("/table/table_user_profile");
+                    }} className="bg-yellow-500 px-4 py-1 text-white">Close</div>
                 </div>
               </div>
             </div>

@@ -53,11 +53,15 @@ const AssignRole = () => {
             </h2>
           
             <h2>
-              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome 
+              onClick={() => {
+                router.push("/");
+              }} 
+              className="text-red-500" size={34}></AiTwotoneHome>
             </h2>
             <button
               onClick={() => {
-                router.push("/form/product_brand");
+                router.push("/form/assign_role");
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -89,7 +93,7 @@ const AssignRole = () => {
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                     <button
                       onClick={() => {
-                        router.push("/form/product_brand");
+                        router.push("/form/assign_role");
                       }}
                       className="b text-black   hover:text-blue-500  "
                     >
@@ -97,7 +101,7 @@ const AssignRole = () => {
                     </button>
                     <button
                       onClick={() => {
-                        router.push("/form/product_brand");
+                        router.push("/form/assign_role");
                       }}
                       className="b text-black hover:text-yellow-400 ml-2"
                     >
