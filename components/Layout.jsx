@@ -13,6 +13,7 @@ import WillLogo from "../public/Willowood.png";
 import { AiOutlineHome, AiOutlinePropertySafety } from "react-icons/ai";
 import { BiUser, BiSolidBusiness } from "react-icons/bi";
 import Footer from "./Footer";
+import { Popover } from "@headlessui/react";
 
 const Layout = ({ children }) => {
   const [isOpen, setOpen] = useState(null);
@@ -34,75 +35,71 @@ const Layout = ({ children }) => {
     { id: 2.3, label: "Manage User", icon: BiUser, link: "/posts" },
     { id: 2.4, label: "User Permission", icon: BiUser, link: "/posts" },
 
-
-
-
-
     {
       id: 3,
       label: "Business Structure",
       icon: BiSolidBusiness,
-      link: "/users",
+      link: "/users"
     },
 
     {
       id: 3.1,
       label: "Company Information",
       icon: BiSolidBusiness,
-      link: "/users",
+      link: "/users"
     },
 
     {
       id: 3.2,
       label: "Business Division",
       icon: BiSolidBusiness,
-      link: "/users",
+      link: "/users"
     },
 
     {
       id: 3.3,
       label: "Business Zone",
       icon: BiSolidBusiness,
-      link: "/users",
+      link: "/users"
     },
 
     {
       id: 3.4,
       label: "Territory",
       icon: BiSolidBusiness,
-      link: "/users",
+      link: "/users"
     },
     {
       id: 3,
       label: "District",
       icon: BiSolidBusiness,
-      link: "/users",
+      link: "/users"
     },
 
     {
       id: 4,
       label: "Product Management",
       icon: AiOutlinePropertySafety,
-      link: "/tutorials",
+      link: "/tutorials"
     },
     {
       id: 5,
       label: "MR Data Management",
       icon: AiOutlinePropertySafety,
-      link: "/tutorials",
+      link: "/tutorials"
     },
     {
       id: 6,
       label: "Control Management",
       icon: AiOutlinePropertySafety,
-      link: "/tutorials",
+      link: "/tutorials"
     },
     {
       id: 7,
       label: "Dummy Management",
       icon: AiOutlinePropertySafety,
-      link: "/tutorials",
-    },
+      link: "/tutorials"
+    }
   ];
 
   return (
@@ -119,25 +116,15 @@ const Layout = ({ children }) => {
               <div className="flex items-center pl-1 gap-4">
                 <div className="userImg flex items-center py-4 mx justify-center">
                   {isOpen ? (
-                    <Image
-                      className="rounded-full h-8 w-8"
-                      src={Profile}
-                      alt=""
-                    />
+                    <Image className="rounded-full h-8 w-8" src={Profile} alt="" />
                   ) : (
                     <div className="flex  items-center justify-center gap-4 ">
-                      <Image
-                        className=" h-[4.1rem] w-[4.1rem] rounded-full"
-                        src={Profile}
-                        alt=""
-                      />
+                      <Image className=" h-[4.1rem] w-[4.1rem] rounded-full" src={Profile} alt="" />
                       <div className="flex flex-col items-start font-sans">
                         <h2 className="font-sm text-white">Uttam Aggarwal</h2>
                         <div className="flex items-center gap-2">
                           <h2 className="bg-[#00FF00] h-2 w-2 rounded-full animate-ping"></h2>
-                          <h2 className="text-sm text-text-green font-normal">
-                            Online
-                          </h2>
+                          <h2 className="text-sm text-text-green font-normal">Online</h2>
                         </div>
                       </div>
                     </div>
@@ -151,8 +138,11 @@ const Layout = ({ children }) => {
               </div>
             )}
             <div className="flex flex-col items-center text-white font-Arial ">
-              {menuItems.map(({ id, icon: Icon, ...menu  }) => (
-                <div key={id} className="flex cursor-pointer items-center border-1 rounded-md border-black w-full hover:bg-orange-500 gap-3 px-2 py-1">
+              {menuItems.map(({ id, icon: Icon, ...menu }) => (
+                <div
+                  key={id}
+                  className="flex cursor-pointer items-center border-1 rounded-md border-black w-full hover:bg-orange-500 gap-3 px-2 py-1"
+                >
                   <div className="">
                     <Icon></Icon>
                   </div>
@@ -169,20 +159,11 @@ const Layout = ({ children }) => {
             <nav className="nav font-playfair ">
               <div className="navContainer h-[52px] bg-text flex items-center justify-between max-w-full">
                 <div className="flex items-center">
-                  <div
-                    className="max-w-full bg-[#ff5722] p-[0.9rem] h-full cursor-pointer"
-                    onClick={collaps}
-                  >
-                    <GiHamburgerMenu
-                      className="mx-2 my-2 max-w-full max-h-full"
-                      size={24}
-                    ></GiHamburgerMenu>
+                  <div className="max-w-full bg-[#ff5722] p-[0.9rem] h-full cursor-pointer" onClick={collaps}>
+                    <GiHamburgerMenu className="mx-2 my-2 max-w-full max-h-full" size={24}></GiHamburgerMenu>
                   </div>
                   <div className="max-w-full max-h-full">
-                    <Image
-                      src={WillLogo}
-                      className="h-[3.4rem] w-full object-cover"
-                    ></Image>
+                    <Image src={WillLogo} className="h-[3.4rem] w-full object-cover"></Image>
                   </div>
                 </div>
 
@@ -194,7 +175,7 @@ const Layout = ({ children }) => {
                       <AiOutlineMail size={23}></AiOutlineMail>
                     </div>
                   </div>
-                  <div className="bg-[#ff5722] h-full mx-0 font-arial relative">
+                  {/* <div className="bg-[#ff5722] h-full mx-0 font-arial relative">
                     <div className="flex items-center px-4 py-[0.4rem] h-full gap-1">
                       <Image
                         src={Profile}
@@ -227,6 +208,48 @@ const Layout = ({ children }) => {
                         </ul>
                       </div>
                     )}
+                  </div> */}
+                  <div className="bg-[#ff5722] h-full mx-0 font-arial relative">
+                    <div className="flex items-center px-4 py-[0.4rem] h-full gap-1">
+                      <Image
+                        src={Profile}
+                        alt=""
+                        className="h-10 w-10 object-cover border-2 border-yellow-500 rounded-full"
+                      />
+                      <Popover as="div" className="relative border-none outline-none">
+                        {({ open }) => (
+                          <>
+                            <Popover.Button className="focus:outline-none">
+                              <div
+                                className="details flex items-start justify-between gap-2 cursor-pointer"
+                                onClick={toggleDropdown}
+                              >
+                                <h2 className="font-normal font-arial text-sm">Uttam Aggarwal</h2>
+                                <IoIosArrowDown className="button"></IoIosArrowDown>
+                              </div>
+                            </Popover.Button>
+
+                            <Popover.Panel
+                              as="div"
+                              className={`${
+                                open ? "block" : "hidden"
+                              } absolute right-2 mt-2 w-40 bg-white text-black borde rounded-md shadow-md`}
+                            >
+                              <ul className="py-2 p text-text-black flex flex-col gap-2 px-4 font-Rale cursor-pointer">
+                                <li>My Profile</li>
+                                <li>Settings</li>
+                                <li>Help</li>
+                                <li>
+                                  <div className="flex gap-1 items-center">
+                                    Log out <MdLogout size={16}></MdLogout>
+                                  </div>
+                                </li>
+                              </ul>
+                            </Popover.Panel>
+                          </>
+                        )}
+                      </Popover>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -234,9 +257,7 @@ const Layout = ({ children }) => {
           </div>
 
           {/* Main Content Area */}
-          <div className="flex-grow bg-gray-200">
-            {children}
-          </div>
+          <div className="flex-grow bg-gray-200">{children}</div>
         </div>
       </div>
     </>

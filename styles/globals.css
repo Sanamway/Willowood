@@ -58,5 +58,11 @@ body {
   
 }
 
+/* custom.css */
+.no-outline:focus {
+  outline: none;
+}
+
+
 
 
