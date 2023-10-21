@@ -8,23 +8,18 @@ import Snapshot from "./EmployeeForm/Snapshot";
 import Personal from "./EmployeeForm/Personal";
 import Family from "./EmployeeForm/Family";
 import Bank from "./EmployeeForm/Bank";
+import History from "./EmployeeForm/History";
 import Documents from "./EmployeeForm/Documents";
+import { useState } from "react";
 const EmployeeForm = () => {
   const router = useRouter();
+  const [formType, setFormType] = useState("Personal");
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Employee </h2>
           <span className="flex items-center gap-2 cursor-pointer">
-            <TiArrowBack
-              onClick={() => {
-                router.push("/table/table_user_profile");
-              }}
-              className="text-gray-400"
-              size={35}
-            />
-
             <AiTwotoneHome className="text-red-500" size={34} />
           </span>
         </div>
@@ -33,58 +28,93 @@ const EmployeeForm = () => {
           <ul className="flex border-b gap-12">
             <li className="-mb-px mr-1">
               <a
-                className="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold"
+                className={`${
+                  formType === "Snapshot"
+                    ? "bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold"
+                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                }`}
                 href="#"
+                onClick={() => setFormType("Snapshot")}
               >
                 {" "}
                 Snapshot
               </a>
             </li>
-            <li className="mr-1">
+            <li className="-mb-px mr-1">
               <a
-                className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold"
+                className={`${
+                  formType === "Personal"
+                    ? "bg-white inline-block border-l border-t border-r border-b-0 rounded-t py-2 px-4 font-semibold"
+                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                }`}
                 href="#"
+                onClick={() => setFormType("Personal")}
               >
                 {" "}
                 Personal
               </a>
             </li>
-            <li className="mr-1">
+            <li className="-mb-px mr-1">
               <a
-                className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold"
+                className={`${
+                  formType === "Family"
+                    ? "bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold"
+                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                }`}
                 href="#"
+                onClick={() => setFormType("Family")}
               >
                 Family
               </a>
             </li>
-            <li className="mr-1">
+            <li className="-mb-px mr-1">
               <a
-                className="bg-white inline-block py-2 px-4 text-gray-400 font-semibold"
+                className={`${
+                  formType === "Bank"
+                    ? "bg-white inline-block border-l border-t border-r border-b-0 rounded-t py-2 px-4 font-semibold"
+                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                }`}
                 href="#"
+                onClick={() => setFormType("Bank")}
               >
                 {" "}
                 Bank
               </a>
             </li>
-            <li className="mr-1">
+            <li className="-mb-px mr-1">
               <a
-                className="bg-white inline-block py-2 px-4 text-gray-400 font-semibold"
+                className={`${
+                  formType === "Documents"
+                    ? "bg-white inline-block border-l border-t border-r border-b-0 rounded-t py-2 px-4 font-semibold"
+                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                }`}
                 href="#"
+                onClick={() => setFormType("Documents")}
               >
                 Documents
               </a>
             </li>
-            <li className="mr-1">
+            <li className="-mb-px mr-1">
               <a
-                className="bg-white inline-block py-2 px-4 text-gray-400 font-semibold"
+                className={`${
+                  formType === "History"
+                    ? "bg-white inline-block border-l border-t border-r border-b-0 rounded-t py-2 px-4 font-semibold"
+                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                }`}
                 href="#"
+                onClick={() => setFormType("History")}
               >
                 History
               </a>
             </li>
           </ul>
         </div>
-        <Documents />
+        {formType === "Snapshot" && <Snapshot />}
+        {formType === "Personal" && <Personal />}
+        {formType === "Family" && <Family />}
+        {formType === "Bank" && <Bank />}
+        {formType === "Documents" && <Documents />}
+        {formType === "History" && <History />}
       </div>
     </Layout>
   );

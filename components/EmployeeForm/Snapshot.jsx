@@ -189,7 +189,7 @@ const Snapshot = () => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> ISDcode
+            <small className="text-red-600">*</small> ISD code
           </label>
           <select
             className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
