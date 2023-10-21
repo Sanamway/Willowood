@@ -25,7 +25,7 @@ const EmployeeForm = () => {
         </div>
 
         <div className="w-[100%] flex  justify-center">
-          <ul className="flex border-b gap-12">
+          <ul className="flex border-b gap-16">
             <li className="-mb-px mr-1">
               <a
                 className={`${
