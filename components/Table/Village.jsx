@@ -33,10 +33,12 @@ const District = () => {
               size={35}
             />
 
-            <AiTwotoneHome className="text-red-500" size={34} />
+            <AiTwotoneHome className="text-red-500" size={34}  onClick={() => {
+                router.push("/");
+              }} />
             <button
               onClick={() => {
-                router.push("/form/user_profile_form");
+                router.push("/form/village_form");
               }}
               className=" text-white py-1 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -82,9 +84,9 @@ const District = () => {
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Business Segment
                 </th>
-               
+
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                 Company
+                  Company
                 </th>
               </tr>
             </thead>
@@ -93,7 +95,7 @@ const District = () => {
                 <td className="  px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                   <button
                     onClick={() => {
-                      router.push("/form/user_profile_form");
+                      router.push("/form/village_form");
                     }}
                     className="b text-black   hover:text-blue-500  "
                   >
@@ -101,7 +103,7 @@ const District = () => {
                   </button>
                   <button
                     onClick={() => {
-                      router.push("/form/user_profile_form");
+                      router.push("/form/village_form");
                     }}
                     className="b text-black hover:text-yellow-400 ml-2"
                   >

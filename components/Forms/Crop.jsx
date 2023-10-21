@@ -5,7 +5,7 @@ import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
 const UserProfileForm = () => {
   const router = useRouter();
-  
+
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
@@ -15,7 +15,7 @@ const UserProfileForm = () => {
             <h2>
               <TiArrowBack
                 onClick={() => {
-                  router.push("/table/table_user_profile");
+                  router.push("/table/table_crop");
                 }}
                 className="text-gray-400"
                 size={35}
@@ -28,7 +28,10 @@ const UserProfileForm = () => {
         </div>
 
         <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start h-full ">
-          <form className=" bg-white rounded shadow p-4 w-full ">
+          <form
+            className=" bg-white rounded shadow p-4 w-full "
+            onSubmit={(e) => e.preventDefault()}
+          >
             <div className="mb-4 w-1/6">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -107,7 +110,12 @@ const UserProfileForm = () => {
 
             <div className="button flex items-center gap-3 mt-6">
               <div className="bg-green-700 px-4 py-1 text-white">Save</div>
-              <div className="bg-yellow-500 px-4 py-1 text-white">Close</div>
+              <button
+                className="bg-yellow-500 px-4 py-1 text-white"
+                onClick={() => router.push("/table/table_crop")}
+              >
+                Close
+              </button>
             </div>
           </form>
         </div>

@@ -33,7 +33,7 @@ const AssignRole = () => {
             <div className="flex items-center gap-2 cursor-pointer">
               <TiArrowBack
                 onClick={() => {
-                  router.push("/table/table_user_profile");
+                  router.push("/table/table_map_depot");
                 }}
                 className="text-gray-400"
                 size={35}

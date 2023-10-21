@@ -25,10 +25,7 @@ const Territory = () => {
                 <AiOutlineSearch className="mx-2 my-1" size={20} />
               </button>
             </span>
-            <TiArrowBack
-              onClick={() => {
-                router.push("/table/table_user_profile");
-              }}
+            <TiArrowBack             
               className="text-gray-400"
               size={35}
             />
@@ -36,7 +33,7 @@ const Territory = () => {
             <AiTwotoneHome className="text-red-500" size={34} />
             <button
               onClick={() => {
-                router.push("/form/user_profile_form");
+                router.push("/form/territory_form");
               }}
               className=" text-white py-1 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -80,7 +77,7 @@ const Territory = () => {
                 <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                   <button
                     onClick={() => {
-                      router.push("/form/user_profile_form");
+                      router.push("/form/territory_form");
                     }}
                     className="b text-black   hover:text-blue-500  "
                   >
@@ -88,7 +85,7 @@ const Territory = () => {
                   </button>
                   <button
                     onClick={() => {
-                      router.push("/form/user_profile_form");
+                      router.push("/form/territory_form");
                     }}
                     className="b text-black hover:text-yellow-400 ml-2"
                   >

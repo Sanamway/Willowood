@@ -107,7 +107,7 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <div className="flex h-screen fixed w-full font-arial  ">
+      <div className="tw- flex h-screen fixed w-full font-arial  ">
         {/* Sidebar */}
         <div
           className={`flex justify-center custom-scrollbar overflow-y-scroll h-screen transition-all ${
