@@ -20,7 +20,7 @@ const History = () => {
           <p class="font-bold  mb-2">History</p>
           <div className="flex flex-col w-1/4">
             <p class="mb-2 text-slate-400 self-center">Type</p>
-           
+
             <select
               className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
