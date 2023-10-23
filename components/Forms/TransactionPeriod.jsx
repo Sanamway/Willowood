@@ -68,7 +68,7 @@ const TrasactionPeriod = () => {
           <span className="flex items-center gap-2 cursor-pointer">
             <TiArrowBack
               onClick={() => {
-                router.push("/table/table_user_profile");
+                router.push("/table/table_transaction_open");
               }}
               className="text-gray-400"
               size={35}
@@ -79,7 +79,10 @@ const TrasactionPeriod = () => {
         </div>
 
         <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start h-full">
-          <form className=" flex flex-col gap-4 bg-white rounded shadow p-4 w-full mb-8 ">
+          <form
+            className=" flex flex-col gap-4 bg-white rounded shadow p-4 w-full mb-8 "
+            onSubmit={(e) => e.preventDefault()}
+          >
             <span className="text-black flex items-center gap-4">
               <h2 className=" text-md">Plan ID</h2>
               <input
@@ -243,7 +246,12 @@ const TrasactionPeriod = () => {
               <button className="bg-green-700 px-4 py-1 text-white">
                 Save
               </button>
-              <button className="bg-yellow-500 px-4 py-1 text-white">
+              <button
+                className="bg-yellow-500 px-4 py-1 text-white"
+                onClick={() => {
+                  router.push("/table/table_transaction_open");
+                }}
+              >
                 Close
               </button>
             </span>

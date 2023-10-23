@@ -17,20 +17,26 @@ const CompanyInfo = () => {
             <h2>
               <TiArrowBack
                 onClick={() => {
-                  router.push("/table/table_user_profile");
+                  router.push("/table/table_company_info");
                 }}
                 className="text-gray-400"
                 size={35}
-              ></TiArrowBack>
+              />
             </h2>
             <h2>
-              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome
+                className="text-red-500"
+                size={34}
+                onClick={() => {
+                  router.push("/");
+                }}
+              />
             </h2>
           </div>
         </div>
 
         <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start ">
-          <form className=" bg-white rounded shadow p-4 w-full mb-8 ">
+          <form className=" bg-white rounded shadow p-4 w-full mb-8 "  onSubmit={(e) => e.preventDefault()}>
             <div className="mb-4 w-1/6">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -247,7 +253,14 @@ const CompanyInfo = () => {
             </div>
             <div className="button flex items-center gap-3 mt-6">
               <div className="bg-green-700 px-4 py-1 text-white">Save</div>
-              <div className="bg-yellow-500 px-4 py-1 text-white">Close</div>
+              <button
+                className="bg-yellow-500 px-4 py-1 text-white"
+                onClick={() => {
+                  router.push("/table/table_company_info");
+                }}
+              >
+                Close
+              </button>
             </div>
           </form>
         </div>

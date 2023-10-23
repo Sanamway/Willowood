@@ -13,7 +13,7 @@ const FarmerInfo = () => {
           <span className="flex items-center gap-2 cursor-pointer">
             <TiArrowBack
               onClick={() => {
-                router.push("/table/table_user_profile");
+                router.push("/table/table_farmer");
               }}
               className="text-gray-400"
               size={35}
@@ -24,7 +24,10 @@ const FarmerInfo = () => {
         </div>
 
         <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start ">
-          <form className=" flex flex-col gap-4 bg-white rounded shadow p-4 w-full mb-8 ">
+          <form
+            className=" flex flex-col gap-4 bg-white rounded shadow p-4 w-full mb-8 "
+            onSubmit={(e) => e.preventDefault()}
+          >
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="inputField"
@@ -132,7 +135,7 @@ const FarmerInfo = () => {
                     className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
                     type="text"
                     id="inputField"
-                    placeholder="Village Name"
+                    placeholder="Land Information"
                   />
                 </label>
               </div>
@@ -188,10 +191,10 @@ const FarmerInfo = () => {
 
             <div className="flex flex-row gap-2 w-full">
               <label
-                className="block text-gray-700 text-sm font-bold mb-2 w-full"
-                htmlFor="userSelect"
+                className="block text-gray-700 text-sm font-bold w-full "
+                htmlFor="inputField"
               >
-                <span className="text-red-500 p-1">*</span> Territory
+                <small className="text-red-600">*</small> District
                 <select
                   className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
                   id="userSelect"
@@ -206,12 +209,12 @@ const FarmerInfo = () => {
                   <option value="user2">User 2</option>
                 </select>
               </label>
-
+              s
               <label
-                className="block text-gray-700 text-sm font-bold w-full "
-                htmlFor="inputField"
+                className="block text-gray-700 text-sm font-bold mb-2 w-full"
+                htmlFor="userSelect"
               >
-                <small className="text-red-600">*</small> District
+                <span className="text-red-500 p-1">*</span> Territory
                 <select
                   className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
                   id="userSelect"
@@ -233,7 +236,7 @@ const FarmerInfo = () => {
                 className="block text-gray-700 text-sm font-bold mb-2 w-full"
                 htmlFor="userSelect"
               >
-                <span className="text-red-500 p-1">*</span> Zone
+                <span className="text-red-500 p-1">*</span> Region
                 <select
                   className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
                   id="userSelect"
@@ -248,12 +251,11 @@ const FarmerInfo = () => {
                   <option value="user2">User 2</option>
                 </select>
               </label>
-
               <label
                 className="block text-gray-700 text-sm font-bold mb-2 w-full"
                 htmlFor="userSelect"
               >
-                <span className="text-red-500 p-1">*</span> Region
+                <span className="text-red-500 p-1">*</span> Zone
                 <select
                   className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
                   id="userSelect"
@@ -316,7 +318,12 @@ const FarmerInfo = () => {
               <button className="bg-green-700 px-4 py-1 text-white">
                 Save
               </button>
-              <button className="bg-yellow-500 px-4 py-1 text-white">
+              <button
+                className="bg-yellow-500 px-4 py-1 text-white"
+                onClick={() => {
+                  router.push("/table/table_farmer");
+                }}
+              >
                 Close
               </button>
             </span>

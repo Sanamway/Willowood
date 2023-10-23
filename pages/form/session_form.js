@@ -1,8 +1,8 @@
 import React from "react";
 
-import BusinessSegment from "@/components/Forms/BusinessSegment";
+import Season from "@/components/Forms/Season";
 const busineess_segement_form = () => {
-  return <BusinessSegment />;
+  return <Season />;
 };
 
 export default busineess_segement_form;

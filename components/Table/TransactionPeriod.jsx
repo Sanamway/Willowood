@@ -4,7 +4,7 @@ import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
 
-const AssignRole = () => {
+const TransactionPeriod = () => {
   const router = useRouter();
 
   const menus = [
@@ -28,12 +28,12 @@ const AssignRole = () => {
         <div className="h-screen overflow-auto w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">
-              Mapping Depot/Warehouse
+             Transaction Period
             </h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <TiArrowBack
                 onClick={() => {
-                  router.push("/table/table_map_depot");
+                  router.push("/table/table_user_profile");
                 }}
                 className="text-gray-400"
                 size={35}
@@ -46,7 +46,7 @@ const AssignRole = () => {
           <div className="bg-gray-100 py-4 h-screen rounded-md">
             <div className="text-black mx-12 bg-white p-4 ">
               <div className="mt-4 font-arial">
-                <h2 className="text-sm mb-4"> Mapping Depot/Warehouse</h2>
+                <h2 className="text-sm mb-4"> Trasaction Period</h2>
                 <div className="overflow-x-auto">
                   <table className="min-w-full">
                     <thead className="font-arial border-b">
@@ -57,19 +57,19 @@ const AssignRole = () => {
                         <td className=" px-4 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                           Depot Name
                         </td>
-                        <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                        <td className="px-4 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                           Terrotry
                         </td>
-                        <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                        <td className="px-4 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                           Region
                         </td>
-                        <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                        <td className="px-4 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                           Zone
                         </td>
-                        <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                        <td className="px-4 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                           Business Unit
                         </td>
-                        <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                        <td className="px-4 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                           Business Segment
                         </td>
                       </tr>
@@ -127,4 +127,4 @@ const AssignRole = () => {
   );
 };
 
-export default AssignRole;
+export default TransactionPeriod;
