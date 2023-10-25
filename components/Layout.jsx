@@ -140,7 +140,7 @@ const Layout = ({ children }) => {
                         alt=""
                         className="h-10 w-10 object-cover border-2 border-yellow-500 rounded-full"
                       />
-                      <Popover as="div" className="relative border-none outline-none">
+                      <Popover as="div" className="relative border-none outline-none z-50">
                         {({ open }) => (
                           <>
                             <Popover.Button className="focus:outline-none">
@@ -160,7 +160,7 @@ const Layout = ({ children }) => {
                               } absolute right-2 mt-2 w-40 bg-white text-black borde rounded-md shadow-md`}
                             >
                               <ul className="py-2 p text-text-black flex flex-col gap-2 px-4 font-Rale cursor-pointer">
-                                <li>My Profile</li>
+                                <li onClick={()=>{router.push('/profile')}}>My Profile</li>
                                 <li>Settings</li>
                                 <li>Help</li>
                                 <li>
@@ -181,7 +181,7 @@ const Layout = ({ children }) => {
           </div>
 
           {/* Main Content Area */}
-          <div className="flex-grow bg-gray-200">{children}</div>
+          <div className="flex-grow bg-gray-200 ">{children}</div>
         </div>
       </div>
     </>

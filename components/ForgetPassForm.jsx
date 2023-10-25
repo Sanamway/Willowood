@@ -3,12 +3,12 @@ import { FaUser } from "react-icons/fa";
 import { BiSolidLockAlt } from "react-icons/bi";
 import { AiFillGoogleCircle, AiFillTwitterCircle } from "react-icons/ai";
 import { BsFacebook } from "react-icons/bs";
-import Logo from '../public/Willowood.png'
+import Logo from "../public/Willowood.png";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-const Login = () => {
-  const router = useRouter()
+const ForgetPassForm = () => {
+    const router = useRouter()
   return (
     <>
       <div className="flex w-full h-screen font-arial">
@@ -18,10 +18,14 @@ const Login = () => {
               <div className="relative top-[1rem] flex items-center justify-center">
                 <Image src={Logo}></Image>
               </div>
+              <div className="flex flex-col items-center justify-center mt-4">
+                <h2 className="text-lg text-black font-semibold">Reset Password</h2>
+                <h4 className="text-black mt-2">Choose a new Password</h4>
+              </div>
               <div className="flex flex-col justify-between mt-8 mx-12 ">
                 <label className="flex  text-black items-center gap-1 font-semibold">
                   <FaUser></FaUser>
-                  Username
+                  New Password 
                 </label>
                 <input
                   className="bg-transparent text-black py-1.5 max-w-full text-start outline-none border-0 placeholder:text-black text-sm border-black border-b-2 border-white-200"
@@ -29,23 +33,36 @@ const Login = () => {
                   placeholder="Type your username"
                 />
               </div>
-              <div className="flex flex-col justify-between mx-12 mt-4">
-                <label className="flex text-black items-center gap-1 font-semibold">
-                  <BiSolidLockAlt />
-                  Password
+
+              <div className="flex flex-col justify-between mt-8 mx-12 ">
+                <label className="flex  text-black items-center gap-1 font-semibold">
+                  <FaUser></FaUser>
+                  Confirm Password 
                 </label>
                 <input
                   className="bg-transparent text-black py-1.5 max-w-full text-start outline-none border-0 placeholder:text-black text-sm border-black border-b-2 border-white-200"
-                  type="password"
-                  placeholder="Type your password"
+                  type="text"
+                  placeholder="Type your username"
                 />
-                <div className="flex items-center justify-end mt-2">
-                  <h3 onClick={()=>{router.push('/forgotpass')}} className="text-xs text-black cursor-pointer">Forgot Password?</h3>
-                </div>
               </div>
-              <div className="flex items-center justify-center mt-4">
-                <button onClick={()=>{router.push('/otp')}} className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full uppercase text-sm text-white">
-                  Login
+
+              <div className="flex flex-col items-center justify-center mt-4 gap-2">
+                <button
+                  onClick={() => {
+                    router.push("/otp");
+                  }}
+                  className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full uppercase text-sm text-white"
+                >
+                  Reset Password
+                </button>
+
+                <button
+                  onClick={() => {
+                    router.push("/login");
+                  }}
+                  className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full uppercase text-sm text-white"
+                >
+                  Back to Login
                 </button>
               </div>
 
@@ -65,4 +82,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgetPassForm;
