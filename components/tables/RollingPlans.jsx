@@ -23,7 +23,8 @@ const RollingPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "green",
-      status: "Approved"
+      status: "Approved",
+      progress:"20%"
     },
 
     {
@@ -35,7 +36,9 @@ const RollingPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "red",
-      status: "Yet to submit"
+      status: "Yet to submit",
+      progress:"40%"
+
     },
 
     {
@@ -47,7 +50,9 @@ const RollingPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "orange",
-      status: "Draft save"
+      status: "Draft save",
+      progress:"60%"
+
     },
 
     {
@@ -59,7 +64,9 @@ const RollingPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "red",
-      status: "Submitted by TM/RM/ZM"
+      status: "Submitted by TM/RM/ZM",
+      progress:"80%"
+
     },
 
     {
@@ -71,7 +78,9 @@ const RollingPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "green",
-      status: "Review stage"
+      status: "Review stage",
+      progress:"100%"
+
     },
 
     {
@@ -83,7 +92,9 @@ const RollingPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "red",
-      status: "Yet to sumbit"
+      status: "Yet to sumbit",
+      progress:"20%"
+
     },
 
     {
@@ -95,7 +106,9 @@ const RollingPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "green",
-      status: "Approved"
+      status: "Approved",
+      progress:"80%"
+
     },
 
     {
@@ -107,7 +120,9 @@ const RollingPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "orange",
-      status: "Draft save"
+      status: "Draft save",
+      progress:"30%"
+
     },
 
     {
@@ -288,7 +303,7 @@ const RollingPlans = () => {
                     </thead>
                     <tbody>
                       {datas.map((item) => (
-                        <tr>
+                        <tr key={item.id}>
                           <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
                             <div className="flex items-center">
                               <div className="">
@@ -321,7 +336,7 @@ const RollingPlans = () => {
                               <div className="progress progress-striped active">
                                 <div
                                   role="progressbar "
-                                  style={{ width: "75%" }}
+                                  style={{ width: `${item.progress}` }}
                                   className="progress-bar progress-bar-success rounded-md"
                                 >
                                   <span className="inline-block"></span>
