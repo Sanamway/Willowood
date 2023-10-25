@@ -377,6 +377,9 @@ const RollingPlans = () => {
                                         <li className="hover:bg-gray-100 px-2 py-1 rounded-md">New</li>
                                         <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Edit</li>
                                         <li className="hover:bg-gray-100 px-2 py-1 rounded-md">View</li>
+                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Previous Period</li>
+                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Current Period</li>
+                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Future Period</li>
                                         <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Report</li>
                                       </ul>
                                     </Popover.Panel>
