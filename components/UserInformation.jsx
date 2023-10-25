@@ -33,7 +33,7 @@ const UserInformation = () => {
     console.log(formData);
   };
 
-  const [userImage, setUserImage] = useState(null);
+  const [userImage, setUserImage] = useState("");
 
   // Function to handle image upload
   const handleImageUpload = (e) => {
@@ -114,10 +114,12 @@ const UserInformation = () => {
                   </div>
                   <div className="profpic relative group">
                     <Image
-                      src={userImage ? userImage : userimg}
-                      className="h-32 w-32 rounded-full"
-                      alt="Profile"
+                      // src={userImage ? userImage :userimg}
+                      src={userImage}
+                      className="h-32 w-32 rounded-full bg-gray-200"
+                      // alt="Profile"
                       width={100}
+                      height={100}
                     />
                     <input
                       type="file"
@@ -128,9 +130,10 @@ const UserInformation = () => {
                     />
                     <label
                       htmlFor="fileInput"
-                      className="text-orange-500 absolute font-semibold top-3/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      // here make the opacity-0 to get hover text effect 
+                      className={`text-black absolute text-center font-semibold top-3/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${userImage =="" ? "opacity-50":"opacity-0"} ${userImage !=="" ? "group-hover:opacity-100" :"group-hover:opacity-0"}  transition-opacity duration-300`}
                     >
-                      Edit
+                      Upload Image
                     </label>
                   </div>
                 </div>
