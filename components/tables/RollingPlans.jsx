@@ -168,6 +168,18 @@ const RollingPlans = () => {
       color: "red",
       status: "Yet to submit"
     },
+
+    {
+      id: 13,
+      icon: FcBullish,
+      name: "Rolling Sales Plan",
+      month: "April 2023",
+      depot: "Hyderabad",
+      due_date: "due date 5th",
+      zone: "South Telagana Hyderabad",
+      color: "red",
+      status: "Yet to submit"
+    },
     
   ];
   return (
@@ -175,7 +187,7 @@ const RollingPlans = () => {
       <Layout>
         <div className="">
           <div className="container mx-auto px-4 sm:px-8 bg-white text-black">
-            <div className="py-2 overflow-auto h-screen pb-20 scrollbar-hide ">
+            <div className="py-2 overflow-y-auto overflow-x-hidden h-screen pb-16 scrollbar-hide ">
               <div className="flex items-center justify-between w-full ">
                 <h2 className="text-lg font-semibold leading-tight">Rolling Sales Plan</h2>
                 {/* <GiTakeMyMoney size={30} className="text-blue-500"></GiTakeMyMoney> */}
@@ -318,7 +330,7 @@ const RollingPlans = () => {
                             </div>
                           </td>
 
-                          <td className="px-5 py-1 border-b border-gray-200 bg-white text-sm relative flex items-center justify-between">
+                          <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm relative flex items-center justify-between">
                             <span className="relative inline-block px-2 py-1 font-semibold text-green-900 leading-tight">
                               <span
                                 aria-hidden
