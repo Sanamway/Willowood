@@ -9,13 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@headlessui/react": "^1.7.17",
-    "moment": "^2.29.4",
-=======
     "@headlessui/react": "^0.0.0-insiders.1469b85",
     "axios": "^1.5.1",
->>>>>>> e0dffe91c2db2af0097456034de28c6846854da9
     "next": "13.5.4",
     "react": "^18",
     "react-csv": "^2.2.2",

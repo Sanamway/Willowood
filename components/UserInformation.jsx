@@ -341,9 +341,6 @@ const UserInformation = () => {
                   </div>
                 </div>
 
-<<<<<<< HEAD
-              
-=======
                 <div className="mb-1">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="textareaField">
                     About Me
@@ -356,7 +353,6 @@ const UserInformation = () => {
                   ></textarea>
                 </div>
 
->>>>>>> e0dffe91c2db2af0097456034de28c6846854da9
                 <div className="button flex items-center gap-3 mt-6">
                   <button type="submit" className="bg-green-700 px-4 py-1 text-white">
                     Save
