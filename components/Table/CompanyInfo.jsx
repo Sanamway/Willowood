@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
@@ -6,6 +6,59 @@ import { useRouter } from "next/router";
 import { AiOutlineSearch } from "react-icons/ai";
 const CompanyInfo = () => {
   const router = useRouter();
+  const newFunc = async () => {
+    const url = "192.168.126:3005/API/get_company_information";
+    const response = await fetch(url, {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  };
+  useEffect(() => {
+    newFunc();
+  }, []);
+
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const fetchDataWithHeaders = async () => {
+      const url = "192.168.126:3005/API/get_company_information";
+
+      // Create a Headers object and set your headers
+      const headers = new Headers();
+      headers.append("Authorization", "Bearer yourAccessToken");
+      headers.append("Content-Type", "application/json");
+      headers.append("secret", "fsdhfgsfuiweifiowefjewcewcebjw");
+      try {
+        const response = await fetch(url, {
+          method: "GET", // You can use 'POST', 'PUT', 'DELETE', etc. based on your request type
+          headers: headers, // Set the headers here
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          setData(responseData);
+        } else {
+          // Handle the error
+          console.error("Request failed with status:", response.status);
+        }
+      } catch (error) {
+        // Handle any other errors, e.g., network issues
+        console.error("Error:", error);
+      }
+    };
+
+    fetchDataWithHeaders();
+  }, []);
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">

@@ -12,7 +12,7 @@ import History from "./EmployeeForm/History";
 import Documents from "./EmployeeForm/Documents";
 import { useState } from "react";
 const EmployeeForm = () => {
-  const router = useRouter();
+
   const [formType, setFormType] = useState("Personal");
   return (
     <Layout>
@@ -24,13 +24,13 @@ const EmployeeForm = () => {
           </span>
         </div>
 
-        <div className="w-[100%] flex  justify-center">
-          <ul className="flex border-b gap-16">
+        <div className="w-[100%] flex ">
+          <ul className="flex border-b ">
             <li className="-mb-px mr-1">
               <a
                 className={`${
                   formType === "Snapshot"
-                    ? "bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold"
+                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
                     : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
                 }`}
                 href="#"
@@ -44,7 +44,7 @@ const EmployeeForm = () => {
               <a
                 className={`${
                   formType === "Personal"
-                    ? "bg-white inline-block border-l border-t border-r border-b-0 rounded-t py-2 px-4 font-semibold"
+                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
                     : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
                 }`}
                 href="#"
@@ -58,7 +58,7 @@ const EmployeeForm = () => {
               <a
                 className={`${
                   formType === "Family"
-                    ? "bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold"
+                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
                     : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
                 }`}
                 href="#"
@@ -71,7 +71,7 @@ const EmployeeForm = () => {
               <a
                 className={`${
                   formType === "Bank"
-                    ? "bg-white inline-block border-l border-t border-r border-b-0 rounded-t py-2 px-4 font-semibold"
+                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
                     : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
                 }`}
                 href="#"
@@ -85,7 +85,7 @@ const EmployeeForm = () => {
               <a
                 className={`${
                   formType === "Documents"
-                    ? "bg-white inline-block border-l border-t border-r border-b-0 rounded-t py-2 px-4 font-semibold"
+                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
                     : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
                 }`}
                 href="#"
@@ -98,7 +98,7 @@ const EmployeeForm = () => {
               <a
                 className={`${
                   formType === "History"
-                    ? "bg-white inline-block border-l border-t border-r border-b-0 rounded-t py-2 px-4 font-semibold"
+                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
                     : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
                 }`}
                 href="#"
