@@ -54,15 +54,17 @@ const ProductBrand = () => {
             <h2>
               <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
             </h2>
-            {/* <h2>
-                <TiArrowBack className="text-gray-400" size={35}></TiArrowBack>
-              </h2> */}
+          
             <h2>
-              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome
+              onClick={() => {
+                router.push("/");
+              }} 
+               className="text-red-500" size={34}></AiTwotoneHome>
             </h2>
             <button
               onClick={() => {
-                router.push("/form/user_profile_form");
+                router.push("/form/product_brand");
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -71,8 +73,8 @@ const ProductBrand = () => {
           </div>
         </div>
 
-        {/* <div className="bg-gray-300"></div> */}
-        <div className="overflow-x-auto text-black font-arial">
+        <div className="bg-white h-screen flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
           <table className="min-w-full divide-y border divide-gray-200">
             <thead className="border-b">
               <tr className="bg-gray-50 font-arial">
@@ -99,7 +101,7 @@ const ProductBrand = () => {
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                     <button
                       onClick={() => {
-                        router.push("/form/product_category");
+                        router.push("/form/product_brand");
                       }}
                       className="b text-black   hover:text-blue-500  "
                     >
@@ -107,7 +109,7 @@ const ProductBrand = () => {
                     </button>
                     <button
                       onClick={() => {
-                        router.push("/form/product_category");
+                        router.push("/form/product_brand");
                       }}
                       className="b text-black hover:text-yellow-400 ml-2"
                     >
@@ -123,6 +125,7 @@ const ProductBrand = () => {
               ))}
             </tbody>
           </table>
+        </div>
         </div>
       </div>
     </Layout>

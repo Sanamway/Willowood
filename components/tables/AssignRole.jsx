@@ -7,24 +7,24 @@ import { TbFileDownload } from "react-icons/tb";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
 
-const ProductSegment = () => {
+const AssignRole = () => {
   const router = useRouter();
 
   const dummyData = [
     {
       id: 1,
-      category: "Product A",
-      company: "Company A"
+      username:'username',
+      userprofile:"userprofile"
     },
     {
       id: 2,
-      category: "Product B",
-      company: "Company B"
+      username:'username',
+      userprofile:"userprofile"
     },
     {
       id: 3,
-      category: "Product C",
-      company: "Company C"
+      username:'username',
+      userprofile:"userprofile"
     }
   ];
 
@@ -32,7 +32,7 @@ const ProductSegment = () => {
     <Layout>
       <div className="h-screen overflow-auto w-full ">
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">Product Segment</h2>
+          <h2 className="font-arial font-normal text-3xl  py-2">Assign Role Profile to User</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
@@ -51,7 +51,7 @@ const ProductSegment = () => {
             <h2>
               <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
             </h2>
-            
+          
             <h2>
               <AiTwotoneHome 
               onClick={() => {
@@ -61,7 +61,7 @@ const ProductSegment = () => {
             </h2>
             <button
               onClick={() => {
-                router.push("/form/product_segment");
+                router.push("/form/assign_role");
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -71,22 +71,20 @@ const ProductSegment = () => {
         </div>
 
         <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1100px]">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
           <table className="min-w-full divide-y border divide-gray-200">
             <thead className="border-b">
               <tr className="bg-gray-50 font-arial">
-                <th className=" w-[12%] px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Action
                 </th>
-                <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Segment ID
+                <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  User Name
                 </th>
-                <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Product Segment
+                <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  User Profile
                 </th>
-                <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Company
-                </th>
+               
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200 text-xs">
@@ -95,7 +93,7 @@ const ProductSegment = () => {
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                     <button
                       onClick={() => {
-                        router.push("/form/product_segment");
+                        router.push("/form/assign_role");
                       }}
                       className="b text-black   hover:text-blue-500  "
                     >
@@ -103,7 +101,7 @@ const ProductSegment = () => {
                     </button>
                     <button
                       onClick={() => {
-                        router.push("/form/product_segment");
+                        router.push("/form/assign_role");
                       }}
                       className="b text-black hover:text-yellow-400 ml-2"
                     >
@@ -112,17 +110,17 @@ const ProductSegment = () => {
                     <button className="b text-black hover:text-red-500 ml-2">Delete</button>
                   </td>
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.id}</td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.category}</td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.company}</td>
+                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.username}</td>
+                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.userprofile}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
+        </div>
       </div>
     </Layout>
   );
 };
 
-export default ProductSegment;
+export default AssignRole;

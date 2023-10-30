@@ -5,7 +5,7 @@ import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
 import WillLog from "../public/Willowood.png";
 import Image from "next/image";
-import Select from 'react-select'
+import Select from "react-select";
 
 const MaterialSkuInfo = () => {
   const router = useRouter();
@@ -50,9 +50,13 @@ const MaterialSkuInfo = () => {
   };
 
   const options = [
-    { value: 'rabi', label: 'Rabi' },
-    { value: 'kharif', label: 'Kharif' },
-  ]
+    { value: "rabi", label: "Rabi" },
+    { value: "kharif", label: "Kharif" }
+  ];
+
+  const handleSubmit =(e)=>{
+    e.preventDefault()
+  }
 
   return (
     <>
@@ -64,14 +68,20 @@ const MaterialSkuInfo = () => {
               <h2>
                 <TiArrowBack
                   onClick={() => {
-                    router.push("/table/table_user_profile");
+                    router.push("/table/table_material_sku");
                   }}
                   className="text-gray-400"
                   size={35}
                 ></TiArrowBack>
               </h2>
               <h2>
-                <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+                <AiTwotoneHome
+                  onClick={() => {
+                    router.push("/");
+                  }}
+                  className="text-red-500"
+                  size={34}
+                ></AiTwotoneHome>
               </h2>
             </div>
           </div>
@@ -79,7 +89,7 @@ const MaterialSkuInfo = () => {
           {/* <div className="bg-gray-300"></div> */}
           <div className="text-black h-screen  ">
             <div className="bg-gray-100 p-4  h-sceen ">
-              <form className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4">
+              <form onSubmit={handleSubmit} className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4">
                 <div className="flex -mx-2 mb-4 flex-col">
                   <div className="w-1/6 px-2 mb-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
@@ -103,7 +113,7 @@ const MaterialSkuInfo = () => {
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
                           id="inputField"
-                          placeholder="Input Brand Name"
+                          placeholder="Input Material Name"
                         />
                       </div>
 
@@ -115,12 +125,16 @@ const MaterialSkuInfo = () => {
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
                           id="inputField"
-                          placeholder="Input Brand Name"
+                          placeholder="Input Technical Spec"
                         />
                       </div>
                     </div>
-                    <div className="banner ">
-                      <Image className="w-auto h-32" src={WillLog} alt="" />
+                    <div className="banner border-2 flex flex-col items-center justify-center w-1/2  ">
+                      <div className=" ">
+                        <h2 className="text-lg text-center mb-2">Upload Banner Image</h2>
+                        <input type="file" />
+                      </div>
+                      {/* <Image className="w-auto h-32" src={WillLog} alt="" /> */}
                     </div>
                   </div>
 
@@ -133,7 +147,7 @@ const MaterialSkuInfo = () => {
                       id="userSelect"
                     >
                       <option value="" className="focus:outline-none focus:border-b bg-white">
-                        Select
+                        UOM
                       </option>
                       <option value="user1">User 1</option>
                       <option value="user2">User 2</option>
@@ -228,7 +242,10 @@ const MaterialSkuInfo = () => {
                   </div> */}
 
                   <div className="w-1/2 px-2 mt-2 ">
-                    <label className="block border-none text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                    <label
+                      className="block border-none text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="userSelect"
+                    >
                       <span className="text-red-500 p-1">*</span>Crop
                     </label>
                     <Select
@@ -336,18 +353,6 @@ const MaterialSkuInfo = () => {
                     <option value="user2">User 2</option>
                   </select>
                 </div>
-
-                {/* <div className="w-1/2 px-2 mt-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
-                    <span className="text-red-500 p-1">*</span>Upload Image
-                  </label>
-                  <input
-                    type="file"
-                    className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                    id="userSelect"
-                  ></input>
-                </div> */}
-
                 <div className="uploadImageDiv w-1/2 px-2 mt-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="imageUpload">
                     <span className="text-red-500 p-1">*</span>Upload Image
@@ -464,7 +469,14 @@ const MaterialSkuInfo = () => {
 
                 <div className="button flex items-center gap-3 mt-6">
                   <button className="bg-green-700 px-4 py-1 text-white">Save</button>
-                  <button className="bg-yellow-500 px-4 py-1 text-white">Close</button>
+                  <button
+                    onClick={() => {
+                      router.push("/table/table_material_sku");
+                    }}
+                    className="bg-yellow-500 px-4 py-1 text-white"
+                  >
+                    Close
+                  </button>
                 </div>
               </form>
             </div>

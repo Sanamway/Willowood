@@ -7,24 +7,39 @@ import { TbFileDownload } from "react-icons/tb";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
 
-const ProductSegment = () => {
+const UserAssignBusiness = () => {
   const router = useRouter();
 
   const dummyData = [
     {
       id: 1,
-      category: "Product A",
-      company: "Company A"
+      username:"username",
+      territory:"territory",
+      region:"region",
+      zone:"zone",
+      unit_division:"unit division",
+      business_seg :"business segment",
+      company:"company"
     },
     {
       id: 2,
-      category: "Product B",
-      company: "Company B"
+      username:"username",
+      territory:"territory",
+      region:"region",
+      zone:"zone",
+      unit_division:"unit division",
+      business_seg :"business segment",
+      company:"company"
     },
     {
       id: 3,
-      category: "Product C",
-      company: "Company C"
+      username:"username",
+      territory:"territory",
+      region:"region",
+      zone:"zone",
+      unit_division:"unit division",
+      business_seg :"business segment",
+      company:"company"
     }
   ];
 
@@ -32,7 +47,7 @@ const ProductSegment = () => {
     <Layout>
       <div className="h-screen overflow-auto w-full ">
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">Product Segment</h2>
+          <h2 className="font-arial font-normal text-2xl  py-2">User Map With Business Structure</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
@@ -51,17 +66,17 @@ const ProductSegment = () => {
             <h2>
               <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
             </h2>
-            
+          
             <h2>
-              <AiTwotoneHome 
+              <AiTwotoneHome
               onClick={() => {
                 router.push("/");
               }} 
-              className="text-red-500" size={34}></AiTwotoneHome>
+               className="text-red-500" size={34}></AiTwotoneHome>
             </h2>
             <button
               onClick={() => {
-                router.push("/form/product_segment");
+                router.push("/form/user_assign_business");
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -79,14 +94,35 @@ const ProductSegment = () => {
                   Action
                 </th>
                 <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Segment ID
+                  Map id
+                </th>
+                <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  User Name
                 </th>
                 <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Product Segment
+                  Territory
                 </th>
+                <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Region
+                </th>
+
+                <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Zone
+                </th>
+                <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Unit Division
+                </th>
+
+                <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Business Segment
+                </th>
+
                 <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Company
                 </th>
+
+
+
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200 text-xs">
@@ -95,7 +131,7 @@ const ProductSegment = () => {
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                     <button
                       onClick={() => {
-                        router.push("/form/product_segment");
+                        router.push("/form/user_assign_business");
                       }}
                       className="b text-black   hover:text-blue-500  "
                     >
@@ -103,7 +139,7 @@ const ProductSegment = () => {
                     </button>
                     <button
                       onClick={() => {
-                        router.push("/form/product_segment");
+                        router.push("/form/user_assign_business");
                       }}
                       className="b text-black hover:text-yellow-400 ml-2"
                     >
@@ -112,17 +148,22 @@ const ProductSegment = () => {
                     <button className="b text-black hover:text-red-500 ml-2">Delete</button>
                   </td>
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.id}</td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.category}</td>
+                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.username}</td>
+                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.territory}</td>
+                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.region}</td>
+                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.zone}</td>
+                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.unit_division}</td>
+                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.business_seg}</td>
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.company}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
+        </div>
       </div>
     </Layout>
   );
 };
 
-export default ProductSegment;
+export default UserAssignBusiness;

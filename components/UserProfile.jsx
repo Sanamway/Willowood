@@ -29,7 +29,8 @@ const UserProfile = () => {
   explicabo ducimus eveniet, est rem sequi officiis distinctio?`;
   return (
     <>
-      <div className="h-screen overflow-auto w-full font-arial bg-white  ">
+      {/* <div className=" h-screen overflow-auto w-full font-arial bg-white  "> */}
+      <div className="container mx-auto px-4 sm:px-8 bg-gray-100 p-4 pb-20  text-black overflow-y-auto ">
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Profile </h2>
           <div className="flex items-center gap-2 cursor-pointer">
@@ -43,16 +44,30 @@ const UserProfile = () => {
               ></TiArrowBack>
             </h2>
             <h2>
-              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome
+                onClick={() => {
+                  router.push("/");
+                }}
+                className="text-red-500"
+                size={34}
+              ></AiTwotoneHome>
             </h2>
           </div>
         </div>
 
         {/* <div className="bg-gray-300"></div> */}
         <div className="text-black h-screen  ">
+<<<<<<< HEAD
           <div className="bg-gray-100 pt-1  pb-10  ">
             <div className="relative flex rounded-lg bg-white mt-12 items-center justify-start max-w-full p-12 mx-20 gap-12 ">
               
+=======
+          <div className="bg-gray-100 pt-1  pb-44  ">
+            <div className="relative flex rounded-lg bg-white mt-8  items-center justify-start max-w-full p-12 mx-20 gap-12 ">
+              <div className="flex ">
+                <Image className=" w-52 h-52 rounded-full" src={ProfImg}></Image>
+              </div>
+>>>>>>> e0dffe91c2db2af0097456034de28c6846854da9
               <div className="flex flex-col flex-items-center justify-between">
                 <div className="grid grid-cols-2 w-full gap-4">
                   <div className="flex items-center">
@@ -118,7 +133,7 @@ const UserProfile = () => {
                     Territory
                   </label>
                   <input
-                  disabled
+                    disabled
                     className="w-full px-2 py-2 borde rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
                     type="text"
                     id="inputField"
@@ -126,13 +141,12 @@ const UserProfile = () => {
                   />
                 </div>
 
-
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                   Region
+                    Region
                   </label>
                   <input
-                  disabled
+                    disabled
                     className="w-full px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     type="text"
                     id="inputField"
@@ -142,10 +156,10 @@ const UserProfile = () => {
 
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                   Zone
+                    Zone
                   </label>
                   <input
-                  disabled
+                    disabled
                     className="w-full px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     type="text"
                     id="inputField"
@@ -153,13 +167,12 @@ const UserProfile = () => {
                   />
                 </div>
 
-
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                   BUsiness Unit
+                    BUsiness Unit
                   </label>
                   <input
-                  disabled
+                    disabled
                     className="w-full px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     type="text"
                     id="inputField"
@@ -167,13 +180,12 @@ const UserProfile = () => {
                   />
                 </div>
 
-
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                   Segment
+                    Segment
                   </label>
                   <input
-                  disabled
+                    disabled
                     className="w-full px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     type="text"
                     id="inputField"
@@ -183,10 +195,10 @@ const UserProfile = () => {
 
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                   Company
+                    Company
                   </label>
                   <input
-                  disabled
+                    disabled
                     className="w-full px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     type="text"
                     id="inputField"
@@ -194,15 +206,12 @@ const UserProfile = () => {
                   />
                 </div>
 
-               
-
-
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                   Reporting Manager
+                    Reporting Manager
                   </label>
                   <input
-                  disabled
+                    disabled
                     className="w-full px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     type="text"
                     id="inputField"
@@ -212,10 +221,10 @@ const UserProfile = () => {
 
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                   Mobile No.
+                    Mobile No.
                   </label>
                   <input
-                  disabled
+                    disabled
                     className="w-full px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     type="text"
                     id="inputField"
@@ -232,42 +241,75 @@ const UserProfile = () => {
             <div className=" flex flex-col bg-white mt-2 mx-20 items-center justify-start max-w-full px-5 ">
               <div className="flex flex-col w-full p-2 mt-4">
                 <h2>Rolling Vs Actual Sales</h2>
-                <div className="w-full bg-gray-200  dark:bg-gray-700 my-2">
+                {/* <div className="w-full bg-gray-200  dark:bg-gray-700 my-2">
                   <div
                     className="bg-green-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none"
                     style={{ width: "85%" }}
                   >
                     85%
                   </div>
+                </div> */}
+                <div className="demo-preview ">
+                  <div className="progress progress-striped active">
+                    <div
+                      role="progressbar "
+                      style={{ width: `80%` }}
+                      className="progress-bar progress-bar-success rounded-md h-4"
+                    >
+                      <span className="inline-block"></span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <div className="flex flex-col w-full p-2 ">
                 <h2>Collection Plain Vs Actual Plain</h2>
-                <div className="w-full bg-gray-200  dark:bg-gray-700 my-2">
+                {/* <div className="w-full bg-gray-200  dark:bg-gray-700 my-2">
                   <div
                     className="bg-green-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none "
                     style={{ width: "85%" }}
                   >
                     85%
+                  </div>
+                </div> */}
+                <div className="demo-preview">
+                  <div className="progress progress-striped active">
+                    <div
+                      role="progressbar "
+                      style={{ width: `80%` }}
+                      className="progress-bar progress-bar-success rounded-md h-4"
+                    >
+                      <span className="inline-block"></span>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div className="flex flex-col w-full p-2">
                 <h2>Sales Vs Collection</h2>
-                <div className="w-full bg-gray-200  dark:bg-gray-700 my-2">
+                {/* <div className="w-full bg-gray-200  dark:bg-gray-700 my-2">
                   <div
                     className="bg-green-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none "
                     style={{ width: "85%" }}
                   >
                     85%
                   </div>
+                </div> */}
+                <div className="demo-preview">
+                  <div className="progress progress-striped active">
+                    <div
+                      role="progressbar "
+                      style={{ width: `80%` }}
+                      className="progress-bar progress-bar-success rounded-md h-4"
+                    >
+                      <span className="inline-block"></span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className=" flex bg-white mt-2 mx-20 rounded-lg items-center justify-start max-w-full px-5 ">
+            <div className=" flex bg-white mt-2 mx-20  rounded-lg items-center justify-start max-w-full px-5 ">
               <h1 className="font-arial font-normal text-3xl  py-2">About Me</h1>
             </div>
 
@@ -275,15 +317,15 @@ const UserProfile = () => {
               {!showEdit ? (
                 <div className="flex items-center justify-start w-full p-4 ">{data}</div>
               ) : (
-                <div className="flex flex-col items-center justify-start w-full p-4">
+                <div className="flex flex-col items-center justify-start w-full p-4 ">
                   <textarea
-                    rows={8}
+                    rows={6}
                     defaultValue={data}
                     className="w-full px-3 py-1.5  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     id="textareaField"
                     placeholder=""
                   ></textarea>
-                  <div className="button flex items-center gap-3 mt-6">
+                  <div className="button flex items-center gap-3 mt-1">
                     <button className="bg-green-700 px-4 py-1 text-white">Save</button>
                     <button onClick={closeHandle} className="bg-yellow-500 px-4 py-1 text-white">
                       Close
