@@ -2,9 +2,41 @@ import React from "react";
 import Layout from "../Layout";
 import { AiFillFileExcel, AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
+import axios from "axios";
+import { url } from "@/constants/url";
 import { useRouter } from "next/router";
 const CompanyInfo = () => {
   const router = useRouter();
+  
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+  };
+
+  const gettingMenuRole = async () => {
+    try {
+      const respond = await axios.get(`${url}/get_company_informations`, { headers: headers });
+      const apires = await respond.data.data;
+      setMenusRole(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const gettingMenuName = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/menus`, { headers: headers });
+      const apires = await respond.data.data;
+      setMenusName(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    gettingMenuRole();
+    // gettingMenuName();
+  }, []);
 
   return (
     <Layout>

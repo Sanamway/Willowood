@@ -57,17 +57,11 @@ const UserProfile = () => {
 
         {/* <div className="bg-gray-300"></div> */}
         <div className="text-black h-screen  ">
-<<<<<<< HEAD
-          <div className="bg-gray-100 pt-1  pb-10  ">
-            <div className="relative flex rounded-lg bg-white mt-12 items-center justify-start max-w-full p-12 mx-20 gap-12 ">
-              
-=======
           <div className="bg-gray-100 pt-1  pb-44  ">
             <div className="relative flex rounded-lg bg-white mt-8  items-center justify-start max-w-full p-12 mx-20 gap-12 ">
               <div className="flex ">
                 <Image className=" w-52 h-52 rounded-full" src={ProfImg}></Image>
               </div>
->>>>>>> e0dffe91c2db2af0097456034de28c6846854da9
               <div className="flex flex-col flex-items-center justify-between">
                 <div className="grid grid-cols-2 w-full gap-4">
                   <div className="flex items-center">
