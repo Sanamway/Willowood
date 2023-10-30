@@ -53,7 +53,7 @@ const UserInformation = () => {
       .required("Confirm Password is required"),
     user_profile: Yup.string().required("User Profile is required"),
     user_status: Yup.string().required("Status is required"),
-    userType: Yup.string().required("User Type is required"),
+    // userType: Yup.string().required("User Type is required"),
     city: Yup.string().required("City is required"),
     state: Yup.string().required("State is required"),
     designation: Yup.string().required("Designation is required"),
@@ -110,15 +110,16 @@ const UserInformation = () => {
 
       console.log("Form data:", userData);
 
-     return
+    //  return
       const response = await axios.post(`${url}/api/create_user`, userData, { headers: headers });
       const resdata = await response.data;
       console.log(resdata);
 
     } catch (errors) {
+      console.log("e", errors)
       const newErrors = {};
-      errors.inner.forEach((error) => {
-        newErrors[error.path] = error.message;
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
       });
       setFormErrors(newErrors);
     }
@@ -140,6 +141,7 @@ const UserInformation = () => {
   const togglePassword = () => {
     setShowPass(!showPass);
   };
+
 
   return (
     <>
