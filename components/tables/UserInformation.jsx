@@ -12,6 +12,7 @@ const UserInformation = () => {
   const router = useRouter();
   const[datas, setDatas] = useState([])
 
+
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw"
@@ -100,6 +101,9 @@ const UserInformation = () => {
                   <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Action
                   </th>
+                  <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    USERID
+                  </th>
                   <th className="px-6 w py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Username
                   </th>
@@ -142,8 +146,11 @@ const UserInformation = () => {
                         View
                       </button>
                       <button
-                        onClick={() => {
-                          router.push("/form/user_information_form");
+                         onClick={() => {
+                          router.push({
+                            pathname: '/form/user_information_form',
+                            query: { userData: JSON.stringify(item) }, 
+                          });
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
                       >
@@ -151,6 +158,7 @@ const UserInformation = () => {
                       </button>
                       <button onClick={()=>{deleteHandler(item?._id)}}  className="b text-black hover:text-red-500 ml-2">Delete</button>
                     </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.user_id}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.user_name}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.address}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.city}</td>
