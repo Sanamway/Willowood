@@ -16,6 +16,7 @@
     "react-csv": "^2.2.2",
     "react-datepicker": "^4.21.0",
     "react-dom": "^18",
+    "react-hot-toast": "^2.4.1",
     "react-icons": "^4.11.0",
     "react-select": "^5.7.7",
     "solid-icons": "^1.0.12",

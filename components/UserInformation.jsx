@@ -8,6 +8,7 @@ import Image from "next/image";
 import axios from "axios";
 import { url } from "@/constants/url";
 import * as Yup from "yup";
+import toast, { Toaster } from "react-hot-toast";
 
 const UserInformation = () => {
   const router = useRouter();
@@ -27,7 +28,8 @@ const UserInformation = () => {
     userType: "",
     user_profile: "",
     user_status: "",
-    designation:""
+    designation: "",
+    about: ""
   });
 
   //Defining the Validation Schema
@@ -36,27 +38,30 @@ const UserInformation = () => {
     address: Yup.string().required("Address is required"),
     email: Yup.string().email("Invalid email format").required("Email is required"),
     phone_number: Yup.number()
-    .transform((value, originalValue) => {
-      if (originalValue === '') return undefined;
-      return Number(value);
-    })
-    .required('Mobile No is required')
-    .test('is-valid-number', 'Invalid Mobile Number', value => {
-      if (!value) return false; 
-      const stringValue = value.toString();
-      return /^[6-9]\d{9}$/.test(stringValue);
-    }).typeError('Mobile No must be a valid number'),
+      .transform((value, originalValue) => {
+        if (originalValue === "") return undefined;
+        return Number(value);
+      })
+      .required("Mobile No is required")
+      .test("is-valid-number", "Invalid Mobile Number", (value) => {
+        if (!value) return false;
+        const stringValue = value.toString();
+        return /^[6-9]\d{9}$/.test(stringValue);
+      })
+      .typeError("Mobile No must be a valid number"),
 
-    password: Yup.string().required("Password is required"),
+    password: Yup.string()
+      .required("Password is required")
+      .min(8, "Password must be at least 8 characters long"), // Minimum length validation
+
     confirm_password: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords must match")
       .required("Confirm Password is required"),
     user_profile: Yup.string().required("User Profile is required"),
     user_status: Yup.string().required("Status is required"),
-    // userType: Yup.string().required("User Type is required"),
     city: Yup.string().required("City is required"),
     state: Yup.string().required("State is required"),
-    designation: Yup.string().required("Designation is required"),
+    designation: Yup.string().required("Designation is required")
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -105,18 +110,20 @@ const UserInformation = () => {
         user_status: formData.user_status,
         city: formData.city,
         state: formData.state,
-        designation:formData.designation
+        designation: formData.designation,
+        about: formData.about
       };
 
-      console.log("Form data:", userData);
-
-    //  return
       const response = await axios.post(`${url}/api/create_user`, userData, { headers: headers });
       const resdata = await response.data;
       console.log(resdata);
-
+      toast.success(resdata?.message);
     } catch (errors) {
-      console.log("e", errors)
+      console.log("e", errors);
+      const errorMessage = errors?.response?.data?.error;
+      if (errorMessage?.includes("duplicate key error")) {
+        toast.error("Email Already exist");
+      }
       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
@@ -142,10 +149,87 @@ const UserInformation = () => {
     setShowPass(!showPass);
   };
 
+  //Editing and Saving the data
+
+  const { userData } = router.query;
+  const [userDataObject, setUserDataObject] = useState(null);
+
+  useEffect(() => {
+    if (userData) {
+      try {
+        const userDataParsed = JSON.parse(userData);
+        setUserDataObject(userDataParsed);
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
+    }
+  }, [userData]);
+
+  // console.log("heya", userDataObject);
+
+  const handleEdit = (e) => {
+    const { name, value } = e.target;
+    setUserDataObject({ ...userDataObject, [name]: value.trim() });
+  };
+
+  const updateDataHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const id = userDataObject?._id;
+      const editedData = {
+        user_name: userDataObject ? userDataObject?.user_name : "",
+        email: userDataObject ? userDataObject?.email : "",
+        phone_number: userDataObject ? userDataObject?.phone_number : "",
+        address: userDataObject ? userDataObject?.address : "",
+        t_user: "skp",
+        c_name: "skp",
+        ul_name: "skp"
+      };
+      // if(userDataObject?.user_name.length && userDataObject?.address.length && userDataObject?.phone_number.length && userDataObject?.email.length ){
+      //   const res = await axios.put(`${url}/api/update_user/${id}`, editedData, { headers: headers });
+      //   const resp = await res.data;
+      //   toast.success(resp.message)
+      // }else{
+      //   toast.error("Some Fields are Missing")
+      // }
+
+      if (
+        !userDataObject?.user_name.length ||
+        !userDataObject?.address.length ||
+        !userDataObject?.phone_number.length ||
+        !userDataObject?.email.length
+      ) {
+        const emptyFields = [];
+
+        if (!userDataObject?.user_name.length) {
+          emptyFields.push("User name");
+        }
+        if (!userDataObject?.address.length) {
+          emptyFields.push("Address");
+        }
+        if (!userDataObject?.phone_number.length) {
+          emptyFields.push("Phone number");
+        }
+        if (!userDataObject?.email.length) {
+          emptyFields.push("Email");
+        }
+
+        const errorMessage = `Fields missing: ${emptyFields.join(", ")}`;
+        toast.error(errorMessage);
+      } else {
+        const res = await axios.put(`${url}/api/update_user/${id}`, editedData, { headers: headers });
+        const resp = await res.data;
+        toast.success(resp.message);
+      }
+    } catch (error) {
+      console.log("edit", error.message);
+    }
+  };
 
   return (
     <>
       <Layout>
+        <Toaster position="bottom-center" reverseOrder={false} />
         <div className="h-screen overflow-auto w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">User Information</h2>
@@ -174,7 +258,10 @@ const UserInformation = () => {
           {/* <div className="bg-gray-300"></div> */}
           <div className="text-black h-screen mb- ">
             <div className="bg-gray-100 p-4  ">
-              <form onSubmit={handleSubmit} className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4">
+              <form
+                onSubmit={userDataObject?._id ? updateDataHandler : handleSubmit}
+                className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4"
+              >
                 <div className="flex items-center justify-between w-full">
                   <div className="flex gap-4 items-start justify-between mb-4 w-3/4">
                     <div className="w-1/2 ">
@@ -185,6 +272,7 @@ const UserInformation = () => {
                         className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                         type="text"
                         id="inputField"
+                        defaultValue={userDataObject?.user_id ? userDataObject?.user_id : ""}
                         placeholder="Employee Code"
                       />
                     </div>
@@ -197,11 +285,15 @@ const UserInformation = () => {
                         type="text"
                         id="inputField"
                         name="user_name"
+                        defaultValue={userDataObject?.user_name ? userDataObject?.user_name : ""}
                         placeholder="Username"
-                        onChange={handleChange}
+                        onChange={userDataObject?._id ? handleEdit : handleChange}
                       />
-                      {formErrors.user_name && <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">{formErrors.user_name}</p>}
-
+                      {formErrors.user_name && (
+                        <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                          {formErrors.user_name}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="profpic relative group">
@@ -243,10 +335,15 @@ const UserInformation = () => {
                     type="text"
                     id="inputField"
                     name="designation"
+                    defaultValue={userDataObject?.designation ? userDataObject?.designation : ""}
                     placeholder="Designation"
                     onChange={handleChange}
                   />
-                      {formErrors.designation && <p className="text-red-500 text-sm absolute bottom-12 left-24 cursor-pointer">{formErrors.designation}</p>}
+                  {formErrors.designation && (
+                    <p className="text-red-500 text-sm absolute bottom-12 left-24 cursor-pointer">
+                      {formErrors.designation}
+                    </p>
+                  )}
                 </div>
                 <div className="mb-1 relative">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="textareaField">
@@ -257,10 +354,15 @@ const UserInformation = () => {
                     className="w-full px-3 py-1.5  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     id="textareaField"
                     placeholder="Address"
+                    defaultValue={userDataObject?.address ? userDataObject?.address : ""}
                     name="address"
-                    onChange={handleChange}
+                    onChange={userDataObject?._id ? handleEdit : handleChange}
                   ></textarea>
-                      {formErrors.address && <p className="text-red-500 absolute bottom-[7.8rem] left-24 text-sm ">{formErrors.address}</p>}
+                  {formErrors.address && (
+                    <p className="text-red-500 absolute bottom-[7.8rem] left-24 text-sm ">
+                      {formErrors.address}
+                    </p>
+                  )}
                 </div>
                 <div className="flex -mx-2 mb-4">
                   <div className="w-1/2 px-2 relative ">
@@ -271,15 +373,20 @@ const UserInformation = () => {
                       className="w-full px-3 py-2 border-b border-gray-500 bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="citySelect"
                       onChange={handleChange}
+                      // defaultValue={userDataObject?.city ? userDataObject?.city : ""}
                       name="city"
                     >
                       <option value="" className="focus:outline-none focus:border-b bg-white">
-                        Select City
+                        {userDataObject?.city ? userDataObject?.city : ""}
                       </option>
                       <option value="Hisar">Hisar</option>
                       <option value="Delhi">Delhi</option>
                     </select>
-                    {formErrors.city && <p className="text-red-500 text-sm absolute bottom-10 right-3 cursor-pointer">{formErrors.city}</p>}
+                    {formErrors.city && (
+                      <p className="text-red-500 text-sm absolute bottom-10 right-3 cursor-pointer">
+                        {formErrors.city}
+                      </p>
+                    )}
                   </div>
                   <div className="w-1/2 px-2 relative ">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="stateSelect">
@@ -292,12 +399,17 @@ const UserInformation = () => {
                       name="state"
                     >
                       <option value="" className="focus:outline-none focus:border-b bg-white">
-                        Select State
+                        {/* Select State */}
+                        {userDataObject?.state ? userDataObject?.state : ""}
                       </option>
                       <option value="Haryana">Haryana</option>
                       <option value="Delhi">Delhi</option>
                     </select>
-                    {formErrors.state && <p className="text-red-500 text-sm absolute bottom-10 right-3 cursor-pointer">{formErrors.state}</p>}
+                    {formErrors.state && (
+                      <p className="text-red-500 text-sm absolute bottom-10 right-3 cursor-pointer">
+                        {formErrors.state}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -311,10 +423,15 @@ const UserInformation = () => {
                       type="email"
                       id="emailField"
                       name="email"
+                      defaultValue={userDataObject?.email ? userDataObject?.email : ""}
                       placeholder="Email"
-                      onChange={handleChange}
+                      onChange={userDataObject?._id ? handleEdit : handleChange}
                     />
-                      {formErrors.email && <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">{formErrors.email}</p>}
+                    {formErrors.email && (
+                      <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                        {formErrors.email}
+                      </p>
+                    )}
                   </div>
                   <div className="w-1/2 relative ">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneField">
@@ -326,9 +443,14 @@ const UserInformation = () => {
                       id="phoneField"
                       name="phone_number"
                       placeholder="Mobile"
-                      onChange={handleChange}
+                      defaultValue={userDataObject?.phone_number ? userDataObject?.phone_number : ""}
+                      onChange={userDataObject?._id ? handleEdit : handleChange}
                     />
-                      {formErrors.phone_number && <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">{formErrors.phone_number}</p>}
+                    {formErrors.phone_number && (
+                      <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                        {formErrors.phone_number}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -342,6 +464,7 @@ const UserInformation = () => {
                       type={showPass ? "text" : "password"}
                       id="passwordField"
                       name="password"
+                      defaultValue={userDataObject?.password ? userDataObject?.password : ""}
                       placeholder="Password"
                       onChange={handleChange}
                     />
@@ -352,7 +475,11 @@ const UserInformation = () => {
                         <AiOutlineEyeInvisible size={23} />
                       )}
                     </span>
-                    {formErrors.password && <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">{formErrors.password}</p>}
+                    {formErrors.password && (
+                      <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                        {formErrors.password}
+                      </p>
+                    )}
                   </div>
                   <div className="w-1/2 relative ">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneField">
@@ -363,6 +490,7 @@ const UserInformation = () => {
                       type={showPass ? "text" : "password"}
                       id="confirmPass"
                       name="confirm_password"
+                      defaultValue={userDataObject?.confirm_password ? userDataObject?.confirm_password : ""}
                       placeholder="Confirm Password"
                       onChange={handleChange}
                     />
@@ -373,7 +501,11 @@ const UserInformation = () => {
                         <AiOutlineEyeInvisible size={23} />
                       )}
                     </span>
-                    {formErrors.confirm_password && <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">{formErrors.confirm_password}</p>}
+                    {formErrors.confirm_password && (
+                      <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                        {formErrors.confirm_password}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="flex -mx-2 mb-4">
@@ -389,15 +521,21 @@ const UserInformation = () => {
                     >
                       {userOptions.map((option) => (
                         <option
-                          value={option?.description}
+                          // value={option?.description}
+                          defaultValue={
+                            userDataObject?.user_profile ? userDataObject?.user_profile : option?.description
+                          }
                           className="focus:outline-none focus:border-b bg-white"
                         >
-                          {option?.description}
+                          {userDataObject?.user_profile ? userDataObject?.user_profile : option?.description}
                         </option>
                       ))}
                     </select>
-                    {formErrors.user_profile && <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">{formErrors.user_profile}</p>}
-
+                    {formErrors.user_profile && (
+                      <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                        {formErrors.user_profile}
+                      </p>
+                    )}
                   </div>
                   <div className="w-1/2 px-2 relative ">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="statusSelect">
@@ -409,13 +547,22 @@ const UserInformation = () => {
                       name="user_status"
                       onChange={handleChange}
                     >
-                      <option defaultValue="enabled" className="focus:outline-none focus:border-b bg-white">
+                      <option
+                        defaultValue="enabled"
+                        // defaultValue={userDataObject?.user_status ? userDataObject?.user_status : ""}
+                        className="focus:outline-none focus:border-b bg-white"
+                      >
+                        {/* {userDataObject?.user_status ? userDataObject?.user_status : ""} */}
                         Enabled
                       </option>
                       <option value="enabled">Enable</option>
                       <option value="disabled">Disable</option>
                     </select>
-                    {formErrors.user_status && <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">{formErrors.user_status}</p>}
+                    {formErrors.user_status && (
+                      <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                        {formErrors.user_status}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -428,12 +575,14 @@ const UserInformation = () => {
                     className="w-full px-3 py-1.5  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     id="textareaField"
                     placeholder="About"
+                    name="about"
+                    defaultValue={userDataObject?.about ? userDataObject?.about : ""}
                   ></textarea>
                 </div>
 
                 <div className="button flex items-center gap-3 mt-6">
                   <button type="submit" className="bg-green-700 px-4 py-1 text-white">
-                    Save
+                    {userDataObject?._id ? "Update" : "Save"}
                   </button>
                   <button
                     onClick={() => {
