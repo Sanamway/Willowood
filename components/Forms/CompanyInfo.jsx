@@ -1,42 +1,68 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../Layout";
-import { AiFillFileExcel, AiTwotoneHome } from "react-icons/ai";
+import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import axios from "axios";
 import { url } from "@/constants/url";
 import { useRouter } from "next/router";
 const CompanyInfo = () => {
   const router = useRouter();
-  
+
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
-  const gettingMenuRole = async () => {
+  const handleSaveCompanyInfo = async () => {
+    const data = {
+      cmpny_name: companyState.companyName,
+      corp_address: companyState.corpAdress,
+      corp_address_city: companyState.corpAddressCity,
+      corp_address_state: companyState.corpAddressState,
+      sale_address: companyState.saleAddress,
+      sale_address_city: companyState.saleAddressCity,
+      sale_address_state: companyState.saleAddressState,
+      email: companyState.email,
+      phone_number: companyState.phoneNumber,
+      contact_person: companyState.contactPerson,
+      gst_no: companyState.gstNum,
+      c_name: companyState.companyName,
+      ul_name: "Ultimate Leader",
+    };
     try {
-      const respond = await axios.get(`${url}/get_company_informations`, { headers: headers });
-      const apires = await respond.data.data;
-      setMenusRole(apires);
+      const respond = await axios
+        .post(`${url}/api/add_company_informations`, JSON.stringify(data), {
+          headers: headers,
+        })
+        .then((res) => {
+          window.alert(res.me);
+          router.push("/table/table_company_info");
+        });
     } catch (error) {
-      console.log(error);
+      window.alert(error);
     }
   };
 
-  const gettingMenuName = async () => {
-    try {
-      const respond = await axios.get(`${url}/api/menus`, { headers: headers });
-      const apires = await respond.data.data;
-      setMenusName(apires);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [companyState, setCompanyState] = useState({
+    companyName: "",
+    corpAdress: "",
+    corpAddressCity: "",
+    corpAddressState: "",
+    saleAddress: "",
+    saleAddressCity: "",
+    saleAddressState: "",
+    email: "",
+    phoneNumber: "",
+    contactPerson: "",
+    gstNum: "",
+    cName: "",
+    ulName: "",
+  });
 
-  useEffect(() => {
-    gettingMenuRole();
-    // gettingMenuName();
-  }, []);
+  const handleDatat = (e) => {
+    const { name, value } = e.target;
+    console.log(value);
+  };
 
   return (
     <Layout>
@@ -68,7 +94,10 @@ const CompanyInfo = () => {
         </div>
 
         <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start ">
-          <form className=" bg-white rounded shadow p-4 w-full mb-8 "  onSubmit={(e) => e.preventDefault()}>
+          <form
+            className=" bg-white rounded shadow p-4 w-full mb-8 "
+            onSubmit={(e) => e.preventDefault()}
+          >
             <div className="mb-4 w-1/6">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -95,6 +124,13 @@ const CompanyInfo = () => {
                 type="text"
                 id="inputField"
                 placeholder="Company Name"
+                value={companyState.companyName}
+                onChange={(e) =>
+                  setCompanyState({
+                    ...companyState,
+                    companyName: e.target.value,
+                  })
+                }
               />
             </div>
             <div className="flex w-full justify-between gap-4">
@@ -110,6 +146,13 @@ const CompanyInfo = () => {
                   id="textareaField"
                   placeholder="Corporate Address"
                   rows="6"
+                  value={companyState.corpAdress}
+                  onChange={(e) =>
+                    setCompanyState({
+                      ...companyState,
+                      corpAdress: e.target.value,
+                    })
+                  }
                 ></textarea>
               </div>
               <div className="w-full">
@@ -124,6 +167,13 @@ const CompanyInfo = () => {
                   id="textareaField"
                   rows="6"
                   placeholder="Sale Address"
+                  value={companyState.saleAddress}
+                  onChange={(e) =>
+                    setCompanyState({
+                      ...companyState,
+                      saleAddress: e.target.value,
+                    })
+                  }
                 ></textarea>
               </div>
             </div>
@@ -141,12 +191,18 @@ const CompanyInfo = () => {
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
+                      onClick={(e) =>
+                        setCompanyState({
+                          ...companyState,
+                          corpAddressCity: e.target.value,
+                        })
+                      }
                     >
                       <option
                         value=""
                         className="focus:outline-none focus:border-b bg-white"
                       >
-                        Option
+                        City
                       </option>
                       <option value="user1">User 1</option>
                       <option value="user2">User 2</option>
@@ -162,12 +218,18 @@ const CompanyInfo = () => {
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
+                      onClick={(e) =>
+                        setCompanyState({
+                          ...companyState,
+                          corpAddressState: e.target.value,
+                        })
+                      }
                     >
                       <option
                         value=""
                         className="focus:outline-none focus:border-b bg-white"
                       >
-                        Option
+                        State
                       </option>
                       <option value="user1">User 1</option>
                       <option value="user2">User 2</option>
@@ -189,12 +251,18 @@ const CompanyInfo = () => {
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
+                      onClick={(e) =>
+                        setCompanyState({
+                          ...companyState,
+                          saleAddressCity: e.target.value,
+                        })
+                      }
                     >
                       <option
                         value=""
                         className="focus:outline-none focus:border-b bg-white"
                       >
-                        Option
+                        City
                       </option>
                       <option value="user1">User 1</option>
                       <option value="user2">User 2</option>
@@ -210,12 +278,18 @@ const CompanyInfo = () => {
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
+                      onClick={(e) =>
+                        setCompanyState({
+                          ...companyState,
+                          saleAddressState: e.target.value,
+                        })
+                      }
                     >
                       <option
                         value=""
                         className="focus:outline-none focus:border-b bg-white"
                       >
-                        Option
+                        State
                       </option>
                       <option value="user1">User 1</option>
                       <option value="user2">User 2</option>
@@ -238,6 +312,13 @@ const CompanyInfo = () => {
                   type="text"
                   id="inputField"
                   placeholder="Mobile"
+                  value={companyState.phoneNumber}
+                  onChange={(e) =>
+                    setCompanyState({
+                      ...companyState,
+                      phoneNumber: e.target.value,
+                    })
+                  }
                 />
               </div>
               <div className="w-full">
@@ -252,6 +333,13 @@ const CompanyInfo = () => {
                   type="email"
                   id="inputField"
                   placeholder="Email"
+                  value={companyState.email}
+                  onChange={(e) =>
+                    setCompanyState({
+                      ...companyState,
+                      email: e.target.value,
+                    })
+                  }
                 />
               </div>
             </div>
@@ -267,6 +355,13 @@ const CompanyInfo = () => {
                 type="text"
                 id="inputField"
                 placeholder="Contact Person"
+                value={companyState.contactPerson}
+                onChange={(e) =>
+                  setCompanyState({
+                    ...companyState,
+                    contactPerson: e.target.value,
+                  })
+                }
               />
             </div>
             <div className="w-1/2">
@@ -281,12 +376,24 @@ const CompanyInfo = () => {
                 type="text"
                 id="inputField"
                 placeholder="GST Number"
+                value={companyState.gstNum}
+                onChange={(e) =>
+                  setCompanyState({
+                    ...companyState,
+                    gstNum: e.target.value,
+                  })
+                }
               />
             </div>
             <div className="button flex items-center gap-3 mt-6">
-              <div className="bg-green-700 px-4 py-1 text-white">Save</div>
+              <div
+                className="bg-green-700 px-4 py-1 text-white cursor-pointer"
+                onClick={() => handleSaveCompanyInfo()}
+              >
+                Save
+              </div>
               <button
-                className="bg-yellow-500 px-4 py-1 text-white"
+                className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
                 onClick={() => {
                   router.push("/table/table_company_info");
                 }}
