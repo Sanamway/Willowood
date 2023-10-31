@@ -1,64 +1,58 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Layout from "../../components/Layout";
 import { AiTwotoneHome } from "react-icons/ai";
-
+import ConfirmModal from "../modals/ConfirmModal";
 import { TbFileDownload } from "react-icons/tb";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
+import axios from "axios";
+import { url } from "@/constants/url";
 
 const UserInformation = () => {
   const router = useRouter();
+  const[datas, setDatas] = useState([])
 
-  const dummyData = [
-    {
-      id: 1,
-      username: "Ironman",
-      address: "Address A",
-      city: "city A",
-      state: "state",
-      email: "email@email.com",
-      mobile: "84845485",
-      user_profile: "user a",
-      status: "enabled"
-    },
-    {
-      id: 2,
-      username: "Ironman",
-      address: "Address B",
-      city: "city B",
-      state: "state",
-      email: "email@email.com",
-      mobile: "84845485",
-      user_profile: "user b",
-      status: "enabled"
-    },
-    {
-      id: 3,
-      username: "Ironman",
-      address: "Address C",
-      city: "city C",
-      state: "state",
-      email: "email@email.com",
-      mobile: "84845485",
-      user_profile: "user C",
-      status: "enabled"
-    },
-    {
-      id: 4,
-      username: "Ironman",
-      address: "Address C",
-      city: "city C",
-      state: "state",
-      email: "email@email.com",
-      mobile: "84845485",
-      user_profile: "user C",
-      status: "enabled"
-    }
-  ];
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+  };
+
+  const getApiData = async()=>{
+    const resp = await axios.get(`${url}/api/get_users`, { headers: headers })
+    const respdata  = await resp.data.data
+    setDatas(respdata)
+  }
+
+  useEffect(()=>{
+    getApiData()
+  },[])
+
+  const [isOpen, setisOpen] = useState(false)
+  const [userId, setUserId] = useState(null)
+
+  const deleteHandler = (id) =>{
+    setisOpen(true)
+    setUserId(id)
+  }
+
+  const resetData = () => {
+    getApiData(); 
+    setisOpen(false);
+  };
+  
+  
+
 
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full ">
+        <ConfirmModal
+        isOpen={isOpen}
+        onClose={() => setisOpen(false)}
+        onOpen={() => setisOpen(true)}
+        userId={userId}
+        onDeletedData={resetData}
+        ></ConfirmModal>
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">User Information</h2>
           <div className="flex items-center gap-2 cursor-pointer">
@@ -132,16 +126,11 @@ const UserInformation = () => {
                   <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     status
                   </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    status
-                  </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    status
-                  </th>
+                
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                {dummyData?.map((item) => (
+                {datas?.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
@@ -160,18 +149,16 @@ const UserInformation = () => {
                       >
                         Edit
                       </button>
-                      <button className="b text-black hover:text-red-500 ml-2">Delete</button>
+                      <button onClick={()=>{deleteHandler(item?._id)}}  className="b text-black hover:text-red-500 ml-2">Delete</button>
                     </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.username}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.user_name}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.address}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.city}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.state}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.email}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.mobile}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.user_profile}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.status}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.status}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.status}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.phone_number}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.ul_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.status ==1 ? "Enabled":"Disabled"}</td>
                   </tr>
                 ))}
               </tbody>
