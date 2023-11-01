@@ -77,7 +77,7 @@ const CompanyInfo = () => {
               onClick={() => {
                 router.push({
                   pathname: "/form/company_info_form",
-                  query: { id: data[data.length - 1].c_id +1, type: "Add" },
+                  query: { id: null, type: "Add" },
                 });
               }}
               className=" text-white py-1 px-2 rounded-md bg-green-500 hover:bg-orange-500"
@@ -117,6 +117,9 @@ const CompanyInfo = () => {
                   </th>
                   <th className="px-4 py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     GST Number
+                  </th>
+                  <th className="px-4 py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Status
                   </th>
                 </tr>
               </thead>
@@ -163,7 +166,7 @@ const CompanyInfo = () => {
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.corp_address}
-                       <br />
+                      <br />
                       {item.corp_address_city}, {item.corp_address_state}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
@@ -182,6 +185,9 @@ const CompanyInfo = () => {
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.gst_no}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.isDeleted == false ? "Enabled" : "Disabled"}
                     </td>
                   </tr>
                 ))}

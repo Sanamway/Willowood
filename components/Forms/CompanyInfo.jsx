@@ -6,6 +6,7 @@ import axios from "axios";
 import { url } from "@/constants/url";
 import { useRouter } from "next/router";
 import * as Yup from "yup";
+import toast, { Toaster } from "react-hot-toast";
 const CompanyInfo = () => {
   const router = useRouter();
 
@@ -60,7 +61,7 @@ const CompanyInfo = () => {
     cName: "",
     ulName: "",
   });
-
+  console.log("company", companyState);
   //Defining the Validation Schema
   const validationSchema = Yup.object().shape({
     companyName: Yup.string().required("Company Name is required"),
@@ -70,7 +71,10 @@ const CompanyInfo = () => {
     saleAddress: Yup.string().required("Sale. State is required"),
     saleAddressCity: Yup.string().required("Sale. City is required"),
     saleAddressState: Yup.string().required("Sale. State is required"),
-    email: Yup.string().required("Email is required"),
+    email: Yup.string()
+      .required("Email is required")
+      .email()
+      .matches(/^(?!.*@[^,]*,)/),
     phoneNumber: Yup.number()
       .transform((value, originalValue) => {
         if (originalValue === "") return undefined;
@@ -91,8 +95,6 @@ const CompanyInfo = () => {
   const handleSaveCompanyInfo = async (e) => {
     e.preventDefault();
     try {
-      // Validate the form data
-
       await validationSchema.validate(companyState, { abortEarly: false });
       const data = {
         cmpny_name: companyState.companyName,
@@ -115,16 +117,25 @@ const CompanyInfo = () => {
           headers: headers,
         })
         .then((res) => {
-          window.alert("Company added successfully!");
-          router.push("/table/table_company_info");
+          if (!res) return;
+          toast.success("Company added successfully!");
+          setTimeout(() => {
+            router.push("/table/table_company_info");
+          }, [3000]);
         });
     } catch (errors) {
-      console.log("e", errors);
+      const errorMessage = errors?.response?.data?.error;
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("gst")) {
+        toast.error("GST number already exist");
+      } else if (errorMessage?.includes("cmpny_name_1")) {
+        toast.error("Company Name already exist");
+      }
       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
       });
-      alert(errors?.message);
       setFormErrors(newErrors);
     }
   };
@@ -160,10 +171,23 @@ const CompanyInfo = () => {
           }
         )
         .then((res) => {
-          window.alert("Company edited successfully!");
-          router.push("/table/table_company_info");
+          if (!res) return;
+          toast.success("Company edited successfully!");
+          setTimeout(() => {
+            router.push("/table/table_company_info");
+          }, [3000]);
         });
     } catch (errors) {
+      const errorMessage = errors?.response?.data?.error;
+
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("gst_no_1")) {
+        toast.error("GST number already exist");
+      } else if (errorMessage?.includes("cmpny_name_1")) {
+        toast.error("Company Name already exist");
+      }
+
       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
@@ -178,6 +202,7 @@ const CompanyInfo = () => {
   };
   return (
     <Layout>
+      <Toaster position="bottom-center" reverseOrder={false} />
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
         <div className="text-black flex items-center justify-between bg-white max-w-6/12 font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
@@ -326,12 +351,13 @@ const CompanyInfo = () => {
                       className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
                       value={companyState.corpAddressCity}
-                      onClick={(e) =>
+                      onChange={(e) => {
+                        console.log("no-one", e);
                         setCompanyState({
                           ...companyState,
                           corpAddressCity: e.target.value,
-                        })
-                      }
+                        });
+                      }}
                     >
                       <option
                         value=""
@@ -360,7 +386,7 @@ const CompanyInfo = () => {
                       className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
                       value={companyState.corpAddressState}
-                      onClick={(e) =>
+                      onChange={(e) =>
                         setCompanyState({
                           ...companyState,
                           corpAddressState: e.target.value,
@@ -399,7 +425,7 @@ const CompanyInfo = () => {
                       className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
                       value={companyState.saleAddressCity}
-                      onClick={(e) =>
+                      onChange={(e) =>
                         setCompanyState({
                           ...companyState,
                           saleAddressCity: e.target.value,
@@ -433,7 +459,7 @@ const CompanyInfo = () => {
                       className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
                       value={companyState.saleAddressState}
-                      onClick={(e) =>
+                      onChange={(e) =>
                         setCompanyState({
                           ...companyState,
                           saleAddressState: e.target.value,
