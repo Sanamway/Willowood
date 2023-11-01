@@ -15,8 +15,52 @@ const UserInformation = () => {
   const [userImage, setUserImage] = useState("");
   const [userOptions, setUserOptions] = useState([]);
   const [showPass, setShowPass] = useState(false);
-  const [formData, setFormData] = useState({
-    userId: "",
+  const { id, view } = router.query;
+
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+  };
+
+  const getDataById = async (id) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_user/${id}`, {
+        headers: headers
+      });
+      const apires = await respond.data.data;
+      console.log("ff", apires);
+      setFormState({
+        _id: apires._id,
+        cId: apires.c_id,
+        empCode: apires._id,
+        user_id: apires.user_id,
+        user_name: apires.user_name,
+        address: apires.address,
+        city: apires.city,
+        state: apires.state,
+        phone_number: apires.phone_number,
+        password: apires.password,
+        confirm_password: apires.confirm_password,
+        email: apires.email,
+        phone_number: apires.phone_number,
+        t_user: apires.t_user,
+        ul_name: apires.ul_name,
+        position: apires.position,
+        about_me: apires.about_me
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (router.query.type === "CREATE") return;
+    getDataById(id);
+  }, [id, view]);
+
+  const [formState, setFormState] = useState({
+    cId: "",
+    empCode: "",
     user_name: "",
     address: "",
     city: "",
@@ -25,13 +69,13 @@ const UserInformation = () => {
     phone_number: "",
     password: "",
     confirm_password: "",
-    userType: "",
-    user_profile: "",
-    user_status: "",
+    t_user: "",
     position: "",
-    about_me: ""
+    about_me: "",
+    ul_name: "",
+    c_name: "skp"
   });
-
+  console.log("form", formState);
   //Defining the Validation Schema
   const validationSchema = Yup.object().shape({
     user_name: Yup.string().required("User name is required"),
@@ -52,78 +96,65 @@ const UserInformation = () => {
 
     password: Yup.string()
       .required("Password is required")
-      .min(8, "Password must be at least 8 characters long"), 
+      .min(8, "Password must be at least 8 characters long"),
 
     confirm_password: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords must match")
       .required("Confirm Password is required"),
-    user_profile: Yup.string().required("User Profile is required"),
-    user_status: Yup.string().required("Status is required"),
+    t_user: Yup.string().required("Profile is required"),
+    ul_name: Yup.string().required("Status is required"),
     city: Yup.string().required("City is required"),
     state: Yup.string().required("State is required"),
     position: Yup.string().required("Designation is required")
   });
-
   const [formErrors, setFormErrors] = useState({});
 
-  const headers = {
-    "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
-  // Function to handle image upload
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setUserImage(URL.createObjectURL(file));
-    }
-  };
-
-  //form data submission
-
-  const handleSubmit = async (e) => {
+  const handleSaveCompanyInfo = async (e) => {
     e.preventDefault();
     try {
-      // Validate the form data
-      await validationSchema.validate(formData, { abortEarly: false });
-
-      // Validation passed, you can submit the form here
-      const userData = {
-        user_name: formData.user_name,
-        email: formData.email,
-        phone_number: formData.phone_number,
-        address: formData.address,
-        t_user: "skp",
-        c_name: "skp",
-        ul_name: "skp",
-        password: formData.password,
-        confirm_password: formData.confirm_password,
-        user_profile: formData.user_profile,
-        user_status: formData.user_status,
-        city: formData.city,
-        state: formData.state,
-        position: formData.position,
-        about_me: formData.about_me
+      await validationSchema.validate(formState, { abortEarly: false });
+      const data = {
+        user_name: formState.user_name,
+        address: formState.address,
+        city: formState.city,
+        state: formState.state,
+        phone_number: formState.phone_number,
+        password: formState.password,
+        confirm_password: formState.confirm_password,
+        email: formState.email,
+        phone_number: formState.phone_number,
+        t_user: formState.t_user,
+        ul_name: formState.ul_name,
+        position: formState.position,
+        about_me: formState.about_me,
+        c_name: "check"
       };
 
-      const response = await axios.post(`${url}/api/create_user`, userData, { headers: headers });
-      const resdata = await response.data;
-      console.log(resdata);
-      toast.success(resdata?.message);
+        const respond = await axios
+          .post(`${url}/api/create_user`, JSON.stringify(data), {
+            headers: headers
+          })
+          .then((res) => {
+              console.log("newFf", res)
+            if (!res) return;
+            toast.success("User added successfully!");
+            setTimeout(() => {
+              router.push("/table/table_user_information");
+            }, [3000]);
+          });
+     
     } catch (errors) {
-      console.log("e", errors);
+        const messageError = errors?.response?.data?.message
+        if(messageError){
+            toast.error(messageError)
+            return 
+        }
       const errorMessage = errors?.response?.data?.error;
-      if (errorMessage?.includes("duplicate key error")) {
-        toast.error("Email Already exist");
-      }
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("phone_number")) {
+        toast.error("Phone Number already exist");
+      } 
       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
@@ -132,20 +163,67 @@ const UserInformation = () => {
     }
   };
 
-  //getting datas from api
-  const gettingData = async () => {
+  const handleEditCompanyInfo = async (e, id) => {
+    console.log("ff");
+    e.preventDefault();
     try {
-      const resoptions = await axios.get(`${url}/api/user_profiles`, { headers: headers });
-      const respData = await resoptions.data.data;
-      setUserOptions(respData);
-    } catch (error) {
-      console.log(error)
+      // Validate the form data
+      const uid = formState?._id;
+      await validationSchema.validate(formState, { abortEarly: false });
+      const data = {
+        user_name: formState.user_name,
+        address: formState.address,
+        city: formState.city,
+        state: formState.state,
+        phone_number: formState.phone_number,
+        password: formState.password,
+        confirm_password: formState.confirm_password,
+        email: formState.email,
+        phone_number: formState.phone_number,
+        t_user: formState.t_user,
+        ul_name: formState.ul_name,
+        position: formState.position,
+        about_me: formState.about_me
+      };
+
+      const res = await axios.put(`${url}/api/update_user/${uid}`, JSON.stringify(data), {
+        headers: headers
+      });
+      const resp = await res.data;
+
+      toast.success(resp.message);
+      if (resp.message) {
+        setTimeout(() => {
+          router.push("/table/table_user_information");
+        }, 2000);
+      }
+    } catch (errors) {
+      console.log("rr", errors);
+      const errorMessage = errors?.response?.data?.error;
+
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("gst_no_1")) {
+        toast.error("GST number already exist");
+      } else if (errorMessage?.includes("cmpny_name_1")) {
+        toast.error("Company Name already exist");
+      }
+
+      const newErrors = {};
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+      setFormErrors(newErrors);
     }
   };
 
-  useEffect(() => {
-    gettingData();
-  }, []);
+  const handleSave = (e) => {
+    if (router.query.type !== "Edit") {
+      handleSaveCompanyInfo(e);
+    } else {
+      handleEditCompanyInfo(e);
+    }
+  };
 
   //toggle to see password
 
@@ -153,87 +231,29 @@ const UserInformation = () => {
     setShowPass(!showPass);
   };
 
-  //Editing and Saving the data
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUserImage(URL.createObjectURL(file));
+    }
+  };
 
-  const { userData } = router.query;
-  const [userDataObject, setUserDataObject] = useState(null);
+  //getting dropdown menus
+
+  const gettingDropdown = async () => {
+    try {
+      const resoptions = await axios.get(`${url}/api/user_profiles`, { headers: headers });
+      const respData = await resoptions.data.data;
+      setUserOptions(respData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    if (userData) {
-      try {
-        const userDataParsed = JSON.parse(userData);
-        setUserDataObject(userDataParsed);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-      }
-    }
-  }, [userData]);
-
-  // console.log("heya", userDataObject);
-
-  const handleEdit = (e) => {
-    const { name, value } = e.target;
-    setUserDataObject({ ...userDataObject, [name]: value.trim() });
-  };
-
-  const updateDataHandler = async (e) => {
-    e.preventDefault();
-    try {
-      const id = userDataObject?._id;
-      const editedData = {
-        user_name: userDataObject ? userDataObject?.user_name : "",
-        email: userDataObject ? userDataObject?.email : "",
-        phone_number: userDataObject ? userDataObject?.phone_number : "",
-        address: userDataObject ? userDataObject?.address : "",
-        password: userDataObject ? userDataObject?.password : "",
-        position: userDataObject ? userDataObject?.position : "",
-        about_me: userDataObject ? userDataObject?.about_me : "",
-        confirm_password: userDataObject ? userDataObject?.confirm_password : "",
-        t_user: "skp",
-        c_name: "skp",
-        ul_name: "skp"
-      };
-
-      if (
-        !userDataObject?.user_name.length ||
-        !userDataObject?.address.length ||
-        !userDataObject?.phone_number.length ||
-        !userDataObject?.email.length
-      ) {
-        const emptyFields = [];
-
-        if (!userDataObject?.user_name.length) {
-          emptyFields.push("User name");
-        }
-        if (!userDataObject?.address.length) {
-          emptyFields.push("Address");
-        }
-        if (!userDataObject?.phone_number.length) {
-          emptyFields.push("Phone number");
-        }
-        if (!userDataObject?.email.length) {
-          emptyFields.push("Email");
-        }
-
-        if (!userDataObject?.password.length) {
-          emptyFields.push("Password");
-        }
-
-        if (!userDataObject?.confirm_password.length) {
-          emptyFields.push("Confirm Password");
-        }
-
-        const errorMessage = `${emptyFields.join(", ")} can not be blanked`;
-        toast.error(errorMessage);
-      } else {
-        const res = await axios.put(`${url}/api/update_user/${id}`, editedData, { headers: headers });
-        const resp = await res.data;
-        toast.success(resp.message);
-      }
-    } catch (error) {
-      console.log("edit", error.message);
-    }
-  };
+    gettingDropdown();
+  }, []);
+  //Editing and Saving the data
 
   return (
     <>
@@ -267,8 +287,10 @@ const UserInformation = () => {
           {/* <div className="bg-gray-300"></div> */}
           <div className="text-black h-screen mb- ">
             <div className="bg-gray-100 p-4  ">
+              {/* <form onSubmit={""} className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4"> */}
               <form
-                onSubmit={userDataObject?._id ? updateDataHandler : handleSubmit}
+                onSubmit={(e) => e.preventDefault()}
+                disabled={router.query.type === "CREATE"}
                 className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4"
               >
                 <div className="flex items-center justify-between w-full">
@@ -281,8 +303,14 @@ const UserInformation = () => {
                         className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                         type="text"
                         id="inputField"
-                        defaultValue={userDataObject?.user_id ? userDataObject?.user_id : ""}
                         placeholder="Employee Code"
+                        value={formState?.user_id}
+                        onChange={(e) =>
+                          setFormState({
+                            ...formState,
+                            empCode: e.target.value
+                          })
+                        }
                       />
                     </div>
                     <div className="w-1/2 relative ">
@@ -294,9 +322,14 @@ const UserInformation = () => {
                         type="text"
                         id="inputField"
                         name="user_name"
-                        defaultValue={userDataObject?.user_name ? userDataObject?.user_name : ""}
                         placeholder="Username"
-                        onChange={userDataObject?._id ? handleEdit : handleChange}
+                        value={formState.user_name}
+                        onChange={(e) =>
+                          setFormState({
+                            ...formState,
+                            user_name: e.target.value
+                          })
+                        }
                       />
                       {formErrors.user_name && (
                         <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
@@ -344,13 +377,18 @@ const UserInformation = () => {
                     type="text"
                     id="inputField"
                     name="position"
-                    defaultValue={userDataObject?.position ? userDataObject?.position : ""}
                     placeholder="Designation"
-                    onChange={handleChange}
+                    value={formState.position}
+                    onChange={(e) =>
+                      setFormState({
+                        ...formState,
+                        position: e.target.value
+                      })
+                    }
                   />
-                  {formErrors.designation && (
+                  {formErrors.position && (
                     <p className="text-red-500 text-sm absolute bottom-12 left-24 cursor-pointer">
-                      {formErrors.designation}
+                      {formErrors.position}
                     </p>
                   )}
                 </div>
@@ -363,9 +401,14 @@ const UserInformation = () => {
                     className="w-full px-3 py-1.5  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     id="textareaField"
                     placeholder="Address"
-                    defaultValue={userDataObject?.address ? userDataObject?.address : ""}
                     name="address"
-                    onChange={userDataObject?._id ? handleEdit : handleChange}
+                    value={formState.address}
+                    onChange={(e) =>
+                      setFormState({
+                        ...formState,
+                        address: e.target.value
+                      })
+                    }
                   ></textarea>
                   {formErrors.address && (
                     <p className="text-red-500 absolute bottom-[7.8rem] left-24 text-sm ">
@@ -381,12 +424,17 @@ const UserInformation = () => {
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="citySelect"
-                      onChange={handleChange}
-                      // defaultValue={userDataObject?.city ? userDataObject?.city : ""}
                       name="city"
+                      value={formState?.city}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          city: e.target.value
+                        })
+                      }
                     >
                       <option value="" className="focus:outline-none focus:border-b bg-white">
-                        {userDataObject?.city ? userDataObject?.city : ""}
+                        Select City
                       </option>
                       <option value="Hisar">Hisar</option>
                       <option value="Delhi">Delhi</option>
@@ -404,12 +452,17 @@ const UserInformation = () => {
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="stateSelect"
-                      onChange={handleChange}
                       name="state"
+                      value={formState?.state}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          state: e.target.value
+                        })
+                      }
                     >
                       <option value="" className="focus:outline-none focus:border-b bg-white">
-                        {/* Select State */}
-                        {userDataObject?.state ? userDataObject?.state : ""}
+                        Select State
                       </option>
                       <option value="Haryana">Haryana</option>
                       <option value="Delhi">Delhi</option>
@@ -432,9 +485,14 @@ const UserInformation = () => {
                       type="email"
                       id="emailField"
                       name="email"
-                      defaultValue={userDataObject?.email ? userDataObject?.email : ""}
                       placeholder="Email"
-                      onChange={userDataObject?._id ? handleEdit : handleChange}
+                      value={formState.email}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          email: e.target.value
+                        })
+                      }
                     />
                     {formErrors.email && (
                       <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
@@ -454,8 +512,13 @@ const UserInformation = () => {
                       placeholder="Mobile"
                       minLength={10}
                       maxLength={10}
-                      defaultValue={userDataObject?.phone_number ? userDataObject?.phone_number : ""}
-                      onChange={userDataObject?._id ? handleEdit : handleChange}
+                      value={formState.phone_number}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          phone_number: e.target.value
+                        })
+                      }
                     />
                     {formErrors.phone_number && (
                       <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
@@ -475,9 +538,14 @@ const UserInformation = () => {
                       type={showPass ? "text" : "password"}
                       id="passwordField"
                       name="password"
-                      defaultValue={userDataObject?.password ? userDataObject?.password : ""}
                       placeholder="Password"
-                      onChange={handleChange}
+                      value={formState.password}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          password: e.target.value
+                        })
+                      }
                     />
                     <span className="absolute bottom-2 right-3 cursor-pointer" onClick={togglePassword}>
                       {showPass ? (
@@ -501,9 +569,14 @@ const UserInformation = () => {
                       type={showPass ? "text" : "password"}
                       id="confirmPass"
                       name="confirm_password"
-                      defaultValue={userDataObject?.confirm_password ? userDataObject?.confirm_password : ""}
                       placeholder="Confirm Password"
-                      onChange={handleChange}
+                      value={formState.confirm_password}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          confirm_password: e.target.value
+                        })
+                      }
                     />
                     <span className="absolute bottom-2 right-3 cursor-pointer" onClick={togglePassword}>
                       {showPass ? (
@@ -525,26 +598,28 @@ const UserInformation = () => {
                       <span className="text-red-500">*</span> User Profile
                     </label>
                     <select
-                      className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                      className="w-full px-3 py-2 border-b border-gray-500 bg-white focus:outline-none focus:border-b focus-border-indigo-500"
                       id="userSelect"
-                      name="user_profile"
-                      onChange={handleChange}
+                      name="t_user"
+                      value={formState.t_user}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          t_user: e.target.value
+                        })
+                      }
                     >
+                      <option value="">Select User</option>
                       {userOptions.map((option) => (
-                        <option
-                          // value={option?.description}
-                          defaultValue={
-                            userDataObject?.user_profile ? userDataObject?.user_profile : option?.description
-                          }
-                          className="focus:outline-none focus:border-b bg-white"
-                        >
-                          {userDataObject?.user_profile ? userDataObject?.user_profile : option?.description}
+                        <option key={option.id} value={option.id}>
+                          {option.description}
                         </option>
                       ))}
                     </select>
-                    {formErrors.user_profile && (
+
+                    {formErrors.t_user && (
                       <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
-                        {formErrors.user_profile}
+                        {formErrors.t_user}
                       </p>
                     )}
                   </div>
@@ -555,23 +630,27 @@ const UserInformation = () => {
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-gray-500"
                       id="statusSelect"
-                      name="user_status"
-                      onChange={handleChange}
+                      name="ul_name"
+                      value={formState.ul_name}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          ul_name: e.target.value
+                        })
+                      }
                     >
                       <option
-                        defaultValue="enabled"
-                        // defaultValue={userDataObject?.user_status ? userDataObject?.user_status : ""}
+                        // defaultValue="enabled"
                         className="focus:outline-none focus:border-b bg-white"
                       >
-                        {/* {userDataObject?.user_status ? userDataObject?.user_status : ""} */}
-                        Enabled
+                        Select Option
                       </option>
-                      <option value="enabled">Enable</option>
-                      <option value="disabled">Disable</option>
+                      <option value="true">Enable</option>
+                      <option value="false">Disable</option>
                     </select>
-                    {formErrors.user_status && (
+                    {formErrors.ul_name && (
                       <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
-                        {formErrors.user_status}
+                        {formErrors.ul_name}
                       </p>
                     )}
                   </div>
@@ -587,13 +666,19 @@ const UserInformation = () => {
                     id="textareaField"
                     placeholder="About"
                     name="about_me"
-                    defaultValue={userDataObject?.about_me ? userDataObject?.about_me : ""}
+                    value={formState.about_me}
+                    onChange={(e) =>
+                      setFormState({
+                        ...formState,
+                        about_me: e.target.value
+                      })
+                    }
                   ></textarea>
                 </div>
 
-                <div className="button flex items-center gap-3 mt-6">
+                {/* <div className="button flex items-center gap-3 mt-6">
                   <button type="submit" className="bg-green-700 px-4 py-1 text-white">
-                    {userDataObject?._id ? "Update" : "Save"}
+                    {"Save"}
                   </button>
                   <button
                     onClick={() => {
@@ -603,7 +688,26 @@ const UserInformation = () => {
                   >
                     Close
                   </button>
-                </div>
+                </div> */}
+
+                {router.query.type !== "view" && (
+                  <div className="button flex items-center gap-3 mt-6">
+                    <div
+                      className="bg-green-700 px-4 py-1 text-white cursor-pointer"
+                      onClick={(e) => handleSave(e)}
+                    >
+                      {router.query.type === "Edit" ? "Update" : "Save"}{" "}
+                    </div>
+                    <button
+                      className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
+                      onClick={() => {
+                        router.push("/table/table_user_information");
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                )}
               </form>
             </div>
           </div>
