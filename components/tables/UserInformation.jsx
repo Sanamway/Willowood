@@ -52,6 +52,8 @@ const UserInformation = () => {
           onClose={() => setisOpen(false)}
           onOpen={() => setisOpen(true)}
           userId={userId}
+          method="get"
+          endpoints="delete_user"
           onDeletedData={resetData}
         ></ConfirmModal>
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
@@ -99,7 +101,7 @@ const UserInformation = () => {
         </div>
 
         <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1100px]">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1100px] overflow-y-auto ">
             <table className="min-w-full divide-y border- divide-gray-200 ">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
@@ -109,11 +111,11 @@ const UserInformation = () => {
                   <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Userid
                   </th>
-                  <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    Emp_Code
+                  <th className="  px-6 py-2 text-left whitespace-nowrap dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Emp Code
                   </th>
-                  <th className="px-6 w py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    User_Name
+                  <th className="px-6 w py-2 text-left whitespace-nowrap dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    User Name
                   </th>
                   <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Position
@@ -135,8 +137,8 @@ const UserInformation = () => {
                     Mobile
                   </th>
 
-                  <th className="px-6   py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    User_Role
+                  <th className="px-6   py-2 text-left whitespace-nowrap dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    User Role
                   </th>
                   <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Status

@@ -73,7 +73,8 @@ const UserInformation = () => {
     position: "",
     about_me: "",
     ul_name: "",
-    c_name: "skp"
+    c_name: "skp",
+    image :userImage
   });
   console.log("form", formState);
   //Defining the Validation Schema
@@ -127,34 +128,34 @@ const UserInformation = () => {
         ul_name: formState.ul_name,
         position: formState.position,
         about_me: formState.about_me,
+        image: formState.image,
         c_name: "check"
       };
 
-        const respond = await axios
-          .post(`${url}/api/create_user`, JSON.stringify(data), {
-            headers: headers
-          })
-          .then((res) => {
-              console.log("newFf", res)
-            if (!res) return;
-            toast.success("User added successfully!");
-            setTimeout(() => {
-              router.push("/table/table_user_information");
-            }, [3000]);
-          });
-     
+      const respond = await axios
+        .post(`${url}/api/create_user`, JSON.stringify(data), {
+          headers: headers
+        })
+        .then((res) => {
+          console.log("newFf", res);
+          if (!res) return;
+          toast.success("User added successfully!");
+          setTimeout(() => {
+            router.push("/table/table_user_information");
+          }, [3000]);
+        });
     } catch (errors) {
-        const messageError = errors?.response?.data?.message
-        if(messageError){
-            toast.error(messageError)
-            return 
-        }
+      const messageError = errors?.response?.data?.message;
+      if (messageError) {
+        toast.error(messageError);
+        return;
+      }
       const errorMessage = errors?.response?.data?.error;
       if (errorMessage?.includes("email_1")) {
         toast.error("Email already exist");
       } else if (errorMessage?.includes("phone_number")) {
         toast.error("Phone Number already exist");
-      } 
+      }
       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
@@ -231,10 +232,13 @@ const UserInformation = () => {
     setShowPass(!showPass);
   };
 
+  //uploading Image
+  
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setUserImage(URL.createObjectURL(file));
+      // setUserImage(URL.createObjectURL(file));
+      setUserImage(file);
     }
   };
 
@@ -253,7 +257,8 @@ const UserInformation = () => {
   useEffect(() => {
     gettingDropdown();
   }, []);
-  //Editing and Saving the data
+
+  console.log("imgh", userImage);
 
   return (
     <>
@@ -347,12 +352,27 @@ const UserInformation = () => {
                       width={100}
                       height={100}
                     />
-                    <input
+                    {/* <input
                       type="file"
                       accept="image/*"
                       onChange={handleImageUpload}
                       style={{ display: "none" }}
                       id="fileInput"
+                    /> */}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      // onChange={handleImageUpload}
+                      // onChange={(e) => handleImageUpload(e)}
+
+                      style={{ display: "none" }} 
+                      id="fileInput"
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          image: e.target.value[0]
+                        })
+                      }
                     />
                     <label
                       htmlFor="fileInput"

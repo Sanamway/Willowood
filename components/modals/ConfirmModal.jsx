@@ -3,20 +3,23 @@ import { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import { url } from "@/constants/url";
 
-function ConfirmModal({ onClose, isOpen, onOpen, userId, onDeletedData }) {
+function ConfirmModal({ onClose, isOpen, onOpen, userId, onDeletedData, method, endpoints }) {
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw"
   };
 
   const methodDelete = async (userId) => {
-    const resp = await axios.get(`${url}/api/delete_user/${userId}`, { headers: headers });
-    const respdata = await resp.data.data;
-    if (respdata) {
-      onClose();
-      onDeletedData();
+    try {
+      const resp = await axios[method](`${url}/api/${endpoints}/${userId}`, { headers });
+      const respdata = await resp.data.data;
+      if (respdata) {
+        onClose();
+        onDeletedData();
+      }
+    } catch (error) {
+      console.log(error)
     }
-
   };
 
   return (
