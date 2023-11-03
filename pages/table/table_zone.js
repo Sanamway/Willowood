@@ -1,5 +1,5 @@
 import React from "react";
-import Zone from "@/components/Table/ZoneForm";
+import Zone from "@/components/Table/Zone";
 const table = () => {
   return <Zone />;
 };

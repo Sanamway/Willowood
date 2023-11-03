@@ -7,49 +7,48 @@ import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
-const BusinessSegment = () => {
+const RegionForm = () => {
   const router = useRouter();
-  const [data, setData] = useState(null);
+
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-  const getBusinessSegment = async () => {
+
+  const [data, setData] = useState([]);
+  const getRegion = async () => {
     try {
-      const respond = await axios.get(`${url}/api/get_business_segment`, {
+       const respond = await axios.get(`${url}/api/get_region`, {
         headers: headers,
       });
       const apires = await respond.data.data;
       setData(apires);
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
-    getBusinessSegment();
+    getRegion();
   }, []);
 
   const deleteHandler = (id) => {
     setisOpen(true);
-    setCompanyId(id);
+    setRegionId(id);
   };
 
   const [isOpen, setisOpen] = useState(false);
-  const [companyId, setCompanyId] = useState(null);
+  const [regionId, setRegionId] = useState(null);
 
   const resetData = () => {
-    getBusinessSegment();
+    getRegion();
     setisOpen(false);
   };
-
+  
   return (
     <Layout>
+     
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
         <div className="flex flex-row justify-between  h-max  px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">
-            Business Segment
-          </h2>
+          <h2 className="font-arial font-normal text-3xl  py-2">Region</h2>
           <span className="flex items-center gap-2 cursor-pointer">
             <span className="flex flex-row">
               <input
@@ -64,31 +63,18 @@ const BusinessSegment = () => {
                 <AiOutlineSearch className="mx-2 my-1" size={20} />
               </button>
             </span>
-            <TiArrowBack
-              onClick={() => {
-                router.push("/form/business_segement_form");
-              }}
-              className="text-gray-400"
-              size={35}
-            />
 
-            <AiTwotoneHome
-              className="text-red-500"
-              size={34}
-              onClick={() => {
-                router.push("/");
-              }}
-            />
+            <AiTwotoneHome className="text-red-500" size={34} />
             <button
-              onClick={() => {
+               onClick={() => {
                 router.push({
-                  pathname: "/form/business_segement_form",
+                   pathname: "/form/region_form",
                   query: { id: null, type: "Add" },
                 });
               }}
               className=" text-white py-1 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
-                Create New
+              Create New
             </button>
           </span>
         </div>
@@ -100,24 +86,32 @@ const BusinessSegment = () => {
                 <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Action
                 </th>
-                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  B.G ID
+                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Region ID
                 </th>
-
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  Region
+                </th>
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  Zone
+                </th>
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  Unit Division
+                </th>
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Business Segment
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Company
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Email
+                  Email
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   H.O.D
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Mobile 
+                  Mobile
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Status
@@ -125,52 +119,59 @@ const BusinessSegment = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-              {data?.map((item, idx) => (
-                <tr className="dark:border-2">
+              {data.map((item, idx) => (
+                <tr className="dark:border-2" key={idx}>
                   <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                     <button
                       onClick={() => {
-                         router.push({
-                          pathname: "/form/business_segement_form",
-                          query: { id: item.bg_id, type: "View" },
-                        });
+                        router.push("/form/region_form");
                       }}
-                      className="b text-black hover:text-blue-500  "
+                      className="b text-black   hover:text-blue-500  "
                     >
                       View
                     </button>
                     <button
                       onClick={() => {
-                        router.push({
-                          pathname: "/form/business_segement_form",
-                          query: { id: item.bg_id, type: "Edit" },
-                        });
+                        router.push("/form/region_form");
                       }}
                       className="b text-black hover:text-yellow-400 ml-2"
                     >
                       Edit
                     </button>
-                    <button
-                      className="b text-black hover:text-red-500 ml-2"
-                      onClick={() => {
-                        deleteHandler(item.bg_id);
-                      }}
-                    >
+                    <button className="b text-black hover:text-red-500 ml-2"    onClick={() => {
+                        deleteHandler(item.r_id);
+                      }}>
                       Delete
                     </button>
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.r_id}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.region_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  {item.z_id}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.bu_id}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.bg_id}
                   </td>
-                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.business_segment}
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.c_id}
                   </td>
-
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">{item.c_id}</td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">{item.email_id}</td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">{item.hod_name}</td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">{item.mobile_no}</td>
-                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.email_id}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.hod_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.mobile_no}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.isDeleted == false ? "Enabled" : "Disabled"}
                   </td>
                 </tr>
@@ -183,12 +184,12 @@ const BusinessSegment = () => {
         isOpen={isOpen}
         onClose={() => setisOpen(false)}
         onOpen={() => setisOpen(true)}
-        id={companyId}
-        type="Business Segment"
+        id={regionId}
+        type="Region"
         onDeletedData={resetData}
       />
     </Layout>
   );
 };
 
-export default BusinessSegment;
+export default RegionForm;

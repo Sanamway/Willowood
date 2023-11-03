@@ -113,7 +113,7 @@ const CompanyInfo = () => {
                     Mobile No.
                   </th>
                   <th className="px-4 py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    Emial.Id
+                    Email.Id
                   </th>
                   <th className="px-4 py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     GST Number

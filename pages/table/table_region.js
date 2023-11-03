@@ -1,7 +1,7 @@
 import React from "react";
-import RegionForm from "@/components/Table/RegionForm";
+import RegionForm from "@/components/Table/Region";
 const table = () => {
-  return <RegionForm />;
+   return <RegionForm />;
 };
 
 export default table;

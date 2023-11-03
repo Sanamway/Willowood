@@ -61,7 +61,7 @@ const CompanyInfo = () => {
     cName: "",
     ulName: "",
   });
-  console.log("company", companyState);
+  
   //Defining the Validation Schema
   const validationSchema = Yup.object().shape({
     companyName: Yup.string().required("Company Name is required"),

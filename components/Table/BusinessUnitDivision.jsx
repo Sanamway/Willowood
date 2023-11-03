@@ -1,11 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
-import { TiArrowBack } from "react-icons/ti";
+
 import { useRouter } from "next/router";
+import axios from "axios";
+import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
+import ConfirmationModal from "../modals/ConfirmationModal";
+
 const BusinessUnitDivision = () => {
   const router = useRouter();
+  const [data, setData] = useState(null);
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+  };
+
+  const getUnitDivision = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_business_unit`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      setData(apires);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getUnitDivision();
+  }, []);
+
+  console.log("mko", data);
+
+  const deleteHandler = (id) => {
+    setisOpen(true);
+    setCompanyId(id);
+  };
+
+  const [isOpen, setisOpen] = useState(false);
+  const [companyId, setCompanyId] = useState(null);
+
+  const resetData = () => {
+    getUnitDivision();
+    setisOpen(false);
+  };
+
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
@@ -27,18 +66,14 @@ const BusinessUnitDivision = () => {
                 <AiOutlineSearch className="mx-2 my-1" size={20} />
               </button>
             </span>
-            <TiArrowBack
-              onClick={() => {
-                router.push("/table/table_user_profile");
-              }}
-              className="text-gray-400"
-              size={35}
-            />
 
             <AiTwotoneHome className="text-red-500" size={34} />
             <button
               onClick={() => {
-                router.push("/form/business_unit_division_form");
+                router.push({
+                  pathname: "/form/business_unit_division_form",
+                  query: { id: null, type: "Add" },
+                });
               }}
               className=" text-white py-1 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -51,60 +86,109 @@ const BusinessUnitDivision = () => {
           <table className=" border divide-gray-200 table-auto w-full ">
             <thead className="border-b">
               <tr className="bg-gray-50 font-arial w-max">
-                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Action
                 </th>
-                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                 B.U. ID
+                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  B.U. ID
                 </th>
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Unit Division
                 </th>
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Business Segment
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Company
-                </th>       
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Email
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  H.O.D
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Mobile
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Status
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-              <tr className="dark:border-2">
-                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                  <button
-                    onClick={() => {
-                      router.push("/form/business_unit_division_form");
-                    }}
-                    className="b text-black   hover:text-blue-500  "
-                  >
-                    View
-                  </button>
-                  <button
-                    onClick={() => {
-                      router.push("/form/business_unit_division_form");
-                    }}
-                    className="b text-black hover:text-yellow-400 ml-2"
-                  >
-                    Edit
-                  </button>
-                  <button className="b text-black hover:text-red-500 ml-2">
-                    Delete
-                  </button>
-                </td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  Company B
-                </td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  Company A
-                </td>
+              {data?.map((item, idx) => (
+                <tr className="dark:border-2" key={idx}>
+                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                    <button
+                      onClick={() => {
+                        router.push({
+                          pathname: "/form/business_unit_division_form",
+                          query: { id: item.bu_id, type: "View" },
+                        });
+                      }}
+                      className="b text-black   hover:text-blue-500  "
+                    >
+                      View
+                    </button>
+                    <button
+                      onClick={() => {
+                        router.push({
+                          pathname: "/form/business_unit_division_form",
+                          query: { id: item.bu_id, type: "Edit" },
+                        });
+                      }}
+                      className="b text-black hover:text-yellow-400 ml-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="b text-black hover:text-red-500 ml-2"
+                      onClick={() => {
+                        deleteHandler(item.bu_id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.bu_id}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.business_unit_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.bg_id}
+                  </td>
 
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
-              </tr>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.c_id}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.email_id}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.hod_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.mobile_no}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.isDeleted == false ? "Enabled" : "Disabled"}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
-      </div>
+       </div>
+      <ConfirmationModal
+        isOpen={isOpen}
+        onClose={() => setisOpen(false)}
+        onOpen={() => setisOpen(true)}
+        id={companyId}
+        type="Business Unit"
+        onDeletedData={resetData}
+      />
     </Layout>
   );
 };

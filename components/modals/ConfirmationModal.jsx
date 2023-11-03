@@ -4,7 +4,7 @@ import axios from "axios";
 import { url } from "@/constants/url";
 
 function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
-    console.log("No Name" , isOpen , onClose ,id, type , onDeletedData )
+  console.log("No Name", isOpen, onClose, id, type, onDeletedData);
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
@@ -23,15 +23,84 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
     }
   };
 
+  const handleDeleteBusinessSegment = async () => {
+    try {
+      const respond = await axios
+        .delete(`${url}/api/delete_business_segment/${id}`, {
+          headers: headers,
+        })
+        .then((res) => onDeletedData());
+      const apires = await respond.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteBusinessUnit = async () => {
+    try {
+      const respond = await axios
+        .delete(`${url}/api/delete_business_unit/${id}`, {
+          headers: headers,
+        })
+        .then((res) => onDeletedData());
+      const apires = await respond.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleDeleteZone = async () => {
+    try {
+      const respond = await axios
+        .delete(`${url}/api/delete_zone/${id}`, {
+          headers: headers,
+        })
+        .then((res) => onDeletedData());
+      const apires = await respond.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleDeleteRegion = async () => {
+    try {
+      const respond = await axios
+        .delete(`${url}/api/delete_region/${id}`, {
+          headers: headers,
+        })
+        .then((res) => onDeletedData());
+      const apires = await respond.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleDelete = () => {
     if (type === "Company Information") {
       handleDeleteCompany();
       onClose();
       onDeletedData();
+    } else if (type === "Business Segment") {
+      handleDeleteBusinessSegment();
+      onClose();
+      onDeletedData();
+    }
+    else if(type === "Business Unit"){
+      handleDeleteBusinessUnit();
+      onClose();
+      onDeletedData();
+    }
+    else if(type === "Zone"){
+      handleDeleteZone();
+      onClose();
+      onDeletedData();
+    }
+    else if(type === "Region"){
+      handleDeleteRegion();
+      onClose();
+      onDeletedData();
     }
   };
   return (
-    <>
+    
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={onClose}>
           <Transition.Child
@@ -95,7 +164,7 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
           </div>
         </Dialog>
       </Transition>
-    </>
+   
   );
 }
 
