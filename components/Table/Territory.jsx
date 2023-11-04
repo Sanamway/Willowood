@@ -32,11 +32,11 @@ const Territory = () => {
 
   const deleteHandler = (id) => {
     setisOpen(true);
-    setRegionId(id);
+    setTerritoryId(id);
   };
 
   const [isOpen, setisOpen] = useState(false);
-  const [regionId, setRegionId] = useState(null);
+  const [territoryId, setTerritoryId] = useState(null);
 
   const resetData = () => {
     getTerritory();
@@ -67,7 +67,10 @@ const Territory = () => {
             <AiTwotoneHome className="text-red-500" size={34} />
             <button
               onClick={() => {
-                router.push("/form/territory_form");
+                 router.push({
+                  pathname: "/form/territory_form",
+                  query: { id: null, type: "Add" },
+                });
               }}
               className=" text-white py-1 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -138,7 +141,12 @@ const Territory = () => {
                     >
                       Edit
                     </button>
-                    <button className="b text-black hover:text-red-500 ml-2">
+                    <button
+                      className="b text-black hover:text-red-500 ml-2"
+                      onClick={() => {
+                        deleteHandler(item.t_id);
+                      }}
+                    >
                       Delete
                     </button>
                   </td>
@@ -186,7 +194,7 @@ const Territory = () => {
         isOpen={isOpen}
         onClose={() => setisOpen(false)}
         onOpen={() => setisOpen(true)}
-        id={regionId}
+        id={territoryId}
         type="Territory"
         onDeletedData={resetData}
       />
