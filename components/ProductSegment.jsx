@@ -11,6 +11,7 @@ import { toast, Toaster } from "react-hot-toast";
 const ProductSegment = () => {
   const router = useRouter()
   let { id, view } = router.query;
+  
 
   const headers = {
     "Content-Type": "application/json",

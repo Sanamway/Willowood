@@ -24,7 +24,8 @@ const ProductBrand = () => {
     pseg_id: "",
     c_name: "",
     status: true,
-    c_id: 201,
+    c_id: "",
+    pseg_name: "",
     ul_name: "WPCL"
   });
 
@@ -32,7 +33,7 @@ const ProductBrand = () => {
 
   const validationSchema = Yup.object().shape({
     brand_name: Yup.string().required("Brand Nanme is required"),
-    pseg_id: Yup.string().required("Product Segment is required"),
+    // pseg_id: Yup.string().required("Product Segment is required"),
     c_name: Yup.string().required("Company Name is required")
   });
 
@@ -63,10 +64,11 @@ const ProductBrand = () => {
       const Formdata = {
         brand_name: formState.brand_name,
         brand_code: formState.brand_code,
-        pseg_id: formState.pseg_id,
+        pseg_id: formState?.pseg_id,
         c_name: formState.c_name,
         status: formState.status,
-        c_id: formState.c_id,
+        c_id: formState.c_name,
+        pseg_name: formState.pseg_name,
         ul_name: formState.ul_name
       };
       const resp = await axios.post(`${url}/api/create_product_brand`, JSON.stringify(Formdata), {
@@ -135,6 +137,41 @@ const ProductBrand = () => {
     }
   };
 
+  //getting companyinfo options
+
+  const [companyInfo, setCompanyInfo] = useState([]);
+
+  const getCompanyInfo = async () => {
+    try {
+      const resp = await axios.get(`${url}/api/get_company_information`, { headers: headers });
+      const respda = await resp.data.data;
+      setCompanyInfo(respda);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const filterCompanyInfo = companyInfo.filter((item) => item.isDeleted == false);
+
+  //getting product segment descriptionn
+
+  const [prdSegment, setPrdSegment] = useState([]);
+  const [filteredSegment, setFilteredPrdSegment] = useState([]);
+
+  const gettingProductSegment = async () => {
+    const response = await axios.get(`${url}/api/get_product_segment`, { headers });
+    const respdata = await response.data.data;
+
+    setPrdSegment(respdata);
+  };
+
+  useEffect(() => {
+    getCompanyInfo();
+    gettingProductSegment();
+  }, []);
+
+  console.log("FORM", formState);
+
   return (
     <>
       <Layout>
@@ -166,7 +203,7 @@ const ProductBrand = () => {
 
           {/* <div className="bg-gray-300"></div> */}
           <div className="text-black h-screen  ">
-            <div className="bg-gray-100 p-4  h-sceen ">
+            <div className="bg-gray-100 p-4  h-filteredSegmentsceen ">
               <form
                 onSubmit={(e) => e.preventDefault()}
                 disabled={router.query.type === "CREATE"}
@@ -221,17 +258,29 @@ const ProductBrand = () => {
                       id="userSelect"
                       value={formState.c_name}
                       onChange={(e) => {
+                        const selectedCId = e.target.value;
                         setFromState({
                           ...formState,
                           c_name: e.target.value
                         });
+                        const filteredSegments = prdSegment.filter((segment) => segment.c_id == selectedCId);
+                        setFilteredPrdSegment(filteredSegments);
                       }}
                     >
-                      <option value="" className="focus:outline-none focus:border-b bg-white">
-                        Select Company
-                      </option>
-                      <option value="Willowood">Willowood</option>
-                      <option value="Salcon">Salcon</option>
+                      {filterCompanyInfo.map((option) => (
+                        <option
+                          value={option?.c_id}
+                          onChange={(e) => {
+                            setFromState({
+                              ...formState,
+                              c_id: e.target.value
+                            });
+                          }}
+                          className="focus:outline-none focus:border-b bg-white"
+                        >
+                          {option?.cmpny_name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -251,28 +300,24 @@ const ProductBrand = () => {
                         });
                       }}
                     >
-                      <option value="" className="focus:outline-none focus:border-b bg-white">
-                        Select Product Segment
-                      </option>
-                      <option value="301">301</option>
-                      <option value="302">302</option>
-                      <option value="303">303</option>
-                      <option value="304">304</option>
+                      <option value={""} className="focus:outline-none focus:border-b bg-white">Select Options</option>
+                      {filteredSegment.map(
+                        (option, idx) => (
+                          console.log("kio", option),
+                          (
+                            <option
+                              key={idx}
+                              value={option?.pseg_id ? option?.pseg_id :"" }
+                              className="focus:outline-none focus:border-b bg-white"
+                            >
+                              {option?.pseg_name ? option?.pseg_name :"Select Optiopn" }
+                            </option>
+                          )
+                        )
+                      )}
                     </select>
                   </div>
                 </div>
-
-                {/* <div className="button flex items-center gap-3 mt-6">
-                  <button className="bg-green-700 px-4 py-1 text-white">Save</button>
-                  <button
-                    onClick={() => {
-                      router.push("/table/table_product_brand");
-                    }}
-                    className="bg-yellow-500 px-4 py-1 text-white"
-                  >
-                    Close
-                  </button>
-                </div> */}
 
                 <div className="w-1/2 px-2 ">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">

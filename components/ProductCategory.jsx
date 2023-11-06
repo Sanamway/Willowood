@@ -24,7 +24,7 @@ const ProductCategory = () => {
     brand_code: "",
     pseg_id: "",
     c_name: "WCL",
-    status: true,
+    status: false,
     c_id: "",
     pcat_id: "",
     ul_name: "WCL"
@@ -70,8 +70,10 @@ const ProductCategory = () => {
         c_id: formState.c_id,
         ul_name: formState.ul_name,
         pcat_name: formState?.pcat_name,
-        pcat_id:formState?.pcat_id
+        pcat_id:formState?.pcat_id,
+        status:formState?.status
       };
+      console.log("formdata",Formdata)
       const resp = await axios.post(`${url}/api/add_product_category`, JSON.stringify(Formdata), {
         headers: headers
       });
@@ -103,6 +105,8 @@ const ProductCategory = () => {
       }
     }
   };
+
+  
 
   //Edit Brand
 
