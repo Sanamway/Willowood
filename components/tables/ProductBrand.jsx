@@ -27,7 +27,7 @@ const ProductBrand = () => {
       const respData = await resp.data.data;
       setPrdBrand(respData);
     } catch (error) {
-      console.log("ap", error);
+      console.log("err", error)
     }
   };
 
