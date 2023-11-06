@@ -90,23 +90,23 @@ const ZoneTable = () => {
             <table className="min-w-full divide-y border- divide-gray-200 ">
               <thead className="border-b w-max">
                 <tr className="bg-gray-50 font-arial w-max">
-                  <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Action
                   </th>
-                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Zone ID
                   </th>
-                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Zone
                   </th>
-                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Unit Division
                   </th>
-                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Business Segment
                   </th>
 
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Company
                   </th>
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
@@ -121,6 +121,13 @@ const ZoneTable = () => {
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                     Status
                   </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Mobile
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Status
+                  </th>
+              
                 </tr>
               </thead>
               <tbody className="bg-white divide-y  divide-gray-200 text-xs">
@@ -178,6 +185,12 @@ const ZoneTable = () => {
                       {item.mobile_no}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.isDeleted == false ? "Enabled" : "Disabled"}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.mobile_no}
+                    </td>
+                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.isDeleted == false ? "Enabled" : "Disabled"}
                     </td>
                   </tr>

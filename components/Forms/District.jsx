@@ -26,10 +26,14 @@ const UserProfileForm = () => {
           </div>
         </div>
 
-        <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start h-max pb-12 ">
+        <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start h-max pb-12">
           <form
-            className=" bg-white rounded shadow p-4 w-full "
+             className="bg-white rounded shadow p-4 w-fullb"
             onSubmit={(e) => e.preventDefault()}
+
+
+
+
           >
             <div className="mb-4 w-1/6">
               <label
