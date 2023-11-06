@@ -21,9 +21,7 @@ const BusinessSegment = () => {
       });
       const apires = await respond.data.data;
       setData(apires);
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -88,95 +86,105 @@ const BusinessSegment = () => {
               }}
               className=" text-white py-1 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
-                Create New
+              Create New
             </button>
           </span>
         </div>
 
-        <div className="bg-gray-0 p-4 bg-gray-100 flex items-start overflow-x-auto ">
-          <table className=" border divide-gray-200 table-auto w-full ">
-            <thead className="border-b">
-              <tr className="bg-gray-50 font-arial w-max">
-                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  Action
-                </th>
-                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  B.G ID
-                </th>
+        <div className="bg-white h-screen flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+            <table className="min-w-full divide-y border- divide-gray-200 ">
+              <thead className="border-b w-max">
+                <tr className="bg-gray-50 font-arial w-max">
+                  <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Action
+                  </th>
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    B.G ID
+                  </th>
 
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Business Segment
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Company
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Email
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  H.O.D
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Mobile 
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-              {data?.map((item, idx) => (
-                <tr className="dark:border-2">
-                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                    <button
-                      onClick={() => {
-                         router.push({
-                          pathname: "/form/business_segement_form",
-                          query: { id: item.bg_id, type: "View" },
-                        });
-                      }}
-                      className="b text-black hover:text-blue-500  "
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => {
-                        router.push({
-                          pathname: "/form/business_segement_form",
-                          query: { id: item.bg_id, type: "Edit" },
-                        });
-                      }}
-                      className="b text-black hover:text-yellow-400 ml-2"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="b text-black hover:text-red-500 ml-2"
-                      onClick={() => {
-                        deleteHandler(item.bg_id);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.bg_id}
-                  </td>
-                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.business_segment}
-                  </td>
-
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">{item.c_id}</td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">{item.email_id}</td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">{item.hod_name}</td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">{item.mobile_no}</td>
-                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.isDeleted == false ? "Enabled" : "Disabled"}
-                  </td>
+                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Business Segment
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Company
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    H.O.D
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Mobile
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Status
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+                {data?.map((item, idx) => (
+                  <tr className="dark:border-2">
+                    <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                      <button
+                        onClick={() => {
+                          router.push({
+                            pathname: "/form/business_segement_form",
+                            query: { id: item.bg_id, type: "View" },
+                          });
+                        }}
+                        className="b text-black hover:text-blue-500  "
+                      >
+                        View
+                      </button>
+                      <button
+                        onClick={() => {
+                          router.push({
+                            pathname: "/form/business_segement_form",
+                            query: { id: item.bg_id, type: "Edit" },
+                          });
+                        }}
+                        className="b text-black hover:text-yellow-400 ml-2"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="b text-black hover:text-red-500 ml-2"
+                        onClick={() => {
+                          deleteHandler(item.bg_id);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.bg_id}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.business_segment}
+                    </td>
+
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.c_id}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.email_id}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.hod_name}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.mobile_no}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.isDeleted == false ? "Enabled" : "Disabled"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <ConfirmationModal

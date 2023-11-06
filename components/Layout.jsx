@@ -126,7 +126,7 @@ const Layout = ({ children }) => {
 
                 <div className="flex items-center justify-center  ">
                   <div className="icons mx-8">
-                    <div className="flex items-center gap-4 ">
+                    <div className="flex items-center gap-4">
                       <BsBell size={24}></BsBell>
                       <BsQuestionSquare size={22}></BsQuestionSquare>
                       <AiOutlineMail size={23}></AiOutlineMail>

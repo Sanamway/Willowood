@@ -1,17 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
+import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
+import axios from "axios";
+import ConfirmationModal from "../modals/ConfirmationModal";
 const DepotWareHouse = () => {
-  const router = useRouter();
+   const router = useRouter();
+   
+    
+ 
+ 
+  
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
-           Depot/Warehouse
+            Depot/Warehouse
           </h2>
           <span className="flex items-center gap-2 cursor-pointer">
             <span className="flex flex-row">
@@ -27,7 +35,6 @@ const DepotWareHouse = () => {
                 <AiOutlineSearch className="mx-2 my-1" size={20} />
               </button>
             </span>
-            
 
             <AiTwotoneHome className="text-red-500" size={34} />
             <button
@@ -42,19 +49,19 @@ const DepotWareHouse = () => {
         </div>
 
         <div className="bg-gray-0 p-4 bg-gray-100 flex items-start overflow-x-auto ">
-          <table className=" border divide-gray-200 table-auto w-full ">
+          <table className="border divide-gray-200 table-auto w-full ">
             <thead className="border-b">
               <tr className="bg-gray-50 font-arial w-max">
-                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Action
                 </th>
-                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Depot ID
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Depot Name
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Company
                 </th>
               </tr>

@@ -43,8 +43,9 @@ const Territory = () => {
     regionId: "",
     territory: "",
     hod: "",
-    mobile:"",
-    email:""
+    costCenter: "",
+    mobile: "",
+    email: "",
   });
   // Getting Company Information for the dropdown values
   const getBGInfo = async (companyId) => {
@@ -183,7 +184,19 @@ const Territory = () => {
     regionId: Yup.string().required("Region is required"),
     territory: Yup.string().required("Territory is required"),
     hod: Yup.string().required("hod is required"),
-    mobile: Yup.string().required("Mobile is required"),
+    costCenter: Yup.string().required("Cost Center is required"),
+    mobile: Yup.number()
+      .transform((value, originalValue) => {
+        if (originalValue === "") return undefined;
+        return Number(value);
+      })
+      .required("Mobile No is required")
+      .test("is-valid-number", "Invalid Mobile Number", (value) => {
+        if (!value) return false;
+        const stringValue = value.toString();
+        return /^[6-9]\d{9}$/.test(stringValue);
+      })
+      .typeError("Mobile No must be a valid number"),
     email: Yup.string().required("Email is required"),
   });
 
@@ -205,8 +218,10 @@ const Territory = () => {
         hod_name: territoryState.hod,
         c_name: "No Worries",
         ul_name: "No Man",
-        mobile: territoryState.mobile,
+        mobile_no: territoryState.mobile,
         email_id: territoryState.email,
+        cost_center: territoryState.costCenter,
+        t_id: 2,
       };
       const respond = await axios
         .post(`${url}/api/add_territory`, JSON.stringify(data), {
@@ -232,6 +247,7 @@ const Territory = () => {
 
   return (
     <Layout>
+      <Toaster position="bottom-center" reverseOrder={false} />
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
         <div className="text-black flex items-center justify-between bg-white max-w-6/12 font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Territory</h2>
@@ -251,9 +267,9 @@ const Territory = () => {
           </div>
         </div>
 
-        <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start h-full mb-20">
+        <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start h-full mb-28">
           <form
-            className="bg-white rounded shadow p-4 w-full "
+            className="bg-white rounded shadow p-4 w-full pb-24 "
             onSubmit={(e) => e.preventDefault()}
           >
             <div className="mb-4 w-1/6">
@@ -476,6 +492,33 @@ const Territory = () => {
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="phoneField"
                 >
+                  <small className="text-red-600">*</small> Cost Center
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  id="phoneField"
+                  placeholder="Cost Center"
+                  value={territoryState.costCenter}
+                  onChange={(e) =>
+                    setTerritoryState({
+                      ...territoryState,
+                      costCenter: e.target.value,
+                    })
+                  }
+                />
+                {formErrors.costCenter && (
+                  <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                    {formErrors.costCenter}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="flex -mx-2 mb-4">
+              <div className="w-1/2 px-2 mt-2 relative">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="phoneField"
+                >
                   <small className="text-red-600">*</small> H.O.D Name
                 </label>
                 <input
@@ -512,7 +555,10 @@ const Territory = () => {
                   placeholder="Mobile"
                   value={territoryState.mobile}
                   onChange={(e) =>
-                    setTerritoryState({ ...territoryState, mobile: e.target.value })
+                    setTerritoryState({
+                      ...territoryState,
+                      mobile: e.target.value,
+                    })
                   }
                 />
                 {formErrors.mobile && (
@@ -535,7 +581,10 @@ const Territory = () => {
                   placeholder="Email"
                   value={territoryState.email}
                   onChange={(e) =>
-                    setTerritoryState({ ...territoryState, email: e.target.value })
+                    setTerritoryState({
+                      ...territoryState,
+                      email: e.target.value,
+                    })
                   }
                 />
                 {formErrors.email && (

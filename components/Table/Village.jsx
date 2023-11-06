@@ -33,9 +33,13 @@ const District = () => {
               size={35}
             />
 
-            <AiTwotoneHome className="text-red-500" size={34}  onClick={() => {
+            <AiTwotoneHome
+              className="text-red-500"
+              size={34}
+              onClick={() => {
                 router.push("/");
-              }} />
+              }}
+            />
             <button
               onClick={() => {
                 router.push("/form/village_form");
@@ -47,98 +51,110 @@ const District = () => {
           </span>
         </div>
 
-        <div className="bg-gray-0 p-4 bg-gray-100 flex items-start overflow-x-auto ">
-          <table className=" border divide-gray-200 table-auto w-full ">
-            <thead className="border-b">
-              <tr className="bg-gray-50 font-arial w-max">
-                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th>
-                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Village ID
-                </th>
-                <th className="px-4 py-2 overflow-hidden whitespace-wrap text-left w-max dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Village Name
-                </th>
-                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Pin Code
-                </th>
-                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Post Office
-                </th>
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  District
-                </th>
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Territory
-                </th>
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Region
-                </th>
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Zone
-                </th>
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Unit Division
-                </th>
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Business Segment
-                </th>
+        <div className="bg-white h-screen flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+            <table className="min-w-full divide-y border- divide-gray-200 ">
+              <thead className="border-b w-max">
+                <tr className="bg-gray-50 font-arial w-max">
+                  <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Action
+                  </th>
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Village ID
+                  </th>
+                  <th className="px-4 py-2 overflow-hidden whitespace-wrap text-left w-max dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Village Name
+                  </th>
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Pin Code
+                  </th>
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Post Office
+                  </th>
+                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    District
+                  </th>
+                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Territory
+                  </th>
+                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Region
+                  </th>
+                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Zone
+                  </th>
+                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Unit Division
+                  </th>
+                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Business Segment
+                  </th>
 
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Company
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-              <tr className="dark:border-2">
-                <td className="  px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                  <button
-                    onClick={() => {
-                      router.push("/form/village_form");
-                    }}
-                    className="b text-black   hover:text-blue-500  "
-                  >
-                    View
-                  </button>
-                  <button
-                    onClick={() => {
-                      router.push("/form/village_form");
-                    }}
-                    className="b text-black hover:text-yellow-400 ml-2"
-                  >
-                    Edit
-                  </button>
-                  <button className="b text-black hover:text-red-500 ml-2">
-                    Delete
-                  </button>
-                </td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  Company A
-                </td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  Company A
-                </td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  Company A
-                </td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  Company A
-                </td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  Company A
-                </td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  Company A
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Company
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+                <tr className="dark:border-2">
+                  <td className="  px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                    <button
+                      onClick={() => {
+                        router.push("/form/village_form");
+                      }}
+                      className="b text-black   hover:text-blue-500  "
+                    >
+                      View
+                    </button>
+                    <button
+                      onClick={() => {
+                        router.push("/form/village_form");
+                      }}
+                      className="b text-black hover:text-yellow-400 ml-2"
+                    >
+                      Edit
+                    </button>
+                    <button className="b text-black hover:text-red-500 ml-2">
+                      Delete
+                    </button>
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    2
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    Company A
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    2
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    Company A
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    2
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    Company A
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    2
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    Company A
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    3
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    Company A
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    Company A
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </Layout>
