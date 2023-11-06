@@ -124,7 +124,6 @@ const ProductBrand = () => {
       }
     } catch (error) {
       console.log("e", error);
-      
     }
   };
 
@@ -193,7 +192,7 @@ const ProductBrand = () => {
                       }}
                     />
                   </div>
-                  <div className="w-1/2 px-2 ">
+                  {/* <div className="w-1/2 px-2 ">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
                       <span className="text-red-500 px-1">*</span>Brand Name
                     </label>
@@ -210,6 +209,30 @@ const ProductBrand = () => {
                         });
                       }}
                     />
+                  </div> */}
+                </div>
+                <div className="flex -mx-2 mb-4">
+                  <div className="w-1/2 px-2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                      <span className="text-red-500 p-1">*</span>Company
+                    </label>
+                    <select
+                      className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                      id="userSelect"
+                      value={formState.c_name}
+                      onChange={(e) => {
+                        setFromState({
+                          ...formState,
+                          c_name: e.target.value
+                        });
+                      }}
+                    >
+                      <option value="" className="focus:outline-none focus:border-b bg-white">
+                        Select Company
+                      </option>
+                      <option value="Willowood">Willowood</option>
+                      <option value="Salcon">Salcon</option>
+                    </select>
                   </div>
                 </div>
                 <div className="flex -mx-2 mb-4">
@@ -238,30 +261,6 @@ const ProductBrand = () => {
                     </select>
                   </div>
                 </div>
-                <div className="flex -mx-2 mb-4">
-                  <div className="w-1/2 px-2">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
-                      <span className="text-red-500 p-1">*</span>Company
-                    </label>
-                    <select
-                      className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                      id="userSelect"
-                      value={formState.c_name}
-                      onChange={(e) => {
-                        setFromState({
-                          ...formState,
-                          c_name: e.target.value
-                        });
-                      }}
-                    >
-                      <option value="" className="focus:outline-none focus:border-b bg-white">
-                        Select Company
-                      </option>
-                      <option value="Willowood">Willowood</option>
-                      <option value="Salcon">Salcon</option>
-                    </select>
-                  </div>
-                </div>
 
                 {/* <div className="button flex items-center gap-3 mt-6">
                   <button className="bg-green-700 px-4 py-1 text-white">Save</button>
@@ -274,6 +273,25 @@ const ProductBrand = () => {
                     Close
                   </button>
                 </div> */}
+
+                <div className="w-1/2 px-2 ">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+                    <span className="text-red-500 px-1">*</span>Brand Name
+                  </label>
+                  <input
+                    className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                    type="text"
+                    id="inputField"
+                    placeholder="Input Brand Name"
+                    value={formState.brand_name}
+                    onChange={(e) => {
+                      setFromState({
+                        ...formState,
+                        brand_name: e.target.value
+                      });
+                    }}
+                  />
+                </div>
 
                 {router.query.type !== "view" && (
                   <div className="button flex items-center gap-3 mt-6">

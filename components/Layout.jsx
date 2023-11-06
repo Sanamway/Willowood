@@ -11,7 +11,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { MdLogout } from "react-icons/md";
 import WillLogo from "../public/Willowood.png";
 import { AiOutlineHome, AiOutlinePropertySafety } from "react-icons/ai";
-import { BiUser, BiSolidBusiness } from "react-icons/bi";
+import { BiUser, BiSolidBusiness, BiLogInCircle } from "react-icons/bi";
 import Footer from "./Footer";
 import { Popover } from "@headlessui/react";
 import { useRouter } from "next/router";
@@ -30,6 +30,7 @@ const Layout = ({ children }) => {
   };
 
   const menuItems = [
+    { id: 1, label: "Login", icon: BiLogInCircle, link: "/login" },
     { id: 1, label: "User Role Profile", icon: AiOutlineHome, link: "/table/table_user_profile" },
     { id: 2, label: "User Information", icon: BiUser, link: "/table/table_user_information" },
     { id: 2.1, label: "Assign Role Profile", icon: BiUser, link: "/table/table_assign_role" },
@@ -48,6 +49,8 @@ const Layout = ({ children }) => {
     { id: 3.4, label: "Product Sement", icon: BiUser, link: "/table/table_product_segment" },
     { id: 3.5, label: "Product Brand", icon: BiUser, link: "/table/table_product_brand" },
     { id: 3.6, label: "Material SKU", icon: BiUser, link: "/table/table_material_sku" },
+    { id: 3.6, label: "Rolling Plan", icon: BiUser, link: "/rollingplans" },
+    { id: 3.6, label: "Colletion Plan", icon: BiUser, link: "/collectionplans" },
   ];
 
   return (
@@ -55,8 +58,8 @@ const Layout = ({ children }) => {
       <div className="flex h-screen fixed w-full font-arial  ">
         {/* Sidebar */}
         <div
-          className={`flex justify-center custom-scrollbar overflow-y-scroll h-screen transition-all ${
-            isOpen ? "w-24" : "w-56"
+          className={`flex justify-center custom-scrollbar overflow-x-hidden overflow-y-scroll h-screen transition-all ${
+            isOpen ? "w-28" : "w-[14rem]"
           } bg-[#15283c]  text-white`}
         >
           <div className="flex flex-col items-center w-full ">
@@ -69,7 +72,7 @@ const Layout = ({ children }) => {
                     <div className="flex  items-center justify-center gap-4 ">
                       <Image className=" h-[4.1rem] w-[4.1rem] rounded-full" src={Profile} alt="" />
                       <div className="flex flex-col items-start font-sans">
-                        <h2 className="font-sm text-white">Uttam Aggarwal</h2>
+                        <h2 className="font-sm text-white whitespace-nowrap">Uttam Aggarwal</h2>
                         <div className="flex items-center gap-2">
                           <h2 className="bg-[#00FF00] h-2 w-2 rounded-full animate-ping"></h2>
                           <h2 className="text-sm text-text-green font-normal">Online</h2>
@@ -99,7 +102,7 @@ const Layout = ({ children }) => {
                       onClick={() => {
                         router.push(menu.link);
                       }}
-                      className=""
+                      className="whitespace-nowrap text-[0.89rem"
                     >
                       {menu.label}
                     </h2>

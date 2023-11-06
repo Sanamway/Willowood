@@ -58,7 +58,7 @@ const OTPVal = () => {
                 </div>
               </div>
               <div className="flex items-center justify-center mt-4">
-                <button onClick={()=>{router.push('/forgetpassform')}} className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full uppercase text-sm text-white">
+                <button onClick={()=>{router.push('/')}} className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full uppercase text-sm text-white">
                   Verify
                 </button>
               </div>
