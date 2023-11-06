@@ -25,7 +25,7 @@ const ProductSegment = () => {
       const respData = await resp.data.data;
       setPrdSegment(respData);
     } catch (error) {
-      console.log("err", error);
+      console.log(error)
     }
   };
 
