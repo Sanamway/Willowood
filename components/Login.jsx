@@ -13,6 +13,8 @@ import toast, { Toaster } from "react-hot-toast";
 const Login = () => {
   const router = useRouter();
   const [phone, setPhone] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 
   const headers = {
     "Content-Type": "application/json",
@@ -51,6 +53,21 @@ const Login = () => {
       }
     }
   };
+
+
+  useEffect(() => {
+    if (window.localStorage) {
+      const isLoggedInInLocalStorage = !!localStorage.getItem("uid");
+      setIsLoggedIn(isLoggedInInLocalStorage);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push("/");
+    }
+  }, [isLoggedIn]);
+
 
   return (
     <>

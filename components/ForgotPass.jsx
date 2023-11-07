@@ -22,17 +22,17 @@ const ForgotPass = () => {
               </div>
               <div className="flex flex-col items-center justify-center mt-4">
                 <h2 className="text-lg text-black font-semibold">Forgot Password</h2>
-                <h4 className="text-black mt-2">Enter Your Username</h4>
+                <h4 className="text-black mt-2">Enter Your Mobile Number</h4>
               </div>
               <div className="flex flex-col justify-between mt-8 mx-12 ">
                 <label className="flex  text-black items-center gap-1 font-semibold">
                   <FaUser></FaUser>
-                  Username
+                  Mobile Number
                 </label>
                 <input
                   className="bg-transparent text-black py-1.5 max-w-full text-start outline-none border-0 placeholder:text-black text-sm border-black border-b-2 border-white-200"
                   type="text"
-                  placeholder="Type your username"
+                  placeholder="Type your Mobile Number"
                 />
               </div>
              

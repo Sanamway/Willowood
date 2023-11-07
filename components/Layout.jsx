@@ -29,6 +29,13 @@ const Layout = ({ children }) => {
     setOpen(!isOpen);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('uid');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('email');
+    router.push('/logoutsuccess')
+  };
+
   const menuItems = [
     { id: 1, label: "Login", icon: BiLogInCircle, link: "/login" },
     { id: 1, label: "User Role Profile", icon: AiOutlineHome, link: "/table/table_user_profile" },
@@ -166,7 +173,7 @@ const Layout = ({ children }) => {
                                 <li onClick={()=>{router.push('/profile')}}>My Profile</li>
                                 <li>Settings</li>
                                 <li>Help</li>
-                                <li>
+                                <li onClick={handleLogout}>
                                   <div className="flex gap-1 items-center">
                                     Log out <MdLogout size={16}></MdLogout>
                                   </div>
