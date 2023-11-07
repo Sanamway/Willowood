@@ -3,7 +3,7 @@ import OTPVal from "@/components/OTPVal";
 const index = () => {
   return (
     <>
-      <OTPVal></OTPVal>;
+      <OTPVal></OTPVal>
     </>
   );
 };
