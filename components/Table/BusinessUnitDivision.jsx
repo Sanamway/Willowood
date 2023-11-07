@@ -79,10 +79,10 @@ const BusinessUnitDivision = () => {
             >
               Create New
             </button>
-          </span>
+            </span>
         </div>
 
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
+         <div className="bg-white h-screen flex items-start justify-center max-w-full">
           <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
             <table className="min-w-full divide-y border- divide-gray-200 ">
               <thead className="border-b w-max">
@@ -127,7 +127,7 @@ const BusinessUnitDivision = () => {
                             query: { id: item.bu_id, type: "View" },
                           });
                         }}
-                        className="b text-black   hover:text-blue-500  "
+                        className="b text-black   hover:text-blue-500"
                       >
                         View
                       </button>

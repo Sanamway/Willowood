@@ -131,7 +131,6 @@ const RegionForm = () => {
 
   //Defining the Validation Schema
   const validationSchema = Yup.object().shape({
-   
     companyId: Yup.string().required("Company Id is required"),
     bgId: Yup.string().required("Business Segment is required"),
     buId: Yup.string().required("Business Unit is required"),
@@ -157,7 +156,7 @@ const RegionForm = () => {
   });
 
   const [formErrors, setFormErrors] = useState({});
-  
+
   const handleSaveRegion = async (e) => {
     e.preventDefault();
     try {
@@ -171,7 +170,7 @@ const RegionForm = () => {
         z_id: Number(regionState.zId),
         mobile_no: regionState.mobile,
         hod_name: regionState.hod,
-        email_id: regionState.email, 
+        email_id: regionState.email,
         region_name: regionState.region,
         c_name: "No Worries",
         ul_name: "No Man",
@@ -188,7 +187,6 @@ const RegionForm = () => {
           }, [3000]);
         });
     } catch (errors) {
-     
       const errorMessage = errors?.response?.data?.error;
       toast.error(errorMessage);
       const newErrors = {};
@@ -199,11 +197,9 @@ const RegionForm = () => {
     }
   };
 
-
-
   return (
     <Layout>
-       <Toaster position="bottom-center" reverseOrder={false} />
+      <Toaster position="bottom-center" reverseOrder={false} />
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
         <div className="text-black flex items-center justify-between bg-white max-w-6/12 font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Region</h2>

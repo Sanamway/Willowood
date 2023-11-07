@@ -85,6 +85,19 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       console.log(error);
     }
   };
+   const handleDeleteDistrict = async () => {
+    try {
+      const respond = await axios
+        .delete(`${url}/api/delete_district/${id}`, {
+          headers: headers,
+        })
+        .then((res) => onDeletedData());
+
+      const apires = await respond.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  } ;
 
   const handleDelete = () => {
     if (type === "Company Information") {
@@ -109,6 +122,10 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       onDeletedData();
     } else if (type === "Territory") {
       handleDeleteTerritory();
+      onClose();
+      onDeletedData();
+    } else if (type === "District") {
+      handleDeleteDistrict();
       onClose();
       onDeletedData();
     }

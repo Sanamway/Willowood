@@ -97,7 +97,7 @@ const BusinessSegment = () => {
               <thead className="border-b w-max">
                 <tr className="bg-gray-50 font-arial w-max">
                   <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    Action
+                     Action
                   </th>
                   <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     B.G ID

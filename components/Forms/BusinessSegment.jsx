@@ -9,18 +9,17 @@ import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
 const BusinessSegmentForm = () => {
   const router = useRouter();
-  console.log("opo", router.query);
+
   const getDataById = async () => {
     try {
       const respond = await axios.get(`${url}/api/get_business_segment`, {
         headers: headers,
         params: { bg_id: router.query.id },
       });
-      const apires = await respond.data.data;
+      const apires = await respond.data.data[0];
       setBusinessSegmentState({
         bg_id: apires.bg_id,
         companyId: apires.c_id,
-        // companyName:apires.bg_id,
         businessSegment: apires.business_segment,
         hod: apires.hod_name,
         mobile: apires.mobile_no,
@@ -135,7 +134,6 @@ const BusinessSegmentForm = () => {
     e.preventDefault();
     try {
       // Validate the form data
-
       await validationSchema.validate(businessSegmentState, {
         abortEarly: false,
       });
@@ -182,6 +180,7 @@ const BusinessSegmentForm = () => {
       setFormErrors(newErrors);
     }
   };
+  
 
   const handleSave = (e) => {
     if (router.query.type !== "Edit") handleSaveBusinessSegment(e);
@@ -384,22 +383,24 @@ const BusinessSegmentForm = () => {
               </div>
             </div>
 
-            <div className="button flex items-center gap-3 mt-6">
-              <div
-                className="bg-green-700 px-4 py-1 text-white cursor-pointer"
-                onClick={(e) => handleSave(e)}
-              >
-                Save
+            {router.query.type !== "View" && (
+              <div className="button flex items-center gap-3 mt-6">
+                <div
+                  className="bg-green-700 px-4 py-1 text-white cursor-pointer"
+                  onClick={(e) => handleSave(e)}
+                >
+                  {router.query.type === "Edit" ? "Update" : "Save"}{" "}
+                </div>
+                <button
+                  className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
+                  onClick={() => {
+                    router.push("/table/table_business_segment");
+                  }}
+                >
+                  Close
+                </button>
               </div>
-              <button
-                className="bg-yellow-500 px-4 py-1 text-white"
-                onClick={() => {
-                  router.push("/table/table_business_segment");
-                }}
-              >
-                Close
-              </button>
-            </div>
+            )}
           </form>
         </div>
       </div>

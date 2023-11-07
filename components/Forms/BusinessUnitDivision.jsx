@@ -20,6 +20,20 @@ const BusinessUnit = () => {
         params: { bu_id: router.query.id },
       });
       const apires = await respond.data.data;
+      console.log("lkio" , apires)
+      setBusinessUnitState(
+
+        {
+
+
+          companyId: apires[0].c_id,
+          bgId: apires[0].bg_id,
+          unitDivision: apires[0].bu_id,
+          hod: apires[0].hod_name,
+          mobile:  apires[0].mobile_no,
+          email: apires[0].email_id,
+        }
+      )
     } catch (error) {
       console.log(error);
     }
@@ -61,8 +75,7 @@ const BusinessUnit = () => {
         apires.filter((item, idx) => item.isDeleted === false)
       );
     } catch (error) {
-      setBusinessSegmentData([])
-      
+      setBusinessSegmentData([]);
     }
   };
 
@@ -163,10 +176,9 @@ const BusinessUnit = () => {
         c_name: "No Worries",
         ul_name: "No Man",
       };
-
       const respond = await axios
         .put(
-          `${url}/api/update_business_unit/${businessUnitState.bgId}`,
+          `${url}/api/update_business_unit/${router.query.id} `,
           JSON.stringify(data),
           {
             headers: headers,
@@ -174,9 +186,9 @@ const BusinessUnit = () => {
         )
         .then((res) => {
           if (!res) return;
-          toast.success("Business Segment edited successfully!");
+             toast.success("Business Unit Division edited successfully!");
           setTimeout(() => {
-            router.push("/table/table_business_segment");
+            router.push("/table/table_business_unit_division");
           }, [3000]);
         });
     } catch (errors) {
@@ -200,8 +212,8 @@ const BusinessUnit = () => {
 
   const handleSave = (e) => {
     if (router.query.type !== "Edit") handleSaveBusinessUnit(e);
+    handleEditBusinessUnit(e)
   };
-
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
@@ -209,12 +221,12 @@ const BusinessUnit = () => {
         <div className="text-black flex items-center justify-between bg-white max-w-6/12 font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
             Business Unit Division
-          </h2>
+           </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <h2>
               <TiArrowBack
                 onClick={() => {
-                  router.push("/table/table_business_unit_division");
+                   router.push("/table/table_business_unit_division");
                 }}
                 className="text-gray-400"
                 size={35}
@@ -249,7 +261,7 @@ const BusinessUnit = () => {
                 type="text"
                 id="inputField"
                 disabled={true}
-                value={"Auto Genrated"}
+                value=  {router.query.type === "Edit" ? router.query.id : "Auto Genrated"}  
                 placeholder="B.U Id"
               />
             </div>
@@ -273,7 +285,6 @@ const BusinessUnit = () => {
                     })
                   }
                 >
-                
                   {companyData.map((item, idx) => (
                     <option value={item.c_id} key={idx}>
                       {item.cmpny_name}
@@ -305,7 +316,6 @@ const BusinessUnit = () => {
                     })
                   }
                 >
-                 
                   {businessSegmentData.map((item, idx) => (
                     <option value={item.bg_id} key={idx}>
                       {item.business_segment}
@@ -429,22 +439,24 @@ const BusinessUnit = () => {
               </div>
             </div>
 
-            <div className="button flex items-center gap-3 mt-6">
-              <div
-                className="bg-green-700 px-4 py-1 text-white cursor-pointer"
-                onClick={(e) => handleSave(e)}
-              >
-                Save
+            {router.query.type !== "View" && (
+              <div className="button flex items-center gap-3 mt-6">
+                <div
+                  className="bg-green-700 px-4 py-1 text-white cursor-pointer"
+                  onClick={(e) => handleSave(e)}
+                >
+                  {router.query.type === "Edit" ? "Update" : "Save"}{" "}
+                </div>
+                <button
+                  className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
+                  onClick={() => {
+                    router.push("/table/table_business_segment");
+                  }}
+                >
+                  Close
+                </button>
               </div>
-              <button
-                className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
-                onClick={(e) => {
-                  router.push("/table/table_business_unit_division");
-                }}
-              >
-                Close
-              </button>
-            </div>
+            )}
           </form>
         </div>
       </div>

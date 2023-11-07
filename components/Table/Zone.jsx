@@ -48,7 +48,7 @@ const ZoneTable = () => {
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
         <div className="flex flex-row justify-between  h-max  px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">Zone</h2>
+           <h2 className="font-arial font-normal text-3xl  py-2">Zone</h2>
           <span className="flex items-center gap-2 cursor-pointer">
             <span className="flex flex-row">
               <input
@@ -63,13 +63,7 @@ const ZoneTable = () => {
                 <AiOutlineSearch className="mx-2 my-1" size={20} />
               </button>
             </span>
-            <TiArrowBack
-              onClick={() => {
-                router.push("/table/table_user_profile");
-              }}
-              className="text-gray-400"
-              size={35}
-            />
+          
 
             <AiTwotoneHome className="text-red-500" size={34} />
             <button
@@ -81,11 +75,11 @@ const ZoneTable = () => {
               }}
               className=" text-white py-1 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
-              Create New
+                Create New
             </button>
           </span>
         </div>
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
+          <div className="bg-white h-screen flex items-start justify-center max-w-full">
           <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
             <table className="min-w-full divide-y border- divide-gray-200 ">
               <thead className="border-b w-max">
@@ -136,15 +130,21 @@ const ZoneTable = () => {
                     <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                       <button
                         onClick={() => {
-                          router.push("/form/zone_form");
+                          router.push({
+                            pathname: "/form/zone_form",
+                            query: { id: item.z_id, type: "View" },
+                          });
                         }}
                         className="b text-black   hover:text-blue-500  "
                       >
                         View
-                      </button>
+                       </button>
                       <button
-                        onClick={() => {
-                          router.push("/form/zone_form");
+                         onClick={() => {
+                          router.push({
+                            pathname: "/form/zone_form",
+                            query: { id: item.z_id, type: "Edit" },
+                          });
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
                       >

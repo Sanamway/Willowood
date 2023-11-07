@@ -160,7 +160,7 @@ const Territory = () => {
                       {item.r_id}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.Z_id}
+                      {item.z_id}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.bu_id}
