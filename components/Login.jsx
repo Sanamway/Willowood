@@ -14,7 +14,7 @@ const Login = () => {
   const router = useRouter();
   const [phone, setPhone] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [isLoading, setLoading] = useState(false);
 
   const headers = {
     "Content-Type": "application/json",
@@ -23,6 +23,7 @@ const Login = () => {
 
   const loginHandler = async (e) => {
     e.preventDefault();
+    setLoading(true);
     console.log("data", phone);
     if (phone.length < 10) {
       toast.error("Enter the valid Mobile number");
@@ -34,26 +35,43 @@ const Login = () => {
     try {
       const resp = await axios.post(`${url}/api/login_user`, payload, { headers: headers });
       const respdata = await resp.data;
-      const phone_number = respdata?.data.phone_no
-      const uid = respdata?.data.uid
-      if (respdata?.message) {
+      const phone_number = respdata?.data.phone_no;
+      const uid = respdata?.data.uid || respdata?.data?.loginHistory.uid;
+
+      const email = respdata?.data?.loginHistory?.email_id;
+      const userName = respdata?.data?.loginHistory?.user_name;
+
+      // console.log("datas", respdata?.data?.loginHistory)
+      // console.log("status", respdata?.status)
+
+      console.log("respa", respdata)
+
+      if (respdata?.message && respdata?.status == false) {
+        setLoading(false);
         toast.success(respdata?.message);
         setTimeout(() => {
           router.push({
             pathname: "/otp",
-            query: { phone_number: phone_number,uid:uid }
+            query: { phone_number: phone_number, uid: uid }
           });
         }, 1000);
+      } else {
+        localStorage.setItem("uid", uid);
+        localStorage.setItem("email", email);
+        localStorage.setItem("userName", userName);
+        router.push("/");
       }
     } catch (error) {
+      console.log("re", error);
       console.log("err", error?.response?.data?.message);
       const errorMessage = error?.response?.data?.message;
-      if (errorMessage) {
+      const status = error?.response?.data?.status;
+      if (errorMessage && status ==false) {
         toast.error(errorMessage);
+        router.push('/otp')
       }
     }
   };
-
 
   useEffect(() => {
     if (window.localStorage) {
@@ -67,7 +85,6 @@ const Login = () => {
       router.push("/");
     }
   }, [isLoggedIn]);
-
 
   return (
     <>
@@ -120,9 +137,9 @@ const Login = () => {
                 {/* <button onClick={()=>{router.push('/otp')}} className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full uppercase text-sm text-white"> */}
                 <button
                   onClick={loginHandler}
-                  className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full uppercase text-sm text-white"
+                  className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full text-sm text-white"
                 >
-                  Login
+                  {isLoading ? "Loading..." : "Login"}
                 </button>
               </div>
 

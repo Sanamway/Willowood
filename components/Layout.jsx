@@ -56,8 +56,9 @@ const Layout = ({ children }) => {
     { id: 3.4, label: "Product Sement", icon: BiUser, link: "/table/table_product_segment" },
     { id: 3.5, label: "Product Brand", icon: BiUser, link: "/table/table_product_brand" },
     { id: 3.6, label: "Material SKU", icon: BiUser, link: "/table/table_material_sku" },
-    { id: 3.6, label: "Rolling Plan", icon: BiUser, link: "/rollingplans" },
-    { id: 3.6, label: "Colletion Plan", icon: BiUser, link: "/collectionplans" },
+    { id: 3.7, label: "Rolling Plan", icon: BiUser, link: "/rollingplans" },
+    { id: 3.8, label: "Colletion Plan", icon: BiUser, link: "/collectionplans" },
+    { id: 3.9, label: "Forgot", icon: BiUser, link: "/forgotpass" },
   ];
 
   return (
