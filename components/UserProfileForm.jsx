@@ -75,9 +75,9 @@ const UserProfileForm = () => {
         const responseData = response.data;
        console.log("fdvfv",responseData)
       }
-      console.log("All POST requests are complete.");
+      console.log("completed.");
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error("error:", error);
     }
   }
 
