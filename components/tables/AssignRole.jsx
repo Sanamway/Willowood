@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Layout from "../../components/Layout";
 import { AiFillFileExcel, AiTwotoneHome } from "react-icons/ai";
 import { BiArrowBack } from "react-icons/bi";
@@ -7,24 +7,25 @@ import { TbFileDownload } from "react-icons/tb";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
 
+
 const AssignRole = () => {
   const router = useRouter();
 
   const dummyData = [
     {
       id: 1,
-      username:'username',
-      userprofile:"userprofile"
+      username: "username",
+      userprofile: "userprofile"
     },
     {
       id: 2,
-      username:'username',
-      userprofile:"userprofile"
+      username: "username",
+      userprofile: "userprofile"
     },
     {
       id: 3,
-      username:'username',
-      userprofile:"userprofile"
+      username: "username",
+      userprofile: "userprofile"
     }
   ];
 
@@ -51,13 +52,15 @@ const AssignRole = () => {
             <h2>
               <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
             </h2>
-          
+
             <h2>
-              <AiTwotoneHome 
-              onClick={() => {
-                router.push("/");
-              }} 
-              className="text-red-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome
+                onClick={() => {
+                  router.push("/");
+                }}
+                className="text-red-500"
+                size={34}
+              ></AiTwotoneHome>
             </h2>
             <button
               onClick={() => {
@@ -72,51 +75,50 @@ const AssignRole = () => {
 
         <div className="bg-white h-screen flex items-start justify-center max-w-full">
           <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
-          <table className="min-w-full divide-y border divide-gray-200">
-            <thead className="border-b">
-              <tr className="bg-gray-50 font-arial">
-                <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th>
-                <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  User Name
-                </th>
-                <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  User Profile
-                </th>
-               
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200 text-xs">
-              {dummyData?.map((item) => (
-                <tr key={item.id}>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
-                    <button
-                      onClick={() => {
-                        router.push("/form/assign_role");
-                      }}
-                      className="b text-black   hover:text-blue-500  "
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => {
-                        router.push("/form/assign_role");
-                      }}
-                      className="b text-black hover:text-yellow-400 ml-2"
-                    >
-                      Edit
-                    </button>
-                    <button className="b text-black hover:text-red-500 ml-2">Delete</button>
-                  </td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.id}</td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.username}</td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.userprofile}</td>
+            <table className="min-w-full divide-y border divide-gray-200">
+              <thead className="border-b">
+                <tr className="bg-gray-50 font-arial">
+                  <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Action
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    User Name
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    User Profile
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200 text-xs">
+                {dummyData?.map((item) => (
+                  <tr key={item.id}>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
+                      <button
+                        onClick={() => {
+                          router.push("/form/assign_role");
+                        }}
+                        className="b text-black   hover:text-blue-500  "
+                      >
+                        View
+                      </button>
+                      <button
+                        onClick={() => {
+                          router.push("/form/assign_role");
+                        }}
+                        className="b text-black hover:text-yellow-400 ml-2"
+                      >
+                        Edit
+                      </button>
+                      <button className="b text-black hover:text-red-500 ml-2">Delete</button>
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.username}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.userprofile}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </Layout>

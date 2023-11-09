@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Layout from "./Layout";
+import Layout from "../Layout";
 import { AiTwotoneHome, AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
@@ -28,8 +28,8 @@ const UserInformation = () => {
     userType: "",
     user_profile: "",
     user_status: "",
-    designation: "",
-    about: ""
+    position: "",
+    about_me: ""
   });
 
   //Defining the Validation Schema
@@ -52,7 +52,7 @@ const UserInformation = () => {
 
     password: Yup.string()
       .required("Password is required")
-      .min(8, "Password must be at least 8 characters long"), // Minimum length validation
+      .min(8, "Password must be at least 8 characters long"), 
 
     confirm_password: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords must match")
@@ -61,7 +61,7 @@ const UserInformation = () => {
     user_status: Yup.string().required("Status is required"),
     city: Yup.string().required("City is required"),
     state: Yup.string().required("State is required"),
-    designation: Yup.string().required("Designation is required")
+    position: Yup.string().required("Designation is required")
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -110,8 +110,8 @@ const UserInformation = () => {
         user_status: formData.user_status,
         city: formData.city,
         state: formData.state,
-        designation: formData.designation,
-        about: formData.about
+        position: formData.position,
+        about_me: formData.about_me
       };
 
       const response = await axios.post(`${url}/api/create_user`, userData, { headers: headers });
@@ -134,9 +134,13 @@ const UserInformation = () => {
 
   //getting datas from api
   const gettingData = async () => {
-    const resoptions = await axios.get(`${url}/api/user_profiles`, { headers: headers });
-    const respData = await resoptions.data.data;
-    setUserOptions(respData);
+    try {
+      const resoptions = await axios.get(`${url}/api/user_profiles`, { headers: headers });
+      const respData = await resoptions.data.data;
+      setUserOptions(respData);
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   useEffect(() => {
@@ -181,17 +185,14 @@ const UserInformation = () => {
         email: userDataObject ? userDataObject?.email : "",
         phone_number: userDataObject ? userDataObject?.phone_number : "",
         address: userDataObject ? userDataObject?.address : "",
+        password: userDataObject ? userDataObject?.password : "",
+        position: userDataObject ? userDataObject?.position : "",
+        about_me: userDataObject ? userDataObject?.about_me : "",
+        confirm_password: userDataObject ? userDataObject?.confirm_password : "",
         t_user: "skp",
         c_name: "skp",
         ul_name: "skp"
       };
-      // if(userDataObject?.user_name.length && userDataObject?.address.length && userDataObject?.phone_number.length && userDataObject?.email.length ){
-      //   const res = await axios.put(`${url}/api/update_user/${id}`, editedData, { headers: headers });
-      //   const resp = await res.data;
-      //   toast.success(resp.message)
-      // }else{
-      //   toast.error("Some Fields are Missing")
-      // }
 
       if (
         !userDataObject?.user_name.length ||
@@ -214,7 +215,15 @@ const UserInformation = () => {
           emptyFields.push("Email");
         }
 
-        const errorMessage = `Fields missing: ${emptyFields.join(", ")}`;
+        if (!userDataObject?.password.length) {
+          emptyFields.push("Password");
+        }
+
+        if (!userDataObject?.confirm_password.length) {
+          emptyFields.push("Confirm Password");
+        }
+
+        const errorMessage = `${emptyFields.join(", ")} can not be blanked`;
         toast.error(errorMessage);
       } else {
         const res = await axios.put(`${url}/api/update_user/${id}`, editedData, { headers: headers });
@@ -334,8 +343,8 @@ const UserInformation = () => {
                     className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     type="text"
                     id="inputField"
-                    name="designation"
-                    defaultValue={userDataObject?.designation ? userDataObject?.designation : ""}
+                    name="position"
+                    defaultValue={userDataObject?.position ? userDataObject?.position : ""}
                     placeholder="Designation"
                     onChange={handleChange}
                   />
@@ -443,6 +452,8 @@ const UserInformation = () => {
                       id="phoneField"
                       name="phone_number"
                       placeholder="Mobile"
+                      minLength={10}
+                      maxLength={10}
                       defaultValue={userDataObject?.phone_number ? userDataObject?.phone_number : ""}
                       onChange={userDataObject?._id ? handleEdit : handleChange}
                     />
@@ -575,8 +586,8 @@ const UserInformation = () => {
                     className="w-full px-3 py-1.5  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     id="textareaField"
                     placeholder="About"
-                    name="about"
-                    defaultValue={userDataObject?.about ? userDataObject?.about : ""}
+                    name="about_me"
+                    defaultValue={userDataObject?.about_me ? userDataObject?.about_me : ""}
                   ></textarea>
                 </div>
 

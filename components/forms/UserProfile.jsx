@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "./Layout";
+import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
@@ -8,6 +8,7 @@ import ProfImg from "../public/userimg.jpg";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 const UserProfile = () => {
+  const router = useRouter()
   const now = new Date();
   const dateString = now.toLocaleString();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -29,8 +30,8 @@ const UserProfile = () => {
   explicabo ducimus eveniet, est rem sequi officiis distinctio?`;
   return (
     <>
-      {/* <div className=" h-screen overflow-auto w-full font-arial bg-white  "> */}
-      <div className="container mx-auto px-4 sm:px-8 bg-gray-100 p-4 pb-20  text-black overflow-y-auto ">
+      {/* <div className=" h-screen overflow-auto w-full font-arial bg-white container  "> */}
+      <div className=" w-[1000px] mx-auto px-4 sm:px-8 bg-gray-100 p-4 pb-20  text-black overflow-y-auto ">
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Profile </h2>
           <div className="flex items-center gap-2 cursor-pointer">

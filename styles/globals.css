@@ -202,5 +202,13 @@ body {
 
 
 
+.inputOTPBOX{
+  margin:2px !important;
+  border: none !important;
+  outline: none !important;
+  width: 35px !important;
+  height: 35px !important;
+}
+
 
 

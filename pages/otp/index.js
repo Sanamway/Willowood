@@ -1,9 +1,9 @@
 import React from "react";
-import OTPVal from "@/components/OTPVal";
+import OTPVal from "@/components/loginHistory/OTPVal";
 const index = () => {
   return (
     <>
-      <OTPVal></OTPVal>;
+      <OTPVal></OTPVal>
     </>
   );
 };
