@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Layout from "./Layout";
+import Layout from "../Layout";
 import { AiTwotoneHome, AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
-import userimg from "../public/userimg.jpg";
+import userimg from "../../public/userimg.jpg";
 import Image from "next/image";
 import axios from "axios";
 import { url } from "@/constants/url";

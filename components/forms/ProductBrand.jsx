@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import Layout from "./Layout";
+import React, { useEffect, useState } from "react";
+import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
-import * as Yup from "yup";
 import axios from "axios";
 import { url } from "@/constants/url";
-import { toast, Toaster } from "react-hot-toast";
+import * as Yup from "yup";
+import toast, { Toaster } from "react-hot-toast";
 
-const ProductCategory = () => {
+const ProductBrand = () => {
   const router = useRouter();
 
   let { id, view } = router.query;
@@ -19,38 +19,34 @@ const ProductCategory = () => {
   };
 
   const [formState, setFromState] = useState({
-    cat_id: "",
-    pcat_name: "",
+    brand_name: "",
     brand_code: "",
     pseg_id: "",
-    c_name: "WCL",
-    status: false,
+    c_name: "",
+    status: true,
     c_id: "",
-    pcat_id: "",
-    ul_name: "WCL"
+    pseg_name: "",
+    ul_name: "WPCL"
   });
 
   const [formErrors, setFormErrors] = useState({});
 
   const validationSchema = Yup.object().shape({
-    pcat_name: Yup.string().required("Product Category Name is required"),
+    brand_name: Yup.string().required("Brand Nanme is required"),
+    // pseg_id: Yup.string().required("Product Segment is required"),
     c_name: Yup.string().required("Company Name is required")
   });
 
-  const getPrdCatById = async (id) => {
+  const getPrdBrandById = async (id) => {
     try {
-      const resp = await axios.get(`${url}/api/get_product_category/${id}`, { headers: headers });
+      const resp = await axios.get(`${url}/api/get_product_brand/${id}`, { headers: headers });
       const respData = await resp.data.data;
       setFromState({
-        pcat_name: respData?.pcat_name,
+        brand_name: respData?.brand_name,
         brand_code: respData?.brand_code,
         pseg_id: respData?.pseg_id,
-        c_name: respData?.c_name,
-        c_id: respData?.c_id,
-        pcat_id: respData?.pcat_id
+        c_name: respData?.c_name
       });
-
-      console.log("geprr", respData);
     } catch (error) {
       console.log("ee", error);
     }
@@ -58,23 +54,24 @@ const ProductCategory = () => {
 
   useEffect(() => {
     if (router.query.type === "CREATE") return;
-    if (id) getPrdCatById(id);
+    if (id) getPrdBrandById(id);
   }, [id]);
 
-  const handleSaveCat = async (e) => {
+  const handleSaveBrand = async (e) => {
     e.preventDefault();
     try {
       await validationSchema.validate(formState, { abortEarly: false });
       const Formdata = {
+        brand_name: formState.brand_name,
+        brand_code: formState.brand_code,
+        pseg_id: formState?.pseg_id,
         c_name: formState.c_name,
-        c_id: formState.c_id,
-        ul_name: formState.ul_name,
-        pcat_name: formState?.pcat_name,
-        pcat_id:formState?.pcat_id,
-        status:formState?.status
+        status: formState.status,
+        c_id: formState.c_name,
+        pseg_name: formState.pseg_name,
+        ul_name: formState.ul_name
       };
-      console.log("formdata",Formdata)
-      const resp = await axios.post(`${url}/api/add_product_category`, JSON.stringify(Formdata), {
+      const resp = await axios.post(`${url}/api/create_product_brand`, JSON.stringify(Formdata), {
         headers: headers
       });
       const respdata = await resp.data;
@@ -82,83 +79,65 @@ const ProductCategory = () => {
       if (respdata) {
         toast.success(respdata.message);
         setTimeout(() => {
-          router.push("/table/table_product_category");
+          router.push("/table/table_product_brand");
         }, 2500);
       }
     } catch (errors) {
-      console.log("ee", errors);
       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
       });
       setFormErrors(newErrors);
-      switch (true) {
-        case !!newErrors?.pcat_name:
-          toast.error(newErrors.pcat_name);
-          break;
-        case !!newErrors?.c_id:
-          toast.error(newErrors.c_id);
-        case !!newErrors?.c_name:
-          toast.error(newErrors.c_name);
-          break;
-        default:
-      }
+    }
+    switch (true) {
+      case !!formErrors?.brand_name:
+        toast.error(formErrors.brand_name);
+        break;
+      case !!formErrors?.pseg_id:
+        toast.error(formErrors.pseg_id);
+      case !!formErrors?.c_name:
+        toast.error(formErrors.c_name);
+        break;
+      default:
     }
   };
 
-  
-
   //Edit Brand
 
-  const handleEditCat = async (e) => {
+  const handleEditBrand = async (e) => {
     e.preventDefault();
     try {
+      await validationSchema.validate(formState, { abortEarly: false });
       const Editdata = {
-        c_name: formState.c_name,
-        c_id: formState.c_id,
-        ul_name: formState.ul_name,
-        pcat_name: formState?.pcat_name,
-        pcat_id:formState?.pcat_id
+        brand_name: formState.brand_name,
+        brand_code: formState.brand_code,
+        pseg_id: formState.pseg_id,
+        c_name: formState.c_name
       };
-      await validationSchema.validate(Editdata, { abortEarly: false });
-      const resp = await axios.put(`${url}/api/update_product_category/${id}`, JSON.stringify(Editdata), {
+      const resp = await axios.put(`${url}/api/update_product_brand/${id}`, JSON.stringify(Editdata), {
         headers: headers
       });
       const respdata = await resp.data;
-      console.log("resap", respdata);
       if (respdata) {
         toast.success(respdata.message);
         setTimeout(() => {
-          router.push("/table/table_product_category");
+          router.push("/table/table_product_brand");
         }, 2500);
       }
-    } catch (errors) {
-      console.log("e", errors);
-      const newErrors = {};
-      errors?.inner?.forEach((error) => {
-        newErrors[error?.path] = error?.message;
-      });
-      switch (true) {
-        case !!newErrors?.pcat_name:
-          toast.error(newErrors.pcat_name);
-          break;
-        case !!newErrors?.c_id:
-          toast.error(newErrors.c_id);
-        case !!newErrors?.c_name:
-          toast.error(newErrors.c_name);
-          break;
-        default:
-      }
+    } catch (error) {
+      console.log("e", error);
     }
   };
 
   const handleSubmit = (e) => {
     if (router.query.type !== "Edit") {
-      handleSaveCat(e);
+      handleSaveBrand(e);
     } else {
-      handleEditCat(e);
+      handleEditBrand(e);
     }
   };
+
+  //getting companyinfo options
 
   const [companyInfo, setCompanyInfo] = useState([]);
 
@@ -172,15 +151,26 @@ const ProductCategory = () => {
     }
   };
 
-  useEffect(()=>{
-    getCompanyInfo();
-  },[])
-
   const filterCompanyInfo = companyInfo.filter((item) => item.isDeleted == false);
-  console.log("hcekc", filterCompanyInfo)
 
+  //getting product segment descriptionn
 
-  console.log("fvbfvf",formState.c_id)
+  const [prdSegment, setPrdSegment] = useState([]);
+  const [filteredSegment, setFilteredPrdSegment] = useState([]);
+
+  const gettingProductSegment = async () => {
+    const response = await axios.get(`${url}/api/get_product_segment`, { headers });
+    const respdata = await response.data.data;
+
+    setPrdSegment(respdata);
+  };
+
+  useEffect(() => {
+    getCompanyInfo();
+    gettingProductSegment();
+  }, []);
+
+  console.log("FORM", formState);
 
   return (
     <>
@@ -188,12 +178,12 @@ const ProductCategory = () => {
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="h-screen overflow-auto w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-            <h2 className="font-arial font-normal text-3xl  py-2">Product Category </h2>
+            <h2 className="font-arial font-normal text-3xl  py-2">Product Brand </h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <h2>
                 <TiArrowBack
                   onClick={() => {
-                    router.push("/table/table_product_category");
+                    router.push("/table/table_product_brand");
                   }}
                   className="text-gray-400"
                   size={35}
@@ -213,7 +203,7 @@ const ProductCategory = () => {
 
           {/* <div className="bg-gray-300"></div> */}
           <div className="text-black h-screen  ">
-            <div className="bg-gray-100 p-4  h-screen ">
+            <div className="bg-gray-100 p-4  h-filteredSegmentsceen ">
               <form
                 onSubmit={(e) => e.preventDefault()}
                 disabled={router.query.type === "CREATE"}
@@ -222,35 +212,41 @@ const ProductCategory = () => {
                 <div className="flex -mx-2 mb-4 flex-col">
                   <div className="w-1/6 px-2 mb-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                      Category ID
+                      Brand Code
                     </label>
                     <input
-                      disabled
+                      // disabled
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                       type="text"
                       id="inputField"
                       placeholder=""
-                      value={ router.query.type=="CREATE" ? "Auto Generated" :formState?.pcat_id }
+                      value={formState.brand_code}
+                      onChange={(e) => {
+                        setFromState({
+                          ...formState,
+                          brand_code: e.target.value
+                        });
+                      }}
                     />
                   </div>
-                  <div className="w-1/2 px-2 ">
+                  {/* <div className="w-1/2 px-2 ">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                      <span className="text-red-500 px-1">*</span>Product Category
+                      <span className="text-red-500 px-1">*</span>Brand Name
                     </label>
                     <input
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                       type="text"
                       id="inputField"
-                      placeholder="Input Product Category"
-                      value={formState.pcat_name}
+                      placeholder="Input Brand Name"
+                      value={formState.brand_name}
                       onChange={(e) => {
                         setFromState({
                           ...formState,
-                          pcat_name: e.target.value
+                          brand_name: e.target.value
                         });
                       }}
                     />
-                  </div>
+                  </div> */}
                 </div>
                 <div className="flex -mx-2 mb-4">
                   <div className="w-1/2 px-2">
@@ -260,24 +256,26 @@ const ProductCategory = () => {
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
-                      value={formState?.c_id}
+                      value={formState.c_name}
                       onChange={(e) => {
+                        const selectedCId = e.target.value;
                         setFromState({
                           ...formState,
-                          c_id: e.target.value
+                          c_name: e.target.value
                         });
+                        const filteredSegments = prdSegment.filter((segment) => segment.c_id == selectedCId);
+                        setFilteredPrdSegment(filteredSegments);
                       }}
                     >
-                      {/* <option value="" className="focus:outline-none focus:border-b bg-white">
-                        Select Company Name
-                      </option>
-                      <option value="WCL">WCL</option>
-                      <option value="PCL">PCL</option> */}
-
                       {filterCompanyInfo.map((option) => (
                         <option
-                          // value={option?.description}
                           value={option?.c_id}
+                          onChange={(e) => {
+                            setFromState({
+                              ...formState,
+                              c_id: e.target.value
+                            });
+                          }}
                           className="focus:outline-none focus:border-b bg-white"
                         >
                           {option?.cmpny_name}
@@ -285,6 +283,59 @@ const ProductCategory = () => {
                       ))}
                     </select>
                   </div>
+                </div>
+                <div className="flex -mx-2 mb-4">
+                  <div className="w-1/2 px-2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                      <span className="text-red-500 p-1">*</span>Product Segment
+                    </label>
+                    <select
+                      className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                      id="userSelect"
+                      value={formState.pseg_id}
+                      onChange={(e) => {
+                        setFromState({
+                          ...formState,
+                          pseg_id: e.target.value
+                        });
+                      }}
+                    >
+                      <option value={""} className="focus:outline-none focus:border-b bg-white">Select Options</option>
+                      {filteredSegment.map(
+                        (option, idx) => (
+                          console.log("kio", option),
+                          (
+                            <option
+                              key={idx}
+                              value={option?.pseg_id ? option?.pseg_id :"" }
+                              className="focus:outline-none focus:border-b bg-white"
+                            >
+                              {option?.pseg_name ? option?.pseg_name :"Select Optiopn" }
+                            </option>
+                          )
+                        )
+                      )}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="w-1/2 px-2 ">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+                    <span className="text-red-500 px-1">*</span>Brand Name
+                  </label>
+                  <input
+                    className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                    type="text"
+                    id="inputField"
+                    placeholder="Input Brand Name"
+                    value={formState.brand_name}
+                    onChange={(e) => {
+                      setFromState({
+                        ...formState,
+                        brand_name: e.target.value
+                      });
+                    }}
+                  />
                 </div>
 
                 {router.query.type !== "view" && (
@@ -298,7 +349,7 @@ const ProductCategory = () => {
                     <button
                       className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
                       onClick={() => {
-                        router.push("/table/table_product_category");
+                        router.push("/table/table_product_brand");
                       }}
                     >
                       Close
@@ -314,4 +365,4 @@ const ProductCategory = () => {
   );
 };
 
-export default ProductCategory;
+export default ProductBrand;

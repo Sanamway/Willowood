@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "./Layout";
+import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";

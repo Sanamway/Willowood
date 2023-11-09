@@ -1,5 +1,5 @@
 import React from 'react'
-import MaterialSkuInfo from '@/components/MaterialSku'
+import MaterialSkuInfo from '@/components/forms/MaterialSku'
 const material_sku_info = () => {
   return (
     <>
