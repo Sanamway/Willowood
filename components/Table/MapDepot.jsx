@@ -50,7 +50,7 @@ const MapDepot = () => {
         <div className="h-screen overflow-auto w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">
-              Mapping Depot/Warehouse
+              Map Depot Warehouse
             </h2>
 
             <div className="flex items-center gap-2 cursor-pointer">
@@ -98,7 +98,7 @@ const MapDepot = () => {
           <div className="bg-gray-100 py-4 h-screen rounded-md">
             <div className="text-black mx-12 bg-white p-4 ">
               <div className="mt-4 font-arial">
-                <h2 className="text-sm mb-4"> Mapping Depot/Warehouse</h2>
+                <h2 className="text-sm mb-4"> Map Depot Warehouse</h2>
                 <div className="overflow-x-auto">
                   <table className="min-w-full">
                     <thead className="font-arial border-b">
