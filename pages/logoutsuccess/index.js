@@ -1,5 +1,5 @@
 import React from 'react'
-import LogoutSuccess from '@/components/LogoutSuccess'
+import LogoutSuccess from '@/components/loginHistory/LogoutSuccess'
 const index = () => {
   return (
     <>
