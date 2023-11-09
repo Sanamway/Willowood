@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout";
 import { AiFillFileExcel, AiTwotoneHome } from "react-icons/ai";
 import { BiArrowBack } from "react-icons/bi";
@@ -6,34 +6,63 @@ import { TiArrowBack } from "react-icons/ti";
 import { TbFileDownload } from "react-icons/tb";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
+import { url } from "@/constants/url";
+import axios from "axios";
+import ConfirmModal from "../modals/ConfirmModal";
 
 const ProductBrand = () => {
   const router = useRouter();
 
-  const dummyData = [
-    {
-      id: 1,
-      brand:"Brand A",
-      category: "Product A",
-      company: "Company A"
-    },
-    {
-      id: 2,
-      brand:"Brand B",
-      category: "Product B",
-      company: "Company B"
-    },
-    {
-      id: 3,
-      brand:"Brand C",
-      category: "Product C",
-      company: "Company C"
+  const [prdBrand, setPrdBrand] = useState([]);
+
+
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+  };
+
+  const gettingPrdBrand = async () => {
+    try {
+      const resp = await axios.get(`${url}/api/get_product_brand`, { headers: headers });
+      const respData = await resp.data.data;
+      setPrdBrand(respData);
+    } catch (error) {
+      console.log("err", error)
     }
-  ];
+  };
+
+  useEffect(() => {
+    gettingPrdBrand();
+  }, []);
+
+
+
+  const [isOpen, setisOpen] = useState(false);
+  const [userId, setUserId] = useState(null);
+
+  const deleteHandler = (id) => {
+    setisOpen(true);
+    setUserId(id);
+  };
+
+  const resetData = () => {
+    gettingPrdBrand();
+    setisOpen(false);
+  };
+
 
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full ">
+      <ConfirmModal
+          isOpen={isOpen}
+          onClose={() => setisOpen(false)}
+          onOpen={() => setisOpen(true)}
+          userId={userId}
+          method="delete"
+          endpoints="delete_product_brand"
+          onDeletedData={resetData}
+        ></ConfirmModal>
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Product Brand</h2>
           <div className="flex items-center gap-2 cursor-pointer">
@@ -54,15 +83,22 @@ const ProductBrand = () => {
             <h2>
               <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
             </h2>
-            {/* <h2>
-                <TiArrowBack className="text-gray-400" size={35}></TiArrowBack>
-              </h2> */}
+
             <h2>
-              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome
+                onClick={() => {
+                  router.push("/");
+                }}
+                className="text-red-500"
+                size={34}
+              ></AiTwotoneHome>
             </h2>
             <button
               onClick={() => {
-                router.push("/form/user_profile_form");
+                router.push({
+                  pathname: "/form/product_brand",
+                  query: { type: "CREATE"}
+                });
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -71,58 +107,70 @@ const ProductBrand = () => {
           </div>
         </div>
 
-        {/* <div className="bg-gray-300"></div> */}
-        <div className="overflow-x-auto text-black font-arial">
-          <table className="min-w-full divide-y border divide-gray-200">
-            <thead className="border-b">
-              <tr className="bg-gray-50 font-arial">
-                <th className=" w-[12%] px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th>
-                <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Brand Code
-                </th>
-                <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Brand Name
-                </th>
-                <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Product Segment
-                </th>
-                <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Company
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200 text-xs">
-              {dummyData?.map((item) => (
-                <tr key={item.id}>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
-                    <button
-                      onClick={() => {
-                        router.push("/form/product_category");
-                      }}
-                      className="b text-black   hover:text-blue-500  "
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => {
-                        router.push("/form/product_category");
-                      }}
-                      className="b text-black hover:text-yellow-400 ml-2"
-                    >
-                      Edit
-                    </button>
-                    <button className="b text-black hover:text-red-500 ml-2">Delete</button>
-                  </td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.id}</td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.brand}</td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.category}</td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.company}</td>
+        <div className="bg-white h-screen flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+            <table className="min-w-full divide-y border divide-gray-200">
+              <thead className="border-b">
+                <tr className="bg-gray-50 font-arial">
+                  <th className=" w-[12%] px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Action
+                  </th>
+                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Brand Code
+                  </th>
+                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Brand Name
+                  </th>
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Product Segment
+                  </th>
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Company
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200 text-xs">
+                {prdBrand?.map((item) => (
+                  <tr key={item.id}>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
+                      <button
+                        onClick={() => {
+                          router.push({
+                            pathname: "/form/product_brand",
+
+                            query: { type: "view", id: item?.brand_code }
+                          });
+                        }}
+                        className="b text-black   hover:text-blue-500  "
+                      >
+                        View
+                      </button>
+                      <button
+                        onClick={() => {
+                          router.push({
+                            pathname: "/form/product_brand",
+                            query: { type: "Edit", id: item?.brand_code }
+                          });
+                        }}
+                        className="b text-black hover:text-yellow-400 ml-2"
+                      >
+                        Edit
+                      </button>
+                      <button
+                      onClick={() => {
+                        deleteHandler(item?.brand_code);
+                      }}
+                       className="b text-black hover:text-red-500 ml-2">Delete</button>
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.brand_code}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.brand_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.pseg_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.c_name}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </Layout>

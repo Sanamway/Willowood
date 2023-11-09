@@ -1,0 +1,313 @@
+import React, { useState, useEffect } from "react";
+import Layout from "../Layout";
+import { AiFillFileExcel, AiTwotoneHome } from "react-icons/ai";
+import { TiArrowBack } from "react-icons/ti";
+import { useRouter } from "next/router";
+import axios from "axios";
+import { url } from "@/constants/url";
+
+const UserProfileForm = () => {
+  const router = useRouter();
+  const [menuRole, setMenusRole] = useState([]);
+  const [menus, setMenus] = useState([]);
+  const [selectRole, setSelectRole] = useState("");
+
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+  };
+
+  const gettingMenuRole = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/user_profiles`, { headers: headers });
+      const apires = await respond.data.data;
+      setMenusRole(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const gettingMenuName = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/menus`, { headers: headers });
+      const apires = await respond.data.data;
+      // setMenus(apires);
+      setMenus(
+        apires.map((item) => {
+          return {
+            ...item,
+            isEditable: false
+          };
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    gettingMenuRole();
+    gettingMenuName();
+  }, []);
+
+  const payload = menus
+    .filter((item) => item && item.isEditable === true)
+    .map((item) => ({
+      menu_id: item?.menu_id,
+      role_id: selectRole,
+      U_profile_name: item.menu_name,
+      New: item.AddRight,
+      modify: item.EditRight,
+      view: item.ViewRight,
+      Delete: item.DeleteRight,
+      wf_approval: item.ApproveRight,
+      c_name: "NA",
+      ul_name: item.Ul_name
+    }));
+
+  
+  async function makingLoopApi(datas) {
+    try {
+      for (const item of datas) {
+        const response = await axios.post(`${url}/api/assign_menu_rights`, JSON.stringify(item), {
+          headers: headers
+        });
+        const responseData = response.data;
+       console.log("fdvfv",responseData)
+      }
+      console.log("completed.");
+    } catch (error) {
+      console.error("error:", error);
+    }
+  }
+
+  const handleSave =()=>{
+    makingLoopApi(payload)
+  }
+
+  return (
+    <>
+      <Layout>
+        <div className="h-screen overflow-auto w-full font-arial bg-white ">
+          <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
+            <h2 className="font-arial font-normal text-3xl  py-2">User Profile</h2>
+            <div className="flex items-center gap-2 cursor-pointer">
+              <h2>
+                <TiArrowBack
+                  onClick={() => {
+                    router.push("/table/table_user_profile");
+                  }}
+                  className="text-gray-400"
+                  size={35}
+                ></TiArrowBack>
+              </h2>
+              <h2>
+                <AiTwotoneHome
+                  onClick={() => {
+                    router.push("/");
+                  }}
+                  className="text-red-500"
+                  size={34}
+                ></AiTwotoneHome>
+              </h2>
+            </div>
+          </div>
+
+          {/* <div className="bg-gray-300"></div> */}
+          <div className="bg-gray-100 py-4 rounded-md">
+            <div className="text-black mx-12 bg-white p-4">
+              <div className="text-black flex items-center gap-4">
+                <h2 className=" text-md">Role</h2>
+                <input disabled type="text" className="px-2 py-1 bg-gray-100 w-1/6" />
+              </div>
+              <div className=" text-black flex items-center justify-start mt-4">
+                <div className="w-1/2 flex items-center justify-center">
+                  <label className="w-1/2 text-gray-700 text-sm font-bold mb-2" htmlFor="userName">
+                    <span className="text-red-500 p-1">*</span>User Profile
+                  </label>
+                  <select
+                    className="w-full px-1 py-2 border-b border-gray-500 rouded bg-white focus:outline-none focus:border-b focus-border-indigo-500"
+                    id="userName"
+                    value={selectRole}
+                    onChange={(e) => {
+                      setSelectRole(e.target.value);
+                    }}
+                  >
+                    {menuRole.map((role) => (
+                      <option
+                        key={role.id}
+                        className="focus:outline-none focus:border-b bg-white whitespace-nowrap w-full"
+                        value={role.role_id}
+                      >
+                        {role.role}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="mt-8 font-arial">
+                <h2 className="text-sm mb-4">Assign Menu Rights</h2>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full">
+                    <thead className="font-arial border-b">
+                      <tr className="border bg-gray-50 font-arial">
+                        <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider ">
+                          SR NO.
+                        </td>
+                        <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                          Menus Name
+                        </td>
+                        <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                          New
+                        </td>
+                        <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                          Modify
+                        </td>
+                        <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                          View
+                        </td>
+                        <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                          Delete
+                        </td>
+                        <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                          Approve
+                        </td>
+                        <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                          Reject
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody className="font-arial text- text-center">
+                      {menus.map((menu, index) => (
+                        <tr className="bg-white divide-y border  divide-gray-200 text-xs" key={menu._id}>
+                          <td className="border-b px-4 py-2 flex items-center gap-4">
+                            <input
+                              type="checkbox"
+                              checked={menu.isEditable}
+                              onChange={() => {
+                                setMenus(
+                                  menus.map((el) =>
+                                    el._id === menu._id ? { ...el, isEditable: !el.isEditable } : el
+                                  )
+                                );
+                              }}
+                            />
+                            {index + 1}
+                          </td>
+                          <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-left text-xs">
+                            {menu?.menu_name}
+                          </td>
+                          <td className="border px-4 py-2">
+                            <input
+                              type="checkbox"
+                              disabled={!menu.isEditable}
+                              checked={menu.isEditable ? menu.AddRight : false}
+                              onChange={() => {
+                                setMenus(
+                                  menus.map((el) =>
+                                    el._id === menu._id ? { ...el, AddRight: !el.AddRight } : el
+                                  )
+                                );
+                              }}
+                            />
+                          </td>
+                          <td className="border px-4 py-2">
+                            <input
+                              type="checkbox"
+                              disabled={!menu.isEditable}
+                              // checked={menu.EditRight}
+                              checked={menu.isEditable ? menu.EditRight : false}
+                              onChange={() => {
+                                setMenus(
+                                  menus.map((el) =>
+                                    el._id === menu._id ? { ...el, EditRight: !el.EditRight } : el
+                                  )
+                                );
+                              }}
+                            />
+                          </td>
+                          <td className="border px-4 py-2">
+                            <input
+                              type="checkbox"
+                              disabled={!menu.isEditable}
+                              checked={menu.isEditable ? menu.ViewRight : false}
+                              onChange={() => {
+                                setMenus(
+                                  menus.map((el) =>
+                                    el._id === menu._id ? { ...el, ViewRight: !el.ViewRight } : el
+                                  )
+                                );
+                              }}
+                            />
+                          </td>
+                          <td className="border px-4 py-2">
+                            <input
+                              type="checkbox"
+                              disabled={!menu.isEditable}
+                              checked={menu.isEditable ? menu.DeleteRight : false}
+                              onChange={() => {
+                                setMenus(
+                                  menus.map((el) =>
+                                    el._id === menu._id ? { ...el, DeleteRight: !el.DeleteRight } : el
+                                  )
+                                );
+                              }}
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="checkbox"
+                              className="border px-4 py-2"
+                              disabled={!menu.isEditable}
+                              checked={menu.isEditable ? menu.ApproveRight : false}
+                              onChange={() => {
+                                setMenus(
+                                  menus.map((el) =>
+                                    el._id === menu._id ? { ...el, ApproveRight: !el.ApproveRight } : el
+                                  )
+                                );
+                              }}
+                            />
+                          </td>
+                          <td className="border px-4 py-2">
+                            <input
+                              type="checkbox"
+                              disabled={!menu.isEditable}
+                              checked={menu.isEditable ? menu.RejectRight : false}
+                              onChange={() => {
+                                setMenus(
+                                  menus.map((el) =>
+                                    el._id === menu._id ? { ...el, RejectRight: !el.RejectRight } : el
+                                  )
+                                );
+                              }}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="button flex items-center gap-3 mt-6 mb-10">
+                  <div onClick={handleSave} className="bg-green-700 px-4 py-1 text-white">
+                    Save
+                  </div>
+                  <div
+                    onClick={() => {
+                      router.push("/table/table_user_profile");
+                    }}
+                    className="bg-yellow-500 px-4 py-1 text-white"
+                  >
+                    Close
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    </>
+  );
+};
+
+export default UserProfileForm;

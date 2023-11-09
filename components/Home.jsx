@@ -1,16 +1,16 @@
 import React from "react";
 import Layout from "./Layout";
 import Footer from "./Footer";
-const Profile = () => {
+const HomePage = () => {
   return (
     <Layout>
       <div className="h-screen overflow-auto ">
         <div className="text-black bg-white max-w-full font-sans h-[52px]">
-          <h2 className="font-rale font-normal text-3xl px-5 py-2">Profile</h2>
+          <h2 className="font-rale font-normal text-3xl px-5 py-2">HomePage</h2>
         </div>
         {/* <div className="bg-gray-300"></div> */}
         <section classNameName="bg-[#f8f8f8] ">
-          <div className="max-w-screen-xl mx-auto p-5 sm:p-10 md:p-16">
+          <div className="w-[1000px] mx-auto p-5 sm:p-10 md:p-16">
             <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-10">
               <div className="rounded overflow-hidden shadow-lg">
                 <a href="#"></a>
@@ -197,4 +197,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default HomePage;

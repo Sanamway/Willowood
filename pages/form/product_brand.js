@@ -1,5 +1,5 @@
 import React from 'react'
-import ProductBrand from '@/components/ProductBrand'
+import ProductBrand from '@/components/forms/ProductBrand'
 const product_brand = () => {
   return (
     <>

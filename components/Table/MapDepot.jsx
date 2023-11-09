@@ -1,26 +1,48 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../Layout";
-import { AiTwotoneHome, AiOutlineSearch, TbFileDownload } from "react-icons/ai";
+import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
+import { url } from "@/constants/url";
+import { AiOutlineSearch } from "react-icons/ai";
+import axios from "axios";
+import ConfirmationModal from "../modals/ConfirmationModal";
 
-const AssignRole = () => {
+const MapDepot = () => {
   const router = useRouter();
 
-  const menus = [
-    {
-      id: 1,
-      name: "Menu Admin Check This",
-    },
-    {
-      id: 2,
-      name: "Menu 2",
-    },
-    {
-      id: 3,
-      name: "Menu 3",
-    },
-  ];
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+  };
+
+  const [data, setData] = useState(null);
+  const getDistrict = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_dipot`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      setData(apires);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getDistrict();
+  }, []);
+
+  const deleteHandler = (id) => {
+    setisOpen(true);
+    setDepotId(id);
+  };
+
+  const [isOpen, setisOpen] = useState(false);
+  const [depot, setDepotId] = useState(null);
+
+  const resetData = () => {
+    getDistrict();
+    setisOpen(false);
+  };
 
   return (
     <>
@@ -62,7 +84,10 @@ const AssignRole = () => {
               </h2>
               <button
                 onClick={() => {
-                  router.push("/form/map_depot_warehouse_form");
+                  router.push({
+                    pathname: "/form/map_depot_warehouse_form",
+                    query: { id: null, type: "Add" },
+                  });
                 }}
                 className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
               >
@@ -82,7 +107,7 @@ const AssignRole = () => {
                           Action
                         </th>
                         <td className="px-2 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                          SR
+                          Depot Id
                         </td>
                         <td className=" px-4 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                           Depot Name
@@ -102,10 +127,16 @@ const AssignRole = () => {
                         <td className="px-4 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                           Business Segment
                         </td>
+                        <td className="px-4 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                          Company
+                        </td>
+                        <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                          Status
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="font-arial text- text-center">
-                      {menus.map((menu, index) => (
+                      {data?.map((menu, index) => (
                         <tr
                           className="bg-white divide-y border  divide-gray-200 text-xs"
                           key={menu.id}
@@ -113,7 +144,10 @@ const AssignRole = () => {
                           <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                             <button
                               onClick={() => {
-                                router.push("/form/map_depot_warehouse_form");
+                                router.push({
+                                  pathname: "/form/map_depot_warehouse_form",
+                                  query: { id: menu.d_id, type: "View" },
+                                });
                               }}
                               className="b text-black   hover:text-blue-500  "
                             >
@@ -121,29 +155,39 @@ const AssignRole = () => {
                             </button>
                             <button
                               onClick={() => {
-                                router.push("/form/map_depot_warehouse_form");
+                                router.push({
+                                  pathname: "/form/map_depot_warehouse_form",
+                                  query: { id: menu.d_id, type: "Edit" },
+                                });
                               }}
                               className="b text-black hover:text-yellow-400 ml-2"
                             >
                               Edit
                             </button>
-                            <button className="b text-black hover:text-red-500 ml-2">
+                            <button
+                              className="b text-black hover:text-red-500 ml-2"
+                              onClick={() => {
+                                deleteHandler(menu.d_id);
+                              }}
+                            >
                               Delete
                             </button>
                           </td>
                           <td className=" px-2 py-2 flex items-center gap-4">
-                            {index + 1}
+                            {menu.d_id}
                           </td>
                           <td className="px-12 py-2 dark:border-2 whitespace-nowrap font-arial text-xs">
-                            -
+                            {menu.depot_name}
                           </td>
-                          <td className="border px-4 py-2">
-                            <input type="select" />
+                          <td className="border px-4 py-2">{menu.t_id}</td>
+                          <td className="border px-4 py-2">{menu.r_id}</td>
+                          <td className="border px-4 py-2">{menu.z_id}</td>
+                          <td className="border px-4 py-2">{menu.bu_id}</td>
+                          <td className="border px-4 py-2">{menu.bg_id}</td>
+                          <td className="border px-4 py-2">{menu.c_id}</td>
+                          <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                                {menu.isDeleted == false ? "Enabled" : "Disabled"}
                           </td>
-                          <td className="border px-4 py-2">Test123</td>
-                          <td className="border px-4 py-2">Test123</td>
-                          <td className="border px-4 py-2">Test123</td>
-                          <td className="border px-4 py-2">Test123</td>
                         </tr>
                       ))}
                     </tbody>
@@ -153,9 +197,17 @@ const AssignRole = () => {
             </div>
           </div>
         </div>
+        <ConfirmationModal
+          isOpen={isOpen}
+          onClose={() => setisOpen(false)}
+          onOpen={() => setisOpen(true)}
+          id={depot}
+          type="Depot"
+          onDeletedData={resetData}
+        />
       </Layout>
     </>
   );
 };
 
-export default AssignRole;
+export default MapDepot;
