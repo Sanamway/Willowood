@@ -23,10 +23,7 @@ const District = () => {
       });
       const apires = await respond.data.data;
       setData(apires);
-    } catch (error) {
-
-
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -40,13 +37,10 @@ const District = () => {
 
   const [isOpen, setisOpen] = useState(false);
   const [districtId, setDistrictId] = useState(null);
-   
-  
 
   const resetData = () => {
     getDistrict();
     setisOpen(false);
-    
   };
   return (
     <Layout>
@@ -72,7 +66,7 @@ const District = () => {
             <button
               onClick={() => {
                 router.push({
-                  pathname: "/form/district_form",
+                  pathname: "/form/map_depot_warehouse_form",
                   query: { id: null, type: "Add" },
                 });
               }}
@@ -115,6 +109,9 @@ const District = () => {
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Company
                   </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Status
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y  divide-gray-200 text-xs">
@@ -123,15 +120,21 @@ const District = () => {
                     <td className="  px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                       <button
                         onClick={() => {
-                          router.push("/form/district_form");
+                          router.push({
+                            pathname: "/form/district_form",
+                            query: { id: item.ds_id, type: "View" },
+                          });
                         }}
-                        className="b text-black   hover:text-blue-500"
+                        className="b text-black   hover:text-blue-500  "
                       >
                         View
                       </button>
                       <button
                         onClick={() => {
-                          router.push("/form/district_form");
+                          router.push({
+                            pathname: "/form/district_form",
+                            query: { id: item.ds_id, type: "Edit" },
+                          });
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
                       >
@@ -170,6 +173,9 @@ const District = () => {
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.c_id}
                     </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.isDeleted == false ? "Enabled" : "Disabled"}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -182,7 +188,7 @@ const District = () => {
         onClose={() => setisOpen(false)}
         onOpen={() => setisOpen(true)}
         id={districtId}
-        type="District"
+        type="Dipot"
         onDeletedData={resetData}
       />
     </Layout>

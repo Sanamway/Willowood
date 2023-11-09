@@ -14,6 +14,33 @@ const ZoneForm = () => {
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
+  const getDataById = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_zone`, {
+        headers: headers,
+        params: { z_id: router.query.id },
+      });
+      const apires = await respond.data.data;
+
+      setZoneState({
+        companyId: apires[0].c_id,
+        bgId: apires[0].bg_id,
+        buId: apires[0].bu_id,
+        zone: apires[0].zone_name,
+        hod: apires[0].hod_name,
+        mobile: apires[0].mobile_no,
+        email: apires[0].email_id,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (router.query.type === "Add") return;
+    getDataById();
+  }, [router]);
+
   const [companyData, setCompanyData] = useState([]);
 
   // Getting Company Information for the dropdown values
@@ -57,7 +84,6 @@ const ZoneForm = () => {
 
       setBGData(apires.filter((item, idx) => item.isDeleted === false));
     } catch (error) {
-      console.log(error);
       setBGData([]);
     }
   };
@@ -69,7 +95,6 @@ const ZoneForm = () => {
   const [buData, setBUData] = useState([]);
 
   const getBUInfo = async (businessSegmentId, companyId) => {
-    console.log("No-one", companyId);
     try {
       const respond = await axios.get(
         `${url}/api/get_business_unit_by_segmentId/${businessSegmentId}`,
@@ -78,8 +103,8 @@ const ZoneForm = () => {
         }
       );
       const apires = await respond.data.data;
-      console.log("KIO", apires);
-      setBUData(apires.filter((item) => item.c_id !== companyId));
+
+      setBUData(apires);
     } catch (error) {
       console.log(error);
     }
@@ -115,7 +140,7 @@ const ZoneForm = () => {
   });
 
   const [formErrors, setFormErrors] = useState({});
-  const handleSaveBusinessSegment = async (e) => {
+  const handleSaveZone = async (e) => {
     e.preventDefault();
     try {
       await validationSchema.validate(zoneState, {
@@ -145,12 +170,79 @@ const ZoneForm = () => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.error;
-      toast.error(errorMessage);
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("gst_no_1")) {
+        toast.error("GST number already exist");
+      } else if (errorMessage?.includes("zone_name_1")) {
+        toast.error("Zone already exist");
+      } else {
+        toast.error(errorMessage);
+      }
+
       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
       });
       setFormErrors(newErrors);
+    }
+  };
+
+  const handleEditZone = async (e) => {
+    e.preventDefault();
+    try {
+      await validationSchema.validate(zoneState, {
+        abortEarly: false,
+      });
+      const data = {
+        c_id: zoneState.companyId,
+        bu_id: zoneState.buId,
+        bg_id: zoneState.bgId,
+        mobile_no: zoneState.mobile,
+        hod_name: zoneState.hod,
+        email_id: zoneState.email,
+        zone_name: zoneState.zone,
+        c_name: "No Worries",
+        ul_name: "No Man",
+      };
+      const respond = await axios
+        .put(
+          `${url}/api/update_zone/${router.query.id}`,
+          JSON.stringify(data),
+          {
+            headers: headers,
+          }
+        )
+        .then((res) => {
+          if (!res) return;
+          toast.success("Zone edited successfully!");
+          setTimeout(() => {
+            router.push("/table/table_zone");
+          }, [3000]);
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.error;
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("gst_no_1")) {
+        toast.error("GST number already exist");
+      } else if (errorMessage?.includes("zone_name_1")) {
+        toast.error("Zone already exist");
+      } else {
+        toast.error(errorMessage);
+      }
+      const newErrors = {};
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+      setFormErrors(newErrors);
+    }
+  };
+
+  const handleSave = (e) => {
+    if (router.query.type === "Add") handleSaveZone(e);
+    else {
+      handleEditZone(e);
     }
   };
 
@@ -193,7 +285,11 @@ const ZoneForm = () => {
                 type="text"
                 id="inputField"
                 placeholder="Zone ID"
-                value={"Auto Generated"}
+                value={
+                  router.query.type === "Edit" || router.query.type === "View"
+                    ? router.query.id
+                    : "Auto Genrated"
+                }
                 disabled
               />
             </div>
@@ -217,9 +313,7 @@ const ZoneForm = () => {
                     })
                   }
                 >
-                  <option value="" disabled>
-                    - Select -
-                  </option>
+                  <option value="">- Select -</option>
                   {companyData.map((item, idx) => (
                     <option value={item.c_id} key={idx}>
                       {item.cmpny_name}
@@ -251,9 +345,7 @@ const ZoneForm = () => {
                     })
                   }
                 >
-                  <option value="" disabled>
-                    - Select -
-                  </option>
+                  <option value="">- Select -</option>
                   {bgData.map((item, idx) => (
                     <option value={item.bg_id} key={idx}>
                       {item.business_segment}
@@ -282,7 +374,7 @@ const ZoneForm = () => {
                   onChange={(e) =>
                     setZoneState({
                       ...zoneState,
-                       buId: e.target.value,
+                      buId: e.target.value,
                     })
                   }
                 >
@@ -407,22 +499,24 @@ const ZoneForm = () => {
               </div>
             </div>
 
-            <div className="button flex items-center gap-3 mt-6">
-              <div
-                className="bg-green-700 px-4 py-1 text-white cursor-pointer"
-                onClick={(e) => handleSaveBusinessSegment(e)}
-              >
-                Save
+            {router.query.type !== "View" && (
+              <div className="button flex items-center gap-3 mt-6">
+                <div
+                  className="bg-green-700 px-4 py-1 text-white cursor-pointer"
+                  onClick={(e) => handleSave(e)}
+                >
+                  {router.query.type !== "Add" ? "Update" : "Save"}{" "}
+                </div>
+                <button
+                  className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
+                  onClick={() => {
+                    router.push("/table/table_zone");
+                  }}
+                >
+                  Close
+                </button>
               </div>
-              <button
-                className="bg-yellow-500 px-4 py-1 text-white"
-                onClick={() => {
-                  router.push("/table/table_zone");
-                }}
-              >
-                Close
-              </button>
-            </div>
+            )}
           </form>
         </div>
       </div>

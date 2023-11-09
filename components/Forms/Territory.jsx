@@ -16,6 +16,36 @@ const Territory = () => {
 
   const [companyData, setCompanyData] = useState([]);
 
+  const getDataById = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_territory`, {
+        headers: headers,
+        params: { t_id: router.query.id },
+      });
+      const apires = await respond.data.data;
+
+      setTerritoryState({
+        companyId: apires[0].c_id,
+        bgId: apires[0].bg_id,
+        buId: apires[0].bu_id,
+        zoneId: apires[0].z_id,
+        hod: apires[0].hod_name,
+        mobile: apires[0].mobile_no,
+        email: apires[0].email_id,
+        regionId: apires[0].r_id,
+        territory: apires[0].territory_name,
+        costCenter: apires[0].cost_center,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (router.query.type === "Add") return;
+    getDataById();
+  }, [router]);
+
   // Getting Company Information for the dropdown values
   const getCompanyInfo = async () => {
     try {
@@ -202,7 +232,7 @@ const Territory = () => {
 
   const [formErrors, setFormErrors] = useState({});
 
-  const handleSaveRegion = async (e) => {
+  const handleSaveTerritory = async (e) => {
     e.preventDefault();
     try {
       await validationSchema.validate(territoryState, {
@@ -221,7 +251,6 @@ const Territory = () => {
         mobile_no: territoryState.mobile,
         email_id: territoryState.email,
         cost_center: territoryState.costCenter,
-        t_id: 2,
       };
       const respond = await axios
         .post(`${url}/api/add_territory`, JSON.stringify(data), {
@@ -236,15 +265,84 @@ const Territory = () => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.error;
-      toast.error(errorMessage);
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("gst_no_1")) {
+        toast.error("GST number already exist");
+      } else if (errorMessage?.includes("territory_name_1")) {
+        toast.error("Territory already exist");
+      } else {
+        toast.error(errorMessage);
+      }
       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
       });
+
       setFormErrors(newErrors);
     }
   };
 
+  const handleEditTerritory = async (e) => {
+    e.preventDefault();
+    try {
+      await validationSchema.validate(territoryState, {
+        abortEarly: false,
+      });
+      const data = {
+        c_id: Number(territoryState.companyId),
+        bu_id: Number(territoryState.buId),
+        bg_id: Number(territoryState.bgId),
+        z_id: Number(territoryState.zoneId),
+        r_id: Number(territoryState.regionId),
+        territory_name: territoryState.territory,
+        hod_name: territoryState.hod,
+        c_name: "No Worries",
+        ul_name: "No Man",
+        mobile_no: territoryState.mobile,
+        email_id: territoryState.email,
+        cost_center: territoryState.costCenter,
+      };
+      const respond = await axios
+        .put(
+          `${url}/api/update_territory/${router.query.id}`,
+          JSON.stringify(data),
+          {
+            headers: headers,
+          }
+        )
+        .then((res) => {
+          if (!res) return;
+          toast.success("Territory edited successfully!");
+          setTimeout(() => {
+            router.push("/table/table_territory");
+          }, [3000]);
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.error;
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("gst_no_1")) {
+        toast.error("GST number already exist");
+      } else if (errorMessage?.includes("territory_name_1")) {
+        toast.error("Territory already exist");
+      } else {
+        toast.error(errorMessage);
+      }
+      const newErrors = {};
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+
+      setFormErrors(newErrors);
+    }
+  };
+  const handleSave = (e) => {
+    if (router.query.type === "Add") handleSaveTerritory(e);
+    else {
+      handleEditTerritory(e);
+    }
+  };
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
@@ -284,7 +382,11 @@ const Territory = () => {
                 type="text"
                 id="inputField"
                 placeholder="Territory Id"
-                value={"Auto Generated"}
+                value={
+                  router.query.type === "Edit" || router.query.type === "View"
+                    ? router.query.id
+                    : "Auto Genrated"
+                }
                 disabled={true}
               />
             </div>
@@ -595,22 +697,24 @@ const Territory = () => {
               </div>
             </div>
 
-            <div className="button flex items-center gap-3 mt-6">
-              <div
-                className="bg-green-700 px-4 py-1 text-white cursor-pointer"
-                onClick={(e) => handleSaveRegion(e)}
-              >
-                Save
+            {router.query.type !== "View" && (
+              <div className="button flex items-center gap-3 mt-6">
+                <div
+                  className="bg-green-700 px-4 py-1 text-white cursor-pointer"
+                  onClick={(e) => handleSave(e)}
+                >
+                  {router.query.type !== "Add" ? "Update" : "Save"}{" "}
+                </div>
+                <button
+                  className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
+                  onClick={() => {
+                    router.push("/table/table_zone");
+                  }}
+                >
+                  Close
+                </button>
               </div>
-              <button
-                className="bg-yellow-500 px-4 py-1 text-white"
-                onClick={() => {
-                  router.push("/table/table_territory");
-                }}
-              >
-                Close
-              </button>
-            </div>
+            )}
           </form>
         </div>
       </div>

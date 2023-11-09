@@ -116,7 +116,6 @@ const RegionForm = () => {
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                     Status
                   </th>
-                  
                 </tr>
               </thead>
               <tbody className="bg-white divide-y  divide-gray-200 text-xs">
@@ -125,7 +124,10 @@ const RegionForm = () => {
                     <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                       <button
                         onClick={() => {
-                          router.push("/form/region_form");
+                          router.push({
+                            pathname: "/form/region_form",
+                            query: { id: item.r_id, type: "View" },
+                          });
                         }}
                         className="b text-black   hover:text-blue-500  "
                       >
@@ -133,7 +135,10 @@ const RegionForm = () => {
                       </button>
                       <button
                         onClick={() => {
-                          router.push("/form/region_form");
+                          router.push({
+                            pathname: "/form/region_form",
+                            query: { id: item.r_id, type: "Edit" },
+                          });
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
                       >

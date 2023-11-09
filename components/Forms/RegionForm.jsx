@@ -16,6 +16,34 @@ const RegionForm = () => {
 
   const [companyData, setCompanyData] = useState([]);
 
+  const getDataById = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_region`, {
+        headers: headers,
+        params: { r_id: router.query.id },
+      });
+      const apires = await respond.data.data;
+
+      setRegionState({
+        companyId: apires[0].c_id,
+        bgId: apires[0].bg_id,
+        buId: apires[0].bu_id,
+        zId: apires[0].z_id,
+        hod: apires[0].hod_name,
+        mobile: apires[0].mobile_no,
+        email: apires[0].email_id,
+        region: apires[0].region_name,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (router.query.type === "Add") return;
+    getDataById();
+  }, [router]);
+
   // Getting Company Information for the dropdown values
   const getCompanyInfo = async () => {
     try {
@@ -35,17 +63,7 @@ const RegionForm = () => {
   }, []);
 
   const [bgData, setBGData] = useState([]);
-  const [regionState, setRegionState] = useState({
-    bgId: "",
-    buId: "",
-    companyId: "",
-    zoneId: "",
-    region: "",
-    hod: "",
-    mobile: "",
-    email: "",
-    zId: "",
-  });
+  const [regionState, setRegionState] = useState({});
   // Getting Company Information for the dropdown values
   const getBGInfo = async (companyId) => {
     try {
@@ -188,7 +206,15 @@ const RegionForm = () => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.error;
-      toast.error(errorMessage);
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("gst_no_1")) {
+        toast.error("GST number already exist");
+      } else if (errorMessage?.includes("region_name_1")) {
+        toast.error("Region already exist");
+      } else {
+        toast.error(errorMessage);
+      }
       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
@@ -197,6 +223,64 @@ const RegionForm = () => {
     }
   };
 
+  const handleEditRegion = async (e) => {
+    e.preventDefault();
+    try {
+      await validationSchema.validate(regionState, {
+        abortEarly: false,
+      });
+      const data = {
+        c_id: Number(regionState.companyId),
+        bu_id: Number(regionState.buId),
+        bg_id: Number(regionState.bgId),
+        z_id: Number(regionState.zId),
+        mobile_no: regionState.mobile,
+        hod_name: regionState.hod,
+        email_id: regionState.email,
+        region_name: regionState.region,
+        c_name: "No Worries",
+        ul_name: "No Man",
+      };
+      const respond = await axios
+        .put(
+          `${url}/api/update_region/${router.query.id}`,
+          JSON.stringify(data),
+          {
+            headers: headers,
+          }
+        )
+        .then((res) => {
+          if (!res) return;
+          toast.success("Region edited successfully!");
+          setTimeout(() => {
+            router.push("/table/table_region");
+          }, [3000]);
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.error;
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("gst_no_1")) {
+        toast.error("GST number already exist");
+      } else if (errorMessage?.includes("region_name_1")) {
+        toast.error("Region already exist");
+      } else {
+        toast.error(errorMessage);
+      }
+      const newErrors = {};
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+      setFormErrors(newErrors);
+    }
+  };
+
+  const handleSave = (e) => {
+    if (router.query.type === "Add") handleSaveRegion(e);
+    else {
+      handleEditRegion(e);
+    }
+  };
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
@@ -236,7 +320,11 @@ const RegionForm = () => {
                 type="text"
                 id="inputField"
                 placeholder="Region ID"
-                value={"Auto Generated"}
+                value={
+                  router.query.type === "Edit" || router.query.type === "View"
+                    ? router.query.id
+                    : "Auto Genrated"
+                }
                 disabled={true}
               />
             </div>
@@ -260,9 +348,7 @@ const RegionForm = () => {
                     })
                   }
                 >
-                  <option value="" disabled>
-                    - Select -
-                  </option>
+                  <option value={""}>- Select -</option>
                   {companyData.map((item, idx) => (
                     <option value={item.c_id} key={idx}>
                       {item.cmpny_name}
@@ -294,7 +380,7 @@ const RegionForm = () => {
                     })
                   }
                 >
-                  <option value="" disabled>
+                  <option value={""} disabled>
                     - Select -
                   </option>
                   {bgData.map((item, idx) => (
@@ -329,9 +415,7 @@ const RegionForm = () => {
                     })
                   }
                 >
-                  <option value="" disabled>
-                    - Select -
-                  </option>
+                  <option value={" "}>- Select -</option>
                   {buData.map((item, idx) => (
                     <option value={item.bu_id} key={idx}>
                       {item.business_unit_name}
@@ -470,22 +554,24 @@ const RegionForm = () => {
               </div>
             </div>
 
-            <div className="button flex items-center gap-3 mt-6">
-              <div
-                className="bg-green-700 px-4 py-1 text-white cursor-pointer"
-                onClick={(e) => handleSaveRegion(e)}
-              >
-                Save
+            {router.query.type !== "View" && (
+              <div className="button flex items-center gap-3 mt-6">
+                <div
+                  className="bg-green-700 px-4 py-1 text-white cursor-pointer"
+                  onClick={(e) => handleSave(e)}
+                >
+                  {router.query.type === "Edit" ? "Update" : "Save"}
+                </div>
+                <button
+                  className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
+                  onClick={() => {
+                    router.push("/table/table_region");
+                  }}
+                >
+                  Close
+                </button>
               </div>
-              <button
-                className="bg-yellow-500 px-4 py-1 text-white"
-                onClick={() => {
-                  router.push("/table/table_region");
-                }}
-              >
-                Close
-              </button>
-            </div>
+            )}
           </form>
         </div>
       </div>

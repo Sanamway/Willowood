@@ -85,7 +85,7 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       console.log(error);
     }
   };
-   const handleDeleteDistrict = async () => {
+  const handleDeleteDistrict = async () => {
     try {
       const respond = await axios
         .delete(`${url}/api/delete_district/${id}`, {
@@ -97,7 +97,33 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
     } catch (error) {
       console.log(error);
     }
-  } ;
+  };
+  const handleDeleteVillage = async () => {
+    try {
+      const respond = await axios
+        .delete(`${url}/api/delete_village/${id}`, {
+          headers: headers,
+        })
+        .then((res) => onDeletedData());
+
+      const apires = await respond.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleDeleteDepot = async () => {
+    try {
+      const respond = await axios
+        .delete(`${url}/api/delete_dipot/${id}`, {
+          headers: headers,
+        })
+        .then((res) => onDeletedData());
+
+      const apires = await respond.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleDelete = () => {
     if (type === "Company Information") {
@@ -128,6 +154,16 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       handleDeleteDistrict();
       onClose();
       onDeletedData();
+    } else if (type === "Village") {
+      handleDeleteVillage();
+      onClose();
+      onDeletedData();
+    } else if (type === "Depot") {
+      handleDeleteDepot();
+      onClose();
+      onDeletedData();
+    } else {
+      return;
     }
   };
   return (

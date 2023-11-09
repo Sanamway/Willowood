@@ -17,6 +17,33 @@ const UserProfileForm = () => {
 
   const [companyData, setCompanyData] = useState([]);
 
+  const getDataById = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_district`, {
+        headers: headers,
+        params: { ds_id: router.query.id },
+      });
+      const apires = await respond.data.data;
+
+      setDistrictState({
+        companyId: apires[0].c_id,
+        bgId: apires[0].bg_id,
+        buId: apires[0].bu_id,
+        zoneId: apires[0].z_id,
+        regionId: apires[0].r_id,
+        territoryId: apires[0].t_id,
+        district: apires[0].district_name,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (router.query.type === "Add") return;
+    getDataById();
+  }, [router]);
+
   // Getting Company Information for the dropdown values
   const getCompanyInfo = async () => {
     try {
@@ -232,6 +259,7 @@ const UserProfileForm = () => {
     regionId: Yup.string().required("Region is required"),
     territoryId: Yup.string().required("Territory is required"),
     district: Yup.string().required("District is required"),
+    // territory: Yup.string().required("Territory is required"),
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -271,12 +299,81 @@ const UserProfileForm = () => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.error;
-      toast.error(errorMessage);
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("gst_no_1")) {
+        toast.error("GST number already exist");
+      } else if (errorMessage?.includes("district_name_1")) {
+        toast.error("District already exist");
+      } else {
+        toast.error(errorMessage);
+      }
       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
       });
       setFormErrors(newErrors);
+    }
+  };
+
+  const handleEditDistrict = async (e) => {
+    e.preventDefault();
+    try {
+      await validationSchema.validate(districtState, {
+        abortEarly: false,
+      });
+      const data = {
+        c_id: Number(districtState.companyId),
+        bu_id: Number(districtState.buId),
+        bg_id: Number(districtState.bgId),
+        z_id: Number(districtState.zoneId),
+        r_id: Number(districtState.regionId),
+        t_id: Number(districtState.territoryId),
+        district_name: districtState.district,
+        c_name: localStorage.getItem("c_name")
+          ? localStorage.getItem("c_name")
+          : "New Man",
+        ul_name: localStorage.getItem("ul_name")
+          ? localStorage.getItem("ul_name")
+          : "No Man",
+      };
+      const respond = await axios
+        .put(
+          `${url}/api/update_district/${router.query.id}`,
+          JSON.stringify(data),
+          {
+            headers: headers,
+          }
+        )
+        .then((res) => {
+          if (!res) return;
+          toast.success("District edited successfully!");
+          setTimeout(() => {
+            router.push("/table/table_district");
+          }, [3000]);
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.error;
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("gst_no_1")) {
+        toast.error("GST number already exist");
+      } else if (errorMessage?.includes("district_name_1")) {
+        toast.error("District already exist");
+      } else {
+        toast.error(errorMessage);
+      }
+      const newErrors = {};
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+      setFormErrors(newErrors);
+    }
+  };
+  const handleSave = (e) => {
+    if (router.query.type === "Add") handleSaveDistrict(e);
+    else {
+      handleEditDistrict(e);
     }
   };
 
@@ -319,7 +416,11 @@ const UserProfileForm = () => {
                 type="text"
                 id="inputField"
                 placeholder="District Id"
-                value={"Auto Generated"}
+                value={
+                  router.query.type === "Edit" || router.query.type === "View"
+                    ? router.query.id
+                    : "Auto Genrated"
+                }
                 disabled={true}
               />
             </div>
@@ -533,12 +634,14 @@ const UserProfileForm = () => {
             <div className="flex -mx-2 mb-4 relative">
               <div className="w-1/2 px-2">
                 <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="block text-gray-700 text-sm  mb-2"
                   htmlFor="stateSelect"
                 >
-                  <small className="text-red-600">*</small> District
+                  <small className="block text-gray-700 text-sm font-bold">
+                    * District
+                  </small>
                   <input
-                    className="w-full mt-2 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     id="phoneField"
                     placeholder="District"
                     value={districtState.district}
@@ -558,22 +661,24 @@ const UserProfileForm = () => {
               </div>
             </div>
 
-            <div className="button flex items-center gap-3 mt-6 cursor-pointer">
-              <div
-                className="bg-green-700 px-4 py-1 text-white"
-                onClick={(e) => handleSaveDistrict(e)}
-              >
-                Save
+            {router.query.type !== "View" && (
+              <div className="button flex items-center gap-3 mt-6">
+                <div
+                  className="bg-green-700 px-4 py-1 text-white cursor-pointer"
+                  onClick={(e) => handleSave(e)}
+                >
+                  {router.query.type !== "Add" ? "Update" : "Save"}{" "}
+                </div>
+                <button
+                  className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
+                  onClick={() => {
+                    router.push("/table/table_district");
+                  }}
+                >
+                  Close
+                </button>
               </div>
-              <button
-                className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
-                onClick={() => {
-                  router.push("/table/table_district");
-                }}
-              >
-                Close
-              </button>
-            </div>
+            )}
           </form>
         </div>
       </div>

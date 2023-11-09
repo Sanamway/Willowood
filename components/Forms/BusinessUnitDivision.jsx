@@ -20,20 +20,15 @@ const BusinessUnit = () => {
         params: { bu_id: router.query.id },
       });
       const apires = await respond.data.data;
-      console.log("lkio" , apires)
-      setBusinessUnitState(
 
-        {
-
-
-          companyId: apires[0].c_id,
-          bgId: apires[0].bg_id,
-          unitDivision: apires[0].bu_id,
-          hod: apires[0].hod_name,
-          mobile:  apires[0].mobile_no,
-          email: apires[0].email_id,
-        }
-      )
+      setBusinessUnitState({
+        companyId: apires[0].c_id,
+        bgId: apires[0].bg_id,
+        unitDivision: apires[0].business_unit_name,
+        hod: apires[0].hod_name,
+        mobile: apires[0].mobile_no,
+        email: apires[0].email_id,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -149,6 +144,15 @@ const BusinessUnit = () => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.error;
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("gst_no_1")) {
+        toast.error("GST number already exist");
+      } else if (errorMessage?.includes("business_unit_name_1")) {
+        toast.error("Business Unit already exist");
+      } else {
+        toast.error(errorMessage);
+      }
 
       const newErrors = {};
       errors?.inner?.forEach((error) => {
@@ -178,7 +182,7 @@ const BusinessUnit = () => {
       };
       const respond = await axios
         .put(
-          `${url}/api/update_business_unit/${router.query.id} `,
+          `${url}/api/update_business_unit/${router.query.id}`,
           JSON.stringify(data),
           {
             headers: headers,
@@ -186,22 +190,22 @@ const BusinessUnit = () => {
         )
         .then((res) => {
           if (!res) return;
-             toast.success("Business Unit Division edited successfully!");
+          toast.success("Business Unit Division edited successfully!");
           setTimeout(() => {
             router.push("/table/table_business_unit_division");
           }, [3000]);
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.error;
-
       if (errorMessage?.includes("email_1")) {
         toast.error("Email already exist");
       } else if (errorMessage?.includes("gst_no_1")) {
         toast.error("GST number already exist");
-      } else if (errorMessage?.includes("cmpny_name_1")) {
-        toast.error("Company Name already exist");
+      } else if (errorMessage?.includes("business_unit_name_1")) {
+        toast.error("Business Unit already exist");
+      } else {
+        toast.error(errorMessage);
       }
-
       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
@@ -212,7 +216,7 @@ const BusinessUnit = () => {
 
   const handleSave = (e) => {
     if (router.query.type !== "Edit") handleSaveBusinessUnit(e);
-    handleEditBusinessUnit(e)
+    handleEditBusinessUnit(e);
   };
   return (
     <Layout>
@@ -221,12 +225,12 @@ const BusinessUnit = () => {
         <div className="text-black flex items-center justify-between bg-white max-w-6/12 font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
             Business Unit Division
-           </h2>
+          </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <h2>
               <TiArrowBack
                 onClick={() => {
-                   router.push("/table/table_business_unit_division");
+                  router.push("/table/table_business_unit_division");
                 }}
                 className="text-gray-400"
                 size={35}
@@ -261,7 +265,11 @@ const BusinessUnit = () => {
                 type="text"
                 id="inputField"
                 disabled={true}
-                value=  {router.query.type === "Edit" ? router.query.id : "Auto Genrated"}  
+                value={
+                  router.query.type === "Edit" || router.query.type === "View"
+                    ? router.query.id
+                    : "Auto Genrated"
+                }
                 placeholder="B.U Id"
               />
             </div>
@@ -285,6 +293,12 @@ const BusinessUnit = () => {
                     })
                   }
                 >
+                  <option
+                    value={""}
+                    className="focus:outline-none focus:border-b bg-white"
+                  >
+                    - Select -
+                  </option>
                   {companyData.map((item, idx) => (
                     <option value={item.c_id} key={idx}>
                       {item.cmpny_name}
@@ -316,6 +330,12 @@ const BusinessUnit = () => {
                     })
                   }
                 >
+                  <option
+                    value={""}
+                    className="focus:outline-none focus:border-b bg-white"
+                  >
+                    - Select -
+                  </option>
                   {businessSegmentData.map((item, idx) => (
                     <option value={item.bg_id} key={idx}>
                       {item.business_segment}

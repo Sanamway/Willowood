@@ -61,7 +61,7 @@ const CompanyInfo = () => {
     cName: "",
     ulName: "",
   });
-  
+
   //Defining the Validation Schema
   const validationSchema = Yup.object().shape({
     companyName: Yup.string().required("Company Name is required"),
@@ -360,10 +360,10 @@ const CompanyInfo = () => {
                       }}
                     >
                       <option
-                        value=""
+                        value={""}
                         className="focus:outline-none focus:border-b bg-white"
                       >
-                        City
+                        - Select -
                       </option>
                       <option value="Delhi">Delhi</option>
                       <option value="Mumbai">Mumbai</option>
@@ -394,12 +394,13 @@ const CompanyInfo = () => {
                       }
                     >
                       <option
-                        value=""
+                        value={""}
                         className="focus:outline-none focus:border-b bg-white"
                       >
-                        State
+                        - Select -
                       </option>
                       <option value="UP">UP</option>
+                      <option value="Delhi">Delhi</option>
                       <option value="Haryana">Haryana</option>
                     </select>
                     {formErrors.corpAddressState && (
@@ -433,10 +434,10 @@ const CompanyInfo = () => {
                       }
                     >
                       <option
-                        value=""
+                        value={""}
                         className="focus:outline-none focus:border-b bg-white"
                       >
-                        City
+                        - Select -
                       </option>
                       <option value="Delhi">Delhi</option>
                       <option value="Mumbai">Mumbai</option>
@@ -467,12 +468,13 @@ const CompanyInfo = () => {
                       }
                     >
                       <option
-                        value=""
+                        value={""}
                         className="focus:outline-none focus:border-b bg-white"
                       >
-                        State
+                        - Select -
                       </option>
                       <option value="UP">UP</option>
+                      <option value="Delhi">Delhi</option>
                       <option value="Haryana">Haryana</option>
                     </select>
                     {formErrors.saleAddressState && (

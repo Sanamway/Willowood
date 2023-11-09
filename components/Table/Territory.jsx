@@ -117,6 +117,9 @@ const Territory = () => {
                     Mobile
                   </th>
                   <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Cost Center
+                  </th>
+                  <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                     Status
                   </th>
                 </tr>
@@ -127,7 +130,10 @@ const Territory = () => {
                     <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                       <button
                         onClick={() => {
-                          router.push("/form/territory_form");
+                          router.push({
+                            pathname: "/form/territory_form",
+                            query: { id: item.t_id, type: "View" },
+                          });
                         }}
                         className="b text-black   hover:text-blue-500  "
                       >
@@ -135,7 +141,10 @@ const Territory = () => {
                       </button>
                       <button
                         onClick={() => {
-                          router.push("/form/territory_form");
+                          router.push({
+                            pathname: "/form/territory_form",
+                            query: { id: item.t_id, type: "Edit" },
+                          });
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
                       >
@@ -179,6 +188,9 @@ const Territory = () => {
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.mobile_no}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.cost_center}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.isDeleted == false ? "Enable" : "Disable"}

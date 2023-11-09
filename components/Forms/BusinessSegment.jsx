@@ -121,7 +121,16 @@ const BusinessSegmentForm = () => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.error;
-      toast.error(errorMessage);
+      if (errorMessage?.includes("email_1")) {
+        toast.error("Email already exist");
+      } else if (errorMessage?.includes("gst_no_1")) {
+        toast.error("GST number already exist");
+      } else if (errorMessage?.includes("business_segment_1")) {
+        toast.error("Business Segment already exist");
+      } else {
+        toast.error(errorMessage);
+      }
+
       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
@@ -164,27 +173,29 @@ const BusinessSegmentForm = () => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.error;
-
       if (errorMessage?.includes("email_1")) {
         toast.error("Email already exist");
       } else if (errorMessage?.includes("gst_no_1")) {
         toast.error("GST number already exist");
-      } else if (errorMessage?.includes("cmpny_name_1")) {
-        toast.error("Company Name already exist");
+      } else if (errorMessage?.includes("business_segment_1")) {
+        toast.error("Business Segment already exist");
+      } else {
+        toast.error(errorMessage);
       }
 
-      const newErrors = {};
+       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
       });
       setFormErrors(newErrors);
     }
   };
-  
 
   const handleSave = (e) => {
-    if (router.query.type !== "Edit") handleSaveBusinessSegment(e);
-    handleEditBusinessSegment(e);
+    if (router.query.type === "Add") handleSaveBusinessSegment(e);
+    else {
+      handleEditBusinessSegment(e);
+    }
   };
 
   return (
