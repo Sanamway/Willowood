@@ -11,6 +11,7 @@ const UserProfileForm = () => {
   const [menuRole, setMenusRole] = useState([]);
   const [menus, setMenus] = useState([]);
   const [selectRole, setSelectRole] = useState("");
+  const [roleDesc, setRoleDesc] = useState("")
 
   const headers = {
     "Content-Type": "application/json",
@@ -21,6 +22,7 @@ const UserProfileForm = () => {
     try {
       const respond = await axios.get(`${url}/api/user_profiles`, { headers: headers });
       const apires = await respond.data.data;
+      console.log("apiprof", apires)
       setMenusRole(apires);
     } catch (error) {
       console.log(error);
@@ -56,6 +58,7 @@ const UserProfileForm = () => {
       menu_id: item?.menu_id,
       role_id: selectRole,
       U_profile_name: item.menu_name,
+      umenu_name:selectRole,
       New: item.AddRight,
       modify: item.EditRight,
       view: item.ViewRight,
@@ -84,6 +87,12 @@ const UserProfileForm = () => {
   const handleSave =()=>{
     makingLoopApi(payload)
   }
+
+  
+  const handleSelectRole =(e)=>{
+    setSelectRole(e.target.value)
+  }
+  
 
   return (
     <>
@@ -129,15 +138,13 @@ const UserProfileForm = () => {
                     className="w-full px-1 py-2 border-b border-gray-500 rouded bg-white focus:outline-none focus:border-b focus-border-indigo-500"
                     id="userName"
                     value={selectRole}
-                    onChange={(e) => {
-                      setSelectRole(e.target.value);
-                    }}
+                    onChange={handleSelectRole}
                   >
                     {menuRole.map((role) => (
                       <option
                         key={role.id}
                         className="focus:outline-none focus:border-b bg-white whitespace-nowrap w-full"
-                        value={role.role_id}
+                        value={role.description}
                       >
                         {role.role}
                       </option>
@@ -289,14 +296,14 @@ const UserProfileForm = () => {
                   </table>
                 </div>
                 <div className="button flex items-center gap-3 mt-6 mb-10">
-                  <div onClick={handleSave} className="bg-green-700 px-4 py-1 text-white">
+                  <div onClick={handleSave} className="bg-green-700 px-4 py-1 cursor-pointer text-white">
                     Save
                   </div>
                   <div
                     onClick={() => {
                       router.push("/table/table_user_profile");
                     }}
-                    className="bg-yellow-500 px-4 py-1 text-white"
+                    className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
                   >
                     Close
                   </div>

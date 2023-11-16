@@ -16,7 +16,6 @@ const MaterialSkuInfo = () => {
     e.preventDefault();
     const files = e.target.files;
     const newImages = Array.from(files);
-
     setSelectedImages((prevImages) => [...prevImages, ...newImages]);
   };
 
