@@ -138,6 +138,32 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       console.log(error);
     }
   };
+  const handleDeleteFarmer = async () => {
+    try {
+      const respond = await axios
+        .delete(`${url}/api/delete_farmer/${id}`, {
+          headers: headers,
+        })
+        .then((res) => onDeletedData());
+
+      const apires = await respond.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleDeleteBst = async () => {
+    try {
+      const respond = await axios
+        .delete(`${url}/api/delete_bstuser/${id}`, {
+          headers: headers,
+        })
+        .then((res) => onDeletedData());
+
+      const apires = await respond.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleDelete = () => {
     if (type === "Company Information") {
@@ -178,6 +204,14 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       onDeletedData();
     } else if (type === "Crop") {
       handleDeleteCrop();
+      onClose();
+      onDeletedData();
+    } else if (type === "Farmer") {
+      handleDeleteFarmer();
+      onClose();
+      onDeletedData();
+    } else if (type === "Bst") {
+      handleDeleteBst();
       onClose();
       onDeletedData();
     } else {

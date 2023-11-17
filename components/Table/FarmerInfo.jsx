@@ -34,11 +34,11 @@ const Farmer = () => {
 
   const deleteHandler = (id) => {
     setisOpen(true);
-    setDistrictId(id);
+    setFarmerId(id);
   };
 
   const [isOpen, setisOpen] = useState(false);
-  const [districtId, setDistrictId] = useState(null);
+  const [farmerId, setFarmerId] = useState(null);
 
   const resetData = () => {
     getDistrict();
@@ -54,8 +54,8 @@ const Farmer = () => {
     { label: "Types", key: "f_type" },
     { label: "Category", key: "email" },
     { label: "Village", key: "email" },
-    { label: "Pincode", key: "email" },
-    { label: "Post Office", key: "email" },
+    { label: "Pincode", key: "f_pin" },
+    { label: "Post Office", key: "f_post" },
     { label: "Territory", key: "email" },
     { label: "District", key: "ds_id" },
     { label: "Zone", key: "z_id" },
@@ -175,6 +175,9 @@ const Farmer = () => {
                   <th className="px-6  py-2  whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Business Segment
                   </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Status
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
@@ -183,7 +186,10 @@ const Farmer = () => {
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
                         onClick={() => {
-                          router.push("/form/farmer_info_form");
+                          router.push({
+                            pathname: "/form/farmer_info_form",
+                            query: { id: item.f_id, type: "View" },
+                          });
                         }}
                         className="b text-black   hover:text-blue-500  "
                       >
@@ -191,13 +197,21 @@ const Farmer = () => {
                       </button>
                       <button
                         onClick={() => {
-                          router.push("/form/farmer_info_form");
+                          router.push({
+                            pathname: "/form/farmer_info_form",
+                            query: { id: item.f_id, type: "Edit" },
+                          });
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
                       >
                         Edit
                       </button>
-                      <button className="b text-black hover:text-red-500 ml-2">
+                      <button
+                        className="b text-black hover:text-red-500 ml-2"
+                        onClick={() => {
+                          deleteHandler(item.f_id);
+                        }}
+                      >
                         Delete
                       </button>
                     </td>
@@ -223,10 +237,10 @@ const Farmer = () => {
                       {item.v_id}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.v_id}
+                      {item.f_pin}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.t_id}
+                      {item.f_post}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.t_id}
@@ -246,6 +260,9 @@ const Farmer = () => {
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.bg_id}
                     </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.isDeleted == false ? "Enabled" : "Disabled"}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -253,6 +270,14 @@ const Farmer = () => {
           </div>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={isOpen}
+        onClose={() => setisOpen(false)}
+        onOpen={() => setisOpen(true)}
+        id={farmerId}
+        type="Farmer"
+        onDeletedData={resetData}
+      />
     </Layout>
   );
 };
