@@ -125,6 +125,20 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
     }
   };
 
+  const handleDeleteCrop = async () => {
+    try {
+      const respond = await axios
+        .delete(`${url}/api/delete_crop/${id}`, {
+          headers: headers,
+        })
+        .then((res) => onDeletedData());
+
+      const apires = await respond.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleDelete = () => {
     if (type === "Company Information") {
       handleDeleteCompany();
@@ -160,6 +174,10 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       onDeletedData();
     } else if (type === "Depot") {
       handleDeleteDepot();
+      onClose();
+      onDeletedData();
+    } else if (type === "Crop") {
+      handleDeleteCrop();
       onClose();
       onDeletedData();
     } else {

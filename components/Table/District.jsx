@@ -66,7 +66,7 @@ const District = () => {
             <button
               onClick={() => {
                 router.push({
-                  pathname: "/form/map_depot_warehouse_form",
+                  pathname: "/form/district_form",
                   query: { id: null, type: "Add" },
                 });
               }}

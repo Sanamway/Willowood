@@ -26,7 +26,7 @@ const Village = () => {
     } catch (error) {}
   };
 
-  useEffect(() => {
+   useEffect(() => {
     getDistrict();
   }, []);
 
