@@ -112,20 +112,23 @@ const ProductBrand = () => {
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
-                  <th className=" w-[12%] px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className=" w-[12%] px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Action
                   </th>
-                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Brand Code
                   </th>
-                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Brand Name
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Product Segment
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Company
+                  </th>
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Status
                   </th>
                 </tr>
               </thead>
@@ -165,7 +168,8 @@ const ProductBrand = () => {
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.brand_code}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.brand_name}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.pseg_id}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.c_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.c_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.isDeleted ? "Disabled":"Enabled"}</td>
                   </tr>
                 ))}
               </tbody>

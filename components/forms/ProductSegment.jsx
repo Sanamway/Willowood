@@ -34,16 +34,17 @@ const ProductSegment = () => {
 
   const getPrdSegById = async (id) => {
     try {
-      const resp = await axios.get(`${url}/api/get_product_segment/${id}`, { headers: headers });
+      const resp = await axios.get(`${url}/api/get_product_segment/?pseg_id=${id}`, { headers: headers });
       const respData = await resp.data.data;
       setFromState({
-        pseg_name: respData?.pseg_name,
-        pseg_id: respData?.pseg_id,
-        c_name: respData?.c_name,
-        c_id: respData?.c_id
+        pseg_name: respData[0]?.pseg_name,
+        pseg_id: respData[0]?.pseg_id,
+        c_name: respData[0]?.c_name,
+        c_id: respData[0]?.c_id
       });
 
       console.log("geprr", respData);
+      console.log("segId", respData.pseg_id);
     } catch (error) {
       console.log("ee", error);
     }
@@ -165,7 +166,6 @@ const ProductSegment = () => {
     getCompanyInfo();
   }, []);
 
-  console.log("ggf", formState)
 
   return (
     <>
@@ -253,6 +253,9 @@ const ProductSegment = () => {
                         });
                       }}
                     >
+                      <option value={""} className="focus:outline-none focus:border-b bg-white">
+                        Select Options
+                      </option>
                       {companyInfo.map((option) => (
                         <option value={option?.c_id} className="focus:outline-none focus:border-b bg-white">
                           {option?.cmpny_name}

@@ -11,7 +11,7 @@ import toast, { Toaster } from "react-hot-toast";
 const ProductBrand = () => {
   const router = useRouter();
 
-  let { id, view } = router.query;
+  let { id, view, CREATE } = router.query;
 
   const headers = {
     "Content-Type": "application/json",
@@ -27,13 +27,6 @@ const ProductBrand = () => {
     c_id: "",
     pseg_name: "",
     ul_name: "WPCL"
-  });
-
-  const [formErrors, setFormErrors] = useState({});
-
-  const validationSchema = Yup.object().shape({
-    brand_name: Yup.string().required("Brand Nanme is required"),
-    c_name: Yup.string().required("Company Name is required")
   });
 
   const getPrdBrandById = async (id) => {
@@ -59,16 +52,15 @@ const ProductBrand = () => {
   const handleSaveBrand = async (e) => {
     e.preventDefault();
     try {
-      await validationSchema.validate(formState, { abortEarly: false });
       const Formdata = {
-        brand_name: formState.brand_name,
-        brand_code: formState.brand_code,
+        brand_name: formState?.brand_name,
+        brand_code: formState?.brand_code,
         pseg_id: formState?.pseg_id,
-        c_name: formState.c_name,
-        status: formState.status,
-        c_id: formState.c_name,
-        pseg_name: formState.pseg_name,
-        ul_name: formState.ul_name
+        c_name: formState?.c_name,
+        status: formState?.status,
+        c_id: formState?.c_name,
+        pseg_name: formState?.pseg_name,
+        ul_name: formState?.ul_name
       };
       const resp = await axios.post(`${url}/api/create_product_brand`, JSON.stringify(Formdata), {
         headers: headers
@@ -82,22 +74,25 @@ const ProductBrand = () => {
         }, 2500);
       }
     } catch (errors) {
-      const newErrors = {};
-      errors?.inner?.forEach((error) => {
-        newErrors[error?.path] = error?.message;
-      });
-      setFormErrors(newErrors);
-    }
-    switch (true) {
-      case !!formErrors?.brand_name:
-        toast.error(formErrors.brand_name);
-        break;
-      case !!formErrors?.pseg_id:
-        toast.error(formErrors.pseg_id);
-      case !!formErrors?.c_name:
-        toast.error(formErrors.c_name);
-        break;
-      default:
+      const ermsg = errors.response.data.message;
+      // if(ermsg){
+      //   toast.error(ermsg)
+        
+      // }
+      const errmsg = errors.response.data.error;
+      console.log("fefef", errors)
+      if (errmsg?.includes('brand_name_1')) {
+        toast.error('Brand Name is Duplicate');
+      }else if(errmsg?.includes('brand_code_1')){
+        toast.error('Brand Id is duplicate')
+      }else{
+        toast.error(errmsg)
+      }
+
+      // if(errmsg){
+      //   toast.error("Some field is duplicate")
+      // }
+      // console.log("errorrrrr", errors.response.data.error);
     }
   };
 
@@ -106,25 +101,57 @@ const ProductBrand = () => {
   const handleEditBrand = async (e) => {
     e.preventDefault();
     try {
-      await validationSchema.validate(formState, { abortEarly: false });
       const Editdata = {
         brand_name: formState.brand_name,
         brand_code: formState.brand_code,
         pseg_id: formState.pseg_id,
         c_name: formState.c_name
       };
-      const resp = await axios.put(`${url}/api/update_product_brand/${id}`, JSON.stringify(Editdata), {
-        headers: headers
-      });
-      const respdata = await resp.data;
-      if (respdata) {
-        toast.success(respdata.message);
-        setTimeout(() => {
-          router.push("/table/table_product_brand");
-        }, 2500);
+      const emptyFields = Object.entries(Editdata)
+        .filter(([key, value]) => value === "")
+        .map(([key]) => key);
+      if (emptyFields.length > 0) {
+        const customMessages = {
+          c_name: "Company Name",
+          pseg_id: "Product Segment",
+          brand_code: "Brand Code",
+          brand_name: "Brand Name"
+        };
+        const requiredFields = emptyFields.map((field) => customMessages[field] || field);
+        toast.error(`${requiredFields.join(", ")} is required.`);
+      } else {
+        const resp = await axios.put(`${url}/api/update_product_brand/${id}`, JSON.stringify(Editdata), {
+          headers: headers
+        });
+        const respdata = await resp.data;
+        if (respdata) {
+          toast.success(respdata.message);
+          setTimeout(() => {
+            router.push("/table/table_product_brand");
+          }, 2500);
+        }
       }
-    } catch (error) {
-      console.log("e", error);
+    } catch (errors) {
+      // const erroMsg = error.response.data.message
+      // if( error.response.data.error.includes('duplicate')){
+      //   toast.error('Some Fields are Duplicate')
+      // }
+      // console.log("e", error.response.data.error.includes('duplicate'));
+      // erroMsg ? toast.error(erroMsg) :""
+      const ermsg = errors.response.data.message;
+      // if(ermsg){
+      //   toast.error(ermsg)
+        
+      // }
+      const errmsg = errors.response.data.error;
+      console.log("fefef", errors)
+      if (errmsg?.includes('brand_name_1')) {
+        toast.error('Brand Name is Duplicate');
+      }else if(errmsg?.includes('brand_code_1')){
+        toast.error('Brand Id is duplicate')
+      }else{
+        toast.error(errmsg)
+      }
     }
   };
 
@@ -163,12 +190,14 @@ const ProductBrand = () => {
   }, [formState.c_name]);
 
   const gettingProductSegment = async (cId) => {
-    const response = await axios.get(`${url}/api/get_product_segment`, { headers });
-    const respdata = await response.data.data;
-    setPrdSegment(respdata.filter((item) => Number(item.c_id) === Number(cId)));
+    try {
+      const response = await axios.get(`${url}/api/get_product_segment`, { headers });
+      const respdata = await response.data.data;
+      setPrdSegment(respdata.filter((item) => Number(item.c_id) === Number(cId)));
+    } catch (error) {}
   };
 
-  console.log("fddf", prdSegment)
+  console.log("fddf", prdSegment);
 
   return (
     <>
@@ -204,7 +233,7 @@ const ProductBrand = () => {
             <div className="bg-gray-100 p-4  h-filteredSegmentsceen ">
               <form
                 onSubmit={(e) => e.preventDefault()}
-                disabled={router.query.type === "CREATE"}
+                disabled={router.query.type === "CREATE" }
                 className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4"
               >
                 <div className="flex -mx-2 mb-4 flex-col">
@@ -213,10 +242,12 @@ const ProductBrand = () => {
                       Brand Code
                     </label>
                     <input
-                      // disabled
+                      disabled={router.query.type === "Edit" || router.query.type === "view"}
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                       type="text"
                       id="inputField"
+                      maxLength={4}
+                      minLength={4}
                       placeholder=""
                       value={formState.brand_code}
                       onChange={(e) => {
@@ -303,16 +334,20 @@ const ProductBrand = () => {
                       <option value={""} className="focus:outline-none focus:border-b bg-white">
                         Select Options
                       </option>
-                      {prdSegment.map((option, idx) => (
-                      console.log("ff", option),
-                        <option
-                          key={idx}
-                          value={option?.pseg_id ? option?.pseg_id : ""}
-                          className="focus:outline-none focus:border-b bg-white"
-                        >
-                          {option?.pseg_name ? option?.pseg_name : "Select Option"}
-                        </option>
-                      ))}
+                      {prdSegment.map(
+                        (option, idx) => (
+                          console.log("ff", option),
+                          (
+                            <option
+                              key={idx}
+                              value={option?.pseg_id ? option?.pseg_id : ""}
+                              className="focus:outline-none focus:border-b bg-white"
+                            >
+                              {option?.pseg_name ? option?.pseg_name : "Select Option"}
+                            </option>
+                          )
+                        )
+                      )}
                     </select>
                   </div>
                 </div>

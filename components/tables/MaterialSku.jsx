@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
-import { AiFillFileExcel, AiTwotoneHome } from "react-icons/ai";
+import { AiTwotoneHome } from "react-icons/ai";
 import { TbFileDownload } from "react-icons/tb";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
@@ -141,11 +141,15 @@ const MaterialSku = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
                 {mateSku?.map((item) => (
+                console.log("item", item),
                   <tr key={item.id}>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
                         onClick={() => {
-                          router.push("/form/material_sku_info");
+                          router.push({
+                            pathname: "/form/material_sku_info",
+                            query: { type: "view", id: item?.id }
+                          });
                         }}
                         className="b text-black   hover:text-blue-500  "
                       >

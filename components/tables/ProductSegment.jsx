@@ -128,8 +128,11 @@ const ProductSegment = () => {
                   <tr key={item.id}>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
-                        onClick={() => {
-                          router.push("/form/product_segment");
+                         onClick={() => {
+                          router.push({
+                            pathname: "/form/product_segment",
+                            query: { type: "view", id: item?.pseg_id }
+                          });
                         }}
                         className="b text-black   hover:text-blue-500  "
                       >
