@@ -7,10 +7,20 @@ import axios from "axios";
 import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import ConfirmationModal from "../modals/ConfirmationModal";
-
+import { CSVLink } from "react-csv";
+import { TbFileDownload } from "react-icons/tb";
 const BusinessUnitDivision = () => {
+  const csvHeaders = [
+    { label: "Id", key: "bu_id" },
+    { label: "Unit Division", key: "business_unit_name" },
+    { label: "Business Segment", key: "bg_id" },
+    { label: "Company", key: "c_id" },
+    { label: "Email", key: "email_id" },
+    { label: "H.O.D.", key: "hod_name" },
+    { label: "Mobile No.", key: "phone_number" },
+  ];
   const router = useRouter();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
@@ -66,7 +76,14 @@ const BusinessUnitDivision = () => {
                 <AiOutlineSearch className="mx-2 my-1" size={20} />
               </button>
             </span>
-
+            <h2>
+              <CSVLink data={data} headers={csvHeaders}>
+                <TbFileDownload
+                  className="text-green-600"
+                  size={34}
+                ></TbFileDownload>
+              </CSVLink>
+            </h2>
             <AiTwotoneHome className="text-red-500" size={34} />
             <button
               onClick={() => {
@@ -79,10 +96,10 @@ const BusinessUnitDivision = () => {
             >
               Create New
             </button>
-            </span>
+          </span>
         </div>
 
-         <div className="bg-white h-screen flex items-start justify-center max-w-full">
+        <div className="bg-white h-screen flex items-start justify-center max-w-full">
           <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
             <table className="min-w-full divide-y border- divide-gray-200 ">
               <thead className="border-b w-max">

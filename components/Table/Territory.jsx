@@ -7,7 +7,21 @@ import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
+import { CSVLink } from "react-csv";
+import { TbFileDownload } from "react-icons/tb";
 const Territory = () => {
+  const csvHeaders = [
+    { label: "Id", key: "t_id" },
+    { label: "Territory", key: "territory_name" },
+    { label: "Region", key: "r_id" },
+    { label: "Zone", key: "z_id" },
+    { label: "Unit Division", key: "bu_id" },
+    { label: "Business Segment", key: "bg_id" },
+    { label: "Company", key: "c_id" },
+    { label: "Email", key: "email_id" },
+    { label: "H.O.D.", key: "hod_name" },
+    { label: "Mobile No.", key: "mobile_no" },
+  ];
   const router = useRouter();
 
   const headers = {
@@ -62,8 +76,15 @@ const Territory = () => {
                 <AiOutlineSearch className="mx-2 my-1" size={20} />
               </button>
             </span>
-            <TiArrowBack className="text-gray-400" size={35} />
 
+            <h2>
+              <CSVLink data={data} headers={csvHeaders}>
+                <TbFileDownload
+                  className="text-green-600"
+                  size={34}
+                ></TbFileDownload>
+              </CSVLink>
+            </h2>
             <AiTwotoneHome className="text-red-500" size={34} />
             <button
               onClick={() => {

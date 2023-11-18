@@ -1,83 +1,67 @@
-import React from "react";
-import Layout from "../../components/Layout";
+import React, { useState, useEffect, useRef } from "react";
+import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
-
-import { TbFileDownload } from "react-icons/tb";
-import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
-import { useRef } from "react";
-import { CSVLink } from "react-csv";
-const UserInformation = () => {
-  const router = useRouter();
-  const headers = [
-    { label: "First Id", key: "firstname" },
-    { label: "Farmer Name", key: "lastname" },
-    { label: "Father Name", key: "email" },
-    { label: "Address", key: "firstname" },
-    { label: "Types", key: "lastname" },
-    { label: "Category", key: "email" },
-    { label: "Village", key: "email" },
-    { label: "Pincode", key: "email" },
-    { label: "Post Office", key: "email" },
-    { label: "Territory", key: "email" },
-    { label: "District", key: "email" },
-    { label: "Zone", key: "email" },
-    { label: "Region", key: "email" },
-  ];
+import { url } from "@/constants/url";
+import { AiOutlineSearch } from "react-icons/ai";
+import { TbFileDownload } from "react-icons/tb";
+import axios from "axios";
+import ConfirmationModal from "../modals/ConfirmationModal";
 
-  const data = [
-    { firstname: "Ahmed", lastname: "Tomi", email: "ah@smthing.co.com" },
-    { firstname: "Raed", lastname: "Labes", email: "rl@smthing.co.com" },
-    { firstname: "Yezzi", lastname: "Min l3b", email: "ymin@cocococo.com" },
-  ];
-  const dummyData = [
-    {
-      id: 1,
-      username: "Ironman",
-      address: "Address A",
-      city: "city A",
-      state: "state",
-      email: "email@email.com",
-      mobile: "84845485",
-      user_profile: "user a",
-      status: "enabled",
-    },
-    {
-      id: 2,
-      username: "Ironman",
-      address: "Address B",
-      city: "city B",
-      state: "state",
-      email: "email@email.com",
-      mobile: "84845485",
-      user_profile: "user b",
-      status: "enabled",
-    },
-    {
-      id: 3,
-      username: "Ironman",
-      address: "Address C",
-      city: "city C",
-      state: "state",
-      email: "email@email.com",
-      mobile: "84845485",
-      user_profile: "user C",
-      status: "enabled",
-    },
-    {
-      id: 4,
-      username: "Ironman",
-      address: "Address C",
-      city: "city C",
-      state: "state",
-      email: "email@email.com",
-      mobile: "84845485",
-      user_profile: "user C",
-      status: "enabled",
-    },
-  ];
+import { CSVLink } from "react-csv";
+
+const Farmer = () => {
+  const router = useRouter();
+
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+  };
+
+  const [data, setData] = useState([]);
+  const getDistrict = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_farmer`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      setData(apires);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getDistrict();
+  }, []);
+
+  const deleteHandler = (id) => {
+    setisOpen(true);
+    setFarmerId(id);
+  };
+
+  const [isOpen, setisOpen] = useState(false);
+  const [farmerId, setFarmerId] = useState(null);
+
+  const resetData = () => {
+    getDistrict();
+    setisOpen(false);
+  };
   const tableRef = useRef(null);
 
+  const csvHeaders = [
+    { label: "Id", key: "f_id" },
+    { label: "Farmer Name", key: "f_name" },
+    { label: "Father Name", key: "ff_name" },
+    { label: "Address", key: "f_address" },
+    { label: "Types", key: "f_type" },
+    { label: "Category", key: "email" },
+    { label: "Village", key: "email" },
+    { label: "Pincode", key: "f_pin" },
+    { label: "Post Office", key: "f_post" },
+    { label: "Territory", key: "email" },
+    { label: "District", key: "ds_id" },
+    { label: "Zone", key: "z_id" },
+    { label: "Region", key: "r_id" },
+  ];
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full ">
@@ -107,13 +91,12 @@ const UserInformation = () => {
               </div>
             </div>
             <h2>
-              <CSVLink data={data} headers={headers}>
+              <CSVLink data={data} headers={csvHeaders}>
                 <TbFileDownload
                   className="text-green-600"
                   size={34}
                 ></TbFileDownload>
               </CSVLink>
-              
             </h2>
 
             <h2>
@@ -121,7 +104,10 @@ const UserInformation = () => {
             </h2>
             <button
               onClick={() => {
-                router.push("/form/farmer_info_form");
+                router.push({
+                  pathname: "/form/farmer_info_form",
+                  query: { id: null, type: "Add" },
+                });
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -138,67 +124,73 @@ const UserInformation = () => {
             <table className="min-w-full divide-y border- divide-gray-200 ">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
-                  <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Action
                   </th>
-                  <th className="px-6 w py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Farmer Id
                   </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Name
                   </th>
-                  <th className="px-6  py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Father Name
                   </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Address
                   </th>
 
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Types
                   </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Category
                   </th>
 
-                  <th className="px-6  py-2  whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2  whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Village Name
                   </th>
-                  <th className="px-6  py-2  whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2  whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Pin Code
                   </th>
-                  <th className="px-6  py-2  whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2  whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Post Office
                   </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Territory
                   </th>
 
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     District
                   </th>
 
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Zone
                   </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Region
                   </th>
-                  <th className="px-6  py-2  whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2  whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Unit Division
                   </th>
-                  <th className="px-6  py-2  whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2  whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Business Segment
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Status
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                {dummyData?.map((item) => (
+                {data?.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
                         onClick={() => {
-                          router.push("/form/farmer_info_form");
+                          router.push({
+                            pathname: "/form/farmer_info_form",
+                            query: { id: item.f_id, type: "View" },
+                          });
                         }}
                         className="b text-black   hover:text-blue-500  "
                       >
@@ -206,45 +198,71 @@ const UserInformation = () => {
                       </button>
                       <button
                         onClick={() => {
-                          router.push("/form/farmer_info_form");
+                          router.push({
+                            pathname: "/form/farmer_info_form",
+                            query: { id: item.f_id, type: "Edit" },
+                          });
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
                       >
                         Edit
                       </button>
-                      <button className="b text-black hover:text-red-500 ml-2">
+                      <button
+                        className="b text-black hover:text-red-500 ml-2"
+                        onClick={() => {
+                          deleteHandler(item.f_id);
+                        }}
+                      >
                         Delete
                       </button>
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.username}
+                      {item.f_id}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.address}
+                      {item.f_name}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.city}
+                      {item.ff_name}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.state}
+                      {item.f_address}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.email}
+                      {item.f_type}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.mobile}
+                      {item.f_cat}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.user_profile}
+                      {item.v_id}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.status}
+                      {item.f_pin}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.status}
+                      {item.f_post}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.status}
+                      {item.t_id}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.ds_id}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.z_id}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.r_id}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.bu_id}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.bg_id}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.isDeleted == false ? "Enabled" : "Disabled"}
                     </td>
                   </tr>
                 ))}
@@ -253,8 +271,16 @@ const UserInformation = () => {
           </div>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={isOpen}
+        onClose={() => setisOpen(false)}
+        onOpen={() => setisOpen(true)}
+        id={farmerId}
+        type="Farmer"
+        onDeletedData={resetData}
+      />
     </Layout>
   );
 };
 
-export default UserInformation;
+export default Farmer;

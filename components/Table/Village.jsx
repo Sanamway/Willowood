@@ -6,8 +6,22 @@ import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
-
+import { CSVLink } from "react-csv";
+import { TbFileDownload } from "react-icons/tb";
 const Village = () => {
+  const csvHeaders = [
+    { label: "Id", key: "v_id" },
+    { label: "Village", key: "village_town_name" },
+    { label: "Pin Code", key: "village_pin_code" },
+    { label: "Post Office", key: "village_post_office" },
+    { label: "District", key: "ds_id" },
+    { label: "Territory", key: "t_id" },
+    { label: "Region", key: "r_id" },
+    { label: "Zone", key: "z_id" },
+    { label: "Unit Division", key: "bu_id" },
+    { label: "Business Segment", key: "bg_id" },
+    { label: "Company", key: "c_id" },
+  ];
   const router = useRouter();
 
   const headers = {
@@ -15,10 +29,10 @@ const Village = () => {
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const getDistrict = async () => {
     try {
-  const respond = await axios.get(`${url}/api/get_village`, {
+      const respond = await axios.get(`${url}/api/get_village`, {
         headers: headers,
       });
       const apires = await respond.data.data;
@@ -62,7 +76,14 @@ const Village = () => {
                 <AiOutlineSearch className="mx-2 my-1" size={20} />
               </button>
             </span>
-
+            <h2>
+              <CSVLink data={data} headers={csvHeaders}>
+                <TbFileDownload
+                  className="text-green-600"
+                  size={34}
+                ></TbFileDownload>
+              </CSVLink>
+            </h2>
             <AiTwotoneHome className="text-red-500" size={34} />
             <button
               onClick={() => {

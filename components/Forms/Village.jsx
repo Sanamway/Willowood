@@ -48,7 +48,7 @@ const Village = () => {
   }, [router]);
 
   // Getting Company Information for the dropdown values
-  const getCompanyInfo = async () => {
+   const getCompanyInfo = async () => {
     try {
       const respond = await axios.get(`${url}/api/get_company_information`, {
         headers: headers,

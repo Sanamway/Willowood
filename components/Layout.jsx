@@ -50,6 +50,7 @@ const Layout = ({ children }) => {
     { id: 2.8, label: "Territory", icon: BiUser, link: "/table/table_territory" },
     { id: 2.9, label: "District", icon: BiUser, link: "/table/table_district" },
     { id: 3.0, label: "Village", icon: BiUser, link: "/table/table_village" },
+    { id: 3.0, label: "Farmer", icon: BiUser, link: "/table/table_farmer" },
     { id: 3.1, label: "Depot/Warehouse", icon: BiUser, link: "/table/table_depot" },
     { id: 3.2, label: "Map Depot Warehouse", icon: BiUser, link: "/table/table_map_depot" },
     { id: 3.3, label: "Product Category", icon: BiUser, link: "/table/table_product_category" },

@@ -7,10 +7,21 @@ import axios from "axios";
 import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import ConfirmationModal from "../modals/ConfirmationModal";
-
+import { CSVLink } from "react-csv";
+import { TbFileDownload } from "react-icons/tb";
 const CompanyInfo = () => {
+  const csvHeaders = [
+    { label: "Id", key: "c_id" },
+    { label: "Company Name", key: "c_name" },
+    { label: "Company Address", key: "corp_address" },
+    { label: "Sale Address", key: "sale_address" },
+    { label: "Contact Person", key: "contact_person" },
+    { label: "Mobile No.", key: "phone_number" },
+    { label: "Email", key: "email" },
+    { label: "GST No.", key: "gst_no" },
+  ];
   const router = useRouter();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
@@ -65,7 +76,14 @@ const CompanyInfo = () => {
                 <AiOutlineSearch className="mx-2 my-1" size={20} />
               </button>
             </span>
-
+            <h2>
+              <CSVLink data={data} headers={csvHeaders}>
+                <TbFileDownload
+                  className="text-green-600"
+                  size={34}
+                ></TbFileDownload>
+              </CSVLink>
+            </h2>
             <AiTwotoneHome
               className="text-red-500"
               size={34}
