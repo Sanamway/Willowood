@@ -102,9 +102,9 @@ const CropForm = () => {
         toast.error("Email already exist");
       } else if (errorMessage?.includes("gst_no_1")) {
         toast.error("GST number already exist");
-      } else if (errorMessage?.includes("crop_1")) {
+      } else if (errorMessage?.includes("crop_name_1")) {
         toast.error("Crop already exist");
-      } else {
+      }  else {
         toast.error(errorMessage);
       }
 
@@ -152,7 +152,7 @@ const CropForm = () => {
         toast.error("Email already exist");
       } else if (errorMessage?.includes("gst_no_1")) {
         toast.error("GST number already exist");
-      } else if (errorMessage?.includes("crop_1")) {
+      } else if (errorMessage?.includes("crop_name_1")) {
         toast.error("Crop already exist");
       } else {
         toast.error(errorMessage);
