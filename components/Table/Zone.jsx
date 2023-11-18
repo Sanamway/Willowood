@@ -19,6 +19,7 @@ const ZoneTable = () => {
     { label: "Email", key: "email_id" },
     { label: "H.O.D.", key: "hod_name" },
     { label: "Mobile No.", key: "phone_number" },
+    { label: "Status", key:  "isDeleted" },
   ];
   const router = useRouter();
 

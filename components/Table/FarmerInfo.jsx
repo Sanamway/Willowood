@@ -61,6 +61,7 @@ const Farmer = () => {
     { label: "District", key: "ds_id" },
     { label: "Zone", key: "z_id" },
     { label: "Region", key: "r_id" },
+    { label: "Status", key:  "isDeleted" },
   ];
   return (
     <Layout>
