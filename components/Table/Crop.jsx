@@ -16,6 +16,7 @@ const Crop = () => {
     { label: "Crop Name", key: "crop_name" },
     { label: "Season Name", key: "season_name" },
     { label: "Company", key: "c_id" },
+    { label: "Status", key:  "isDeleted" },
   ];
   const router = useRouter();
   const [data, setData] = useState([]);

@@ -18,6 +18,7 @@ const District = () => {
     { label: "Unit Division", key: "bu_id" },
     { label: "Business Segment", key: "bg_id" },
     { label: "Company", key: "c_id" },
+    { label: "Status", key:  "isDeleted" },
   ];
   const router = useRouter();
 

@@ -18,7 +18,8 @@ const CompanyInfo = () => {
     { label: "Contact Person", key: "contact_person" },
     { label: "Mobile No.", key: "phone_number" },
     { label: "Email", key: "email" },
-    { label: "GST No.", key: "gst_no" },
+    { label: "GST No.", key: "gst_no" }, 
+    { label: "Status", key:  "isDeleted" },
   ];
   const router = useRouter();
   const [data, setData] = useState([]);
