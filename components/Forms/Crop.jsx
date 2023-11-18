@@ -189,9 +189,7 @@ const CropForm = () => {
                 size={35}
               ></TiArrowBack>
             </h2>
-            <h2>
-              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
-            </h2>
+           
           </div>
         </div>
 

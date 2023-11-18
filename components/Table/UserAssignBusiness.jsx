@@ -6,8 +6,19 @@ import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
-
+import { CSVLink } from "react-csv";
+import { TbFileDownload } from "react-icons/tb";
 const UserAssignBusiness = () => {
+  const csvHeaders = [
+    { label: "Id", key: "bst_id" },
+    { label: "User", key: "user_id" },
+    { label: "Territory", key: "t_id" },
+    { label: "Region", key: "r_id" },
+    { label: "Zone", key: "z_id" },
+    { label: "Unit Division", key: "bu_id" },
+    { label: "Business Segment", key: "bg_id" },
+    { label: "Company", key: "c_id" },
+  ];
   const router = useRouter();
 
   const headers = {
@@ -15,7 +26,7 @@ const UserAssignBusiness = () => {
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const getDistrict = async () => {
     try {
       const respond = await axios.get(`${url}/api/get_bstuser`, {
@@ -71,7 +82,14 @@ const UserAssignBusiness = () => {
                 </form>
               </div>
             </div>
-
+            <h2>
+              <CSVLink data={data} headers={csvHeaders}>
+                <TbFileDownload
+                  className="text-green-600"
+                  size={34}
+                ></TbFileDownload>
+              </CSVLink>
+            </h2>
             <h2>
               <AiTwotoneHome
                 onClick={() => {

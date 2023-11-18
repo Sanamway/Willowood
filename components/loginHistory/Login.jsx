@@ -16,6 +16,7 @@ const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
+
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw"
@@ -40,6 +41,7 @@ const Login = () => {
 
       const email = respdata?.data?.loginHistory?.email_id;
       const userName = respdata?.data?.loginHistory?.user_name;
+      const _id = respdata?.data?.loginHistory?._id;
 
       // console.log("datas", respdata?.data?.loginHistory)
       // console.log("status", respdata?.status)
@@ -59,6 +61,7 @@ const Login = () => {
         localStorage.setItem("uid", uid);
         localStorage.setItem("email", email);
         localStorage.setItem("userName", userName);
+        localStorage.setItem("id", _id);
         router.push("/");
       }
     } catch (error) {
