@@ -157,7 +157,7 @@ const UserInformation = () => {
                           router.push({
                             pathname: "/form/user_information_form",
                             // query: { userData: JSON.stringify(item) },
-                            query: { type: "view", id: item?._id}
+                            query: { type: "view", id: item?.user_id}
                           });
                         }}
                         className="b text-black   hover:text-blue-500  "
@@ -169,7 +169,7 @@ const UserInformation = () => {
                           router.push({
                             pathname: "/form/user_information_form",
                             // query: { userData: JSON.stringify(item) },
-                            query: { type: "Edit", id: item?._id }
+                            query: { type: "Edit", id: item?.user_id }
                           });
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
@@ -178,7 +178,7 @@ const UserInformation = () => {
                       </button>
                       <button
                         onClick={() => {
-                          deleteHandler(item?._id);
+                          deleteHandler(item?.user_id);
                         }}
                         className="b text-black hover:text-red-500 ml-2"
                       >

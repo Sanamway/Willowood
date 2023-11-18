@@ -30,23 +30,23 @@ const UserInformation = () => {
       const apires = await respond.data.data;
       console.log("ff", apires);
       setFormState({
-        _id: apires._id,
-        cId: apires.c_id,
-        empCode: apires._id,
-        user_id: apires.user_id,
-        user_name: apires.user_name,
-        address: apires.address,
-        city: apires.city,
-        state: apires.state,
-        phone_number: apires.phone_number,
-        password: apires.password,
-        confirm_password: apires.confirm_password,
-        email: apires.email,
-        phone_number: apires.phone_number,
-        t_user: apires.t_user,
-        ul_name: apires.ul_name,
-        position: apires.position,
-        about_me: apires.about_me
+        _id: apires[0]._id,
+        cId: apires[0].c_id,
+        empCode: apires[0]._id,
+        user_id: apires[0].user_id,
+        user_name: apires[0].user_name,
+        address: apires[0].address,
+        city: apires[0].city,
+        state: apires[0].state,
+        phone_number: apires[0].phone_number,
+        password: apires[0].password,
+        confirm_password: apires[0].confirm_password,
+        email: apires[0].email,
+        phone_number: apires[0].phone_number,
+        t_user: apires[0].t_user,
+        ul_name: apires[0].ul_name,
+        position: apires[0].position,
+        about_me: apires[0].about_me
       });
     } catch (error) {
       console.log(error);
@@ -187,7 +187,7 @@ const UserInformation = () => {
         about_me: formState.about_me
       };
 
-      const res = await axios.put(`${url}/api/update_user/${uid}`, JSON.stringify(data), {
+      const res = await axios.put(`${url}/api/update_user/${id}`, JSON.stringify(data), {
         headers: headers
       });
       const resp = await res.data;
@@ -222,7 +222,7 @@ const UserInformation = () => {
     if (router.query.type !== "Edit") {
       handleSaveCompanyInfo(e);
     } else {
-      handleEditCompanyInfo(e);
+      handleEditCompanyInfo(e,id);
     }
   };
 

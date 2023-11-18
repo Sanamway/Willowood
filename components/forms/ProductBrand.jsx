@@ -33,7 +33,6 @@ const ProductBrand = () => {
 
   const validationSchema = Yup.object().shape({
     brand_name: Yup.string().required("Brand Nanme is required"),
-    // pseg_id: Yup.string().required("Product Segment is required"),
     c_name: Yup.string().required("Company Name is required")
   });
 
@@ -139,38 +138,37 @@ const ProductBrand = () => {
 
   //getting companyinfo options
 
-  const [companyInfo, setCompanyInfo] = useState([]);
+  const [allCompanyInfo, setAllCompanyInfo] = useState([]);
 
   const getCompanyInfo = async () => {
     try {
       const resp = await axios.get(`${url}/api/get_company_information`, { headers: headers });
       const respda = await resp.data.data;
-      setCompanyInfo(respda);
+      setAllCompanyInfo(respda.filter((item) => item.isDeleted == false));
     } catch (error) {
       console.log(error);
     }
   };
 
-  const filterCompanyInfo = companyInfo.filter((item) => item.isDeleted == false);
-
   //getting product segment descriptionn
 
   const [prdSegment, setPrdSegment] = useState([]);
-  const [filteredSegment, setFilteredPrdSegment] = useState([]);
-
-  const gettingProductSegment = async () => {
-    const response = await axios.get(`${url}/api/get_product_segment`, { headers });
-    const respdata = await response.data.data;
-
-    setPrdSegment(respdata);
-  };
 
   useEffect(() => {
     getCompanyInfo();
-    gettingProductSegment();
   }, []);
 
-  console.log("FORM", formState);
+  useEffect(() => {
+    gettingProductSegment(formState.c_name);
+  }, [formState.c_name]);
+
+  const gettingProductSegment = async (cId) => {
+    const response = await axios.get(`${url}/api/get_product_segment`, { headers });
+    const respdata = await response.data.data;
+    setPrdSegment(respdata.filter((item) => Number(item.c_id) === Number(cId)));
+  };
+
+  console.log("fddf", prdSegment)
 
   return (
     <>
@@ -258,16 +256,18 @@ const ProductBrand = () => {
                       id="userSelect"
                       value={formState.c_name}
                       onChange={(e) => {
-                        const selectedCId = e.target.value;
+                        // const selectedCId = e.target.value;
+
                         setFromState({
                           ...formState,
                           c_name: e.target.value
                         });
-                        const filteredSegments = prdSegment.filter((segment) => segment.c_id == selectedCId);
-                        setFilteredPrdSegment(filteredSegments);
                       }}
                     >
-                      {filterCompanyInfo.map((option) => (
+                      <option value={""} className="focus:outline-none focus:border-b bg-white">
+                        Select Options
+                      </option>
+                      {allCompanyInfo.map((option) => (
                         <option
                           value={option?.c_id}
                           onChange={(e) => {
@@ -300,21 +300,19 @@ const ProductBrand = () => {
                         });
                       }}
                     >
-                      <option value={""} className="focus:outline-none focus:border-b bg-white">Select Options</option>
-                      {filteredSegment.map(
-                        (option, idx) => (
-                          console.log("kio", option),
-                          (
-                            <option
-                              key={idx}
-                              value={option?.pseg_id ? option?.pseg_id :"" }
-                              className="focus:outline-none focus:border-b bg-white"
-                            >
-                              {option?.pseg_name ? option?.pseg_name :"Select Optiopn" }
-                            </option>
-                          )
-                        )
-                      )}
+                      <option value={""} className="focus:outline-none focus:border-b bg-white">
+                        Select Options
+                      </option>
+                      {prdSegment.map((option, idx) => (
+                      console.log("ff", option),
+                        <option
+                          key={idx}
+                          value={option?.pseg_id ? option?.pseg_id : ""}
+                          className="focus:outline-none focus:border-b bg-white"
+                        >
+                          {option?.pseg_name ? option?.pseg_name : "Select Option"}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>

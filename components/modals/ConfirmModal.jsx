@@ -4,6 +4,7 @@ import axios from "axios";
 import { url } from "@/constants/url";
 
 function ConfirmModal({ onClose, isOpen, onOpen, userId, onDeletedData, method, endpoints }) {
+  console.log("frmmod", userId)
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw"

@@ -9,9 +9,8 @@ import { url } from "@/constants/url";
 import { toast, Toaster } from "react-hot-toast";
 
 const ProductSegment = () => {
-  const router = useRouter()
+  const router = useRouter();
   let { id, view } = router.query;
-  
 
   const headers = {
     "Content-Type": "application/json",
@@ -23,7 +22,7 @@ const ProductSegment = () => {
     pseg_name: "",
     c_name: "WCL",
     ul_name: "WCL",
-    c_id: "",
+    c_id: ""
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -41,7 +40,7 @@ const ProductSegment = () => {
         pseg_name: respData?.pseg_name,
         pseg_id: respData?.pseg_id,
         c_name: respData?.c_name,
-        c_id: respData?.c_id,
+        c_id: respData?.c_id
       });
 
       console.log("geprr", respData);
@@ -155,25 +154,24 @@ const ProductSegment = () => {
     try {
       const resp = await axios.get(`${url}/api/get_company_information`, { headers: headers });
       const respda = await resp.data.data;
-      setCompanyInfo(respda);
+      const filterCompanyInfo = respda.filter((item) => item.isDeleted == false);
+      setCompanyInfo(filterCompanyInfo);
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getCompanyInfo();
-  },[])
+  }, []);
 
-  const filterCompanyInfo = companyInfo.filter((item) => item.isDeleted == false);
-
-
+  console.log("ggf", formState)
 
   return (
     <>
       <Layout>
         <div className="h-screen overflow-auto w-full font-arial bg-white ">
-        <Toaster position="bottom-center" reverseOrder={false} />
+          <Toaster position="bottom-center" reverseOrder={false} />
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">Product Segment </h2>
             <div className="flex items-center gap-2 cursor-pointer">
@@ -201,8 +199,11 @@ const ProductSegment = () => {
           {/* <div className="bg-gray-300"></div> */}
           <div className="text-black h-screen  ">
             <div className="bg-gray-100 p-4  h-screen ">
-              <form  onSubmit={(e) => e.preventDefault()}
-                disabled={router.query.type === "CREATE"} className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4">
+              <form
+                onSubmit={(e) => e.preventDefault()}
+                disabled={router.query.type === "CREATE"}
+                className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4"
+              >
                 <div className="flex -mx-2 mb-4 flex-col">
                   <div className="w-1/6 px-2 mb-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
@@ -214,7 +215,7 @@ const ProductSegment = () => {
                       type="text"
                       id="inputField"
                       placeholder=""
-                      value={ router.query.type=="CREATE" ? "Auto Generated" :formState?.pseg_id }
+                      value={router.query.type == "CREATE" ? "Auto Generated" : formState?.pseg_id}
                     />
                   </div>
                   <div className="w-1/2 px-2 ">
@@ -252,11 +253,8 @@ const ProductSegment = () => {
                         });
                       }}
                     >
-                      {filterCompanyInfo.map((option) => (
-                        <option
-                          value={option?.c_id}
-                          className="focus:outline-none focus:border-b bg-white"
-                        >
+                      {companyInfo.map((option) => (
+                        <option value={option?.c_id} className="focus:outline-none focus:border-b bg-white">
                           {option?.cmpny_name}
                         </option>
                       ))}

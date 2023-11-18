@@ -1,80 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { AiFillFileExcel, AiTwotoneHome } from "react-icons/ai";
-import { BiArrowBack } from "react-icons/bi";
-import { TiArrowBack } from "react-icons/ti";
 import { TbFileDownload } from "react-icons/tb";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
+import { url } from "@/constants/url";
+import axios from "axios";
 
 const MaterialSku = () => {
   const router = useRouter();
+  const [mateSku, setMateSku] = useState([]);
 
-  const dummyData = [
-    {
-      id: 1,
-      material_name: "Material A",
-      technical_spec: "Tech A",
-      uom: "uom A",
-      product_category: "category A",
-      product_segment: "segment a",
-      product_brand: "brand a",
-      division: "division a",
-      crop: "crop a",
-      gross_wt: "gross a",
-      net_wt: "net a",
-      weight_wt: "weight a",
-      packsize: "packing a",
-      packing_desc: "packing a",
-      batch: "batch a",
-      company: "company a",
-      image: "image a",
-      docs: "docs a",
-      video: "video a"
-    },
-    {
-      id: 2,
-      material_name: "Material A",
-      technical_spec: "Tech A",
-      uom: "uom A",
-      product_category: "category A",
-      product_segment: "segment a",
-      product_brand: "brand a",
-      division: "division a",
-      crop: "crop a",
-      gross_wt: "gross a",
-      net_wt: "net a",
-      weight_wt: "weight a",
-      packsize: "packing a",
-      packing_desc: "packing a",
-      batch: "batch a",
-      company: "company a",
-      image: "image a",
-      docs: "docs a",
-      video: "video a"
-    },
-    {
-      id: 3,
-      material_name: "Material A",
-      technical_spec: "Tech A",
-      uom: "uom A",
-      product_category: "category A",
-      product_segment: "segment a",
-      product_brand: "brand a",
-      division: "division a",
-      crop: "crop a",
-      gross_wt: "gross a",
-      net_wt: "net a",
-      weight_wt: "weight a",
-      packsize: "packing a",
-      packing_desc: "packing a",
-      batch: "batch a",
-      company: "company a",
-      image: "image a",
-      docs: "docs a",
-      video: "video a"
-    }
-  ];
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+  };
+
+  const getMateSKUData = async () => {
+    const res = await axios.get(`${url}/api/get_product_material_sku`, { headers: headers });
+    const respData = await res.data.data;
+    setMateSku(respData);
+  };
+
+  useEffect(() => {
+    getMateSKUData();
+  }, []);
+
+  console.log("ff", mateSku);
 
   return (
     <Layout>
@@ -101,11 +53,13 @@ const MaterialSku = () => {
             </h2>
 
             <h2>
-              <AiTwotoneHome 
-              onClick={() => {
-                router.push("/");
-              }} 
-              className="text-red-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome
+                onClick={() => {
+                  router.push("/");
+                }}
+                className="text-red-500"
+                size={34}
+              ></AiTwotoneHome>
             </h2>
             <button
               onClick={() => {
@@ -126,54 +80,57 @@ const MaterialSku = () => {
                   <th className=" w-[12%] px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Action
                   </th>
-                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[7%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Mat ID
+                  </th>
+                  <th className="px-6 w-[7%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Material Code
                   </th>
-                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[7%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Material Name
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                     Technical Spec
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                     UOM
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Product Category
                   </th>
 
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                     Product Segment
                   </th>
 
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                     Product Brand
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                     Division
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                     Crop
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Gross Wt.
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Net Wt.
                   </th>
 
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Weight UM.
                   </th>
 
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Pack Size
                   </th>
 
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Packing Size
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
                     batch
                   </th>
 
@@ -183,7 +140,7 @@ const MaterialSku = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                {dummyData?.map((item) => (
+                {mateSku?.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
@@ -204,15 +161,16 @@ const MaterialSku = () => {
                       </button>
                       <button className="b text-black hover:text-red-500 ml-2">Delete</button>
                     </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.id}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.material_name}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.technical_spec}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.mat_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.matnr}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.mat_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.techn_spec}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.uom}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.product_category}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.product_segment}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.product_brand}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.pcat_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.pseg_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.brand_code}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.division}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.crop}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.crop_id}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.gross_wt}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.net_wt}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.weight_wt}</td>
