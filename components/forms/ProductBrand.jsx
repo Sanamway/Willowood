@@ -167,6 +167,9 @@ const ProductBrand = () => {
     const respdata = await response.data.data;
     setPrdSegment(respdata.filter((item) => Number(item.c_id) === Number(cId)));
   };
+
+  console.log("fddf", prdSegment)
+
   return (
     <>
       <Layout>
@@ -254,6 +257,7 @@ const ProductBrand = () => {
                       value={formState.c_name}
                       onChange={(e) => {
                         // const selectedCId = e.target.value;
+
                         setFromState({
                           ...formState,
                           c_name: e.target.value
@@ -300,6 +304,7 @@ const ProductBrand = () => {
                         Select Options
                       </option>
                       {prdSegment.map((option, idx) => (
+                      console.log("ff", option),
                         <option
                           key={idx}
                           value={option?.pseg_id ? option?.pseg_id : ""}

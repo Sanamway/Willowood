@@ -10,8 +10,23 @@ const UserProfileForm = () => {
   const router = useRouter();
   const [menuRole, setMenusRole] = useState([]);
   const [menus, setMenus] = useState([]);
-  const [selectRole, setSelectRole] = useState("");
-  const [roleDesc, setRoleDesc] = useState("")
+  const [isSelect, setSelect] = useState(false);
+
+  let { id, view } = router.query;
+  
+
+  const [selectedRole, setSelectedRole] = useState({
+    role_id: "",
+    description: ""
+  });
+
+  const handleSelectRole = (e) => {
+    const [role_id, description] = e.target.value.split(",");
+    setSelectedRole({
+      role_id,
+      description
+    });
+  };
 
   const headers = {
     "Content-Type": "application/json",
@@ -22,10 +37,25 @@ const UserProfileForm = () => {
     try {
       const respond = await axios.get(`${url}/api/user_profiles`, { headers: headers });
       const apires = await respond.data.data;
-      console.log("apiprof", apires)
+      console.log("apiprof", apires);
       setMenusRole(apires);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const getMenusById = async (id) => {
+    try {
+      const resp = await axios.get(`${url}/api/get_menu_role_id/${id}`, { headers: headers });
+      const respData = await resp.data.data;
+      // setFromState({
+      //   brand_name: respData?.brand_name,
+      //   brand_code: respData?.brand_code,
+      //   pseg_id: respData?.pseg_id,
+      //   c_name: respData?.c_name
+      // });
+    } catch (error) {
+      console.log("ee", error);
     }
   };
 
@@ -33,7 +63,6 @@ const UserProfileForm = () => {
     try {
       const respond = await axios.get(`${url}/api/menus`, { headers: headers });
       const apires = await respond.data.data;
-      // setMenus(apires);
       setMenus(
         apires.map((item) => {
           return {
@@ -56,9 +85,9 @@ const UserProfileForm = () => {
     .filter((item) => item && item.isEditable === true)
     .map((item) => ({
       menu_id: item?.menu_id,
-      role_id: selectRole,
-      U_profile_name: item.menu_name,
-      umenu_name:selectRole,
+      role_id: selectedRole?.role_id,
+      U_profile_name: selectedRole?.description,
+      umenu_Name: item.menu_name,
       New: item.AddRight,
       modify: item.EditRight,
       view: item.ViewRight,
@@ -68,31 +97,28 @@ const UserProfileForm = () => {
       ul_name: item.Ul_name
     }));
 
-  
   async function makingLoopApi(datas) {
-    try {
-      for (const item of datas) {
-        const response = await axios.post(`${url}/api/assign_menu_rights`, JSON.stringify(item), {
-          headers: headers
-        });
-        const responseData = response.data;
-       console.log("fdvfv",responseData)
+    if (!isSelect) {
+      return;
+    } else {
+      try {
+        for (const item of datas) {
+          const response = await axios.post(`${url}/api/assign_menu_rights`, JSON.stringify(item), {
+            headers: headers
+          });
+          const responseData = response.data;
+          console.log("fdvfv", responseData);
+        }
+        console.log("completed.");
+      } catch (error) {
+        console.error("error:", error);
       }
-      console.log("completed.");
-    } catch (error) {
-      console.error("error:", error);
     }
   }
 
-  const handleSave =()=>{
-    makingLoopApi(payload)
-  }
-
-  
-  const handleSelectRole =(e)=>{
-    setSelectRole(e.target.value)
-  }
-  
+  const handleSave = () => {
+    makingLoopApi(payload);
+  };
 
   return (
     <>
@@ -122,7 +148,6 @@ const UserProfileForm = () => {
             </div>
           </div>
 
-          {/* <div className="bg-gray-300"></div> */}
           <div className="bg-gray-100 py-4 rounded-md">
             <div className="text-black mx-12 bg-white p-4">
               <div className="text-black flex items-center gap-4">
@@ -134,17 +159,18 @@ const UserProfileForm = () => {
                   <label className="w-1/2 text-gray-700 text-sm font-bold mb-2" htmlFor="userName">
                     <span className="text-red-500 p-1">*</span>User Profile
                   </label>
+
                   <select
-                    className="w-full px-1 py-2 border-b border-gray-500 rouded bg-white focus:outline-none focus:border-b focus-border-indigo-500"
+                    className="w-full px-1 py-2 border-b border-gray-500 rounded bg-white focus:outline-none focus:border-b focus-border-indigo-500"
                     id="userName"
-                    value={selectRole}
+                    value={`${selectedRole.role_id},${selectedRole.description}`}
                     onChange={handleSelectRole}
                   >
                     {menuRole.map((role) => (
                       <option
                         key={role.id}
                         className="focus:outline-none focus:border-b bg-white whitespace-nowrap w-full"
-                        value={role.description}
+                        value={`${role.role_id},${role.description}`}
                       >
                         {role.role}
                       </option>
@@ -197,6 +223,7 @@ const UserProfileForm = () => {
                                     el._id === menu._id ? { ...el, isEditable: !el.isEditable } : el
                                   )
                                 );
+                                setSelect(true);
                               }}
                             />
                             {index + 1}

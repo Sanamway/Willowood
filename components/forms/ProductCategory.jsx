@@ -166,7 +166,9 @@ const ProductCategory = () => {
     try {
       const resp = await axios.get(`${url}/api/get_company_information`, { headers: headers });
       const respda = await resp.data.data;
-      setCompanyInfo(respda);
+      const filterCompanyInfo = respda.filter((item) => item.isDeleted == false);
+      setCompanyInfo(filterCompanyInfo);
+
     } catch (error) {
       console.log(error);
     }
@@ -273,8 +275,10 @@ const ProductCategory = () => {
                       </option>
                       <option value="WCL">WCL</option>
                       <option value="PCL">PCL</option> */}
-
-                      {filterCompanyInfo.map((option) => (
+                      <option value={""} className="focus:outline-none focus:border-b bg-white">
+                        Select Options
+                      </option>
+                      {companyInfo.map((option) => (
                         <option
                           // value={option?.description}
                           value={option?.c_id}
