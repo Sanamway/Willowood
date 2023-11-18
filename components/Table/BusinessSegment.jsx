@@ -7,9 +7,19 @@ import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
+import { CSVLink } from "react-csv";
+import { TbFileDownload } from "react-icons/tb";
 const BusinessSegment = () => {
+  const csvHeaders = [
+    { label: "Id", key: "bg_id" },
+    { label: "Business Segment", key: "business_segment" },
+     { label: "Company", key: "c_id" },
+    { label: "Email", key: "email_id" },
+    { label: "H.O.D.", key: "hod_name" },
+    { label: "Mobile No.", key: "mobile_no" },
+  ];
   const router = useRouter();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
@@ -62,14 +72,14 @@ const BusinessSegment = () => {
                 <AiOutlineSearch className="mx-2 my-1" size={20} />
               </button>
             </span>
-            <TiArrowBack
-              onClick={() => {
-                router.push("/form/business_segement_form");
-              }}
-              className="text-gray-400"
-              size={35}
-            />
-
+            <h2>
+              <CSVLink data={data} headers={csvHeaders}>
+                <TbFileDownload
+                  className="text-green-600"
+                  size={34}
+                ></TbFileDownload>
+              </CSVLink>
+            </h2>
             <AiTwotoneHome
               className="text-red-500"
               size={34}
@@ -97,7 +107,7 @@ const BusinessSegment = () => {
               <thead className="border-b w-max">
                 <tr className="bg-gray-50 font-arial w-max">
                   <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                     Action
+                    Action
                   </th>
                   <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     B.G ID

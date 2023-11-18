@@ -7,10 +7,18 @@ import axios from "axios";
 import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import ConfirmationModal from "../modals/ConfirmationModal";
-
+import { CSVLink } from "react-csv";
+import { TbFileDownload } from "react-icons/tb";
 const Crop = () => {
+  const csvHeaders = [
+    { label: "Id", key: "cr_id" },
+
+    { label: "Crop Name", key: "crop_name" },
+    { label: "Season Name", key: "season_name" },
+    { label: "Company", key: "c_id" },
+  ];
   const router = useRouter();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
@@ -61,7 +69,14 @@ const Crop = () => {
                 <AiOutlineSearch className="mx-2 my-1" size={20} />
               </button>
             </span>
-
+            <h2>
+              <CSVLink data={data} headers={csvHeaders}>
+                <TbFileDownload
+                  className="text-green-600"
+                  size={34}
+                ></TbFileDownload>
+              </CSVLink>
+            </h2>
             <AiTwotoneHome className="text-red-500" size={34} />
             <button
               onClick={() => {
