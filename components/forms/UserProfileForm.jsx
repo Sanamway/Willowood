@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../Layout";
-import { AiFillFileExcel, AiTwotoneHome } from "react-icons/ai";
+import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { url } from "@/constants/url";
+import toast, { Toaster } from "react-hot-toast";
 
 const UserProfileForm = () => {
   const router = useRouter();
@@ -13,7 +14,6 @@ const UserProfileForm = () => {
   const [isSelect, setSelect] = useState(false);
 
   let { id, view } = router.query;
-  
 
   const [selectedRole, setSelectedRole] = useState({
     role_id: "",
@@ -102,12 +102,21 @@ const UserProfileForm = () => {
       return;
     } else {
       try {
+        let toastDisplayed = false; 
         for (const item of datas) {
           const response = await axios.post(`${url}/api/assign_menu_rights`, JSON.stringify(item), {
             headers: headers
           });
           const responseData = response.data;
-          console.log("fdvfv", responseData);
+          console.log("fdvfv", responseData.message);
+
+          if (responseData.message && !toastDisplayed) {
+            toast.success(responseData.message);
+            toastDisplayed = true;
+            setTimeout(() => {
+              router.push("/table/table_user_profile");
+            }, 2500);
+          }
         }
         console.log("completed.");
       } catch (error) {
@@ -116,7 +125,8 @@ const UserProfileForm = () => {
     }
   }
 
-  const handleSave = () => {
+  const handleSave = (e) => {
+    e.preventDefault();
     makingLoopApi(payload);
   };
 
@@ -124,6 +134,7 @@ const UserProfileForm = () => {
     <>
       <Layout>
         <div className="h-screen overflow-auto w-full font-arial bg-white ">
+          <Toaster position="bottom-center" reverseOrder={false} />
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">User Profile</h2>
             <div className="flex items-center gap-2 cursor-pointer">
@@ -166,6 +177,12 @@ const UserProfileForm = () => {
                     value={`${selectedRole.role_id},${selectedRole.description}`}
                     onChange={handleSelectRole}
                   >
+                    <option
+                      className="focus:outline-none focus:border-b bg-white whitespace-nowrap w-full"
+                      value=""
+                    >
+                      Select Options
+                    </option>
                     {menuRole.map((role) => (
                       <option
                         key={role.id}

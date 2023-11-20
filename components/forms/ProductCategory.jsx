@@ -87,22 +87,21 @@ const ProductCategory = () => {
       }
     } catch (errors) {
       console.log("ee", errors);
-      const newErrors = {};
-      errors?.inner?.forEach((error) => {
-        newErrors[error?.path] = error?.message;
-      });
-      setFormErrors(newErrors);
-      switch (true) {
-        case !!newErrors?.pcat_name:
-          toast.error(newErrors.pcat_name);
-          break;
-        case !!newErrors?.c_id:
-          toast.error(newErrors.c_id);
-        case !!newErrors?.c_name:
-          toast.error(newErrors.c_name);
-          break;
-        default:
+      const ermsg = errors.response.data.message;
+      // if(ermsg){
+      //   toast.error(ermsg)
+        
+      // }
+      const errmsg = errors.response.data.error;
+      console.log("fefef", errors)
+      if (errmsg?.includes('pcat_name_1')) {
+        toast.error('Product Category is Duplicate');
+      }else if(errmsg?.includes('brand_code_1')){
+        toast.error('Brand Id is duplicate')
+      }else{
+        toast.error(errmsg)
       }
+
     }
   };
 
@@ -120,7 +119,19 @@ const ProductCategory = () => {
         pcat_name: formState?.pcat_name,
         pcat_id:formState?.pcat_id
       };
-      await validationSchema.validate(Editdata, { abortEarly: false });
+      const emptyFields = Object.entries(Editdata)
+      .filter(([key, value]) => value === "")
+      .map(([key]) => key);
+    if (emptyFields.length > 0) {
+      const customMessages = {
+        c_name: "Company Name",
+        pcat_name: "Product Category",
+        pcat_id: "Product Id",
+        brand_name: "Brand Name"
+      };
+      const requiredFields = emptyFields.map((field) => customMessages[field] || field);
+      toast.error(`${requiredFields.join(", ")} is required.`);
+    }else{
       const resp = await axios.put(`${url}/api/update_product_category/${id}`, JSON.stringify(Editdata), {
         headers: headers
       });
@@ -132,22 +143,22 @@ const ProductCategory = () => {
           router.push("/table/table_product_category");
         }, 2500);
       }
+    }
     } catch (errors) {
       console.log("e", errors);
-      const newErrors = {};
-      errors?.inner?.forEach((error) => {
-        newErrors[error?.path] = error?.message;
-      });
-      switch (true) {
-        case !!newErrors?.pcat_name:
-          toast.error(newErrors.pcat_name);
-          break;
-        case !!newErrors?.c_id:
-          toast.error(newErrors.c_id);
-        case !!newErrors?.c_name:
-          toast.error(newErrors.c_name);
-          break;
-        default:
+      const ermsg = errors.response.data.message;
+      if(ermsg){
+        toast.error(ermsg)
+        return
+      }
+      const errmsg = errors.response.data.error;
+      console.log("fefef", errors)
+      if (errmsg?.includes('pcat_name_1')) {
+        toast.error('Product Category is Duplicate');
+      }else if(errmsg?.includes('brand_code_1')){
+        toast.error('Brand Id is duplicate')
+      }else{
+        toast.error(errmsg)
       }
     }
   };

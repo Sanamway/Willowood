@@ -78,22 +78,19 @@ const ProductSegment = () => {
         }, 2500);
       }
     } catch (errors) {
-      console.log("ee", errors);
-      const newErrors = {};
-      errors?.inner?.forEach((error) => {
-        newErrors[error?.path] = error?.message;
-      });
-      setFormErrors(newErrors);
-      switch (true) {
-        case !!newErrors?.pcat_name:
-          toast.error(newErrors.pcat_name);
-          break;
-        case !!newErrors?.c_id:
-          toast.error(newErrors.c_id);
-        case !!newErrors?.c_name:
-          toast.error(newErrors.c_name);
-          break;
-        default:
+      const ermsg = errors.response.data.message;
+      if(ermsg){
+        toast.error(ermsg)
+        return
+      }
+      const errmsg = errors.response.data.error;
+      console.log("fefef", errors)
+      if (errmsg?.includes('pseg_name_1')) {
+        toast.error('Product Segment is Duplicate');
+      }else if(errmsg?.includes('pseg_id')){
+        toast.error('Product Id is duplicate')
+      }else{
+        toast.error(errmsg)
       }
     }
   };
@@ -109,35 +106,49 @@ const ProductSegment = () => {
         c_name: formState?.c_name,
         c_id: formState?.c_id
       };
-      await validationSchema.validate(Editdata, { abortEarly: false });
-      const resp = await axios.put(`${url}/api/update_product_segment/${id}`, JSON.stringify(Editdata), {
-        headers: headers
-      });
-      const respdata = await resp.data;
-      console.log("resap", respdata);
-      if (respdata) {
-        toast.success(respdata.message);
-        setTimeout(() => {
-          router.push("/table/table_product_segment");
-        }, 2500);
+
+      const emptyFields = Object.entries(Editdata)
+        .filter(([key, value]) => value === "")
+        .map(([key]) => key);
+      if (emptyFields.length > 0) {
+        const customMessages = {
+          c_name: "Company Name",
+          pseg_id: "Product Segment",
+          brand_code: "Brand Code",
+          pseg_name: "Product Segment"
+        };
+        const requiredFields = emptyFields.map((field) => customMessages[field] || field);
+        toast.error(`${requiredFields.join(", ")} is required.`);
+      } else {
+        const resp = await axios.put(`${url}/api/update_product_segment/${id}`, JSON.stringify(Editdata), {
+          headers: headers
+        });
+        const respdata = await resp.data;
+        console.log("resap", respdata);
+        if (respdata) {
+          toast.success(respdata.message);
+          setTimeout(() => {
+            router.push("/table/table_product_segment");
+          }, 2500);
+        }
       }
     } catch (errors) {
-      console.log("e", errors);
-      const newErrors = {};
-      errors?.inner?.forEach((error) => {
-        newErrors[error?.path] = error?.message;
-      });
-      switch (true) {
-        case !!newErrors?.pcat_name:
-          toast.error(newErrors.pcat_name);
-          break;
-        case !!newErrors?.c_id:
-          toast.error(newErrors.c_id);
-        case !!newErrors?.c_name:
-          toast.error(newErrors.c_name);
-          break;
-        default:
+     
+      const ermsg = errors.response.data.message;
+      // if(ermsg){
+      //   toast.error(ermsg)
+        
+      // }
+      const errmsg = errors.response.data.error;
+      console.log("fefef", errors)
+      if (errmsg?.includes('pseg_name_1')) {
+        toast.error('Product Segment is Duplicate');
+      }else if(errmsg?.includes('pseg_id')){
+        toast.error('Product ID is duplicate')
+      }else{
+        toast.error(errmsg)
       }
+     
     }
   };
 
@@ -165,7 +176,6 @@ const ProductSegment = () => {
   useEffect(() => {
     getCompanyInfo();
   }, []);
-
 
   return (
     <>

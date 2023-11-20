@@ -7,6 +7,8 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { url } from "@/constants/url";
+import { CSVLink } from "react-csv";
+
 
 const UserInformation = () => {
   const router = useRouter();
@@ -43,6 +45,14 @@ const UserInformation = () => {
     getApiData();
     setisOpen(false);
   };
+
+  const csvHeaders = [
+    { label: "Id", key: "pseg_id" },
+    { label: "Segment ID", key: "pseg_id" },
+    { label: "Product Segment", key: "pseg_name" },
+    { label: "Company", key: "c_id" },
+    { label: "Status", key: "isDeleted" }
+  ];
 
   return (
     <Layout>

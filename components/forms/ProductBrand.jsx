@@ -75,11 +75,11 @@ const ProductBrand = () => {
       }
     } catch (errors) {
       const ermsg = errors.response.data.message;
-      // if(ermsg){
-      //   toast.error(ermsg)
-        
-      // }
       const errmsg = errors.response.data.error;
+      if(ermsg){
+        toast.error(ermsg)
+        return
+      }
       console.log("fefef", errors)
       if (errmsg?.includes('brand_name_1')) {
         toast.error('Brand Name is Duplicate');
@@ -88,11 +88,6 @@ const ProductBrand = () => {
       }else{
         toast.error(errmsg)
       }
-
-      // if(errmsg){
-      //   toast.error("Some field is duplicate")
-      // }
-      // console.log("errorrrrr", errors.response.data.error);
     }
   };
 
@@ -132,12 +127,6 @@ const ProductBrand = () => {
         }
       }
     } catch (errors) {
-      // const erroMsg = error.response.data.message
-      // if( error.response.data.error.includes('duplicate')){
-      //   toast.error('Some Fields are Duplicate')
-      // }
-      // console.log("e", error.response.data.error.includes('duplicate'));
-      // erroMsg ? toast.error(erroMsg) :""
       const ermsg = errors.response.data.message;
       // if(ermsg){
       //   toast.error(ermsg)
@@ -199,6 +188,8 @@ const ProductBrand = () => {
 
   console.log("fddf", prdSegment);
 
+ 
+
   return (
     <>
       <Layout>
@@ -230,7 +221,7 @@ const ProductBrand = () => {
 
           {/* <div className="bg-gray-300"></div> */}
           <div className="text-black h-screen  ">
-            <div className="bg-gray-100 p-4  h-filteredSegmentsceen ">
+            <div className="bg-gray-100 p-4  h-screen ">
               <form
                 onSubmit={(e) => e.preventDefault()}
                 disabled={router.query.type === "CREATE" }

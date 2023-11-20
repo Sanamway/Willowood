@@ -7,6 +7,9 @@ import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 import axios from "axios";
 import ConfirmModal from "../modals/ConfirmModal";
+import { CSVLink } from "react-csv";
+
+
 
 const UserProfile = () => {
   const router = useRouter();
@@ -34,6 +37,7 @@ const UserProfile = () => {
     }
   };
 
+
   useEffect(() => {
     gettingMenusData();
   }, []);
@@ -52,6 +56,12 @@ const UserProfile = () => {
     gettingPrdBrand();
     setisOpen(false);
   };
+
+  const csvHeaders = [
+    { label: "Id", key: "pseg_id" },
+    { label: "Role ID", key: "role_id" },
+    { label: "User Profile", key: "U_profile_name" }
+  ];
 
   return (
     <>
@@ -84,7 +94,9 @@ const UserProfile = () => {
                 </div>
               </div>
               <h2>
+              <CSVLink data={menuRecords} headers={csvHeaders}>
                 <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
+              </CSVLink>
               </h2>
               {/* <h2>
                 <TiArrowBack className="text-gray-400" size={35}></TiArrowBack>

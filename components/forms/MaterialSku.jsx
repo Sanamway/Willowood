@@ -9,6 +9,7 @@ import Select from "react-select";
 import axios from "axios";
 import { url } from "@/constants/url";
 import { uomlist } from "@/constants/uomlist";
+import toast, { Toaster } from "react-hot-toast";
 
 const MaterialSkuInfo = () => {
   const router = useRouter();
@@ -22,26 +23,29 @@ const MaterialSkuInfo = () => {
   const banImage = new FormData();
   banImage.append("banner", banner);
 
+  let { id, view, CREATE } = router.query;
+
   const [formData, setFormData] = useState({
     mat_code: "",
     mat_name: "",
     matnr: "",
     techn_spec: "",
     uom: "",
-    crops: [],
     crop_id: "",
     pcat_id: "",
     pseg_id: "",
     brand_code: "",
-    wuom: "",
-    batch: false,
+    wgt_uom: "",
+    batch: "",
     c_name: "",
     c_id: "",
-    gross_wt: "",
-    pack_desc: "",
+    gross_wgt: "",
+    net_wgt: "",
+    packing_size: "",
     pack_size: "",
     division: "",
-    banner: banImage
+    brand_name:""
+
   });
 
   //appending Images
@@ -160,27 +164,183 @@ const MaterialSkuInfo = () => {
     setSelectBanner(e.target.files[0]);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSaveMatSku = async (e) => {
     e.preventDefault();
-    console.log("sub", formData);
-    const formImage = new FormData();
-    formImage.append("banner", banner);
-
     try {
-      const resp = await axios.post(`${url}/api/create_product_material_sku`, formData, { headers: headers });
+      const data = {
+        mat_code: formData?.mat_code,
+        mat_name: formData?.mat_name,
+        matnr: formData?.matnr,
+        techn_spec: formData?.techn_spec,
+        uom: formData?.uom,
+        crop_id: formData?.crop_id,
+        pcat_id: formData?.pcat_id,
+        pseg_id: formData?.pseg_id,
+        brand_code: formData?.brand_code,
+        wgt_uom: formData?.wgt_uom,
+        batch: formData?.batch,
+        c_name: formData?.c_name,
+        c_id: formData?.c_id,
+        gross_wgt: formData?.gross_wgt,
+        net_wgt: formData?.net_wgt,
+        packing_size: formData?.packing_size,
+        pack_size: formData?.pack_size,
+        division: formData?.division,
+      };
+      const resp = await axios.post(`${url}/api/create_product_material_sku`, JSON.stringify(data), {
+        headers: headers
+      });
       const respData = await resp.data.data;
       console.log("post", respData);
-    } catch (error) {
-      console.log("error", error);
+
+      const respdata = await resp.data;
+      console.log("saved", respdata);
+      if (respdata) {
+        toast.success(respdata.message);
+        setTimeout(() => {
+          router.push("/table/table_material_sku");
+        }, 2500);
+      }
+    } catch (errors) {
+      const ermsg = errors.response.data.message;
+      if(ermsg){
+        toast.error(ermsg)
+        return
+      }
+      const errmsg = errors.response.data.error;
+      console.log("fefef", errmsg);
+      if (errmsg?.includes("mat_name_1")) {
+        toast.error("Material Name already exist");
+      } else if (errmsg?.includes("techn_spec_1")) {
+        toast.error("Technical Spec already exist");
+      } else if (errmsg?.includes("matnr_1")) {
+        toast.error("Material Code already exist.");
+      } else {
+        toast.error(errmsg);
+      }
     }
   };
 
-  console.log("fdf", formData);
+  //Edit MatSku
+  const handleEditMatSku = async (e) => {
+    e.preventDefault();
+    try {
+      const Editdata = {
+        mat_code: formData?.mat_code,
+        mat_name: formData?.mat_name,
+        matnr: formData?.matnr,
+        techn_spec: formData?.techn_spec,
+        uom: formData?.uom,
+        crop_id: formData?.crop_id,
+        pcat_id: formData?.pcat_id,
+        pseg_id: formData?.pseg_id,
+        brand_code: formData?.brand_code,
+        wgt_uom: formData?.wgt_uom,
+        batch: formData?.batch,
+        // c_name: formData?.c_name,
+        c_id: formData?.c_id,
+        net_wgt: formData?.net_wgt,
+        gross_wgt: formData?.gross_wgt,
+        packing_size: formData?.packing_size,
+        pack_size: formData?.pack_size,
+        division: formData?.division
+      };
+      const emptyFields = Object.entries(Editdata)
+        .filter(([key, value]) => value === "")
+        .map(([key]) => key);
+      if (emptyFields.length > 0) {
+        const customMessages = {
+          mat_name: "Material Name",
+          matnr: "Material Code",
+          techn_spec: "Technical Spec"
+          // brand_name: "Brand Name"
+        };
+        const requiredFields = emptyFields.map((field) => customMessages[field] || field);
+        toast.error(`${requiredFields.join(", ")} is required.`);
+      } else {
+        const resp = await axios.put(`${url}/api/update_product_material_sku/${id}`, JSON.stringify(Editdata), {
+          headers: headers
+        });
+        const respdata = await resp.data;
+        if (respdata) {
+          toast.success(respdata.message);
+          setTimeout(() => {
+            router.push("/table/table_material_sku");
+          }, 2500);
+        }
+      }
+    } catch (errors) {
+      const ermsg = errors.response.data.message;
+      // if(ermsg){
+      //   toast.error(ermsg)
+      //   return
+      // }
+      const errmsg = errors.response.data.error;
+      console.log("fefef", errors);
+      if (errmsg?.includes("mat_name_1")) {
+        toast.error("Material Name already exist");
+      } else if (errmsg?.includes("techn_spec_1")) {
+        toast.error("Technical Spec already exist");
+      } else if (errmsg?.includes("matnr_1")) {
+        toast.error("Material Code already exist.");
+      } else {
+        toast.error(errmsg);
+      }
+    }
+  };
+
+  const gettingMatSkuid = async (id) => {
+    try {
+      const resp = await axios.get(`${url}/api/get_product_material_sku/?mat_id=${id}`, { headers: headers });
+      const respdata = await resp.data.data;
+      setFormData({
+        mat_code: respdata?.mat_id,
+        mat_name: respdata?.mat_name,
+        matnr: respdata?.matnr,
+        techn_spec: respdata?.techn_spec,
+        uom: respdata?.uom,
+        crops: [],
+        crop_id: respdata?.crop_id,
+        pcat_id: respdata?.pcat_id,
+        pseg_id:respdata?.pseg_id ,
+        brand_code: respdata?.brand_code,
+        wgt_uom: respdata?.wgt_uom,
+        batch: respdata?.batch,
+        c_name: respdata?.c_name,
+        c_id: respdata?.c_id,
+        gross_wgt: respdata?.gross_wgt,
+        packing_size: respdata?.packing_size,
+        net_wgt:respdata?.net_wgt, 
+        pack_size: respdata?.pack_size,
+        division: respdata?.division,
+        brand_name:respdata?.brand_name
+      });
+      console.log("getbyid", respdata);
+    } catch (error) {}
+  };
+
+  // useEffect(() => {
+  //   gettingMatSkuid(id);
+  // }, [id]);
+
+  useEffect(() => {
+    if (router.query.type === "CREATE") return;
+    if (id) gettingMatSkuid(id);
+  }, [id]);
+
+  const handleSubmit = (e) => {
+    if (router.query.type !== "Edit") {
+      handleSaveMatSku(e);
+    } else {
+      handleEditMatSku(e);
+    }
+  };
 
   return (
     <>
       <Layout>
         <div className="h-screen overflow-auto w-full font-arial bg-white ">
+          <Toaster position="bottom-center" reverseOrder={false} />
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">Material SKU Information </h2>
             <div className="flex items-center gap-2 cursor-pointer">
@@ -207,7 +367,12 @@ const MaterialSkuInfo = () => {
 
           <div className="text-black h-screen  ">
             <div className="bg-gray-100 p-4  h-sceen ">
-              <form onSubmit={handleSubmit} className=" mx-2 mt mb-12 bg-white rounded shadow p-2">
+              <form
+                // onSubmit={handleSubmit}
+                onSubmit={(e) => e.preventDefault()}
+                disabled={router.query.type === "CREATE"}
+                className=" mx-2 mt mb-12 bg-white rounded shadow p-2"
+              >
                 <div className="flex -mx-2 mb-4 flex-col">
                   <div className="w-1/6 px-2 mb-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
@@ -236,8 +401,8 @@ const MaterialSkuInfo = () => {
                     <input
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                       type="text"
-                      maxLength={14}
-                      minLength={14}
+                      maxLength={10}
+                      minLength={10}
                       id="inputField"
                       pattern="[0-9]*"
                       value={formData?.matnr}
@@ -293,7 +458,7 @@ const MaterialSkuInfo = () => {
                         />
                       </div>
                     </div>
-                    <div className="banner border-2 flex flex-col items-center justify-center w-1/2  ">
+                    <div className="banner border- flex flex-col items-center justify-center w-1/3">
                       <div className=" ">
                         <h2 className="text-lg text-center mb-2">Upload Banner Image</h2>
                         <input type="file" onChange={handleBannerUpload} />
@@ -344,7 +509,7 @@ const MaterialSkuInfo = () => {
                         });
                       }}
                     >
-                      <option value="" className="focus:outline-none focus:border-b bg-white">
+                      <option value={""} className="focus:outline-none focus:border-b bg-white">
                         Select
                       </option>
                       {prdCat.map((item) => (
@@ -360,7 +525,7 @@ const MaterialSkuInfo = () => {
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
-                      value={formData?.pseg_name}
+                      value={formData?.pseg_id}
                       onChange={(e) => {
                         setFormData({
                           ...formData,
@@ -384,7 +549,7 @@ const MaterialSkuInfo = () => {
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="userSelect"
-                      value={formData?.brand_name}
+                      value={formData?.brand_code}
                       onChange={(e) => {
                         setFormData({
                           ...formData,
@@ -489,11 +654,11 @@ const MaterialSkuInfo = () => {
                         type="text"
                         id="inputField"
                         placeholder="Input Gross Wt."
-                        value={formData?.gross_wt}
+                        value={formData?.gross_wgt}
                         onChange={(e) => {
                           setFormData({
                             ...formData,
-                            gross_wt: e.target.value
+                            gross_wgt: e.target.value
                           });
                         }}
                       />
@@ -507,11 +672,11 @@ const MaterialSkuInfo = () => {
                         className="placeholder:text-xs w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                         type="text"
                         id="inputField"
-                        value={formData?.net_wt}
+                        value={formData?.net_wgt}
                         onChange={(e) => {
                           setFormData({
                             ...formData,
-                            net_wt: e.target.value
+                            net_wgt: e.target.value
                           });
                         }}
                         placeholder="Input Net Wt."
@@ -525,11 +690,11 @@ const MaterialSkuInfo = () => {
                       <select
                         className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                         id="userSelect"
-                        value={formData?.wuom}
+                        value={formData?.wgt_uom}
                         onChange={(e) => {
                           setFormData({
                             ...formData,
-                            wuom: e.target.value
+                            wgt_uom: e.target.value
                           });
                         }}
                       >
@@ -569,11 +734,11 @@ const MaterialSkuInfo = () => {
                         className=" placeholder:text-xs w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                         type="text"
                         id="inputField"
-                        value={formData?.pack_desc}
+                        value={formData?.packing_size}
                         onChange={(e) => {
                           setFormData({
                             ...formData,
-                            pack_desc: e.target.value
+                            packing_size: e.target.value
                           });
                         }}
                         placeholder="Input Packing Des"
@@ -764,7 +929,7 @@ const MaterialSkuInfo = () => {
                   </button>
                 </div>
 
-                <div className="button flex items-center gap-3 mt-6">
+                {/* <div className="button flex items-center gap-3 mt-6">
                   <button className="bg-green-700 px-4 py-1 text-white">Save</button>
                   <button
                     onClick={() => {
@@ -774,7 +939,26 @@ const MaterialSkuInfo = () => {
                   >
                     Close
                   </button>
-                </div>
+                </div> */}
+
+                {router.query.type !== "view" && (
+                  <div className="button flex items-center gap-3 mt-6">
+                    <div
+                      className="bg-green-700 px-4 py-1 text-white cursor-pointer"
+                      onClick={(e) => handleSubmit(e)}
+                    >
+                      {router.query.type === "Edit" ? "Update" : "Save"}{" "}
+                    </div>
+                    <button
+                      className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
+                      onClick={() => {
+                        router.push("/table/table_material_sku");
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                )}
               </form>
             </div>
           </div>

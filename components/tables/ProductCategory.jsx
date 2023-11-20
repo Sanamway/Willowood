@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import ConfirmModal from "../modals/ConfirmModal";
 import { url } from "@/constants/url";
+import { CSVLink } from "react-csv";
 
 const ProductCategory = () => {
   const router = useRouter();
@@ -50,6 +51,13 @@ const ProductCategory = () => {
     setisOpen(false);
   };
 
+  const csvHeaders = [
+    { label: "Id", key: "pcat_id" },
+    { label: "Product Category", key: "pcat_name" },
+    { label: "Comapny", key: "c_id" },
+    { label: "Status", key: "isDeleted" }
+  ];
+
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full ">
@@ -80,7 +88,9 @@ const ProductCategory = () => {
               </div>
             </div>
             <h2>
-              <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
+              <CSVLink data={prdData} headers={csvHeaders}>
+                <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
+              </CSVLink>
             </h2>
 
             <h2>
@@ -96,7 +106,7 @@ const ProductCategory = () => {
               onClick={() => {
                 router.push({
                   pathname: "/form/product_category",
-                  query: { type: "CREATE"}
+                  query: { type: "CREATE" }
                 });
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
@@ -111,17 +121,20 @@ const ProductCategory = () => {
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
-                  <th className=" w-[12%] px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className=" w-[12%] px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Action
                   </th>
-                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Category ID
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Product Category
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Company
+                  </th>
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Status
                   </th>
                 </tr>
               </thead>
@@ -153,14 +166,20 @@ const ProductCategory = () => {
                         Edit
                       </button>
                       <button
-                      onClick={() => {
-                        deleteHandler(item?.pcat_id);
-                      }}
-                       className="b text-black hover:text-red-500 ml-2">Delete</button>
+                        onClick={() => {
+                          deleteHandler(item?.pcat_id);
+                        }}
+                        className="b text-black hover:text-red-500 ml-2"
+                      >
+                        Delete
+                      </button>
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.pcat_id}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.pcat_name}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.c_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.isDeleted ? "Disabled" : "Enabled"}
+                    </td>
                   </tr>
                 ))}
               </tbody>
