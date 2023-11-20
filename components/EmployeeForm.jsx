@@ -3,7 +3,6 @@ import Layout from "./Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
-
 import Snapshot from "./EmployeeForm/Snapshot";
 import Personal from "./EmployeeForm/Personal";
 import Family from "./EmployeeForm/Family";
@@ -12,11 +11,10 @@ import History from "./EmployeeForm/History";
 import Documents from "./EmployeeForm/Documents";
 import { useState } from "react";
 const EmployeeForm = () => {
-
   const [formType, setFormType] = useState("Personal");
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className="h-screen overflow-auto w-full font-arial bg-white pb-22">
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Employee </h2>
           <span className="flex items-center gap-2 cursor-pointer">
@@ -109,7 +107,7 @@ const EmployeeForm = () => {
             </li>
           </ul>
         </div>
-        {formType === "Snapshot" && <Snapshot />}
+        {formType === "Snapshot" && <Snapshot formType={setFormType} />}
         {formType === "Personal" && <Personal />}
         {formType === "Family" && <Family />}
         {formType === "Bank" && <Bank />}

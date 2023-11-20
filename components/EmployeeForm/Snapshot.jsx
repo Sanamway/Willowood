@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 
-const Snapshot = () => {
+const Snapshot = (props) => {
   const [formActive, setFormActive] = useState(false);
   return (
     <form
       className=" bg-white rounded shadow p-4 w-full pb-20"
       onSubmit={(e) => e.preventDefault()}
-    
     >
       <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2">
         Basic Information
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -34,7 +33,7 @@ const Snapshot = () => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  lg:w-1/2 px-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -50,7 +49,7 @@ const Snapshot = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  lg:w-1/2 px-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -66,8 +65,8 @@ const Snapshot = () => {
           />
         </div>
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -82,7 +81,7 @@ const Snapshot = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -97,7 +96,7 @@ const Snapshot = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -114,8 +113,8 @@ const Snapshot = () => {
         </div>
       </div>
 
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -137,7 +136,7 @@ const Snapshot = () => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -160,7 +159,7 @@ const Snapshot = () => {
           </select>
         </div>
 
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -183,13 +182,13 @@ const Snapshot = () => {
           </select>
         </div>
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-             Work email
+            Work email
           </label>
 
           <input
@@ -200,29 +199,8 @@ const Snapshot = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/4 px-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> ISD code
-          </label>
-          <select
-            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-            disabled={!formActive}
-          >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
-              Option
-            </option>
-            <option value="state1">Mr.</option>
-            <option value="state2">Mrs.</option>
-          </select>
-        </div>
-        <div className="w-1/2 px-2">
+
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -237,25 +215,9 @@ const Snapshot = () => {
             disabled={!formActive}
           />
         </div>
-
-        <div className="w-1/2 px-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-             Biometric Id
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="Biometric Id"
-            disabled={!formActive}
-          />
-        </div>
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/3 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -281,8 +243,8 @@ const Snapshot = () => {
       <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2">
         Employment status & type
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -298,7 +260,7 @@ const Snapshot = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -314,7 +276,7 @@ const Snapshot = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -339,8 +301,8 @@ const Snapshot = () => {
         </div>
       </div>
 
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -363,7 +325,7 @@ const Snapshot = () => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -379,7 +341,7 @@ const Snapshot = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -400,8 +362,8 @@ const Snapshot = () => {
       <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2">
         Position
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -424,7 +386,7 @@ const Snapshot = () => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -447,7 +409,7 @@ const Snapshot = () => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -472,8 +434,8 @@ const Snapshot = () => {
         </div>
       </div>
 
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -496,7 +458,7 @@ const Snapshot = () => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -519,7 +481,7 @@ const Snapshot = () => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -544,8 +506,8 @@ const Snapshot = () => {
         </div>
       </div>
 
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -568,7 +530,7 @@ const Snapshot = () => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -591,7 +553,7 @@ const Snapshot = () => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -614,7 +576,7 @@ const Snapshot = () => {
           </select>
         </div>
       </div>
-      <div className="w-1/3 px-2">
+      <div className="w-2/3  px-2  lg:w-1/2 ">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
           htmlFor="inputField"
@@ -636,24 +598,12 @@ const Snapshot = () => {
           <option value="state2">Mrs.</option>
         </select>
       </div>
-      <br />
-      <hr />
-      <div className="button flex justify-end  gap-3 mt-6">
-        {formActive ? (
-          <div
-            className="bg-green-700 px-4 py-1 text-white  pointer"
-            onClick={() => setFormActive(true)}
-          >
-            Submit
-          </div>
-        ) : (
-          <div
-            className="bg-green-700 px-4 py-1 text-white pointer"
-            onClick={() => setFormActive(true)}
-          >
-            Edit
-          </div>
-        )}
+
+      <div
+        className="text-center w-2/3 mt-12 lg:w-full mx-2  overflow-hidden  bg-green-700 px-4 py-1 text-white  pointer"
+        onClick={() => props.formType("Personal")}
+      >
+        Next
       </div>
     </form>
   );
