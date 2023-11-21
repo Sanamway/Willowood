@@ -64,7 +64,7 @@ const ProductCategory = () => {
   const handleSaveCat = async (e) => {
     e.preventDefault();
     try {
-      await validationSchema.validate(formState, { abortEarly: false });
+      // await validationSchema.validate(formState, { abortEarly: false });
       const Formdata = {
         c_name: formState.c_name,
         c_id: formState.c_id,
@@ -87,12 +87,12 @@ const ProductCategory = () => {
       }
     } catch (errors) {
       console.log("ee", errors);
-      const ermsg = errors.response.data.message;
+      const ermsg = errors?.response?.data?.message;
       // if(ermsg){
       //   toast.error(ermsg)
         
       // }
-      const errmsg = errors.response.data.error;
+      const errmsg = errors?.response?.data?.error;
       console.log("fefef", errors)
       if (errmsg?.includes('pcat_name_1')) {
         toast.error('Product Category is Duplicate');
@@ -146,12 +146,12 @@ const ProductCategory = () => {
     }
     } catch (errors) {
       console.log("e", errors);
-      const ermsg = errors.response.data.message;
+      const ermsg = errors?.response?.data?.message;
       if(ermsg){
         toast.error(ermsg)
         return
       }
-      const errmsg = errors.response.data.error;
+      const errmsg = errors?.response?.data?.error;
       console.log("fefef", errors)
       if (errmsg?.includes('pcat_name_1')) {
         toast.error('Product Category is Duplicate');
@@ -177,7 +177,7 @@ const ProductCategory = () => {
     try {
       const resp = await axios.get(`${url}/api/get_company_information`, { headers: headers });
       const respda = await resp.data.data;
-      const filterCompanyInfo = respda.filter((item) => item.isDeleted == false);
+      const filterCompanyInfo = respda.filter((item) => item?.isDeleted == false);
       setCompanyInfo(filterCompanyInfo);
 
     } catch (error) {

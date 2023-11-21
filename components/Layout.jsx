@@ -1,17 +1,14 @@
-import React, { useState } from "react";
-import { RiMenu4Line, RiHeart2Line } from "react-icons/ri";
+import React, { useState, useEffect } from "react";
 import { BsBell, BsQuestionSquare } from "react-icons/bs";
-import { AiOutlineClose, AiOutlineMail } from "react-icons/ai";
+import { AiOutlineMail } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
-import { CgProfile } from "react-icons/cg";
-import { CiMail } from "react-icons/ci";
 import Profile from "../public/userimg.jpg";
 import Image from "next/image";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdLogout } from "react-icons/md";
 import WillLogo from "../public/Willowood.png";
-import { AiOutlineHome, AiOutlinePropertySafety } from "react-icons/ai";
-import { BiUser, BiSolidBusiness, BiLogInCircle } from "react-icons/bi";
+import { AiOutlineHome } from "react-icons/ai";
+import { BiUser, BiLogInCircle } from "react-icons/bi";
 import Footer from "./Footer";
 import { Popover } from "@headlessui/react";
 import { useRouter } from "next/router";
@@ -20,6 +17,7 @@ const Layout = ({ children }) => {
   const router = useRouter();
   const [isOpen, setOpen] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -30,10 +28,10 @@ const Layout = ({ children }) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('uid');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('email');
-    router.push('/logoutsuccess')
+    localStorage.removeItem("uid");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("email");
+    router.push("/logoutsuccess");
   };
 
   const menuItems = [
@@ -43,7 +41,12 @@ const Layout = ({ children }) => {
     { id: 2.1, label: "Assign Role Profile", icon: BiUser, link: "/table/table_assign_role" },
     { id: 2.2, label: "User Assign Business", icon: BiUser, link: "/table/table_user_assign_business" },
     { id: 2.3, label: "Company Information", icon: BiUser, link: "/table/table_company_information" },
-    { id: 2.4, label: "Business Division Segment", icon: BiUser, link: "/table/table_business_division_segment" },
+    {
+      id: 2.4,
+      label: "Business Div Segment",
+      icon: BiUser,
+      link: "/table/table_business_division_segment"
+    },
     { id: 2.5, label: "Business Unit Cluster", icon: BiUser, link: "/table/table_business_unit_cluster" },
     { id: 2.6, label: "Business Zone", icon: BiUser, link: "/table/table_business_zone" },
     { id: 2.7, label: "Region", icon: BiUser, link: "/table/table_region" },
@@ -58,19 +61,33 @@ const Layout = ({ children }) => {
     { id: 3.6, label: "Material SKU", icon: BiUser, link: "/table/table_material_sku" },
     { id: 3.7, label: "Rolling Plan", icon: BiUser, link: "/rollingplans" },
     { id: 3.8, label: "Colletion Plan", icon: BiUser, link: "/collectionplans" },
-    { id: 3.9, label: "Forgot", icon: BiUser, link: "/forgotpass" },
+    { id: 3.9, label: "Forgot", icon: BiUser, link: "/forgotpass" }
   ];
+
+  const handleWindowSizeChange = () => {
+    setIsMobile(window.innerWidth <= 768);
+  };
+
+  useEffect(() => {
+    handleWindowSizeChange();
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
 
   return (
     <>
-      <div className="flex h-screen fixed w-full font-arial  ">
+      {/* <div className="flex h-screen fixed w-full font-arial  "> */}
+      <div className="flex min-h-screen font-arial">
         {/* Sidebar */}
+       
         <div
-          className={`flex justify-center custom-scrollbar overflow-x-hidden overflow-y-scroll h-screen transition-all ${
-            isOpen ? "w-28" : "w-[14rem]"
-          } bg-[#15283c]  text-white`}
+          className={`flex-shrink-0 ${
+            isOpen ?  (isMobile ? "" : "w-[4rem]") : (isMobile ? "" : "w-[14rem]")
+          } bg-[#15283c] text-white custom-scrollbar max-h-screen overflow-x-hidden overflow-y-scroll transition-all`}
         >
-          <div className="flex flex-col items-center w-full ">
+          <div className="flex flex-col items-center w-full  ">
             <div className="flex items-center justify-between  relative">
               <div className="flex items-center pl-1 gap-4">
                 <div className="userImg flex items-center py-4 mx justify-center">
@@ -103,7 +120,7 @@ const Layout = ({ children }) => {
                   className="flex cursor-pointer items-center border-1 rounded-md border-black w-full hover:bg-orange-500 gap-3 px-2 py-1"
                 >
                   <div className="">
-                    <Icon></Icon>
+                    <Icon size={25}></Icon>
                   </div>
                   {!isOpen && (
                     <h2
@@ -120,6 +137,8 @@ const Layout = ({ children }) => {
             </div>
           </div>
         </div>
+
+       
 
         <div className="flex-grow flex flex-col">
           {/* Top Bar */}
@@ -144,55 +163,63 @@ const Layout = ({ children }) => {
                     </div>
                   </div>
 
-                  <div className="bg-[#ff5722] h-full mx-0 font-arial relative">
-                    <div className="flex items-center px-4 py-[0.4rem] h-full gap-1">
-                      <Image
-                        src={Profile}
-                        alt=""
-                        className="h-10 w-10 object-cover border-2 border-yellow-500 rounded-full"
-                      />
-                      <Popover as="div" className="relative border-none outline-none z-50">
-                        {({ open }) => (
-                          <>
-                            <Popover.Button className="focus:outline-none">
-                              <div
-                                className="details flex items-start justify-between gap-2 cursor-pointer"
-                                onClick={toggleDropdown}
-                              >
-                                <h2 className="font-normal font-arial text-sm">Uttam Aggarwal</h2>
-                                <IoIosArrowDown className="button"></IoIosArrowDown>
-                              </div>
-                            </Popover.Button>
+                  {!isMobile && (
+                    <div className="bg-[#ff5722] h-full mx-0 font-arial relative">
+                      <div className="flex items-center px-4 py-[0.4rem] h-full gap-1">
+                        <Image
+                          src={Profile}
+                          alt=""
+                          className="h-10 w-10 object-cover border-2 border-yellow-500 rounded-full"
+                        />
+                        <Popover as="div" className="relative border-none outline-none z-50">
+                          {({ open }) => (
+                            <>
+                              <Popover.Button className="focus:outline-none">
+                                <div
+                                  className="details flex items-start justify-between gap-2 cursor-pointer"
+                                  onClick={toggleDropdown}
+                                >
+                                  <h2 className="font-normal font-arial text-sm">Uttam Aggarwal</h2>
+                                  <IoIosArrowDown className="button"></IoIosArrowDown>
+                                </div>
+                              </Popover.Button>
 
-                            <Popover.Panel
-                              as="div"
-                              className={`${
-                                open ? "block" : "hidden"
-                              } absolute right-2 mt-2 w-40 bg-white text-black borde rounded-md shadow-md`}
-                            >
-                              <ul className="py-2 p text-text-black flex flex-col gap-2 px-4 font-Rale cursor-pointer">
-                                <li onClick={()=>{router.push('/profile')}}>My Profile</li>
-                                <li>Settings</li>
-                                <li>Help</li>
-                                <li onClick={handleLogout}>
-                                  <div className="flex gap-1 items-center">
-                                    Log out <MdLogout size={16}></MdLogout>
-                                  </div>
-                                </li>
-                              </ul>
-                            </Popover.Panel>
-                          </>
-                        )}
-                      </Popover>
+                              <Popover.Panel
+                                as="div"
+                                className={`${
+                                  open ? "block" : "hidden"
+                                } absolute right-2 mt-2 w-40 bg-white text-black borde rounded-md shadow-md`}
+                              >
+                                <ul className="py-2 p text-text-black flex flex-col gap-2 px-4 font-Rale cursor-pointer">
+                                  <li
+                                    onClick={() => {
+                                      router.push("/profile");
+                                    }}
+                                  >
+                                    My Profile
+                                  </li>
+                                  <li>Settings</li>
+                                  <li>Help</li>
+                                  <li onClick={handleLogout}>
+                                    <div className="flex gap-1 items-center">
+                                      Log out <MdLogout size={16}></MdLogout>
+                                    </div>
+                                  </li>
+                                </ul>
+                              </Popover.Panel>
+                            </>
+                          )}
+                        </Popover>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </nav>
           </div>
 
           {/* Main Content Area */}
-          <div className="flex-grow bg-gray-200 ">{children}</div>
+          <div className="flex-grow bg-gray bg-white  ">{children}</div>
         </div>
       </div>
     </>
