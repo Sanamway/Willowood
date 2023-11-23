@@ -418,7 +418,7 @@ const Family = (props) => {
           </button>
         </div>
       </div> */}
-      <div className="flex justify-between  gap-2 w-2/3 mt-12  flex gap-1 lg:w-full   overflow-hidden  px-4 py-1 text-white  pointer">
+      <div className="flex justify-between  gap-2 w-2/3 mt-12  flex gap-1 lg:w-1/2   overflow-hidden  px-4 py-1 text-white  pointer">
         <div
           className="w-full  text-center  bg-green-700 px-4 py-1 text-white cursor-pointer"
           onClick={() => props.formType("Personal")}

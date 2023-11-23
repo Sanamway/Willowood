@@ -1,13 +1,13 @@
 import React from "react";
-import Layout from "./Layout";
+import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 
-import Snapshot from "./EmployeeForm/Snapshot";
-import Personal from "./EmployeeForm/Personal";
-import Family from "./EmployeeForm/Family";
-import Bank from "./EmployeeForm/Bank";
-import History from "./EmployeeForm/History";
-import Documents from "./EmployeeForm/Documents";
+import Snapshot from "../EmployeeForm/Snapshot";
+import Personal from "../EmployeeForm/Personal";
+import Family from "../EmployeeForm/Family";
+import Bank from "../EmployeeForm/Bank";
+import History from "../EmployeeForm/History";
+import Documents from "../EmployeeForm/Documents";
 import { useState } from "react";
 const EmployeeForm = () => {
   const [formType, setFormType] = useState("Personal");

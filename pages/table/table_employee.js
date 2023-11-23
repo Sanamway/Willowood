@@ -1,5 +1,5 @@
 import React from "react";
-import Employee from "@/components/EmployeeForm";
+import Employee from "@/components/Table/Employee";
 const table = () => {
   return <Employee />;
 };
