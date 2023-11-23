@@ -10,7 +10,7 @@ const DepoForm = () => {
     const [formType, setFormType] = useState("Basic");
   return (
     <Layout>
-       <div className="h-screen overflow-auto w-full font-arial bg-white text-black  ">
+       <div className="   w-full font-arial bg-white text-black  ">
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Dealer Details </h2>
           <span className="flex items-center gap-2 cursor-pointer">
@@ -18,7 +18,7 @@ const DepoForm = () => {
           </span>
         </div>
 
-        <div className="w-[100%] flex mx-2 ">
+        <div className=" flex mx-2 ">
           <ul className="flex border-b ">
             <li className="-mb-px mr-1">
               <a
@@ -103,8 +103,9 @@ const DepoForm = () => {
             </li>
           </ul>
         </div>
-        {formType === "Basic" && <Basic />}
-        {formType === "Personal" && <Personal />}
+
+        {formType === "Basic" && <Basic formType={setFormType} />}
+        {formType === "Personal" && <Personal formType={setFormType} />}
         {formType === "Family" && <Family />}
         {formType === "Bank" && <Bank />}
         {formType === "Documents" && <Documents />}

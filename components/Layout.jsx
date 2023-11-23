@@ -78,17 +78,15 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      {/* <div className="flex h-screen fixed w-full font-arial  "> */}
-      <div className="flex min-h-screen font-arial">
+      <div className="flex min-h-screen font-arial bg-[#15283c] ">
         {/* Sidebar */}
-       
         <div
-          className={`flex-shrink-0 ${
-            isOpen ?  (isMobile ? "" : "w-[4rem]") : (isMobile ? "" : "w-[14rem]")
-          } bg-[#15283c] text-white custom-scrollbar max-h-screen overflow-x-hidden overflow-y-scroll transition-all`}
+          className={`flex-shrink-0  ${
+            isOpen ? (isMobile ? "hidden " : "w-[4rem] ") : isMobile ? "" : "w-[14rem]"
+          } bg-[#15283c] text-white custom-scrollbar min-h-screen overflow-x-hidden overflow-y-scroll transition-all ease-in duration-300`}
         >
           <div className="flex flex-col items-center w-full  ">
-            <div className="flex items-center justify-between  relative">
+            <div className="flex items-center justify-between relative">
               <div className="flex items-center pl-1 gap-4">
                 <div className="userImg flex items-center py-4 mx justify-center">
                   {isOpen ? (
@@ -137,17 +135,15 @@ const Layout = ({ children }) => {
             </div>
           </div>
         </div>
-
-       
-
-        <div className="flex-grow flex flex-col">
+        <div className="flex-grow flex flex-col ">
           {/* Top Bar */}
-          <div className="bg-[#15283c]   text-white">
-            <nav className="nav font-playfair ">
-              <div className="navContainer h-[52px] bg-text flex items-center justify-between max-w-full">
+          <div className="bg-[#15283c] lg:w-full  text-white ">
+            {/* mod w added */}
+            <nav className="nav font-playfair  ">
+              <div className="navContainer h-[52px] bg-text flex items-center  justify-between lg:max-w-full">
                 <div className="flex items-center">
-                  <div className="max-w-full bg-[#ff5722] p-[0.9rem] h-full cursor-pointer" onClick={collaps}>
-                    <GiHamburgerMenu className="mx-2 my-2 max-w-full max-h-full" size={24}></GiHamburgerMenu>
+                  <div className=" bg-[#ff5722] p-[0.9rem] lg:p-[0.9rem] h-full cursor-pointer" onClick={collaps}>
+                    <GiHamburgerMenu className="mx-2 my-2 " size={24}></GiHamburgerMenu>
                   </div>
                   <div className="max-w-full max-h-full">
                     <Image src={WillLogo} className="h-[3.4rem] w-full object-cover"></Image>
@@ -217,9 +213,8 @@ const Layout = ({ children }) => {
               </div>
             </nav>
           </div>
-
           {/* Main Content Area */}
-          <div className="flex-grow bg-gray bg-white  ">{children}</div>
+          <div className="flex-grow bg-gray bg-white h-screen overflow-auto">{children}</div>
         </div>
       </div>
     </>

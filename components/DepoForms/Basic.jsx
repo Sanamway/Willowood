@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 
-const Basic = () => {
+const Basic = (props) => {
   const [formActive, setFormActive] = useState(false);
 
   return (
     <form
-      className=" bg-white rounded shadow p-4 w-full min-h-screen overflow-auto"
+      className=" bg-white rounded shadow p-4 w-full  overflow-auto"
       onSubmit={(e) => e.preventDefault()}
     >
-      <div className="flex -mx-2 my-2">
-        <div className="w-1/2 lg:w-full px-2">
+      <div className="flex my-2">
+        <div className="w-full px-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600">*</small> Party Name
           </label>
@@ -22,10 +22,10 @@ const Basic = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col -mx-2 my-2 lg:flex-row ">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col  my-2 mb-2 lg:flex-row ">
+        <div className="w-full px-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-            <small className="text-red-600">*</small> Postal Address
+            <small className="text-red-600">*</small> Address
           </label>
           <textarea
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -35,9 +35,9 @@ const Basic = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-full px-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-            <small className="text-red-600">*</small> Address
+            <small className="text-red-600">*</small> Postal Address
           </label>
           <textarea
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -49,62 +49,78 @@ const Basic = () => {
         </div>
       </div>
 
-      <div className="flex -mx-2 my-2 lg:flex-row flex-col">
-        <div className="w-1/2 px-2">
+      <div className="flex my-2 mb-2 lg:flex-row flex-col">
+        <div className="w-full px-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600">*</small> City
           </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="City"
-            disabled={!formActive}
-          />
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={formActive}
+          >
+            <option value="" className="focus:outline-none focus:border-b bg-white">
+              Option
+            </option>
+            <option value="state1">City 1</option>
+            <option value="state2">City 2</option>
+          </select>
         </div>
-        <div className="w-1/2 px-2">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-            <small className="text-red-600">*</small> District
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2  " htmlFor="inputField">
+            <small className="text-red-600 ">*</small> District
           </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="IFSC Code"
-            disabled={!formActive}
-          />
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={formActive}
+          >
+            <option value="" className="focus:outline-none focus:border-b bg-white">
+              Option
+            </option>
+            <option value="state1">District 1</option>
+            <option value="state2">District 2</option>
+          </select>
         </div>
       </div>
 
-      <div className="flex -mx-2 my-2 lg:flex-row flex-col">
-        <div className="w-1/2 px-2">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+      <div className="flex my-2 mb-2 lg:flex-row flex-col ">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
             <small className="text-red-600">*</small> State
           </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="City"
-            disabled={!formActive}
-          />
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={formActive}
+          >
+            <option value="" className="focus:outline-none focus:border-b bg-white">
+              Option
+            </option>
+            <option value="state1">State 1</option>
+            <option value="state2">State 2</option>
+          </select>
         </div>
-        <div className="w-1/2 px-2">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+        <div className="w-full px-2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
             <small className="text-red-600">*</small> Pin Code
           </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="IFSC Code"
-            disabled={!formActive}
-          />
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={formActive}
+          >
+            <option value="" className="focus:outline-none focus:border-b bg-white">
+              Option
+            </option>
+            <option value="state1">Pin 1</option>
+            <option value="state2">Pin 2</option>
+          </select>
         </div>
       </div>
-     
-      <div className="flex -mx-2 my-2">
-        <div className="w-1/2 lg:w-full px-2">
+
+      <div className="flex  my-2">
+        <div className="w-full lg:w-full px-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600">*</small> Contact Person
           </label>
@@ -118,16 +134,220 @@ const Basic = () => {
         </div>
       </div>
 
-      <div className="button flex justify-end ">
-        {formActive ? (
-          <div className="bg-green-700 px-4 py-1 text-white  pointer" onClick={() => setFormActive(true)}>
-            Submit
-          </div>
-        ) : (
-          <div className="bg-green-700 px-4 py-1 text-white pointer" onClick={() => setFormActive(true)}>
-            Edit
-          </div>
-        )}
+      <div className="flex my-2 mb-2 lg:flex-row flex-col ">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600">*</small> Primary Mobile
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Primary Mobile"
+            disabled={!formActive}
+          />
+        </div>
+        <div className="w-full px-2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600">*</small> Secondary Mobile
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Secondary Mobile"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
+      <div className="flex my-2">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600">*</small> Email
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="email"
+            id="inputField"
+            placeholder="Email"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
+
+      <div className="flex justify-start items-center  w-full my-4">
+        <h2 className="font-arial font-normal text-xl py-2 border-dashed  border-t-2 w-full border-b-2 border-l-0 border-r-0">
+          Business Structure Info:{" "}
+        </h2>
+      </div>
+
+      <div className="flex my-2 mb-2 lg:flex-row flex-col ">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> District
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="District"
+            disabled={!formActive}
+          />
+        </div>
+        <div className="w-full px-2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Territory
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Territory"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
+
+      <div className="flex my-2 mb-2 lg:flex-row flex-col ">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Region
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Region"
+            disabled={!formActive}
+          />
+        </div>
+        <div className="w-full px-2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Zone
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Zone"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
+
+      <div className="flex my-2 mb-2 lg:flex-row flex-col ">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Business Unit
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Business Unit"
+            disabled={!formActive}
+          />
+        </div>
+        <div className="w-full px-2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Segment
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Segment"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
+
+
+      <div className="flex my-2">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Company
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Company"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
+
+
+      <div className="flex my-2">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Territory Person
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Territory Person"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
+
+      <div className="flex my-2">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Region Person
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Region Person"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
+
+
+      <div className="flex my-2">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Zonal Head
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Zonal Head"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
+
+      <div className="flex my-2">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Unit Head
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Unit Head"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
+
+      {/* buttons */}
+      <div className="my-5 flex items-center justify-end">
+        <button
+          onClick={() => props.formType("Personal")}
+          className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-lg"
+        >
+          Next
+        </button>
       </div>
     </form>
   );
