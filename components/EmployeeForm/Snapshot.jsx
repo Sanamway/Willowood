@@ -7,7 +7,7 @@ const Snapshot = (props) => {
       className=" bg-white rounded shadow p-4 w-full pb-20"
       onSubmit={(e) => e.preventDefault()}
     >
-      <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2">
+      <div className="flex bg-gray-100 w-2/3 h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Basic Information
       </div>
       <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
@@ -96,6 +96,7 @@ const Snapshot = (props) => {
             disabled={!formActive}
           />
         </div>
+
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -240,7 +241,7 @@ const Snapshot = (props) => {
           </select>
         </div>
       </div>
-      <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2">
+      <div className="flex bg-gray-100 w-2/3 h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Employment status & type
       </div>
       <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
@@ -341,25 +342,9 @@ const Snapshot = (props) => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-2/3  px-2  lg:w-1/2 ">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            Employee Other Status Id
-          </label>
-
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="Employee Other Status Id"
-            disabled={!formActive}
-          />
-        </div>
       </div>
 
-      <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2">
+      <div className="flex bg-gray-100 w-2/3 h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Position
       </div>
       <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
@@ -368,7 +353,7 @@ const Snapshot = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Company
+            <small className="text-red-600">*</small> Company Info
           </label>
 
           <select
@@ -391,7 +376,7 @@ const Snapshot = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Business Unit
+            <small className="text-red-600">*</small> Business Segment
           </label>
 
           <select
@@ -414,7 +399,78 @@ const Snapshot = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Department
+            <small className="text-red-600">*</small> Business Unit Division
+          </label>
+
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={!formActive}
+          >
+            <option
+              value=""
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Option
+            </option>
+            <option value="state1">Mr.</option>
+            <option value="state2">Mrs.</option>
+          </select>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
+          >
+            <small className="text-red-600">*</small> Zone
+          </label>
+
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={!formActive}
+          >
+            <option
+              value=""
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Option
+            </option>
+            <option value="state1">Mr.</option>
+            <option value="state2">Mrs.</option>
+          </select>
+        </div>
+        <div className="w-2/3  px-2  lg:w-1/2 ">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
+          >
+            <small className="text-red-600">*</small> Region
+          </label>
+
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={!formActive}
+          >
+            <option
+              value=""
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Option
+            </option>
+            <option value="state1">Mr.</option>
+            <option value="state2">Mrs.</option>
+          </select>
+        </div>
+        <div className="w-2/3  px-2  lg:w-1/2 ">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
+          >
+            <small className="text-red-600">*</small> Territory
           </label>
 
           <select
@@ -486,9 +542,8 @@ const Snapshot = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Region
+            Reporting manager
           </label>
-
           <select
             className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
@@ -512,53 +567,7 @@ const Snapshot = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Branch
-          </label>
-
-          <select
-            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-            disabled={!formActive}
-          >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
-              Option
-            </option>
-            <option value="state1">Mr.</option>
-            <option value="state2">Mrs.</option>
-          </select>
-        </div>
-        <div className="w-2/3  px-2  lg:w-1/2 ">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Sub branch
-          </label>
-
-          <select
-            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-            disabled={!formActive}
-          >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
-              Option
-            </option>
-            <option value="state1">Mr.</option>
-            <option value="state2">Mrs.</option>
-          </select>
-        </div>
-        <div className="w-2/3  px-2  lg:w-1/2 ">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            Reporting manager
+            Functional manager
           </label>
           <select
             className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -575,32 +584,10 @@ const Snapshot = (props) => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-      </div>
-      <div className="w-2/3  px-2  lg:w-1/2 ">
-        <label
-          className="block text-gray-700 text-sm font-bold mb-2"
-          htmlFor="inputField"
-        >
-          Functional manager
-        </label>
-        <select
-          className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-          id="stateSelect"
-          disabled={!formActive}
-        >
-          <option
-            value=""
-            className="focus:outline-none focus:border-b bg-white"
-          >
-            Option
-          </option>
-          <option value="state1">Mr.</option>
-          <option value="state2">Mrs.</option>
-        </select>
       </div>
 
       <div
-        className="text-center w-2/3 mt-12 lg:w-full mx-2  overflow-hidden  bg-green-700 px-4 py-1 text-white  pointer"
+        className="text-center w-2/3 mt-12 bg-orange-500 lg:w-full   overflow-hidden  bg-green-700 px-4 py-1 text-white  pointer"
         onClick={() => props.formType("Personal")}
       >
         Next

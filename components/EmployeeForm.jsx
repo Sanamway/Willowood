@@ -1,8 +1,7 @@
 import React from "react";
 import Layout from "./Layout";
 import { AiTwotoneHome } from "react-icons/ai";
-import { TiArrowBack } from "react-icons/ti";
-import { useRouter } from "next/router";
+
 import Snapshot from "./EmployeeForm/Snapshot";
 import Personal from "./EmployeeForm/Personal";
 import Family from "./EmployeeForm/Family";
@@ -20,11 +19,11 @@ const EmployeeForm = () => {
           <span className="flex items-center gap-2 cursor-pointer">
             <AiTwotoneHome className="text-red-500" size={34} />
           </span>
-        </div>
+        </div> 
 
         <div className="w-[100%] flex ">
-          <ul className="flex border-b ">
-            <li className="-mb-px mr-1">
+          <ul className="flex border-b  px-2 overflow-x-auto w-2/3 lg:flex border-b overflow-hidden ">
+            <li className="ml-2 lg:-mb-px mr-1 lg:-mb-px mr-1">
               <a
                 className={`${
                   formType === "Snapshot"
@@ -82,6 +81,19 @@ const EmployeeForm = () => {
             <li className="-mb-px mr-1">
               <a
                 className={`${
+                  formType === "History"
+                    ? "inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white  whitespace-nowrap"
+                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold whitespace-nowrap"
+                }`}
+                href="#"
+                onClick={() => setFormType("History")}
+              >
+                CTC 
+              </a>
+            </li>
+            <li className="-mb-px mr-1 ">
+              <a
+                className={`${
                   formType === "Documents"
                     ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
                     : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
@@ -92,27 +104,14 @@ const EmployeeForm = () => {
                 Documents
               </a>
             </li>
-            <li className="-mb-px mr-1">
-              <a
-                className={`${
-                  formType === "History"
-                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
-                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
-                }`}
-                href="#"
-                onClick={() => setFormType("History")}
-              >
-                History
-              </a>
-            </li>
           </ul>
         </div>
         {formType === "Snapshot" && <Snapshot formType={setFormType} />}
-        {formType === "Personal" && <Personal />}
-        {formType === "Family" && <Family />}
-        {formType === "Bank" && <Bank />}
-        {formType === "Documents" && <Documents />}
-        {formType === "History" && <History />}
+        {formType === "Personal" && <Personal formType={setFormType} />}
+        {formType === "Family" && <Family formType={setFormType} />}
+        {formType === "Bank" && <Bank formType={setFormType} />}
+        {formType === "Documents" && <Documents formType={setFormType} />}
+        {formType === "History" && <History formType={setFormType} />}
       </div>
     </Layout>
   );
