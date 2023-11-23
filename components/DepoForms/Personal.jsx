@@ -20,7 +20,6 @@ const Basic = (props) => {
     { id: 2, asset: "Property B", category: "Commercial", acres: 5, valuation: "$500,000" },
     { id: 2, asset: "Property B", category: "Commercial", acres: 5, valuation: "$500,000" },
     { id: 2, asset: "Property B", category: "Commercial", acres: 5, valuation: "$500,000" },
-    { id: 2, asset: "Property B", category: "Commercial", acres: 5, valuation: "$500,000" },
     { id: 2, asset: "Property B", category: "Commercial", acres: 5, valuation: "$500,000" }
   ];
 
