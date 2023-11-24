@@ -187,6 +187,9 @@ const MaterialSku = () => {
                   <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Company
                   </th>
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Status
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
@@ -244,6 +247,7 @@ const MaterialSku = () => {
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.packing_size}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.batch ? "true":"false"}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.c_id}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.isDeleted ? "Disable":"Enable"}</td>
                       </tr>
                     )
                   )

@@ -5,6 +5,7 @@ import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
 import Basic from "./DepoForms/Basic";
 import Personal from './DepoForms/Personal'
+import AdditionalInfo from "./DepoForms/AdditionalInfo";
 
 const DepoForm = () => {
     const [formType, setFormType] = useState("Basic");
@@ -18,7 +19,7 @@ const DepoForm = () => {
           </span>
         </div>
 
-        <div className=" flex mx-2 ">
+        <div className="w-1/3 flex mx-2 ">
           <ul className="flex border-b ">
             <li className="-mb-px mr-1">
               <a
@@ -51,14 +52,14 @@ const DepoForm = () => {
             <li className="-mb-px mr-1">
               <a
                 className={`${
-                  formType === "Family"
+                  formType === "AdditionalInfo"
                     ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
                     : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
                 }`}
                 href="#"
-                // onClick={() => setFormType("Family")}
+                onClick={() => setFormType("AdditionalInfo")}
               >
-                Family
+                Additional
               </a>
             </li>
             <li className="-mb-px mr-1">
@@ -75,41 +76,15 @@ const DepoForm = () => {
                 Bank
               </a>
             </li>
-            <li className="-mb-px mr-1">
-              <a
-                className={`${
-                  formType === "Documents"
-                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
-                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
-                }`}
-                href="#"
-                // onClick={() => setFormType("Documents")}
-              >
-                Documents
-              </a>
-            </li>
-            <li className="-mb-px mr-1">
-              <a
-                className={`${
-                  formType === "History"
-                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
-                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
-                }`}
-                href="#"
-                // onClick={() => setFormType("History")}
-              >
-                History
-              </a>
-            </li>
+          
           </ul>
         </div>
 
         {formType === "Basic" && <Basic formType={setFormType} />}
         {formType === "Personal" && <Personal formType={setFormType} />}
-        {formType === "Family" && <Family />}
+        {formType === "AdditionalInfo" && <AdditionalInfo formType={setFormType} />}
         {formType === "Bank" && <Bank />}
-        {formType === "Documents" && <Documents />}
-        {formType === "History" && <History />} 
+        
       </div>
     </Layout>
   );

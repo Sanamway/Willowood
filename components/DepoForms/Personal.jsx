@@ -2,9 +2,17 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import DepoAddModal from "../modals/DepoAddModal";
 
-const Basic = (props) => {
+const Personal = (props) => {
   const [formActive, setFormActive] = useState(false);
   const [userImage, setUserImage] = useState("");
+  const [secondForm, setSecondForm] = useState({
+    assets: "",
+    category: "",
+    areas: "",
+    market_valuation: ""
+  });
+
+  const [secondTableData, setSecondTabData] = useState([]);
 
   const [isOpen, setisOpen] = useState(false);
   const [userId, setUserId] = useState(null);
@@ -15,19 +23,25 @@ const Basic = (props) => {
   };
 
   const data = [
-    { id: 1, asset: "Property A", category: "Real Estate", acres: 10, valuation: "$1,000,000" },
-    { id: 2, asset: "Property B", category: "Commercial", acres: 5, valuation: "$500,000" },
-    { id: 2, asset: "Property B", category: "Commercial", acres: 5, valuation: "$500,000" },
-    { id: 2, asset: "Property B", category: "Commercial", acres: 5, valuation: "$500,000" },
-    { id: 2, asset: "Property B", category: "Commercial", acres: 5, valuation: "$500,000" },
-    { id: 2, asset: "Property B", category: "Commercial", acres: 5, valuation: "$500,000" }
+    { id: 1, assets: "Property A", category: "Real Estate", areas: 10, market_valuation: "$1,000,000" },
+    { id: 2, assets: "Property B", category: "Commercial", areas: 5, market_valuation: "$500,000" },
+    { id: 2, assets: "Property B", category: "Commercial", areas: 5, market_valuation: "$500,000" },
+    { id: 2, assets: "Property B", category: "Commercial", areas: 5, market_valuation: "$500,000" },
+    { id: 2, assets: "Property B", category: "Commercial", areas: 5, market_valuation: "$500,000" },
+    { id: 2, assets: "Property B", category: "Commercial", areas: 5, market_valuation: "$500,000" }
   ];
 
+  // console.log("form", secondForm)
+
+  const secondFormArray = Object.entries(secondForm).map(([key, value]) => ({ [key]: value }));
+
+  const secondFormHandler = (e) => {
+    e.preventDefault();
+    // setSecondTabData(secondFormArray);
+  };
+
   return (
-    <form
-      className=" bg-white rounded shadow p-4 w-full overflow-auto"
-      onSubmit={(e) => e.preventDefault()}
-    >
+    <form className=" bg-white rounded shadow p-4 w-full overflow-auto" onSubmit={(e) => e.preventDefault()}>
       <div className="flex my-2">
         <DepoAddModal
           isOpen={isOpen}
@@ -267,15 +281,15 @@ const Basic = (props) => {
       </div>
 
       <div className="my-3 flex items-center justify-end">
-          <button
-            onClick={() => {
-              deleteHandler("");
-            }}
-            className="bg-orange-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
-          >
-            Add +
-          </button>
-        </div>
+        <button
+          onClick={() => {
+            deleteHandler("");
+          }}
+          className="bg-orange-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
+        >
+          Add +
+        </button>
+      </div>
 
       {/* table  */}
 
@@ -293,8 +307,7 @@ const Basic = (props) => {
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider"
               >
-                Category/Urban
-                Semi-Urban
+                Category/Urban Semi-Urban
               </th>
               <th
                 scope="col"
@@ -314,11 +327,152 @@ const Basic = (props) => {
             {data.map((item) => (
               <tr className="border-2" key={item.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {item.asset}
+                  {item.assets}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.category}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.acres}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.valuation}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.areas}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.market_valuation}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* seconds form  */}
+
+      <div className="flex my-2 mb-2 lg:flex-row flex-col ">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Assets
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            value={secondForm?.assets}
+            placeholder="Assets"
+            onChange={(e) => {
+              setSecondForm({
+                ...secondForm,
+                assets: e.target.value
+              });
+            }}
+            disabled={formActive}
+          />
+        </div>
+        <div className="w-full px-2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Categoty
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            value={secondForm?.category}
+            placeholder="Categoty"
+            disabled={formActive}
+            onChange={(e) => {
+              setSecondForm({
+                ...secondForm,
+                category: e.target.value
+              });
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="flex my-2 mb-2 lg:flex-row flex-col ">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Acres/Area
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Acres Area"
+            value={secondForm?.areas}
+            disabled={formActive}
+            onChange={(e) => {
+              setSecondForm({
+                ...secondForm,
+                areas: e.target.value
+              });
+            }}
+          />
+        </div>
+        <div className="w-full px-2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Market Valuation
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Market Valuation"
+            value={secondForm?.market_valuation}
+            disabled={formActive}
+            onChange={(e) => {
+              setSecondForm({
+                ...secondForm,
+                market_valuation: e.target.value
+              });
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="my-3 flex items-center justify-end">
+        <button
+          // onClick={() => {
+          //   deleteHandler("");
+          // }}
+          onClick={secondFormHandler}
+          className="bg-orange-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
+        >
+          Add +
+        </button>
+      </div>
+      {/* tables */}
+      <div className="overflow-x-auto my-6">
+        <table className="min-w-full divide-y divide-gray-200 border-2">
+          <thead className="bg-gray-50 border-2">
+            <tr className="border-2">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider"
+              >
+                Assets
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider"
+              >
+                Category/Urban Semi-Urban
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider"
+              >
+                Acres/Area
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider"
+              >
+                Market Valuation
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200 my-2 ">
+            {data?.map((item, index) => (
+              <tr className="border-2" key={item.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {item.assets}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.category}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.areas}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.market_valuation}</td>
               </tr>
             ))}
           </tbody>
@@ -337,7 +491,7 @@ const Basic = (props) => {
             Prev
           </button>
           <button
-            onClick={() => props.formType("Personal")}
+            onClick={() => props.formType("AdditionalInfo")}
             className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-lg"
           >
             Next
@@ -348,4 +502,4 @@ const Basic = (props) => {
   );
 };
 
-export default Basic;
+export default Personal;
