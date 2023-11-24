@@ -282,6 +282,18 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
+      <div className="my-3 flex items-center justify-end">
+        <button
+          onClick={() => {
+            deleteHandler("");
+          }}
+          className="bg-orange-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
+        >
+          Add +
+        </button>
+      </div>
+
+
       {/* tables */}
 
       <div className="overflow-x-auto my-6 sm:overflow-hidden">
@@ -410,7 +422,7 @@ const AdditionalInfo = (props) => {
             Prev
           </button>
           <button
-            onClick={() => props.formType("")}
+            onClick={() => props.formType("Security")}
             className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-lg"
           >
             Next

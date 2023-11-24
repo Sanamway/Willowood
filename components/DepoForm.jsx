@@ -1,10 +1,9 @@
 import React,{useState, useEffect} from "react";
 import Layout from "./Layout";
 import { AiTwotoneHome } from "react-icons/ai";
-import { TiArrowBack } from "react-icons/ti";
-import { useRouter } from "next/router";
 import Basic from "./DepoForms/Basic";
 import Personal from './DepoForms/Personal'
+import SecurityDeposit from "./DepoForms/SecurityDeposit";
 import AdditionalInfo from "./DepoForms/AdditionalInfo";
 
 const DepoForm = () => {
@@ -65,15 +64,15 @@ const DepoForm = () => {
             <li className="-mb-px mr-1">
               <a
                 className={`${
-                  formType === "Bank"
+                  formType === "Security"
                     ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
                     : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
                 }`}
                 href="#"
-                // onClick={() => setFormType("Bank")}
+                onClick={() => setFormType("Security")}
               >
                 {" "}
-                Bank
+                Security
               </a>
             </li>
           
@@ -83,7 +82,7 @@ const DepoForm = () => {
         {formType === "Basic" && <Basic formType={setFormType} />}
         {formType === "Personal" && <Personal formType={setFormType} />}
         {formType === "AdditionalInfo" && <AdditionalInfo formType={setFormType} />}
-        {formType === "Bank" && <Bank />}
+        {formType === "Security" && <SecurityDeposit formType={setFormType} />}
         
       </div>
     </Layout>
