@@ -1,22 +1,70 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import { BsCheck2Circle } from "react-icons/bs";
 const AdditionalInfo = (props) => {
   const [formActive, setFormActive] = useState(false);
   const [userImage, setUserImage] = useState("");
 
-
   const currentYear = new Date().getFullYear();
   const nextYears = Array.from({ length: 10 }, (_, index) => currentYear + index);
 
-  //dummyData 
+  //dummyData
 
   const data = [
-    { id: 1, name: "Property A", profit: "Real Estate", relation: 10, son_of: "$1,000,000",pan:"EJHVFBVERG5Y6",aadhar:"7658756865" },
-    { id: 2, name: "Property B", profit: "Commercial", relation: 5, son_of: "$500,000",pan:"EJHVFBVERG5Y6",aadhar:"7658756865" },
-    { id: 2, name: "Property B", profit: "Commercial", relation: 5, son_of: "$500,000",pan:"EJHVFBVERG5Y6",aadhar:"7658756865" },
-    { id: 2, name: "Property B", profit: "Commercial", relation: 5, son_of: "$500,000",pan:"EJHVFBVERG5Y6",aadhar:"7658756865" },
-    { id: 2, name: "Property B", profit: "Commercial", relation: 5, son_of: "$500,000",pan:"EJHVFBVERG5Y6",aadhar:"7658756865" },
-    { id: 2, name: "Property B", profit: "Commercial", relation: 5, son_of: "$500,000",pan:"EJHVFBVERG5Y6" ,aadhar:"7658756865"}
+    {
+      id: 1,
+      name: "Property A",
+      profit: "Real Estate",
+      relation: 10,
+      son_of: "$1,000,000",
+      pan: "EJHVFBVERG5Y6",
+      aadhar: "7658756865"
+    },
+    {
+      id: 2,
+      name: "Property B",
+      profit: "Commercial",
+      relation: 5,
+      son_of: "$500,000",
+      pan: "EJHVFBVERG5Y6",
+      aadhar: "7658756865"
+    },
+    {
+      id: 2,
+      name: "Property B",
+      profit: "Commercial",
+      relation: 5,
+      son_of: "$500,000",
+      pan: "EJHVFBVERG5Y6",
+      aadhar: "7658756865"
+    },
+    {
+      id: 2,
+      name: "Property B",
+      profit: "Commercial",
+      relation: 5,
+      son_of: "$500,000",
+      pan: "EJHVFBVERG5Y6",
+      aadhar: "7658756865"
+    },
+    {
+      id: 2,
+      name: "Property B",
+      profit: "Commercial",
+      relation: 5,
+      son_of: "$500,000",
+      pan: "EJHVFBVERG5Y6",
+      aadhar: "7658756865"
+    },
+    {
+      id: 2,
+      name: "Property B",
+      profit: "Commercial",
+      relation: 5,
+      son_of: "$500,000",
+      pan: "EJHVFBVERG5Y6",
+      aadhar: "7658756865"
+    }
   ];
 
   return (
@@ -46,7 +94,7 @@ const AdditionalInfo = (props) => {
             id="stateSelect"
             disabled={formActive}
           >
-           <option value="" className="focus:outline-none focus:border-b bg-white">
+            <option value="" className="focus:outline-none focus:border-b bg-white">
               Option
             </option>
             {nextYears.map((year) => (
@@ -187,7 +235,7 @@ const AdditionalInfo = (props) => {
       <div className="flex my-2 mb-2 lg:flex-row flex-col items-center  ">
         <div className="w-full px-2">
           <label className="block text-gray-700 text-sm font-bold mb-2 pt-2">
-            <small className="text-red-600"></small> Shop Status Please Tick Mark
+           <span className="flex gap-1"> <small className="text-red-600"></small> Shop Status : Please Tick Mark <BsCheck2Circle className="text-green-500" fontSize={20}/></span>
           </label>
         </div>
         <div className="w-full px-2">
@@ -236,44 +284,43 @@ const AdditionalInfo = (props) => {
 
       {/* tables */}
 
-      {/* <div className="overflow-x-auto my-6">
+      <div className="overflow-x-auto my-6 sm:overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
             <tr className="border-2">
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Name of Adddress of All Partners
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Profit Sharing Ratio
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Relationship
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Son of
               </th>
-
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Pan No.
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Aadhar No.
               </th>
@@ -282,9 +329,7 @@ const AdditionalInfo = (props) => {
           <tbody className="bg-white divide-y divide-gray-200 my-2 ">
             {data?.map((item, index) => (
               <tr className="border-2" key={item.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {item.name}
-                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.profit}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.relation}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.son_of}</td>
@@ -294,16 +339,17 @@ const AdditionalInfo = (props) => {
             ))}
           </tbody>
         </table>
-      </div> */}
-
-      
-    
-
+      </div>
 
       {/* photos */}
-
+      <div className="w-full px-2">
+        <label className="block text-gray-700 text-sm font-bold mb-2 pt-2">
+          <small className="text-red-600">* </small>Shop Photograph with Proprietor & Company Staff
+          <h6 className="text-xs font-thin">(Shop board must appear in photograph)</h6>
+        </label>
+      </div>
       <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
-      <div className="wrap ">
+        <div className="wrap ">
           <div className=" w-full px-2 profpic relative group">
             <Image src={""} className="h-32 w-32 rounded bg-gray-200" width={100} height={100} />
             <input type="file" accept="image/*" style={{ display: "none" }} id="fileInput" />
@@ -337,7 +383,20 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      
+      <div className="flex my-2">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Remarks
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Remarks"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
 
       {/* buttons */}
       <div className="my-5 flex items-center justify-end mx-4 ">
