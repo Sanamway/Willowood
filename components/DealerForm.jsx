@@ -1,12 +1,15 @@
 import React,{useState, useEffect} from "react";
 import Layout from "./Layout";
 import { AiTwotoneHome } from "react-icons/ai";
-import Basic from "./DepoForms/Basic";
-import Personal from './DepoForms/Personal'
-import SecurityDeposit from "./DepoForms/SecurityDeposit";
-import AdditionalInfo from "./DepoForms/AdditionalInfo";
+import Basic from "./DealerForms/Basic";
+import Personal from './DealerForms/Personal'
+import SecurityDeposit from "./DealerForms/SecurityDeposit";
+import AdditionalInfo from "./DealerForms/AdditionalInfo";
+import BusinessInfo from "./DealerForms/BusinessInfo";
+import Assessment from "./DealerForms/Assessment";
+import Approval from "./DealerForms/Approval";
 
-const DepoForm = () => {
+const DealerForm = () => {
     const [formType, setFormType] = useState("Basic");
   return (
     <Layout>
@@ -75,6 +78,51 @@ const DepoForm = () => {
                 Security
               </a>
             </li>
+
+            <li className="-mb-px mr-1">
+              <a
+                className={`${
+                  formType === "BusinessInfo"
+                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
+                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                }`}
+                href="#"
+                onClick={() => setFormType("BusinessInfo")}
+              >
+                {" "}
+                Business
+              </a>
+            </li>
+
+            <li className="-mb-px mr-1">
+              <a
+                className={`${
+                  formType === "Assessment"
+                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
+                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                }`}
+                href="#"
+                onClick={() => setFormType("Assessment")}
+              >
+                {" "}
+                Assessment
+              </a>
+            </li>
+
+            <li className="-mb-px mr-1">
+              <a
+                className={`${
+                  formType === "Approval"
+                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
+                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                }`}
+                href="#"
+                onClick={() => setFormType("Approval")}
+              >
+                {" "}
+                Approval
+              </a>
+            </li>
           
           </ul>
         </div>
@@ -83,10 +131,13 @@ const DepoForm = () => {
         {formType === "Personal" && <Personal formType={setFormType} />}
         {formType === "AdditionalInfo" && <AdditionalInfo formType={setFormType} />}
         {formType === "Security" && <SecurityDeposit formType={setFormType} />}
+        {formType === "BusinessInfo" && <BusinessInfo formType={setFormType} />}
+        {formType === "Assessment" && <Assessment formType={setFormType} />}
+        {formType === "Approval" && <Approval formType={setFormType} />}
         
       </div>
     </Layout>
   );
 };
 
-export default DepoForm;
+export default DealerForm;

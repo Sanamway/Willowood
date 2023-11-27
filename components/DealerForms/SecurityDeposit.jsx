@@ -23,7 +23,7 @@ const SecurityDeposit = (props) => {
       <div className="w-full px-2">
         <label className="block text-gray-700 text-sm font-bold mb-2 pt-2">
           <span className="flex gap-1">
-            <small className="text-red-600">*</small> Please Or Write in Bold Letters & Tick in Appropriate
+            <small className="text-red-600">*</small> Please Type Or Write in Bold Letters & Tick in Appropriate
             Boxes <BsCheck2Circle className="text-green-500" fontSize={20} />
           </span>
         </label>
@@ -102,7 +102,7 @@ const SecurityDeposit = (props) => {
       <div className="flex my-2 mb-2 lg:flex-row flex-col ">
         <div className="w-full px-2">
           <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
-            <small className="text-red-600">*</small> Reciet Number/UTR No
+            <small className="text-red-600">*</small> Reciept No/UTR Number
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -138,7 +138,7 @@ const SecurityDeposit = (props) => {
             Prev
           </button>
           <button
-            onClick={() => props.formType("")}
+            onClick={() => props.formType("BusinessInfo")}
             className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-lg"
           >
             Next
