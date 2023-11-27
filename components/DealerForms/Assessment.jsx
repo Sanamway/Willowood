@@ -16,7 +16,7 @@ const [formActive, setFormActive] = useState(false);
             type="text"
             id="inputField"
             placeholder="Party Name"
-            // disabled={!formActive}
+            disabled={!formActive}
           />
         </div>
       </div>
