@@ -1,43 +1,108 @@
-import React from "react";
+import React, { useState } from "react";
 
 const History = () => {
+  const [formActive, setFormActive] = useState(false);
   return (
-    <div className="flex flex-col  gap-6 w-full items-center justify-center mt-5">
-      <div class=" rounded overflow-hidden shadow-lg bg-slate-100 self-center  w-[90%]">
-        <div class="px-6 py-4 w-[70%]">
-          <p class="font-bold  mb-2">Timeline</p>
-          <hr className="h-1 w-full" />
-          <div class="text-gray-700 text-base mt-2">
-            <div className="bg-green-700 px-4 py-1 text-white w-28">
-              Probation
-            </div>
-            <p className="mt-4 self-center text-sm">13 Oct 2023</p>
-          </div>
+    <form
+      className=" bg-white rounded shadow p-4 w-full pb-20"
+      onSubmit={(e) => e.preventDefault()}
+    >
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
+          >
+            <small className="text-red-600">*</small> Approval Fee Amt.
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Approval Fee Amt."
+            disabled={!formActive}
+          />
+        </div>
+        <div className="w-2/3  lg:w-1/2 px-2">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
+            disabled={!formActive}
+          >
+            <small className="text-red-600">*</small> Most Expensive Budget
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="First Name"
+            disabled={!formActive}
+          />
+        </div>
+        <div className="w-2/3  lg:w-1/2 px-2">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
+          >
+            Middle Name
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Middle Name"
+            disabled={!formActive}
+          />
+        </div>
+        <div className="w-2/3  px-2  lg:w-1/2 ">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
+          >
+            <small className="text-red-600">*</small> Agreement Start Date
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Middle Name"
+            disabled={!formActive}
+          />
+        </div>
+        <div className="w-2/3  px-2  lg:w-1/2 ">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
+          >
+            <small className="text-red-600">*</small> Agreement End Date
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Middle Name"
+            disabled={!formActive}
+          />
         </div>
       </div>
-      <div class="rounded overflow-hidden shadow-lg bg-slate-100 self-center  w-[90%]">
-        <div className="flex justify-between my-4 mx-4">
-          <p class="font-bold  mb-2">History</p>
-          <div className="flex flex-col w-1/4">
-            <p class="mb-2 text-slate-400 self-center">Type</p>
 
-            <select
-              className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-              id="stateSelect"
-            >
-              <option
-                value=""
-                className="focus:outline-none focus:border-b bg-white"
-              >
-                All Updates
-              </option>
-              <option value="state1">Mr.</option>
-              <option value="state2">Mrs.</option>
-            </select>
-          </div>
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
+          >
+            <small className="text-red-600">*</small> Remarks
+          </label>
+          <textarea
+            rows={4}
+            className="w-full px-3 py-1.5  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            id="textareaField"
+            placeholder="Remarks"
+          ></textarea>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

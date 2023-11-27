@@ -114,12 +114,6 @@ const Snapshot = (props) => {
         </div>
       </div>
 
-
-
-
-
-
-
       <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
         <div className="w-2/3  px-2  lg:w-1/3 ">
           <label
@@ -151,27 +145,7 @@ const Snapshot = (props) => {
             disabled={!formActive}
           />
         </div>
-
-       
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
         <div className="w-2/3  px-2  lg:w-1/2 ">
@@ -594,6 +568,30 @@ const Snapshot = (props) => {
       </div>
 
       <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+       
+      <div className="w-2/3  px-2  lg:w-1/2 ">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
+          >
+            <small className="text-red-600">*</small> Department
+          </label>
+
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={!formActive}
+          >
+            <option
+              value=""
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Option
+            </option>
+            <option value="state1">Mr.</option>
+            <option value="state2">Mrs.</option>
+          </select>
+        </div>
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -640,6 +638,9 @@ const Snapshot = (props) => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
+      </div>
+
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -662,9 +663,6 @@ const Snapshot = (props) => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-      </div>
-
-      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
