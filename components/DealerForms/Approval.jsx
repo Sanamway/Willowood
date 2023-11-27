@@ -133,7 +133,7 @@ const Approval = (props) => {
         <div className="w-full px-2">
           <div className="flex items-center whitespace-nowrap">
             <input type="checkbox" id="ownedCheckbox" className="mr-2" disabled={formActive} />
-            <label htmlFor="ownedCheckbox ">All Furnished Information has been checked</label>
+            <label htmlFor="ownedCheckbox ">All Furnished Information checked</label>
           </div>
         </div>
 
@@ -146,7 +146,7 @@ const Approval = (props) => {
 
         <div className="w-full px-2">
           <div className="flex items-center whitespace-nowrap">
-            <input type="checkbox" id="rentedCheckbox" className="mr-3 " disabled={formActive} />
+            <input type="checkbox" id="rentedCheckbox" className="mr-2 " disabled={formActive} />
             <label htmlFor="rentedCheckbox">3 blanks cheque received</label>
           </div>
         </div>
@@ -379,7 +379,7 @@ const Approval = (props) => {
 
 
       {/* buttons */}
-      <div className="my-5 flex items-center justify-end mx-4 ">
+      <div className="my-6 flex items-center justify-end ">
         <div className="flex items-center justify-end w-full gap-4 ">
           <button
             onClick={() => props.formType("Assessment")}
@@ -387,10 +387,10 @@ const Approval = (props) => {
               formActive ? "bg-green-400" : "bg-gray-400"
             }  text-white py-1 px-4 text-lg`}
           >
-            Prev.
+            Prev
           </button>
           <button
-            onClick={() => props.formType("")}
+            onClick={() => props.formType("Documents")}
             className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-lg"
           >
             Next

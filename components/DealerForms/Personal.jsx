@@ -267,15 +267,15 @@ const Personal = (props) => {
           </select>
         </div>
         <div className="w-full px-2 ">
-          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+          <label className="block text- text-sm font-bold mb-2 pt-2" htmlFor="inputField">
             <small className="text-red-600">*</small> Date of Anniversary
           </label>
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className=" w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="date"
             id="inputField"
             placeholder="Secondary Mobile"
-            disabled={formActive}
+            // disabled={formActive}
           />
         </div>
       </div>
@@ -293,7 +293,7 @@ const Personal = (props) => {
 
       {/* table  */}
 
-      <div className="overflow-x-auto my-4">
+      {/* <div className="overflow-x-auto my-4">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
             <tr className="border-2">
@@ -336,7 +336,7 @@ const Personal = (props) => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
 
       {/* seconds form  */}
 
@@ -434,7 +434,7 @@ const Personal = (props) => {
         </button>
       </div>
       {/* tables */}
-      <div className="overflow-x-auto my-6">
+      {/* <div className="overflow-x-auto my-6">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
             <tr className="border-2">
@@ -477,10 +477,10 @@ const Personal = (props) => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
 
       {/* buttons */}
-      <div className="my-5 flex items-center justify-end mx-4 ">
+      <div className="my-6 flex items-center justify-end  ">
         <div className="flex items-center justify-end w-full gap-4 ">
           <button
             onClick={() => props.formType("Basic")}

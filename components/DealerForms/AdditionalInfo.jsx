@@ -79,13 +79,13 @@ const AdditionalInfo = (props) => {
             type="text"
             id="inputField"
             placeholder="Party Name"
-            disabled={!formActive}
+            // disabled={!formActive}
           />
         </div>
       </div>
 
       <div className="flex my-2 mb-2 lg:flex-row flex-col">
-        <div className="w-full px-2">
+        <div className="w-full px-2 mt-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600">*</small> Year of Establishment
           </label>
@@ -104,7 +104,7 @@ const AdditionalInfo = (props) => {
             ))}
           </select>
         </div>
-        <div className="w-full px-2">
+        <div className="w-full px-2 mt-2">
           <label className="block text-gray-700 text-sm font-bold mb-2  " htmlFor="inputField">
             <small className="text-red-600 ">*</small> Nature of Firm
           </label>
@@ -122,8 +122,8 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      <div className="flex flex-col  my-2 mb-2 lg:flex-row ">
-        <div className="w-full px-2">
+      <div className="flex flex-col  my-2 mb-2 lg:flex-row gap-3">
+        <div className="w-full px-2 mt-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600">*</small> PAN No.
           </label>
@@ -132,10 +132,10 @@ const AdditionalInfo = (props) => {
             type="text"
             id="inputField"
             placeholder="PAN No."
-            disabled={!formActive}
+            // disabled={!formActive}
           />
         </div>
-        <div className="w-full px-2">
+        <div className="w-full px-2 mt-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600">*</small> GST Registration No.
           </label>
@@ -144,13 +144,13 @@ const AdditionalInfo = (props) => {
             type="text"
             id="inputField"
             placeholder="GST Registration No."
-            disabled={!formActive}
+            // disabled={!formActive}
           />
         </div>
       </div>
 
-      <div className="flex my-2 mb-2 lg:flex-row flex-col ">
-        <div className="w-full px-2">
+      <div className="flex my-2 mb-2 lg:flex-row flex-col gap-2">
+        <div className="w-full px-2 mt-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600">*</small> Pesticide License No.
           </label>
@@ -159,7 +159,7 @@ const AdditionalInfo = (props) => {
             type="text"
             id="inputField"
             placeholder="Pesticide License No."
-            disabled={!formActive}
+            // disabled={!formActive}
           />
         </div>
         <div className="w-full px-2 ">
@@ -193,7 +193,6 @@ const AdditionalInfo = (props) => {
             type="text"
             id="inputField"
             placeholder="Fertilizer License No."
-            disabled={!formActive}
           />
         </div>
         <div className="w-full px-2 ">
@@ -227,7 +226,7 @@ const AdditionalInfo = (props) => {
             type="text"
             id="inputField"
             placeholder="Shop & Establishment No."
-            disabled={!formActive}
+            // disabled={!formActive}
           />
         </div>
       </div>
@@ -245,8 +244,6 @@ const AdditionalInfo = (props) => {
               id="ownedCheckbox"
               className="mr-2"
               //   checked={isOwned}
-              onChange={() => setIsOwned(!isOwned)}
-              disabled={!formActive}
             />
             <label htmlFor="ownedCheckbox">Owned</label>
           </div>
@@ -259,8 +256,6 @@ const AdditionalInfo = (props) => {
               id="rentedCheckbox"
               className="mr-2"
               //   checked={isRented}
-              onChange={() => setIsRented(!isRented)}
-              disabled={!formActive}
             />
             <label htmlFor="rentedCheckbox">Rented</label>
           </div>
@@ -296,7 +291,7 @@ const AdditionalInfo = (props) => {
 
       {/* tables */}
 
-      <div className="overflow-x-auto my-6 sm:overflow-hidden">
+      {/* <div className="overflow-x-auto my-6 sm:overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
             <tr className="border-2">
@@ -351,7 +346,7 @@ const AdditionalInfo = (props) => {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
 
       {/* photos */}
       <div className="w-full px-2">
@@ -405,13 +400,12 @@ const AdditionalInfo = (props) => {
             type="text"
             id="inputField"
             placeholder="Remarks"
-            disabled={!formActive}
           />
         </div>
       </div>
 
       {/* buttons */}
-      <div className="my-5 flex items-center justify-end mx-4 ">
+      <div className="my-6 flex items-center justify-end">
         <div className="flex items-center justify-end w-full gap-4 ">
           <button
             onClick={() => props.formType("Personal")}

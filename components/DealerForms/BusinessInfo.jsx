@@ -88,7 +88,7 @@ const BusinessInfo = (props) => {
 
       {/* table  */}
 
-      <div className="overflow-x-auto my-6 sm:overflow-hidden">
+      {/* <div className="overflow-x-auto my-6 sm:overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
             <tr className="border-2">
@@ -126,7 +126,7 @@ const BusinessInfo = (props) => {
           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total</td>
           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Voul</td>
         </tr>
-      </div>
+      </div> */}
 
       <div className="w-full px-2">
         <label className="block text-gray-700 text-sm font-bold mb-2 pt-2 ">
@@ -150,7 +150,7 @@ const BusinessInfo = (props) => {
 
       {/* second table  */}
 
-      <div className="overflow-x-auto my-6 sm:overflow-hidden">
+      {/* <div className="overflow-x-auto my-6 sm:overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
             <tr className="border-2">
@@ -210,12 +210,12 @@ const BusinessInfo = (props) => {
         </table>
         <tr className="border-2 flex justify-end w-full">
           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total</td>
-          {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Voul</td> */}
+          
         </tr>
-      </div>
+      </div> */}
 
       {/* buttons */}
-      <div className="my-5 flex items-center justify-end mx-4 ">
+      <div className="my-6 flex items-center justify-end ">
         <div className="flex items-center justify-end w-full gap-4 ">
           <button
             onClick={() => props.formType("Security")}

@@ -55,7 +55,7 @@ const Basic = (props) => {
             <small className="text-red-600">*</small> City
           </label>
           <select
-            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             disabled={formActive}
           >
@@ -71,7 +71,7 @@ const Basic = (props) => {
             <small className="text-red-600 ">*</small> District
           </label>
           <select
-            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             disabled={formActive}
           >
@@ -90,7 +90,7 @@ const Basic = (props) => {
             <small className="text-red-600">*</small> State
           </label>
           <select
-            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             disabled={formActive}
           >
@@ -106,7 +106,7 @@ const Basic = (props) => {
             <small className="text-red-600">*</small> Pin Code
           </label>
           <select
-            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             disabled={formActive}
           >

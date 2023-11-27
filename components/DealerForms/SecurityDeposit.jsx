@@ -127,7 +127,7 @@ const SecurityDeposit = (props) => {
       </div>
 
       {/* buttons */}
-      <div className="my-5 flex items-center justify-end mx-4 ">
+      <div className="my-6 flex items-center justify-end  ">
         <div className="flex items-center justify-end w-full gap-4 ">
           <button
             onClick={() => props.formType("AdditionalInfo")}

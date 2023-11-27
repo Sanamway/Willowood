@@ -9,6 +9,7 @@ import { MdLogout } from "react-icons/md";
 import WillLogo from "../public/Willowood.png";
 import { AiOutlineHome } from "react-icons/ai";
 import { BiUser, BiLogInCircle } from "react-icons/bi";
+import { FcBusinessman } from "react-icons/fc";
 import Footer from "./Footer";
 import { Popover } from "@headlessui/react";
 import { useRouter } from "next/router";
@@ -60,6 +61,7 @@ const Layout = ({ children }) => {
     { id: 3.5, label: "Product Brand", icon: BiUser, link: "/table/table_product_brand" },
     { id: 3.6, label: "Material SKU", icon: BiUser, link: "/table/table_material_sku" },
     { id: 3.7, label: "Rolling Plan", icon: BiUser, link: "/rollingplans" },
+    { id: 3.7, label: "Dealer", icon: FcBusinessman, link: "/dealerform_details" },
     { id: 3.8, label: "Colletion Plan", icon: BiUser, link: "/collectionplans" },
     { id: 3.9, label: "Forgot", icon: BiUser, link: "/forgotpass" }
   ];
@@ -78,11 +80,12 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <div className="flex min-h-screen font-arial bg-[#15283c] ">
+      <div className="flex fixed w-full h-screen  font-arial bg-[#15283c]  ">
         {/* Sidebar */}
         <div
           className={`flex-shrink-0  ${
-            isOpen ? (isMobile ? "hidden " : "w-[4rem] ") : isMobile ? "" : "w-[14rem]"
+            isOpen ? (!isMobile ? " " : "w-[4rem]  ") : isMobile ? "hidden " : "w-[14rem] "
+            // isOpen ? (isMobile ? "hidden " : "w-[4rem] ") : isMobile ? "hidden" : "w-[14rem]"
           } bg-[#15283c] text-white custom-scrollbar min-h-screen overflow-x-hidden overflow-y-scroll transition-all ease-in duration-300`}
         >
           <div className="flex flex-col items-center w-full  ">
@@ -118,7 +121,9 @@ const Layout = ({ children }) => {
                   className="flex cursor-pointer items-center border-1 rounded-md border-black w-full hover:bg-orange-500 gap-3 px-2 py-1"
                 >
                   <div className="">
-                    <Icon size={25}></Icon>
+                    <Icon onClick={() => {
+                        router.push(menu.link);
+                      }} size={25}></Icon>
                   </div>
                   {!isOpen && (
                     <h2
@@ -145,13 +150,13 @@ const Layout = ({ children }) => {
                   <div className=" bg-[#ff5722] p-[0.9rem] lg:p-[0.9rem] h-full cursor-pointer" onClick={collaps}>
                     <GiHamburgerMenu className="mx-2 my-2 " size={24}></GiHamburgerMenu>
                   </div>
-                  <div className="max-w-full max-h-full">
-                    <Image src={WillLogo} className="h-[3.4rem] w-full object-cover"></Image>
+                  <div className="lg:max-w-full lg:max-h-full">
+                    <Image src={WillLogo} className="lg:h-[3.4rem] w-2/3 lg:w-full object-cover"></Image>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-center  ">
-                  <div className="icons mx-8">
+                  <div className="icons mx-4 lg:mx-8">
                     <div className="flex items-center gap-4 ">
                       <BsBell size={24}></BsBell>
                       <BsQuestionSquare size={22}></BsQuestionSquare>

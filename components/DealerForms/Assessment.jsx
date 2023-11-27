@@ -120,7 +120,7 @@ const [formActive, setFormActive] = useState(false);
      
 
       {/* buttons */}
-      <div className="my-5 flex items-center justify-end mx-4 ">
+      <div className="my-6 flex items-center justify-end ">
         <div className="flex items-center justify-end w-full gap-4 ">
           <button
             onClick={() => props.formType("BusinessInfo")}
@@ -131,7 +131,7 @@ const [formActive, setFormActive] = useState(false);
             Prev
           </button>
           <button
-            onClick={() => props.formType("")}
+            onClick={() => props.formType("Approval")}
             className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-lg"
           >
             Next
