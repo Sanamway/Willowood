@@ -41,7 +41,7 @@ const Personal = (props) => {
   };
 
   return (
-    <form className=" bg-white rounded shadow p-4 w-full overflow-auto" onSubmit={(e) => e.preventDefault()}>
+    <form className=" bg-white rounded  p-4 w-full overflow-auto" onSubmit={(e) => e.preventDefault()}>
       <div className="flex my-2">
         <DepoAddModal
           isOpen={isOpen}
@@ -337,6 +337,43 @@ const Personal = (props) => {
           </tbody>
         </table>
       </div> */}
+      <div className="flex flex-col ">
+        <div className="overflow-x-auto sm:-mx-6 lg:-mx-4">
+          <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+            <div className="overflow-hidden">
+              <table className="min-w-full">
+                <thead className="border-b bg-gray-200 ">
+                  <tr className="text-center">
+                    <th scope="col" className="text-sm font-medium text-gray-900 px-2 py-4 text-center">
+                      Assets
+                    </th>
+                    <th scope="col" className="text-sm font-medium text-gray-900 px-2 py-4 text-center">
+                      Category
+                    </th>
+                    <th scope="col" className="text-sm font-medium text-gray-900 px-2 py-4 text-center">
+                      Acres/Area
+                    </th>
+                    <th scope="col" className=" lg:text-sm font-medium text-gray-900 px-2 py-4 text-center">
+                      Market Valuation
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((item) => (
+                    <tr className="border-2 text-center" key={item.id}>
+                    <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">{item.assets}</td>
+                    <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">{item.assets}</td>
+                    <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">{item.assets}</td>
+                    <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">{item.assets}</td>
+                    </tr>
+                  ))}
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* seconds form  */}
 
@@ -478,6 +515,44 @@ const Personal = (props) => {
           </tbody>
         </table>
       </div> */}
+
+<div className="flex flex-col ">
+        <div className="overflow-x-auto sm:-mx-6 lg:-mx-4">
+          <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+            <div className="overflow-hidden">
+              <table className="min-w-full">
+                <thead className="border-b bg-gray-200 ">
+                  <tr className="text-center">
+                    <th scope="col" className="text-sm font-medium text-gray-900 px-2 py-4 text-center">
+                      Assets
+                    </th>
+                    <th scope="col" className="text-sm font-medium text-gray-900 px-2 py-4 text-center">
+                      Category
+                    </th>
+                    <th scope="col" className="text-sm font-medium text-gray-900 px-2 py-4 text-center">
+                      Acres/Area
+                    </th>
+                    <th scope="col" className=" lg:text-sm font-medium text-gray-900 px-2 py-4 text-center">
+                      Market Valuation
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((item) => (
+                    <tr className="border-2 text-center" key={item.id}>
+                    <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">{item.assets}</td>
+                    <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">{item.assets}</td>
+                    <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">{item.assets}</td>
+                    <td className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">{item.assets}</td>
+                    </tr>
+                  ))}
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* buttons */}
       <div className="my-6 flex items-center justify-end  ">

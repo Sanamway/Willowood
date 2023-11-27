@@ -84,7 +84,7 @@ const Layout = ({ children }) => {
       <div className="flex fixed w-full h-screen  font-arial bg-[#15283c]   ">
         {/* Sidebar */}
         <div
-          className={`flex-shrink-0  ${
+          className={`flex-shrink-0   ${
             isOpen ? (isMobile ? " " : "w-[4rem]  ") : isMobile ? "hidden " : "w-[14rem] "
           } bg-[#15283c] text-white custom-scrollbar min-h-screen overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-500`}
         >

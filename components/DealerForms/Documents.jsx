@@ -18,49 +18,72 @@ const Documents = () => {
     },
     {
       id: 2,
-      name: "Copy of Partnership Dead"
+      name: "Copy of Partnership Dead",
+      src: [Aadhar, Aadhar, Aadhar]
+
     },
     {
       id: 2,
-      name: "Copy of Certificate of Incorporation"
+      name: "Copy of Certificate of Incorporation",
+      src: [Aadhar, Aadhar, Aadhar]
+
     },
     {
       id: 2,
-      name: "Personal Guarantee"
+      name: "Personal Guarantee",
+      src: [Aadhar, Aadhar, Aadhar]
+
     },
     {
       id: 2,
-      name: "Profit and Loss"
+      name: "Profit and Loss",
+      src: [Aadhar, Aadhar, Aadhar]
+
     },
     {
       id: 2,
-      name: "Balance Sheet for Last Two Years"
+      name: "Balance Sheet for Last Two Years",
+      src: [Aadhar, Aadhar, Aadhar]
+
     },
     {
       id: 2,
-      name: "Copy Of Pesticide License"
+      name: "Copy Of Pesticide License",
+      src: [Aadhar, Aadhar, Aadhar]
+
     },
     {
       id: 2,
-      name: "Copy Of Pesticide License"
+      name: "Copy Of Pesticide License",
+      src: [Aadhar, Aadhar, Aadhar]
+
     },
     {
       id: 2,
-      name: "Copy of Pan Card"
+      name: "Copy of Pan Card",
+      src: [Aadhar, Aadhar, Aadhar]
+
     },
     {
       id: 2,
-      name: "Copy of Aadhar Card"
+      name: "Copy of Aadhar Card",
+      src: [Aadhar, Aadhar, Aadhar]
+
     },
 
     {
       id: 2,
-      name: "Copy of Bank Signature Verification"
+      name: "Copy of Bank Signature Verification",
+      src: [Aadhar, Aadhar, Aadhar]
+
     },
 
     {
       id: 2,
-      name: "Bank Statement"
+      name: "Bank Statement",
+      src: [Aadhar, Aadhar, Aadhar]
+
+
     }
   ];
 
@@ -216,8 +239,8 @@ const Documents = () => {
     // </div>
 
 
-    <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-1 overflow-x-auto ">
-    <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+    <div className="mx-2  px-4 my-4 py-1 overflow-x-auto  ">
+    <div className="inline-block min-w-full rounded-lg overflow-hidden">
       <table className="min-w-full leading-normal ">
         <thead className="">
           <tr>
@@ -228,10 +251,8 @@ const Documents = () => {
               Documents
             </th>
             <th className="px- py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
-              Zone / Region / Territory
+              Zone
             </th>
-           
-            
           </tr>
         </thead>
         <tbody>
@@ -239,31 +260,21 @@ const Documents = () => {
             <tr key={item.id}>
               <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
                 <div className="flex items-center">
-                  <div className="">
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">
-                      {item.name}
-                    </p>
-                    <p className="text-gray-900 whitespace-no-wrap text-[0.6rem]">
-                      {item.month} ({item.due_date})
-                    </p>
+                  <div className="w-20 h-20">
+                    {item.src &&(
+                    <Image className="object-contain w-full h-full" src={item.src[0]}></Image>
+                      )}
                   </div>
                 </div>
               </td>
-              <td className="px- py-2 border-b border-gray-200 bg-white text-sm ">
-                <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">
-                  {item.depot}
-                </p>
-              </td>
               <td className="px- py-2 border-b border-gray-200 bg-white text-sm">
                 <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">
-                  {item.zone}
+                  {item.name}
                 </p>
               </td>
         
 
-              <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm relative flex items-center justify-between">
+              <td className="px- py-2 border-b border-gray-200 bg-white text-sm relative flex items-center justify-between">
                 <span className="relative inline-block px-2 py-1 font-semibold text-green-900 leading-tight">
                   <span
                     aria-hidden

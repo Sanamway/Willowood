@@ -5,7 +5,7 @@ const Basic = (props) => {
 
   return (
     <form
-      className=" bg-white rounded shadow p-4 w-full  overflow-auto"
+      className=" bg-white rounded p-4 w-full  overflow-auto"
       onSubmit={(e) => e.preventDefault()}
     >
       <div className="flex my-2">

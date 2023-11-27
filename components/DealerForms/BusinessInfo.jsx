@@ -63,7 +63,7 @@ const BusinessInfo = (props) => {
   ];
 
   return (
-    <form className=" bg-white rounded shadow p-4 w-full  overflow-auto" onSubmit={(e) => e.preventDefault()}>
+    <form className=" bg-white rounded  p-4 w-full  overflow-auto" onSubmit={(e) => e.preventDefault()}>
       <div className="flex my-2">
         <div className="w-full px-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
