@@ -68,6 +68,7 @@ const Layout = ({ children }) => {
 
   const handleWindowSizeChange = () => {
     setIsMobile(window.innerWidth <= 768);
+    setOpen(isOpen)
   };
 
   useEffect(() => {
@@ -80,13 +81,12 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <div className="flex fixed w-full h-screen  font-arial bg-[#15283c]  ">
+      <div className="flex fixed w-full h-screen  font-arial bg-[#15283c]   ">
         {/* Sidebar */}
         <div
           className={`flex-shrink-0  ${
-            isOpen ? (!isMobile ? " " : "w-[4rem]  ") : isMobile ? "hidden " : "w-[14rem] "
-            // isOpen ? (isMobile ? "hidden " : "w-[4rem] ") : isMobile ? "hidden" : "w-[14rem]"
-          } bg-[#15283c] text-white custom-scrollbar min-h-screen overflow-x-hidden overflow-y-scroll transition-all ease-in duration-300`}
+            isOpen ? (isMobile ? " " : "w-[4rem]  ") : isMobile ? "hidden " : "w-[14rem] "
+          } bg-[#15283c] text-white custom-scrollbar min-h-screen overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-500`}
         >
           <div className="flex flex-col items-center w-full  ">
             <div className="flex items-center justify-between relative">
@@ -147,8 +147,8 @@ const Layout = ({ children }) => {
             <nav className="nav font-playfair  ">
               <div className="navContainer h-[52px] bg-text flex items-center  justify-between lg:max-w-full">
                 <div className="flex items-center">
-                  <div className=" bg-[#ff5722] p-[0.9rem] lg:p-[0.9rem] h-full cursor-pointer" onClick={collaps}>
-                    <GiHamburgerMenu className="mx-2 my-2 " size={24}></GiHamburgerMenu>
+                  <div className=" bg-[#ff5722] p-[0.9rem] lg:p-[0.8rem] h-full cursor-pointer" onClick={collaps}>
+                    <GiHamburgerMenu className="mx-2 my-2 " size={20}></GiHamburgerMenu>
                   </div>
                   <div className="lg:max-w-full lg:max-h-full">
                     <Image src={WillLogo} className="lg:h-[3.4rem] w-2/3 lg:w-full object-cover"></Image>
@@ -165,7 +165,7 @@ const Layout = ({ children }) => {
                   </div>
 
                   {!isMobile && (
-                    <div className="bg-[#ff5722] h-full mx-0 font-arial relative">
+                    <div className="bg-[#ff5722] max-h-full mx-0 font-arial relative">
                       <div className="flex items-center px-4 py-[0.4rem] h-full gap-1">
                         <Image
                           src={Profile}
@@ -180,7 +180,7 @@ const Layout = ({ children }) => {
                                   className="details flex items-start justify-between gap-2 cursor-pointer"
                                   onClick={toggleDropdown}
                                 >
-                                  <h2 className="font-normal font-arial text-sm">Uttam Aggarwal</h2>
+                                  <h2 className="font-normal font-arial text-sm whitespace-nowrap">Uttam Aggarwal</h2>
                                   <IoIosArrowDown className="button"></IoIosArrowDown>
                                 </div>
                               </Popover.Button>

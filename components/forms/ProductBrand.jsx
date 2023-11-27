@@ -228,7 +228,7 @@ const ProductBrand = () => {
                 className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4"
               >
                 <div className="flex -mx-2 mb-4 flex-col">
-                  <div className="w-1/6 px-2 mb-2">
+                  <div className="lg:w-1/6 px-2 mb-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
                       Brand Code
                     </label>
@@ -269,7 +269,7 @@ const ProductBrand = () => {
                   </div> */}
                 </div>
                 <div className="flex -mx-2 mb-4">
-                  <div className="w-1/2 px-2">
+                  <div className="w-full lg:w-1/2 px-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
                       <span className="text-red-500 p-1">*</span>Company
                     </label>
@@ -307,7 +307,7 @@ const ProductBrand = () => {
                   </div>
                 </div>
                 <div className="flex -mx-2 mb-4">
-                  <div className="w-1/2 px-2">
+                  <div className="w-full lg:w-1/2 px-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
                       <span className="text-red-500 p-1">*</span>Product Segment
                     </label>
@@ -343,7 +343,7 @@ const ProductBrand = () => {
                   </div>
                 </div>
 
-                <div className="w-1/2 px-2 ">
+                <div className="w-full lg:w-1/2 px-2 ">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
                     <span className="text-red-500 px-1">*</span>Brand Name
                   </label>
