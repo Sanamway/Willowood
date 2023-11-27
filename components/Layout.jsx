@@ -30,36 +30,113 @@ const Layout = ({ children }) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('uid');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('email');
-    router.push('/logoutsuccess')
+    localStorage.removeItem("uid");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("email");
+    router.push("/logoutsuccess");
   };
 
   const menuItems = [
     { id: 1, label: "Login", icon: BiLogInCircle, link: "/login" },
-    { id: 1, label: "User Role Profile", icon: AiOutlineHome, link: "/table/table_user_profile" },
-    { id: 2, label: "User Information", icon: BiUser, link: "/table/table_user_information" },
-    { id: 2.1, label: "Assign Role Profile", icon: BiUser, link: "/table/table_assign_role" },
-    { id: 2.2, label: "User Assign Business", icon: BiUser, link: "/table/table_user_assign_business" },
-    { id: 2.3, label: "Company Information", icon: BiUser, link: "/table/table_company_info" },
-    { id: 2.4, label: "Business Segment", icon: BiUser, link: "/table/table_business_segment" },
-    { id: 2.5, label: "Business Unit Division", icon: BiUser, link: "/table/table_business_unit_division" },
+    {
+      id: 1,
+      label: "User Role Profile",
+      icon: AiOutlineHome,
+      link: "/table/table_user_profile",
+    },
+    {
+      id: 2,
+      label: "User Information",
+      icon: BiUser,
+      link: "/table/table_user_information",
+    },
+    {
+      id: 2.1,
+      label: "Assign Role Profile",
+      icon: BiUser,
+      link: "/table/table_assign_role",
+    },
+    {
+      id: 2.2,
+      label: "User Assign Business",
+      icon: BiUser,
+      link: "/table/table_user_assign_business",
+    },
+    {
+      id: 2.3,
+      label: "Company Information",
+      icon: BiUser,
+      link: "/table/table_company_info",
+    },
+    {
+      id: 2.4,
+      label: "Business Segment",
+      icon: BiUser,
+      link: "/table/table_business_segment",
+    },
+    {
+      id: 2.5,
+      label: "Business Unit Division",
+      icon: BiUser,
+      link: "/table/table_business_unit_division",
+    },
     { id: 2.6, label: "Zone", icon: BiUser, link: "/table/table_zone" },
     { id: 2.7, label: "Region", icon: BiUser, link: "/table/table_region" },
-    { id: 2.8, label: "Territory", icon: BiUser, link: "/table/table_territory" },
+    {
+      id: 2.8,
+      label: "Territory",
+      icon: BiUser,
+      link: "/table/table_territory",
+    },
     { id: 2.9, label: "District", icon: BiUser, link: "/table/table_district" },
     { id: 3.0, label: "Village", icon: BiUser, link: "/table/table_village" },
     { id: 3.0, label: "Farmer", icon: BiUser, link: "/table/table_farmer" },
-    { id: 3.1, label: "Depot/Warehouse", icon: BiUser, link: "/table/table_depot" },
-    { id: 3.2, label: "Map Depot Warehouse", icon: BiUser, link: "/table/table_map_depot" },
-    { id: 3.3, label: "Product Category", icon: BiUser, link: "/table/table_product_category" },
-    { id: 3.4, label: "Product Sement", icon: BiUser, link: "/table/table_product_segment" },
-    { id: 3.5, label: "Product Brand", icon: BiUser, link: "/table/table_product_brand" },
-    { id: 3.6, label: "Material SKU", icon: BiUser, link: "/table/table_material_sku" },
+
+    {
+      id: 3.1,
+      label: "Depot/Warehouse",
+      icon: BiUser,
+      link: "/table/table_depot",
+    },
+    {
+      id: 3.2,
+      label: "Map Depot Warehouse",
+      icon: BiUser,
+      link: "/table/table_map_depot",
+    },
+    {
+      id: 3.3,
+      label: "Product Category",
+      icon: BiUser,
+      link: "/table/table_product_category",
+    },
+    {
+      id: 3.4,
+      label: "Product Sement",
+      icon: BiUser,
+      link: "/table/table_product_segment",
+    },
+    {
+      id: 3.5,
+      label: "Product Brand",
+      icon: BiUser,
+      link: "/table/table_product_brand",
+    },
+    {
+      id: 3.6,
+      label: "Material SKU",
+      icon: BiUser,
+      link: "/table/table_material_sku",
+    },
     { id: 3.7, label: "Rolling Plan", icon: BiUser, link: "/rollingplans" },
-    { id: 3.8, label: "Colletion Plan", icon: BiUser, link: "/collectionplans" },
+    {
+      id: 3.8,
+      label: "Colletion Plan",
+      icon: BiUser,
+      link: "/collectionplans",
+    },
     { id: 3.9, label: "Forgot", icon: BiUser, link: "/forgotpass" },
+    { id: 4.0, label: "Employee", icon: BiUser, link: "table/table_employee" },
   ];
 
   return (
@@ -76,15 +153,27 @@ const Layout = ({ children }) => {
               <div className="flex items-center pl-1 gap-4">
                 <div className="userImg flex items-center py-4 mx justify-center">
                   {isOpen ? (
-                    <Image className="rounded-full h-8 w-8" src={Profile} alt="" />
+                    <Image
+                      className="rounded-full h-8 w-8"
+                      src={Profile}
+                      alt=""
+                    />
                   ) : (
                     <div className="flex  items-center justify-center gap-4 ">
-                      <Image className=" h-[4.1rem] w-[4.1rem] rounded-full" src={Profile} alt="" />
+                      <Image
+                        className=" h-[4.1rem] w-[4.1rem] rounded-full"
+                        src={Profile}
+                        alt=""
+                      />
                       <div className="flex flex-col items-start font-sans">
-                        <h2 className="font-sm text-white whitespace-nowrap">Uttam Aggarwal</h2>
+                        <h2 className="font-sm text-white whitespace-nowrap">
+                          Uttam Aggarwal
+                        </h2>
                         <div className="flex items-center gap-2">
                           <h2 className="bg-[#00FF00] h-2 w-2 rounded-full animate-ping"></h2>
-                          <h2 className="text-sm text-text-green font-normal">Online</h2>
+                          <h2 className="text-sm text-text-green font-normal">
+                            Online
+                          </h2>
                         </div>
                       </div>
                     </div>
@@ -128,11 +217,20 @@ const Layout = ({ children }) => {
             <nav className="nav font-playfair ">
               <div className="navContainer h-[52px] bg-text flex items-center justify-between max-w-full">
                 <div className="flex items-center">
-                  <div className="max-w-full bg-[#ff5722] p-[0.9rem] h-full cursor-pointer" onClick={collaps}>
-                    <GiHamburgerMenu className="mx-2 my-2 max-w-full max-h-full" size={24}></GiHamburgerMenu>
+                  <div
+                    className="max-w-full bg-[#ff5722] p-[0.9rem] h-full cursor-pointer"
+                    onClick={collaps}
+                  >
+                    <GiHamburgerMenu
+                      className="mx-2 my-2 max-w-full max-h-full"
+                      size={24}
+                    ></GiHamburgerMenu>
                   </div>
                   <div className="max-w-full max-h-full">
-                    <Image src={WillLogo} className="h-[3.4rem] w-full object-cover"></Image>
+                    <Image
+                      src={WillLogo}
+                      className="h-[3.4rem] w-full object-cover"
+                    ></Image>
                   </div>
                 </div>
 
@@ -152,7 +250,10 @@ const Layout = ({ children }) => {
                         alt=""
                         className="h-10 w-10 object-cover border-2 border-yellow-500 rounded-full"
                       />
-                      <Popover as="div" className="relative border-none outline-none z-50">
+                      <Popover
+                        as="div"
+                        className="relative border-none outline-none z-50"
+                      >
                         {({ open }) => (
                           <>
                             <Popover.Button className="focus:outline-none">
@@ -160,7 +261,9 @@ const Layout = ({ children }) => {
                                 className="details flex items-start justify-between gap-2 cursor-pointer"
                                 onClick={toggleDropdown}
                               >
-                                <h2 className="font-normal font-arial text-sm">Uttam Aggarwal</h2>
+                                <h2 className="font-normal font-arial text-sm">
+                                  Uttam Aggarwal
+                                </h2>
                                 <IoIosArrowDown className="button"></IoIosArrowDown>
                               </div>
                             </Popover.Button>
@@ -172,7 +275,13 @@ const Layout = ({ children }) => {
                               } absolute right-2 mt-2 w-40 bg-white text-black borde rounded-md shadow-md`}
                             >
                               <ul className="py-2 p text-text-black flex flex-col gap-2 px-4 font-Rale cursor-pointer">
-                                <li onClick={()=>{router.push('/profile')}}>My Profile</li>
+                                <li
+                                  onClick={() => {
+                                    router.push("/profile");
+                                  }}
+                                >
+                                  My Profile
+                                </li>
                                 <li>Settings</li>
                                 <li>Help</li>
                                 <li onClick={handleLogout}>

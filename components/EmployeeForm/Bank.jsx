@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Bank = () => {
+const Bank = (props) => {
   const [formActive, setFormActive] = useState(false);
 
   return (
@@ -8,12 +8,12 @@ const Bank = () => {
       className=" bg-white rounded shadow p-4 w-full pb-20 h-[80%]"
       onSubmit={(e) => e.preventDefault()}
     >
-      <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2">
+      <div className="flex bg-gray-100  h-8 w-2/3  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Bank Information
       </div>
 
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -28,7 +28,7 @@ const Bank = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -44,8 +44,8 @@ const Bank = () => {
           />
         </div>
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -60,7 +60,7 @@ const Bank = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -76,8 +76,8 @@ const Bank = () => {
           />
         </div>
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -93,11 +93,11 @@ const Bank = () => {
           />
         </div>
       </div>
-      <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2">
+      <div className="flex bg-gray-100  w-2/3  h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Reimbursement
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -121,22 +121,19 @@ const Bank = () => {
         </div>
       </div>
 
-      <div className="button flex justify-end  gap-3 mt-6">
-        {formActive ? (
-          <div
-            className="bg-green-700 px-4 py-1 text-white  pointer"
-            onClick={() => setFormActive(true)}
-          >
-            Submit
-          </div>
-        ) : (
-          <div
-            className="bg-green-700 px-4 py-1 text-white pointer"
-            onClick={() => setFormActive(true)}
-          >
-            Edit
-          </div>
-        )}
+      <div className="flex justify-between  gap-2 w-2/3 mt-12  flex gap-1 lg:w-1/2   overflow-hidden  px-4 py-1 text-white  pointer">
+        <div
+          className="w-full  text-center  bg-green-700 px-4 py-1 text-white cursor-pointer"
+          onClick={() => props.formType("Family")}
+        >
+          ...Prev
+        </div>
+        <div
+          className=" w-full text-center bg-orange-400 px-4 py-1 text-white cursor-pointer"
+          onClick={() => props.formType("Document")}
+        >
+          Next..
+        </div>
       </div>
     </form>
   );

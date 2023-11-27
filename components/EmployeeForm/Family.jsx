@@ -1,21 +1,20 @@
 import React, { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { IoMdAddCircle } from "react-icons/io";
-const Family = () => {
+const Family = (props) => {
   const [formActive, setFormActive] = useState(false);
   const [addChildrenArray, setAddChildrenArray] = useState([]);
-  const [addNomineeArray, setAddNomineeArray] = useState([]);
 
   return (
     <form
       className=" bg-white rounded shadow p-4 w-full pb-20"
       onSubmit={(e) => e.preventDefault()}
     >
-      <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2">
+      <div className="flex bg-gray-100 w-2/3 h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Parental Information
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -30,22 +29,8 @@ const Family = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            Father date of birth
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="Father D.O.B"
-            disabled={!formActive}
-          />
-        </div>
-        <div className="w-1/2 px-2">
+
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -61,52 +46,70 @@ const Family = () => {
           />
         </div>
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/3 px-2">
+
+      <div className="flex bg-gray-100 w-2/3 h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
+        Martial Status & Children Details
+      </div>
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            Mother D.O.B
+            <small className="text-red-600">*</small> Maritial Status
+          </label>
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={!formActive}
+          >
+            <option
+              value=""
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Option
+            </option>
+            <option value="state1">Married</option>
+            <option value="state1">Seprated</option>
+            <option value="state1">Single</option>
+            <option value="state1">Widow / Widower</option>
+          </select>
+        </div>
+
+        <div className="w-2/3  px-2  lg:w-1/2 ">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
+          >
+            Spause Name
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
-            placeholder="Mother D.O.B"
+            placeholder="Spause Name"
             disabled={!formActive}
           />
         </div>
       </div>
 
-      <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2">
-        Martial Status & Children Details
-      </div>
-      <div className="w-1/3 px-2 mb-8">
-        <label
-          className="block text-gray-700 text-sm font-bold mb-2"
-          htmlFor="inputField"
-        >
-          <small className="text-red-600">*</small> Maritial Status
-        </label>
-        <select
-          className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-          id="stateSelect"
-          disabled={!formActive}
-        >
-          <option
-            value=""
-            className="focus:outline-none focus:border-b bg-white"
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
           >
-            Option
-          </option>
-          <option value="state1">Married</option>
-          <option value="state1">Seprated</option>
-          <option value="state1">Single</option>
-          <option value="state1">Widow / Widower</option>
-        </select>
+            <small className="text-red-600">*</small> Date of Marriage
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Date of Marriage"
+            disabled={!formActive}
+          />
+        </div>
       </div>
-
       {addChildrenArray?.map((item, index) => (
         <div>
           <div className="flex -mx-2 mb-8" key={index}>
@@ -200,7 +203,7 @@ const Family = () => {
         </div>
       ))}
 
-      <div className="flex w-full justify-center m-4">
+      {/* <div className="flex w-full justify-center m-4">
         <button
           onClick={() => {
             setAddChildrenArray([...addChildrenArray, "hey"]);
@@ -216,125 +219,6 @@ const Family = () => {
         Other Dependents
       </div>
 
-      {addChildrenArray?.map((item, index) => (
-        <div>
-          <div className="flex -mx-2 mb-8" key={index}>
-            <small className="font-bold">{index + 1}.</small>
-            <div className="w-1/2 px-2">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="inputField"
-              >
-                <small className="text-red-600">*</small> Dependent Name
-              </label>
-              <input
-                className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                type="text"
-                id="inputField"
-                placeholder="Dependent Name"
-                disabled={!formActive}
-              />
-            </div>
-            <div className="w-1/2 px-2">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="inputField"
-              >
-                <small className="text-red-600">*</small> Dependent Relation
-              </label>
-              <select
-                className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                id="stateSelect"
-                disabled={!formActive}
-              >
-                <option
-                  value=""
-                  className="focus:outline-none focus:border-b bg-white"
-                >
-                  Option
-                </option>
-                <option value="state1">Mr.</option>
-                <option value="state2">Mrs.</option>
-              </select>
-            </div>
-            <div className="w-1/2 px-2">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="inputField"
-              >
-                <small className="text-red-600">*</small> Dependent D.O.B
-              </label>
-              <input
-                className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                type="text"
-                id="inputField"
-                placeholder="Dependent D.O.B"
-                disabled={!formActive}
-              />
-            </div>
-            <div className="flex flex-col gap-4 items-center p-4">
-              <AiOutlineDelete
-                fontSize={26}
-                className="text-red-500  cursor-pointer"
-                onClick={() =>
-                  setAddChildrenArray(
-                    addChildrenArray.filter((el, io) => index !== io)
-                  )
-                }
-              />
-              {addChildrenArray.length === index + 1 && (
-                <IoMdAddCircle
-                  fontSize={26}
-                  className="text-green-500 cursor-pointer"
-                  onClick={() =>
-                    setAddChildrenArray([...addChildrenArray, "hey"])
-                  }
-                />
-              )}
-            </div>
-          </div>
-          <div className="flex -mx-2 mb-8">
-            <div className="w-1/3 px-2">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="inputField"
-              >
-                <small className="text-red-600">*</small> Dependent Gender
-              </label>
-              <select
-                className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                id="stateSelect"
-                disabled={!formActive}
-              >
-                <option
-                  value=""
-                  className="focus:outline-none focus:border-b bg-white"
-                >
-                  Option
-                </option>
-                <option value="state1">Mr.</option>
-                <option value="state2">Mrs.</option>
-              </select>
-            </div>
-            <div className="w-1/3 px-2">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="inputField"
-              >
-                Dependent Remark
-              </label>
-              <input
-                className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                type="text"
-                id="inputField"
-                placeholder="Dependent Remark"
-                disabled={!formActive}
-              />
-            </div>
-          </div>
-        </div>
-      ))}
-
       <div className="flex w-full justify-center m-4">
         <button
           onClick={() => {
@@ -345,9 +229,9 @@ const Family = () => {
         >
           + Add Other
         </button>
-      </div>
+      </div> */}
 
-      <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2">
+      {/* <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2">
         Nominee Details
       </div>
       {addNomineeArray?.map((item, index) => (
@@ -520,8 +404,8 @@ const Family = () => {
             </div>
           </div>
         </div>
-      ))}
-      <div className="flex w-full justify-center m-4">
+      ))} */}
+      {/* <div className="flex w-full justify-center m-4">
         <div className="flex w-full justify-center m-4">
           <button
             onClick={() => {
@@ -533,23 +417,20 @@ const Family = () => {
             + Add Nominee
           </button>
         </div>
-      </div>
-      <div className="button flex justify-end  gap-3 mt-6">
-        {formActive ? (
-          <div
-            className="bg-green-700 px-4 py-1 text-white cursor-pointer"
-            onClick={() => setFormActive(true)}
-          >
-            Submit
-          </div>
-        ) : (
-          <div
-            className="bg-green-700 px-4 py-1 text-white cursor-pointer"
-            onClick={() => setFormActive(true)}
-          >
-            Edit
-          </div>
-        )}
+      </div> */}
+      <div className="flex justify-between  gap-2 w-2/3 mt-12  flex gap-1 lg:w-1/2   overflow-hidden  px-4 py-1 text-white  pointer">
+        <div
+          className="w-full  text-center  bg-green-700 px-4 py-1 text-white cursor-pointer"
+          onClick={() => props.formType("Personal")}
+        >
+          ...Prev
+        </div>
+        <div
+          className=" w-full text-center bg-orange-400 px-4 py-1 text-white cursor-pointer"
+          onClick={() => props.formType("Bank")}
+        >
+          Next..
+        </div>
       </div>
     </form>
   );

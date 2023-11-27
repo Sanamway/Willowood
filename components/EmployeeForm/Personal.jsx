@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 
-const Personal = () => {
+const Personal = (props) => {
   const [formActive, setFormActive] = useState(false);
   return (
     <form
       className=" bg-white rounded shadow p-4 w-full pb-20"
       onSubmit={(e) => e.preventDefault()}
     >
-      <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2">
+      <div className="flex bg-gray-100 w-2/3 h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Identification Details
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -26,7 +26,7 @@ const Personal = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -41,7 +41,7 @@ const Personal = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -57,28 +57,32 @@ const Personal = () => {
           />
         </div>
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/3 px-2">
+
+
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/3 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            Passport Expiry
+            D.L Number
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
-            placeholder="Passport Expiry"
+            placeholder="D.L Number"
             disabled={!formActive}
           />
         </div>
+      
       </div>
-      <div className="flex bg-gray-100 text-slate-400 w-full h-8  items-center pl-2 mb-2">
+
+      <div className="flex bg-gray-100 text-slate-400 w-2/3 h-8  items-center pl-2 mb-2 lg:w-full">
         Contact Details
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -93,7 +97,7 @@ const Personal = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -108,24 +112,9 @@ const Personal = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            ISD Code Emergency Contact
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="ISD Code Emergency Contact"
-            disabled={!formActive}
-          />
-        </div>
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/3 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -140,7 +129,7 @@ const Personal = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/3 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -163,11 +152,11 @@ const Personal = () => {
           </select>
         </div>
       </div>
-      <div className="flex bg-gray-100 text-slate-400 w-full h-8  items-center  pl-2 mb-2">
+      <div className="flex bg-gray-100 text-slate-400 w-2/3 h-8  items-center  pl-2 mb-2 lg:w-full">
         Present Residence
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -182,7 +171,7 @@ const Personal = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -204,7 +193,7 @@ const Personal = () => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -227,8 +216,8 @@ const Personal = () => {
           </select>
         </div>
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/3 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -250,7 +239,7 @@ const Personal = () => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-        <div className="w-1/3 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -267,15 +256,15 @@ const Personal = () => {
         </div>
       </div>
 
-      <div className="flex bg-gray-100 text-slate-400 w-full h-8  items-center  pl-2 mb-2 relative">
+      <div className="flex bg-gray-100 text-slate-400 w-2/3 h-8  items-center  pl-2 mb-2 relative lg:w-full">
         Permanent Residence
-        <span className="absolute right-4">
+        <span className="absolute right-10">
           <input className="mr-4 self-center" type="checkbox" />
           Same as present
         </span>
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/2 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -290,7 +279,7 @@ const Personal = () => {
             disabled={!formActive}
           />
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -312,7 +301,7 @@ const Personal = () => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-        <div className="w-1/2 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -335,8 +324,8 @@ const Personal = () => {
           </select>
         </div>
       </div>
-      <div className="flex -mx-2 mb-8">
-        <div className="w-1/3 px-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -358,7 +347,7 @@ const Personal = () => {
             <option value="state2">Mrs.</option>
           </select>
         </div>
-        <div className="w-1/3 px-2">
+        <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -374,24 +363,19 @@ const Personal = () => {
           />
         </div>
       </div>
-      <br />
-      <hr />
-      <div className="button flex justify-end  gap-3 mt-6">
-        {formActive ? (
-          <div
-            className="bg-green-700 px-4 py-1 text-white  pointer"
-            onClick={() => setFormActive(true)}
-          >
-            Submit
-          </div>
-        ) : (
-          <div
-            className="bg-green-700 px-4 py-1 text-white pointer"
-            onClick={() => setFormActive(true)}
-          >
-            Edit
-          </div>
-        )}
+      <div className="flex justify-between  gap-2 w-2/3 mt-12  flex gap-1 lg:w-1/2   overflow-hidden  px-4 py-1 text-white  pointer">
+        <div
+          className="w-full  text-center  bg-green-700 px-4 py-1 text-white cursor-pointer"
+          onClick={() => props.formType("Snapshot")}
+        >
+          ...Prev
+        </div>
+        <div
+          className=" w-full text-center bg-orange-400 px-4 py-1 text-white cursor-pointer"
+          onClick={() => props.formType("Family")}
+        >
+          Next..
+        </div>
       </div>
     </form>
   );
