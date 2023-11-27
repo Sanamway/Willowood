@@ -215,8 +215,8 @@ const ProductSegment = () => {
                 className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4"
               >
                 <div className="flex -mx-2 mb-4 flex-col">
-                  <div className="w-1/6 px-2 mb-2">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+                  <div className="w-full lg:w-1/6 px-2 mb-2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2 whitespace-nowrap" htmlFor="inputField">
                       Segment ID
                     </label>
                     <input
@@ -228,9 +228,9 @@ const ProductSegment = () => {
                       value={router.query.type == "CREATE" ? "Auto Generated" : formState?.pseg_id}
                     />
                   </div>
-                  <div className="w-1/2 px-2 ">
+                  <div className="w-full lg:w-1/2 px-2 ">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                      <span className="text-red-500 px-1">*</span>Product Segment
+                      <span className="text-red-500 px-1 whitespace-nowrap">*</span>Product Segment
                     </label>
                     <input
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -248,9 +248,9 @@ const ProductSegment = () => {
                   </div>
                 </div>
                 <div className="flex -mx-2 mb-4">
-                  <div className="w-1/2 px-2">
+                  <div className="w-full lg:w-1/2 px-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
-                      <span className="text-red-500 p-1">*</span>Company
+                      <span className="text-red-500 p-1 whitespace-nowrap">*</span>Company
                     </label>
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
