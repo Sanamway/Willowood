@@ -387,7 +387,7 @@ const Approval = (props) => {
               formActive ? "bg-green-400" : "bg-gray-400"
             }  text-white py-1 px-4 text-lg`}
           >
-            Prev
+            Prev.
           </button>
           <button
             onClick={() => props.formType("")}
