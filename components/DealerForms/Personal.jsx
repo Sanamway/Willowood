@@ -279,7 +279,7 @@ const Personal = (props) => {
       <div className="my-3 flex items-center justify-end w-full px-2">
         <button
           onClick={() => {
-            deleteHandler("");
+            // deleteHandler("");
           }}
           className="bg-orange-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
         >
@@ -291,9 +291,9 @@ const Personal = (props) => {
 
      
       <div className="flex flex-col ">
-        <div className="overflow-x-auto sm:-mx-6 lg:-mx-4">
+        <div className="overflow-x-auto sm:-mx-6 lg:-mx-4 ">
           <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-            <div className="overflow-hidden">
+            <div className="overflow-hidden ">
               <table className="min-w-full">
                 <thead className="border-b bg-gray-200 ">
                   <tr className="text-center">
