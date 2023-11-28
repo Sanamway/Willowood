@@ -291,7 +291,7 @@ const AdditionalInfo = (props) => {
 
       {/* tables */}
 
-      {/* <div className="overflow-x-auto my-6 sm:overflow-hidden">
+      <div className="overflow-x-auto my-6 sm:overflow-hidden w-[300px] lg:w-full">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
             <tr className="border-2">
@@ -346,7 +346,7 @@ const AdditionalInfo = (props) => {
             ))}
           </tbody>
         </table>
-      </div> */}
+      </div>
 
       {/* photos */}
       <div className="w-full px-2">

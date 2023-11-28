@@ -89,7 +89,7 @@ const Personal = (props) => {
             disabled={!formActive}
           />
         </div>
-        <div className="wrap ">
+        <div className="wrap self-center">
           <div className=" w-full px-2 profpic relative group">
             <Image src={""} className="h-32 w-32 rounded bg-gray-200" width={100} height={100} />
             <input type="file" accept="image/*" style={{ display: "none" }} id="fileInput" />
@@ -101,7 +101,7 @@ const Personal = (props) => {
                 userImage !== "" ? "group-hover:opacity-100" : "group-hover:opacity-0"
               }  transition-opacity duration-300`}
             >
-              <span className="text-red-500 whitespace-nowrap">*</span> Upload Image
+              <span className="text-red-500 whitespace-nowrap ">*</span> Upload Image
             </label>
           </div>
         </div>

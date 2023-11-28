@@ -20,70 +20,58 @@ const Documents = () => {
       id: 2,
       name: "Copy of Partnership Dead",
       src: [Aadhar, Aadhar, Aadhar]
-
     },
     {
       id: 2,
       name: "Copy of Certificate of Incorporation",
       src: [Aadhar, Aadhar, Aadhar]
-
     },
     {
       id: 2,
       name: "Personal Guarantee",
       src: [Aadhar, Aadhar, Aadhar]
-
     },
     {
       id: 2,
       name: "Profit and Loss",
       src: [Aadhar, Aadhar, Aadhar]
-
     },
     {
       id: 2,
       name: "Balance Sheet for Last Two Years",
       src: [Aadhar, Aadhar, Aadhar]
-
     },
     {
       id: 2,
       name: "Copy Of Pesticide License",
       src: [Aadhar, Aadhar, Aadhar]
-
     },
     {
       id: 2,
       name: "Copy Of Pesticide License",
       src: [Aadhar, Aadhar, Aadhar]
-
     },
     {
       id: 2,
       name: "Copy of Pan Card",
       src: [Aadhar, Aadhar, Aadhar]
-
     },
     {
       id: 2,
       name: "Copy of Aadhar Card",
       src: [Aadhar, Aadhar, Aadhar]
-
     },
 
     {
       id: 2,
       name: "Copy of Bank Signature Verification",
       src: [Aadhar, Aadhar, Aadhar]
-
     },
 
     {
       id: 2,
       name: "Bank Statement",
       src: [Aadhar, Aadhar, Aadhar]
-
-
     }
   ];
 
@@ -238,91 +226,88 @@ const Documents = () => {
     //   </div>
     // </div>
 
-
     <div className="mx-2  px-4 my-4 py-1 overflow-x-auto  ">
-    <div className="inline-block min-w-full rounded-lg overflow-hidden">
-      <table className="min-w-full leading-normal ">
-        <thead className="">
-          <tr>
-            <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
-              Images
-            </th>
-            <th className="px- py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
-              Documents
-            </th>
-            <th className="px- py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
-              Zone
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {datas.map((item) => (
-            <tr key={item.id}>
-              <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
-                <div className="flex items-center">
-                  <div className="w-20 h-20">
-                    {item.src &&(
-                    <Image className="object-contain w-full h-full" src={item.src[0]}></Image>
-                      )}
-                  </div>
-                </div>
-              </td>
-              <td className="px- py-2 border-b border-gray-200 bg-white text-sm">
-                <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">
-                  {item.name}
-                </p>
-              </td>
-        
-
-              <td className="px- py-2 border-b border-gray-200 bg-white text-sm relative flex items-center justify-between">
-                <span className="relative inline-block px-2 py-1 font-semibold text-green-900 leading-tight">
-                  <span
-                    aria-hidden
-                    style={{ backgroundColor: item.color }}
-                    className="absolute inset-0 opacity-60 rounded-full"
-                  ></span>
-                  <span className="relative text-white whitespace-no-wrap text-xs font-semibold">
-                    {item.status}
-                  </span>
-                </span>
-                <div className="popop">
-                  <Popover as="div" className="relative border-none outline-none ">
-                    {({ open }) => (
-                      <>
-                        <Popover.Button className="focus:outline-none">
-                          <BsThreeDotsVertical
-                            className="text-[#626364] cursor-pointer"
-                            size={20}
-                          ></BsThreeDotsVertical>
-                        </Popover.Button>
-
-                        <Popover.Panel
-                          as="div"
-                          className={`${
-                            open ? "block" : "hidden"
-                          } absolute z-40 top-1 right-0 mt-2 w-40 bg-white  text-black border rounded-md shadow-md`}
-                        >
-                          <ul className=" text-black text-xs flex flex-col gap-  font-Rale cursor-pointer">
-                            <li className="hover:bg-gray-100 px-2 py-1 rounded-md">New</li>
-                            <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Edit</li>
-                            <li className="hover:bg-gray-100 px-2 py-1 rounded-md">View</li>
-                            <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Previous Period</li>
-                            <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Current Period</li>
-                            <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Future Period</li>
-                            <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Report</li>
-                          </ul>
-                        </Popover.Panel>
-                      </>
-                    )}
-                  </Popover>
-                </div>
-              </td>
+      <div className="inline-block min-w-full rounded-lg overflow-hidden">
+        <table className="min-w-full leading-normal ">
+          <thead className="">
+            <tr>
+              <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
+                Images
+              </th>
+              <th className="px- py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
+                Documents
+              </th>
+              <th className="px- py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
+                Options
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {datas.map((item) => (
+              <tr key={item.id}>
+                <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
+                  <div className="flex items-center">
+                    <div className="w-20 h-20">
+                      {item.src && <Image className="object-contain w-full h-full" src={item.src[0]}></Image>}
+                    </div>
+                  </div>
+                </td>
+                <td className="px- py-2 border-b border-gray-200 bg-white text-sm">
+                  <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">{item.name}</p>
+                </td>
+
+                <td className="px-2 py-2 border-b border-gray-200 bg-white text-sm">
+                  <span className="relative inline-block px-2 py-1 font-semibold text-green-900 leading-tight">
+                    <span
+                      aria-hidden
+                      style={{ backgroundColor: item.color }}
+                      className="absolute inset-0 opacity-60 rounded-full"
+                    ></span>
+                    <span className="relative text-white whitespace-no-wrap text-xs font-semibold">
+                      {item.status}
+                    </span>
+                  </span>
+                  <div className="popop">
+                    <Popover as="div" className="relative lg:relative border-none outline-none ">
+                      {({ open }) => (
+                        <>
+                          <Popover.Button className="focus:outline-none">
+                            <BsThreeDotsVertical
+                              className="text-[#626364] cursor-pointer"
+                              size={20}
+                            ></BsThreeDotsVertical>
+                          </Popover.Button>
+
+                          <Popover.Panel
+                            as="div"
+                            className={`${
+                              open ? "block" : "hidden"
+                            }  absolute right-0 lg:absolute z-40 top-1 right-0 mt-2 w-40 bg-white  text-black border rounded-md shadow-md`}
+                          >
+                            <ul className=" text-black text-xs flex flex-col gap-  font-Rale cursor-pointer">
+                              <li className="flex  gap-2  hover:bg-gray-100 px-2 py-1 rounded-md text-xl">
+                                <FaUpload className="mt-1" /> Upload
+                              </li>
+                              <li className="flex  gap-2 hover:bg-gray-100 px-2 py-1 rounded-md text-xl">
+                                <FaEye className="mt-1" /> View
+                              </li>
+                              <li className="flex  gap-2  hover:bg-gray-100 px-2 py-1 rounded-md text-xl">
+                                <FaRegTrashAlt className="mt-1" />
+                                Delete
+                              </li>
+                            </ul>
+                          </Popover.Panel>
+                        </>
+                      )}
+                    </Popover>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
   );
 };
 
