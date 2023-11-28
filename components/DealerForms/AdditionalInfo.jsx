@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { BsCheck2Circle } from "react-icons/bs";
+import { AiOutlineDelete } from "react-icons/ai";
+
 const AdditionalInfo = (props) => {
   const [formActive, setFormActive] = useState(false);
   const [userImage, setUserImage] = useState("");
@@ -116,8 +118,10 @@ const AdditionalInfo = (props) => {
             <option value="" className="focus:outline-none focus:border-b bg-white">
               Option
             </option>
-            <option value="state1">Nature Firm 1</option>
-            <option value="state2">Nature Firm 2</option>
+            <option value="resident_individual">Residential Individual</option>
+            <option value="domestic_company">Domestic Company</option>
+            <option value="proprietary_concern">Proprietary Concern</option>
+            <option value="partner_firm">Partner Firm</option>
           </select>
         </div>
       </div>
@@ -163,10 +167,10 @@ const AdditionalInfo = (props) => {
           />
         </div>
         <div className="w-full px-2 ">
-          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2 " htmlFor="inputField">
             <small className="text-red-600">*</small> Valid to
           </label>
-          <select
+          {/* <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             disabled={formActive}
@@ -179,7 +183,14 @@ const AdditionalInfo = (props) => {
                 {year}
               </option>
             ))}
-          </select>
+          </select> */}
+           <input
+            className="w-full px-3 py-1.5 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="date"
+            id="inputField"
+            placeholder="dd/mm/yyyy"
+            // disabled={!formActive}
+          />
         </div>
       </div>
 
@@ -196,10 +207,10 @@ const AdditionalInfo = (props) => {
           />
         </div>
         <div className="w-full px-2 ">
-          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2 lg:pt-0 " htmlFor="inputField">
             <small className="text-red-600">*</small> Valid to
           </label>
-          <select
+          {/* <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             disabled={formActive}
@@ -212,7 +223,14 @@ const AdditionalInfo = (props) => {
                 {year}
               </option>
             ))}
-          </select>
+          </select> */}
+           <input
+            className="w-full px-3 py-1.5 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="date"
+            id="inputField"
+            placeholder="dd/mm/yyyy"
+            // disabled={!formActive}
+          />
         </div>
       </div>
 
@@ -277,10 +295,101 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
+      {/* new input fields  */}
+
+      {/* <div className="w-full px-2">
+        <label className="block text-gray-700 text-sm font-bold mb-2 pt-2">
+          <small className="text-red-600">* </small>Constitution
+        </label>
+      </div> */}
+
+      <div className="flex justify-start items-center  w-full my-4">
+        <h2 className="font-arial font-normal text-center lg:text-left text-xl py-2 border-dashed  border-t-2 mx-2 w-full border-b-2 border-l-0 border-r-0">
+        <small className="text-red-600">* </small>Constitution
+        </h2>
+      </div>
+
+      <div className="flex flex-col  my-2 mb-2 lg:flex-row gap-3">
+        <div className="w-full px-2 mt-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600">*</small> Name of Partner
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Name of Partner"
+          />
+        </div>
+        <div className="w-full px-2 mt-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600">*</small> Profit Sharing Ratio.
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Profit Sharing Ratio"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col  my-2 mb-2 lg:flex-row gap-3">
+        <div className="w-full px-2 mt-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600">*</small> Relationship
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Relationship"
+          />
+        </div>
+        <div className="w-full px-2 mt-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600">*</small> Son Of
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Son of"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col  my-2 mb-2 lg:flex-row gap-3">
+        <div className="w-full px-2 mt-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600">*</small> PAN No.
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="PAN No."
+          />
+        </div>
+        <div className="w-full px-2 mt-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600">*</small> AADHAR No.
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="AADHAR No."
+          />
+        </div>
+      </div>
+
+
+
       <div className="my-3 flex items-center justify-end">
         <button
           onClick={() => {
-            deleteHandler("");
+            // deleteHandler("");
           }}
           className="bg-orange-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
         >
@@ -291,7 +400,7 @@ const AdditionalInfo = (props) => {
 
       {/* tables */}
 
-      <div className="overflow-x-auto my-6 sm:overflow-hidden w-[300px] lg:w-full">
+      <div className="overflow-x-auto my-6 sm:overflow-hidden w-[300px]  lg:w-full">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
             <tr className="border-2">
@@ -331,6 +440,12 @@ const AdditionalInfo = (props) => {
               >
                 Aadhar No.
               </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+                
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 my-2 ">
@@ -342,6 +457,7 @@ const AdditionalInfo = (props) => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.son_of}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.pan}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.aadhar}</td>
+                <button className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">{<AiOutlineDelete className="hover:text-red-500"></AiOutlineDelete>}</button>
               </tr>
             ))}
           </tbody>
@@ -362,13 +478,13 @@ const AdditionalInfo = (props) => {
             <input type="file" accept="image/*" style={{ display: "none" }} id="fileInput" />
             <label
               htmlFor="fileInput "
-              className={`text-black absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
+              className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
                 userImage == "" ? "opacity-50" : "opacity-0"
               } ${
                 userImage !== "" ? "group-hover:opacity-100" : "group-hover:opacity-0"
               }  transition-opacity duration-300`}
             >
-              <span className="text-red-500 whitespace-nowrap">*</span> Front
+              <span className="text-red-500 whitespace-nowrap text-xs">*</span> Upload Front Image
             </label>
           </div>
         </div>
@@ -378,13 +494,13 @@ const AdditionalInfo = (props) => {
             <input type="file" accept="image/*" style={{ display: "none" }} id="fileInput" />
             <label
               htmlFor="fileInput "
-              className={`text-black absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
+              className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
                 userImage == "" ? "opacity-50" : "opacity-0"
               } ${
                 userImage !== "" ? "group-hover:opacity-100" : "group-hover:opacity-0"
               }  transition-opacity duration-300`}
             >
-              <span className="text-red-500 whitespace-nowrap">*</span> Inner Shop
+              <span className="text-red-500 whitespace-nowrap">*</span>Upload Inner Shop
             </label>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { BsCheck2Circle } from "react-icons/bs";
+import { AiOutlineDelete } from "react-icons/ai";
 
 const BusinessInfo = (props) => {
   const [formActive, setFormActive] = useState(false);
@@ -110,6 +111,7 @@ const BusinessInfo = (props) => {
               >
                 Value
               </th>
+              <th scope="col" className="text-sm font-medium text-gray-900  text-center"></th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 my-2 ">
@@ -118,32 +120,45 @@ const BusinessInfo = (props) => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.profit}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.relation}</td>
+                <button className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
+                  {<AiOutlineDelete className="hover:text-red-500"></AiOutlineDelete>}
+                </button>
               </tr>
             ))}
           </tbody>
         </table>
         <tr className="border-2 flex justify-end w-full">
           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total</td>
-          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Voul</td>
+          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Value</td>
         </tr>
       </div>
 
       <div className="w-full px-2">
         <label className="block text-gray-700 text-sm font-bold mb-2 pt-2 ">
-          <span className="flex gap-1">
+          <span className="flex gap-1 items-center">
             <small className="text-red-600 text-lg text-center ">*</small>Credit Evaluation
           </span>
         </label>
-          <h2>
-            Maximum Credit Limit = <input className="border-b-2 outline-none" type="text" id="inputField" placeholder="" />% of total sales planned Rs <input className="border-b-2 outline-none" type="text" id="inputField" placeholder="" />Lacs
-          </h2>
+        <h2 className="flex flex-col lg:flex-row items-center gap-2">
+          Maximum Credit Limit ={" "}
+          <input className="border-b-2 outline-none" type="text" id="inputField" placeholder="" />% of total
+          sales planned Rs{" "}
+          <input
+            disabled={true}
+            className="border-b-2 outline-none text-center"
+            type="text"
+            id="inputField"
+            placeholder="Value"
+          />
+          Lacs
+        </h2>
       </div>
-
 
       <div className="w-full px-2 mt-4">
         <label className="block text-gray-700 text-sm font-bold mb-2 pt-2">
-          <span className="flex gap-1">
-            <small className="text-red-600 text-lg ">*</small> Particulars of the Pesticides Business For Last 4 Years
+          <span className="flex gap-1 items-center">
+            <small className="text-red-600 text-lg ">*</small> Particulars of the Pesticides Business For Last
+            4 Years
           </span>
         </label>
       </div>
@@ -191,8 +206,9 @@ const BusinessInfo = (props) => {
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-               Ratio of Cash vs Credit
+                Ratio of Cash vs Credit
               </th>
+              <th scope="col" className="text-sm font-medium text-gray-900  text-center"></th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 my-2 ">
@@ -204,13 +220,15 @@ const BusinessInfo = (props) => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.relation}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.relation}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.relation}</td>
+                <button className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
+                  {<AiOutlineDelete className="hover:text-red-500"></AiOutlineDelete>}
+                </button>
               </tr>
             ))}
           </tbody>
         </table>
         <tr className="border-2 flex justify-end w-full">
           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total</td>
-          
         </tr>
       </div>
 
