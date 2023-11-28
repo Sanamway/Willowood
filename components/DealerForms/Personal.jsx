@@ -211,6 +211,7 @@ const Personal = (props) => {
           />
         </div>
       </div>
+      
       <div className="flex my-2">
         <div className="w-full px-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
@@ -273,7 +274,9 @@ const Personal = (props) => {
         </div>
       </div>
 
-      <div className="my-3 flex items-center justify-end">
+      
+
+      <div className="my-3 flex items-center justify-end w-full px-2">
         <button
           onClick={() => {
             deleteHandler("");
@@ -413,7 +416,7 @@ const Personal = (props) => {
         </div>
       </div>
 
-      <div className="my-3 flex items-center justify-end">
+      <div className="my-3 flex items-center justify-end px-2">
         <button
           // onClick={() => {
           //   deleteHandler("");

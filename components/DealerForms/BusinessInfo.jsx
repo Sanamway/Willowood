@@ -5,6 +5,9 @@ import { AiOutlineDelete } from "react-icons/ai";
 const BusinessInfo = (props) => {
   const [formActive, setFormActive] = useState(false);
 
+  const currentYear = new Date().getFullYear();
+  const nextYears = Array.from({ length: 10 }, (_, index) => currentYear + index);
+
   //dummydata
   const data = [
     {
@@ -79,12 +82,72 @@ const BusinessInfo = (props) => {
           />
         </div>
       </div>
+
       <div className="w-full px-2">
         <label className="block text-gray-700 text-sm font-bold mb-2 pt-2">
           <span className="flex gap-1">
             <small className="text-red-600">*</small> Focus Product Sales with Willowood
           </span>
         </label>
+      </div>
+
+      {/* new fields add  */}
+
+      <div className="flex my-2 mb-2 lg:flex-row flex-col ">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600">*</small> Product
+          </label>
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={formActive}
+          >
+            <option value="" className="focus:outline-none focus:border-b bg-white">
+              Option
+            </option>
+            <option value="product1">Product 1</option>
+            <option value="product2">Product 2</option>
+          </select>
+        </div>
+        <div className="w-full px-2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Volume
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="volume"
+            disabled={!formActive}
+          />
+        </div>
+
+        <div className="w-full px-2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Value
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="value"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
+
+      {/* new add button  */}
+
+      <div className="my-3 flex items-center justify-end w-full px-2">
+        <button
+          onClick={() => {
+            // deleteHandler("");
+          }}
+          className="bg-orange-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
+        >
+          Add +
+        </button>
       </div>
 
       {/* table  */}
@@ -161,6 +224,125 @@ const BusinessInfo = (props) => {
             4 Years
           </span>
         </label>
+      </div>
+
+      {/* new fields added  */}
+
+      <div className="flex my-2 mb-2 lg:flex-row flex-col ">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Name of the Company
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Name of the Company"
+            disabled={!formActive}
+          />
+        </div>
+        <div className="w-full px-2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> No of Years
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="No of Years"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
+
+
+      <div className="flex my-2 mb-2 lg:flex-row flex-col ">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Years 2021
+          </label>
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={formActive}
+          >
+            <option value="" className="focus:outline-none focus:border-b bg-white">
+              Option
+            </option>
+            {nextYears.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="w-full px-2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Year 2022
+          </label>
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={formActive}
+          >
+            <option value="" className="focus:outline-none focus:border-b bg-white">
+              Option
+            </option>
+            {nextYears.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+
+      <div className="flex my-2 mb-2 lg:flex-row flex-col ">
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Years 2021
+          </label>
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={formActive}
+          >
+            <option value="" className="focus:outline-none focus:border-b bg-white">
+              Option
+            </option>
+            {nextYears.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
+            <small className="text-red-600"></small> Ratio of Cash vs Credit
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Ratio Cash Credit"
+            disabled={!formActive}
+          />
+        </div>
+      </div>
+
+        {/* second add button  */}
+        
+      <div className="my-3 flex items-center justify-end w-full px-2">
+        <button
+          onClick={() => {
+            // deleteHandler("");
+          }}
+          className="bg-orange-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
+        >
+          Add +
+        </button>
       </div>
 
       {/* second table  */}
