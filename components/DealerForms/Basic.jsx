@@ -122,6 +122,25 @@ const Basic = (props) => {
       <div className="flex  my-2">
         <div className="w-full lg:w-full px-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600">*</small> Country
+          </label>
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={formActive}
+          >
+            <option value="" className="focus:outline-none focus:border-b bg-white">
+              Option
+            </option>
+            <option value="country">Country</option>
+            <option value="country">Country</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="flex  my-2">
+        <div className="w-full lg:w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600">*</small> Contact Person
           </label>
           <input
@@ -149,7 +168,7 @@ const Basic = (props) => {
         </div>
         <div className="w-full px-2 ">
           <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
-            <small className="text-red-600">*</small> Secondary Mobile
+            <small className="text-red-600"></small> Secondary Mobile
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
