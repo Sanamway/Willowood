@@ -8,7 +8,7 @@ import { Popover } from "@headlessui/react";
 import Image from "next/image";
 import { Dialog } from "@headlessui/react";
 
-const Documents = () => {
+const Documents = (props) => {
   let [isOpen, setIsOpen] = useState(true);
   const datas = [
     {
@@ -306,6 +306,24 @@ const Documents = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="my-6 flex items-center justify-end ">
+        <div className="flex items-center justify-end w-full gap-4 ">
+          <button
+            onClick={() => props.formType("Approval")}
+            className={`text-center rounded-md hover:bg-green-500 ${
+              formActive ? "bg-green-400" : "bg-gray-400"
+            }  text-white py-1 px-4 text-lg`}
+          >
+            Prev
+          </button>
+          <button
+            onClick={() => props.formType("")}
+            className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-lg"
+          >
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );

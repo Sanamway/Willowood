@@ -358,7 +358,7 @@ const Personal = (props) => {
         </div>
         <div className="w-full px-2 ">
           <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
-            <small className="text-red-600"></small> Categoty
+            <small className="text-red-600"></small> Category
           </label>
            <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
