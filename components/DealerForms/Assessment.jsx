@@ -12,7 +12,6 @@ const Assessment = (props) => {
     }
   };
 
-  console.log("ff", selectedCheckbox)
 
   return (
     <form className=" bg-white rounded  p-4 w-full  overflow-auto" onSubmit={(e) => e.preventDefault()}>
@@ -46,7 +45,7 @@ const Assessment = (props) => {
             distributor
           </label>
 
-          <div className="flex my-2 mb-2 justify-between lg:flex-row flex-col items-center accent-lime-400 border-[0.006rem] lg:py-6 border-gray-400">
+          <div className="flex my-2 mb-2 justify-between lg:flex-row rounded-md p-4 flex-col items-center accent-lime-400 border-[0.006rem] lg:py-6 border-gray-400">
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
                 <input
@@ -125,7 +124,7 @@ const Assessment = (props) => {
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600"></small> (B) Proprietor Relationship with our Company Staff
           </label>
-          <div className="flex my-2 mb-2 justify-between lg:flex-row flex-col items-center accent-lime-400 border-[0.006rem] lg:py-6 border-gray-400 ">
+          <div className="flex my-2 mb-2 justify-between rounded-md p-4 lg:flex-row flex-col items-center accent-lime-400 border-[0.006rem] lg:py-6 border-gray-400 ">
             <div className="w-full lg:w-auto px-2 ">
               <div className="flex items-center">
                 <input type="checkbox" id="ownedCheckbox" className="mr-2" disabled={formActive} checked={selectedCheckbox === "yes"}
@@ -157,38 +156,43 @@ const Assessment = (props) => {
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600"></small> (C) Goodwill / Reputation Status of Distributor in Market
           </label>
-          <div className="flex my-2 mb-2  justify-between lg:flex-row flex-col items-center accent-lime-400 border-[0.006rem] lg:py-6 border-gray-400 ">
+          <div className="flex my-2 mb-2  justify-between rounded-md p-4 lg:flex-row flex-col items-center accent-lime-400 border-[0.006rem] lg:py-6 border-gray-400 ">
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="ownedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="ownedCheckbox"  checked={selectedCheckbox === "poor"}
+                  onChange={() => handleCheckboxChange("poor")} className="mr-2" disabled={formActive} />
                 <label htmlFor="ownedCheckbox">Poor</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
-                <label htmlFor="rentedCheckbox">Avg</label>
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "average"}
+                  onChange={() => handleCheckboxChange("average")} className="mr-2" disabled={formActive} />
+                <label htmlFor="rentedCheckbox">Average</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "god"}
+                  onChange={() => handleCheckboxChange("god")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox"> Good</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "excelent"}
+                  onChange={() => handleCheckboxChange("excelent")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox">Excellent</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2 invisible">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "outstanding"}
+                  onChange={() => handleCheckboxChange("outstanding")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox">Oustanding</label>
               </div>
             </div>
@@ -201,38 +205,43 @@ const Assessment = (props) => {
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600"></small> (D) Financial Status of Distributor
           </label>
-          <div className="flex my-2 mb-2  justify-between lg:flex-row flex-col items-center accent-lime-400 border-[0.006rem] lg:py-6 border-gray-400 ">
+          <div className="flex my-2 mb-2  justify-between rounded-md p-4 lg:flex-row flex-col items-center accent-lime-400 border-[0.006rem] lg:py-6 border-gray-400 ">
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="ownedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="ownedCheckbox"  checked={selectedCheckbox === "less50"}
+                  onChange={() => handleCheckboxChange("less50")} className="mr-2" disabled={formActive} />
                 <label htmlFor="ownedCheckbox">Less than 50 L</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "50+"}
+                  onChange={() => handleCheckboxChange("50+")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox">50 Lac +</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "1cr"}
+                  onChange={() => handleCheckboxChange("1cr")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox"> 1Cr +</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "5cr"}
+                  onChange={() => handleCheckboxChange("5cr")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox">5Cr +</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "10cr"}
+                  onChange={() => handleCheckboxChange("10cr")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox">10Cr+</label>
               </div>
             </div>
@@ -245,31 +254,35 @@ const Assessment = (props) => {
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600"></small> (E) Family Background Of Distributor
           </label>
-          <div className="flex my-2 mb-2  justify-between lg:flex-row flex-col items-center accent-lime-400 border-[0.006rem] lg:py-6 border-gray-400 ">
+          <div className="flex my-2 mb-2  justify-between rounded-md p-4 lg:flex-row flex-col items-center accent-lime-400 border-[0.006rem] lg:py-6 border-gray-400 ">
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="ownedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="ownedCheckbox"  checked={selectedCheckbox === "family"}
+                  onChange={() => handleCheckboxChange("family")} className="mr-2" disabled={formActive} />
                 <label htmlFor="ownedCheckbox">Family Background</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "service"}
+                  onChange={() => handleCheckboxChange("service")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox">Service Backround</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "businessfamily"}
+                  onChange={() => handleCheckboxChange("businessfamily")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox">Business Family Root</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "distributedf"}
+                  onChange={() => handleCheckboxChange("distributedf")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox">Distrurbed Family</label>
               </div>
             </div>
@@ -282,38 +295,43 @@ const Assessment = (props) => {
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600"></small> (F) Any Demerit about Distributor
           </label>
-          <div className="flex my-2 mb-2  justify-between lg:flex-row flex-col items-center accent-lime-400 border-[0.006rem] lg:py-6 border-gray-400 ">
+          <div className="flex my-2 mb-2  justify-between rounded-md p-4 lg:flex-row flex-col items-center accent-lime-400 border-[0.006rem] lg:py-6 border-gray-400 ">
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="ownedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="ownedCheckbox"  checked={selectedCheckbox === "trader"}
+                  onChange={() => handleCheckboxChange("trader")} className="mr-2" disabled={formActive} />
                 <label htmlFor="ownedCheckbox">Trader Wholesale Type</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "wholesale"}
+                  onChange={() => handleCheckboxChange("wholesale")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox">Wholesale Only</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "retail"}
+                  onChange={() => handleCheckboxChange("retail")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox">Retail Only</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "credit"}
+                  onChange={() => handleCheckboxChange("credit")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox">Live Credit Only</label>
               </div>
             </div>
 
             <div className="w-full lg:w-auto px-2">
               <div className="flex items-center">
-                <input type="checkbox" id="rentedCheckbox" className="mr-2" disabled={formActive} />
+                <input type="checkbox" id="rentedCheckbox"  checked={selectedCheckbox === "sell"}
+                  onChange={() => handleCheckboxChange("sell")} className="mr-2" disabled={formActive} />
                 <label htmlFor="rentedCheckbox">Can sell only service</label>
               </div>
             </div>

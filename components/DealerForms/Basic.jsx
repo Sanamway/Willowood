@@ -103,25 +103,6 @@ const Basic = (props) => {
         </div>
         <div className="w-full px-2 ">
           <label className="block text-gray-700 text-sm font-bold mb-2 pt-2" htmlFor="inputField">
-            <small className="text-red-600">*</small> Pin Code
-          </label>
-          <select
-            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-            disabled={formActive}
-          >
-            <option value="" className="focus:outline-none focus:border-b bg-white">
-              Option
-            </option>
-            <option value="state1">Pin 1</option>
-            <option value="state2">Pin 2</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="flex  my-2">
-        <div className="w-full lg:w-full px-2">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600">*</small> Country
           </label>
           <select
@@ -132,9 +113,24 @@ const Basic = (props) => {
             <option value="" className="focus:outline-none focus:border-b bg-white">
               Option
             </option>
-            <option value="country">Country</option>
-            <option value="country">Country</option>
+            <option value="count 1">Country 1</option>
+            <option value="count 2">Country 2</option>
           </select>
+        </div>
+      </div>
+
+      <div className="flex  my-2">
+        <div className="w-full lg:w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600">*</small> Pin code
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Pin code"
+            disabled={!formActive}
+          />
         </div>
       </div>
 
