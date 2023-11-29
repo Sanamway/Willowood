@@ -339,12 +339,19 @@ const AdditionalInfo = (props) => {
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600">*</small> Relationship
           </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="Relationship"
-          />
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            disabled={formActive}
+          >
+            <option value="" className="focus:outline-none focus:border-b bg-white">
+              Option
+            </option>
+            <option value="resident_individual">Father</option>
+            <option value="domestic_company">Mother</option>
+            <option value="proprietary_concern">Son</option>
+            <option value="partner_firm">Daughter</option>
+          </select>
         </div>
         <div className="w-full px-2 mt-2">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
@@ -383,6 +390,19 @@ const AdditionalInfo = (props) => {
           />
         </div>
       </div>
+
+      <div className="w-full px-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+            <small className="text-red-600">*</small> Address
+          </label>
+          <textarea
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Address"
+            // disabled={!formActive}
+          />
+        </div>
 
 
 

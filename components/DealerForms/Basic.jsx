@@ -31,7 +31,7 @@ const Basic = (props) => {
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
-            placeholder="Postal Address"
+            placeholder="Address"
             disabled={!formActive}
           />
         </div>
@@ -43,7 +43,7 @@ const Basic = (props) => {
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
-            placeholder="Address"
+            placeholder="Postal Address"
             disabled={!formActive}
           />
         </div>
