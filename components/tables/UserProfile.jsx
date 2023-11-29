@@ -109,7 +109,10 @@ const UserProfile = () => {
               </h2>
               <button
                 onClick={() => {
-                  router.push("/form/user_profile_form");
+                  router.push({
+                    pathname: "/form/user_profile_form",
+                    query: { type: "CREATE" }
+                  });
                 }}
                 className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
               >

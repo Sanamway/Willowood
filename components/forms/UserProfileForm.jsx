@@ -58,9 +58,7 @@ const UserProfileForm = () => {
 
   console.log("role id", role_id);
 
-  // useEffect(() => {
-  //   getMenusById(role_id);
-  // }, []);
+  
 
   useEffect(() => {
     if (router.query.type === "CREATE") return;
@@ -178,7 +176,7 @@ const UserProfileForm = () => {
                 <input disabled placeholder={role_id} type="text" className="px-2 py-1 bg-gray-100 w-1/6" />
               </div>
               <div className=" text-black flex items-center justify-start mt-4">
-                {/* <div className="w-1/2 flex items-center justify-center">
+               {router.query.type == "CREATE"&& ( <div className="w-1/2 flex items-center justify-center">
                   <label className="w-1/2 text-gray-700 text-sm font-bold mb-2" htmlFor="userName">
                     <span className="text-red-500 p-1">*</span>User Profile
                   </label>
@@ -205,9 +203,9 @@ const UserProfileForm = () => {
                       </option>
                     ))}
                   </select>
-                </div> */}
+                </div>)}
 
-                <div className="w-1/2 flex items-center justify-center">
+                {router.query.type == "view" &&(<div className="w-1/2 flex items-center justify-center">
                   <label className="w-1/2 text-gray-700 text-sm font-bold mb-2" htmlFor="userName">
                     <span className="text-red-500 p-1">*</span>User Profile
                   </label>
@@ -217,7 +215,7 @@ const UserProfileForm = () => {
                     type="text"
                     className="w-full px-1 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus-border-indigo-500"
                   />
-                </div>
+                </div>)}
               </div>
               <div className="mt-8 font-arial">
                 <h2 className="text-sm mb-4">Assign Menu Rights</h2>
@@ -250,7 +248,8 @@ const UserProfileForm = () => {
                       </tr>
                     </thead>
                     <tbody className="font-arial text- text-center">
-                      {/* {menus.map((menu, index) => (
+                      { router.query.type == "CREATE" &&
+                      (menus.map((menu, index) => (
                         <tr className="bg-white divide-y border  divide-gray-200 text-xs" key={menu._id}>
                           <td className="border-b px-4 py-2 flex items-center gap-4">
                             <input
@@ -357,7 +356,7 @@ const UserProfileForm = () => {
                             />
                           </td>
                         </tr>
-                      ))} */}
+                      )))}
 
                       {check.map(
                         (menu, index) => (
