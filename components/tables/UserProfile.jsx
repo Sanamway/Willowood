@@ -53,7 +53,7 @@ const UserProfile = () => {
   };
 
   const resetData = () => {
-    gettingPrdBrand();
+    gettingMenusData();
     setisOpen(false);
   };
 
@@ -141,7 +141,7 @@ const UserProfile = () => {
                         onClick={() => {
                           router.push({
                             pathname: "/form/user_profile_form",
-                            query: { type: "view", id: item?.role_id }
+                            query: { type: "view", role_id: item?.role_id }
                           });
                         }}
                         className="b text-black   hover:text-blue-500  "

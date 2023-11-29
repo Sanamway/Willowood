@@ -249,24 +249,7 @@ const ProductBrand = () => {
                       }}
                     />
                   </div>
-                  {/* <div className="w-1/2 px-2 ">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                      <span className="text-red-500 px-1">*</span>Brand Name
-                    </label>
-                    <input
-                      className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                      type="text"
-                      id="inputField"
-                      placeholder="Input Brand Name"
-                      value={formState.brand_name}
-                      onChange={(e) => {
-                        setFromState({
-                          ...formState,
-                          brand_name: e.target.value
-                        });
-                      }}
-                    />
-                  </div> */}
+                 
                 </div>
                 <div className="flex -mx-2 mb-4">
                   <div className="w-full lg:w-1/2 px-2">
