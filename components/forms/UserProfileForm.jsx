@@ -97,11 +97,16 @@ const UserProfileForm = () => {
       view: item.ViewRight,
       Delete: item.DeleteRight,
       wf_approval: item.ApproveRight,
+      menutype: item?.type_menu,
       c_name: "NA",
       ul_name: item.Ul_name
     }));
 
   async function makingLoopApi(datas) {
+    if(datas.length<=0){
+      toast.error("Select Options")
+      return 
+    }
     if (!isSelect) {
       return;
     } else {
@@ -153,6 +158,14 @@ const UserProfileForm = () => {
 
   console.log("iveee", router.query.type == "view");
 
+  const rowdisable = (menu) => {
+    if (menu?.type_menu === "0" || menu?.type_menu === "1") {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <>
       <Layout>
@@ -196,14 +209,19 @@ const UserProfileForm = () => {
                     className="px-2 py-1 bg-gray-100 w-full"
                   />
                 </div>
-                {router.query.type == "Edit" &&(<div onClick={() => {
-                          router.push({
-                            pathname: "/form/user_profile_form",
-                            query: { type: "CREATE", role_id: role_id }
-                          });
-                        }} className="bg-green-700 rounded-md px-4 py-1 cursor-pointer text-white">
-                  Refresh Menu
-                </div>)}
+                {router.query.type == "Edit" && (
+                  <div
+                    onClick={() => {
+                      router.push({
+                        pathname: "/form/user_profile_form",
+                        query: { type: "CREATE", role_id: role_id }
+                      });
+                    }}
+                    className="bg-green-700 rounded-md px-4 py-1 cursor-pointer text-white"
+                  >
+                    Refresh Menu
+                  </div>
+                )}
               </div>
               <div className=" text-black flex items-center justify-start mt-4">
                 {router.query.type == "CREATE" && (
@@ -292,118 +310,130 @@ const UserProfileForm = () => {
                         <td className="px-6 py-2 text-center dark:border-2 text-xs whitespace-nowrap font-medium text-gray-500  tracking-wider">
                           Approve
                         </td>
+                        {/* <td className="px-6 py-2 text-center dark:border-2 text-xs whitespace-nowrap font-medium text-gray-500  tracking-wider">
+                          Select All
+                        </td> */}
                       </tr>
                     </thead>
                     <tbody className="font-arial text- text-center">
                       {router.query.type == "CREATE" &&
-                        menus.map((menu, index) => (
-                          <tr className="bg-white divide-y border  divide-gray-200 text-xs" key={menu._id}>
-                            <td className="border-b px-4 py-2 flex items-center gap-4">
-                              <input
-                                type="checkbox"
-                                checked={menu.isEditable}
-                                onChange={() => {
-                                  setMenus(
-                                    menus.map((el) =>
-                                      el._id === menu._id ? { ...el, isEditable: !el.isEditable } : el
-                                    )
-                                  );
-                                  setSelect(true);
-                                }}
-                              />
-                              {index + 1}
-                            </td>
-                            <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-left text-xs">
-                              {menu?.menu_name}
-                            </td>
-                            <td className="border px-4 py-2">
-                              <input
-                                type="checkbox"
-                                disabled={!menu.isEditable}
-                                checked={menu.isEditable ? menu.AddRight : false}
-                                onChange={() => {
-                                  setMenus(
-                                    menus.map((el) =>
-                                      el._id === menu._id ? { ...el, AddRight: !el.AddRight } : el
-                                    )
-                                  );
-                                }}
-                              />
-                            </td>
-                            <td className="border px-4 py-2">
-                              <input
-                                type="checkbox"
-                                disabled={!menu.isEditable}
-                                // checked={menu.EditRight}
-                                checked={menu.isEditable ? menu.EditRight : false}
-                                onChange={() => {
-                                  setMenus(
-                                    menus.map((el) =>
-                                      el._id === menu._id ? { ...el, EditRight: !el.EditRight } : el
-                                    )
-                                  );
-                                }}
-                              />
-                            </td>
-                            <td className="border px-4 py-2">
-                              <input
-                                type="checkbox"
-                                disabled={!menu.isEditable}
-                                checked={menu.isEditable ? menu.ViewRight : false}
-                                onChange={() => {
-                                  setMenus(
-                                    menus.map((el) =>
-                                      el._id === menu._id ? { ...el, ViewRight: !el.ViewRight } : el
-                                    )
-                                  );
-                                }}
-                              />
-                            </td>
-                            <td className="border px-4 py-2">
-                              <input
-                                type="checkbox"
-                                disabled={!menu.isEditable}
-                                checked={menu.isEditable ? menu.DeleteRight : false}
-                                onChange={() => {
-                                  setMenus(
-                                    menus.map((el) =>
-                                      el._id === menu._id ? { ...el, DeleteRight: !el.DeleteRight } : el
-                                    )
-                                  );
-                                }}
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="checkbox"
-                                className="border px-4 py-2"
-                                disabled={!menu.isEditable}
-                                checked={menu.isEditable ? menu.ApproveRight : false}
-                                onChange={() => {
-                                  setMenus(
-                                    menus.map((el) =>
-                                      el._id === menu._id ? { ...el, ApproveRight: !el.ApproveRight } : el
-                                    )
-                                  );
-                                }}
-                              />
-                            </td>
-                            {/* <td className="border px-4 py-2">
+                        menus?.map(
+                          (menu, index) => (
+                            (
+                              <tr
+                                className={`bg-white divide-y ${rowdisable(menu) ? 'border-2 border-red-200':""}  text-xs`}
+                                key={menu._id}
+                              >
+                                <td className={`border-b px-4 py-2 flex items-center gap-4 `}>
+                                  <input
+                                    type="checkbox"
+                                    checked={menu?.isEditable}
+                                    // disabled={rowdisable(menu)}
+                                    onChange={() => {
+                                      setMenus(
+                                        menus.map((el) =>
+                                          el._id === menu._id ? { ...el, isEditable: !el.isEditable } : el
+                                        )
+                                      );
+                                      setSelect(true);
+                                    }}
+                                  />
+                                  {index + 1}
+                                </td>
+                                <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-left text-xs">
+                                  {menu?.menu_name}
+                                </td>
+                                <td className="border px-4 py-2">
+                                  <input
+                                    type="checkbox"
+                                    disabled={!menu.isEditable}
+                                    checked={menu.isEditable ? menu.AddRight : false}
+                                    onChange={() => {
+                                      setMenus(
+                                        menus.map((el) =>
+                                          el._id === menu._id ? { ...el, AddRight: !el.AddRight } : el
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </td>
+                                <td className="border px-4 py-2">
+                                  <input
+                                    type="checkbox"
+                                    disabled={!menu.isEditable}
+                                    // checked={menu.EditRight}
+                                    checked={menu.isEditable ? menu.EditRight : false}
+                                    onChange={() => {
+                                      setMenus(
+                                        menus.map((el) =>
+                                          el._id === menu._id ? { ...el, EditRight: !el.EditRight } : el
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </td>
+                                <td className="border px-4 py-2">
+                                  <input
+                                    type="checkbox"
+                                    disabled={!menu.isEditable}
+                                    checked={menu.isEditable ? menu.ViewRight : false}
+                                    onChange={() => {
+                                      setMenus(
+                                        menus.map((el) =>
+                                          el._id === menu._id ? { ...el, ViewRight: !el.ViewRight } : el
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </td>
+                                <td className="border px-4 py-2">
+                                  <input
+                                    type="checkbox"
+                                    disabled={!menu.isEditable}
+                                    checked={menu.isEditable ? menu.DeleteRight : false}
+                                    onChange={() => {
+                                      setMenus(
+                                        menus.map((el) =>
+                                          el._id === menu._id ? { ...el, DeleteRight: !el.DeleteRight } : el
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type="checkbox"
+                                    className="border px-4 py-2"
+                                    disabled={!menu.isEditable}
+                                    checked={menu.isEditable ? menu.ApproveRight : false}
+                                    onChange={() => {
+                                      setMenus(
+                                        menus.map((el) =>
+                                          el._id === menu._id ? { ...el, ApproveRight: !el.ApproveRight } : el
+                                        )
+                                      );
+                                    }}
+                                  />
+                                </td>
+                                {/* <td className="border px-4 py-2">
                             <input
                               type="checkbox"
-                              disabled={!menu.isEditable}
+                              disabled={!menu?.isEditable}
                               checked={menu.isEditable ? menu.RejectRight : false}
                               onChange={() => {
                                 setMenus(
-                                  menus.map((el) =>
+                                  menus.map((el) =>{
+                                    console.log("dfd",el)
                                     el._id === menu._id ? { ...el, RejectRight: !el.RejectRight } : el
-                                  )
+                                  })
                                 );
                               }}
                             />
                           </td> */}
-                          </tr>
-                        ))}
+                              </tr>
+                            )
+                          )
+                        )}
 
                       {check.map(
                         (menu, index) => (
