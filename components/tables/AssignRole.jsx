@@ -6,10 +6,22 @@ import { TiArrowBack } from "react-icons/ti";
 import { TbFileDownload } from "react-icons/tb";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
+import axios from "axios";
+import { url } from "@/constants/url";
 
 
 const AssignRole = () => {
+const [data, setData] = useState([])
+
   const router = useRouter();
+
+  // headers 
+
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+  };
+
 
   const dummyData = [
     {
@@ -28,6 +40,21 @@ const AssignRole = () => {
       userprofile: "userprofile"
     }
   ];
+
+  const getAssignRoleDatas = async()=>{
+    try {
+      const resp = await axios.get(`${url}/api/get_assign_role_profile`, { headers: headers });
+      const respData = await resp.data.data;
+      setData(respData)
+      // console.log("datassss",respData)
+    } catch (error) {
+      console.log("er:", error)
+    }
+  }
+
+  useEffect(()=>{
+    getAssignRoleDatas()
+  },[])
 
   return (
     <Layout>
@@ -78,19 +105,31 @@ const AssignRole = () => {
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
-                  <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     Action
                   </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                    Role Id
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                    Role Profile
+                  </th>
+                  <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                    User Id
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     User Name
                   </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    User Profile
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                    Mobile No
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                    Territory
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                {dummyData?.map((item) => (
+                {data?.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
@@ -111,9 +150,12 @@ const AssignRole = () => {
                       </button>
                       <button className="b text-black hover:text-red-500 ml-2">Delete</button>
                     </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.id}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.username}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.userprofile}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.role_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.U_profile_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.user_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.userprofile}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.userprofile}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.userprofile}</td>
                   </tr>
                 ))}
               </tbody>
