@@ -11,12 +11,13 @@ function ConfirmModal({ onClose, isOpen, onOpen, userId, onDeletedData, method, 
   };
 
   const methodDelete = async (userId) => {
+    console.log("coming", userId)
     try {
       const resp = await axios[method](`${url}/api/${endpoints}/${userId}`, { headers });
       const respdata = await resp.data.data;
       if (respdata) {
-        onClose();
         onDeletedData();
+        onClose();
       }
     } catch (error) {
       console.log(error)

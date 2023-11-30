@@ -8,6 +8,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { url } from "@/constants/url";
+import ConfirmModal from "../modals/ConfirmModal";
 
 
 const AssignRole = () => {
@@ -23,23 +24,6 @@ const [data, setData] = useState([])
   };
 
 
-  const dummyData = [
-    {
-      id: 1,
-      username: "username",
-      userprofile: "userprofile"
-    },
-    {
-      id: 2,
-      username: "username",
-      userprofile: "userprofile"
-    },
-    {
-      id: 3,
-      username: "username",
-      userprofile: "userprofile"
-    }
-  ];
 
   const getAssignRoleDatas = async()=>{
     try {
@@ -56,9 +40,33 @@ const [data, setData] = useState([])
     getAssignRoleDatas()
   },[])
 
+
+  const [isOpen, setisOpen] = useState(false);
+  const [userId, setUserId] = useState(null);
+
+  const deleteHandler = (id) => {
+    setisOpen(true);
+    setUserId(id);
+  };
+
+  const resetData = () => {
+    getAssignRoleDatas();
+    setisOpen(false);
+  };
+
+
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full ">
+      <ConfirmModal
+          isOpen={isOpen}
+          onClose={() => setisOpen(false)}
+          onOpen={() => setisOpen(true)}
+          userId={userId}
+          method="delete"
+          endpoints="delete_role_profile"
+          onDeletedData={resetData}
+        ></ConfirmModal>
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Assign Role Profile to User</h2>
           <div className="flex items-center gap-2 cursor-pointer">
@@ -91,7 +99,10 @@ const [data, setData] = useState([])
             </h2>
             <button
               onClick={() => {
-                router.push("/form/assign_role");
+                router.push({
+                  pathname: "/form/assign_role",
+                  query: { type: "CREATE" }
+                });
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -134,21 +145,27 @@ const [data, setData] = useState([])
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
                         onClick={() => {
-                          router.push("/form/assign_role");
+                          router.push({
+                            pathname: "/form/assign_role",
+
+                            query: { type: "view", user_id: item?.user_id }
+                          });
                         }}
                         className="b text-black   hover:text-blue-500  "
                       >
                         View
                       </button>
-                      <button
+                      {/* <button
                         onClick={() => {
                           router.push("/form/assign_role");
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
                       >
                         Edit
-                      </button>
-                      <button className="b text-black hover:text-red-500 ml-2">Delete</button>
+                      </button> */}
+                      <button  onClick={() => {
+                          deleteHandler(item?.user_id);
+                        }} className="b text-black hover:text-red-500 ml-2">Delete</button>
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.role_id}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.U_profile_name}</td>

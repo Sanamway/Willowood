@@ -137,7 +137,7 @@ const UserProfile = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                {menuRecords?.map((item) => (
+                {menuRecords.length > 0 && menuRecords?.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
@@ -151,17 +151,7 @@ const UserProfile = () => {
                       >
                         View
                       </button>
-                      {/* <button
-                        onClick={() => {
-                          router.push({
-                            pathname: "/form/user_profile_form",
-                            query: { type: "Edit", role_id: item?.role_id }
-                          });
-                        }}
-                        className="b text-black hover:text-yellow-400 ml-2"
-                      >
-                        Edit
-                      </button> */}
+                      
                       <button
                         onClick={() => {
                           deleteHandler(item?.role_id);
