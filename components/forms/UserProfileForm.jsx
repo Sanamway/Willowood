@@ -58,8 +58,6 @@ const UserProfileForm = () => {
 
   console.log("role id", role_id);
 
-  
-
   useEffect(() => {
     if (router.query.type === "CREATE") return;
     if (role_id) getMenusById(role_id);
@@ -125,8 +123,23 @@ const UserProfileForm = () => {
           }
         }
         console.log("completed.");
-      } catch (error) {
-        console.error("error:", error);
+      } catch (errors) {
+        console.error("error:", errors);
+
+        const ermsg = errors.response.data.message;
+        const errmsg = errors.response.data.error;
+        if (ermsg) {
+          toast.error(ermsg);
+          return;
+        }
+        console.log("fefef", errors);
+        if (errmsg?.includes("brand_name_1")) {
+          toast.error("Brand Name is Duplicate");
+        } else if (errmsg?.includes("brand_code_1")) {
+          toast.error("Brand Id is duplicate");
+        } else {
+          toast.error(errmsg);
+        }
       }
     }
   }
@@ -171,51 +184,86 @@ const UserProfileForm = () => {
 
           <div className="bg-gray-100 py-4 rounded-md">
             <div className="text-black mx-12 bg-white p-4">
-              <div className="text-black flex items-center gap-4">
-                <h2 className=" text-md">Role</h2>
-                <input disabled placeholder={role_id} type="text" className="px-2 py-1 bg-gray-100 w-1/6" />
-              </div>
-              <div className=" text-black flex items-center justify-start mt-4">
-               {router.query.type == "CREATE"&& ( <div className="w-1/2 flex items-center justify-center">
-                  <label className="w-1/2 text-gray-700 text-sm font-bold mb-2" htmlFor="userName">
-                    <span className="text-red-500 p-1">*</span>User Profile
-                  </label>
-
-                  <select
-                    className="w-full px-1 py-2 border-b border-gray-500 rounded bg-white focus:outline-none focus:border-b focus-border-indigo-500"
-                    id="userName"
-                    value={`${selectedRole.role_id},${selectedRole.description}`}
-                    onChange={handleSelectRole}
-                  >
-                    <option
-                      className="focus:outline-none focus:border-b bg-white whitespace-nowrap w-full"
-                      value=""
-                    >
-                      Select Options
-                    </option>
-                    {menuRole.map((role) => (
-                      <option
-                        key={role.id}
-                        className="focus:outline-none focus:border-b bg-white whitespace-nowrap w-full"
-                        value={`${role.role_id},${role.description}`}
-                      >
-                        {role.role}
-                      </option>
-                    ))}
-                  </select>
-                </div>)}
-
-                {router.query.type == "view" &&(<div className="w-1/2 flex items-center justify-center">
-                  <label className="w-1/2 text-gray-700 text-sm font-bold mb-2" htmlFor="userName">
-                    <span className="text-red-500 p-1">*</span>User Profile
+              <div className=" text-black flex items-center justify-between mt-4">
+                <div className="w-1/2 flex items-center justify-center">
+                  <label className="w-1/2 text-gray-700 text-sm font-bold " htmlFor="userName">
+                    <span className="text-red-500 p-1"></span>Role
                   </label>
                   <input
                     disabled
-                    placeholder={check[0]?.U_profile_name}
+                    placeholder={role_id}
                     type="text"
-                    className="w-full px-1 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus-border-indigo-500"
+                    className="px-2 py-1 bg-gray-100 w-full"
                   />
+                </div>
+                {router.query.type == "Edit" &&(<div onClick={() => {
+                          router.push({
+                            pathname: "/form/user_profile_form",
+                            query: { type: "CREATE", role_id: role_id }
+                          });
+                        }} className="bg-green-700 rounded-md px-4 py-1 cursor-pointer text-white">
+                  Refresh Menu
                 </div>)}
+              </div>
+              <div className=" text-black flex items-center justify-start mt-4">
+                {router.query.type == "CREATE" && (
+                  <div className="w-1/2 flex items-center justify-center">
+                    <label className="w-1/2 text-gray-700 text-sm font-bold mb-2" htmlFor="userName">
+                      <span className="text-red-500 p-1">*</span>User Profile
+                    </label>
+
+                    <select
+                      className="w-full px-1 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus-border-indigo-500"
+                      id="userName"
+                      value={`${selectedRole.role_id},${selectedRole.description}`}
+                      onChange={handleSelectRole}
+                    >
+                      <option
+                        className="focus:outline-none focus:border-b bg-white whitespace-nowrap w-full"
+                        value=""
+                      >
+                        Select Options
+                      </option>
+                      {menuRole.map((role) => (
+                        <option
+                          key={role.id}
+                          className="focus:outline-none focus:border-b bg-white whitespace-nowrap w-full"
+                          value={`${role.role_id},${role.description}`}
+                        >
+                          {role.role}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {router.query.type == "Edit" && (
+                  <div className="w-1/2 flex items-center justify-center">
+                    <label className="w-1/2 text-gray-700 text-sm font-bold mb-2" htmlFor="userName">
+                      <span className="text-red-500 p-1">*</span>User Profile
+                    </label>
+                    <input
+                      disabled
+                      placeholder={check[0]?.U_profile_name}
+                      type="text"
+                      className="w-full px-1 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus-border-indigo-500"
+                    />
+                  </div>
+                )}
+
+                {router.query.type == "view" && (
+                  <div className="w-1/2 flex items-center justify-center">
+                    <label className="w-1/2 text-gray-700 text-sm font-bold mb-2" htmlFor="userName">
+                      <span className="text-red-500 p-1">*</span>User Profile
+                    </label>
+                    <input
+                      disabled
+                      placeholder={check[0]?.U_profile_name}
+                      type="text"
+                      className="w-full px-1 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus-border-indigo-500"
+                    />
+                  </div>
+                )}
               </div>
               <div className="mt-8 font-arial">
                 <h2 className="text-sm mb-4">Assign Menu Rights</h2>
@@ -244,104 +292,103 @@ const UserProfileForm = () => {
                         <td className="px-6 py-2 text-center dark:border-2 text-xs whitespace-nowrap font-medium text-gray-500  tracking-wider">
                           Approve
                         </td>
-                        
                       </tr>
                     </thead>
                     <tbody className="font-arial text- text-center">
-                      { router.query.type == "CREATE" &&
-                      (menus.map((menu, index) => (
-                        <tr className="bg-white divide-y border  divide-gray-200 text-xs" key={menu._id}>
-                          <td className="border-b px-4 py-2 flex items-center gap-4">
-                            <input
-                              type="checkbox"
-                              checked={menu.isEditable}
-                              onChange={() => {
-                                setMenus(
-                                  menus.map((el) =>
-                                    el._id === menu._id ? { ...el, isEditable: !el.isEditable } : el
-                                  )
-                                );
-                                setSelect(true);
-                              }}
-                            />
-                            {index + 1}
-                          </td>
-                          <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-left text-xs">
-                            {menu?.menu_name}
-                          </td>
-                          <td className="border px-4 py-2">
-                            <input
-                              type="checkbox"
-                              disabled={!menu.isEditable}
-                              checked={menu.isEditable ? menu.AddRight : false}
-                              onChange={() => {
-                                setMenus(
-                                  menus.map((el) =>
-                                    el._id === menu._id ? { ...el, AddRight: !el.AddRight } : el
-                                  )
-                                );
-                              }}
-                            />
-                          </td>
-                          <td className="border px-4 py-2">
-                            <input
-                              type="checkbox"
-                              disabled={!menu.isEditable}
-                              // checked={menu.EditRight}
-                              checked={menu.isEditable ? menu.EditRight : false}
-                              onChange={() => {
-                                setMenus(
-                                  menus.map((el) =>
-                                    el._id === menu._id ? { ...el, EditRight: !el.EditRight } : el
-                                  )
-                                );
-                              }}
-                            />
-                          </td>
-                          <td className="border px-4 py-2">
-                            <input
-                              type="checkbox"
-                              disabled={!menu.isEditable}
-                              checked={menu.isEditable ? menu.ViewRight : false}
-                              onChange={() => {
-                                setMenus(
-                                  menus.map((el) =>
-                                    el._id === menu._id ? { ...el, ViewRight: !el.ViewRight } : el
-                                  )
-                                );
-                              }}
-                            />
-                          </td>
-                          <td className="border px-4 py-2">
-                            <input
-                              type="checkbox"
-                              disabled={!menu.isEditable}
-                              checked={menu.isEditable ? menu.DeleteRight : false}
-                              onChange={() => {
-                                setMenus(
-                                  menus.map((el) =>
-                                    el._id === menu._id ? { ...el, DeleteRight: !el.DeleteRight } : el
-                                  )
-                                );
-                              }}
-                            />
-                          </td>
-                          <td>
-                            <input
-                              type="checkbox"
-                              className="border px-4 py-2"
-                              disabled={!menu.isEditable}
-                              checked={menu.isEditable ? menu.ApproveRight : false}
-                              onChange={() => {
-                                setMenus(
-                                  menus.map((el) =>
-                                    el._id === menu._id ? { ...el, ApproveRight: !el.ApproveRight } : el
-                                  )
-                                );
-                              }}
-                            />
-                          </td>
-                          <td className="border px-4 py-2">
+                      {router.query.type == "CREATE" &&
+                        menus.map((menu, index) => (
+                          <tr className="bg-white divide-y border  divide-gray-200 text-xs" key={menu._id}>
+                            <td className="border-b px-4 py-2 flex items-center gap-4">
+                              <input
+                                type="checkbox"
+                                checked={menu.isEditable}
+                                onChange={() => {
+                                  setMenus(
+                                    menus.map((el) =>
+                                      el._id === menu._id ? { ...el, isEditable: !el.isEditable } : el
+                                    )
+                                  );
+                                  setSelect(true);
+                                }}
+                              />
+                              {index + 1}
+                            </td>
+                            <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-left text-xs">
+                              {menu?.menu_name}
+                            </td>
+                            <td className="border px-4 py-2">
+                              <input
+                                type="checkbox"
+                                disabled={!menu.isEditable}
+                                checked={menu.isEditable ? menu.AddRight : false}
+                                onChange={() => {
+                                  setMenus(
+                                    menus.map((el) =>
+                                      el._id === menu._id ? { ...el, AddRight: !el.AddRight } : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td className="border px-4 py-2">
+                              <input
+                                type="checkbox"
+                                disabled={!menu.isEditable}
+                                // checked={menu.EditRight}
+                                checked={menu.isEditable ? menu.EditRight : false}
+                                onChange={() => {
+                                  setMenus(
+                                    menus.map((el) =>
+                                      el._id === menu._id ? { ...el, EditRight: !el.EditRight } : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td className="border px-4 py-2">
+                              <input
+                                type="checkbox"
+                                disabled={!menu.isEditable}
+                                checked={menu.isEditable ? menu.ViewRight : false}
+                                onChange={() => {
+                                  setMenus(
+                                    menus.map((el) =>
+                                      el._id === menu._id ? { ...el, ViewRight: !el.ViewRight } : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td className="border px-4 py-2">
+                              <input
+                                type="checkbox"
+                                disabled={!menu.isEditable}
+                                checked={menu.isEditable ? menu.DeleteRight : false}
+                                onChange={() => {
+                                  setMenus(
+                                    menus.map((el) =>
+                                      el._id === menu._id ? { ...el, DeleteRight: !el.DeleteRight } : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="checkbox"
+                                className="border px-4 py-2"
+                                disabled={!menu.isEditable}
+                                checked={menu.isEditable ? menu.ApproveRight : false}
+                                onChange={() => {
+                                  setMenus(
+                                    menus.map((el) =>
+                                      el._id === menu._id ? { ...el, ApproveRight: !el.ApproveRight } : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                            {/* <td className="border px-4 py-2">
                             <input
                               type="checkbox"
                               disabled={!menu.isEditable}
@@ -354,17 +401,17 @@ const UserProfileForm = () => {
                                 );
                               }}
                             />
-                          </td>
-                        </tr>
-                      )))}
+                          </td> */}
+                          </tr>
+                        ))}
 
                       {check.map(
                         (menu, index) => (
                           console.log("dd", menu.umenu_Name),
                           (
-                            <tr className="bg-white divide-y border  divide-gray-200 text-xs" key={menu._id}>
-                              <td className="border-b px-4 py-2 flex items-center gap-4 ">
-                                <input
+                            <tr className="bg-white divide-y border  divide-gray-200 text-xs " key={menu._id}>
+                              <td className="border-b px-4 py-2 justify-center flex items-center gap-4">
+                                {/* <input
                                   type="checkbox"
                                   checked={menu.isEditable}
                                   disabled={true}
@@ -376,7 +423,7 @@ const UserProfileForm = () => {
                                     );
                                     setSelect(true);
                                   }}
-                                />
+                                /> */}
                                 {index + 1}
                               </td>
                               <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-left text-xs">
@@ -412,7 +459,6 @@ const UserProfileForm = () => {
                                   checked={menu.wf_approval}
                                 />
                               </td>
-                             
                             </tr>
                           )
                         )
@@ -421,10 +467,26 @@ const UserProfileForm = () => {
                   </table>
                 </div>
 
-                {router.query.type !== "view" && (
+                {router.query.type == "CREATE" && (
                   <div className="button flex items-center gap-3 mt-6 mb-10">
                     <div onClick={handleSave} className="bg-green-700 px-4 py-1 cursor-pointer text-white">
                       Save
+                    </div>
+                    <div
+                      onClick={() => {
+                        router.push("/table/table_user_profile");
+                      }}
+                      className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
+                    >
+                      Close
+                    </div>
+                  </div>
+                )}
+
+                {router.query.type == "Edit" && (
+                  <div className="button flex items-center gap-3 mt-6 mb-10">
+                    <div onClick={handleSave} className="bg-green-700 px-4 py-1 cursor-pointer text-white">
+                      Update
                     </div>
                     <div
                       onClick={() => {

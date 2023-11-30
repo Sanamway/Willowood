@@ -151,17 +151,17 @@ const UserProfile = () => {
                       >
                         View
                       </button>
-                      <button
+                      {/* <button
                         onClick={() => {
                           router.push({
                             pathname: "/form/user_profile_form",
-                            query: { type: "Edit", id: item?.role_id }
+                            query: { type: "Edit", role_id: item?.role_id }
                           });
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
                       >
                         Edit
-                      </button>
+                      </button> */}
                       <button
                         onClick={() => {
                           deleteHandler(item?.role_id);
