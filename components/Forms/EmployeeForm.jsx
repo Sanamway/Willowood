@@ -1,16 +1,40 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
-
+import { useRouter } from "next/router";
 import Snapshot from "../EmployeeForm/Snapshot";
 import Personal from "../EmployeeForm/Personal";
 import Family from "../EmployeeForm/Family";
 import Bank from "../EmployeeForm/Bank";
 import History from "../EmployeeForm/History";
 import Documents from "../EmployeeForm/Documents";
-import { useState } from "react";
+import { url } from "@/constants/url";
+import axios from "axios";
 const EmployeeForm = () => {
-  const [formType, setFormType] = useState("Personal");
+  const router = useRouter();
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+  };
+  const [employeeData, setEmployeeData] = useState(null);
+  const getDataById = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_employee`, {
+        headers: headers,
+        params: { e_id: router.query.id },
+      });
+      const apires = await respond.data.data;
+      console.log("jl", apires)
+      setEmployeeData(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (router.query.type === "Add") return;
+    getDataById();
+  }, [router]);
+  const [formType, setFormType] = useState("Snapshot");
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white pb-22">
@@ -19,7 +43,7 @@ const EmployeeForm = () => {
           <span className="flex items-center gap-2 cursor-pointer">
             <AiTwotoneHome className="text-red-500" size={34} />
           </span>
-        </div> 
+        </div>
 
         <div className="w-[100%] flex ">
           <ul className="flex border-b  px-2 overflow-x-auto w-2/3 lg:flex border-b overflow-hidden ">
@@ -88,7 +112,7 @@ const EmployeeForm = () => {
                 href="#"
                 onClick={() => setFormType("History")}
               >
-                CTC 
+                CTC
               </a>
             </li>
             <li className="-mb-px mr-1 ">
@@ -106,12 +130,24 @@ const EmployeeForm = () => {
             </li>
           </ul>
         </div>
-        {formType === "Snapshot" && <Snapshot formType={setFormType} />}
-        {formType === "Personal" && <Personal formType={setFormType} />}
-        {formType === "Family" && <Family formType={setFormType} />}
-        {formType === "Bank" && <Bank formType={setFormType} />}
-        {formType === "Documents" && <Documents formType={setFormType} />}
-        {formType === "History" && <History formType={setFormType} />}
+        {formType === "Snapshot" && (
+          <Snapshot formType={setFormType} data={employeeData} />
+        )}
+        {formType === "Personal" && (
+          <Personal formType={setFormType} data={employeeData} />
+        )}
+        {formType === "Family" && (
+          <Family formType={setFormType} data={employeeData} />
+        )}
+        {formType === "Bank" && (
+          <Bank formType={setFormType} data={employeeData} />
+        )}
+        {formType === "Documents" && (
+          <Documents formType={setFormType} data={employeeData} />
+        )}
+        {formType === "History" && (
+          <History formType={setFormType} data={employeeData} />
+        )}
       </div>
     </Layout>
   );

@@ -2,6 +2,25 @@ import React, { useState, useEffect } from "react";
 
 const Bank = (props) => {
   const [formActive, setFormActive] = useState(false);
+  const [bankData, setBankData] = useState({
+    bankName: "",
+    beneficiaryName: "",
+    accountNumber: "",
+    branch: "",
+    ifsc: "",
+    reimbursement: "",
+  });
+  useEffect(() => {
+    if (props)
+      setBankData({
+        bankName: props.data?.bank_name || "",
+        beneficiaryName: props.data?.benef_name || "",
+        accountNumber: props.data?.baccount_no || "",
+        branch: props.data?.baccount_branch || "",
+        ifsc: props.data?.ifsc_code || "",
+        reimbursement: props.data?.reimburse_P_mode || "",
+      });
+  }, [props]);
 
   return (
     <form
@@ -25,7 +44,13 @@ const Bank = (props) => {
             type="text"
             id="inputField"
             placeholder="Bank Name"
-            disabled={!formActive}
+            value={bankData.bankName}
+            onChange={(e) =>
+              setBankData({
+                ...bankData,
+                bankName: e.target.value,
+              })
+            }
           />
         </div>
         <div className="w-2/3  px-2  lg:w-1/2 ">
@@ -40,7 +65,13 @@ const Bank = (props) => {
             type="text"
             id="inputField"
             placeholder="Beneficiary Name"
-            disabled={!formActive}
+            value={bankData.beneficiaryName}
+            onChange={(e) =>
+              setBankData({
+                ...bankData,
+                beneficiaryName: e.target.value,
+              })
+            }
           />
         </div>
       </div>
@@ -57,7 +88,13 @@ const Bank = (props) => {
             type="text"
             id="inputField"
             placeholder="Account No"
-            disabled={!formActive}
+            value={bankData.accountNumber}
+            onChange={(e) =>
+              setBankData({
+                ...bankData,
+                accountNumber: e.target.value,
+              })
+            }
           />
         </div>
         <div className="w-2/3  px-2  lg:w-1/2 ">
@@ -72,7 +109,13 @@ const Bank = (props) => {
             type="text"
             id="inputField"
             placeholder="Branch"
-            disabled={!formActive}
+            value={bankData.branch}
+            onChange={(e) =>
+              setBankData({
+                ...bankData,
+                branch: e.target.value,
+              })
+            }
           />
         </div>
       </div>
@@ -89,7 +132,13 @@ const Bank = (props) => {
             type="text"
             id="inputField"
             placeholder="IFSC Code"
-            disabled={!formActive}
+            value={bankData.ifsc}
+            onChange={(e) =>
+              setBankData({
+                ...bankData,
+                ifsc: e.target.value,
+              })
+            }
           />
         </div>
       </div>
@@ -107,7 +156,13 @@ const Bank = (props) => {
           <select
             className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
-            disabled={!formActive}
+            value={bankData.reimbursement}
+            onChange={(e) =>
+              setBankData({
+                ...bankData,
+                reimbursement: e.target.value,
+              })
+            }
           >
             <option
               value=""

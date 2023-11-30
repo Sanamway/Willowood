@@ -7,12 +7,14 @@ import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
+import { BiCheckCircle } from "react-icons/bi";
 import { CSVLink } from "react-csv";
 import { TbFileDownload } from "react-icons/tb";
 import Image from "next/image";
 import EmpImage from "../../public/EmpImage.jpeg";
 import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
+import { BsCheck2Square } from "react-icons/bs";
 
 const Employee = () => {
   const csvHeaders = [
@@ -62,9 +64,11 @@ const Employee = () => {
   };
 
   const [employeeDetails, setEmployeeDetails] = useState({
+    appNo: "",
     firstName: "",
     midName: "",
     lastName: "",
+    prefix: "",
     mobile: "",
     email: "",
     position: "",
@@ -74,69 +78,76 @@ const Employee = () => {
 
   //Defining the Validation Schema
   const validationSchema = Yup.object().shape({
-    companyId: Yup.string().required("Company Id is required"),
-    bgId: Yup.string().required("Business Segment is required"),
-    buId: Yup.string().required("Business Unit is required"),
-    zoneId: Yup.string().required("Zone is required"),
-    regionId: Yup.string().required("Region is required"),
-    territoryId: Yup.string().required("Territory is required"),
-    district: Yup.string().required("District is required"),
-    // territory: Yup.string().required("Territory is required"),
+    firstName: Yup.string().required("First Name is required"),
+    lastName: Yup.string().required("Last Name is required"),
+    prefix: Yup.string().required("Prefix is required"),
+    mobile: Yup.string().required("Mobile is required"),
+    email: Yup.string().required("Email is required"),
+    position: Yup.string().required("Position is required"),
+    commpany: Yup.string().required("Company is required"),
+    territory: Yup.string().required("Territory is required"),
   });
 
-  const [formErrors, setFormErrors] = useState({});
-
+  const [empIdState, setEmpIdState] = useState(false);
   const handleGenerateEmployee = async () => {
     try {
-      await validationSchema.validate(districtState, {
+      await validationSchema.validate(employeeDetails, {
         abortEarly: false,
       });
       const data = {
-        c_id: Number(districtState.companyId),
-        bu_id: Number(districtState.buId),
-        bg_id: Number(districtState.bgId),
-        z_id: Number(districtState.zoneId),
-        r_id: Number(districtState.regionId),
-        t_id: Number(districtState.territoryId),
-        district_name: districtState.district,
-        c_name: localStorage.getItem("c_name")
-          ? localStorage.getItem("c_name")
-          : "New Man",
-        ul_name: localStorage.getItem("ul_name")
-          ? localStorage.getItem("ul_name")
-          : "No Man",
+        appl_no: "Exapmle no",
+        c_id: Number(employeeDetails.commpany),
+
+        t_id: Number(employeeDetails.territory),
+        appl_no: "WCL-DL-HR-0000",
+        appl_dt: new Date(),
+        prefix: employeeDetails.prefix,
+        fname: employeeDetails.firstName,
+        mname: employeeDetails.midName,
+        lname: employeeDetails.lastName,
+        phone_number: employeeDetails.mobile,
+        pemail: employeeDetails.email,
+        emppos: employeeDetails.position,
       };
       const respond = await axios
-        .post(`${url}/api/add_district`, JSON.stringify(data), {
+        .post(`${url}/api/add_employee`, JSON.stringify(data), {
           headers: headers,
         })
         .then((res) => {
           if (!res) return;
-          toast.success("District added successfully!");
-          setTimeout(() => {
-            router.push("/table/table_district");
-          }, [3000]);
+          toast.success("Employee added successfully!");
+          console.log("kio", res);
+          setEmployeeDetails({
+            appNo: res.data.data.appl_no,
+            company: res.data.data.c_id,
+            territory: res.data.data.t_id,
+            prefix: res.data.data.prefix,
+            firstName: res.data.data.fname,
+            midName: res.data.data.mname,
+            lastName: res.data.data.lname,
+            mobile: res.data.data.phone_number,
+            email: res.data.data.pemail,
+            position: res.data.data.emppos,
+          });
+          setEmpIdState(res.data.data.e_id);
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.error;
       if (errorMessage?.includes("email_1")) {
         toast.error("Email already exist");
-      } else if (errorMessage?.includes("gst_no_1")) {
-        toast.error("GST number already exist");
-      } else if (errorMessage?.includes("district_name_1")) {
-        toast.error("District already exist");
-      } else {
+      } else if (errorMessage?.includes("phone_number")) {
+        toast.error("Mobile No. already exist");
+      } else if (errorMessage) {
         toast.error(errorMessage);
       }
-      const newErrors = {};
+
       errors?.inner?.forEach((error) => {
-        newErrors[error?.path] = error?.message;
+        toast.error(error?.message);
       });
-      setFormErrors(newErrors);
     }
   };
 
-  const [companyData, setCompanyData] = useState([]);
+  const [allCompany, setAllCompany] = useState([]);
   // Getting Company Information for the dropdown values
   const getCompanyInfo = async () => {
     try {
@@ -145,7 +156,7 @@ const Employee = () => {
       });
       const apires = await respond.data.data;
 
-      setCompanyData(apires.filter((item, idx) => item.isDeleted === false));
+      setAllCompany(apires.filter((item, idx) => item.isDeleted === false));
     } catch (error) {
       console.log(error);
     }
@@ -168,9 +179,28 @@ const Employee = () => {
   useEffect(() => {
     getTerritoryInfo();
     getCompanyInfo();
+    getAllEmployees();
   }, []);
+
+  const handleCloseModal = () => {
+    setisOpen(false);
+    setEmployeeDetails({
+      appNo: "",
+      firstName: "",
+      midName: "",
+      lastName: "",
+      prefix: "",
+      mobile: "",
+      email: "",
+      position: "",
+      commpany: "",
+      territory: "",
+    });
+    setEmpIdState(null);
+  };
   return (
     <Layout>
+      <Toaster position="bottom-center" reverseOrder={false} />
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
         <div className="flex flex-row justify-between px-2  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Employee</h2>
@@ -261,8 +291,8 @@ const Employee = () => {
                       <button
                         onClick={() => {
                           router.push({
-                            pathname: "/form/district_form",
-                            query: { id: item.ds_id, type: "Edit" },
+                            pathname: "/employee_details",
+                            query: { id: item.e_id, type: "Edit" },
                           });
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
@@ -316,7 +346,7 @@ const Employee = () => {
         <Dialog
           as="div"
           className="relative z-10   "
-          onClose={() => setisOpen(false)}
+          onClose={() => handleCloseModal()}
         >
           <Transition.Child
             as={Fragment}
@@ -353,17 +383,21 @@ const Employee = () => {
                   <div className="flex flex-col justify-center">
                     <h4 className="text-center text-gray-500">Welcome!</h4>
                     <h3 className="text-center text-gray-500 text-lg">
-                      Uttam Chand Aggarwal
+                      {employeeDetails.firstName} {employeeDetails.midName}{" "}
+                      {employeeDetails.lastName}
                     </h3>
                   </div>
-                  <div className="flex justify-center">
-                    <Image
-                      className="max-w-full "
-                      height={100}
-                      src={EmpImage}
-                      alt="Picture of the author"
-                    />
-                  </div>
+                  {!empIdState && (
+                    <div className="flex justify-center">
+                      <Image
+                        className="max-w-full "
+                        height={100}
+                        src={EmpImage}
+                        alt="Picture of the author"
+                      />
+                    </div>
+                  )}
+
                   <div className="flex flex-col gap-1">
                     <div className="flex flex-row gap-2 justify-between px-2 ">
                       <label
@@ -372,19 +406,55 @@ const Employee = () => {
                       >
                         First Name
                       </label>
-                      <input
-                        className=" px-3 py-1 text-sm border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                        type="text"
-                        id="small-input"
-                        placeholder="First Name"
-                        value={employeeDetails.firstName}
-                        onChange={(e) =>
-                          setEmployeeDetails({
-                            ...employeeDetails,
-                            firstName: e.target.value,
-                          })
-                        }
-                      />
+                      <div className="flex flex-row gap-1">
+                        {" "}
+                        <select
+                          className="   text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          id="stateSelect"
+                          value={employeeDetails.prefix}
+                          disabled={empIdState}
+                          onChange={(e) =>
+                            setEmployeeDetails({
+                              ...employeeDetails,
+                              prefix: e.target.value,
+                            })
+                          }
+                        >
+                          <option
+                            value=""
+                            className="focus:outline-none focus:border-b bg-white"
+                          >
+                            -- Prefix --
+                          </option>
+
+                          <option
+                            value="Mr."
+                            className="focus:outline-none focus:border-b bg-white"
+                          >
+                            Mr.
+                          </option>
+                          <option
+                            value="Mrs."
+                            className="focus:outline-none focus:border-b bg-white"
+                          >
+                            Mrs.
+                          </option>
+                        </select>
+                        <input
+                          className="  px-3 py-1 text-sm border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="small-input"
+                          placeholder="First Name"
+                          value={employeeDetails.firstName}
+                          disabled={empIdState}
+                          onChange={(e) =>
+                            setEmployeeDetails({
+                              ...employeeDetails,
+                              firstName: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
                     </div>
 
                     <div className="flex flex-row gap-2 justify-between px-2">
@@ -395,11 +465,12 @@ const Employee = () => {
                         Mid Name
                       </label>
                       <input
-                        className=" px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                         type="text"
                         id="small-input"
                         placeholder="Middle Name"
                         value={employeeDetails.midName}
+                        disabled={empIdState}
                         onChange={(e) =>
                           setEmployeeDetails({
                             ...employeeDetails,
@@ -417,11 +488,12 @@ const Employee = () => {
                         Last Name
                       </label>
                       <input
-                        className=" px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                         type="text"
                         id="small-input"
                         placeholder="Last Name"
                         value={employeeDetails.lastName}
+                        disabled={empIdState}
                         onChange={(e) =>
                           setEmployeeDetails({
                             ...employeeDetails,
@@ -439,11 +511,12 @@ const Employee = () => {
                         Mobile No
                       </label>
                       <input
-                        className=" px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                         type="text"
                         id="small-input"
                         placeholder="Mobile No"
                         value={employeeDetails.mobile}
+                        disabled={empIdState}
                         onChange={(e) =>
                           setEmployeeDetails({
                             ...employeeDetails,
@@ -460,11 +533,12 @@ const Employee = () => {
                         Email
                       </label>
                       <input
-                        className=" px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                         type="text"
                         id="small-input"
                         placeholder="Email"
                         value={employeeDetails.email}
+                        disabled={empIdState}
                         onChange={(e) =>
                           setEmployeeDetails({
                             ...employeeDetails,
@@ -481,11 +555,12 @@ const Employee = () => {
                         Position
                       </label>
                       <input
-                        className=" px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                         type="text"
                         id="small-input"
                         placeholder="Position"
                         value={employeeDetails.position}
+                        disabled={empIdState}
                         onChange={(e) =>
                           setEmployeeDetails({
                             ...employeeDetails,
@@ -502,33 +577,142 @@ const Employee = () => {
                       >
                         Territory
                       </label>
-                      <input
-                        className=" px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                        type="text"
-                        id="small-input"
-                        placeholder="Territory"
+                      <select
+                        className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        id="stateSelect"
                         value={employeeDetails.territory}
+                        disabled={empIdState}
                         onChange={(e) =>
                           setEmployeeDetails({
                             ...employeeDetails,
                             territory: e.target.value,
                           })
                         }
-                      />
-                    </div>
-                    <div className="flex justify-around bg-green-400 m-4">
-                      <button
-                        type="button"
-                        className="text-white"
-                        onClick={() => handleGenerateEmployee()}
                       >
-                        Generate
-                      </button>
-
-                      <button type="button" className="text-white">
-                        Cancel
-                      </button>
+                        <option
+                          value=""
+                          className="focus:outline-none focus:border-b bg-white"
+                        >
+                          Select
+                        </option>
+                        {allTerritory.map((item, idx) => (
+                          <option
+                            value={item.t_id}
+                            className="focus:outline-none focus:border-b bg-white"
+                            key={idx}
+                          >
+                            {item.territory_name}
+                          </option>
+                        ))}
+                      </select>
                     </div>
+
+                    <div className="flex flex-row gap-2 justify-between px-2">
+                      <label
+                        className="block text-gray-700 text-sm font-bold justify-self-center"
+                        htmlFor="inputField"
+                      >
+                        Company
+                      </label>
+                      <select
+                        className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        id="stateSelect"
+                        value={employeeDetails.commpany}
+                        disabled={empIdState}
+                        onChange={(e) =>
+                          setEmployeeDetails({
+                            ...employeeDetails,
+                            commpany: e.target.value,
+                          })
+                        }
+                      >
+                        <option
+                          value=""
+                          className="focus:outline-none focus:border-b bg-white"
+                        >
+                          Select
+                        </option>
+                        {allCompany.map((item, idx) => (
+                          <option
+                            value={item.c_id}
+                            className="focus:outline-none focus:border-b bg-white"
+                            key={idx}
+                          >
+                            {item.cmpny_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {empIdState && (
+                      <div className="flex flex-row gap-2 justify-between px-2">
+                        <label
+                          className="block text-gray-700 text-sm font-bold justify-self-center"
+                          htmlFor="inputField"
+                        >
+                          Application No.
+                        </label>
+
+                        <input
+                          className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="small-input"
+                          placeholder="Position"
+                          value={employeeDetails.appNo}
+                          disabled={empIdState}
+                          onChange={(e) =>
+                            setEmployeeDetails({
+                              ...employeeDetails,
+                              appNo: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    )}
+                    {empIdState && (
+                      <div className="flex flex-col items-center gap-1 w-full mt-3">
+                        <BiCheckCircle className="text-green-500 text-4xl" />
+
+                        <p className="text-lg font-bold">
+                          Thankyou for filling out the form
+                        </p>
+                        <small className="text-center">
+                          Please don'nt forget your employee application
+                          refrence number to your fill the form
+                          <br />
+                          For any furthur inquery please, contact
+                          hr@willowood.com
+                        </small>
+                      </div>
+                    )}
+                    {empIdState ? (
+                      <div className="flex justify-center mt-2">
+                        <div
+                          className="text-center w-40   bg-green-700 px-4 py-1 text-white  cursor-pointer"
+                          onClick={() => handleCloseModal()}
+                        >
+                          Close
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex justify-around bg-green-400 m-4">
+                        <button
+                          type="button"
+                          className="text-white"
+                          onClick={() => handleGenerateEmployee()}
+                        >
+                          Generate
+                        </button>
+
+                        <button
+                          type="button"
+                          className="text-white"
+                          onClick={() => handleCloseModal()}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
