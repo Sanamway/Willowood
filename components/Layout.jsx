@@ -14,6 +14,7 @@ import Footer from "./Footer";
 import { Popover } from "@headlessui/react";
 import { useRouter } from "next/router";
 
+
 const Layout = ({ children }) => {
   const router = useRouter();
   const [isOpen, setOpen] = useState(null);
@@ -36,8 +37,9 @@ const Layout = ({ children }) => {
   };
 
   const menuItems = [
+    { id: 1, label: "Home", icon: AiOutlineHome, link: "/" },
     { id: 1, label: "Login", icon: BiLogInCircle, link: "/login" },
-    { id: 1, label: "User Role Profile", icon: AiOutlineHome, link: "/table/table_user_profile" },
+    { id: 1, label: "User Role Profile", icon: BiUser, link: "/table/table_user_profile" },
     { id: 2, label: "User Information", icon: BiUser, link: "/table/table_user_information" },
     { id: 2.1, label: "Assign Role Profile", icon: BiUser, link: "/table/table_assign_role" },
     { id: 2.2, label: "User Assign Business", icon: BiUser, link: "/table/table_user_assign_business" },
@@ -130,7 +132,7 @@ const Layout = ({ children }) => {
                       onClick={() => {
                         router.push(menu.link);
                       }}
-                      className="whitespace-nowrap text-[0.89rem"
+                      className="whitespace-nowrap text-[0.8rem]"
                     >
                       {menu.label}
                     </h2>

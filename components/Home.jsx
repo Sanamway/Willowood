@@ -1,198 +1,291 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "./Layout";
 import Footer from "./Footer";
+import Profile from "../public/userimg.jpg";
+import { FaRegStar } from "react-icons/fa";
+import { LuTrophy } from "react-icons/lu";
+import { GiSprout } from "react-icons/gi";
+import { FaTractor } from "react-icons/fa";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { FaMoneyBillTrendUp } from "react-icons/fa6";
+import { FaRegWindowMinimize } from "react-icons/fa";
+import { AiOutlineClose } from "react-icons/ai";
+import Image from "next/image";
+
 const HomePage = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 9500);
+  }, []);
+
+  const users = [
+    {
+      name: "Satish",
+      img: "https://i.pravatar.cc/250",
+      time: "yesterday"
+    },
+
+    {
+      name: "Satish",
+      img: "https://i.pravatar.cc/250?img=38",
+      time: "yesterday"
+    },
+
+    {
+      name: "Satish",
+      img: "https://i.pravatar.cc/250?img=7",
+      time: "yesterday"
+    },
+    {
+      name: "Satish",
+      img: "https://i.pravatar.cc/250?img=6",
+      time: "today"
+    },
+    {
+      name: "Satish",
+      img: "https://i.pravatar.cc/250?img=5",
+      time: "12pm"
+    },
+    {
+      name: "Satish",
+      img: "https://i.pravatar.cc/250?img=1",
+      time: "yesterday"
+    },
+    {
+      name: "Satish",
+      img: "https://i.pravatar.cc/250?img=2",
+      time: "yesterday"
+    },
+    {
+      name: "Satish",
+      img: "https://i.pravatar.cc/250?img=3",
+      time: "yesterday"
+    }
+  ];
+
   return (
     <Layout>
-      <div className="h-screen overflow-auto ">
-        <div className="text-black bg-white max-w-full font-sans h-[52px]">
-          <h2 className="font-rale font-normal text-3xl px-5 py-2">HomePage</h2>
+      <section className=" bg-gray-100 h-screen  ">
+        {/* card one  */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+          <div className="bg-orange-500 p-1.5 flex flex-col items-center justify-center gap-2 rounded-md shadow-md text-white text-center">
+            <div className="icon ">
+              <FaRegStar size={35}></FaRegStar>
+            </div>
+            <h3 className="text-[20px] font-bold ">A+</h3>
+            <strong className="block p-2">My Rating</strong>
+          </div>
+
+          <div className="bg-blue-500 p-1.5 flex flex-col items-center justify-center gap-2 rounded-md shadow-md text-white text-center">
+            <div className="icon">
+              <LuTrophy size={35}></LuTrophy>
+            </div>
+            <h3 className="text-[20px] font-bold ">125</h3>
+            <strong className="block p-2">My Rating</strong>
+          </div>
+
+          <div className="bg-pink-500 p-1.5  flex flex-col items-center justify-center gap-2 rounded-md shadow-md text-white text-center">
+            <div className="icon">
+              <GiSprout size={35}></GiSprout>
+            </div>
+            <h3 className="text-[20px] font-bold ">5</h3>
+            <strong className="block p-2">Add New Dealer</strong>
+          </div>
+
+          <div className="bg-green-500 p-1.5 flex flex-col items-center justify-center gap-2 rounded-md shadow-md text-white text-center">
+            <div className="icon">
+              <FaTractor size={35}></FaTractor>
+            </div>
+            <h3 className="text-[20px] font-bold ">2566</h3>
+            <strong className="block p-2">Total Farmers</strong>
+          </div>
         </div>
-        {/* <div className="bg-gray-300"></div> */}
-        <section classNameName="bg-[#f8f8f8] ">
-          <div className="w-[1000px] mx-auto p-5 sm:p-10 md:p-16">
-            <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-10">
-              <div className="rounded overflow-hidden shadow-lg">
-                <a href="#"></a>
-                <div className="relative">
-                  <a href="#">
-                    <img
-                      className="w-full"
-                      src="https://images.pexels.com/photos/196667/pexels-photo-196667.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"
-                      alt="Sunset in the mountains"
-                    />
-                    <div className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
-                  </a>
-                  <a href="#!">
-                    <div className="absolute bottom-0 left-0 bg-indigo-600 px-4 py-2 text-white text-sm hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                      Photos
-                    </div>
-                  </a>
 
-                  <a href="!#">
-                    <div className="text-sm absolute top-0 right-0 bg-indigo-600 px-4 text-white rounded-full h-16 w-16 flex flex-col items-center justify-center mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                      <span className="font-bold">27</span>
-                      <small>March</small>
-                    </div>
-                  </a>
-                </div>
-                <div className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-semibold text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out"
-                  >
-                    Best View in Newyork City
-                  </a>
-                  <p className="text-gray-500 text-sm">
-                    The city that never sleeps
-                  </p>
-                </div>
-                <div className="px-6 py-4 flex flex-row items-center">
-                  <span
-                    href="#"
-                    className="py-1 text-sm font-regular text-gray-900 mr-1 flex flex-row items-center"
-                  >
-                    <span className="ml-1">6 mins ago</span>
-                  </span>
-                </div>
+        {/* card two */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+          <div className="bg-[#ff6b6c] rounded-md shadow-md text-white text-center">
+            <div className="flex items-center justify-center gap-2 p-3">
+              <div className="icon">
+                <FaRegCalendarAlt size={35}></FaRegCalendarAlt>
               </div>
-              <div className="rounded overflow-hidden shadow-lg">
-                <a href="#"></a>
-                <div className="relative">
-                  <a href="#">
-                    <img
-                      className="w-full"
-                      src="https://images.pexels.com/photos/1653877/pexels-photo-1653877.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"
-                      alt="Sunset in the mountains"
-                    />
-                    <div className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
-                  </a>
-                  <a href="#!">
-                    <div className="absolute bottom-0 left-0 bg-indigo-600 px-4 py-2 text-white text-sm hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                      Photos
-                    </div>
-                  </a>
+              <div className="border-l-2 w-full ">
+                <div className="flex items-center justify-between px-4 w-full gap-2 ">
+                  <h2>Present</h2>
+                  <h2>43</h2>
+                </div>
 
-                  <a href="!#">
-                    <div className="text-sm absolute top-0 right-0 bg-indigo-600 px-4 text-white rounded-full h-16 w-16 flex flex-col items-center justify-center mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                      <span className="font-bold">20</span>
-                      <small>March</small>
-                    </div>
-                  </a>
+                <div className="flex items-center justify-between px-4 w-full gap-2 ">
+                  <h2>Absent</h2>
+                  <h2>43</h2>
                 </div>
-                <div className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-semibold text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out"
-                  >
-                    Best Pizza in Town
-                  </a>
-                  <p className="text-gray-500 text-sm">
-                    The collection of best pizza images in Newyork city
-                  </p>
+                <div className="flex items-center justify-between px-4 w-full gap-2 ">
+                  <h2>Present</h2>
+                  <h2>43</h2>
                 </div>
-                <div className="px-6 py-4 flex flex-row items-center">
-                  <span
-                    href="#"
-                    className="py-1 text-sm font-regular text-gray-900 mr-1 flex flex-row justify-between items-center"
-                  >
-                    <span className="ml-1">3 mins read</span>
-                  </span>
-                </div>
-              </div>
-              <div className="rounded overflow-hidden shadow-lg">
-                <a href="#"></a>
-                <div className="relative">
-                  <a href="#">
-                    <img
-                      className="w-full"
-                      src="https://images.pexels.com/photos/257816/pexels-photo-257816.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"
-                      alt="Sunset in the mountains"
-                    />
-                    <div className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
-                  </a>
-                  <a href="#!">
-                    <div className="absolute bottom-0 left-0 bg-indigo-600 px-4 py-2 text-white text-sm hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                      Photos
-                    </div>
-                  </a>
 
-                  <a href="!#">
-                    <div className="text-sm absolute top-0 right-0 bg-indigo-600 px-4 text-white rounded-full h-16 w-16 flex flex-col items-center justify-center mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                      <span className="font-bold">15</span>
-                      <small>April</small>
-                    </div>
-                  </a>
-                </div>
-                <div className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-semibold text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out"
-                  >
-                    Best Salad Images ever
-                  </a>
-                  <p className="text-gray-500 text-sm">
-                    The collection of best salads of town in pictures
-                  </p>
-                </div>
-                <div className="px-6 py-4 flex flex-row items-center">
-                  <span
-                    href="#"
-                    className="py-1 text-sm font-regular text-gray-900 mr-1 flex flex-row justify-between items-center"
-                  >
-                    <span className="ml-1">6 mins read</span>
-                  </span>
-                </div>
-              </div>
-
-              <div className="rounded overflow-hidden shadow-lg">
-                <a href="#"></a>
-                <div className="relative">
-                  <a href="#">
-                    <img
-                      className="w-full"
-                      src="https://images.pexels.com/photos/257816/pexels-photo-257816.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"
-                      alt="Sunset in the mountains"
-                    />
-                    <div className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
-                  </a>
-                  <a href="#!">
-                    <div className="absolute bottom-0 left-0 bg-indigo-600 px-4 py-2 text-white text-sm hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                      Photos
-                    </div>
-                  </a>
-
-                  <a href="!#">
-                    <div className="text-sm absolute top-0 right-0 bg-indigo-600 px-4 text-white rounded-full h-16 w-16 flex flex-col items-center justify-center mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                      <span className="font-bold">15</span>
-                      <small>April</small>
-                    </div>
-                  </a>
-                </div>
-                <div className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-semibold text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out"
-                  >
-                    Best Salad Images ever
-                  </a>
-                  <p className="text-gray-500 text-sm">
-                    The collection of best salads of town in pictures
-                  </p>
-                </div>
-                <div className="px-6 py-4 flex flex-row items-center">
-                  <span
-                    href="#"
-                    className="py-1 text-sm font-regular text-gray-900 mr-1 flex flex-row justify-between items-center"
-                  >
-                    <span className="ml-1">6 mins read</span>
-                  </span>
+                <div className="flex items-center justify-between px-4 w-full gap-2 ">
+                  <h2>Weekly Off</h2>
+                  <h2>43</h2>
                 </div>
               </div>
             </div>
+            <div className="mytext flex items-center justify-center bg-blue-600 rounded">
+              <strong className="block p-2 ">Attendance</strong>
+            </div>
           </div>
-        </section>
-      </div>
+
+          <div className="bg-[#5B5F97] rounded-md shadow-md text-white text-center">
+            <div className="flex items-center justify-center gap-2 p-3">
+              <div className="icon">
+                <FaMoneyBillTrendUp size={35}></FaMoneyBillTrendUp>
+              </div>
+              <div className="border-l-2 w-full ">
+                <div className="flex items-center justify-between px-4 w-full gap-2 ">
+                  <h2>Total Visit</h2>
+                  <h2>25</h2>
+                </div>
+
+                <div className="flex items-center justify-between  px-4 w-full gap-2 ">
+                  <h2>Expense</h2>
+                  <h2>25K</h2>
+                </div>
+
+                <div className="flex items-center justify-between  px-4 w-full gap-2 ">
+                  <h2>Outstation</h2>
+                  <h2>25K</h2>
+                </div>
+
+                <div className="flex items-center justify-between  px-4 w-full gap-2 ">
+                  <h2>Interstate</h2>
+                  <h2>25K</h2>
+                </div>
+              </div>
+            </div>
+            <div className="mytext flex items-center justify-center bg-pink-600 rounded">
+              <strong className="block p-2">My Expense</strong>
+            </div>
+          </div>
+
+          <div className="bg-[#FFA737] rounded-md shadow-md text-white text-center">
+            <div className="flex items-center justify-center gap-2 p-3">
+              <div className="icon">
+                <FaMoneyBillTrendUp size={35}></FaMoneyBillTrendUp>
+              </div>
+              <div className="border-l-2 w-full ">
+                <div className="flex items-center justify-between px-4 w-full gap-2 ">
+                  <h2>Total Visit</h2>
+                  <h2>25</h2>
+                </div>
+
+                <div className="flex items-center justify-between  px-4 w-full gap-2 ">
+                  <h2>Expense</h2>
+                  <h2>25K</h2>
+                </div>
+
+                <div className="flex items-center justify-between  px-4 w-full gap-2 ">
+                  <h2>Outstation</h2>
+                  <h2>25K</h2>
+                </div>
+
+                <div className="flex items-center justify-between  px-4 w-full gap-2 ">
+                  <h2>Interstate</h2>
+                  <h2>25K</h2>
+                </div>
+              </div>
+            </div>
+            <div className="mytext flex items-center justify-center bg-teal-600 rounded">
+              <strong className="block p-2">My Team</strong>
+            </div>
+          </div>
+          <div className="bg-[#5B1865] rounded-md shadow-md text-white text-center">
+            <div className="flex items-center justify-center gap-2 p-3">
+              <div className="icon">
+                <FaMoneyBillTrendUp size={35}></FaMoneyBillTrendUp>
+              </div>
+              <div className="border-l-2 w-full ">
+                <div className="flex items-center justify-between px-4 w-full gap-2 ">
+                  <h2>Total Visit</h2>
+                  <h2>25</h2>
+                </div>
+
+                <div className="flex items-center justify-between  px-4 w-full gap-2 ">
+                  <h2>Expense</h2>
+                  <h2>25K</h2>
+                </div>
+
+                <div className="flex items-center justify-between  px-4 w-full gap-2 ">
+                  <h2>Outstation</h2>
+                  <h2>25K</h2>
+                </div>
+
+                <div className="flex items-center justify-between  px-4 w-full gap-2 ">
+                  <h2>Interstate</h2>
+                  <h2>25K</h2>
+                </div>
+              </div>
+            </div>
+            <div className="mytext flex items-center justify-center bg-rose-600 rounded">
+              <strong className="block p-2">Approvals</strong>
+            </div>
+          </div>
+        </div>
+
+        {/* chat gird display  */}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+          {/* new users  */}
+          <div className="bg-teal-800 text-white p-4 rounded-md shadow-md">
+            <div className="flex items-center justify-between w-full">
+              <h2>Latest Members</h2>
+              <div className="flex items-center justify-between gap-2">
+                <h2>8 new Members</h2>
+                <button><FaRegWindowMinimize/></button>
+                <button><AiOutlineClose/></button>
+              </div>
+            </div>
+            <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2">
+              {users.map((item) => (
+                <div className="flex flex-col items-center justify-center">
+                  <img className="h-[3.5rem] w-[3.5rem] rounded-full" src={item.img}></img>
+                  <div className="mt-2 flex flex-col items-center justify-center">
+                    <h2 className="text-sm">{item.name}</h2>
+                    <h3 className="text-xs">{item.time}</h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* chat box  */}
+          <div className="bg-teal-800 text-white p-4 rounded-md shadow-md">
+            <div className="flex items-center justify-between w-full">
+              <h2>Latest Members</h2>
+              <div className="flex items-center justify-between gap-2">
+                <h2>8 new Members</h2>
+                <button><FaRegWindowMinimize/></button>
+                <button><AiOutlineClose/></button>
+              </div>
+            </div>
+            <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2">
+              {users.map((item) => (
+                <div className="flex flex-col items-center justify-center">
+                  <img className="h-[3.5rem] w-[3.5rem] rounded-full" src={item.img}></img>
+                  <div className="mt-2 flex flex-col items-center justify-center">
+                    <h2 className="text-sm">{item.name}</h2>
+                    <h3 className="text-xs">{item.time}</h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="bg-white p-4 rounded-md shadow-md">
+            <p className="text-gray-800">Satish</p>
+            <p className="text-gray-600">Check</p>
+          </div>
+        </div>
+      </section>
     </Layout>
   );
 };

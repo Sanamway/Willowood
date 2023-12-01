@@ -241,3 +241,10 @@ body {
 }
 
 
+/* homepagetbscroll */
+.tabscrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+
+
