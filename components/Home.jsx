@@ -10,10 +10,12 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { FaRegWindowMinimize } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
-import Image from "next/image";
+import { cardData } from "@/constants/cardData";
+import { TiMessages } from "react-icons/ti";
 
 const HomePage = () => {
   const [loading, setLoading] = useState(true);
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     setTimeout(() => {
@@ -21,50 +23,30 @@ const HomePage = () => {
     }, 9500);
   }, []);
 
-  const users = [
+  const chatLog = [
     {
-      name: "Satish",
-      img: "https://i.pravatar.cc/250",
-      time: "yesterday"
-    },
-
-    {
-      name: "Satish",
-      img: "https://i.pravatar.cc/250?img=38",
-      time: "yesterday"
-    },
-
-    {
-      name: "Satish",
-      img: "https://i.pravatar.cc/250?img=7",
-      time: "yesterday"
+      type: "user",
+      message: "Hello, how are you?"
     },
     {
-      name: "Satish",
-      img: "https://i.pravatar.cc/250?img=6",
-      time: "today"
+      type: "other",
+      message: "Hi! I'm doing well, thank you for asking."
     },
     {
-      name: "Satish",
-      img: "https://i.pravatar.cc/250?img=5",
-      time: "12pm"
+      type: "user",
+      message: "That's great to hear!"
     },
     {
-      name: "Satish",
-      img: "https://i.pravatar.cc/250?img=1",
-      time: "yesterday"
+      type: "other",
+      message: "Yes, indeed. How about you?"
     },
     {
-      name: "Satish",
-      img: "https://i.pravatar.cc/250?img=2",
-      time: "yesterday"
-    },
-    {
-      name: "Satish",
-      img: "https://i.pravatar.cc/250?img=3",
-      time: "yesterday"
+      type: "user",
+      message: "I'm good too, thanks."
     }
   ];
+
+  const handleSumbit = () => {};
 
   return (
     <Layout>
@@ -235,19 +217,23 @@ const HomePage = () => {
 
         {/* chat gird display  */}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 ">
           {/* new users  */}
           <div className="bg-teal-800 text-white p-4 rounded-md shadow-md">
             <div className="flex items-center justify-between w-full">
               <h2>Latest Members</h2>
               <div className="flex items-center justify-between gap-2">
                 <h2>8 new Members</h2>
-                <button><FaRegWindowMinimize/></button>
-                <button><AiOutlineClose/></button>
+                <button>
+                  <FaRegWindowMinimize />
+                </button>
+                <button>
+                  <AiOutlineClose />
+                </button>
               </div>
             </div>
-            <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2">
-              {users.map((item) => (
+            <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2 pb-4">
+              {cardData?.map((item) => (
                 <div className="flex flex-col items-center justify-center">
                   <img className="h-[3.5rem] w-[3.5rem] rounded-full" src={item.img}></img>
                   <div className="mt-2 flex flex-col items-center justify-center">
@@ -258,31 +244,151 @@ const HomePage = () => {
               ))}
             </div>
           </div>
+
           {/* chat box  */}
-          <div className="bg-teal-800 text-white p-4 rounded-md shadow-md">
-            <div className="flex items-center justify-between w-full">
-              <h2>Latest Members</h2>
+
+          <div className="bg-white text-black p-2 rounded-md shadow-md">
+            <div className="flex  items-center bg-yellow-500 p-1 px-2 rounded-md justify-between w-full">
+              <h2 className="text-sm font-bold text-gray-700">Direct Chat</h2>
               <div className="flex items-center justify-between gap-2">
-                <h2>8 new Members</h2>
-                <button><FaRegWindowMinimize/></button>
-                <button><AiOutlineClose/></button>
+                <button>
+                  <FaRegWindowMinimize />
+                </button>
+                <button>
+                  <TiMessages />
+                </button>
+                <button>
+                  <AiOutlineClose />
+                </button>
               </div>
             </div>
-            <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2">
-              {users.map((item) => (
-                <div className="flex flex-col items-center justify-center">
-                  <img className="h-[3.5rem] w-[3.5rem] rounded-full" src={item.img}></img>
-                  <div className="mt-2 flex flex-col items-center justify-center">
-                    <h2 className="text-sm">{item.name}</h2>
-                    <h3 className="text-xs">{item.time}</h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-2 ">
+              <div className="col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4">
+                <div className="flex flex-col justify-center">
+                  <div className="px-1 text-black font-bold text-sm">Satish</div>
+                  <div className="h-[200px] overflow-y-scroll chat-scrollbar">
+                    {chatLog.map((message, index) => (
+                      <div
+                        key={index}
+                        className={`flex ${message.type === "user" ? "justify-end" : "justify-start"} mb-4`}
+                      >
+                        <div
+                          className={`bg-${
+                            message.type === "user" ? "green-500" : "gray-700"
+                          } px-4 py-2 rounded-lg ${
+                            message.type === "user" ? "text-white" : "text-black "
+                          } max-w-[50rem] text-xs  `}
+                        >
+                          {message.message}
+                        </div>
+                      </div>
+                    ))}
+                    {!loading && (
+                      <div className="flex justify-start mb-2">
+                        <div className="bg-gra px-4 py-2 rounded-lg max-w-md">
+                          <div className="flex items-center animate-pulse">
+                            <div className="w-2 h-2 bg-black rounded-full mr-2"></div>
+                            <div className="w-2 h-2 bg-black rounded-full mr-2"></div>
+                            <div className="w-2 h-2 bg-black rounded-full mr-2"></div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
+                  <form onSubmit={handleSumbit} className="flex-none text-sm pt-2 ">
+                    <div className="flex rounded-lg border border-gray-200">
+                      <input
+                        type="text"
+                        className="flex-grow text-black px-2 py-1.5 bg-transparent focus:outline-none"
+                        placeholder="Type a message"
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                      />
+                      <button
+                        type="submit"
+                        className="bg-green-500  rounded-r-md px-2 py-1 text-white font-semibold focus:outline-none hover:bg-green-600 transition-colors duration-300"
+                      >
+                        Send
+                      </button>
+                    </div>
+                  </form>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
-          <div className="bg-white p-4 rounded-md shadow-md">
-            <p className="text-gray-800">Satish</p>
-            <p className="text-gray-600">Check</p>
+
+          {/* task card  */}
+
+          <div className="bg-white text-black p-2 rounded-md shadow-md">
+            <div className="flex items-center bg-yellow-500 p-1 px-2 rounded-md justify-between w-full">
+              <h2 className="text-sm font-bold text-gray-700">Direct Chat</h2>
+              <div className="flex items-center justify-between gap-2">
+                <button>
+                  <FaRegWindowMinimize />
+                </button>
+                <button>
+                  <TiMessages />
+                </button>
+                <button>
+                  <AiOutlineClose />
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-2  ">
+              <div className="col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4">
+                <div className="flex flex-col justify-center">
+                  <div className="px-1 text-black font-bold text-sm">Satish</div>
+                  <div className="h-[200px] overflow-y-scroll chat-scrollbar">
+                    {chatLog.map((message, index) => (
+                      <div
+                        key={index}
+                        className={`flex ${message.type === "user" ? "justify-end" : "justify-start"} mb-4`}
+                      >
+                        <div
+                          className={`bg-${
+                            message.type === "user" ? "green-500" : "gray-700"
+                          } px-4 py-2 rounded-lg ${
+                            message.type === "user" ? "text-white" : "text-black "
+                          } max-w-[50rem] text-xs  `}
+                        >
+                          {message.message}
+                        </div>
+                      </div>
+                    ))}
+                    {!loading && (
+                      <div className="flex justify-start mb-2">
+                        <div className="bg-gra px-4 py-2 rounded-lg max-w-md">
+                          <div className="flex items-center animate-pulse">
+                            <div className="w-2 h-2 bg-black rounded-full mr-2"></div>
+                            <div className="w-2 h-2 bg-black rounded-full mr-2"></div>
+                            <div className="w-2 h-2 bg-black rounded-full mr-2"></div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <form onSubmit={handleSumbit} className="flex-none text-sm pt-2 ">
+                    <div className="flex rounded-lg border border-gray-200">
+                      <input
+                        type="text"
+                        className="flex-grow text-black px-2 py-1.5 bg-transparent focus:outline-none"
+                        placeholder="Type a message"
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                      />
+                      <button
+                        type="submit"
+                        className="bg-green-500  rounded-r-md px-2 py-1 text-white font-semibold focus:outline-none hover:bg-green-600 transition-colors duration-300"
+                      >
+                        Send
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
