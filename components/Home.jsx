@@ -12,10 +12,12 @@ import { FaRegWindowMinimize } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { cardData } from "@/constants/cardData";
 import { TiMessages } from "react-icons/ti";
+import { useRouter } from "next/router";
 
 const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [inputValue, setInputValue] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     setTimeout(() => {
@@ -47,6 +49,24 @@ const HomePage = () => {
   ];
 
   const handleSumbit = () => {};
+  const [isUser, setUser] = useState(false);
+
+  useEffect(() => {
+    if (window.localStorage) {
+      const isLoggedInInLocalStorage = !!localStorage.getItem("uid");
+      const user_name = localStorage.getItem("user_name");
+      const uid = localStorage.getItem("uid");
+      const email_id = localStorage.getItem("email_id");
+      setUser(isLoggedInInLocalStorage);
+    }
+
+    if(!localStorage.getItem("uid")){
+      router.push('/login')
+    }
+  
+  }, []);
+
+  
 
   return (
     <Layout>

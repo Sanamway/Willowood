@@ -2,6 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import { url } from "@/constants/url";
+import toast, { Toaster } from "react-hot-toast";
 
 function ConfirmModal({ onClose, isOpen, onOpen, userId, onDeletedData, method, endpoints }) {
   console.log("frmmod", userId)
@@ -15,17 +16,25 @@ function ConfirmModal({ onClose, isOpen, onOpen, userId, onDeletedData, method, 
     try {
       const resp = await axios[method](`${url}/api/${endpoints}/${userId}`, { headers });
       const respdata = await resp.data.data;
+      console.log("modres", respdata)
       if (respdata) {
         onDeletedData();
         onClose();
       }
     } catch (error) {
+      console.log("moderr", error?.response?.data.message)
+      const errMsg = error?.response?.data.message
+      if(errMsg){
+        toast.error(errMsg)
+      }
+      // toast.error(error)
       console.log(error)
     }
   };
 
   return (
     <>
+      <Toaster position="bottom-center" reverseOrder={false} />
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={onClose}>
           <Transition.Child

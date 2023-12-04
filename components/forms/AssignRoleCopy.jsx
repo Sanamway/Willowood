@@ -190,7 +190,7 @@ const AssignRoleCopy = () => {
 
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className="h-screen overflow-auto w-full font-arial bg-gray-100 ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Assign Role Profile to User</h2>
@@ -216,7 +216,7 @@ const AssignRoleCopy = () => {
           </div>
         </div>
 
-        <div className="bg-gray-100 py-4 h-screen rounded-md">
+        <div className="bg-gray py-4 h-screen rounded-md">
           <div className="text-black mx-12 bg-white p-4 ">
             <div className="flex flex-col ">
               { router.query.type ==="view" &&
@@ -319,7 +319,7 @@ const AssignRoleCopy = () => {
             <div className="mt-4 font-arial">
               <h2 className="text-sm mb-4"> Display Assign Menu Rights</h2>
               <div className="overflow-x-auto">
-                <table className="min-w-full">
+                <table className="min-w-full mb-4">
                   <thead className="font-arial border-b">
                     <tr className="border bg-gray-50 font-arial">
                       <td className=" py-2 text-center dark:border-2 text-xs font-medium text-gray-500   ">
@@ -431,7 +431,7 @@ const AssignRoleCopy = () => {
                       allViewMenus.map((menu, index) => (
                         <tr className="bg-white divide-y border  divide-gray-200 text-xs" key={menu._id}>
                           <td className="border-b px-4 py-2 flex items-center gap-4">{index + 1}</td>
-                          <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-xs">
+                          <td className="px-6 py-2 dark:border-2 text-left whitespace-nowrap font-arial text-xs">
                             {menu?.umenu_Name}
                           </td>
                           <td className="border px-4 py-2">

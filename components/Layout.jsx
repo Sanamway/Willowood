@@ -17,6 +17,8 @@ const Layout = ({ children }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  const [isUser, setUser] = useState(false)
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -27,8 +29,8 @@ const Layout = ({ children }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("uid");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("email");
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("email_id");
     router.push("/logoutsuccess");
   };
 
@@ -44,6 +46,30 @@ const Layout = ({ children }) => {
       window.removeEventListener("resize", handleWindowSizeChange);
     };
   }, []);
+
+  const [email_id, setEmailId] = useState("")
+  const [user_name, setUsername] = useState("")
+  const [uid, setUid] = useState("")
+
+  useEffect(() => {
+    if (window.localStorage) {
+      const isLoggedInInLocalStorage = !!localStorage.getItem("uid");
+      const user_name = localStorage.getItem("user_name");
+      const uid = localStorage.getItem("uid");
+      const email_id = localStorage.getItem("email_id");
+      setUser(isLoggedInInLocalStorage);
+      setEmailId(email_id)
+      setUsername(user_name)
+      setUid(uid)
+    }
+
+    if(!localStorage.getItem("uid")){
+      router.push('/login')
+    }
+  
+  }, []);
+
+  console.log("yu", user_name, uid, email_id)
 
   return (
     <>
@@ -64,10 +90,10 @@ const Layout = ({ children }) => {
                     <div className="flex  items-center justify-center gap-4 ">
                       <Image className=" h-[4.1rem] w-[4.1rem] rounded-full" src={Profile} alt="" />
                       <div className="flex flex-col items-start font-sans">
-                        <h2 className="font-sm text-white whitespace-nowrap">Uttam Aggarwal</h2>
+                        <h2 className="font-sm text-white whitespace-nowrap">{user_name}</h2>
                         <div className="flex items-center gap-2">
-                          <h2 className="bg-[#00FF00] h-2 w-2 rounded-full animate-ping"></h2>
-                          <h2 className="text-sm text-text-green font-normal">Online</h2>
+                          <h2 className={`bg-[#00FF00] h-2 w-2 rounded-full ${uid==1 ? "animate-ping" :"bg-gray-200 h-2 w-2 rounded-full"}`}></h2>
+                          <h2 className="text-sm text-text-green font-arial">{"Online"}</h2>
                         </div>
                       </div>
                     </div>
@@ -99,7 +125,7 @@ const Layout = ({ children }) => {
                       onClick={() => {
                         router.push(menu.link);
                       }}
-                      className="whitespace-nowrap text-[0.8rem]"
+                      className="whitespace-nowrap text-[0.9rem]"
                     >
                       {menu.label}
                     </h2>
@@ -108,6 +134,8 @@ const Layout = ({ children }) => {
               ))}
             </div>
           </div>
+
+          
         </div>
         <div className="flex-grow flex flex-col ">
           {/* Top Bar */}
@@ -153,7 +181,7 @@ const Layout = ({ children }) => {
                                   onClick={toggleDropdown}
                                 >
                                   <h2 className="font-normal font-arial text-sm whitespace-nowrap">
-                                    Uttam Aggarwal
+                                   {user_name}
                                   </h2>
                                   <IoIosArrowDown className="button"></IoIosArrowDown>
                                 </div>

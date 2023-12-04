@@ -29,8 +29,18 @@ const [data, setData] = useState([])
     try {
       const resp = await axios.get(`${url}/api/get_assign_role_profile`, { headers: headers });
       const respData = await resp.data.data;
-      setData(respData)
+      // setData(respData)
       // console.log("datassss",respData)
+
+      const uniqueRecords = {};
+      respData.forEach((record) => {
+        const roleId = record.role_id;
+        if (!uniqueRecords[roleId]) {
+          uniqueRecords[roleId] = record;
+        }
+      });
+      const uniqueRecordsArray = Object.values(uniqueRecords);
+      setData(uniqueRecordsArray);
     } catch (error) {
       console.log("er:", error)
     }
@@ -165,7 +175,7 @@ const [data, setData] = useState([])
                       </button> */}
                       <button  onClick={() => {
                           deleteHandler(item?.user_id);
-                        }} className="b text-black hover:text-red-500 ml-2">Delete</button>
+                        }} className=" text-black hover:text-red-500 ml-2">Delete</button>
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.role_id}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.U_profile_name}</td>

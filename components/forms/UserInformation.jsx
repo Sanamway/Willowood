@@ -235,6 +235,9 @@ const UserInformation = () => {
     }
   };
 
+  //Status Options
+  
+
   return (
     <>
       <Layout>
@@ -559,15 +562,17 @@ const UserInformation = () => {
                       onChange={handleChange}
                     >
                       <option
-                        defaultValue="enabled"
+                        value=""
                         // defaultValue={userDataObject?.user_status ? userDataObject?.user_status : ""}
                         className="focus:outline-none focus:border-b bg-white"
                       >
                         {/* {userDataObject?.user_status ? userDataObject?.user_status : ""} */}
                         Enabled
                       </option>
-                      <option value="enabled">Enable</option>
-                      <option value="disabled">Disable</option>
+                      <option value="Enabled">Enabled</option>
+                      <option value="Enabled">Disabled</option>
+                      <option value="Enabled">Frozen</option>
+                      <option value="Enabled">Lock</option>
                     </select>
                     {formErrors.user_status && (
                       <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">

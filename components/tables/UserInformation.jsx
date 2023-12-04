@@ -54,6 +54,23 @@ const UserInformation = () => {
     { label: "Status", key: "isDeleted" }
   ];
 
+  const statusUl =(item)=>{
+    if(item.ul_name =="0"){
+      return "Not Active"
+    }
+    if(item.ul_name =="1"){
+      return "Active"
+    }
+
+    if(item.ul_name =="2"){
+      return "Frozen"
+    }
+
+    if(item.ul_name =="3"){
+      return "Lock"
+    }
+  }
+
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full pb-64 bg-white overflow-y-auto  ">
@@ -205,7 +222,7 @@ const UserInformation = () => {
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.email}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.phone_number}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.t_user}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.ul_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{statusUl(item)}</td>
                     {/* <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.status == 1 ? "Enabled" : "Disabled"}
                     </td> */}

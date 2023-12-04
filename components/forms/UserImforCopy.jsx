@@ -258,7 +258,7 @@ const UserInformation = () => {
     gettingDropdown();
   }, []);
 
-  console.log("imgh", userImage);
+  console.log("fornmv ", formState);
 
   return (
     <>
@@ -665,8 +665,10 @@ const UserInformation = () => {
                       >
                         Select Option
                       </option>
-                      <option value="true">Enable</option>
-                      <option value="false">Disable</option>
+                      <option value={1}>Active</option>
+                      <option value={0}>Not Active</option>
+                      <option value={2}>Frozen</option>
+                      <option value={3}>Block</option>
                     </select>
                     {formErrors.ul_name && (
                       <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
