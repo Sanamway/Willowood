@@ -10,6 +10,13 @@ import History from "../EmployeeForm/History";
 import Documents from "../EmployeeForm/Documents";
 import { url } from "@/constants/url";
 import axios from "axios";
+import { AiFillBank } from "react-icons/ai";
+import { TiArrowBack } from "react-icons/ti";
+import { BiSolidUserDetail } from "react-icons/bi";
+import { BiSolidUser } from "react-icons/bi";
+import { BiChild } from "react-icons/bi";
+import { AiOutlineCluster } from "react-icons/ai";
+import { BsCloudUpload } from "react-icons/bs";
 const EmployeeForm = () => {
   const router = useRouter();
   const headers = {
@@ -24,109 +31,118 @@ const EmployeeForm = () => {
         params: { e_id: router.query.id },
       });
       const apires = await respond.data.data;
-      console.log("jl", apires)
+
       setEmployeeData(apires);
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     if (router.query.type === "Add") return;
     getDataById();
   }, [router]);
+
   const [formType, setFormType] = useState("Snapshot");
+  useEffect(() => {
+    getDataById();
+  }, [formType]);
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white pb-22">
         <div className="flex flex-row justify-between  h-max  px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">Employee </h2>
+          <h2 className="font-arial font-normal text-3xl py-2">Employee </h2>
           <span className="flex items-center gap-2 cursor-pointer">
-            <AiTwotoneHome className="text-red-500" size={34} />
+            <TiArrowBack
+              onClick={() => {
+                router.push("/table/table_employee");
+              }}
+              className="text-gray-400"
+              size={35}
+            />
           </span>
         </div>
 
         <div className="w-[100%] flex ">
           <ul className="flex border-b  px-2 overflow-x-auto w-2/3 lg:flex border-b overflow-hidden ">
             <li className="ml-2 lg:-mb-px mr-1 lg:-mb-px mr-1">
-              <a
+              <button
                 className={`${
                   formType === "Snapshot"
-                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
-                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                    ? " flex  gap-2 inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
+                    : " flex  gap-2  bg-white inline-block   rounded-t py-2 px-4 font-semibold"
                 }`}
-                href="#"
                 onClick={() => setFormType("Snapshot")}
+                disabled={router.query.type === "Edit"}
               >
-                {" "}
-                Snapshot
-              </a>
+                <BiSolidUser className="mt-1" /> Snapshot
+              </button>
             </li>
             <li className="-mb-px mr-1">
-              <a
+              <button
                 className={`${
                   formType === "Personal"
-                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
-                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                    ? "  flex  gap-2  inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
+                    : "  flex  gap-2 bg-white inline-block   rounded-t py-2 px-4 font-semibold"
                 }`}
-                href="#"
                 onClick={() => setFormType("Personal")}
+                disabled={router.query.type === "Edit"}
               >
                 {" "}
-                Personal
-              </a>
+                <BiSolidUserDetail className="mt-1" /> Personal
+              </button>
             </li>
             <li className="-mb-px mr-1">
-              <a
+              <button
                 className={`${
                   formType === "Family"
-                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
-                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                    ? "flex  gap-2  inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
+                    : "flex  gap-2 bg-white inline-block   rounded-t py-2 px-4 font-semibold"
                 }`}
-                href="#"
                 onClick={() => setFormType("Family")}
-              >
-                Family
-              </a>
-            </li>
-            <li className="-mb-px mr-1">
-              <a
-                className={`${
-                  formType === "Bank"
-                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
-                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
-                }`}
-                href="#"
-                onClick={() => setFormType("Bank")}
+                disabled={router.query.type === "Edit"}
               >
                 {" "}
-                Bank
-              </a>
+                <BiChild className="mt-1" /> Family
+              </button>
             </li>
             <li className="-mb-px mr-1">
-              <a
+              <button
+                className={`${
+                  formType === "Bank"
+                    ? "flex  gap-2 inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
+                    : "flex  gap-2 bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                }`}
+                onClick={() => setFormType("Bank")}
+                disabled={router.query.type === "Edit"}
+              >
+                {" "}
+                <AiFillBank className="mt-1" /> Bank
+              </button>
+            </li>
+            <li className="-mb-px mr-1">
+              <button
                 className={`${
                   formType === "History"
-                    ? "inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white  whitespace-nowrap"
-                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold whitespace-nowrap"
+                    ? "flex  gap-2 inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white  whitespace-nowrap"
+                    : "flex  gap-2 bg-white inline-block   rounded-t py-2 px-4 font-semibold whitespace-nowrap"
                 }`}
-                href="#"
                 onClick={() => setFormType("History")}
               >
-                CTC
-              </a>
+                <AiOutlineCluster className="mt-1" /> Joining
+              </button>
             </li>
             <li className="-mb-px mr-1 ">
-              <a
+              <button
                 className={`${
                   formType === "Documents"
-                    ? " inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
-                    : "bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                    ? " flex  gap-2 inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
+                    : " flex  gap-2 bg-white inline-block   rounded-t py-2 px-4 font-semibold"
                 }`}
-                href="#"
                 onClick={() => setFormType("Documents")}
               >
-                Documents
-              </a>
+                <BsCloudUpload className="mt-1" /> Documents
+              </button>
             </li>
           </ul>
         </div>

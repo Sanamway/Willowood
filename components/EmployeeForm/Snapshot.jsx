@@ -1,12 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from "axios";
+import { url } from "@/constants/url";
+import { useRouter } from "next/router";
+import toast, { Toaster } from "react-hot-toast";
+import moment from "moment";
+import * as Yup from "yup";
+
 const Snapshot = (props) => {
+  const router = useRouter();
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+  };
   const [formActive, setFormActive] = useState(false);
   const [snapshotData, setSnapshotData] = useState({
     prefix: "",
     firstName: "",
-     midName: "",
+    midName: "",
     lastName: "",
     dob: "",
     age: "",
@@ -21,42 +33,33 @@ const Snapshot = (props) => {
 
     eStatus: "",
 
-    company: "",
-    bSegment: "",
-    bUnit: "",
-    zone: "",
-    region: "",
-    territory: "",
+    applicationNo: "",
   });
   useEffect(() => {
     if (props)
       setSnapshotData({
         ...snapshotData,
-        prefix: props.data?.prefix || "",
-        firstName: props.data?.fname || "",
-        midName: props.data?.mname || "",
-        lastName: props.data?.lname || "",
-        age: props.data?.age || "",
-        grade: props.data?.grade || "",
-        gender: props.data?.gen || "",
-        dob: props.data?.dob || "",
-        bloodGroup: props.data?.blgrp || "",
-        nationality: props.data?.nationa || "",
-        mobile: props.data?.phone_number || "",
-        skillType: props.data?.skillType || "",
-        highestQualification: props.data?.hgtqual || "",
-        totalExperience: props.data?.tot_exp || "",
-        eStatus: props.data?.emp_status || "",
-
-        company: props.data?.c_id || "",
-        bSegment: props.data?.bg_id || "",
-        bUnit: props.data?.bu_id || "",
-        zone: props.data?.z_id || "",
-        region: props.data?.r || "",
-        territory: props.data?.t_id || "",
+        prefix: props.data?.prefix,
+        firstName: props.data?.fname,
+        midName: props.data?.mname,
+        lastName: props.data?.lname,
+        age: props.data?.age,
+        grade: props.data?.grade,
+        gender: props.data?.gen,
+        dob: props.data?.dob,
+        bloodGroup: props.data?.blgrp,
+        nationality: props.data?.nationa,
+        mobile: props.data?.phone_number,
+        skillType: props.data?.skilltype,
+        highestQualification: props.data?.hgtqual,
+        totalExperience: props.data?.tot_exp,
         eStatus: props.data?.emp_status,
+
+        applicationNo: props.data?.appl_no,
+        eStatus: "Update Snapshot",
+        position: props.data?.emppos,
       });
-  }, [props]);
+  }, [props.data]);
 
   const highestQualificationArray = [
     "10th",
@@ -77,11 +80,170 @@ const Snapshot = (props) => {
     "AB RhD negative (AB-)",
   ];
 
+  const [skillData, setSkillData] = useState([]);
+
+  // Getting Company Information for the dropdown values
+  const getSkillInfo = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_employeeskill`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+
+      setSkillData(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getSkillInfo();
+  }, []);
+  const validationSchema = Yup.object().shape({
+    mobile: Yup.string().matches(
+      /^(\+\d{1,3}[- ]?)?\d{10}$/,
+      "Enter a valid Mobile"
+    ),
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleEditSnapshot = async () => {
+    setLoading(true);
+    try {
+      await validationSchema.validate(snapshotData, { abortEarly: false });
+
+      const {
+        prefix,
+        firstName,
+        midName,
+        lastName,
+        dob,
+        age,
+        grade,
+        gender,
+        bloodGroup,
+        nationality,
+        mobile,
+        skillType,
+        highestQualification,
+        totalExperience,
+        eStatus,
+        applicationNo,
+        position,
+      } = snapshotData;
+      const data = {
+        appl_no: applicationNo,
+        prefix: prefix,
+        fname: firstName,
+        mname: midName,
+        lname: lastName,
+        age: age,
+        grade: grade,
+        gen: gender,
+        dob: moment(dob).utc(),
+        blgrp: bloodGroup,
+        nationa: nationality,
+        phone_number: mobile,
+        skilltype: skillType,
+        hgtqual: highestQualification,
+        tot_exp: totalExperience,
+        emp_status: eStatus,
+        emppos: position,
+        eStatus: "Update Snapshot",
+      };
+      const respond = await axios
+        .put(
+          `${url}/api/update_snapshot/${router.query.id}`,
+          JSON.stringify(data),
+          {
+            headers: headers,
+          }
+        )
+        .then((res) => {
+          if (!res) return;
+          toast.success("Snapshot edited successfully!");
+          setTimeout(() => {
+            props.formType("Personal");
+            setLoading(false);
+          }, [1000]);
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.message;
+      if (errorMessage) toast.error(errorMessage);
+      const newErrors = {};
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+      if (newErrors.mobile) toast.error(newErrors.mobile);
+      setLoading(false);
+    } finally {
+    }
+  };
+
+  const allGradeArray = [
+    "G1  ",
+    "M3",
+    "EX1",
+    "W2",
+    "W1",
+    "GM4",
+    "O3",
+    "W5",
+    "WT",
+    "W4",
+    "O1",
+    "GET",
+    "VP3",
+    "GM3",
+    "VP2",
+    "MGT",
+    "OT",
+    "GT",
+    "PGT",
+    "ZM1",
+    "ZM2",
+    "M4",
+    "ZM3",
+    "M5",
+    "M6",
+    "RM1",
+    "RM2",
+    "RM3",
+    "ZDM1",
+    "ZDM2",
+    "DM1",
+    "O2",
+    "DM2",
+    "DM3",
+    "DE1",
+    "DE2",
+    "DO1",
+    "DO2",
+    "SE1",
+    "SE2",
+    "SO1",
+    "SO2",
+    "EX3",
+    "SO3",
+    "DO3",
+    "AM1",
+    "AM2",
+    "AM3",
+    "SOT",
+    "DOT",
+    "GM1",
+    "MR",
+    "M1",
+    "GM2",
+    "EX2",
+    "W3",
+  ];
   return (
     <form
       className=" bg-white rounded shadow p-4 w-full pb-20"
       onSubmit={(e) => e.preventDefault()}
     >
+      <Toaster position="bottom-center" reverseOrder={false} />
       <div className="flex bg-gray-100 w-2/3 h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Basic Information
       </div>
@@ -134,7 +296,7 @@ const Snapshot = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Middle Name
+            Middle Name
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -176,8 +338,16 @@ const Snapshot = (props) => {
             <small className="text-red-600">*</small> Date of birth
           </label>
           <DatePicker
-            value={snapshotData.dob}
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            value={snapshotData.dob}
+            onChange={(date) =>
+              setSnapshotData({
+                ...snapshotData,
+                age: moment(new Date()).diff(moment(date), "years"),
+                dob: moment(date).format("LL"),
+              })
+            }
+            maxDate={new Date(moment().subtract(18, "years"))}
           />
         </div>
       </div>
@@ -195,6 +365,7 @@ const Snapshot = (props) => {
             type="text"
             id="inputField"
             placeholder="Age"
+            disabled
             value={snapshotData.age}
             onChange={(e) =>
               setSnapshotData({ ...snapshotData, age: e.target.value })
@@ -208,16 +379,25 @@ const Snapshot = (props) => {
           >
             <small className="text-red-600">*</small> Grade
           </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="Grade"
+
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
             value={snapshotData.grade}
             onChange={(e) =>
               setSnapshotData({ ...snapshotData, grade: e.target.value })
             }
-          />
+          >
+            <option
+              value=""
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              -- Select --
+            </option>
+            {allGradeArray.map((item) => (
+              <option value={item}>{item}</option>
+            ))}
+          </select>
         </div>
       </div>
 
@@ -313,7 +493,7 @@ const Snapshot = (props) => {
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
+            type="number"
             id="inputField"
             placeholder="Mobile Number"
             value={snapshotData.mobile}
@@ -345,8 +525,14 @@ const Snapshot = (props) => {
             >
               Option
             </option>
-            <option value="state1">Mr.</option>
-            <option value="state2">Mrs.</option>
+            {skillData.map((item) => (
+              <option
+                value={item.type_skill}
+                className="focus:outline-none focus:border-b bg-white"
+              >
+                {item.type_skill}
+              </option>
+            ))}
           </select>
         </div>
         <div className="w-2/3  px-2  lg:w-1/2 ">
@@ -387,7 +573,7 @@ const Snapshot = (props) => {
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
+            type="number"
             id="inputField"
             placeholder="Total Experience"
             value={snapshotData.totalExperience}
@@ -401,16 +587,19 @@ const Snapshot = (props) => {
         </div>
       </div>
 
-      
-
-      <div className="flex justify-start w-full ">
-        <div
-          className="text-center w-2/3 mt-12 bg-orange-500 lg: w-40   bg-green-700 px-4 py-1 text-white  pointer"
-          onClick={() => props.formType("Personal")}
-        >
-          Next
+      {router.query.type === "Edit" && (
+        <div className="flex justify-start w-full ">
+          <button
+            className="text-center w-2/3 mt-12 bg-orange-500 lg: w-40   bg-green-700 px-4 py-1 text-white  cursor-pointer"
+            disabled={loading}
+            onClick={() => {
+              handleEditSnapshot();
+            }}
+          >
+            Next
+          </button>
         </div>
-      </div>
+      )}
     </form>
   );
 };

@@ -164,6 +164,19 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       console.log(error);
     }
   };
+  const handleDeleteEmployee = async () => {
+    try {
+      const respond = await axios
+        .delete(`${url}/api/delete_employee/${id}`, {
+          headers: headers,
+        })
+        .then((res) => onDeletedData());
+
+      const apires = await respond.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleDelete = () => {
     if (type === "Company Information") {
@@ -212,6 +225,10 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       onDeletedData();
     } else if (type === "Bst") {
       handleDeleteBst();
+      onClose();
+      onDeletedData();
+    } else if (type === "Employee") {
+      handleDeleteEmployee();
       onClose();
       onDeletedData();
     } else {

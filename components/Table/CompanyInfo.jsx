@@ -171,7 +171,7 @@ const CompanyInfo = () => {
                       <button
                         className="b text-black hover:text-red-500 ml-2"
                         onClick={() => {
-                          deleteHandler(item._id);
+                          deleteHandler(item.c_id);
                         }}
                       >
                         Delete
