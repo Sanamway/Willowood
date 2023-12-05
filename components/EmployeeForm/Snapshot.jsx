@@ -254,7 +254,7 @@ const Snapshot = (props) => {
         Basic Information
       </div>
 
-      <div className="flex flex-col gap-2  w-2/3  lg:flex-row -mx-2 mb-2 ">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-2 ">
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -317,7 +317,7 @@ const Snapshot = (props) => {
           />
         </div>
       </div>
-      <div className="flex flex-col gap-2  w-2/3  lg:flex-row -mx-2  ">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2  ">
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -359,7 +359,7 @@ const Snapshot = (props) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2   w-2/3  lg:flex-row -mx-2 mb-2 mt-2">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-2 mt-2">
         <div className="w-2/3  px-2  lg:w-1/3 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -408,7 +408,7 @@ const Snapshot = (props) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 w-2/3   lg:flex-row -mx-2 mb-2 ">
+      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-2 ">
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
