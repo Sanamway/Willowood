@@ -9,6 +9,8 @@ import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 import axios from "axios";
 import ConfirmModal from "../modals/ConfirmModal";
+import { CSVLink } from "react-csv";
+
 
 const ProductSegment = () => {
   const router = useRouter();
@@ -48,12 +50,20 @@ const ProductSegment = () => {
     setisOpen(false);
   };
 
+  const csvHeaders = [
+    { label: "Id", key: "pseg_id" },
+    { label: "Segment ID", key: "pseg_id" },
+    { label: "Product Segment", key: "pseg_name" },
+    { label: "Company", key: "c_id" },
+    { label: "Status", key: "isDeleted" }
+  ];
+
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full ">
         <ConfirmModal
           isOpen={isOpen}
-          onClose={() => setisOpen(false)}
+          onClose={() => setisOpen(false)}Segment
           onOpen={() => setisOpen(true)}
           userId={userId}
           method="delete"
@@ -78,7 +88,9 @@ const ProductSegment = () => {
               </div>
             </div>
             <h2>
-              <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
+            <CSVLink data={prdSegmentData} headers={csvHeaders}>
+                <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
+              </CSVLink>
             </h2>
 
             <h2>
@@ -109,17 +121,20 @@ const ProductSegment = () => {
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
-                  <th className=" w-[12%] px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className=" w-[12%] px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Action
                   </th>
-                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Segment ID
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Product Segment
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Company
+                  </th>
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Status
                   </th>
                 </tr>
               </thead>
@@ -128,8 +143,11 @@ const ProductSegment = () => {
                   <tr key={item.id}>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
-                        onClick={() => {
-                          router.push("/form/product_segment");
+                         onClick={() => {
+                          router.push({
+                            pathname: "/form/product_segment",
+                            query: { type: "view", id: item?.pseg_id }
+                          });
                         }}
                         className="b text-black   hover:text-blue-500  "
                       >
@@ -155,7 +173,8 @@ const ProductSegment = () => {
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.pseg_id}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.pseg_name}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.c_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.cmpny_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.isDeleted ? "Disabled" : "Enabled"}</td>
                   </tr>
                 ))}
               </tbody>

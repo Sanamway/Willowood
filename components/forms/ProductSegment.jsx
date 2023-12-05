@@ -34,16 +34,17 @@ const ProductSegment = () => {
 
   const getPrdSegById = async (id) => {
     try {
-      const resp = await axios.get(`${url}/api/get_product_segment/${id}`, { headers: headers });
+      const resp = await axios.get(`${url}/api/get_product_segment/?pseg_id=${id}`, { headers: headers });
       const respData = await resp.data.data;
       setFromState({
-        pseg_name: respData?.pseg_name,
-        pseg_id: respData?.pseg_id,
-        c_name: respData?.c_name,
-        c_id: respData?.c_id
+        pseg_name: respData[0]?.pseg_name,
+        pseg_id: respData[0]?.pseg_id,
+        c_name: respData[0]?.c_name,
+        c_id: respData[0]?.c_id
       });
 
       console.log("geprr", respData);
+      console.log("segId", respData.pseg_id);
     } catch (error) {
       console.log("ee", error);
     }
@@ -77,22 +78,19 @@ const ProductSegment = () => {
         }, 2500);
       }
     } catch (errors) {
-      console.log("ee", errors);
-      const newErrors = {};
-      errors?.inner?.forEach((error) => {
-        newErrors[error?.path] = error?.message;
-      });
-      setFormErrors(newErrors);
-      switch (true) {
-        case !!newErrors?.pcat_name:
-          toast.error(newErrors.pcat_name);
-          break;
-        case !!newErrors?.c_id:
-          toast.error(newErrors.c_id);
-        case !!newErrors?.c_name:
-          toast.error(newErrors.c_name);
-          break;
-        default:
+      const ermsg = errors.response.data.message;
+      if(ermsg){
+        toast.error(ermsg)
+        return
+      }
+      const errmsg = errors.response.data.error;
+      console.log("fefef", errors)
+      if (errmsg?.includes('pseg_name_1')) {
+        toast.error('Product Segment is Duplicate');
+      }else if(errmsg?.includes('pseg_id')){
+        toast.error('Product Id is duplicate')
+      }else{
+        toast.error(errmsg)
       }
     }
   };
@@ -108,35 +106,49 @@ const ProductSegment = () => {
         c_name: formState?.c_name,
         c_id: formState?.c_id
       };
-      await validationSchema.validate(Editdata, { abortEarly: false });
-      const resp = await axios.put(`${url}/api/update_product_segment/${id}`, JSON.stringify(Editdata), {
-        headers: headers
-      });
-      const respdata = await resp.data;
-      console.log("resap", respdata);
-      if (respdata) {
-        toast.success(respdata.message);
-        setTimeout(() => {
-          router.push("/table/table_product_segment");
-        }, 2500);
+
+      const emptyFields = Object.entries(Editdata)
+        .filter(([key, value]) => value === "")
+        .map(([key]) => key);
+      if (emptyFields.length > 0) {
+        const customMessages = {
+          c_name: "Company Name",
+          pseg_id: "Product Segment",
+          brand_code: "Brand Code",
+          pseg_name: "Product Segment"
+        };
+        const requiredFields = emptyFields.map((field) => customMessages[field] || field);
+        toast.error(`${requiredFields.join(", ")} is required.`);
+      } else {
+        const resp = await axios.put(`${url}/api/update_product_segment/${id}`, JSON.stringify(Editdata), {
+          headers: headers
+        });
+        const respdata = await resp.data;
+        console.log("resap", respdata);
+        if (respdata) {
+          toast.success(respdata.message);
+          setTimeout(() => {
+            router.push("/table/table_product_segment");
+          }, 2500);
+        }
       }
     } catch (errors) {
-      console.log("e", errors);
-      const newErrors = {};
-      errors?.inner?.forEach((error) => {
-        newErrors[error?.path] = error?.message;
-      });
-      switch (true) {
-        case !!newErrors?.pcat_name:
-          toast.error(newErrors.pcat_name);
-          break;
-        case !!newErrors?.c_id:
-          toast.error(newErrors.c_id);
-        case !!newErrors?.c_name:
-          toast.error(newErrors.c_name);
-          break;
-        default:
+     
+      const ermsg = errors.response.data.message;
+      // if(ermsg){
+      //   toast.error(ermsg)
+        
+      // }
+      const errmsg = errors.response.data.error;
+      console.log("fefef", errors)
+      if (errmsg?.includes('pseg_name_1')) {
+        toast.error('Product Segment is Duplicate');
+      }else if(errmsg?.includes('pseg_id')){
+        toast.error('Product ID is duplicate')
+      }else{
+        toast.error(errmsg)
       }
+     
     }
   };
 
@@ -164,8 +176,6 @@ const ProductSegment = () => {
   useEffect(() => {
     getCompanyInfo();
   }, []);
-
-  console.log("ggf", formState)
 
   return (
     <>
@@ -205,8 +215,8 @@ const ProductSegment = () => {
                 className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4"
               >
                 <div className="flex -mx-2 mb-4 flex-col">
-                  <div className="w-1/6 px-2 mb-2">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+                  <div className="w-full lg:w-1/6 px-2 mb-2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2 whitespace-nowrap" htmlFor="inputField">
                       Segment ID
                     </label>
                     <input
@@ -218,9 +228,9 @@ const ProductSegment = () => {
                       value={router.query.type == "CREATE" ? "Auto Generated" : formState?.pseg_id}
                     />
                   </div>
-                  <div className="w-1/2 px-2 ">
+                  <div className="w-full lg:w-1/2 px-2 ">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                      <span className="text-red-500 px-1">*</span>Product Segment
+                      <span className="text-red-500 px-1 whitespace-nowrap">*</span>Product Segment
                     </label>
                     <input
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -238,9 +248,9 @@ const ProductSegment = () => {
                   </div>
                 </div>
                 <div className="flex -mx-2 mb-4">
-                  <div className="w-1/2 px-2">
+                  <div className="w-full lg:w-1/2 px-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
-                      <span className="text-red-500 p-1">*</span>Company
+                      <span className="text-red-500 p-1 whitespace-nowrap">*</span>Company
                     </label>
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -253,6 +263,9 @@ const ProductSegment = () => {
                         });
                       }}
                     >
+                      <option value={""} className="focus:outline-none focus:border-b bg-white">
+                        Select Options
+                      </option>
                       {companyInfo.map((option) => (
                         <option value={option?.c_id} className="focus:outline-none focus:border-b bg-white">
                           {option?.cmpny_name}

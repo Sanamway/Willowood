@@ -84,7 +84,7 @@ const UserProfile = () => {
   return (
     <>
       {/* <div className=" h-screen overflow-auto w-full font-arial bg-white container  "> */}
-      <div className=" w-[1000px] mx-auto px-4 sm:px-8 bg-gray-100 p-4 pb-20  text-black overflow-y-auto ">
+      <div className=" mx-auto px-4 sm:px-8 bg-gray-100 p-4 pb-5  text-black overflow-y-auto ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Profile </h2>
@@ -112,7 +112,7 @@ const UserProfile = () => {
 
         {/* <div className="bg-gray-300"></div> */}
         <div className="text-black h-screen  ">
-          <div className="bg-gray-100 pt-1  pb-44  ">
+          <div className="bg-gray-100 pt-1  pb-10  ">
             {userData?.length > 0 &&
               userData?.map((item) => (
                 <div className="relative flex rounded-lg bg-white mt-8  items-center justify-start max-w-full p-12 mx-20 gap-12 ">

@@ -7,6 +7,8 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { url } from "@/constants/url";
+import { CSVLink } from "react-csv";
+
 
 const UserInformation = () => {
   const router = useRouter();
@@ -43,6 +45,31 @@ const UserInformation = () => {
     getApiData();
     setisOpen(false);
   };
+
+  const csvHeaders = [
+    { label: "Id", key: "pseg_id" },
+    { label: "Segment ID", key: "pseg_id" },
+    { label: "Product Segment", key: "pseg_name" },
+    { label: "Company", key: "c_id" },
+    { label: "Status", key: "isDeleted" }
+  ];
+
+  const statusUl =(item)=>{
+    if(item.status =="0"){
+      return "Not Active"
+    }
+    if(item.status =="1"){
+      return "Active"
+    }
+
+    if(item.status =="2"){
+      return "Frozen"
+    }
+
+    if(item.status =="3"){
+      return "Lock"
+    }
+  }
 
   return (
     <Layout>
@@ -141,11 +168,11 @@ const UserInformation = () => {
                     User Role
                   </th>
                   <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    User Status
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Status
                   </th>
-                  {/* <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    status
-                  </th> */}
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
@@ -195,7 +222,8 @@ const UserInformation = () => {
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.email}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.phone_number}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.t_user}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.ul_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{statusUl(item)}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.isDeleted ==true ? "Disable":"Enable"}</td>
                     {/* <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.status == 1 ? "Enabled" : "Disabled"}
                     </td> */}

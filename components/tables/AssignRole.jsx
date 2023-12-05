@@ -6,32 +6,77 @@ import { TiArrowBack } from "react-icons/ti";
 import { TbFileDownload } from "react-icons/tb";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
+import axios from "axios";
+import { url } from "@/constants/url";
+import ConfirmModal from "../modals/ConfirmModal";
 
 
 const AssignRole = () => {
+const [data, setData] = useState([])
+
   const router = useRouter();
 
-  const dummyData = [
-    {
-      id: 1,
-      username: "username",
-      userprofile: "userprofile"
-    },
-    {
-      id: 2,
-      username: "username",
-      userprofile: "userprofile"
-    },
-    {
-      id: 3,
-      username: "username",
-      userprofile: "userprofile"
+  // headers 
+
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+  };
+
+
+
+  const getAssignRoleDatas = async()=>{
+    try {
+      const resp = await axios.get(`${url}/api/get_assign_role_profile`, { headers: headers });
+      const respData = await resp.data.data;
+      // setData(respData)
+      // console.log("datassss",respData)
+
+      const uniqueRecords = {};
+      respData.forEach((record) => {
+        const roleId = record.role_id;
+        if (!uniqueRecords[roleId]) {
+          uniqueRecords[roleId] = record;
+        }
+      });
+      const uniqueRecordsArray = Object.values(uniqueRecords);
+      setData(uniqueRecordsArray);
+    } catch (error) {
+      console.log("er:", error)
     }
-  ];
+  }
+
+  useEffect(()=>{
+    getAssignRoleDatas()
+  },[])
+
+
+  const [isOpen, setisOpen] = useState(false);
+  const [userId, setUserId] = useState(null);
+
+  const deleteHandler = (id) => {
+    setisOpen(true);
+    setUserId(id);
+  };
+
+  const resetData = () => {
+    getAssignRoleDatas();
+    setisOpen(false);
+  };
+
 
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full ">
+      <ConfirmModal
+          isOpen={isOpen}
+          onClose={() => setisOpen(false)}
+          onOpen={() => setisOpen(true)}
+          userId={userId}
+          method="delete"
+          endpoints="delete_role_profile"
+          onDeletedData={resetData}
+        ></ConfirmModal>
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Assign Role Profile to User</h2>
           <div className="flex items-center gap-2 cursor-pointer">
@@ -64,7 +109,10 @@ const AssignRole = () => {
             </h2>
             <button
               onClick={() => {
-                router.push("/form/assign_role");
+                router.push({
+                  pathname: "/form/assign_role",
+                  query: { type: "CREATE" }
+                });
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -78,42 +126,63 @@ const AssignRole = () => {
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
-                  <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     Action
                   </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                    Role Id
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                    Role Profile
+                  </th>
+                  <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                    User Id
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     User Name
                   </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    User Profile
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                    Mobile No
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                    Territory
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                {dummyData?.map((item) => (
+                {data?.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
                         onClick={() => {
-                          router.push("/form/assign_role");
+                          router.push({
+                            pathname: "/form/assign_role",
+
+                            query: { type: "view", user_id: item?.user_id }
+                          });
                         }}
                         className="b text-black   hover:text-blue-500  "
                       >
                         View
                       </button>
-                      <button
+                      {/* <button
                         onClick={() => {
                           router.push("/form/assign_role");
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
                       >
                         Edit
-                      </button>
-                      <button className="b text-black hover:text-red-500 ml-2">Delete</button>
+                      </button> */}
+                      <button  onClick={() => {
+                          deleteHandler(item?.user_id);
+                        }} className=" text-black hover:text-red-500 ml-2">Delete</button>
                     </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.id}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.username}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.userprofile}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.role_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.U_profile_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.user_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.userprofile}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.userprofile}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.userprofile}</td>
                   </tr>
                 ))}
               </tbody>

@@ -7,6 +7,9 @@ import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 import axios from "axios";
 import ConfirmModal from "../modals/ConfirmModal";
+import { CSVLink } from "react-csv";
+
+
 
 const UserProfile = () => {
   const router = useRouter();
@@ -34,6 +37,7 @@ const UserProfile = () => {
     }
   };
 
+
   useEffect(() => {
     gettingMenusData();
   }, []);
@@ -49,9 +53,15 @@ const UserProfile = () => {
   };
 
   const resetData = () => {
-    gettingPrdBrand();
+    gettingMenusData();
     setisOpen(false);
   };
+
+  const csvHeaders = [
+    { label: "Id", key: "pseg_id" },
+    { label: "Role ID", key: "role_id" },
+    { label: "User Profile", key: "U_profile_name" }
+  ];
 
   return (
     <>
@@ -67,7 +77,7 @@ const UserProfile = () => {
           onDeletedData={resetData}
         ></ConfirmModal>
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-            <h2 className="font-arial font-normal text-3xl  py-2">User Profile</h2>
+            <h2 className="font-arial font-normal text-md lg:text-2xl whitespace-nowrap  py-2">User Profile</h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <div className="search gap-2 mx-8">
                 <div className="container">
@@ -84,11 +94,10 @@ const UserProfile = () => {
                 </div>
               </div>
               <h2>
+              <CSVLink data={menuRecords} headers={csvHeaders}>
                 <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
+              </CSVLink>
               </h2>
-              {/* <h2>
-                <TiArrowBack className="text-gray-400" size={35}></TiArrowBack>
-              </h2> */}
               <h2>
                 <AiTwotoneHome
                   onClick={() => {
@@ -100,7 +109,10 @@ const UserProfile = () => {
               </h2>
               <button
                 onClick={() => {
-                  router.push("/form/user_profile_form");
+                  router.push({
+                    pathname: "/form/user_profile_form",
+                    query: { type: "CREATE" }
+                  });
                 }}
                 className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
               >
@@ -125,31 +137,21 @@ const UserProfile = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                {menuRecords?.map((item) => (
+                {menuRecords.length > 0 && menuRecords?.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
                         onClick={() => {
                           router.push({
                             pathname: "/form/user_profile_form",
-                            query: { type: "view", id: item?.role_id }
+                            query: { type: "view", role_id: item?.role_id }
                           });
                         }}
                         className="b text-black   hover:text-blue-500  "
                       >
                         View
                       </button>
-                      <button
-                        onClick={() => {
-                          router.push({
-                            pathname: "/form/user_profile_form",
-                            query: { type: "Edit", id: item?.role_id }
-                          });
-                        }}
-                        className="b text-black hover:text-yellow-400 ml-2"
-                      >
-                        Edit
-                      </button>
+                      
                       <button
                         onClick={() => {
                           deleteHandler(item?.role_id);

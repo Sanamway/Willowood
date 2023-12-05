@@ -39,8 +39,8 @@ const Login = () => {
       const phone_number = respdata?.data.phone_no;
       const uid = respdata?.data.uid || respdata?.data?.loginHistory.uid;
 
-      const email = respdata?.data?.loginHistory?.email_id;
-      const userName = respdata?.data?.loginHistory?.user_name;
+      const email_id = respdata?.data?.loginHistory?.email_id;
+      const user_name = respdata?.data?.loginHistory?.user_name;
       const _id = respdata?.data?.loginHistory?._id;
 
       // console.log("datas", respdata?.data?.loginHistory)
@@ -59,8 +59,8 @@ const Login = () => {
         }, 1000);
       } else {
         localStorage.setItem("uid", uid);
-        localStorage.setItem("email", email);
-        localStorage.setItem("userName", userName);
+        localStorage.setItem("email_id", email_id);
+        localStorage.setItem("user_name", user_name);
         localStorage.setItem("id", _id);
         router.push("/");
       }
@@ -116,7 +116,7 @@ const Login = () => {
                 />
               </div>
               <div className="flex flex-col justify-between mx-12 mt-4">
-                <label className="flex text-black items-center gap-1 font-semibold">
+                {/* <label className="flex text-black items-center gap-1 font-semibold">
                   <BiSolidLockAlt />
                   Password
                 </label>
@@ -124,7 +124,7 @@ const Login = () => {
                   className="bg-transparent text-black py-1.5 max-w-full text-start outline-none border-0 placeholder:text-black text-sm border-black border-b-2 border-white-200"
                   type="password"
                   placeholder="Type your password"
-                />
+                /> */}
                 <div className="flex items-center justify-end mt-2">
                   <h3
                     onClick={() => {
