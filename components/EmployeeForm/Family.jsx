@@ -161,7 +161,6 @@ const Family = (props) => {
               Option
             </option>
             <option value="Married">Married</option>
-            <option value="Un-Married">Un-Married</option>
             <option value="Seprated">Un-Married</option>
             <option value="Others">Others</option>
           </select>
@@ -196,16 +195,39 @@ const Family = (props) => {
             >
               <small className="text-red-600">*</small> Date of Marriage
             </label>
-            <DatePicker
-              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-              value={moment(familyData.dom).format("LL")}
-              onChange={(date) =>
-                setFamilyData({
-                  ...familyData,
-                  dom: moment(date).format("LL"),
-                })
-              }
-            />
+
+            {familyData.dom ? (
+              <DatePicker
+                className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                dateFormat="dd-MM-yyyy"
+                selected={new Date(familyData.dom)}
+                peekNextMonth
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+                onChange={(date) =>
+                  setFamilyData({
+                    ...familyData,
+                    dom: moment(date).format("LL"),
+                  })
+                }
+              />
+            ) : (
+              <DatePicker
+                className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                dateFormat="dd-MM-yyyy"
+                peekNextMonth
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+                onChange={(date) =>
+                  setFamilyData({
+                    ...familyData,
+                    dom: moment(date).format("LL"),
+                  })
+                }
+              />
+            )}
           </div>
         </div>
       )}

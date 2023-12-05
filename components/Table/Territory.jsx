@@ -12,7 +12,7 @@ import { TbFileDownload } from "react-icons/tb";
 import toast, { Toaster } from "react-hot-toast";
 const Territory = () => {
   const csvHeaders = [
-    { label: "Id", key: "t_id" },
+     { label: "Id", key: "t_id" },
     { label: "Territory", key: "territory_name" },
     { label: "Region", key: "region_name" },
     { label: "Zone", key: "zone_name" },
