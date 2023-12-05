@@ -7,16 +7,14 @@ import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
+import toast, { Toaster } from "react-hot-toast";
 const DepotWareHouse = () => {
-   const router = useRouter();
-   
-    
- 
- 
-  
+  const router = useRouter();
+
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
+        <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
             Depot/Warehouse

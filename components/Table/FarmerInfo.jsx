@@ -7,6 +7,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { TbFileDownload } from "react-icons/tb";
 import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
+import toast, { Toaster } from "react-hot-toast";
 
 import { CSVLink } from "react-csv";
 
@@ -61,11 +62,12 @@ const Farmer = () => {
     { label: "District", key: "ds_id" },
     { label: "Zone", key: "z_id" },
     { label: "Region", key: "r_id" },
-    { label: "Status", key:  "isDeleted" },
+    { label: "Status", key: "isDeleted" },
   ];
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full ">
+        <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
             Farmer Information

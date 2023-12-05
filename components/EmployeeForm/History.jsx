@@ -405,7 +405,13 @@ const History = (props) => {
       className=" bg-white rounded shadow p-4 w-full pb-20"
       onSubmit={(e) => e.preventDefault()}
     >
-      <Toaster position="bottom-center" reverseOrder={false} />
+      <Toaster
+        position="bottom-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 500,
+        }}
+      />
 
       <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
         <div className="w-2/3  px-2  lg:w-1/2 ">
@@ -716,7 +722,7 @@ const History = (props) => {
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
+            type="number"
             id="inputField"
             placeholder="Approval Fee Amt."
             value={ctcData.approvalFee}
@@ -735,7 +741,7 @@ const History = (props) => {
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
+            type="number"
             id="inputField"
             placeholder=" Monthy Expensive Budget"
             value={ctcData.mostExpensiveBudget}
@@ -985,22 +991,21 @@ const History = (props) => {
         </div>
       </div>
       {router.query.type === "Edit" && (
-         <div className="flex justify-between  gap-2 w-2/3 mt-12  flex gap-1 lg:w-1/2   overflow-hidden  px-4 py-1 text-white  pointer">
-         <div
-           className="w-full  text-center  bg-green-700 px-4 py-1 text-white cursor-pointer"
-           onClick={() => props.formType("Bank")}
-         >
-           ...Prev
-         </div>
-         <div
-           className=" w-full text-center bg-orange-400 px-4 py-1 text-white cursor-pointer"
-           onClick={() => handleEditHistory()}
-         >
-           Next..
-         </div>
-       </div>
+        <div className="flex justify-between  gap-2 w-2/3 mt-12  flex gap-1 lg:w-1/2   overflow-hidden  px-4 py-1 text-white  pointer">
+          <div
+            className="w-full  text-center  bg-green-700 px-4 py-1 text-white cursor-pointer"
+            onClick={() => props.formType("Bank")}
+          >
+            ...Prev
+          </div>
+          <div
+            className=" w-full text-center bg-orange-400 px-4 py-1 text-white cursor-pointer"
+            onClick={() => handleEditHistory()}
+          >
+            Next..
+          </div>
+        </div>
       )}
-    
     </form>
   );
 };

@@ -175,11 +175,10 @@ const Employee = () => {
         abortEarly: false,
       });
       const data = {
-        appl_no: "Exapmle no",
         c_id: Number(employeeDetails.commpany),
 
         t_id: Number(employeeDetails.territory),
-        appl_no: "WCL-DL-HR-0000",
+
         appl_dt: new Date(),
         prefix: employeeDetails.prefix,
         fname: employeeDetails.firstName,
@@ -284,6 +283,7 @@ const Employee = () => {
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
+        <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between px-2  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Employee</h2>
           <span className="flex items-center gap-2 cursor-pointer">
@@ -351,10 +351,10 @@ const Employee = () => {
                     Company
                   </th>
                   <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    Status{" "}
+                    Emp Status
                   </th>
                   <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    Emp Status
+                    Status{" "}
                   </th>
                 </tr>
               </thead>
@@ -418,10 +418,10 @@ const Employee = () => {
                       {item.c_id}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.isDeleted == false ? "Enabled" : "Disabled"}
+                      {item.emp_status}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.emp_status}
+                      {item.isDeleted == false ? "Enabled" : "Disabled"}
                     </td>
                   </tr>
                 ))}
@@ -507,7 +507,7 @@ const Employee = () => {
                         <div className="flex flex-row gap-1 w-1/2 lg:flex flex-row gap-1 w-max">
                           {" "}
                           <select
-                            className="  text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                            className="  text-sm   text-gray-700  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                             id="stateSelect"
                             value={employeeDetails.prefix}
                             disabled={empIdState}
@@ -539,7 +539,7 @@ const Employee = () => {
                             </option>
                           </select>
                           <input
-                            className="  px-3 py-1 text-sm border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                            className="text-black px-3 py-1 text-sm border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                             type="text"
                             id="small-input"
                             placeholder="First Name"
@@ -563,7 +563,7 @@ const Employee = () => {
                           Mid Name
                         </label>
                         <input
-                          className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
                           id="small-input"
                           placeholder="Middle Name"
@@ -586,7 +586,7 @@ const Employee = () => {
                           Last Name
                         </label>
                         <input
-                          className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
                           id="small-input"
                           placeholder="Last Name"
@@ -609,7 +609,7 @@ const Employee = () => {
                           Mobile No
                         </label>
                         <input
-                          className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="number"
                           id="small-input"
                           placeholder="Mobile No"
@@ -631,7 +631,7 @@ const Employee = () => {
                           Email
                         </label>
                         <input
-                          className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
                           id="small-input"
                           placeholder="Email"
@@ -653,7 +653,7 @@ const Employee = () => {
                           Position
                         </label>
                         <input
-                          className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
                           id="small-input"
                           placeholder="Position"
@@ -676,7 +676,7 @@ const Employee = () => {
                           Territory
                         </label>
                         <select
-                          className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           id="stateSelect"
                           value={employeeDetails.territory}
                           disabled={empIdState}
@@ -713,7 +713,7 @@ const Employee = () => {
                           Company
                         </label>
                         <select
-                          className="w-[70%] px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          className="text-black w-[70%] px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           id="stateSelect"
                           value={employeeDetails.commpany}
                           disabled={empIdState}
@@ -752,7 +752,7 @@ const Employee = () => {
                           </label>
 
                           <input
-                            className=" w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                            className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                             type="text"
                             id="small-input"
                             placeholder="Position"

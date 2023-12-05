@@ -174,7 +174,13 @@ const Personal = (props) => {
       className=" bg-white rounded shadow p-4 w-full pb-20"
       onSubmit={(e) => e.preventDefault()}
     >
-      <Toaster position="bottom-center" reverseOrder={false} />
+      <Toaster
+        position="bottom-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 500,
+        }}
+      />
       <div className="flex bg-gray-100 w-2/3 h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Identification Details
       </div>
@@ -192,12 +198,13 @@ const Personal = (props) => {
             id="inputField"
             placeholder="PAN no"
             value={personalData.pan}
-            onChange={(e) =>
-              setPersonalData({
-                ...personalData,
-                pan: e.target.value.toUpperCase(),
-              })
-            }
+            onChange={(e) => {
+              e.target.value.length !== 13 &&
+                setPersonalData({
+                  ...personalData,
+                  pan: e.target.value.toUpperCase(),
+                });
+            }}
           />
         </div>
         <div className="w-2/3  px-2  lg:w-1/2 ">
@@ -213,9 +220,10 @@ const Personal = (props) => {
             id="inputField"
             placeholder="Aadhar no."
             value={personalData.aadhar}
-            onChange={(e) =>
-              setPersonalData({ ...personalData, aadhar: e.target.value })
-            }
+            onChange={(e) => {
+              e.target.value.length !== 13 &&
+                setPersonalData({ ...personalData, aadhar: e.target.value });
+            }}
           />
         </div>
         <div className="w-2/3  px-2  lg:w-1/2 ">
@@ -294,9 +302,13 @@ const Personal = (props) => {
             id="inputField"
             placeholder="Emergency contact name"
             value={personalData.contactName}
-            onChange={(e) =>
-              setPersonalData({ ...personalData, contactName: e.target.value })
-            }
+            onChange={(e) => {
+              e.target.value.length !== 11 &&
+                setPersonalData({
+                  ...personalData,
+                  contactName: e.target.value,
+                });
+            }}
           />
         </div>
       </div>

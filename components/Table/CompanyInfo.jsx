@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
-
+import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { url } from "@/constants/url";
@@ -18,8 +18,8 @@ const CompanyInfo = () => {
     { label: "Contact Person", key: "contact_person" },
     { label: "Mobile No.", key: "phone_number" },
     { label: "Email", key: "email" },
-    { label: "GST No.", key: "gst_no" }, 
-    { label: "Status", key:  "isDeleted" },
+    { label: "GST No.", key: "gst_no" },
+    { label: "Status", key: "isDeleted" },
   ];
   const router = useRouter();
   const [data, setData] = useState([]);
@@ -59,6 +59,7 @@ const CompanyInfo = () => {
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
+        <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
             Company Info.

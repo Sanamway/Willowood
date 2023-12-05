@@ -75,7 +75,13 @@ const Family = (props) => {
       className=" bg-white rounded shadow p-4 w-full pb-20"
       onSubmit={(e) => e.preventDefault()}
     >
-      <Toaster position="bottom-center" reverseOrder={false} />
+      <Toaster
+        position="bottom-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 500,
+        }}
+      />
       <div className="flex bg-gray-100 w-2/3 h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Parental Information
       </div>
@@ -134,9 +140,19 @@ const Family = (props) => {
             className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             value={familyData.maritialStatus}
-            onChange={(e) =>
-              setFamilyData({ ...familyData, maritialStatus: e.target.value })
-            }
+            onChange={(e) => {
+              e.target.value !== "Married"
+                ? setFamilyData({
+                    ...familyData,
+                    maritialStatus: e.target.value,
+                    spouseName: "",
+                    dom: "",
+                  })
+                : setFamilyData({
+                    ...familyData,
+                    maritialStatus: e.target.value,
+                  });
+            }}
           >
             <option
               value=""
@@ -145,7 +161,8 @@ const Family = (props) => {
               Option
             </option>
             <option value="Married">Married</option>
-            <option value="Un-Married">Seprated</option>
+            <option value="Un-Married">Un-Married</option>
+            <option value="Seprated">Un-Married</option>
             <option value="Others">Others</option>
           </select>
         </div>
@@ -170,27 +187,28 @@ const Family = (props) => {
           </div>
         )}
       </div>
-
-      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
-        <div className="w-2/3  px-2  lg:w-1/2 ">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Date of Marriage
-          </label>
-          <DatePicker
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            value={moment(familyData.dom).format("LL")}
-            onChange={(date) =>
-              setFamilyData({
-                ...familyData,
-                dom: moment(date).format("LL"),
-              })
-            }
-          />
+      {familyData.maritialStatus === "Married" && (
+        <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
+          <div className="w-2/3  px-2  lg:w-1/2 ">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="inputField"
+            >
+              <small className="text-red-600">*</small> Date of Marriage
+            </label>
+            <DatePicker
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              value={moment(familyData.dom).format("LL")}
+              onChange={(date) =>
+                setFamilyData({
+                  ...familyData,
+                  dom: moment(date).format("LL"),
+                })
+              }
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {router.query.type === "Edit" && (
         <div className="flex justify-between  gap-2 w-2/3 mt-12  flex gap-1 lg:w-1/2   overflow-hidden  px-4 py-1 text-white  pointer">

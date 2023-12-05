@@ -14,7 +14,7 @@ const Snapshot = (props) => {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-  const [formActive, setFormActive] = useState(false);
+
   const [snapshotData, setSnapshotData] = useState({
     prefix: "",
     firstName: "",
@@ -176,7 +176,6 @@ const Snapshot = (props) => {
       });
       if (newErrors.mobile) toast.error(newErrors.mobile);
       setLoading(false);
-    } finally {
     }
   };
 
@@ -243,11 +242,19 @@ const Snapshot = (props) => {
       className=" bg-white rounded shadow p-4 w-full pb-20"
       onSubmit={(e) => e.preventDefault()}
     >
-      <Toaster position="bottom-center" reverseOrder={false} />
+      <Toaster
+        position="bottom-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 500,
+        }}
+      />
+
       <div className="flex bg-gray-100 w-2/3 h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Basic Information
       </div>
-      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-2 ">
+
+      <div className="flex flex-col gap-2  w-2/3  lg:flex-row -mx-2 mb-2 ">
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -310,7 +317,7 @@ const Snapshot = (props) => {
           />
         </div>
       </div>
-      <div className="flex flex-col gap-2   lg:flex-row -mx-2  ">
+      <div className="flex flex-col gap-2  w-2/3  lg:flex-row -mx-2  ">
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -352,7 +359,7 @@ const Snapshot = (props) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-2 mt-2">
+      <div className="flex flex-col gap-2   w-2/3  lg:flex-row -mx-2 mb-2 mt-2">
         <div className="w-2/3  px-2  lg:w-1/3 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -401,7 +408,7 @@ const Snapshot = (props) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-2 ">
+      <div className="flex flex-col gap-2 w-2/3   lg:flex-row -mx-2 mb-2 ">
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -497,9 +504,10 @@ const Snapshot = (props) => {
             id="inputField"
             placeholder="Mobile Number"
             value={snapshotData.mobile}
-            onChange={(e) =>
-              setSnapshotData({ ...snapshotData, mobile: e.target.value })
-            }
+            onChange={(e) => {
+              e.target.value.length !== 11 &&
+                setSnapshotData({ ...snapshotData, mobile: e.target.value });
+            }}
           />
         </div>
       </div>
@@ -591,7 +599,7 @@ const Snapshot = (props) => {
         <div className="flex justify-start w-full ">
           <button
             className="text-center w-2/3 mt-12 bg-orange-500 lg: w-40   bg-green-700 px-4 py-1 text-white  cursor-pointer"
-            disabled={loading}
+            disabled={loading === true}
             onClick={() => {
               handleEditSnapshot();
             }}

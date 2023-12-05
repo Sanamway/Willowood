@@ -9,17 +9,18 @@ import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
 import { CSVLink } from "react-csv";
 import { TbFileDownload } from "react-icons/tb";
+import toast, { Toaster } from "react-hot-toast";
 const ZoneTable = () => {
   const csvHeaders = [
     { label: "Id", key: "z_id" },
     { label: "Zone", key: "zone_name" },
-    { label: "Unit Division", key: "bu_id" },
-    { label: "Business Segment", key: "bg_id" },
-    { label: "Company", key: "c_id" },
+    { label: "Unit Division", key: "business_unit_name" },
+    { label: "Business Segment", key: "business_segment" },
+    { label: "Company", key: "cmpny_name" },
     { label: "Email", key: "email_id" },
     { label: "H.O.D.", key: "hod_name" },
     { label: "Mobile No.", key: "phone_number" },
-    { label: "Status", key:  "isDeleted" },
+    { label: "Status", key: "isDeleted" },
   ];
   const router = useRouter();
 
@@ -58,6 +59,7 @@ const ZoneTable = () => {
 
   return (
     <Layout>
+      <Toaster position="bottom-center" reverseOrder={false} />
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Zone</h2>
@@ -178,13 +180,13 @@ const ZoneTable = () => {
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {" "}
-                      {item.bu_id}
+                      {item.business_unit_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.bg_id}
+                      {item.business_segment}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.c_id}
+                      {item.cmpny_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.email_id}

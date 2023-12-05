@@ -89,7 +89,13 @@ const Bank = (props) => {
       className=" bg-white rounded shadow p-4 w-full pb-20 h-[80%]"
       onSubmit={(e) => e.preventDefault()}
     >
-      <Toaster position="bottom-center" reverseOrder={false} />
+      <Toaster
+        position="bottom-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 500,
+        }}
+      />
       <div className="flex bg-gray-100  h-8 w-2/3  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Bank Information
       </div>

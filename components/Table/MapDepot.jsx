@@ -7,7 +7,7 @@ import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
-
+import toast, { Toaster } from "react-hot-toast";
 const MapDepot = () => {
   const router = useRouter();
 
@@ -48,6 +48,7 @@ const MapDepot = () => {
     <>
       <Layout>
         <div className="h-screen overflow-auto w-full font-arial bg-white ">
+          <Toaster position="bottom-center" reverseOrder={false} />
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">
               Map Depot Warehouse
@@ -186,7 +187,7 @@ const MapDepot = () => {
                           <td className="border px-4 py-2">{menu.bg_id}</td>
                           <td className="border px-4 py-2">{menu.c_id}</td>
                           <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                                {menu.isDeleted == false ? "Enabled" : "Disabled"}
+                            {menu.isDeleted == false ? "Enabled" : "Disabled"}
                           </td>
                         </tr>
                       ))}

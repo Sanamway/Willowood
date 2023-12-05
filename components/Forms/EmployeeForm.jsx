@@ -63,14 +63,14 @@ const EmployeeForm = () => {
           </span>
         </div>
 
-        <div className="w-[100%] flex ">
+        <div className="w-[80%] flex ">
           <ul className="flex border-b  px-2 overflow-x-auto w-2/3 lg:flex border-b overflow-hidden ">
             <li className="ml-2 lg:-mb-px mr-1 lg:-mb-px mr-1">
               <button
                 className={`${
                   formType === "Snapshot"
                     ? " flex  gap-2 inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
-                    : " flex  gap-2  bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                    : " flex  gap-2  bg-white inline-block  text-black rounded-t py-2 px-4 font-semibold"
                 }`}
                 onClick={() => setFormType("Snapshot")}
                 disabled={router.query.type === "Edit"}
@@ -83,7 +83,7 @@ const EmployeeForm = () => {
                 className={`${
                   formType === "Personal"
                     ? "  flex  gap-2  inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
-                    : "  flex  gap-2 bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                    : "  flex  gap-2 bg-white inline-block  text-black rounded-t py-2 px-4 font-semibold"
                 }`}
                 onClick={() => setFormType("Personal")}
                 disabled={router.query.type === "Edit"}
@@ -97,7 +97,7 @@ const EmployeeForm = () => {
                 className={`${
                   formType === "Family"
                     ? "flex  gap-2  inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
-                    : "flex  gap-2 bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                    : "flex  gap-2 bg-white inline-block  text-black rounded-t py-2 px-4 font-semibold"
                 }`}
                 onClick={() => setFormType("Family")}
                 disabled={router.query.type === "Edit"}
@@ -111,7 +111,7 @@ const EmployeeForm = () => {
                 className={`${
                   formType === "Bank"
                     ? "flex  gap-2 inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
-                    : "flex  gap-2 bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                    : "flex  gap-2 bg-white inline-block text-black  rounded-t py-2 px-4 font-semibold"
                 }`}
                 onClick={() => setFormType("Bank")}
                 disabled={router.query.type === "Edit"}
@@ -125,19 +125,20 @@ const EmployeeForm = () => {
                 className={`${
                   formType === "History"
                     ? "flex  gap-2 inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white  whitespace-nowrap"
-                    : "flex  gap-2 bg-white inline-block   rounded-t py-2 px-4 font-semibold whitespace-nowrap"
+                    : "flex  gap-2 bg-white inline-block  text-black rounded-t py-2 px-4 font-semibold whitespace-nowrap"
                 }`}
                 onClick={() => setFormType("History")}
+                disabled={router.query.type === "Edit"}
               >
                 <AiOutlineCluster className="mt-1" /> Joining
               </button>
             </li>
-            <li className="-mb-px mr-1 ">
+            <li className="-mb-px mr-5 ">
               <button
                 className={`${
                   formType === "Documents"
                     ? " flex  gap-2 inline-block border-l border-t border-r rounded-t py-2 px-4 font-semibold  bg-orange-500 text-white"
-                    : " flex  gap-2 bg-white inline-block   rounded-t py-2 px-4 font-semibold"
+                    : " flex  gap-2 bg-white inline-block text-black  rounded-t py-2 px-4 font-semibold"
                 }`}
                 onClick={() => setFormType("Documents")}
               >

@@ -8,20 +8,21 @@ import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
 import { CSVLink } from "react-csv";
 import { TbFileDownload } from "react-icons/tb";
+import toast, { Toaster } from "react-hot-toast";
 const Village = () => {
   const csvHeaders = [
     { label: "Id", key: "v_id" },
     { label: "Village", key: "village_town_name" },
     { label: "Pin Code", key: "village_pin_code" },
     { label: "Post Office", key: "village_post_office" },
-    { label: "District", key: "ds_id" },
-    { label: "Territory", key: "t_id" },
-    { label: "Region", key: "r_id" },
-    { label: "Zone", key: "z_id" },
-    { label: "Unit Division", key: "bu_id" },
-    { label: "Business Segment", key: "bg_id" },
-    { label: "Company", key: "c_id" },
-    { label: "Status", key:  "isDeleted" },
+    { label: "District", key: "district_name" },
+    { label: "Territory", key: "territory_name" },
+    { label: "Region", key: "region_name" },
+    { label: "Zone", key: "zone_name" },
+    { label: "Unit Division", key: "business_unit_name" },
+    { label: "Business Segment", key: "business_segment" },
+    { label: "Company", key: "cmpny_name" },
+    { label: "Status", key: "isDeleted" },
   ];
   const router = useRouter();
 
@@ -60,6 +61,7 @@ const Village = () => {
 
   return (
     <Layout>
+      <Toaster position="bottom-center" reverseOrder={false} />
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Village</h2>
@@ -198,25 +200,25 @@ const Village = () => {
                       {item.village_post_office}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.ds_id}
+                      {item.district_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.t_id}
+                      {item.territory_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.r_id}
+                      {item.region_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.z_id}
+                      {item.zone_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.bu_id}
+                      {item.business_unit_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.bg_id}
+                      {item.business_segment}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.c_id}
+                      {item.cmpny_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.isDeleted == false ? "Enabled" : "Disabled"}
