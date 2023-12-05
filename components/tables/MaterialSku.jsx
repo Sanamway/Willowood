@@ -235,8 +235,8 @@ const MaterialSku = () => {
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.mat_name}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.techn_spec}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.uom}</td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.pcat_id}</td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.pseg_id}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.pcat_name}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.pseg_name}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.brand_code}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.division}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.crop_id}</td>
@@ -246,7 +246,7 @@ const MaterialSku = () => {
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.pack_size}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.packing_size}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.batch ? "true":"false"}</td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.c_id}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.cmpny_name}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.isDeleted ? "Disable":"Enable"}</td>
                       </tr>
                     )

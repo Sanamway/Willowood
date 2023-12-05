@@ -294,26 +294,26 @@ const MaterialSkuInfo = () => {
       const resp = await axios.get(`${url}/api/get_product_material_sku/?mat_id=${id}`, { headers: headers });
       const respdata = await resp.data.data;
       setFormData({
-        mat_code: respdata?.mat_id,
-        mat_name: respdata?.mat_name,
-        matnr: respdata?.matnr,
-        techn_spec: respdata?.techn_spec,
-        uom: respdata?.uom,
+        mat_code: respdata[0]?.mat_id,
+        mat_name: respdata[0]?.mat_name,
+        matnr: respdata[0]?.matnr,
+        techn_spec: respdata[0]?.techn_spec,
+        uom: respdata[0]?.uom,
         crops: [],
-        crop_id: respdata?.crop_id,
-        pcat_id: respdata?.pcat_id,
-        pseg_id:respdata?.pseg_id ,
-        brand_code: respdata?.brand_code,
-        wgt_uom: respdata?.wgt_uom,
-        batch: respdata?.batch,
-        c_name: respdata?.c_name,
-        c_id: respdata?.c_id,
-        gross_wgt: respdata?.gross_wgt,
-        packing_size: respdata?.packing_size,
-        net_wgt:respdata?.net_wgt, 
-        pack_size: respdata?.pack_size,
-        division: respdata?.division,
-        brand_name:respdata?.brand_name
+        crop_id: respdata[0]?.crop_id,
+        pcat_id: respdata[0]?.pcat_id,
+        pseg_id:respdata[0]?.pseg_id ,
+        brand_code: respdata[0]?.brand_code,
+        wgt_uom: respdata[0]?.wgt_uom,
+        batch: respdata[0]?.batch,
+        c_name: respdata[0]?.c_name,
+        c_id: respdata[0]?.c_id,
+        gross_wgt: respdata[0]?.gross_wgt,
+        packing_size: respdata[0]?.packing_size,
+        net_wgt:respdata[0]?.net_wgt, 
+        pack_size: respdata[0]?.pack_size,
+        division: respdata[0]?.division,
+        brand_name:respdata[0]?.brand_name
       });
       console.log("getbyid", respdata);
     } catch (error) {}

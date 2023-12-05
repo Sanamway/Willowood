@@ -124,19 +124,19 @@ const ProductBrand = () => {
                   <th className=" w-[12%] px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Action
                   </th>
-                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     Brand Code
                   </th>
-                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     Brand Name
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     Product Segment
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     Company
                   </th>
-                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     Status
                   </th>
                 </tr>
@@ -177,10 +177,10 @@ const ProductBrand = () => {
                         Delete
                       </button>
                     </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.brand_code}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.brand_name}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.pseg_id}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.c_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.brand_code}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.brand_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.pseg_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.cmpny_name}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.isDeleted ? "Disabled" : "Enabled"}
                     </td>

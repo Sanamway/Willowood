@@ -55,18 +55,18 @@ const UserInformation = () => {
   ];
 
   const statusUl =(item)=>{
-    if(item.ul_name =="0"){
+    if(item.status =="0"){
       return "Not Active"
     }
-    if(item.ul_name =="1"){
+    if(item.status =="1"){
       return "Active"
     }
 
-    if(item.ul_name =="2"){
+    if(item.status =="2"){
       return "Frozen"
     }
 
-    if(item.ul_name =="3"){
+    if(item.status =="3"){
       return "Lock"
     }
   }
@@ -168,11 +168,11 @@ const UserInformation = () => {
                     User Role
                   </th>
                   <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    User Status
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Status
                   </th>
-                  {/* <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    status
-                  </th> */}
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
@@ -223,6 +223,7 @@ const UserInformation = () => {
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.phone_number}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.t_user}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{statusUl(item)}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.isDeleted ==true ? "Disable":"Enable"}</td>
                     {/* <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.status == 1 ? "Enabled" : "Disabled"}
                     </td> */}

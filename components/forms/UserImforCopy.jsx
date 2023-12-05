@@ -44,7 +44,7 @@ const UserInformation = () => {
         email: apires[0].email,
         phone_number: apires[0].phone_number,
         t_user: apires[0].t_user,
-        ul_name: apires[0].ul_name,
+        status: apires[0].status,
         position: apires[0].position,
         about_me: apires[0].about_me
       });
@@ -72,7 +72,7 @@ const UserInformation = () => {
     t_user: "",
     position: "",
     about_me: "",
-    ul_name: "",
+    status: "",
     c_name: "skp",
     image :userImage
   });
@@ -103,7 +103,7 @@ const UserInformation = () => {
       .oneOf([Yup.ref("password"), null], "Passwords must match")
       .required("Confirm Password is required"),
     t_user: Yup.string().required("Profile is required"),
-    ul_name: Yup.string().required("Status is required"),
+    status: Yup.string().required("Status is required"),
     city: Yup.string().required("City is required"),
     state: Yup.string().required("State is required"),
     position: Yup.string().required("Designation is required")
@@ -125,7 +125,7 @@ const UserInformation = () => {
         email: formState.email,
         phone_number: formState.phone_number,
         t_user: formState.t_user,
-        ul_name: formState.ul_name,
+        status: formState.status,
         position: formState.position,
         about_me: formState.about_me,
         image: formState.image,
@@ -182,7 +182,7 @@ const UserInformation = () => {
         email: formState.email,
         phone_number: formState.phone_number,
         t_user: formState.t_user,
-        ul_name: formState.ul_name,
+        status: formState.status,
         position: formState.position,
         about_me: formState.about_me
       };
@@ -650,12 +650,12 @@ const UserInformation = () => {
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-gray-500"
                       id="statusSelect"
-                      name="ul_name"
-                      value={formState.ul_name}
+                      name="status"
+                      value={formState.status}
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          ul_name: e.target.value
+                          status: e.target.value
                         })
                       }
                     >
@@ -670,9 +670,9 @@ const UserInformation = () => {
                       <option value={2}>Frozen</option>
                       <option value={3}>Block</option>
                     </select>
-                    {formErrors.ul_name && (
+                    {formErrors.status && (
                       <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
-                        {formErrors.ul_name}
+                        {formErrors.status}
                       </p>
                     )}
                   </div>

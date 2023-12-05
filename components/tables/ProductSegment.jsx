@@ -173,7 +173,7 @@ const ProductSegment = () => {
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.pseg_id}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.pseg_name}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.c_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.cmpny_name}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.isDeleted ? "Disabled" : "Enabled"}</td>
                   </tr>
                 ))}
