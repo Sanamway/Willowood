@@ -9,19 +9,20 @@ import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
 import { CSVLink } from "react-csv";
 import { TbFileDownload } from "react-icons/tb";
+import toast, { Toaster } from "react-hot-toast";
 const Territory = () => {
   const csvHeaders = [
-    { label: "Id", key: "t_id" },
+     { label: "Id", key: "t_id" },
     { label: "Territory", key: "territory_name" },
-    { label: "Region", key: "r_id" },
-    { label: "Zone", key: "z_id" },
-    { label: "Unit Division", key: "bu_id" },
+    { label: "Region", key: "region_name" },
+    { label: "Zone", key: "zone_name" },
+    { label: "Unit Division", key: "business_unit_name" },
     { label: "Business Segment", key: "bg_id" },
-    { label: "Company", key: "c_id" },
+    { label: "Company", key: "cmpny_name" },
     { label: "Email", key: "email_id" },
     { label: "H.O.D.", key: "hod_name" },
     { label: "Mobile No.", key: "mobile_no" },
-    { label: "Status", key:  "isDeleted" },
+    { label: "Status", key: "isDeleted" },
   ];
   const router = useRouter();
 
@@ -61,6 +62,7 @@ const Territory = () => {
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
+        <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Territory</h2>
           <span className="flex items-center gap-2 cursor-pointer">
@@ -188,19 +190,19 @@ const Territory = () => {
                       {item.territory_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.r_id}
+                      {item.region_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.z_id}
+                      {item.zone_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.bu_id}
+                      {item.business_unit_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.bg_id}
+                      {item.business_segment}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.c_id}
+                      {item.cmpny_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.email_id}

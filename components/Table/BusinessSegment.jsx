@@ -9,15 +9,16 @@ import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
 import { CSVLink } from "react-csv";
 import { TbFileDownload } from "react-icons/tb";
+import toast, { Toaster } from "react-hot-toast";
 const BusinessSegment = () => {
   const csvHeaders = [
     { label: "Id", key: "bg_id" },
     { label: "Business Segment", key: "business_segment" },
-     { label: "Company", key: "c_id" },
+    { label: "Company", key: "cmpny_name" },
     { label: "Email", key: "email_id" },
     { label: "H.O.D.", key: "hod_name" },
     { label: "Mobile No.", key: "mobile_no" },
-    { label: "Status", key:  "isDeleted" },
+    { label: "Status", key: "isDeleted" },
   ];
   const router = useRouter();
   const [data, setData] = useState([]);
@@ -55,6 +56,7 @@ const BusinessSegment = () => {
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
+        <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
             Business Segment
@@ -177,7 +179,7 @@ const BusinessSegment = () => {
                     </td>
 
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.c_id}
+                      {item.cmpny_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.email_id}

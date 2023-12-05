@@ -380,7 +380,7 @@ const RegionForm = () => {
                     })
                   }
                 >
-                  <option value={""} disabled>
+                  <option value={""} >
                     - Select -
                   </option>
                   {bgData.map((item, idx) => (
