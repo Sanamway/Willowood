@@ -223,7 +223,7 @@ const History = (props) => {
         doc: props.data?.dconfm || "",
         functionalManager: props.data?.functional_mgr || "",
         reportingManager: props.data?.Reporting_mgr || "",
-        retirementDate: props.data?.rdate || "",
+        retirementDate: moment(props.data?.dob).add(60, "years") || "",
         employementType: props.data?.etype || "",
         employementStatus: props.data?.estatus || "",
         approvalFee: props.data?.app_amt || "",
@@ -558,17 +558,40 @@ const History = (props) => {
             <small className="text-red-600">*</small> Date of joining
           </label>
 
-          <DatePicker
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            value={moment(ctcData.doj).format("LL")}
-            onChange={(date) =>
-              setCtcData({
-                ...ctcData,
-                doj: moment(date).format("LL"),
-                doc: moment(date).add(6, "months"),
-              })
-            }
-          />
+          {ctcData.doj ? (
+            <DatePicker
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              dateFormat="dd-MM-yyyy"
+              selected={new Date(ctcData.doj)}
+              peekNextMonth
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+              onChange={(date) =>
+                setCtcData({
+                  ...ctcData,
+                  doj: date,
+                  doc: moment(date).add(6, "months"),
+                })
+              }
+            />
+          ) : (
+            <DatePicker
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              dateFormat="dd-MM-yyyy"
+              peekNextMonth
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+              onChange={(date) =>
+                setCtcData({
+                  ...ctcData,
+                  doj: date,
+                  doc: moment(date).add(6, "months"),
+                })
+              }
+            />
+          )}
         </div>
       </div>
 
@@ -580,12 +603,20 @@ const History = (props) => {
           >
             <small className="text-red-600">*</small> Date of Confirmation
           </label>
-
-          <DatePicker
-            value={moment(ctcData.doc).format("LL")}
-            disabled
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-          />
+          {ctcData.doc ? (
+            <DatePicker
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              dateFormat="dd-MM-yyyy"
+              selected={new Date(ctcData.doc)}
+              disabled
+            />
+          ) : (
+            <DatePicker
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              dateFormat="dd-MM-yyyy"
+              disabled
+            />
+          )}
         </div>
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
@@ -636,16 +667,20 @@ const History = (props) => {
             Retirement date
           </label>
 
-          <DatePicker
-            value={moment(ctcData.retirementDate).format("LL")}
-            onChange={(date) =>
-              setCtcData({
-                ...ctcData,
-                retirementDate: moment(date).format("LL"),
-              })
-            }
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-          />
+          {ctcData.retirementDate ? (
+            <DatePicker
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              dateFormat="dd-MM-yyyy"
+              selected={new Date(ctcData.retirementDate)}
+              disabled
+            />
+          ) : (
+            <DatePicker
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              dateFormat="dd-MM-yyyy"
+              disabled
+            />
+          )}
         </div>
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
@@ -758,18 +793,41 @@ const History = (props) => {
           >
             <small className="text-red-600">*</small> Agreement Start Date
           </label>
-          <DatePicker
-            value={moment(ctcData.agreeStartDate).format("LL")}
-            onChange={(date) =>
-              setCtcData({
-                ...ctcData,
 
-                agreeEndDate: moment(date).add(6, "months"),
-                agreeStartDate: moment(date).format("LL"),
-              })
-            }
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-          />
+          {ctcData.agreeStartDate ? (
+            <DatePicker
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              dateFormat="dd-MM-yyyy"
+              selected={new Date(ctcData.agreeStartDate)}
+              peekNextMonth
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+              onChange={(date) =>
+                setCtcData({
+                  ...ctcData,
+                  agreeEndDate: moment(date).add(6, "months"),
+                  agreeStartDate: date,
+                })
+              }
+            />
+          ) : (
+            <DatePicker
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              dateFormat="dd-MM-yyyy"
+              peekNextMonth
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+              onChange={(date) =>
+                setCtcData({
+                  ...ctcData,
+                  agreeEndDate: moment(date).add(6, "months"),
+                  agreeStartDate: date,
+                })
+              }
+            />
+          )}
         </div>
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
@@ -778,11 +836,20 @@ const History = (props) => {
           >
             <small className="text-red-600">*</small> Agreement End Date
           </label>
-          <DatePicker
-            value={moment(ctcData.agreeEndDate).format("LL")}
-            disabled
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-          />
+          {ctcData.agreeEndDate ? (
+            <DatePicker
+              selected={new Date(ctcData.agreeEndDate)}
+              dateFormat="dd-MM-yyyy"
+              disabled
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            />
+          ) : (
+            <DatePicker
+              dateFormat="dd-MM-yyyy"
+              disabled
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            />
+          )}
         </div>
       </div>
       <div className="flex bg-gray-100 w-2/3 h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">

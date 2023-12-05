@@ -17,7 +17,7 @@ const District = () => {
     { label: "Region", key: "region_name" },
     { label: "Zone", key: "zone_name" },
     { label: "Unit Division", key: "business_unit_name" },
-    { label: "Business Segment", key: "business_segment" },
+    { label: "Business Segment", key: "bg_id" },
     { label: "Company", key: "cmpny_name" },
     { label: "Status", key: "isDeleted" },
   ];

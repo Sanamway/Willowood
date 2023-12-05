@@ -165,7 +165,7 @@ const Crop = () => {
                     {item.season_name}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.c_id}
+                    {item.cmpny_name}
                   </td>
                   <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                     {item.isDeleted == false ? "Enabled" : "Disabled"}

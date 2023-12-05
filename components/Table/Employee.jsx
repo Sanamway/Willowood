@@ -76,12 +76,13 @@ const Employee = () => {
     { label: "Month Exp. Budget", key: "mon_reiamt" },
     { label: "Agreement Start Date", key: "agg_startdate" },
     { label: "Agreement End Date", key: "agg_enddate" },
-    { label: "Company", key: "c_id" },
-    { label: "Business Segment", key: "bg_id" },
-    { label: "Business Unit Division", key: "bu_id" },
-    { label: "Zone", key: "z_id" },
-    { label: "Region", key: "r_id" },
-    { label: "Territory", key: "t_id" },
+
+    { label: "Territory", key: "territory_name" },
+    { label: "Region", key: "region_name" },
+    { label: "Zone", key: "zone_name" },
+    { label: "Unit Division", key: "business_unit_name" },
+    { label: "Business Segment", key: "business_segment" },
+    { label: "Company", key: "cmpny_name" },
     { label: "Remarks", key: "remarks" },
     { label: "Bank Name", key: "bank_name" },
     { label: "Beneficiary Name", key: "benef_name" },
@@ -412,10 +413,10 @@ const Employee = () => {
                       {item.emppos}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.t_id}
+                      {item.territory_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.c_id}
+                      {item.cmpny_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.emp_status}

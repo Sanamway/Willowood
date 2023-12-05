@@ -246,7 +246,7 @@ const Snapshot = (props) => {
         position="bottom-center"
         reverseOrder={false}
         toastOptions={{
-          duration: 500,
+          duration: 1000,
         }}
       />
 
@@ -344,18 +344,44 @@ const Snapshot = (props) => {
           >
             <small className="text-red-600">*</small> Date of birth
           </label>
-          <DatePicker
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            value={snapshotData.dob}
-            onChange={(date) =>
-              setSnapshotData({
-                ...snapshotData,
-                age: moment(new Date()).diff(moment(date), "years"),
-                dob: moment(date).format("LL"),
-              })
-            }
-            maxDate={new Date(moment().subtract(18, "years"))}
-          />
+
+          {snapshotData.dob ? (
+            <DatePicker
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              dateFormat="dd-MM-yyyy"
+              selected={new Date(snapshotData.dob)}
+              peekNextMonth
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+              onChange={(date) =>
+                setSnapshotData({
+                  ...snapshotData,
+                  age: moment(new Date()).diff(moment(date), "years"),
+                  dob: moment(date).format("LL"),
+                })
+              }
+              maxDate={new Date(moment().subtract(18, "years"))}
+            />
+          ) : (
+            <DatePicker
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              dateFormat="dd-MM-yyyy"
+              
+              peekNextMonth
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+              onChange={(date) =>
+                setSnapshotData({
+                  ...snapshotData,
+                  age: moment(new Date()).diff(moment(date), "years"),
+                  dob: moment(date).format("LL"),
+                })
+              }
+              maxDate={new Date(moment().subtract(18, "years"))}
+            />
+          )}
         </div>
       </div>
 

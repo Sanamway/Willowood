@@ -303,11 +303,10 @@ const Personal = (props) => {
             placeholder="Emergency contact name"
             value={personalData.contactName}
             onChange={(e) => {
-              e.target.value.length !== 11 &&
-                setPersonalData({
-                  ...personalData,
-                  contactName: e.target.value,
-                });
+              setPersonalData({
+                ...personalData,
+                contactName: e.target.value,
+              });
             }}
           />
         </div>
