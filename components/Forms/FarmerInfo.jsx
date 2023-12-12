@@ -247,7 +247,7 @@ const FarmerInfo = () => {
       console.log("error", error);
     }
   };
-  console.log("jklop", villagetData);
+
   useEffect(() => {
     if (
       farmerState.bgId &&

@@ -95,85 +95,87 @@ const Crop = () => {
           </span>
         </div>
 
-        <div className="bg-gray-0 p-4 bg-gray-100 flex items-start overflow-x-auto ">
-          <table className=" border divide-gray-200 table-auto w-full ">
-            <thead className="border-b">
-              <tr className="bg-gray-50 font-arial w-max">
-                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  Action
-                </th>
-                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  Crop ID
-                </th>
+        <div className="bg-white h-screen flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+            <table className=" border divide-gray-200 table-auto w-full ">
+              <thead className="border-b">
+                <tr className="bg-gray-50 font-arial w-max">
+                  <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Action
+                  </th>
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Crop ID
+                  </th>
 
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  Crop Name
-                </th>
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  Season Name
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  Company
-                </th>
-                <th className="px-4 py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-              {data?.map((item, idx) => (
-                <tr className="dark:border-2">
-                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                    <button
-                      onClick={() => {
-                        router.push({
-                          pathname: "/form/crop_form",
-                          query: { id: item.cr_id, type: "View" },
-                        });
-                      }}
-                      className="b text-black   hover:text-blue-500  "
-                    >
-                      View
-                    </button>
-                    <button
-                      className="b text-black hover:text-yellow-400 ml-2"
-                      onClick={() => {
-                        router.push({
-                          pathname: "/form/crop_form",
-                          query: { id: item.cr_id, type: "Edit" },
-                        });
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="b text-black hover:text-red-500 ml-2"
-                      onClick={() => {
-                        deleteHandler(item.cr_id);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.cr_id}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.crop_name}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.season_name}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.cmpny_name}
-                  </td>
-                  <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                    {item.isDeleted == false ? "Enabled" : "Disabled"}
-                  </td>
+                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Crop Name
+                  </th>
+                  <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Season Name
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Company
+                  </th>
+                  <th className="px-4 py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Status
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+                {data?.map((item, idx) => (
+                  <tr className="dark:border-2">
+                    <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                      <button
+                        onClick={() => {
+                          router.push({
+                            pathname: "/form/crop_form",
+                            query: { id: item.cr_id, type: "View" },
+                          });
+                        }}
+                        className="b text-black   hover:text-blue-500  "
+                      >
+                        View
+                      </button>
+                      <button
+                        className="b text-black hover:text-yellow-400 ml-2"
+                        onClick={() => {
+                          router.push({
+                            pathname: "/form/crop_form",
+                            query: { id: item.cr_id, type: "Edit" },
+                          });
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="b text-black hover:text-red-500 ml-2"
+                        onClick={() => {
+                          deleteHandler(item.cr_id);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.cr_id}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.crop_name}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.season_name}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.cmpny_name}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.isDeleted == false ? "Enabled" : "Disabled"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <ConfirmationModal

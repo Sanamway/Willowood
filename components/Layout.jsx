@@ -14,7 +14,7 @@ import menuItems from "@/constants/sidebarMenus";
 const Layout = ({ children }) => {
   const router = useRouter();
   const [isOpen, setOpen] = useState(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   const [isUser, setUser] = useState(false)

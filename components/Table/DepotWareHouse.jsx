@@ -1,15 +1,61 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
-import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import ConfirmationModal from "../modals/ConfirmationModal";
+import { CSVLink } from "react-csv";
+import { TbFileDownload } from "react-icons/tb";
 import toast, { Toaster } from "react-hot-toast";
 const DepotWareHouse = () => {
+  const csvHeaders = [
+    { label: "Id", key: "w_id" },
+    { label: "Depot Name", key: "depot_name" },
+    { label: "Pin", key: "dpin" },
+    { label: "City", key: "dcity" },
+    { label: "Country", key: "dcountry" },
+    { label: "State", key: "dstate" },
+    { label: "Comapny", key: "cmpny_name" },
+    { label: "Email", key: "email_id" },
+    { label: "mobile_no", key: "mobile_no" },
+    { label: "Hod", key: "hod_name" },
+  ];
   const router = useRouter();
+
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+  };
+
+  const [data, setData] = useState([]);
+  const getWarehouse = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_warehousedepot`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      setData(apires);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getWarehouse();
+  }, []);
+
+  const deleteHandler = (id) => {
+    setisOpen(true);
+    setDepotId(id);
+  };
+
+  const [isOpen, setisOpen] = useState(false);
+  const [depotId, setDepotId] = useState(null);
+
+  const resetData = () => {
+    getWarehouse();
+    setisOpen(false);
+  };
 
   return (
     <Layout>
@@ -33,11 +79,21 @@ const DepotWareHouse = () => {
                 <AiOutlineSearch className="mx-2 my-1" size={20} />
               </button>
             </span>
-
+            <h2>
+              <CSVLink data={data} headers={csvHeaders}>
+                <TbFileDownload
+                  className="text-green-600"
+                  size={34}
+                ></TbFileDownload>
+              </CSVLink>
+            </h2>
             <AiTwotoneHome className="text-red-500" size={34} />
             <button
               onClick={() => {
-                router.push("/form/depot_warehouse_form");
+                router.push({
+                  pathname: "/form/depot_warehouse_form",
+                  query: { id: null, type: "Add" },
+                });
               }}
               className=" text-white py-1 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
@@ -46,58 +102,141 @@ const DepotWareHouse = () => {
           </span>
         </div>
 
-        <div className="bg-gray-0 p-4 bg-gray-100 flex items-start overflow-x-auto ">
-          <table className="border divide-gray-200 table-auto w-full ">
-            <thead className="border-b">
-              <tr className="bg-gray-50 font-arial w-max">
-                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  Action
-                </th>
-                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  Depot ID
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  Depot Name
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Company
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-              <tr className="dark:border-2">
-                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                  <button
-                    onClick={() => {
-                      router.push("/form/depot_warehouse_form");
-                    }}
-                    className="b text-black   hover:text-blue-500  "
-                  >
-                    View
-                  </button>
-                  <button
-                    onClick={() => {
-                      router.push("/form/depot_warehouse_form");
-                    }}
-                    className="b text-black hover:text-yellow-400 ml-2"
-                  >
-                    Edit
-                  </button>
-                  <button className="b text-black hover:text-red-500 ml-2">
-                    Delete
-                  </button>
-                </td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  Company B
-                </td>
+        <div className="bg-white h-screen flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+            <table className="min-w-full divide-y border- divide-gray-200 ">
+              <thead className="border-b">
+                <tr className="bg-gray-50 font-arial w-max">
+                  <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Action
+                  </th>
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider ">
+                    Id
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Depot Name
+                  </th>
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Address
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    City
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    State
+                  </th>
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Country
+                  </th>
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Pin Code
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    H.O.D
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Mobile
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Company
+                  </th>
 
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
-              </tr>
-            </tbody>
-          </table>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+                {data?.map((item, idx) => (
+                  <tr className="dark:border-2" key={idx}>
+                    <td className="  px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                      <button
+                        onClick={() => {
+                          router.push({
+                            pathname: "/form/depot_warehouse_form",
+                            query: { id: item.w_id, type: "View" },
+                          });
+                        }}
+                        className="b text-black   hover:text-blue-500  "
+                      >
+                        View
+                      </button>
+                      <button
+                        onClick={() => {
+                          router.push({
+                            pathname: "/form/depot_warehouse_form",
+                            query: { id: item.w_id, type: "Edit" },
+                          });
+                        }}
+                        className="b text-black hover:text-yellow-400 ml-2"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="b text-black hover:text-red-500 ml-2"
+                        onClick={() => {
+                          deleteHandler(item.w_id);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.w_id}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.depot_name}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.daddress}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.dcity}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.dstate}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.dcountry}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.dpin}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.hod_name}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.mobile_no}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.email_id}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.cmpny_name}
+                    </td>
+
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.isDeleted == false ? "Enabled" : "Disabled"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={isOpen}
+        onClose={() => setisOpen(false)}
+        onOpen={() => setisOpen(true)}
+        id={depotId}
+        type="DepotWarehouse"
+        onDeletedData={resetData}
+      />
     </Layout>
   );
 };

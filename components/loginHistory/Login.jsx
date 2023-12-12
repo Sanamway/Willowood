@@ -46,7 +46,7 @@ const Login = () => {
       // console.log("datas", respdata?.data?.loginHistory)
       // console.log("status", respdata?.status)
 
-      console.log("respa", respdata)
+ 
 
       if (respdata?.message && respdata?.status == false) {
         setLoading(false);
@@ -62,6 +62,7 @@ const Login = () => {
         localStorage.setItem("email_id", email_id);
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("id", _id);
+
         router.push("/");
       }
     } catch (error) {

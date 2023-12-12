@@ -183,40 +183,41 @@ const Territory = () => {
                         Delete
                       </button>
                     </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                   
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap text-xs">
                       {item.t_id}
                     </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap text-xs">
                       {item.territory_name}
                     </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap text-xs">
                       {item.region_name}
                     </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap text-xs">
                       {item.zone_name}
                     </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap text-xs">
                       {item.business_unit_name}
                     </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap text-xs">
                       {item.business_segment}
                     </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap text-xs">
                       {item.cmpny_name}
                     </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap text-xs">
                       {item.email_id}
                     </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap text-xs">
                       {item.hod_name}
                     </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap text-xs">
                       {item.mobile_no}
                     </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap text-xs">
                       {item.cost_center}
                     </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap text-xs">
                       {item.isDeleted == false ? "Enable" : "Disable"}
                     </td>
                   </tr>
