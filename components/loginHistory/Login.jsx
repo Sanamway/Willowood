@@ -46,6 +46,10 @@ const Login = () => {
       // console.log("datas", respdata?.data?.loginHistory)
       // console.log("status", respdata?.status)
 
+      const userinfo = respdata?.data?.userBSTDetails
+      console.log("logInfo", userinfo?.bg_id)
+
+
  
 
       if (respdata?.message && respdata?.status == false) {
@@ -62,6 +66,7 @@ const Login = () => {
         localStorage.setItem("email_id", email_id);
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("id", _id);
+        localStorage.setItem("userinfo", JSON.stringify(userinfo))
 
         router.push("/");
       }

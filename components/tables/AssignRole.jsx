@@ -180,9 +180,9 @@ const [data, setData] = useState([])
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.role_id}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.U_profile_name}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.user_id}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.userprofile}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.userprofile}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.userprofile}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.user_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.user_phone}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.user_state}</td>
                   </tr>
                 ))}
               </tbody>

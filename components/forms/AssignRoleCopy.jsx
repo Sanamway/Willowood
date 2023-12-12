@@ -220,20 +220,20 @@ const AssignRoleCopy = () => {
           <div className="text-black mx-12 bg-white p-4 ">
             <div className="flex flex-col ">
               { router.query.type ==="view" &&
-                (<div className="w-1/3 px-2 flex whitespace-nowrap">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                (<div className="w-1/3 px-2 flex whitespace-nowrap items-center justify-center gap-2">
+                  <label className="block text-gray-700 text-sm font-bold " htmlFor="userSelect">
                     <span className="text-red-500 p-1">*</span>User Name
                   </label>
                   <input
                     disabled
-                    placeholder={allViewMenus[0]?.U_profile_name}
+                    placeholder={allViewMenus[0]?.user_name}
                     type="text"
                     className="w-full px-1 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus-border-indigo-500"
                   />
                 </div>)
               }
 
-             {router.query.type =="CREATE"&&( <div className="w-1/3 px-2 flex whitespace-nowrap">
+             {router.query.type =="CREATE"&&( <div className="w-1/3 px-2 flex whitespace-nowrap ">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
                   <span className="text-red-500 p-1">*</span>User Name
                 </label>
@@ -255,7 +255,7 @@ const AssignRoleCopy = () => {
               </div>)}
 
 
-              {router.query.type ==="view" && (<div className="w-1/3 px-2 flex mt-8 whitespace-nowrap">
+              {router.query.type ==="view" && (<div className="w-1/3 px-2 flex mt-8 whitespace-nowrap items-center justify-center gap-2">
                 <label className=" text-gray-700 text-sm font-bold flex" htmlFor="userSelect">
                   <span className="text-red-500 p-1">*</span> User Profile
                 </label>

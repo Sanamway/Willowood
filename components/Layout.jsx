@@ -50,6 +50,7 @@ const Layout = ({ children }) => {
   const [email_id, setEmailId] = useState("")
   const [user_name, setUsername] = useState("")
   const [uid, setUid] = useState("")
+  const [userinfo, setUserInfo] = useState("")
 
   useEffect(() => {
     if (window.localStorage) {
@@ -57,10 +58,13 @@ const Layout = ({ children }) => {
       const user_name = localStorage.getItem("user_name");
       const uid = localStorage.getItem("uid");
       const email_id = localStorage.getItem("email_id");
+      const userinfoo = localStorage.getItem("userinfo")
+
       setUser(isLoggedInInLocalStorage);
       setEmailId(email_id)
       setUsername(user_name)
       setUid(uid)
+      setUserInfo(userinfoo)
     }
 
     if(!localStorage.getItem("uid")){
@@ -69,7 +73,7 @@ const Layout = ({ children }) => {
   
   }, []);
 
-  console.log("yu", user_name, uid, email_id)
+  console.log("layinfo", userinfo)
 
   return (
     <>
