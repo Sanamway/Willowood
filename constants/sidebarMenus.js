@@ -4,7 +4,7 @@ import { FcBusinessman } from "react-icons/fc";
 
  const menuItems = [
   { id: 1, label: "Home", icon: AiOutlineHome, link: "/" },
-  { id: 1, label: "Login", icon: BiLogInCircle, link: "/login" },
+  
   { id: 1, label: "User Role Profile", icon: BiUser, link: "/table/table_user_profile" },
   { id: 2, label: "User Information", icon: BiUser, link: "/table/table_user_information" },
   { id: 2.1, label: "Assign Role Profile", icon: BiUser, link: "/table/table_assign_role" },
