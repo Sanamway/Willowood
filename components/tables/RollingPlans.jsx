@@ -13,21 +13,11 @@ import { Popover } from "@headlessui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CSVLink } from "react-csv";
+
 import moment from "moment";
 
 import { AiOutlineSearch } from "react-icons/ai";
 const RollingPlans = () => {
-  const router = useRouter();
-  const headers = {
-    "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
-  };
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
   const datas = [
     {
       id: 1,
@@ -204,7 +194,21 @@ const RollingPlans = () => {
       status: "Yet to submit",
     },
   ];
-
+  const router = useRouter();
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+  };
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [localStorageItems, setLocalStorageItems] = useState({
+    cId: null,
+    bgId: null,
+    buId: null,
+    rId: null,
+    zId: null,
+    tId: null,
+    roleId: null,
+  });
   const [filterState, setFilterState] = useState({
     bgId: null,
     buId: null,
@@ -214,9 +218,145 @@ const RollingPlans = () => {
     yr: null,
     month: null,
   });
+  useEffect(() => {
+    const roleId = JSON.parse(window.localStorage.getItem("userinfo")).role_id;
+    console.log("pay", roleId);
+    switch (roleId) {
+      case 6:
+        setLocalStorageItems({
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
+
+        setFilterState({
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          yr: null,
+          month: null,
+        });
+        break;
+      case 5:
+        setLocalStorageItems({
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
+
+        setFilterState({
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: null,
+          yr: null,
+          month: null,
+        });
+        break;
+      case 4:
+        setLocalStorageItems({
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
+
+        setFilterState({
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: null,
+          tId: null,
+          yr: null,
+          month: null,
+        });
+        break;
+      case 3:
+        setLocalStorageItems({
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
+
+        setFilterState({
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: null,
+          zId: null,
+          tId: null,
+          yr: null,
+          month: null,
+        });
+        break;
+      case 10:
+        setLocalStorageItems({
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
+
+        setFilterState({
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: null,
+          rId: null,
+          zId: null,
+          tId: null,
+          yr: null,
+          month: null,
+        });
+        break;
+      default:
+        setLocalStorageItems({
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
+
+        setFilterState({
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          yr: null,
+          month: null,
+        });
+        break;
+    }
+  }, []);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   const [bgData, setBgData] = useState([]);
-  // Getting Company Information for the dropdown values
+
   const getBusinesSegmentInfo = async () => {
     try {
       const respond = await axios.get(`${url}/api/get_business_segment`, {
@@ -350,7 +490,6 @@ const RollingPlans = () => {
         headers: headers,
         params: {
           year: moment(yr).year(),
-          
         },
       });
       const apires = await respond.data.data;
@@ -364,6 +503,91 @@ const RollingPlans = () => {
     getAllTransactionPlan(filterState.year);
   }, [filterState.year]);
 
+  const [allTableData, setAllTableData] = useState([]);
+  const getAllSalesPlanStatus = async (
+    yr,
+    month,
+    bgId,
+    buId,
+    zId,
+    rId,
+    tId
+  ) => {
+    console.log("jio", month);
+    try {
+      const respond = await axios.get(
+        `${url}/api/get_rollingdata_based_on_roll_t`,
+        {
+          headers: headers,
+
+          params: {
+            t_year: moment(yr).year() || null,
+            m_year:
+              month === "All" || !month
+                ? null
+                : moment(month).format("YYYY-MM"),
+            bg_id: bgId || null,
+            bu_id: buId || null,
+            z_id: zId || null,
+            r_id: rId || null,
+            t_id: tId || null,
+          },
+        }
+      );
+
+      const apires = await respond.data.data;
+      console.log("jkl", apires);
+      setAllTableData(apires);
+    } catch (error) {
+      setAllTableData([]);
+    }
+  };
+
+  useEffect(() => {
+    if (!filterState.year) return;
+    getAllSalesPlanStatus(
+      filterState.year,
+      filterState.month || null,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId
+    );
+  }, [
+    filterState.year,
+    filterState.month,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+  ]);
+
+  const getStatus = (status) => {
+    switch (status) {
+      case "Close Period":
+        return "black";
+
+      case "Review Stage":
+        return "#1c1c84";
+      case "Draft Submit":
+        return "#f67c41";
+      case "Final Submitted":
+        return "green";
+
+      case "Yet to Submit":
+        return "#f4141c";
+      case "Yet to Approve":
+        return "green";
+      case "Reject":
+        return "#f4141c";
+
+      default:
+        return "black";
+    }
+  };
+
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
@@ -372,26 +596,7 @@ const RollingPlans = () => {
             Rolling Sales Plan Status
           </h2>
           <span className="flex items-center gap-2 cursor-pointer">
-            {/* <h2>
-                    <CSVLink data={data} headers={csvHeaders}>
-                      <TbFileDownload
-                        className="text-green-600"
-                        size={34}
-                      ></TbFileDownload>
-                    </CSVLink>
-                  </h2> */}
             <AiTwotoneHome className="text-red-500" size={34} />
-            {/* <button
-                    onClick={() => {
-                      router.push({
-                        pathname: "/form/transaction_period_form",
-                        query: { id: null, type: "Add" },
-                      });
-                    }}
-                    className=" text-white py-1 px-2 rounded-md bg-green-500 hover:bg-orange-500"
-                  >
-                    Open Period
-                  </button> */}
           </span>
         </div>
         <div className="my-4 flex  flex-col w-full gap-4 px-12 ">
@@ -434,14 +639,20 @@ const RollingPlans = () => {
                   }
                   disabled={!filterState.year}
                 >
-                  <option value={null} className="font-bold">
-                    - All Month -
+                  <option value="All" className="font-bold">
+                    All
                   </option>
-                  {allMonthData.map((item, idx) => (
-                    <option value={item.m_year} key={idx}>
-                      {moment(item.m_year).format("MMM YYYY")}
-                    </option>
-                  ))}
+                  {allMonthData
+                    .filter(
+                      (item) =>
+                        item.clos_status === "Open Period" ||
+                        item.clos_status === "Close Period"
+                    )
+                    .map((item, idx) => (
+                      <option value={item.m_year} key={idx}>
+                        {moment(item.m_year).format("MMM YYYY")}
+                      </option>
+                    ))}
                 </select>
               )}
             </div>
@@ -458,11 +669,18 @@ const RollingPlans = () => {
                   bgId: e.target.value,
                 })
               }
+              disabled={
+                localStorageItems.roleId === 6 ||
+                localStorageItems.roleId === 5 ||
+                localStorageItems.roleId === 4 ||
+                localStorageItems.roleId === 3 ||
+                localStorageItems.roleId === 10
+              }
             >
-              <option value={null} className="font-bold">
+              <option value={""} className="font-bold">
                 - Business Segment -
               </option>
-             
+
               {bgData.map((item, idx) => (
                 <option value={item.bg_id} key={idx}>
                   {item.business_segment}
@@ -479,11 +697,15 @@ const RollingPlans = () => {
                   buId: e.target.value,
                 })
               }
+              disabled={
+                localStorageItems.roleId === 6 ||
+                localStorageItems.roleId === 5 ||
+                localStorageItems.roleId === 4 ||
+                localStorageItems.roleId === 3
+              }
             >
-              <option value={null}>- Business Unit -</option>
-              <option value="All" >
-               All Unit
-              </option>
+              <option value={""}>- Business Unit -</option>
+              <option value="All">All Unit</option>
               {buData.map((item, idx) => (
                 <option value={item.bu_id} key={idx}>
                   {item.business_unit_name}
@@ -501,11 +723,14 @@ const RollingPlans = () => {
                   zId: e.target.value,
                 })
               }
+              disabled={
+                localStorageItems.roleId === 6 ||
+                localStorageItems.roleId === 5 ||
+                localStorageItems.roleId === 4
+              }
             >
-              <option value={null}>- Zone -</option>
-              <option value="All" >
-               All Zone
-              </option>
+              <option value={""}>- Zone -</option>
+              <option value="All">All Zone</option>
               {zoneData.map((item, idx) => (
                 <option value={item.z_id} key={idx}>
                   {item.zone_name}
@@ -517,6 +742,9 @@ const RollingPlans = () => {
               className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
               value={filterState.rId}
+              disabled={
+                localStorageItems.roleId === 6 || localStorageItems.roleId === 5
+              }
               onChange={(e) =>
                 setFilterState({
                   ...filterState,
@@ -524,10 +752,8 @@ const RollingPlans = () => {
                 })
               }
             >
-              <option value={null}>- Region -</option>
-              <option value="All" >
-               All Region
-              </option>
+              <option value={""}>- Region -</option>
+              <option value="All">All Region</option>
               {regionData.map((item, idx) => (
                 <option value={item.r_id} key={idx}>
                   {item.region_name}
@@ -539,6 +765,7 @@ const RollingPlans = () => {
               className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
               value={filterState.tId}
+              disabled={localStorageItems.roleId === 6}
               onChange={(e) =>
                 setFilterState({
                   ...filterState,
@@ -546,10 +773,8 @@ const RollingPlans = () => {
                 })
               }
             >
-              <option value={null}>- Territory -</option>
-              <option value="All" >
-               All Territory
-              </option>
+              <option value={""}>- Territory -</option>
+              <option value="All">All Territory</option>
               {territoryData.map((item, idx) => (
                 <option value={item.t_id} key={idx}>
                   {item.territory_name}
@@ -569,8 +794,8 @@ const RollingPlans = () => {
                   <th className="px- py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
                     Depot
                   </th>
-                  <th className="px- py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
-                    Zone / Region / Territory
+                  <th className="pl-4 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
+                    Segment / Unit / Zone / Region / Territory
                   </th>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
                     Target Vs Actual
@@ -581,41 +806,41 @@ const RollingPlans = () => {
                 </tr>
               </thead>
               <tbody>
-                {datas.map((item) => (
-                  <tr key={item.id}>
+                {allTableData.map((item, idx) => (
+                  <tr key={idx}>
                     <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
                       <div className="flex items-center">
-                        <div className="">
-                          {/* <FcBullish size={30} className="text-green-500"></FcBullish> */}
-                          {<item.icon size={20}></item.icon>}
-                        </div>
+                        <div className=""></div>
                         <div className="ml-3">
                           <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">
-                            {item.name}
+                            Rolling Sales Plan
                           </p>
                           <p className="text-gray-900 whitespace-no-wrap text-[0.6rem]">
-                            {item.month} ({item.due_date})
+                            {moment(item.m_year).format("MMM YYYY")} (due date{" "}
+                            {moment(item.lastsubm_t_date).format("Do")})
                           </p>
                         </div>
                       </div>
                     </td>
                     <td className="px- py-2 border-b border-gray-200 bg-white text-sm ">
                       <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">
-                        {item.depot}
+                        Hyderabad
                       </p>
                     </td>
-                    <td className="px- py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
                       <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">
-                        {item.zone}
+                        {item.business_segment}/{item.business_unit_name}/
+                        {item.zone_name}/{item.region_name}/
+                        {item.territory_name}
                       </p>
                     </td>
-                    <td className="px- py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
                       {/* Progress Bar */}
                       <div className="demo-preview">
                         <div className="progress progress-striped active">
                           <div
                             role="progressbar "
-                            style={{ width: `${item.progress}` }}
+                            style={{ width: "100%" }}
                             className="progress-bar progress-bar-success rounded-md"
                           >
                             <span className="inline-block"></span>
@@ -628,11 +853,11 @@ const RollingPlans = () => {
                       <span className="relative inline-block px-2 py-1 font-semibold text-green-900 leading-tight">
                         <span
                           aria-hidden
-                          style={{ backgroundColor: item.color }}
+                          style={{ backgroundColor: getStatus(item.rp_status) }}
                           className="absolute inset-0 opacity-60 rounded-full"
                         ></span>
                         <span className="relative text-white whitespace-no-wrap text-xs font-semibold">
-                          {item.status}
+                          {item.rp_status}
                         </span>
                       </span>
                       <div className="popop">
@@ -688,17 +913,6 @@ const RollingPlans = () => {
                 ))}
               </tbody>
             </table>
-            {/* <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
-                    <span className="text-xs xs:text-sm text-gray-900">Showing 1 to 4 of 50 Entries</span>
-                    <div className="inline-flex mt-2 xs:mt-0">
-                      <button className="text-sm bg-gray-300 hover-bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l">
-                        Prev
-                      </button>
-                      <button className="text-sm bg-gray-300 hover-bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r">
-                        Next
-                      </button>
-                    </div>
-                  </div> */}
           </div>
         </div>
       </div>
