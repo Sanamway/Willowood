@@ -188,6 +188,16 @@ const AssignRoleCopy = () => {
     if (user_id) getAllMenuById(user_id);
   }, [user_id]);
 
+  //changing row color
+
+  const rowdisable = (menu) => {
+    if (menu?.menutype === 0 || menu?.menutype === 1) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-gray-100 ">
@@ -325,7 +335,7 @@ const AssignRoleCopy = () => {
                       <td className=" py-2 text-center dark:border-2 text-xs font-medium text-gray-500   ">
                         Menu Id
                       </td>
-                      <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                      <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500   tracking-wider">
                         Menus Name
                       </td>
                       <td className="px-6 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
@@ -345,10 +355,14 @@ const AssignRoleCopy = () => {
                       </td>
                     </tr>
                   </thead>
-                  <tbody className="font-arial text- text-center">
+                  <tbody className="font-arial text- text-left">
                     {allMenus.map((menu, index) => (
-                      <tr className="bg-white divide-y border  divide-gray-200 text-xs" key={menu._id}>
-                        <td className="border-b px-4 py-2 flex items-center gap-4">{index + 1}</td>
+                    console.log("assignrow", menu),
+                      <tr 
+                      // className="bg-white divide-y border text-left  divide-gray-200 text-xs" key={menu._id}>
+                                className={`bg-white divide-y ${rowdisable(menu) ? 'border-2 border-red-200':""}  text-xs`}>
+
+                        <td className="border-b px-4 py-2 flex items-center gap-4">{menu.menu_id}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-xs">
                           {menu?.umenu_Name}
                         </td>
@@ -429,7 +443,9 @@ const AssignRoleCopy = () => {
 
                     {router.query.type === "view" &&
                       allViewMenus.map((menu, index) => (
-                        <tr className="bg-white divide-y border  divide-gray-200 text-xs" key={menu._id}>
+                        <tr 
+                        className={`bg-white divide-y ${rowdisable(menu) ? 'border-2 border-red-200':""}  text-xs`}  key={menu._id}>
+                        {/* className="bg-white divide-y border  divide-gray-200 text-xs" key={menu._id}> */}
                           <td className="border-b px-4 py-2 flex items-center gap-4">{index + 1}</td>
                           <td className="px-6 py-2 dark:border-2 text-left whitespace-nowrap font-arial text-xs">
                             {menu?.umenu_Name}

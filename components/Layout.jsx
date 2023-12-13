@@ -10,14 +10,18 @@ import WillLogo from "../public/Willowood.png";
 import { Popover } from "@headlessui/react";
 import { useRouter } from "next/router";
 import menuItems from "@/constants/sidebarMenus";
+import axios from "axios";
+import { url } from "@/constants/url";
+import Link from "next/link";
 
 const Layout = ({ children }) => {
   const router = useRouter();
   const [isOpen, setOpen] = useState(null);
-   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [showSubmenu, setSubmenu] = useState(null);
 
-  const [isUser, setUser] = useState(false)
+  const [isUser, setUser] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -47,10 +51,10 @@ const Layout = ({ children }) => {
     };
   }, []);
 
-  const [email_id, setEmailId] = useState("")
-  const [user_name, setUsername] = useState("")
-  const [uid, setUid] = useState("")
-  const [userinfo, setUserInfo] = useState("")
+  const [email_id, setEmailId] = useState("");
+  const [user_name, setUsername] = useState("");
+  const [uid, setUid] = useState("");
+  const [userinfo, setUserInfo] = useState("");
 
   useEffect(() => {
     if (window.localStorage) {
@@ -58,22 +62,48 @@ const Layout = ({ children }) => {
       const user_name = localStorage.getItem("user_name");
       const uid = localStorage.getItem("uid");
       const email_id = localStorage.getItem("email_id");
-      const userinfoo = localStorage.getItem("userinfo")
+      const userinfoo = localStorage.getItem("userinfo");
 
       setUser(isLoggedInInLocalStorage);
-      setEmailId(email_id)
-      setUsername(user_name)
-      setUid(uid)
-      setUserInfo(userinfoo)
+      setEmailId(email_id);
+      setUsername(user_name);
+      setUid(uid);
+      setUserInfo(JSON.parse(userinfoo));
     }
 
-    if(!localStorage.getItem("uid")){
-      router.push('/login')
+    if (!localStorage.getItem("uid")) {
+      router.push("/login");
     }
-  
   }, []);
 
-  console.log("layinfo", userinfo)
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+  };
+
+  const [menusItems, setMenus] = useState([]);
+
+  const gettingMenuSidebar = async (uid) => {
+    try {
+      const resp = await axios.get(
+        `${url}/api/get_assign_role_profile?user_id=${uid}&data_by_parent_id=true`,
+        { headers: headers }
+      );
+      const respData = await resp.data.data;
+      console.log("laymenus", respData);
+      setMenus(respData);
+    } catch (error) {
+      console.log("error : ", error);
+    }
+  };
+
+  useEffect(() => {
+    if (uid) gettingMenuSidebar(uid);
+  }, [uid]);
+
+  const checkck = userinfo
+
+  console.log("vdv", checkck);
 
   return (
     <>
@@ -81,30 +111,26 @@ const Layout = ({ children }) => {
         {/* Sidebar */}
         <div
           className={`flex-shrink-0   ${
-            isOpen ? (isMobile ? " " : "w-[4rem]  ") : isMobile ? "hidden " : "w-[14rem] "
+            isOpen ? (isMobile ? " " : "w-[6rem]  ") : isMobile ? "hidden " : "w-[14rem] "
           } bg-[#15283c] text-white custom-scrollbar min-h-screen overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-500`}
         >
-          <div className="flex flex-col items-center w-full  ">
+          <div className={`flex flex-col ${isOpen ? "items-center" : "items-start"} w-full  `}>
             <div className="flex items-center justify-between relative">
               <div className="flex items-center pl-1 gap-4">
                 <div className="userImg flex items-center py-4 mx justify-center">
                   {isOpen ? (
-                    <Image
-                      className="rounded-full h-8 w-8"
-                      src={Profile}
-                      alt=""
-                    />
+                    <Image className="rounded-full h-8 w-8" src={Profile} alt="" />
                   ) : (
                     <div className="flex  items-center justify-center gap-4 ">
-                      <Image
-                        className=" h-[4.1rem] w-[4.1rem] rounded-full"
-                        src={Profile}
-                        alt=""
-                      />
+                      <Image className=" h-[4.1rem] w-[4.1rem] rounded-full" src={Profile} alt="" />
                       <div className="flex flex-col items-start font-sans">
                         <h2 className="font-sm text-white whitespace-nowrap">{user_name}</h2>
                         <div className="flex items-center gap-2">
-                          <h2 className={`bg-[#00FF00] h-2 w-2 rounded-full ${uid==1 ? "animate-ping" :"bg-gray-200 h-2 w-2 rounded-full"}`}></h2>
+                          <h2
+                            className={`bg-[#00FF00] h-2 w-2 rounded-full ${
+                              uid == 1 ? "animate-ping" : "bg-gray-200 h-2 w-2 rounded-full"
+                            }`}
+                          ></h2>
                           <h2 className="text-sm text-text-green font-arial">{"Online"}</h2>
                         </div>
                       </div>
@@ -115,39 +141,61 @@ const Layout = ({ children }) => {
             </div>
             {!isOpen && (
               <div className="text-white font-Rale text-[1.1rem] w-full  my- mb-4 py-  font-semibold bottom-1 border-b-2 border-[#ff5722]">
-                <h2 className=" px-6">Administrator</h2>
+                <h2 className=" px-6">{userinfo?.U_profile_name}</h2>
               </div>
             )}
-            <div className="flex flex-col items-center text-white font-Arial ">
-              {menuItems.map(({ id, icon: Icon, ...menu }) => (
-                <div
-                  key={id}
-                  className="flex cursor-pointer items-center border-1 rounded-md border-black w-full hover:bg-orange-500 gap-3 px-2 py-1"
-                >
-                  <div className="">
-                    <Icon
-                      onClick={() => {
-                        router.push(menu.link);
-                      }}
-                      size={25}
-                    ></Icon>
-                  </div>
-                  {!isOpen && (
+            <div className="flex flex-col items-center w-full text-white font-Arial ">
+              {menusItems.map(({ _id, icon: Icon, ...menu }) => (
+                <>
+                  <div
+                    key={_id}
+                    className={`flex ${
+                      isOpen ? "flex-col text-[0.7rem] items-center" : "flex-row gap-2 text-[0.8rem] "
+                    }  cursor-pointer text-left border-1 rounded-md border-black w-full hover:bg-orange-500  px-2 py-1 `}
+                  >
+                    <div className="">
+                      <AiOutlineMail
+                        size={20}
+                      ></AiOutlineMail>
+                    </div>
                     <h2
                       onClick={() => {
-                        router.push(menu.link);
+                        setSubmenu((prev) => (prev == menu.label ? null : menu.label));
                       }}
-                      className="whitespace-nowrap text-[0.9rem]"
+                      className={`select-none whitespace-nowrap `}
                     >
                       {menu.label}
                     </h2>
+                  </div>
+
+                  {showSubmenu == menu.label && (
+                    <div className="flex items-start justify-center  ">
+                      <>
+                        <ul className="gap-2 flex flex-col w-full items-start ">
+                          {menu.submenu?.map((item) => (
+                            <>
+                              <li
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  router.push(`/${item.page_call}`);
+                                }}
+                                className={`text-[0.7rem] flex items-center gap-1.5 py-1 cursor-pointer hover:bg-orange-500 px-2 rounded-md `}
+                              >
+                                <div className="">
+                                  <AiOutlineMail size={15}></AiOutlineMail>
+                                </div>
+                                {item.umenu_Name}
+                              </li>
+                            </>
+                          ))}
+                        </ul>
+                      </>
+                    </div>
                   )}
-                </div>
+                </>
               ))}
             </div>
           </div>
-
-          
         </div>
         <div className="flex-grow flex flex-col ">
           {/* Top Bar */}
@@ -193,7 +241,7 @@ const Layout = ({ children }) => {
                                   onClick={toggleDropdown}
                                 >
                                   <h2 className="font-normal font-arial text-sm whitespace-nowrap">
-                                   {user_name}
+                                    {user_name}
                                   </h2>
                                   <IoIosArrowDown className="button"></IoIosArrowDown>
                                 </div>

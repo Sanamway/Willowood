@@ -14,6 +14,13 @@ const UserProfileForm = () => {
   const [isSelect, setSelect] = useState(false);
   const [check, setCheck] = useState([]);
 
+
+
+  const [user, setUser] = useState("")
+  const [userName, setUsername] = useState("")
+  const [ui, setUid] = useState("")
+  const [email_id, setEmailId] = useState("")
+
   let { role_id, view, CREATE } = router.query;
 
   const [selectedRole, setSelectedRole] = useState({
@@ -98,8 +105,8 @@ const UserProfileForm = () => {
       Delete: item.DeleteRight,
       wf_approval: item.ApproveRight,
       menutype: item?.type_menu,
-      c_name: "NA",
-      ul_name: item.Ul_name
+      c_name: userName,
+      ul_name: userName
     }));
 
   async function makingLoopApi(datas) {
@@ -165,6 +172,35 @@ const UserProfileForm = () => {
       return false;
     }
   };
+  const rowdisable2 = (menu) => {
+    if (menu?.menutype === 0 || menu?.menutype === 1) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+
+  //getting user local
+
+  useEffect(() => {
+    if (window.localStorage) {
+      const isLoggedInInLocalStorage = !!localStorage.getItem("uid");
+      const userName = localStorage.getItem("user_name");
+      const uid = localStorage.getItem("uid");
+      setUser(isLoggedInInLocalStorage);
+      setEmailId(email_id)
+      setUsername(userName)
+      setUid(uid)
+    }
+
+    if(!localStorage.getItem("uid")){
+      router.push('/login')
+    }
+  
+  }, []);
+
+  console.log("userporof",userName)
 
   return (
     <>
@@ -338,7 +374,7 @@ const UserProfileForm = () => {
                                       setSelect(true);
                                     }}
                                   />
-                                  {index + 1}
+                                  {menu.menu_id}
                                 </td>
                                 <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-left text-xs">
                                   {menu?.menu_name}
@@ -435,12 +471,13 @@ const UserProfileForm = () => {
                           )
                         )}
 
-                      {check.map(
+                      {check?.map(
                         (menu, index) => (
-                          console.log("dd", menu.umenu_Name),
+                          console.log("dd", menu.menutype),
                           (
-                            <tr className="bg-white divide-y border  divide-gray-200 text-xs " key={menu._id}>
-                              <td className="border-b px-4 py-2 justify-center flex items-center gap-4">
+                            <tr  className={`bg-white divide-y ${rowdisable2(menu) ? 'border-2 border-red-200':""}  text-xs`}
+                            key={menu._id}>
+                              <td className="border-b px-4 py-2 flex items-center gap-4">
                                 {/* <input
                                   type="checkbox"
                                   checked={menu.isEditable}
@@ -454,7 +491,7 @@ const UserProfileForm = () => {
                                     setSelect(true);
                                   }}
                                 /> */}
-                                {index + 1}
+                                {menu.menu_id}
                               </td>
                               <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-left text-xs">
                                 {menu.umenu_Name}
