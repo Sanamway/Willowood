@@ -219,25 +219,136 @@ const RollingPlans = () => {
     month: null,
   });
   useEffect(() => {
-    setLocalStorageItems({
-      cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-      bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-      buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-      rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-      zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-      tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-      roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
-    });
+    const roleId = JSON.parse(window.localStorage.getItem("userinfo")).role_id;
+    console.log("pay", roleId);
+    switch (roleId) {
+      case 6:
+        setLocalStorageItems({
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
 
-    setFilterState({
-      bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-      buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-      rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-      zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-      tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-      yr: null,
-      month: null,
-    });
+        setFilterState({
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          yr: null,
+          month: null,
+        });
+        break;
+      case 5:
+        setLocalStorageItems({
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
+
+        setFilterState({
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: null,
+          yr: null,
+          month: null,
+        });
+        break;
+      case 4:
+        setLocalStorageItems({
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
+
+        setFilterState({
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: null,
+          tId: null,
+          yr: null,
+          month: null,
+        });
+        break;
+      case 3:
+        setLocalStorageItems({
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
+
+        setFilterState({
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: null,
+          zId: null,
+          tId: null,
+          yr: null,
+          month: null,
+        });
+        break;
+      case 10:
+        setLocalStorageItems({
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
+
+        setFilterState({
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: null,
+          rId: null,
+          zId: null,
+          tId: null,
+          yr: null,
+          month: null,
+        });
+        break;
+      default:
+        setLocalStorageItems({
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
+
+        setFilterState({
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          yr: null,
+          month: null,
+        });
+        break;
+    }
   }, []);
 
   const toggleDropdown = () => {
@@ -393,7 +504,16 @@ const RollingPlans = () => {
   }, [filterState.year]);
 
   const [allTableData, setAllTableData] = useState([]);
-  const getAllSalesPlanStatus = async (yr, month) => {
+  const getAllSalesPlanStatus = async (
+    yr,
+    month,
+    bgId,
+    buId,
+    zId,
+    rId,
+    tId
+  ) => {
+    console.log("jio", month);
     try {
       const respond = await axios.get(
         `${url}/api/get_rollingdata_based_on_roll_t`,
@@ -401,28 +521,48 @@ const RollingPlans = () => {
           headers: headers,
 
           params: {
-            t_year: moment(yr).year(),
-            m_year: month !== "All" ? moment(month).format("YYYY-MM") : null,
-            bg_id: filterState.bgId,
-            bu_id: filterState.buId,
-            z_id: filterState.zId,
-            r_id: filterState.rId,
-            t_id: filterState.tId,
+            t_year: moment(yr).year() || null,
+            m_year:
+              month === "All" || !month
+                ? null
+                : moment(month).format("YYYY-MM"),
+            bg_id: bgId || null,
+            bu_id: buId || null,
+            z_id: zId || null,
+            r_id: rId || null,
+            t_id: tId || null,
           },
         }
       );
-      console.log("pio", respond.data.data);
+
       const apires = await respond.data.data;
+      console.log("jkl", apires);
       setAllTableData(apires);
     } catch (error) {
-      console.log(error);
+      setAllTableData([]);
     }
   };
 
   useEffect(() => {
     if (!filterState.year) return;
-    getAllSalesPlanStatus(filterState.year, filterState.month || null);
-  }, [filterState.year, filterState.month]);
+    getAllSalesPlanStatus(
+      filterState.year,
+      filterState.month || null,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId
+    );
+  }, [
+    filterState.year,
+    filterState.month,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+  ]);
 
   const getStatus = (status) => {
     switch (status) {
@@ -537,7 +677,7 @@ const RollingPlans = () => {
                 localStorageItems.roleId === 10
               }
             >
-              <option value={null} className="font-bold">
+              <option value={""} className="font-bold">
                 - Business Segment -
               </option>
 
@@ -564,7 +704,7 @@ const RollingPlans = () => {
                 localStorageItems.roleId === 3
               }
             >
-              <option value={null}>- Business Unit -</option>
+              <option value={""}>- Business Unit -</option>
               <option value="All">All Unit</option>
               {buData.map((item, idx) => (
                 <option value={item.bu_id} key={idx}>
@@ -589,7 +729,7 @@ const RollingPlans = () => {
                 localStorageItems.roleId === 4
               }
             >
-              <option value={null}>- Zone -</option>
+              <option value={""}>- Zone -</option>
               <option value="All">All Zone</option>
               {zoneData.map((item, idx) => (
                 <option value={item.z_id} key={idx}>
@@ -612,7 +752,7 @@ const RollingPlans = () => {
                 })
               }
             >
-              <option value={null}>- Region -</option>
+              <option value={""}>- Region -</option>
               <option value="All">All Region</option>
               {regionData.map((item, idx) => (
                 <option value={item.r_id} key={idx}>
@@ -633,7 +773,7 @@ const RollingPlans = () => {
                 })
               }
             >
-              <option value={null}>- Territory -</option>
+              <option value={""}>- Territory -</option>
               <option value="All">All Territory</option>
               {territoryData.map((item, idx) => (
                 <option value={item.t_id} key={idx}>
@@ -655,7 +795,7 @@ const RollingPlans = () => {
                     Depot
                   </th>
                   <th className="pl-4 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
-                    B.G / B.u / Zone / Region / Territory
+                    Segment / Unit / Zone / Region / Territory
                   </th>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
                     Target Vs Actual
