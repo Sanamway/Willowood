@@ -22,6 +22,12 @@ const UserInformation = () => {
     secret: "fsdhfgsfuiweifiowefjewcewcebjw"
   };
 
+  //getlocaldta
+  const [user, setUser] = useState("")
+  const [userName, setUsername] = useState("")
+  const [ui, setUid] = useState("")
+  const [email_id, setEmailId] = useState("")
+
   const getDataById = async (id) => {
     try {
       const respond = await axios.get(`${url}/api/get_user/${id}`, {
@@ -73,7 +79,8 @@ const UserInformation = () => {
     position: "",
     about_me: "",
     status: "",
-    c_name: "skp",
+    c_name: userName,
+    ul_name: userName,
     image :userImage
   });
   console.log("form", formState);
@@ -129,7 +136,8 @@ const UserInformation = () => {
         position: formState.position,
         about_me: formState.about_me,
         image: formState.image,
-        c_name: "check"
+        c_name: userName,
+        ul_name: userName
       };
 
       const respond = await axios
@@ -199,7 +207,7 @@ const UserInformation = () => {
         }, 2000);
       }
     } catch (errors) {
-      console.log("r", errors);
+      console.log("rr", errors);
       const errorMessage = errors?.response?.data?.error;
 
       if (errorMessage?.includes("email_1")) {
@@ -259,6 +267,26 @@ const UserInformation = () => {
   }, []);
 
   console.log("fornmv ", formState);
+  
+
+  useEffect(() => {
+    if (window.localStorage) {
+      const isLoggedInInLocalStorage = !!localStorage.getItem("uid");
+      const userName = localStorage.getItem("user_name");
+      const uid = localStorage.getItem("uid");
+      setUser(isLoggedInInLocalStorage);
+      setEmailId(email_id)
+      setUsername(userName)
+      setUid(uid)
+    }
+
+    if(!localStorage.getItem("uid")){
+      router.push('/login')
+    }
+  
+  }, []);
+
+  console.log("c_name",userName)
 
   return (
     <>

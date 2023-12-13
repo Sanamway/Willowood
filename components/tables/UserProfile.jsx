@@ -63,6 +63,14 @@ const UserProfile = () => {
     { label: "User Profile", key: "U_profile_name" }
   ];
 
+  const rowdisable = (menu) => {
+    if (menu?.type_menu === "0" || menu?.type_menu === "1") {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <>
       <Layout>
@@ -139,7 +147,8 @@ const UserProfile = () => {
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
                 {menuRecords.length > 0 && menuRecords?.map((item) => (
                   <tr key={item.id}>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
+                    <td 
+                    className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
                         onClick={() => {
                           router.push({
