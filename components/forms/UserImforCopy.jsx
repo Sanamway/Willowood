@@ -199,7 +199,7 @@ const UserInformation = () => {
         }, 2000);
       }
     } catch (errors) {
-      console.log("rr", errors);
+      console.log("r", errors);
       const errorMessage = errors?.response?.data?.error;
 
       if (errorMessage?.includes("email_1")) {
