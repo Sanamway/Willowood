@@ -12,12 +12,12 @@ const UserAssignBusiness = () => {
   const csvHeaders = [
     { label: "Id", key: "bst_id" },
     { label: "User", key: "user_id" },
-    { label: "Territory", key: "t_id" },
-    { label: "Region", key: "r_id" },
-    { label: "Zone", key: "z_id" },
-    { label: "Unit Division", key: "bu_id" },
-    { label: "Business Segment", key: "bg_id" },
-    { label: "Company", key: "c_id" },
+    { label: "Territory", key: "territory_name" },
+    { label: "Region", key: "region_name" },
+    { label: "Zone", key: "zone_name" },
+    { label: "Unit Division", key: "business_unit_name" },
+    { label: "Business Segment", key: "business_segment" },
+    { label: "Company", key: "cmpny_name" },
   ];
   const router = useRouter();
 
@@ -198,25 +198,25 @@ const UserAssignBusiness = () => {
                       {item.user_id}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      -
+                      {item.user_name}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.t_id}
+                      {item.territory_name}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.r_id}
+                      {item.region_name}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.z_id}
+                      {item.zone_name}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.bu_id}
+                      {item.business_unit_name}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.bg_id}
+                      {item.business_segment}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.c_id}
+                      {item.cmpny_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.isDeleted == false ? "Enabled" : "Disabled"}

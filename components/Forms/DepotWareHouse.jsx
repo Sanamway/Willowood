@@ -30,6 +30,7 @@ const UserProfileForm = () => {
         city: apires[0].dcity,
         country: apires[0].dcountry,
         depotName: apires[0].depot_name,
+        depotCode: apires[0].depot_code,
         pinCode: apires[0].dpin,
         state: apires[0].dstate,
         email: apires[0].email_id,
@@ -67,6 +68,7 @@ const UserProfileForm = () => {
   }, []);
 
   const [depotState, setDepotState] = useState({
+    depotCode: "",
     depotName: "",
     companyId: "",
     address: "",
@@ -83,6 +85,7 @@ const UserProfileForm = () => {
   const validationSchema = Yup.object().shape({
     companyId: Yup.string().required("Company Id is required"),
     depotName: Yup.string().required("Depot Name is required"),
+    depotCode: Yup.string().required("Depot Code is required"),
     address: Yup.string().required("Address is required"),
     city: Yup.string().required("City is required"),
     state: Yup.string().required("State is required"),
@@ -114,6 +117,7 @@ const UserProfileForm = () => {
         dcity: depotState.city,
         dcountry: depotState.country,
         depot_name: depotState.depotName,
+        depot_code: depotState.depotCode,
         dpin: depotState.pinCode,
         dstate: depotState.state,
         email_id: depotState.email,
@@ -134,7 +138,7 @@ const UserProfileForm = () => {
           }, [1000]);
         });
     } catch (errors) {
-      const errorMessage = errors?.response?.data?.error;
+      const errorMessage = errors?.response?.data?.message;
       if (errorMessage) {
         toast.error(errorMessage);
       }
@@ -159,6 +163,7 @@ const UserProfileForm = () => {
         dcity: depotState.city,
         dcountry: depotState.country,
         depot_name: depotState.depotName,
+        depot_code: depotState.depotCode,
         dpin: depotState.pinCode,
         dstate: depotState.state,
         email_id: depotState.email,
@@ -183,7 +188,7 @@ const UserProfileForm = () => {
           }, [1000]);
         });
     } catch (errors) {
-      const errorMessage = errors?.response?.data?.error;
+      const errorMessage = errors?.response?.data?.message;
       if (errorMessage) {
         toast.error(errorMessage);
       }
@@ -200,6 +205,7 @@ const UserProfileForm = () => {
       handleEditFarmer(e);
     }
   };
+
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
@@ -260,6 +266,39 @@ const UserProfileForm = () => {
                 }
                 disabled={true}
               />
+            </div>
+            <div className="mb-4 w-1/6">
+              <div className=" px-2 relative">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="inputField"
+                >
+                  <small className="text-red-600">*</small> Depot Code
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
+                  type="text"
+                  id="inputField"
+                  placeholder="Depot Code"
+                  value={depotState.depotCode}
+                  onChange={(e) =>
+                    e.target.value.length <= 4
+                      ? setDepotState({
+                          ...depotState,
+                          depotCode: e.target.value,
+                        })
+                      : setDepotState({
+                          ...depotState,
+                          depotCode: depotState.depotCode,
+                        })
+                  }
+                />
+                {formErrors.depotCode && (
+                  <p className="text-red-500 text-sm absolute bottom-14 right-3 cursor-pointer">
+                    {formErrors.depotCode}
+                  </p>
+                )}
+              </div>
             </div>
 
             <div className="flex -mx-2 mb-4">
