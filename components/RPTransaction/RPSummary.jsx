@@ -3,6 +3,14 @@ import { TbFileDownload } from "react-icons/tb";
 
 const RPSummary = (props) => {
   const [formActive, setFormActive] = useState(false);
+  const [selectedCheckbox, setSelectedCheckbox] = useState(null);
+
+  const handleCheckboxChange = (checkboxId) => {
+    if (!formActive) {
+      setSelectedCheckbox(checkboxId);
+    }
+  };
+
 
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
@@ -31,7 +39,7 @@ const RPSummary = (props) => {
             <h2 className="font-bold text-xs text-gray-700">Hyderabad</h2>
           </div>
         </div>
-        <div className="categoryoptions flex items-center justify-center w-full">
+        {/* <div className="categoryoptions flex items-center justify-center w-full">
           <div className="category flex items-center justify-center px-2">
             <h2 className="text-xs text-gray-700 font-bold">Segment</h2>
             <select
@@ -60,11 +68,54 @@ const RPSummary = (props) => {
               <option value="Prod">Prod 1</option>
             </select>
           </div>
-        </div>
+        </div> */}
+        <div className="flex items-center justify-center w-full text-xs font-bold">
+            <div className="w-full lg:w-auto px-2">
+              <div className="flex items-center whitespace-nowrap ">
+                <input
+                  type="checkbox"
+                  id="fairCheckbox"
+                  className="mr-2 "
+                  disabled={formActive}
+                  checked={selectedCheckbox === "fair"}
+                  onChange={() => handleCheckboxChange("fair")}
+                />
+                <label htmlFor="fairCheckbox">Product Segment</label>
+              </div>
+            </div>
+
+            <div className="w-full lg:w-auto px-2">
+              <div className="flex items-center whitespace-nowrap">
+                <input
+                  type="checkbox"
+                  id="goodCheckbox"
+                  className="mr-2"
+                  disabled={formActive}
+                  checked={selectedCheckbox === "good"}
+                  onChange={() => handleCheckboxChange("good")}
+                />
+                <label htmlFor="goodCheckbox">Product Brand</label>
+              </div>
+            </div>
+
+            <div className="w-full lg:w-auto px-2">
+              <div className="flex items-center whitespace-nowrap">
+                <input
+                  type="checkbox"
+                  id="goodCheckbox"
+                  className="mr-2"
+                  disabled={formActive}
+                  checked={selectedCheckbox === "cat"}
+                  onChange={() => handleCheckboxChange("cat")}
+                />
+                <label htmlFor="goodCheckbox">Category</label>
+              </div>
+            </div>
+          </div>
         <div className="status xls download flex items-center justify-end w-full">
           <div className="status flex gap-1">
             <h2 className="text-xs text-gray-700">Status :</h2>
-            <h2 className="font-bold text-xs text-gray-700">3/10 Territories Submitted</h2>
+            <h2 className="font-bold text-xs text-gray-700">4/10 Territories Submitted</h2>
           </div>
          
         </div>
@@ -86,9 +137,9 @@ const RPSummary = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         Product Name Sku Wise
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      {/* <th scope="col" className="px-2 py-1 text-black">
                         Product Code
-                      </th>
+                      </th> */}
                       <th scope="col" className="px-2 py-1 text-black">
                         FY Sales 21-23
                       </th>
@@ -105,7 +156,7 @@ const RPSummary = (props) => {
                         Apr 22-23 Sale Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
-                        Apr 22-23 Budget Qty
+                        Apr 23-24 Budget Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
                         Apr 22-23 FSCT Qty
@@ -113,22 +164,25 @@ const RPSummary = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         Apr 22-23 Revised FCT
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
-                        Apr 22-23 Urget Qty
+                      <th scope="col" className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400">
+                        Apr 22-23 Revised FCT
                       </th>
                       <th scope="col" className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400">
+                        Apr 22-23 Urget Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black ">
                         May 22-23 Sale Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
                         May Budget Qty 23-24
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
-                        May Net Sale Qty 23-24
+                        May Net FCST Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black ">
-                        May 22-23 Sale Qty
+                      <th scope="col" className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400 ">
+                        May 22-23 FCST Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400">
                         Expected Sale Return Qty
                       </th>
                     </tr>
@@ -138,7 +192,7 @@ const RPSummary = (props) => {
                       <th scope="row" className="px-4  py-1 font-medium whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
-                      <td className="px-4 py-1">PC</td>
+                      {/* <td className="px-4 py-1">PC</td> */}
                       <td className="px-4 py-1">Apple</td>
                       <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
@@ -147,26 +201,27 @@ const RPSummary = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
-                          placeholder="85856"
-                        />
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
                       </td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
                     </tr>
                     <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs ">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
-                      <td className="px-4 py-1">PC</td>
+                      {/* <td className="px-4 py-1">PC</td> */}
                       <td className="px-4 py-1">Apple</td>
                       <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
@@ -175,26 +230,27 @@ const RPSummary = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
                       </td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
                     </tr>
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
-                      <td className="px-4 py-1">PC</td>
+                      {/* <td className="px-4 py-1">PC</td> */}
                       <td className="px-4 py-1">Apple</td>
                       <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
@@ -203,84 +259,28 @@ const RPSummary = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
                       </td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                    </tr>
-
-                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      <td className="px-4 py-1">PC</td>
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
                       </td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                    </tr>
-                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      <td className="px-4 py-1">PC</td>
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
                       </td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
                     </tr>
 
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
-                      <td className="px-4 py-1">PC</td>
+                      {/* <td className="px-4 py-1">PC</td> */}
                       <td className="px-4 py-1">Apple</td>
                       <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
@@ -289,27 +289,57 @@ const RPSummary = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
                       </td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                    </tr>
+                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
+                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
+                        Apple iMac 27"
+                      </th>
+                      {/* <td className="px-4 py-1">PC</td> */}
+                      <td className="px-4 py-1">Apple</td>
+                      <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
                     </tr>
 
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
-                      <td className="px-4 py-1">PC</td>
+                      {/* <td className="px-4 py-1">PC</td> */}
                       <td className="px-4 py-1">Apple</td>
                       <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
@@ -318,27 +348,28 @@ const RPSummary = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
                       </td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
                     </tr>
 
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
-                      <td className="px-4 py-1">PC</td>
+                      {/* <td className="px-4 py-1">PC</td> */}
                       <td className="px-4 py-1">Apple</td>
                       <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
@@ -347,27 +378,28 @@ const RPSummary = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
                       </td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
                     </tr>
 
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
-                      <td className="px-4 py-1">PC</td>
+                      {/* <td className="px-4 py-1">PC</td> */}
                       <td className="px-4 py-1">Apple</td>
                       <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
@@ -376,27 +408,28 @@ const RPSummary = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
                       </td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
                     </tr>
 
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
-                      <td className="px-4 py-1">PC</td>
+                      {/* <td className="px-4 py-1">PC</td> */}
                       <td className="px-4 py-1">Apple</td>
                       <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
@@ -405,26 +438,57 @@ const RPSummary = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
                       </td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                    </tr>
+
+                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
+                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
+                        Apple iMac 27"
+                      </th>
+                      {/* <td className="px-4 py-1">PC</td> */}
+                      <td className="px-4 py-1">Apple</td>
+                      <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
                     </tr>
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
-                      <td className="px-4 py-1">PC</td>
+                      {/* <td className="px-4 py-1">PC</td> */}
                       <td className="px-4 py-1">Apple</td>
                       <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
@@ -433,27 +497,28 @@ const RPSummary = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
                       </td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
                     </tr>
 
                      <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
-                      <td className="px-4 py-1">PC</td>
+                      {/* <td className="px-4 py-1">PC</td> */}
                       <td className="px-4 py-1">Apple</td>
                       <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
@@ -462,20 +527,21 @@ const RPSummary = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
                       </td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
+                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">
+                       $2999
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -535,7 +601,7 @@ const RPSummary = (props) => {
       </div> */}
 
       <div className="my-2 flex self-end ">
-        <div className="flex items-center justify-end w-full gap-4 ">
+        <div className="flex items-center justify-end w-full gap-2 ">
           <button
             onClick={() => props.formType("RPTable")}
             className={`text-center rounded-md hover:bg-green-500 ${
@@ -545,10 +611,18 @@ const RPSummary = (props) => {
             Prev
           </button>
           <button
+            onClick={() => props.formType("RPSummary")}
+            className={`text-center rounded-md hover:bg-green-500 ${
+              formActive ? "bg-green-400" : "bg-blue-500"
+            }  text-white py-1 px-4 text-sm`}
+          >
+            Save as Draft
+          </button>
+          <button
             onClick={() => props.formType("Upload")}
             className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
           >
-            Next
+            Submit
           </button>
         </div>
       </div>

@@ -35,7 +35,7 @@ const RPTable = (props) => {
           <div className="category flex items-center justify-center px-2">
             <h2 className="text-xs text-gray-700 font-bold">Segment</h2>
             <select
-              className="w-full text-xs text-gray-700 px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              className="w-full text-xs text-gray-700 px-3 py- border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
             >
               <option value="" className="focus:outline-none focus:border-b bg-white">
@@ -49,7 +49,7 @@ const RPTable = (props) => {
           <div className="category flex items-center justify-center px-2">
             <h2 className="text-xs text-gray-700 font-bold">Brand</h2>
             <select
-              className="w-full px-3 text-xs text-gray-700 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              className="w-full px-3 text-xs text-gray-700 py- border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
             >
               <option value="" className="focus:outline-none focus:border-b bg-white">
@@ -105,7 +105,7 @@ const RPTable = (props) => {
                         Apr 22-23 Sale Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
-                        Apr 22-23 Budget Qty
+                        Apr 23-24 Budget Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
                         Apr 22-23 FSCT Qty
@@ -113,22 +113,25 @@ const RPTable = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         Apr 22-23 Revised FCT
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
-                        Apr 22-23 Urget Qty
+                      <th scope="col" className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400">
+                        Apr 22-23 Revised FCT
                       </th>
                       <th scope="col" className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400">
+                        Apr 22-23 Urget Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black ">
                         May 22-23 Sale Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
                         May Budget Qty 23-24
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
-                        May Net Sale Qty 23-24
+                        May Net FCST Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black ">
-                        May 22-23 Sale Qty
+                      <th scope="col" className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400 ">
+                        May 22-23 FCST Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400">
                         Expected Sale Return Qty
                       </th>
                     </tr>
@@ -147,7 +150,15 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
                       <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
                         <input
                           type="text"
@@ -160,7 +171,24 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
                     </tr>
                     <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs ">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
@@ -175,7 +203,15 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
                       <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
                         <input
                           type="text"
@@ -188,7 +224,24 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
                     </tr>
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
@@ -203,7 +256,15 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
                       <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
                         <input
                           type="text"
@@ -216,24 +277,7 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                    </tr>
-
-                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      <td className="px-4 py-1">PC</td>
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
                         <input
                           type="text"
                           minLength={5}
@@ -242,26 +286,7 @@ const RPTable = (props) => {
                           placeholder="85856"
                         />
                       </td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                    </tr>
-                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      <td className="px-4 py-1">PC</td>
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
                         <input
                           type="text"
                           minLength={5}
@@ -270,10 +295,6 @@ const RPTable = (props) => {
                           placeholder="85856"
                         />
                       </td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
                     </tr>
 
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
@@ -289,7 +310,15 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
                       <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
                         <input
                           type="text"
@@ -302,7 +331,77 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                    </tr>
+                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
+                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
+                        Apple iMac 27"
+                      </th>
+                      <td className="px-4 py-1">PC</td>
+                      <td className="px-4 py-1">Apple</td>
+                      <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
                     </tr>
 
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
@@ -318,7 +417,15 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
                       <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
                         <input
                           type="text"
@@ -331,7 +438,24 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
                     </tr>
 
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
@@ -347,7 +471,15 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
                       <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
                         <input
                           type="text"
@@ -360,7 +492,24 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
                     </tr>
 
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
@@ -376,7 +525,15 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
                       <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
                         <input
                           type="text"
@@ -389,7 +546,24 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
                     </tr>
 
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
@@ -405,7 +579,15 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
                       <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
                         <input
                           type="text"
@@ -418,7 +600,78 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                    </tr>
+
+                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
+                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
+                        Apple iMac 27"
+                      </th>
+                      <td className="px-4 py-1">PC</td>
+                      <td className="px-4 py-1">Apple</td>
+                      <td className="px-4 py-1">300</td>
                       <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
                     </tr>
                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
@@ -433,7 +686,15 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
                       <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
                         <input
                           type="text"
@@ -446,7 +707,24 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
                     </tr>
 
                      <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
@@ -462,7 +740,15 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          placeholder="85856"
+                        />
+                      </td>
                       <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
                         <input
                           type="text"
@@ -475,7 +761,24 @@ const RPTable = (props) => {
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] "
+                          placeholder="85856"
+                        />
+                      </td>
                     </tr>
                   </tbody>
                 </table>

@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Basic from "../DealerForms/Basic";
-import Personal from "../DealerForms/Personal";
-import Upload from "./Upload";
 import DragAndDrop from "./UploadTest";
 import RPTable from "./RPTable";
 import RPSummary from "./RPSummary";
