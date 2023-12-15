@@ -20,6 +20,10 @@ const RPSummary = (props) => {
     setisOpen(true);
   };
 
+  const saveAsDraft =()=>{
+    setisOpen(true)
+  }
+
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
       <SubmitModal
@@ -574,7 +578,8 @@ const RPSummary = (props) => {
             Prev
           </button>
           <button
-            onClick={() => props.formType("RPSummary")}
+            // onClick={() => props.formType("RPSummary")}
+            onClick={saveAsDraft}
             className={`text-center rounded-md hover:bg-green-500 ${
               formActive ? "bg-green-400" : "bg-blue-500"
             }  text-white py-1 px-4 text-sm`}
@@ -589,7 +594,8 @@ const RPSummary = (props) => {
           </button>
 
           <button
-            onClick={() => props.formType("Upload")}
+            // onClick={() => props.formType("Upload")}
+            onClick={submitHandle}
             className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-sm"
           >
             Approve Reviews RP
