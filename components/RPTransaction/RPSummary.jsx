@@ -1,5 +1,6 @@
 import React,{useState, useEffect} from "react";
 import { TbFileDownload } from "react-icons/tb";
+import SubmitModal from "../modals/SubmitModal";
 
 const RPSummary = (props) => {
   const [formActive, setFormActive] = useState(false);
@@ -11,9 +12,23 @@ const RPSummary = (props) => {
     }
   };
 
+  //modal state 
+  const [isOpen, setisOpen] = useState(false);
+
+  const submitHandle =()=>{
+    // props.formType("Upload")
+    setisOpen(true);
+  }
+
+
 
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
+       <SubmitModal
+          isOpen={isOpen}
+          onClose={() => setisOpen(false)}
+          onOpen={() => setisOpen(true)}
+        ></SubmitModal>
       <div className=" flex justify-center w-full my-">
         {/* <div className="bcbtn px-2">
           <button className="px-4 py-1 bg-white border-2 border-teal-400 rounded-md text-teal-400">Back</button>
@@ -619,10 +634,17 @@ const RPSummary = (props) => {
             Save as Draft
           </button>
           <button
-            onClick={() => props.formType("Upload")}
+            onClick={submitHandle}
             className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
           >
             Submit
+          </button>
+
+          <button
+            onClick={() => props.formType("Upload")}
+            className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-sm"
+          >
+            Approve Reviews RP
           </button>
         </div>
       </div>
