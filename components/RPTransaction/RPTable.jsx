@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { TbFileDownload } from "react-icons/tb";
 
 const RPTable = (props) => {
@@ -66,7 +66,6 @@ const RPTable = (props) => {
             <h2 className="text-xs text-gray-700">Status :</h2>
             <h2 className="font-bold text-xs text-gray-700">3/10 Territories Submitted</h2>
           </div>
-         
         </div>
       </div>
 
@@ -137,7 +136,7 @@ const RPTable = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs  ">
+                    <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs text-center ">
                       <th scope="row" className="px-4  py-1 font-medium whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
@@ -155,7 +154,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center  "
                           placeholder="85856"
                         />
                       </td>
@@ -164,19 +163,19 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
                       <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
                         <input
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -185,12 +184,12 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
                     </tr>
-                    <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs ">
+                    <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs text-center ">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
@@ -208,7 +207,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -229,7 +228,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -238,12 +237,12 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center"
                           placeholder="85856"
                         />
                       </td>
                     </tr>
-                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
+                    <tr className="border-b dark:border-gray-700 bg-white text-center  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
@@ -261,7 +260,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -270,7 +269,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -282,7 +281,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -291,13 +290,13 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
                     </tr>
 
-                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
+                    <tr className="border-b dark:border-gray-700 bg-white text-center text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
@@ -315,7 +314,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center  "
                           placeholder="85856"
                         />
                       </td>
@@ -324,7 +323,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -336,7 +335,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -345,12 +344,12 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
                     </tr>
-                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
+                    <tr className="border-b dark:border-gray-700 bg-white text-center  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
@@ -368,7 +367,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center  "
                           placeholder="85856"
                         />
                       </td>
@@ -377,7 +376,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -389,7 +388,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -398,67 +397,13 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
-                      </td>
-                    </tr>
-
-                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      <td className="px-4 py-1">PC</td>
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
-                          placeholder="85856"
-                        />
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
-                      </td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
                     </tr>
 
-                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
+                    <tr className="border-b dark:border-gray-700 bg-white text-center text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
@@ -476,7 +421,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -485,7 +430,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -497,7 +442,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -506,13 +451,13 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
                     </tr>
 
-                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
+                    <tr className="border-b dark:border-gray-700 bg-white text-center text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
@@ -530,7 +475,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center  "
                           placeholder="85856"
                         />
                       </td>
@@ -539,7 +484,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center"
                           placeholder="85856"
                         />
                       </td>
@@ -551,7 +496,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -560,13 +505,13 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
                     </tr>
 
-                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
+                    <tr className="border-b dark:border-gray-700 bg-white text-center  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
@@ -584,7 +529,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center  "
                           placeholder="85856"
                         />
                       </td>
@@ -593,7 +538,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -605,7 +550,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -614,13 +559,13 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
                     </tr>
 
-                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
+                    <tr className="border-b dark:border-gray-700 bg-white text-center text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
@@ -638,7 +583,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -647,7 +592,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -659,7 +604,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -668,66 +613,13 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
-                      </td>
-                    </tr>
-                    <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      <td className="px-4 py-1">PC</td>
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
-                          placeholder="85856"
-                        />
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
-                      </td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
-                          placeholder="85856"
-                        />
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
-                        <input
-                          type="text"
-                          minLength={5}
-                          maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
                     </tr>
 
-                     <tr className="border-b dark:border-gray-700 bg-white  text-xs text-gray-700">
+                    <tr className="border-b dark:border-gray-700 bg-white text-center  text-xs text-gray-700">
                       <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
                         Apple iMac 27"
                       </th>
@@ -745,7 +637,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%]  "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center  "
                           placeholder="85856"
                         />
                       </td>
@@ -754,7 +646,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center"
                           placeholder="85856"
                         />
                       </td>
@@ -766,7 +658,7 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -775,7 +667,114 @@ const RPTable = (props) => {
                           type="text"
                           minLength={5}
                           maxLength={5}
-                          className="px-auto outline-none border-b-2 w-[80%] "
+                          className="px-auto outline-none border-b-2 w-[80%] text-center"
+                          placeholder="85856"
+                        />
+                      </td>
+                    </tr>
+                    <tr className="border-b dark:border-gray-700 bg-white text-center text-xs text-gray-700">
+                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
+                        Apple iMac 27"
+                      </th>
+                      <td className="px-4 py-1">PC</td>
+                      <td className="px-4 py-1">Apple</td>
+                      <td className="px-4 py-1">300</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] text-center  "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
+                          placeholder="85856"
+                        />
+                      </td>
+                    </tr>
+
+                    <tr className="border-b dark:border-gray-700 bg-white text-center text-xs text-gray-700">
+                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
+                        Apple iMac 27"
+                      </th>
+                      <td className="px-4 py-1">PC</td>
+                      <td className="px-4 py-1">Apple</td>
+                      <td className="px-4 py-1">300</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] text-center  "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 ">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] text-center"
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-4 py-1">$2999</td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
+                          placeholder="85856"
+                        />
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400">
+                        <input
+                          type="text"
+                          minLength={5}
+                          maxLength={5}
+                          className="px-auto outline-none border-b-2 w-[80%] text-center "
                           placeholder="85856"
                         />
                       </td>
@@ -783,47 +782,102 @@ const RPTable = (props) => {
                   </tbody>
                 </table>
               </div>
-              {/* <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
-          <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-              Showing
-              <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
-              of
-              <span class="font-semibold text-gray-900 dark:text-white">1000</span>
-          </span>
-          <ul class="inline-flex items-stretch -space-x-px">
-              <li>
-                  <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              <nav
+                class=" bg-white text-black flex flex-col md:flex-row-reverse justify-between items-start md:items-center space-y-3 md:space-y-0 p-1"
+                aria-label="Table navigation"
+              >
+                <span class="text-sm font-normal text-black">
+                  Showing
+                  <span class="font-semibold text-gray-900 ">1-10</span>
+                  of
+                  <span class="font-semibold text-gray-900 ">1000</span>
+                </span>
+                <ul class="inline-flex items-stretch -space-x-px">
+                  <li>
+                    <a
+                      href="#"
+                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-700 bg-blue-500 rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
                       <span class="sr-only">Previous</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                      <svg
+                        class="w-5 h-5"
+                        aria-hidden="true"
+                        fill="currentColor"
+                        viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                          clip-rule="evenodd"
+                        />
                       </svg>
-                  </a>
-              </li>
-              <li>
-                  <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-              </li>
-              <li>
-                  <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-              </li>
-              <li>
-                  <a href="#" aria-current="page" class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-              </li>
-              <li>
-                  <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
-              </li>
-              <li>
-                  <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">100</a>
-              </li>
-              <li>
-                  <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      aria-current="page"
+                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:bg-blue-500 dark:hover:text-white"
+                    >
+                      1
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:bg-blue-500 dark:hover:text-white"
+                    >
+                      2
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-blue-500 dark:text-white"
+                    >
+                      3
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:bg-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
+                      ...
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-blue-500  dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
+                      100
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-blue-500 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
                       <span class="sr-only">Next</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                      <svg
+                        class="w-5 h-5"
+                        aria-hidden="true"
+                        fill="currentColor"
+                        viewbox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                          clip-rule="evenodd"
+                        />
                       </svg>
-                  </a>
-              </li>
-          </ul>
-      </nav> */}
+                    </a>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
         </section>
