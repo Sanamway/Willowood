@@ -68,9 +68,9 @@ export default function DragAndDrop(props) {
   }
 
   return (
-    <div className="">
+    <div className="main">
       <form
-        className={`flex justify-center flex-col items-center md:w-[90%] mx-auto h-[16rem] border-2 border-dashed mt-4 rounded-lg 
+        className={`flex justify-center flex-col items-center md:w-[96%] mx-auto h-1/2 border-2 border-dashed mt-4 rounded-lg 
         ${dragActive ? "bg-sky-50 border-sky-400" : "border-gray-300"}`}
         onDragEnter={handleDragEnter}
         onSubmit={(e) => e.preventDefault()}
@@ -129,10 +129,10 @@ export default function DragAndDrop(props) {
           <span className="p-2 text-white">Submit</span>
         </button> */}
       </form>
-      <div className="mt-12 flex items-center justify-end">
+      <div className="mt-12 flex items-center justify-end mx-8">
         <button
-          onClick={() => props.formType("Personal")}
-          className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-lg"
+          onClick={() => props.formType("RPTable")}
+          className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
         >
           Next
         </button>
