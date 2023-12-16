@@ -154,7 +154,7 @@ const DealerForm = () => {
               }`}
             >
               <div className="flex items-center justify-center gap-1 lg:font-bold">
-                <svg
+                {/* <svg
                   className="w-4 h-4"
                   fill="none"
                   stroke="currentColor"
@@ -173,7 +173,8 @@ const DealerForm = () => {
                     strokeWidth="2"
                     d="M7 9h10v2H7zm0 4h5v2H7z"
                   ></path>
-                </svg>
+                </svg> */}
+                <AiTwotoneHome></AiTwotoneHome>
                 Basic
               </div>
             </button>
