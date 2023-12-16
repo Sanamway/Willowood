@@ -101,7 +101,7 @@ const Login = () => {
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="relative flex-1 bg-banner bg-cover bg-center bg-no-repeat">
           <div className="flex items-center justify-center h-screen">
-            <div className="relative form rounded-lg   bg-opacity-[0.35] w-[90%] md:w-[30%] px-8 pb-8">
+            <form className="relative form rounded-lg   bg-opacity-[0.35] w-[90%] md:w-[30%] px-8 pb-8">
               <div className="relative top-[1rem] flex items-center justify-center">
                 <Image src={Logo}></Image>
               </div>
@@ -122,15 +122,6 @@ const Login = () => {
                 />
               </div>
               <div className="flex flex-col justify-between mx-12 mt-4">
-                {/* <label className="flex text-black items-center gap-1 font-semibold">
-                  <BiSolidLockAlt />
-                  Password
-                </label>
-                <input
-                  className="bg-transparent text-black py-1.5 max-w-full text-start outline-none border-0 placeholder:text-black text-sm border-black border-b-2 border-white-200"
-                  type="password"
-                  placeholder="Type your password"
-                /> */}
                 <div className="flex items-center justify-end mt-2">
                   <h3
                     onClick={() => {
@@ -145,6 +136,7 @@ const Login = () => {
               <div className="flex items-center justify-center mt-4">
                 {/* <button onClick={()=>{router.push('/otp')}} className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full uppercase text-sm text-white"> */}
                 <button
+                type="submit"
                   onClick={loginHandler}
                   className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full text-sm text-white"
                 >
@@ -160,7 +152,7 @@ const Login = () => {
                   <AiFillGoogleCircle className="text-red-600" size={29}></AiFillGoogleCircle>
                 </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>

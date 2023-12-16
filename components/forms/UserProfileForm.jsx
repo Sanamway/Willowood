@@ -205,9 +205,9 @@ const UserProfileForm = () => {
   return (
     <>
       <Layout>
-        <div className="h-screen overflow-auto w-full font-arial bg-white ">
+        <div className=" w-full font-arial">
           <Toaster position="bottom-center" reverseOrder={false} />
-          <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
+          <div className="text-black flex items-center justify-between  max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">User Profile</h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <h2>
@@ -231,8 +231,8 @@ const UserProfileForm = () => {
             </div>
           </div>
 
-          <div className="bg-gray-100 py-4 rounded-md">
-            <div className="text-black mx-12 bg-white p-4">
+          <div className="bg-gray-100 py-4 rounded-md  ">
+            <div className="text-black mx-12 bg-white p-4 ">
               <div className=" text-black flex items-center justify-between mt-4">
                 <div className="w-1/2 flex items-center justify-center">
                   <label className="w-1/2 text-gray-700 text-sm font-bold " htmlFor="userName">

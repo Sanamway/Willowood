@@ -121,8 +121,8 @@ const [data, setData] = useState([])
           </div>
         </div>
 
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+        <div className="bg-white  flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full px-2">
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">

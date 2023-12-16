@@ -200,7 +200,7 @@ const AssignRoleCopy = () => {
 
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full font-arial bg-gray-100 ">
+      <div className=" w-full font-arial bg-gray-100 ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Assign Role Profile to User</h2>
@@ -226,11 +226,11 @@ const AssignRoleCopy = () => {
           </div>
         </div>
 
-        <div className="bg-gray py-4 h-screen rounded-md">
+        <div className="bg-gray py-4  rounded-md">
           <div className="text-black mx-12 bg-white p-4 ">
             <div className="flex flex-col ">
-              { router.query.type ==="view" &&
-                (<div className="w-1/3 px-2 flex whitespace-nowrap items-center justify-center gap-2">
+              {router.query.type === "view" && (
+                <div className="w-1/3 px-2 flex whitespace-nowrap items-center justify-center gap-2">
                   <label className="block text-gray-700 text-sm font-bold " htmlFor="userSelect">
                     <span className="text-red-500 p-1">*</span>User Name
                   </label>
@@ -240,49 +240,52 @@ const AssignRoleCopy = () => {
                     type="text"
                     className="w-full px-1 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus-border-indigo-500"
                   />
-                </div>)
-              }
+                </div>
+              )}
 
-             {router.query.type =="CREATE"&&( <div className="w-1/3 px-2 flex whitespace-nowrap ">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
-                  <span className="text-red-500 p-1">*</span>User Name
-                </label>
-                <select
-                  className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                  id="userSelect"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
-                >
-                  <option value={""} className="focus:outline-none focus:border-b bg-white">
-                    -- Select --
-                  </option>
-                  {allUsers.map((item) => (
-                    <option value={item.userId}>
-                      {item.name} ({item.mobile}) - {item.territoryProfile} {item.userId}
+              {router.query.type == "CREATE" && (
+                <div className="w-1/3 px-2 flex whitespace-nowrap ">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                    <span className="text-red-500 p-1">*</span>User Name
+                  </label>
+                  <select
+                    className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                    id="userSelect"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                  >
+                    <option value={""} className="focus:outline-none focus:border-b bg-white">
+                      -- Select --
                     </option>
-                  ))}
-                </select>
-              </div>)}
+                    {allUsers.map((item) => (
+                      <option value={item.userId}>
+                        {item.name} ({item.mobile}) - {item.territoryProfile} {item.userId}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
-
-              {router.query.type ==="view" && (<div className="w-1/3 px-2 flex mt-8 whitespace-nowrap items-center justify-center gap-2">
-                <label className=" text-gray-700 text-sm font-bold flex" htmlFor="userSelect">
-                  <span className="text-red-500 p-1">*</span> User Profile
-                </label>
-                <input
+              {router.query.type === "view" && (
+                <div className="w-1/3 px-2 flex mt-8 whitespace-nowrap items-center justify-center gap-2">
+                  <label className=" text-gray-700 text-sm font-bold flex" htmlFor="userSelect">
+                    <span className="text-red-500 p-1">*</span> User Profile
+                  </label>
+                  <input
                     disabled
                     placeholder={allViewMenus[0]?.U_profile_name}
                     type="text"
                     className="w-full px-1 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus-border-indigo-500"
                   />
-                
-              </div>)}
+                </div>
+              )}
 
-              {router.query.type ==="CREATE" && (<div className="w-1/3 px-2 flex mt-8 whitespace-nowrap">
-                <label className=" text-gray-700 text-sm font-bold mb-2 flex" htmlFor="userSelect">
-                  <span className="text-red-500 p-1">*</span> User Profile
-                </label>
-                {/* <select
+              {router.query.type === "CREATE" && (
+                <div className="w-1/3 px-2 flex mt-8 whitespace-nowrap">
+                  <label className=" text-gray-700 text-sm font-bold mb-2 flex" htmlFor="userSelect">
+                    <span className="text-red-500 p-1">*</span> User Profile
+                  </label>
+                  {/* <select
                   className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                   id="userSelect"
                   value={userProfile}
@@ -297,34 +300,35 @@ const AssignRoleCopy = () => {
                   ))}
                 </select> */}
 
-                <select
-                  className="w-full px-1 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus-border-indigo-500"
-                  id="userName"
-                  value={`${selectedRole.role_id},${selectedRole.U_profile_name}`}
-                  onChange={handleSelectRole}
-                >
-                  <option
-                    className="focus:outline-none focus:border-b bg-white whitespace-nowrap w-full"
-                    value=""
+                  <select
+                    className="w-full px-1 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus-border-indigo-500"
+                    id="userName"
+                    value={`${selectedRole.role_id},${selectedRole.U_profile_name}`}
+                    onChange={handleSelectRole}
                   >
-                    Select Options
-                  </option>
-                  {[
-                    ...new Set(allNewUserProfile.map((role) => `${role.role_id},${role.U_profile_name}`))
-                  ].map((uniqueRole, index) => {
-                    const [role_id, U_profile_name] = uniqueRole.split(",");
-                    return (
-                      <option
-                        key={index}
-                        className="focus:outline-none focus:border-b bg-white whitespace-nowrap w-full"
-                        value={`${role_id},${U_profile_name}`}
-                      >
-                        {U_profile_name}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>)}
+                    <option
+                      className="focus:outline-none focus:border-b bg-white whitespace-nowrap w-full"
+                      value=""
+                    >
+                      Select Options
+                    </option>
+                    {[
+                      ...new Set(allNewUserProfile.map((role) => `${role.role_id},${role.U_profile_name}`))
+                    ].map((uniqueRole, index) => {
+                      const [role_id, U_profile_name] = uniqueRole.split(",");
+                      return (
+                        <option
+                          key={index}
+                          className="focus:outline-none focus:border-b bg-white whitespace-nowrap w-full"
+                          value={`${role_id},${U_profile_name}`}
+                        >
+                          {U_profile_name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+              )}
             </div>
             <div className="mt-4 font-arial">
               <h2 className="text-sm mb-4"> Display Assign Menu Rights</h2>
@@ -356,96 +360,107 @@ const AssignRoleCopy = () => {
                     </tr>
                   </thead>
                   <tbody className="font-arial text- text-left">
-                    {allMenus.map((menu, index) => (
-                    console.log("assignrow", menu),
-                      <tr 
-                      // className="bg-white divide-y border text-left  divide-gray-200 text-xs" key={menu._id}>
-                                className={`bg-white divide-y ${rowdisable(menu) ? 'border-2 border-red-200':""}  text-xs`}>
-
-                        <td className="border-b px-4 py-2 flex items-center gap-4">{menu.menu_id}</td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-xs">
-                          {menu?.umenu_Name}
-                        </td>
-                        <td className="border px-4 py-2">
-                          <input
-                            type="checkbox"
-                            disabled={!menu.isEditable}
-                            checked={menu.New}
-                            onChange={() => {
-                              setAllMenus(
-                                allMenus.map((el) => (el._id === menu._id ? { ...el, New: !el.New } : el))
-                              );
-                            }}
-                          />
-                        </td>
-                        <td className="border px-4 py-2">
-                          <input
-                            type="checkbox"
-                            disabled={!menu.isEditable}
-                            checked={menu.modify}
-                            onChange={() => {
-                              setAllMenus(
-                                allMenus.map((el) =>
-                                  el._id === menu._id ? { ...el, modify: !el.modify } : el
-                                )
-                              );
-                            }}
-                          />
-                        </td>
-                        <td className="border px-4 py-2">
-                          <input
-                            type="checkbox"
-                            disabled={!menu.isEditable}
-                            checked={menu.view}
-                            onChange={() => {
-                              setAllMenus(
-                                allMenus.map((el) => (el._id === menu._id ? { ...el, view: !el.view } : el))
-                              );
-                            }}
-                          />
-                        </td>
-                        <td className="border px-4 py-2">
-                          <input
-                            type="checkbox"
-                            disabled={!menu.isEditable}
-                            checked={menu.Delete}
-                            onChange={() => {
-                              setAllMenus(
-                                allMenus.map((el) =>
-                                  el._id === menu._id ? { ...el, Delete: !el.Delete } : el
-                                )
-                              );
-                            }}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="border px-4 py-2"
-                            disabled={!menu.isEditable}
-                            checked={menu.wf_approval}
-                            onChange={() => {
-                              setAllMenus(
-                                allMenus.map((el) =>
-                                  el._id === menu._id
-                                    ? {
-                                        ...el,
-                                        wf_approval: !el.wf_approval
-                                      }
-                                    : el
-                                )
-                              );
-                            }}
-                          />
-                        </td>
-                      </tr>
-                    ))}
+                    {allMenus.map(
+                      (menu, index) => (
+                        console.log("assignrow", menu),
+                        (
+                          <tr
+                            className={`bg-white divide-y ${
+                              rowdisable(menu) ? "border-2 border-red-200" : ""
+                            }  text-xs`}
+                          >
+                            <td className="border-b px-4 py-2 flex items-center gap-4">{menu.menu_id}</td>
+                            <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-xs">
+                              {menu?.umenu_Name}
+                            </td>
+                            <td className="border px-4 py-2">
+                              <input
+                                type="checkbox"
+                                disabled={!menu.isEditable}
+                                checked={menu.New}
+                                onChange={() => {
+                                  setAllMenus(
+                                    allMenus.map((el) => (el._id === menu._id ? { ...el, New: !el.New } : el))
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td className="border px-4 py-2">
+                              <input
+                                type="checkbox"
+                                disabled={!menu.isEditable}
+                                checked={menu.modify}
+                                onChange={() => {
+                                  setAllMenus(
+                                    allMenus.map((el) =>
+                                      el._id === menu._id ? { ...el, modify: !el.modify } : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td className="border px-4 py-2">
+                              <input
+                                type="checkbox"
+                                disabled={!menu.isEditable}
+                                checked={menu.view}
+                                onChange={() => {
+                                  setAllMenus(
+                                    allMenus.map((el) =>
+                                      el._id === menu._id ? { ...el, view: !el.view } : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td className="border px-4 py-2">
+                              <input
+                                type="checkbox"
+                                disabled={!menu.isEditable}
+                                checked={menu.Delete}
+                                onChange={() => {
+                                  setAllMenus(
+                                    allMenus.map((el) =>
+                                      el._id === menu._id ? { ...el, Delete: !el.Delete } : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="checkbox"
+                                className="border px-4 py-2"
+                                disabled={!menu.isEditable}
+                                checked={menu.wf_approval}
+                                onChange={() => {
+                                  setAllMenus(
+                                    allMenus.map((el) =>
+                                      el._id === menu._id
+                                        ? {
+                                            ...el,
+                                            wf_approval: !el.wf_approval
+                                          }
+                                        : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                          </tr>
+                        )
+                      )
+                    )}
 
                     {router.query.type === "view" &&
                       allViewMenus.map((menu, index) => (
-                        <tr 
-                        className={`bg-white divide-y ${rowdisable(menu) ? 'border-2 border-red-200':""}  text-xs`}  key={menu._id}>
-                        {/* className="bg-white divide-y border  divide-gray-200 text-xs" key={menu._id}> */}
+                        <tr
+                          className={`bg-white divide-y ${
+                            rowdisable(menu) ? "border-2 border-red-200" : ""
+                          }  text-xs`}
+                          key={menu._id}
+                        >
+                          {/* className="bg-white divide-y border  divide-gray-200 text-xs" key={menu._id}> */}
                           <td className="border-b px-4 py-2 flex items-center gap-4">{index + 1}</td>
                           <td className="px-6 py-2 dark:border-2 text-left whitespace-nowrap font-arial text-xs">
                             {menu?.umenu_Name}
@@ -525,21 +540,25 @@ const AssignRoleCopy = () => {
                         </tr>
                       ))}
                   </tbody>
+
+                  
                 </table>
               </div>
-             {router.query.type =="CREATE" && ( <div className="button flex items-center gap-3 mt-6 mb-20">
-                <div className="bg-green-700 px-4 py-1 text-white cursor-pointer" onClick={handleSaveData}>
-                  Save
+              {router.query.type == "CREATE" && (
+                <div className="button flex items-center gap-3 mt-6 mb-20">
+                  <div className="bg-green-700 px-4 py-1 text-white cursor-pointer" onClick={handleSaveData}>
+                    Save
+                  </div>
+                  <div
+                    onClick={() => {
+                      router.push("/table/table_assign_role");
+                    }}
+                    className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
+                  >
+                    Close
+                  </div>
                 </div>
-                <div
-                  onClick={() => {
-                    router.push("/table/table_assign_role");
-                  }}
-                  className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
-                >
-                  Close
-                </div>
-              </div>)}
+              )}
             </div>
           </div>
         </div>
