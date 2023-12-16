@@ -221,7 +221,7 @@ const RollingPlans = () => {
     zId: null,
     rId: null,
     tId: null,
-    yr: null,
+    yr: new Date(),
     month: null,
   });
   useEffect(() => {
@@ -244,7 +244,7 @@ const RollingPlans = () => {
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: null,
+          yr: new Date(),
           month: null,
         });
         break;
@@ -266,7 +266,7 @@ const RollingPlans = () => {
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           tId: null,
-          yr: null,
+          yr: new Date(),
           month: null,
         });
         break;
@@ -288,7 +288,7 @@ const RollingPlans = () => {
           rId: null,
 
           tId: null,
-          yr: null,
+          yr: new Date(),
           month: null,
         });
         break;
@@ -309,7 +309,7 @@ const RollingPlans = () => {
           rId: null,
           zId: null,
           tId: null,
-          yr: null,
+          yr: new Date(),
           month: null,
         });
         break;
@@ -330,7 +330,7 @@ const RollingPlans = () => {
           rId: null,
           zId: null,
           tId: null,
-          yr: null,
+          yr: new Date(),
           month: null,
         });
         break;
@@ -351,7 +351,7 @@ const RollingPlans = () => {
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: null,
+          yr: new Date(),
           month: null,
         });
         break;
@@ -506,9 +506,9 @@ const RollingPlans = () => {
   };
 
   useEffect(() => {
-    if (!filterState.year) return;
-    getAllTransactionPlan(filterState.year);
-  }, [filterState.year]);
+    if (!filterState.yr) return;
+    getAllTransactionPlan(filterState.yr);
+  }, [filterState.yr]);
 
   const [allTableData, setAllTableData] = useState([]);
   const getAllSalesPlanStatus = async (
@@ -556,14 +556,15 @@ const RollingPlans = () => {
       console.log("jkl", apires);
       setAllTableData(apires);
     } catch (error) {
+      if (!error) return;
       setAllTableData([]);
     }
   };
 
   useEffect(() => {
-    if (!filterState.year) return;
+    if (!filterState.yr) return;
     getAllSalesPlanStatus(
-      filterState.year || null,
+      filterState.yr || null,
       filterState.month || null,
       filterState.bgId || null,
       filterState.buId || null,
@@ -572,7 +573,7 @@ const RollingPlans = () => {
       filterState.tId
     );
   }, [
-    filterState.year,
+    filterState.yr,
     filterState.month,
     filterState.bgId,
     filterState.buId,
@@ -785,27 +786,28 @@ const RollingPlans = () => {
         );
     }
   };
-
+  {
+    console.log("nm", filterState.ye);
+  }
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className="h-screen  w-full font-arial bg-white ">
         <div className="grid justify-items-stretch grid-flow-col px-8 py-2">
-          <h2 className="flex font-arial font-normal text-2xl  py-2  justify-self-center underline">
+          <h2 className="flex font-arial  text-xl  py-2 font-bold  text-teal-400  justify-self-center underline">
             Rolling Sales Plan Status
-            
           </h2>
         </div>
         <div className="my-4 flex  flex-col w-full gap-4 px-12 ">
           <div className="flex gap-4 w-full">
             <DatePicker
               className=" px-2 py-1 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 w-28"
-              selected={filterState.year}
-              onChange={(date) =>
+              selected={filterState.yr}
+              onChange={(date) => {
                 setFilterState({
                   ...filterState,
-                  year: date,
-                })
-              }
+                  yr: date,
+                });
+              }}
               minDate={new Date()}
               showYearPicker
               dateFormat="yyyy"
@@ -820,7 +822,7 @@ const RollingPlans = () => {
                   month: e.target.value,
                 })
               }
-              disabled={!filterState.year}
+              disabled={!filterState.yr}
             >
               <option value="All" className="font-bold">
                 All
@@ -973,7 +975,7 @@ const RollingPlans = () => {
           </div>
         </div>
         <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full px-4">
             <table className="min-w-full divide-y border- divide-gray-200 ">
               <thead className="">
                 <tr>
@@ -990,6 +992,9 @@ const RollingPlans = () => {
                     Target Vs Actual
                   </th>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
+                    Stage
+                  </th>
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
                     Status
                   </th>
                 </tr>
@@ -1002,7 +1007,7 @@ const RollingPlans = () => {
                         <div className=""></div>
                         <div className="ml-3">
                           <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">
-                            Rolling Sales Plan
+                            R S P-({item.tran_id})
                           </p>
                           <p className="text-gray-900 whitespace-no-wrap text-[0.6rem]">
                             {moment(item.m_year).format("MMM YYYY")} (due date{" "}
@@ -1013,7 +1018,7 @@ const RollingPlans = () => {
                     </td>
                     <td className="px- py-2 border-b border-gray-200 bg-white text-sm ">
                       <p className="text-gray-900 whitespace-no-wrap text-xs ">
-                        Hyderabad
+                        {item.depot_name}
                       </p>
                     </td>
                     <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
@@ -1030,7 +1035,6 @@ const RollingPlans = () => {
                       </p>
                     </td>
                     <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
-                      {/* Progress Bar */}
                       <div className="demo-preview">
                         <div className="progress progress-striped active">
                           <div
@@ -1044,7 +1048,7 @@ const RollingPlans = () => {
                       </div>
                     </td>
 
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm relative flex items-center justify-between">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
                       <span className="relative inline-block px-2 py-1 font-semibold text-green-900 leading-tight">
                         <span
                           aria-hidden
@@ -1055,6 +1059,13 @@ const RollingPlans = () => {
                           {item.rp_status}
                         </span>
                       </span>
+                    </td>
+
+                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm relative flex items-center justify-between">
+                      <span className="relative inline-block px-2 py-1 italic text-green-900 leading-tight">
+                        {item.count}
+                      </span>
+
                       <div className="popop">
                         <Popover
                           as="div"
