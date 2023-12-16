@@ -7,6 +7,7 @@ export default function DragAndDrop(props) {
   const inputRef = useRef(null);
   const [files, setFiles] = useState([]);
 
+
   function handleChange(e) {
     e.preventDefault();
     console.log("File has been added");
