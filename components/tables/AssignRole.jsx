@@ -114,7 +114,7 @@ const [data, setData] = useState([])
                   query: { type: "CREATE" }
                 });
               }}
-              className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
+              className=" text-white py-1.5 whitespace-nowrap px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
               Create New
             </button>

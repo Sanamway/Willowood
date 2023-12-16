@@ -60,7 +60,7 @@ const ProductBrand = () => {
 
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full ">
+      <div className=" overflow-auto w-full mb-4 px-4">
         <ConfirmModal
           isOpen={isOpen}
           onClose={() => setisOpen(false)}
@@ -116,8 +116,8 @@ const ProductBrand = () => {
           </div>
         </div>
 
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]" ref={tableRef}>
+        <div className="bg-white  flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full" ref={tableRef}>
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
@@ -187,6 +187,8 @@ const ProductBrand = () => {
                   </tr>
                 ))}
               </tbody>
+
+              
             </table>
           </div>
         </div>

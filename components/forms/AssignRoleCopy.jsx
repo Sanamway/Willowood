@@ -333,7 +333,7 @@ const AssignRoleCopy = () => {
             <div className="mt-4 font-arial">
               <h2 className="text-sm mb-4"> Display Assign Menu Rights</h2>
               <div className="overflow-x-auto">
-                <table className="min-w-full mb-4">
+                <table className="min-w-full mb-4 border-b">
                   <thead className="font-arial border-b">
                     <tr className="border bg-gray-50 font-arial">
                       <td className=" py-2 text-center dark:border-2 text-xs font-medium text-gray-500   ">
