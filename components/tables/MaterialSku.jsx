@@ -69,7 +69,7 @@ const MaterialSku = () => {
 
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full ">
+      <div className=" overflow-auto w-full ">
         <ConfirmModal
           isOpen={isOpen}
           onClose={() => setisOpen(false)}
@@ -122,8 +122,8 @@ const MaterialSku = () => {
           </div>
         </div>
 
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+        <div className="bg-white  flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto tableInfo p-2">
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
