@@ -69,7 +69,7 @@ const MaterialSku = () => {
 
   return (
     <Layout>
-      <div className=" overflow-auto w-full ">
+      <div className=" overflow-auto w-full mb-12 ">
         <ConfirmModal
           isOpen={isOpen}
           onClose={() => setisOpen(false)}
