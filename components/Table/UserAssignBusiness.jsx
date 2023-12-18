@@ -56,7 +56,7 @@ const UserAssignBusiness = () => {
 
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full ">
+      <div className=" overflow-auto w-full ">
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-2xl  py-2">
             User Map With Business Structure
@@ -113,8 +113,8 @@ const UserAssignBusiness = () => {
           </div>
         </div>
 
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+        <div className="bg-white mb-12 flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full p-2 ">
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
