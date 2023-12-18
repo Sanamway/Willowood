@@ -366,7 +366,7 @@ const RollingPlans = () => {
 
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className="p-4 overflow-auto w-full font-arial mb-12 bg-white ">
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
             Rolling Sales Plan Status
@@ -423,7 +423,7 @@ const RollingPlans = () => {
                 <h2>"Hey"</h2>
               ) : (
                 <select
-                  className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                  className=" w-full max px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                   id="stateSelect"
                   value={filterState.month}
                   onChange={(e) =>
@@ -449,7 +449,7 @@ const RollingPlans = () => {
 
           <div className="flex gap-4 w-full">
             <select
-              className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              className=" w-full max px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
               value={filterState.bgId}
               onChange={(e) =>
@@ -470,7 +470,7 @@ const RollingPlans = () => {
               ))}
             </select>
             <select
-              className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
               value={filterState.buId}
               onChange={(e) =>
@@ -492,7 +492,7 @@ const RollingPlans = () => {
             </select>
 
             <select
-              className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
               value={filterState.zId}
               onChange={(e) =>
@@ -514,7 +514,7 @@ const RollingPlans = () => {
             </select>
 
             <select
-              className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
               value={filterState.rId}
               onChange={(e) =>
@@ -536,7 +536,7 @@ const RollingPlans = () => {
             </select>
 
             <select
-              className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
               value={filterState.tId}
               onChange={(e) =>
@@ -558,8 +558,8 @@ const RollingPlans = () => {
             </select>
           </div>
         </div>
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+        <div className="bg-white  flex items-start justify-center max-w-full  ">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto relative w-full ">
             <table className="min-w-full divide-y border- divide-gray-200 ">
               <thead className="">
                 <tr>
@@ -583,7 +583,7 @@ const RollingPlans = () => {
               <tbody>
                 {datas.map((item) => (
                   <tr key={item.id}>
-                    <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
+                    <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs ">
                       <div className="flex items-center">
                         <div className="">
                           {/* <FcBullish size={30} className="text-green-500"></FcBullish> */}
@@ -609,13 +609,13 @@ const RollingPlans = () => {
                         {item.zone}
                       </p>
                     </td>
-                    <td className="px- py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="px- py-2  border-b border-gray-200 bg-white text-sm">
                       {/* Progress Bar */}
                       <div className="demo-preview">
-                        <div className="progress progress-striped active">
+                        <div className="progress  progress-striped active">
                           <div
                             role="progressbar "
-                            style={{ width: `${item.progress}` }}
+                            style={{ width: `${item.progress}`, height:"10px" }}
                             className="progress-bar progress-bar-success rounded-md"
                           >
                             <span className="inline-block"></span>
@@ -624,7 +624,7 @@ const RollingPlans = () => {
                       </div>
                     </td>
 
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm relative flex items-center justify-between">
+                    <td className="px-5 py-1.5 border-b border-gray-200 bg-white text-sm relative flex items-center justify-between">
                       <span className="relative inline-block px-2 py-1 font-semibold text-green-900 leading-tight">
                         <span
                           aria-hidden
@@ -635,7 +635,7 @@ const RollingPlans = () => {
                           {item.status}
                         </span>
                       </span>
-                      <div className="popop">
+                      <div className="popop absolute right-0 ">
                         <Popover
                           as="div"
                           className="relative border-none outline-none "
@@ -652,10 +652,10 @@ const RollingPlans = () => {
                               <Popover.Panel
                                 as="div"
                                 className={`${
-                                  open ? "block" : "hidden"
-                                } absolute z-40 top-1 right-0 mt-2 w-40 bg-white  text-black border rounded-md shadow-md`}
+                                  open ? "block " : "hidden"
+                                } absolute z-40 top-0  right-0 mt-2 w-40 bg-white  text-black border rounded-md shadow-md`}
                               >
-                                <ul className=" text-black text-xs flex flex-col gap-  font-Rale cursor-pointer">
+                                <ul className=" text-black text-xs flex flex-col  font-Rale cursor-pointer">
                                   <li className="hover:bg-gray-100 px-2 py-1 rounded-md">
                                     New
                                   </li>

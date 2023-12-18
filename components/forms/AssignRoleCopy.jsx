@@ -202,7 +202,7 @@ const AssignRoleCopy = () => {
     <Layout>
       <div className=" w-full font-arial bg-gray-100 ">
         <Toaster position="bottom-center" reverseOrder={false} />
-        <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
+        <div className="text-black flex items-center  justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Assign Role Profile to User</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <h2>
@@ -226,8 +226,8 @@ const AssignRoleCopy = () => {
           </div>
         </div>
 
-        <div className="bg-gray py-4  rounded-md">
-          <div className="text-black mx-12 bg-white p-4 ">
+        <div className="bg-gray-100 py-4   w-full mb-12 rounded-md">
+          <div className="text-black mx-12  bg-white  p-4 ">
             <div className="flex flex-col ">
               {router.query.type === "view" && (
                 <div className="w-1/3 px-2 flex whitespace-nowrap items-center justify-center gap-2">
