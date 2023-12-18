@@ -73,7 +73,7 @@ const UserInformation = () => {
 
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full pb-64 bg-white overflow-y-auto  ">
+      <div className=" overflow-auto w-full pb-64 bg-white   ">
         <ConfirmModal
           isOpen={isOpen}
           onClose={() => setisOpen(false)}
@@ -83,7 +83,7 @@ const UserInformation = () => {
           endpoints="delete_user"
           onDeletedData={resetData}
         ></ConfirmModal>
-        <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
+        <div className="text-black userinfotext  flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">User Information</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
@@ -127,9 +127,9 @@ const UserInformation = () => {
           </div>
         </div>
 
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px] overflow-y-auto ">
-            <table className="min-w-full divide-y border- divide-gray-200 ">
+        <div className="bg-white  flex items-center justify-center max-w-full ">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-scroll  tableInfo select-none overflow-y-auto p-2 m-2">
+            <table className="w-full  divide-y border- divide-gray-200 ">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
                   <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
@@ -175,7 +175,7 @@ const UserInformation = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200 text-xs">
+              <tbody className="bg-white divide-y divide-gray-200 text-xs ">
                 {datas?.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">

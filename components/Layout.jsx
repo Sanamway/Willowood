@@ -281,7 +281,7 @@ const Layout = ({ children }) => {
             </nav>
           </div>
           {/* Main Content Area */}
-          <div className="flex-grow bg-gray bg-white h-screen overflow-auto">{children}</div>
+          <div className="flex-grow bg-gray bg-white h-screen overflow-auto ">{children}</div>
         </div>
       </div>
     </>

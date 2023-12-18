@@ -312,5 +312,18 @@ body {
   z-index: -1;
 }
 
+/* userInformation grid  */
+
+.tableInfo {
+  width: 86vw;
+ 
+}
+
+@media screen and (min-width: 768px) {
+  .tableInfo {
+    width: 82vw;
+  }
+}
+
 
 
