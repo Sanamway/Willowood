@@ -203,7 +203,7 @@ const CompanyInfo = () => {
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className=" overflow-auto w-full font-arial bg-white ">
         <div className="text-black flex items-center justify-between bg-white max-w-6/12 font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
             Company Info
