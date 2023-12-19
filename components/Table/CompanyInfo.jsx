@@ -56,13 +56,15 @@ const CompanyInfo = () => {
     setisOpen(false);
   };
 
+  const{name} = router.query
+
   return (
     <Layout>
       <div className=" overflow-auto w-full font-arial bg-white ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">
-            Company Info.
+          <h2 className="font-arial font-normal text-3xl tabletitle py-2">
+            {name}
           </h2>
           <span className="flex items-center gap-2 cursor-pointer">
             <span className="flex flex-row">

@@ -55,7 +55,8 @@ const Layout = ({ children }) => {
   const [user_name, setUsername] = useState("");
   const [uid, setUid] = useState("");
   const [userinfo, setUserInfo] = useState("");
-
+  const [menusItems, setMenus] = useState([]);
+  
   useEffect(() => {
     if (window.localStorage) {
       const isLoggedInInLocalStorage = !!localStorage.getItem("uid");
@@ -63,11 +64,12 @@ const Layout = ({ children }) => {
       const uid = localStorage.getItem("uid");
       const email_id = localStorage.getItem("email_id");
       const userinfoo = localStorage.getItem("userinfo");
-
+      const sidemenus = localStorage.getItem("SideMenus")
       setUser(isLoggedInInLocalStorage);
       setEmailId(email_id);
       setUsername(user_name);
       setUid(uid);
+      setMenus(JSON.parse(sidemenus))
       setUserInfo(JSON.parse(userinfoo));
     }
 
@@ -81,29 +83,26 @@ const Layout = ({ children }) => {
     secret: "fsdhfgsfuiweifiowefjewcewcebjw"
   };
 
-  const [menusItems, setMenus] = useState([]);
 
-  const gettingMenuSidebar = async (uid) => {
-    try {
-      const resp = await axios.get(
-        `${url}/api/get_assign_role_profile?user_id=${uid}&data_by_parent_id=true`,
-        { headers: headers }
-      );
-      const respData = await resp.data.data;
-      console.log("laymenus", respData);
-      setMenus(respData);
-    } catch (error) {
-      console.log("error : ", error);
-    }
-  };
+  // const gettingMenuSidebar = async (uid) => {
+  //   try {
+  //     const resp = await axios.get(
+  //       `${url}/api/get_assign_role_profile?user_id=${uid}&data_by_parent_id=true`,
+  //       { headers: headers }
+  //     );
+  //     const respData = await resp.data.data;
+  //     console.log("laymenus", respData);
+  //     setMenus(respData);
+  //   } catch (error) {
+  //     console.log("error : ", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (uid) gettingMenuSidebar(uid);
-  }, [uid]);
+  // useEffect(() => {
+  //   if (uid) gettingMenuSidebar(uid);
+  // }, [uid]);
 
-  const checkck = userinfo
-
-  console.log("vdv", checkck);
+  
 
   return (
     <>
@@ -177,7 +176,11 @@ const Layout = ({ children }) => {
                               <li
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  router.push(`/${item.page_call}`);
+                                  // router.push(`/${item.page_call}`);
+                                  router.push({
+                                    pathname:`/${item.page_call}`,
+                                    query:{name:`${item.umenu_Name}`}
+                                  })
                                 }}
                                 className={`text-[0.7rem] flex items-center gap-1.5 py-1 cursor-pointer hover:bg-orange-500 px-2 rounded-md `}
                               >

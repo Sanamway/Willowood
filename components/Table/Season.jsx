@@ -8,7 +8,7 @@ const Season = () => {
   const router = useRouter();
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className=" w-full font-arial bg-white ">
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Season</h2>
           <span className="flex items-center gap-2 cursor-pointer">
@@ -38,7 +38,7 @@ const Season = () => {
           </span>
         </div>
 
-        <div className="bg-gray-0 p-4 bg-gray-100 flex items-start overflow-x-auto ">
+        <div className="bg-gray-0 p-4 bg-gray-100 flex items-start overflow-x-auto min-h-screen ">
           <table className=" border divide-gray-200 table-auto w-full ">
             <thead className="border-b">
               <tr className="bg-gray-50 font-arial w-max">
@@ -53,6 +53,578 @@ const Season = () => {
                 </th>
               </tr>
             </thead>
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              <tr className="dark:border-2">
+                <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black   hover:text-blue-500  "
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/form/session_form");
+                    }}
+                    className="b text-black hover:text-yellow-400 ml-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="b text-black hover:text-red-500 ml-2">
+                    Delete
+                  </button>
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">2</td>
+
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">3</td>
+              </tr>
+            </tbody>
+
+
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
               <tr className="dark:border-2">
                 <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">

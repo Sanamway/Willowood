@@ -49,6 +49,10 @@ const Login = () => {
       const userinfo = respdata?.data?.userBSTDetails
       console.log("logInfo", userinfo?.bg_id)
 
+      if(uid){
+        gettingMenuSidebar(uid)
+      }
+     
 
  
 
@@ -67,7 +71,7 @@ const Login = () => {
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("id", _id);
         localStorage.setItem("userinfo", JSON.stringify(userinfo))
-
+        
         router.push("/");
       }
     } catch (error) {
@@ -82,6 +86,8 @@ const Login = () => {
     }
   };
 
+  
+
   useEffect(() => {
     if (window.localStorage) {
       const isLoggedInInLocalStorage = !!localStorage.getItem("uid");
@@ -94,6 +100,25 @@ const Login = () => {
       router.push("/");
     }
   }, [isLoggedIn]);
+
+  //setting up the menus in localStorage
+
+  const gettingMenuSidebar = async (uid) => {
+    try {
+      const resp = await axios.get(
+        `${url}/api/get_assign_role_profile?user_id=${uid}&data_by_parent_id=true`,
+        { headers: headers }
+      );
+      const respData = await resp.data.data;
+      // setMenus(respData);
+      localStorage.setItem("SideMenus", JSON.stringify(respData))
+    } catch (error) {
+      console.log("error : ", error);
+    }
+  };
+
+  
+
 
   return (
     <>

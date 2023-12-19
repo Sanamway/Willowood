@@ -28,6 +28,8 @@ const RollingPlans = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const {name} = router.query
+
   const datas = [
     {
       id: 1,
@@ -368,9 +370,9 @@ const RollingPlans = () => {
     <Layout>
       <div className="p-4 overflow-auto w-full font-arial mb-12 bg-white ">
         <div className="flex flex-row justify-between  h-max  px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">
-            Rolling Sales Plan Status
-          </h2>
+          
+        <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name}</h2>
+
           <span className="flex items-center gap-2 cursor-pointer">
             {/* <h2>
                     <CSVLink data={data} headers={csvHeaders}>
