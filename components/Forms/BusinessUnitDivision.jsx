@@ -221,7 +221,7 @@ const BusinessUnit = () => {
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className=" h-screen w-full font-arial bg-white ">
         <div className="text-black flex items-center justify-between bg-white max-w-6/12 font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
             Business Unit Division
@@ -283,7 +283,7 @@ const BusinessUnit = () => {
                   <small className="text-red-600">*</small> Company
                 </label>
                 <select
-                  className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                  className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                   id="citySelect"
                   value={businessUnitState.companyId}
                   onChange={(e) =>
@@ -319,7 +319,7 @@ const BusinessUnit = () => {
                   <small className="text-red-600">*</small> Business Segment
                 </label>
                 <select
-                  className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                  className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                   id="citySelect"
                   value={businessUnitState.bgId}
                   disabled={!businessUnitState.companyId}
