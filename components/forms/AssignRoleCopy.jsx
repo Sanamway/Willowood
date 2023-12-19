@@ -226,8 +226,8 @@ const AssignRoleCopy = () => {
           </div>
         </div>
 
-        <div className="bg-gray-100 py-4   w-full mb-12 rounded-md">
-          <div className="text-black mx-12  bg-white  p-4 ">
+        <div className="bg-gray-100 py-4   w-full  rounded-md ">
+          <div className="text-black mx-12  bg-white  p-4 min-h-screen ">
             <div className="flex flex-col ">
               {router.query.type === "view" && (
                 <div className="w-1/3 px-2 flex whitespace-nowrap items-center justify-center gap-2">

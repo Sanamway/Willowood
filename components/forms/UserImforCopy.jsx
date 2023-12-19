@@ -319,7 +319,7 @@ const UserInformation = () => {
 
           {/* <div className="bg-gray-300"></div> */}
           <div className="text-black  relative ">
-            <div className="bg-gray-100 p-4 absolute w-full  ">
+            <div className="bg-gray-100 p-4 absolute w-full min-h-screen  ">
               <form
                 onSubmit={(e) => e.preventDefault()}
                 disabled={router.query.type === "CREATE"}

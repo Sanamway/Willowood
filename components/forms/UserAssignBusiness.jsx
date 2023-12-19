@@ -391,7 +391,7 @@ const UserAssignBusiness = () => {
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div className=" overflow-auto w-full font-arial bg-white ">
+      <div className="  w-full font-arial bg-white ">
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
             User Map With Business Structure{" "}
@@ -419,8 +419,8 @@ const UserAssignBusiness = () => {
         </div>
 
         {/* <div className="bg-gray-300"></div> */}
-        <div className="text-black  h-screen ">
-          <div className="bg-gray-100 pt-1 h-screen ">
+        <div className="text-black ">
+          <div className="bg-gray-100 pt-1 min-h-screen pb-12  ">
             <div className="max-w-1/2 mx-4 mt-4 bg-white rounded shadow p-4">
               <div className="mb-3 w-1/6">
                 <label
