@@ -57,7 +57,7 @@ const District = () => {
   };
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className="  w-full font-arial bg-white ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">District</h2>
@@ -98,8 +98,8 @@ const District = () => {
           </span>
         </div>
 
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+        <div className="bg-white mb-6 flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto tableInfo p-2">
             <table className=" border divide-gray-200 table-auto w-full ">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial w-max">
@@ -200,6 +200,7 @@ const District = () => {
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
         </div>
