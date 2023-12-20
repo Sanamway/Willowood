@@ -154,14 +154,15 @@ const UserInformation = () => {
         });
     } catch (errors) {
       const messageError = errors?.response?.data?.message;
-      if (messageError) {
-        toast.error(messageError);
-        return;
-      }
+      console.log("userinf", messageError)
+      // if (messageError) {
+      //   toast.error(messageError);
+      //   return;
+      // }
       const errorMessage = errors?.response?.data?.error;
       if (errorMessage?.includes("email_1")) {
         toast.error("Email already exist");
-      } else if (errorMessage?.includes("phone_number")) {
+      } else if (errorMessage?.includes("phone_number_1")) {
         toast.error("Phone Number already exist");
       }
       const newErrors = {};
