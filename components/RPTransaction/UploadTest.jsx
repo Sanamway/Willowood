@@ -1,22 +1,45 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { IoIosRemoveCircleOutline } from "react-icons/io";
-
+import * as XLSX from "xlsx";
+import { useRouter } from "next/router";
 export default function DragAndDrop(props) {
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef(null);
-  const [files, setFiles] = useState([]);
-
+  const [files, setFiles] = useState(null);
+  const router = useRouter();
+  const [jsonData, setJsonData] = useState("");
   function handleChange(e) {
     e.preventDefault();
-    console.log("File has been added");
-    if (e.target.files && e.target.files[0]) {
-      console.log(e.target.files);
-      for (let i = 0; i < e.target.files["length"]; i++) {
-        setFiles((prevState) => [...prevState, e.target.files[i]]);
-      }
-    }
+    console.log("File has been added", e.target.file);
+    setFiles(e.target.files[0]);
   }
+
+  const handleConvert = (file) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const data = e.target.result;
+        const workbook = XLSX.read(data, { type: "binary" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const json = XLSX.utils.sheet_to_json(worksheet, {
+          header: 1,
+          blankrows: false,
+        });
+        setJsonData(json);
+        props.setTableData(json);
+      };
+      reader.readAsBinaryString(file);
+    }
+  };
+  console.log("lot", jsonData);
+
+  useEffect(() => {
+    handleConvert(files);
+  }, [files]);
+
+  console.log("kjk", files);
 
   function handleSubmitFile(e) {
     if (files.length === 0) {
@@ -56,10 +79,7 @@ export default function DragAndDrop(props) {
   }
 
   function removeFile(fileName, idx) {
-    const newArr = [...files];
-    newArr.splice(idx, 1);
-    setFiles([]);
-    setFiles(newArr);
+    setFiles(null);
   }
 
   function openFileExplorer() {
@@ -89,37 +109,33 @@ export default function DragAndDrop(props) {
         />
 
         <div className="flex flex-col gap-2 text-center items-center ">
-          <IoCloudUploadOutline size={35} className="text-gray-400"></IoCloudUploadOutline>
-          <h1 className="text-3xl text-gray-400 select-none">Drag & Drop files here </h1>
+          <IoCloudUploadOutline
+            size={35}
+            className="text-gray-400"
+          ></IoCloudUploadOutline>
+          <h1 className="text-3xl text-gray-400 select-none">
+            Drag & Drop files here{" "}
+          </h1>
           <h6 className=" text-gray-400 select-none">or</h6>
           <h2 className="font-bold cursor-pointer " onClick={openFileExplorer}>
-            <button className="px-3 py-1.5 rounded-sm bg-teal-500 text-white select-none">Browse Files</button>
+            <button className="px-3 py-1.5 rounded-sm bg-teal-500 text-white select-none">
+              Browse Files
+            </button>
           </h2>{" "}
         </div>
 
         <div className="flex flex-col items-start p-3 h-[150px] overflow-y-auto my-4 chat-scrollbar">
-          {files.map(
-            (file, idx) => (
-              console.log("df", files),
-              (
-                <div key={idx} className="flex flex-row space-x-5 py-1 justify-between w-full ">
-                  {file.type.startsWith("image/") ? (
-                    <div className="flex gap-5 items-start justify-center ">
-                      <img
-                        src={URL.createObjectURL(file)}
-                        alt="avatar"
-                        className="image-input-wrapper w-6 h-6 rounded-full cursor-pointer opacity-75-hover"
-                      />
-                      <div>{file.name}</div>
-                    </div>
-                  ) : (
-                    <div>{file.name}</div>
-                  )}
-                    <IoIosRemoveCircleOutline onClick={() => removeFile(file.name, idx)} size={20} className="text-red-400"></IoIosRemoveCircleOutline>
-                </div>
-              )
-            )
-          )}
+          <div className="flex flex-row space-x-5 py-1 justify-between w-full ">
+            <div>{files?.name}</div>
+
+            {files && (
+              <IoIosRemoveCircleOutline
+                onClick={() => removeFile()}
+                size={20}
+                className="text-red-400"
+              ></IoIosRemoveCircleOutline>
+            )}
+          </div>
         </div>
 
         {/* <button

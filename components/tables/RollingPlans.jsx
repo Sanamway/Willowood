@@ -19,6 +19,8 @@ import { Popover } from "@headlessui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CSVLink } from "react-csv";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 import moment from "moment";
 
@@ -521,7 +523,7 @@ const RollingPlans = () => {
     tId
   ) => {
     let endPoint;
-    console.log("muh", bgId, buId);
+
     if (bgId && buId && zId && rId && tId) {
       endPoint = "api/get_rollingdata_based_on_roll_t";
     } else if (bgId && buId && zId && rId && !tId) {
@@ -533,7 +535,7 @@ const RollingPlans = () => {
     } else if (bgId && !buId && !zId && !rId && !tId) {
       endPoint = "api/get_rollingdata_based_on_roll_bg";
     } else {
-      endPoint = "api/get_rollingdata_based_on_roll_t";
+      return;
     }
 
     try {
@@ -562,7 +564,6 @@ const RollingPlans = () => {
   };
 
   useEffect(() => {
-    if (!filterState.yr) return;
     getAllSalesPlanStatus(
       filterState.yr || null,
       filterState.month || null,
@@ -605,15 +606,66 @@ const RollingPlans = () => {
         return "black";
     }
   };
-  const getOptions = (status) => {
+  const getOptions = (
+    planId,
+    tranId,
+    yr,
+    mYr,
+    depot,
+    zrt,
+    status,
+    stage,
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    c,
+    w,
+    tDes
+  ) => {
+    console.log(
+      "Moye Moye",
+      planId,
+      tranId,
+      yr,
+      mYr,
+      depot,
+      zrt,
+      status,
+      stage,
+      bg,
+      bu,
+      z,
+      r,
+      t,
+      c,
+      w
+    );
     switch (status) {
       case "Close Period":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer ">
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcel(
+                  mYr,
+                  planId,
+                  tranId,
+                  t,
+                  tDes,
+                  yr,
+                  "Download"
+                )
+              }
+            >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "  
+            
+            
+            >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -631,10 +683,28 @@ const RollingPlans = () => {
       case "Review Stage":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcel(
+                  mYr,
+                  planId,
+                  tranId,
+                  t,
+                  tDes,
+                  yr,
+                  "Download"
+                )
+              }
+            >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit")
+              }
+            >
               <CiEdit className="text-slate-400" /> Edit
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -654,10 +724,28 @@ const RollingPlans = () => {
       case "Draft Submit":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcel(
+                  mYr,
+                  planId,
+                  tranId,
+                  t,
+                  tDes,
+                  yr,
+                  "Download"
+                )
+              }
+            >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit")
+              }
+            >
               <CiEdit className="text-slate-400" /> Edit
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -677,7 +765,20 @@ const RollingPlans = () => {
       case "Final Submitted":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcel(
+                  mYr,
+                  planId,
+                  tranId,
+                  t,
+                  tDes,
+                  yr,
+                  "Download"
+                )
+              }
+            >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
 
@@ -699,13 +800,55 @@ const RollingPlans = () => {
       case "Yet to Submit":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcel(
+                  mYr,
+                  planId,
+                  tranId,
+                  t,
+                  tDes,
+                  yr,
+                  "Download"
+                )
+              }
+            >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() => {
+                router.push({
+                  pathname: "/rptransaction",
+                  query: {
+                    planId: planId,
+                    tranId: tranId,
+                    yr: yr,
+                    mYr: mYr,
+                    depot: depot,
+                    zrt: zrt,
+                    status: status,
+                    stage: stage,
+                    bgId: bg,
+                    buId: bu,
+                    zId: z,
+                    rId: r,
+                    tId: t,
+                    cId: c,
+                    wId: w,
+                  },
+                });
+              }}
+            >
               <FaUpload className="text-slate-400" /> Upload RP
             </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit")
+              }
+            >
               <CiEdit className="text-slate-400" /> Edit
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -719,10 +862,28 @@ const RollingPlans = () => {
       case "Yet to Approve":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcel(
+                  mYr,
+                  planId,
+                  tranId,
+                  t,
+                  tDes,
+                  yr,
+                  "Download"
+                )
+              }
+            >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit")
+              }
+            >
               <CiEdit className="text-slate-400" /> Edit
             </li>
 
@@ -743,7 +904,20 @@ const RollingPlans = () => {
       case "Reject":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcel(
+                  mYr,
+                  planId,
+                  tranId,
+                  t,
+                  tDes,
+                  yr,
+                  "Download"
+                )
+              }
+            >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -764,7 +938,12 @@ const RollingPlans = () => {
       default:
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit")
+              }
+            >
               <CiEdit className="text-slate-400" /> Edit
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -786,12 +965,79 @@ const RollingPlans = () => {
         );
     }
   };
-  {
-    console.log("nm", filterState.ye);
-  }
+
+  const handleDownloadExcel = async (
+    m_year,
+    planId,
+    tranId,
+    tId,
+    tDes,
+    yr,
+    type
+  ) => {
+    try {
+      const respond = axios.get(`${url}/api/rsp_download`, {
+        headers: headers,
+        params: {
+          year_1: yr - 2,
+          year_2: yr - 1,
+          year_3: yr,
+
+          year_2_nm: moment(m_year)
+            .subtract(1, "years")
+            .add(1, "months")
+            .format("YYYY-MM"),
+          year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+          year_3_cm: moment(m_year).format("YYYY-MM"),
+          year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+
+          plan_id: planId,
+          tran_id: tranId,
+          t_id: tId,
+          t_des: tDes,
+          m_year: m_year,
+          json: true,
+        },
+      });
+      const apires = await respond;
+
+      const ws = XLSX.utils.json_to_sheet(apires.data.data);
+
+      console.log("nm", apires.data.data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+      if (type === "Download") {
+        XLSX.writeFile(
+          wb,
+          `RSP_${moment(m_year).format("YYYY-MM")}_${tDes}.xlsx`
+        );
+      } else {
+        let keys = Object.keys(apires.data.data[0]);
+
+        // Convert array of objects to array of arrays
+        let arrayOfArrays = [
+          keys, // First array with keys
+          ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
+        ];
+
+       
+        localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
+      }
+    } catch (error) {
+      console.log("mlo", error);
+    }
+  };
+
+  useEffect(() => {
+    console.log(
+      "nope",
+      window.localStorage && JSON.parse(localStorage.getItem("RSP"))
+    );
+  }, []);
   return (
     <Layout>
-      <div className="h-screen  w-full font-arial bg-white ">
+      <div className="h-screen  w-full font-arial bg-white  ">
         <div className="grid justify-items-stretch grid-flow-col px-8 py-2">
           <h2 className="flex font-arial  text-xl  py-2 font-bold  text-teal-400  justify-self-center underline">
             Rolling Sales Plan Status
@@ -975,8 +1221,8 @@ const RollingPlans = () => {
           </div>
         </div>
         <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full px-4">
-            <table className="min-w-full divide-y border- divide-gray-200 ">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full px-4 min-h-screen">
+            <table className="min-w-full divide-y border- divide-gray-200  ">
               <thead className="">
                 <tr>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
@@ -1052,7 +1298,9 @@ const RollingPlans = () => {
                       <span className="relative inline-block px-2 py-1 font-semibold text-green-900 leading-tight">
                         <span
                           aria-hidden
-                          style={{ backgroundColor: getStatus(item.rp_status) }}
+                          style={{
+                            backgroundColor: getStatus(item.rp_status),
+                          }}
                           className="absolute inset-0 opacity-60 rounded-full"
                         ></span>
                         <span className="relative text-white whitespace-no-wrap text-xs font-semibold">
@@ -1086,7 +1334,41 @@ const RollingPlans = () => {
                                   open ? "block" : "hidden"
                                 } absolute z-40 top-1 right-0 mt-2 w-40 bg-white  text-black border rounded-md shadow-md`}
                               >
-                                {getOptions(item.rp_status)}
+                                {getOptions(
+                                  item.plan_id,
+                                  item.tran_id,
+                                  item.t_year,
+                                  item.m_year,
+                                  item.depot_name,
+                                  `${
+                                    item.business_segment
+                                      ? item.business_segment
+                                      : ""
+                                  } 
+                                  ${
+                                    item.business_unit_name
+                                      ? item.business_unit_name
+                                      : ""
+                                  }  
+                                  ${item.zone_name ? item.zone_name : ""} 
+                                  ${item.region_name ? item.region_name : ""}
+                                   ${
+                                     item.territory_name
+                                       ? item.territory_name
+                                       : ""
+                                   }`,
+                                  item.rp_status,
+                                  item.count || "",
+
+                                  item.bg_id,
+                                  item.bu_id,
+                                  item.z_id,
+                                  item.r_id,
+                                  item.t_id,
+                                  item.c_id,
+                                  item.w_id,
+                                  item.territory_name
+                                )}
                               </Popover.Panel>
                             </>
                           )}

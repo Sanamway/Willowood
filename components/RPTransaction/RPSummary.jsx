@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { TbFileDownload } from "react-icons/tb";
 import SubmitModal from "../modals/SubmitModal";
-
+import { url } from "@/constants/url";
+import axios from "axios";
+import { useRouter } from "next/router";
 const RPSummary = (props) => {
+  const router = useRouter();
+
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+  };
+
   const [formActive, setFormActive] = useState(false);
   const [selectedCheckbox, setSelectedCheckbox] = useState(null);
 
@@ -15,14 +24,97 @@ const RPSummary = (props) => {
   //modal state
   const [isOpen, setisOpen] = useState(false);
 
-  const submitHandle = () => {
-    // props.formType("Upload")
+  const submitHandle = (status) => {
+    updateRollingPlanStatus(status);
     setisOpen(true);
   };
+  const updateRollingPlanStatus = async (status) => {
+    try {
+      const respond = await axios.get(`${url}/api/rsp_update_status`, {
+        headers: headers,
+        params: {
+          t_year: router.query.yr,
+          m_year: router.query.mYr,
+          plan_id: router.query.planId,
+          tran_id: router.query.tranId,
+          t_id: Number(router.query.tId),
+          rp_status: status,
+        },
+      });
+      const apires = await respond.data.data;
+      setData(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const saveAsDraft =()=>{
-    setisOpen(true)
-  }
+  const handleSaveRsp = async (status) => {
+    try {
+      let endPoint;
+
+      if (JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6) {
+        endPoint = `api/add_rolling_tm?tm=${true}`;
+      } else if (
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5
+      ) {
+        endPoint = `api/add_rolling_tm?rm=${true}`;
+      } else if (
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
+      ) {
+        endPoint = `api/add_rolling_tm?zm=${true}`;
+      } else if (
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
+      ) {
+        endPoint = `api/add_rolling_tm?bum=${true}`;
+      } else if (
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10
+      ) {
+        endPoint = `api/add_rolling_tm?bgm=${true}`;
+      } else {
+        return;
+      }
+      const data = props.resultTable.map((item) => {
+        return {
+          t_year: router.query.yr,
+          m_year: router.query.mYr,
+          plan_id: router.query.planId,
+          tran_id: router.query.tranId,
+          matnr: item[Object.keys(item)[4]],
+          rp_qty: item[Object.keys(item)[17]],
+          rp_value: item[Object.keys(item)[18]],
+          rp_qty_revised: item[Object.keys(item)[19]],
+          rp_val_revised: item[Object.keys(item)[20]],
+          rp_qty_Urgent: item[Object.keys(item)[21]],
+          nx_rp_qty: item[Object.keys(item)[25]],
+          nx_rp_val: item[Object.keys(item)[26]],
+          ret_qty: item[Object.keys(item)[27]],
+          w_id: Number(router.query.wId),
+          t_id: Number(router.query.tId),
+          r_id: Number(router.query.rId),
+          z_id: Number(router.query.zId),
+          bu_id: Number(router.query.buId),
+          bg_id: Number(router.query.bgId),
+          c_id: Number(router.query.cId),
+          subm_t_date: new Date(),
+          rp_status: status,
+          c_name: JSON.parse(window.localStorage.getItem("userinfo")).c_name,
+          ul_name: JSON.parse(window.localStorage.getItem("userinfo")).ul_name,
+          user_id: JSON.parse(window.localStorage.getItem("userinfo")).user_id,
+        };
+      });
+      const respond = await axios
+        .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
+          headers: headers,
+        })
+        .then((res) => {
+          if (!res) return;
+          submitHandle(status);
+          toast.success("Rolling plan added successfully!");
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.error;
+    }
+  };
 
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
@@ -49,7 +141,9 @@ const RPSummary = (props) => {
         <div className="zrtdepoty flex items-center justify-between w-full">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xs text-gray-700">ZRT</h2>
-            <h2 className="font-bold text-xs text-gray-700 ">South Region All Territories</h2>
+            <h2 className="font-bold text-xs text-gray-700 ">
+              South Region All Territories
+            </h2>
           </div>
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xs text-gray-700">Depot :</h2>
@@ -132,7 +226,9 @@ const RPSummary = (props) => {
         <div className="status xls download flex items-center justify-end w-full">
           <div className="status flex gap-1">
             <h2 className="text-xs text-gray-700">Status :</h2>
-            <h2 className="font-bold text-xs text-gray-700">4/10 Territories Submitted</h2>
+            <h2 className="font-bold text-xs text-gray-700">
+              4/10 Territories Submitted
+            </h2>
           </div>
         </div>
       </div>
@@ -153,9 +249,9 @@ const RPSummary = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         Product Name Sku Wise
                       </th>
-                      {/* <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-black">
                         Product Code
-                      </th> */}
+                      </th>
                       <th scope="col" className="px-2 py-1 text-black">
                         FY Sales 21-23
                       </th>
@@ -180,10 +276,16 @@ const RPSummary = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         Apr 22-23 Revised FCT
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400">
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400"
+                      >
                         Apr 22-23 Revised FCT
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400">
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400"
+                      >
                         Apr 22-23 Urget Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-black ">
@@ -195,373 +297,22 @@ const RPSummary = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         May Net FCST Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400 ">
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400 "
+                      >
                         May 22-23 FCST Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400">
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400"
+                      >
                         Expected Sale Return Qty
                       </th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs text-center ">
-                      <th scope="row" className="px-4  py-1 font-medium whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      {/* <td className="px-4 py-1">PC</td> */}
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                    </tr>
-                    <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs text-center">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      {/* <td className="px-4 py-1">PC</td> */}
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                    </tr>
-                    <tr className="border-b dark:border-gray-700 bg-white text-center  text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      {/* <td className="px-4 py-1">PC</td> */}
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                    </tr>
-
-                    <tr className="border-b dark:border-gray-700 bg-white text-center text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      {/* <td className="px-4 py-1">PC</td> */}
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                    </tr>
-                    <tr className="border-b dark:border-gray-700 bg-white text-center  text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      {/* <td className="px-4 py-1">PC</td> */}
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                    </tr>
-
-                    <tr className="border-b dark:border-gray-700 bg-white text-center  text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      {/* <td className="px-4 py-1">PC</td> */}
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                    </tr>
-
-                    <tr className="border-b dark:border-gray-700 bg-white text-center  text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      {/* <td className="px-4 py-1">PC</td> */}
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                    </tr>
-
-                    <tr className="border-b dark:border-gray-700 bg-white text-center  text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      {/* <td className="px-4 py-1">PC</td> */}
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                    </tr>
-
-                    <tr className="border-b dark:border-gray-700 bg-white text-center  text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      {/* <td className="px-4 py-1">PC</td> */}
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                    </tr>
-
-                    <tr className="border-b dark:border-gray-700 bg-white text-center text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      {/* <td className="px-4 py-1">PC</td> */}
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                    </tr>
-                    <tr className="border-b dark:border-gray-700 bg-white text-center text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      {/* <td className="px-4 py-1">PC</td> */}
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                    </tr>
-
-                    <tr className="border-b dark:border-gray-700 bg-white text-center  text-xs text-gray-700">
-                      <th scope="row" className="px-4 py-1 font-medium text-gray-600 whitespace-nowrap ">
-                        Apple iMac 27"
-                      </th>
-                      {/* <td className="px-4 py-1">PC</td> */}
-                      <td className="px-4 py-1">Apple</td>
-                      <td className="px-4 py-1">300</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                      <td className="px-4 py-1 border-l-2 border-r-2 border-red-400">$2999</td>
-                    </tr>
-                  </tbody>
                 </table>
               </div>
-              <nav
-                class=" bg-white text-black flex flex-col md:flex-row-reverse justify-between items-start md:items-center space-y-3 md:space-y-0 p-1"
-                aria-label="Table navigation"
-              >
-                <span class="text-sm font-normal text-black">
-                  Showing
-                  <span class="font-semibold text-gray-900 ">1-10</span>
-                  of
-                  <span class="font-semibold text-gray-900 ">1000</span>
-                </span>
-                <ul class="inline-flex items-stretch -space-x-px">
-                  <li>
-                    <a
-                      href="#"
-                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-700 bg-blue-500 rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
-                    >
-                      <span class="sr-only">Previous</span>
-                      <svg
-                        class="w-5 h-5"
-                        aria-hidden="true"
-                        fill="currentColor"
-                        viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      aria-current="page"
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:bg-blue-500 dark:hover:text-white"
-                    >
-                      1
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:bg-blue-500 dark:hover:text-white"
-                    >
-                      2
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-blue-500 dark:text-white"
-                    >
-                      3
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:bg-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
-                    >
-                      ...
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-blue-500  dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
-                    >
-                      100
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-blue-500 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
-                    >
-                      <span class="sr-only">Next</span>
-                      <svg
-                        class="w-5 h-5"
-                        aria-hidden="true"
-                        fill="currentColor"
-                        viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
             </div>
           </div>
         </section>
@@ -579,26 +330,19 @@ const RPSummary = (props) => {
           </button>
           <button
             // onClick={() => props.formType("RPSummary")}
-            onClick={saveAsDraft}
+            onClick={() => handleSaveRsp("Draft Submit")}
             className={`text-center rounded-md hover:bg-green-500 ${
               formActive ? "bg-green-400" : "bg-blue-500"
             }  text-white py-1 px-4 text-sm`}
           >
             Save as Draft
           </button>
-          <button
-            onClick={submitHandle}
-            className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
-          >
-            Submit
-          </button>
 
           <button
-            // onClick={() => props.formType("Upload")}
-            onClick={submitHandle}
-            className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-sm"
+            className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
+            onClick={() => handleSaveRsp("Final Submitted")}
           >
-            Approve Reviews RP
+            Final Submit
           </button>
         </div>
       </div>
