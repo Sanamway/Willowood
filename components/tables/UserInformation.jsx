@@ -77,6 +77,8 @@ const UserInformation = () => {
 
   const { name } = router.query;
 
+  console.log("griddata", datas)
+
   return (
     <Layout>
       <div className=" overflow-auto w-full pb-64 bg-white   ">
@@ -226,8 +228,8 @@ const UserInformation = () => {
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.user_name}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.position}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.address}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.city}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.state}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.city}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.state}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.email}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.phone_number}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.t_user}</td>
