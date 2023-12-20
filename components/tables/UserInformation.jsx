@@ -9,7 +9,6 @@ import axios from "axios";
 import { url } from "@/constants/url";
 import { CSVLink } from "react-csv";
 
-
 const UserInformation = () => {
   const router = useRouter();
   const [datas, setDatas] = useState([]);
@@ -47,31 +46,36 @@ const UserInformation = () => {
   };
 
   const csvHeaders = [
-    { label: "Id", key: "pseg_id" },
-    { label: "Segment ID", key: "pseg_id" },
-    { label: "Product Segment", key: "pseg_name" },
-    { label: "Company", key: "c_id" },
-    { label: "Status", key: "isDeleted" }
+    { label: "Id", key: "user_id" },
+    { label: "Username", key: "user_name" },
+    { label: "Position", key: "position" },
+    { label: "Address", key: "address" },
+    { label: "City", key: "city" },
+    { label: "State", key: "state" },
+    { label: "Email", key: "email" },
+    { label: "Phone", key: "phone_number" },
+    { label: "User Role", key: "t_user" },
+    { label: "Deleted", key: "isDeleted" },
   ];
 
-  const statusUl =(item)=>{
-    if(item.status =="0"){
-      return "Not Active"
+  const statusUl = (item) => {
+    if (item.status == "0") {
+      return "Not Active";
     }
-    if(item.status =="1"){
-      return "Active"
-    }
-
-    if(item.status =="2"){
-      return "Frozen"
+    if (item.status == "1") {
+      return "Active";
     }
 
-    if(item.status =="3"){
-      return "Lock"
+    if (item.status == "2") {
+      return "Frozen";
     }
-  }
 
-  const {name} =router.query
+    if (item.status == "3") {
+      return "Lock";
+    }
+  };
+
+  const { name } = router.query;
 
   return (
     <Layout>
@@ -86,7 +90,7 @@ const UserInformation = () => {
           onDeletedData={resetData}
         ></ConfirmModal>
         <div className="text-black userinfotext  flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-        <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name}</h2>
+          <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name}</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
@@ -103,7 +107,10 @@ const UserInformation = () => {
               </div>
             </div>
             <h2>
-              <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
+              {/* <TbFileDownload className="text-green-600" size={34}></TbFileDownload> */}
+              <CSVLink data={datas} headers={csvHeaders}>
+                <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
+              </CSVLink>
             </h2>
 
             <h2>
@@ -186,7 +193,7 @@ const UserInformation = () => {
                           router.push({
                             pathname: "/form/user_information_form",
                             // query: { userData: JSON.stringify(item) },
-                            query: { type: "view", id: item?.user_id}
+                            query: { type: "view", id: item?.user_id }
                           });
                         }}
                         className="b text-black   hover:text-blue-500  "
@@ -225,7 +232,9 @@ const UserInformation = () => {
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.phone_number}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.t_user}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{statusUl(item)}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.isDeleted ==true ? "Disable":"Enable"}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.isDeleted == true ? "Disable" : "Enable"}
+                    </td>
                     {/* <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.status == 1 ? "Enabled" : "Disabled"}
                     </td> */}

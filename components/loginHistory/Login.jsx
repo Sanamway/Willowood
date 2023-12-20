@@ -61,7 +61,7 @@ const Login = () => {
         toast.success(respdata?.message);
         setTimeout(() => {
           router.push({
-            pathname: "/otp",
+            pathname: `/otp`,
             query: { phone_number: phone_number, uid: uid }
           });
         }, 1000);
@@ -81,7 +81,11 @@ const Login = () => {
       const status = error?.response?.data?.status;
       if (errorMessage && status ==false) {
         toast.error(errorMessage);
-        router.push('/otp')
+        // router.push('/otp')
+        router.push({
+          pathname: `/otp`,
+          query: { phone_number: phone}
+        });
       }
     }
   };
@@ -125,7 +129,7 @@ const Login = () => {
       <div className="flex w-full h-screen font-arial">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="relative flex-1 bg-banner bg-cover bg-center bg-no-repeat">
-          <div className="flex items-center justify-center h-screen">
+          <div className="flex items-center justify-center min-h-screen">
             <form className="relative form rounded-lg   bg-opacity-[0.35] w-[90%] md:w-[30%] px-8 pb-8">
               <div className="relative top-[1rem] flex items-center justify-center">
                 <Image src={Logo}></Image>
