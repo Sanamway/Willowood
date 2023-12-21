@@ -662,10 +662,7 @@ const RollingPlans = () => {
             >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "  
-            
-            
-            >
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -982,7 +979,6 @@ const RollingPlans = () => {
           year_1: yr - 2,
           year_2: yr - 1,
           year_3: yr,
-
           year_2_nm: moment(m_year)
             .subtract(1, "years")
             .add(1, "months")
@@ -990,7 +986,6 @@ const RollingPlans = () => {
           year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
           year_3_cm: moment(m_year).format("YYYY-MM"),
           year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-
           plan_id: planId,
           tran_id: tranId,
           t_id: tId,
@@ -1006,7 +1001,6 @@ const RollingPlans = () => {
       console.log("nm", apires.data.data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
       if (type === "Download") {
         XLSX.writeFile(
           wb,
@@ -1014,14 +1008,11 @@ const RollingPlans = () => {
         );
       } else {
         let keys = Object.keys(apires.data.data[0]);
-
         // Convert array of objects to array of arrays
         let arrayOfArrays = [
           keys, // First array with keys
           ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
         ];
-
-       
         localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
       }
     } catch (error) {
@@ -1029,12 +1020,6 @@ const RollingPlans = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(
-      "nope",
-      window.localStorage && JSON.parse(localStorage.getItem("RSP"))
-    );
-  }, []);
   return (
     <Layout>
       <div className="h-screen  w-full font-arial bg-white  ">
