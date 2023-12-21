@@ -144,7 +144,7 @@ const Layout = ({ children }) => {
               </div>
             )}
             <div className="flex flex-col items-center w-full text-white font-Arial ">
-              {menusItems.map(({ _id, icon: Icon, ...menu }) => (
+              {menusItems?.map(({ _id, icon: Icon, ...menu }) => (
                 <>
                   <div
                     key={_id}

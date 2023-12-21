@@ -16,7 +16,6 @@ const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
-
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw"
@@ -46,15 +45,12 @@ const Login = () => {
       // console.log("datas", respdata?.data?.loginHistory)
       // console.log("status", respdata?.status)
 
-      const userinfo = respdata?.data?.userBSTDetails
-      console.log("logInfo", userinfo?.bg_id)
+      const userinfo = respdata?.data?.userBSTDetails;
+      console.log("logInfo", userinfo?.bg_id);
 
-      if(uid){
-        gettingMenuSidebar(uid)
+      if (uid) {
+        gettingMenuSidebar(uid);
       }
-     
-
- 
 
       if (respdata?.message && respdata?.status == false) {
         setLoading(false);
@@ -70,8 +66,8 @@ const Login = () => {
         localStorage.setItem("email_id", email_id);
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("id", _id);
-        localStorage.setItem("userinfo", JSON.stringify(userinfo))
-        
+        localStorage.setItem("userinfo", JSON.stringify(userinfo));
+
         router.push("/");
       }
     } catch (error) {
@@ -79,18 +75,34 @@ const Login = () => {
       console.log("err", error?.response?.data?.message);
       const errorMessage = error?.response?.data?.message;
       const status = error?.response?.data?.status;
-      if (errorMessage && status ==false) {
-        toast.error(errorMessage);
-        // router.push('/otp')
-        router.push({
-          pathname: `/otp`,
-          query: { phone_number: phone}
-        });
+      if (errorMessage && status == false) {
+        console.log("loginms", errorMessage == "OTP is not verified");
+        if (errorMessage == "User Login is locked") {
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+        if (errorMessage == "User Login is frozen") {
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+
+        if (errorMessage == "User Login is not active") {
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+        setLoading(false);
+        if (errorMessage == "OTP is not verified") {
+          router.push({
+            pathname: `/otp`,
+            query: { phone_number: phone }
+          });
+        }
       }
     }
   };
-
-  
 
   useEffect(() => {
     if (window.localStorage) {
@@ -115,14 +127,11 @@ const Login = () => {
       );
       const respData = await resp.data.data;
       // setMenus(respData);
-      localStorage.setItem("SideMenus", JSON.stringify(respData))
+      localStorage.setItem("SideMenus", JSON.stringify(respData));
     } catch (error) {
       console.log("error : ", error);
     }
   };
-
-  
-
 
   return (
     <>
@@ -165,7 +174,7 @@ const Login = () => {
               <div className="flex items-center justify-center mt-4">
                 {/* <button onClick={()=>{router.push('/otp')}} className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full uppercase text-sm text-white"> */}
                 <button
-                type="submit"
+                  type="submit"
                   onClick={loginHandler}
                   className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full text-sm text-white"
                 >
