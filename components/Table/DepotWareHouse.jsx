@@ -12,6 +12,7 @@ import toast, { Toaster } from "react-hot-toast";
 const DepotWareHouse = () => {
   const csvHeaders = [
     { label: "Id", key: "w_id" },
+    { label: "Depot Code", key: "depot_code" },
     { label: "Depot Name", key: "depot_name" },
     { label: "Pin", key: "dpin" },
     { label: "City", key: "dcity" },
@@ -56,6 +57,9 @@ const DepotWareHouse = () => {
     getWarehouse();
     setisOpen(false);
   };
+  
+
+
 
   return (
     <Layout>
@@ -80,6 +84,8 @@ const DepotWareHouse = () => {
               </button>
             </span>
             <h2>
+
+           
               <CSVLink data={data} headers={csvHeaders}>
                 <TbFileDownload
                   className="text-green-600"
@@ -112,6 +118,9 @@ const DepotWareHouse = () => {
                   </th>
                   <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider ">
                     Id
+                  </th>
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap ">
+                    Depot Code
                   </th>
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Depot Name
@@ -187,6 +196,9 @@ const DepotWareHouse = () => {
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.w_id}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.depot_code}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.depot_name}

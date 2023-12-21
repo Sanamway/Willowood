@@ -6,13 +6,14 @@ import { url } from "@/constants/url";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 import * as Yup from "yup";
+import Select from "react-select";
 const Personal = (props) => {
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-  const [formActive, setFormActive] = useState(false);
+
   const [personalData, setPersonalData] = useState({
     pan: "",
     aadhar: "",
@@ -23,15 +24,23 @@ const Personal = (props) => {
     contactNo: "",
     relation: "",
     currentAddress: "",
-    currentCountry: "",
-    currentState: "",
-    currentCity: "",
+
     currentPin: "",
     permanentAddress: "",
-    permanentCountry: "",
-    permanentState: "",
-    permanentCity: "",
+
     permanentPin: "",
+    selectedPresentCity: {
+      value: "",
+      label: "",
+      state: "",
+      country: "",
+    },
+    selectedPermanentCity: {
+      value: "",
+      label: "",
+      state: "",
+      country: "",
+    },
   });
   useEffect(() => {
     if (props)
@@ -46,15 +55,23 @@ const Personal = (props) => {
         contactNo: props.data?.emergency_conno || "",
         relation: props.data?.relation || "",
         currentAddress: props.data?.caddress || "",
-        currentCountry: props.data?.ccountry || "",
-        currentState: props.data?.cstate || "",
-        currentCity: props.data?.ccity || "",
+
         currentPin: props.data?.cpin || "",
         permanentAddress: props.data?.paddress || "",
-        permanentCountry: props.data?.pcountry || "",
-        permanentState: props.data?.pstate || "",
-        permanentCity: props.data?.pcity || "",
+
         permanentPin: props.data?.ppin || "",
+        selectedPresentCity: {
+          value: props.data?.ccity,
+          label: props.data?.ccity,
+          state: props.data?.pstate,
+          country: props.data?.pcountry,
+        },
+        selectedPermanentCity: {
+          value: props.data?.ccity,
+          label: props.data?.ccity,
+          state: props.data?.pstate,
+          country: props.data?.pcountry,
+        },
       });
   }, [props]);
 
@@ -100,15 +117,13 @@ const Personal = (props) => {
         contactNo,
         relation,
         currentAddress,
-        currentCountry,
-        currentState,
-        currentCity,
+
         currentPin,
         permanentAddress,
-        permanentCountry,
-        permanentState,
-        permanentCity,
+
         permanentPin,
+        selectedPresentCity,
+        selectedPermanentCity,
       } = personalData;
       const data = {
         pan: pan,
@@ -120,14 +135,14 @@ const Personal = (props) => {
         emergency_conno: contactNo,
         relation: relation,
         caddress: currentAddress,
-        ccountry: currentCountry,
-        cstate: currentState,
-        ccity: currentCity,
+        ccountry: selectedPresentCity.country,
+        cstate: selectedPresentCity.state,
+        ccity: selectedPresentCity.value,
         cpin: currentPin,
         paddress: permanentAddress,
-        pcountry: permanentCountry,
-        pstate: permanentState,
-        pcity: permanentCity,
+        pcountry: selectedPermanentCity.country,
+        pstate: selectedPermanentCity.state,
+        pcity: selectedPermanentCity.value,
         ppin: permanentPin,
         sameabove: "Yes",
         emp_status: "Update Personal",
@@ -169,6 +184,36 @@ const Personal = (props) => {
       }
     }
   };
+
+  const [filteredCityOptn, setFilteredCityOptn] = useState([]);
+  const [citySearchState, setCitySearchState] = useState("");
+  useEffect(() => {
+    if (!citySearchState) return;
+    getAllCityData(citySearchState);
+  }, [citySearchState]);
+  const getAllCityData = async (city) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_citystate`, {
+        params: { city: city, search: true },
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+
+      setFilteredCityOptn(
+        apires.map((item) => {
+          return {
+            value: item.city,
+            label: item.city,
+            state: item.State,
+            country: item.country,
+          };
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <form
       className=" bg-white rounded shadow p-4 w-full pb-20"
@@ -387,29 +432,24 @@ const Personal = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            Current Country
+            Current City
           </label>
-          <select
-            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-            value={personalData.currentCountry}
-            onChange={(e) =>
+          <Select
+            className="w-full px-1  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            value={personalData.selectedPresentCity}
+            isSearchable={true}
+            name="color"
+            options={filteredCityOptn}
+            onChange={(value) =>
               setPersonalData({
                 ...personalData,
-                currentCountry: e.target.value,
+                selectedPresentCity: value,
               })
             }
-          >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
-              -- Select --
-            </option>
-            <option value="Others">Others</option>
-            <option value="India">India</option>
-          </select>
+            onInputChange={(searchVal) => setCitySearchState(searchVal)}
+          />
         </div>
+
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -417,23 +457,13 @@ const Personal = (props) => {
           >
             Current State
           </label>
-          <select
-            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-            value={personalData.currentState}
-            onChange={(e) =>
-              setPersonalData({ ...personalData, currentState: e.target.value })
-            }
-          >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
-              -- Select --
-            </option>
-            <option value="Haryana">Haryana</option>
-            <option value="UP">UP</option>
-          </select>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            id="phoneField"
+            value={personalData.selectedPresentCity.state}
+            placeholder="State"
+            disabled
+          />
         </div>
       </div>
       <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
@@ -442,26 +472,17 @@ const Personal = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            Current City
+            Current Country
           </label>
-          <select
-            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-            value={personalData.currentCity}
-            onChange={(e) =>
-              setPersonalData({ ...personalData, currentCity: e.target.value })
-            }
-          >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
-              -- Select --
-            </option>
-            <option value="Noida">Noida</option>
-            <option value="Balabhgarh">Balabhgarh</option>
-          </select>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            id="phoneField"
+            placeholder="Country"
+            value={personalData.selectedPresentCity.country}
+            disabled
+          />
         </div>
+
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -492,10 +513,9 @@ const Personal = (props) => {
               setPersonalData({
                 ...personalData,
                 permanentAddress: personalData.currentAddress,
-                permanentCountry: personalData.currentCountry,
-                permanentState: personalData.currentState,
-                permanentCity: personalData.currentCity,
+
                 permanentPin: personalData.currentPin,
+                selectedPermanentCity: personalData.selectedPresentCity,
               })
             }
           />
@@ -529,29 +549,24 @@ const Personal = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            Permanent Country
+            Permanent City
           </label>
-          <select
-            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-            value={personalData.permanentCountry}
-            onChange={(e) =>
+          <Select
+            className="w-full px-1  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            value={personalData.selectedPermanentCity}
+            isSearchable={true}
+            name="color"
+            options={filteredCityOptn}
+            onChange={(value) =>
               setPersonalData({
                 ...personalData,
-                permanentCountry: e.target.value,
+                selectedPermanentCity: value,
               })
             }
-          >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
-              -- Select --
-            </option>
-            <option value="Others">Others</option>
-            <option value="India">India</option>
-          </select>
+            onInputChange={(searchVal) => setCitySearchState(searchVal)}
+          />
         </div>
+
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -559,26 +574,13 @@ const Personal = (props) => {
           >
             Permanent State
           </label>
-          <select
-            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-            value={personalData.permanentState}
-            onChange={(e) =>
-              setPersonalData({
-                ...personalData,
-                permanentState: e.target.value,
-              })
-            }
-          >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
-              -- Select --
-            </option>
-            <option value="Haryana">Haryana</option>
-            <option value="UP">UP</option>
-          </select>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            id="phoneField"
+            placeholder="State"
+            value={personalData.selectedPermanentCity.state}
+            disabled
+          />
         </div>
       </div>
       <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
@@ -586,37 +588,18 @@ const Personal = (props) => {
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
-            value={personalData.permanentCity}
-            onChange={(e) =>
-              setPersonalData({
-                ...personalData,
-                permanentCity: e.target.value,
-              })
-            }
           >
-            Permanent City
+            Permanent Country
           </label>
-          <select
-            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-            value={personalData.permanentCity}
-            onChange={(e) =>
-              setPersonalData({
-                ...personalData,
-                permanentCity: e.target.value,
-              })
-            }
-          >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
-              -- Select --
-            </option>
-            <option value="Noida">Noida</option>
-            <option value="Balabhgarh">Balabhgarh</option>
-          </select>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            id="phoneField"
+            placeholder="Country"
+            value={personalData.selectedPermanentCity.country}
+            disabled
+          />
         </div>
+
         <div className="w-2/3  px-2  lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"

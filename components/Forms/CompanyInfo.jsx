@@ -7,6 +7,7 @@ import { url } from "@/constants/url";
 import { useRouter } from "next/router";
 import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
+import Select from "react-select";
 const CompanyInfo = () => {
   const router = useRouter();
 
@@ -31,6 +32,16 @@ const CompanyInfo = () => {
         phoneNumber: apires.phone_number,
         contactPerson: apires.contact_person,
         gstNum: apires.gst_no,
+        selectedCorpCity: {
+          value: apires.corp_address_city,
+          label: apires.corp_address_city,
+          state: apires.corp_address_state,
+        },
+        selectedSaleCity: {
+          value: apires.sale_address_city,
+          label: apires.sale_address_city,
+          state: apires.sale_address_state,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -60,17 +71,25 @@ const CompanyInfo = () => {
     gstNum: "",
     cName: "",
     ulName: "",
+    selectedCorpCity: {
+      value: "",
+      label: "",
+      state: "",
+    },
+    selectedSaleCity: {
+      value: "",
+      label: "",
+      state: "",
+    },
   });
 
   //Defining the Validation Schema
   const validationSchema = Yup.object().shape({
     companyName: Yup.string().required("Company Name is required"),
     corpAdress: Yup.string().required("Corp. Address is required"),
-    corpAddressCity: Yup.string().required("Corp. City is required"),
-    corpAddressState: Yup.string().required("Corp. State is required"),
+
     saleAddress: Yup.string().required("Sale. State is required"),
-    saleAddressCity: Yup.string().required("Sale. City is required"),
-    saleAddressState: Yup.string().required("Sale. State is required"),
+
     email: Yup.string()
       .required("Email is required")
       .email()
@@ -99,11 +118,11 @@ const CompanyInfo = () => {
       const data = {
         cmpny_name: companyState.companyName,
         corp_address: companyState.corpAdress,
-        corp_address_city: companyState.corpAddressCity,
-        corp_address_state: companyState.corpAddressState,
+        corp_address_city: companyState.selectedCorpCity.value,
+        corp_address_state: companyState.selectedCorpCity.state,
         sale_address: companyState.saleAddress,
-        sale_address_city: companyState.saleAddressCity,
-        sale_address_state: companyState.saleAddressState,
+        sale_address_city: companyState.selectedSaleCity.value,
+        sale_address_state: companyState.selectedSaleCity.state,
         email: companyState.email,
         phone_number: companyState.phoneNumber,
         contact_person: companyState.contactPerson,
@@ -124,18 +143,16 @@ const CompanyInfo = () => {
           }, [3000]);
         });
     } catch (errors) {
-      const errorMessage = errors?.response?.data?.error;
-      if (errorMessage?.includes("email_1")) {
-        toast.error("Email already exist");
-      } else if (errorMessage?.includes("gst")) {
-        toast.error("GST number already exist");
-      } else if (errorMessage?.includes("cmpny_name_1")) {
-        toast.error("Company Name already exist");
+      const errorMessage = errors?.response?.data?.message;
+
+      if (errorMessage) {
+        toast.error(errorMessage);
       }
       const newErrors = {};
       errors?.inner?.forEach((error) => {
         newErrors[error?.path] = error?.message;
       });
+      console.log("lop", newErrors);
       setFormErrors(newErrors);
     }
   };
@@ -149,11 +166,11 @@ const CompanyInfo = () => {
       const data = {
         cmpny_name: companyState.companyName,
         corp_address: companyState.corpAdress,
-        corp_address_city: companyState.corpAddressCity,
-        corp_address_state: companyState.corpAddressState,
+        corp_address_city: companyState.selectedCorpCity.value,
+        corp_address_state: companyState.selectedCorpCity.state,
         sale_address: companyState.saleAddress,
-        sale_address_city: companyState.saleAddressCity,
-        sale_address_state: companyState.saleAddressState,
+        sale_address_city: companyState.selectedSaleCity.value,
+        sale_address_state: companyState.selectedSaleCity.state,
         email: companyState.email,
         phone_number: companyState.phoneNumber,
         contact_person: companyState.contactPerson,
@@ -178,14 +195,10 @@ const CompanyInfo = () => {
           }, [3000]);
         });
     } catch (errors) {
-      const errorMessage = errors?.response?.data?.error;
+      const errorMessage = errors?.response?.data?.message;
 
-      if (errorMessage?.includes("email_1")) {
+      if (errorMessage) {
         toast.error("Email already exist");
-      } else if (errorMessage?.includes("gst_no_1")) {
-        toast.error("GST number already exist");
-      } else if (errorMessage?.includes("cmpny_name_1")) {
-        toast.error("Company Name already exist");
       }
 
       const newErrors = {};
@@ -198,8 +211,41 @@ const CompanyInfo = () => {
 
   const handleSave = (e) => {
     if (router.query.type !== "Edit") handleSaveCompanyInfo(e);
-    handleEditCompanyInfo(e);
+    else {
+      handleEditCompanyInfo(e);
+    }
   };
+
+  const [filteredCityOptn, setFilteredCityOptn] = useState([]);
+
+  const [citySearchState, setCitySearchState] = useState("");
+  useEffect(() => {
+    if (!citySearchState) return;
+    getAllCityData(citySearchState);
+  }, [citySearchState]);
+  const getAllCityData = async (city) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_citystate`, {
+        params: { city: city, search: true },
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+
+      setFilteredCityOptn(
+        apires.map((item) => {
+          return {
+            value: item.city,
+            label: item.city,
+            state: item.State,
+            country: item.country,
+          };
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
@@ -288,7 +334,7 @@ const CompanyInfo = () => {
                   className="block text-gray-700 text-sm font-bold mb-2 flex space-between"
                   htmlFor="textareaField"
                 >
-                  <small className="text-red-600">*</small> Corporate Address
+                  <small className="text-red-600">* </small> Corporate Address
                 </label>
                 {formErrors.corpAdress && (
                   <p className="text-red-500 text-sm absolute top-0 right-3 cursor-pointer">
@@ -347,32 +393,22 @@ const CompanyInfo = () => {
                     >
                       <small className="text-red-600">*</small> City
                     </label>
-                    <select
-                      className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                      id="userSelect"
-                      value={companyState.corpAddressCity}
-                      onChange={(e) => {
-                        console.log("no-one", e);
+                    <Select
+                      className="w-full px-1  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      value={companyState.selectedCorpCity}
+                      isSearchable={true}
+                      name="color"
+                      options={filteredCityOptn}
+                      onChange={(value) =>
                         setCompanyState({
                           ...companyState,
-                          corpAddressCity: e.target.value,
-                        });
-                      }}
-                    >
-                      <option
-                        value={""}
-                        className="focus:outline-none focus:border-b bg-white"
-                      >
-                        - Select -
-                      </option>
-                      <option value="Delhi">Delhi</option>
-                      <option value="Mumbai">Mumbai</option>
-                    </select>
-                    {formErrors.corpAddressCity && (
-                      <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
-                        {formErrors.corpAddressCity}
-                      </p>
-                    )}
+                          selectedCorpCity: value,
+                        })
+                      }
+                      onInputChange={(searchVal) =>
+                        setCitySearchState(searchVal)
+                      }
+                    />
                   </div>
 
                   <div className="w-1/2 px-2 relative">
@@ -382,32 +418,13 @@ const CompanyInfo = () => {
                     >
                       <small className="text-red-600">*</small> State
                     </label>
-                    <select
-                      className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                      id="userSelect"
-                      value={companyState.corpAddressState}
-                      onChange={(e) =>
-                        setCompanyState({
-                          ...companyState,
-                          corpAddressState: e.target.value,
-                        })
-                      }
-                    >
-                      <option
-                        value={""}
-                        className="focus:outline-none focus:border-b bg-white"
-                      >
-                        - Select -
-                      </option>
-                      <option value="UP">UP</option>
-                      <option value="Delhi">Delhi</option>
-                      <option value="Haryana">Haryana</option>
-                    </select>
-                    {formErrors.corpAddressState && (
-                      <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
-                        {formErrors.corpAddressState}
-                      </p>
-                    )}
+                    <input
+                      className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      id="phoneField"
+                      placeholder="State"
+                      value={companyState.selectedCorpCity.state}
+                      disabled
+                    />
                   </div>
                 </div>
                 <div className="flex w-full justify-between gap-4"></div>
@@ -422,31 +439,22 @@ const CompanyInfo = () => {
                     >
                       <small className="text-red-600">*</small> City
                     </label>
-                    <select
-                      className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                      id="userSelect"
-                      value={companyState.saleAddressCity}
-                      onChange={(e) =>
+                    <Select
+                      className="w-full px-1  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      value={companyState.selectedSaleCity}
+                      isSearchable={true}
+                      name="color"
+                      options={filteredCityOptn}
+                      onChange={(value) =>
                         setCompanyState({
                           ...companyState,
-                          saleAddressCity: e.target.value,
+                          selectedSaleCity: value,
                         })
                       }
-                    >
-                      <option
-                        value={""}
-                        className="focus:outline-none focus:border-b bg-white"
-                      >
-                        - Select -
-                      </option>
-                      <option value="Delhi">Delhi</option>
-                      <option value="Mumbai">Mumbai</option>
-                    </select>
-                    {formErrors.saleAddressCity && (
-                      <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
-                        {formErrors.saleAddressCity}
-                      </p>
-                    )}
+                      onInputChange={(searchVal) =>
+                        setCitySearchState(searchVal)
+                      }
+                    />
                   </div>
 
                   <div className="w-1/2 px-2 relative">
@@ -456,32 +464,13 @@ const CompanyInfo = () => {
                     >
                       <small className="text-red-600">*</small> State
                     </label>
-                    <select
-                      className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                      id="userSelect"
-                      value={companyState.saleAddressState}
-                      onChange={(e) =>
-                        setCompanyState({
-                          ...companyState,
-                          saleAddressState: e.target.value,
-                        })
-                      }
-                    >
-                      <option
-                        value={""}
-                        className="focus:outline-none focus:border-b bg-white"
-                      >
-                        - Select -
-                      </option>
-                      <option value="UP">UP</option>
-                      <option value="Delhi">Delhi</option>
-                      <option value="Haryana">Haryana</option>
-                    </select>
-                    {formErrors.saleAddressState && (
-                      <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
-                        {formErrors.saleAddressState}
-                      </p>
-                    )}
+                    <input
+                      className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      id="phoneField"
+                      placeholder="State"
+                      value={companyState.selectedSaleCity.state}
+                      disabled
+                    />
                   </div>
                 </div>
               </div>

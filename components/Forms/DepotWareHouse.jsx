@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 import axios from "axios";
 import * as Yup from "yup";
+import Select from "react-select";
 import toast, { Toaster } from "react-hot-toast";
 const UserProfileForm = () => {
   const router = useRouter();
@@ -30,6 +31,7 @@ const UserProfileForm = () => {
         city: apires[0].dcity,
         country: apires[0].dcountry,
         depotName: apires[0].depot_name,
+        depotCode: apires[0].depot_code,
         pinCode: apires[0].dpin,
         state: apires[0].dstate,
         email: apires[0].email_id,
@@ -37,6 +39,12 @@ const UserProfileForm = () => {
         mobile: apires[0].mobile_no,
         c_name: "New Man",
         ul_name: "No Man",
+        selectedCity: {
+          value: apires[0].dcity,
+          label: apires[0].dcity,
+          state: apires[0].dstate,
+          country: apires[0].dcountry,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -67,6 +75,7 @@ const UserProfileForm = () => {
   }, []);
 
   const [depotState, setDepotState] = useState({
+    depotCode: "",
     depotName: "",
     companyId: "",
     address: "",
@@ -77,16 +86,21 @@ const UserProfileForm = () => {
     hodName: "",
     mobile: "",
     email: "",
+    selectedCity: {
+      value: "",
+      label: "",
+      state: "",
+      country: "",
+    },
   });
 
   //Defining the Validation Schema
   const validationSchema = Yup.object().shape({
     companyId: Yup.string().required("Company Id is required"),
     depotName: Yup.string().required("Depot Name is required"),
+    depotCode: Yup.string().required("Depot Code is required"),
     address: Yup.string().required("Address is required"),
-    city: Yup.string().required("City is required"),
-    state: Yup.string().required("State is required"),
-    country: Yup.string().required("Country is required"),
+
     pinCode: Yup.string().required("Pin Code is required"),
     hodName: Yup.string().required("HOD is required"),
     mobile: Yup.string().matches(
@@ -111,11 +125,12 @@ const UserProfileForm = () => {
       const data = {
         c_id: Number(depotState.companyId),
         daddress: depotState.address,
-        dcity: depotState.city,
-        dcountry: depotState.country,
+        dcity: depotState.selectedCity.value,
+        dcountry: depotState.selectedCity.country,
         depot_name: depotState.depotName,
+        depot_code: depotState.depotCode,
         dpin: depotState.pinCode,
-        dstate: depotState.state,
+        dstate: depotState.selectedCity.state,
         email_id: depotState.email,
         hod_name: depotState.hodName,
         mobile_no: depotState.mobile,
@@ -134,7 +149,7 @@ const UserProfileForm = () => {
           }, [1000]);
         });
     } catch (errors) {
-      const errorMessage = errors?.response?.data?.error;
+      const errorMessage = errors?.response?.data?.message;
       if (errorMessage) {
         toast.error(errorMessage);
       }
@@ -156,11 +171,12 @@ const UserProfileForm = () => {
       const data = {
         c_id: Number(depotState.companyId),
         daddress: depotState.address,
-        dcity: depotState.city,
-        dcountry: depotState.country,
+        dcity: depotState.selectedCity.value,
+        dcountry: depotState.selectedCity.country,
         depot_name: depotState.depotName,
+        depot_code: depotState.depotCode,
         dpin: depotState.pinCode,
-        dstate: depotState.state,
+        dstate: depotState.selectedCity.state,
         email_id: depotState.email,
         hod_name: depotState.hodName,
         mobile_no: depotState.mobile,
@@ -183,7 +199,7 @@ const UserProfileForm = () => {
           }, [1000]);
         });
     } catch (errors) {
-      const errorMessage = errors?.response?.data?.error;
+      const errorMessage = errors?.response?.data?.message;
       if (errorMessage) {
         toast.error(errorMessage);
       }
@@ -200,6 +216,37 @@ const UserProfileForm = () => {
       handleEditFarmer(e);
     }
   };
+
+  const [filteredCityOptn, setFilteredCityOptn] = useState([]);
+
+  const [citySearchState, setCitySearchState] = useState("");
+  useEffect(() => {
+    if (!citySearchState) return;
+    getAllCityData(citySearchState);
+  }, [citySearchState]);
+  const getAllCityData = async (city) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_citystate`, {
+        params: { city: city, search: true },
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+
+      setFilteredCityOptn(
+        apires.map((item) => {
+          return {
+            value: item.city,
+            label: item.city,
+            state: item.State,
+            country: item.country,
+          };
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full font-arial bg-white ">
@@ -261,9 +308,42 @@ const UserProfileForm = () => {
                 disabled={true}
               />
             </div>
+            <div className="mb-4 w-1/6">
+              <div className=" px-2 relative">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="inputField"
+                >
+                  <small className="text-red-600">*</small> Depot Code
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
+                  type="text"
+                  id="inputField"
+                  placeholder="Depot Code"
+                  value={depotState.depotCode}
+                  onChange={(e) =>
+                    e.target.value.length <= 4
+                      ? setDepotState({
+                          ...depotState,
+                          depotCode: e.target.value,
+                        })
+                      : setDepotState({
+                          ...depotState,
+                          depotCode: depotState.depotCode,
+                        })
+                  }
+                />
+                {formErrors.depotCode && (
+                  <p className="text-red-500 text-sm absolute bottom-14 right-3 cursor-pointer">
+                    {formErrors.depotCode}
+                  </p>
+                )}
+              </div>
+            </div>
 
             <div className="flex -mx-2 mb-4">
-              <div className="flex flex-col w-1/2 gap-1">
+              <div className="flex flex-col w-1/2 gap-2">
                 <div className=" px-2 relative">
                   <label
                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -328,7 +408,7 @@ const UserProfileForm = () => {
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="textareaField"
                 >
-                  Address
+                  <small className="text-red-600">*</small> Address
                 </label>
                 <textarea
                   rows={4}
@@ -339,7 +419,7 @@ const UserProfileForm = () => {
                   onChange={(e) =>
                     setDepotState({ ...depotState, address: e.target.value })
                   }
-                ></textarea>
+                 ></textarea>
                 {formErrors.address && (
                   <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
                     {formErrors.address}
@@ -348,31 +428,25 @@ const UserProfileForm = () => {
               </div>
             </div>
 
-            <div className="flex -mx-2 mb-4">
+            <div className="flex -mx-2 mb-4 flex-wrap">
               <div className="w-1/2 px-2 relative">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="citySelect"
                 >
-                  City
+                  <small className="text-red-600">*</small> City
                 </label>
-                <select
-                  className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                  id="citySelect"
-                  value={depotState.city}
-                  onChange={(e) =>
-                    setDepotState({ ...depotState, city: e.target.value })
+                <Select
+                  className="w-full px-1  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  value={depotState.selectedCity}
+                  isSearchable={true}
+                  name="color"
+                  options={filteredCityOptn}
+                  onChange={(value) =>
+                    setDepotState({ ...depotState, selectedCity: value })
                   }
-                >
-                  <option
-                    value={""}
-                    className="focus:outline-none focus:border-b bg-white"
-                  >
-                    - Select -
-                  </option>
-                  <option value="Delhi">Delhi</option>
-                  <option value="Mumbai">Mumbai</option>
-                </select>
+                  onInputChange={(searchVal) => setCitySearchState(searchVal)}
+                />
                 {formErrors.city && (
                   <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
                     {formErrors.city}
@@ -383,35 +457,16 @@ const UserProfileForm = () => {
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="stateSelect"
-                  value={depotState.state}
-                  onChange={(e) =>
-                    setDepotState({ ...depotState, state: e.target.value })
-                  }
                 >
-                  State
+                  <small className="text-red-600">*</small> State
                 </label>
-                <select
-                  className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                  id="stateSelect"
-                  value={depotState.state}
-                  onChange={(e) =>
-                    setDepotState({ ...depotState, state: e.target.value })
-                  }
-                >
-                  <option
-                    value={""}
-                    className="focus:outline-none focus:border-b bg-white"
-                  >
-                    - Select -
-                  </option>
-                  <option value="U.P">U.P</option>
-                  <option value="Haryana">Haryana</option>
-                </select>
-                {formErrors.state && (
-                  <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
-                    {formErrors.state}
-                  </p>
-                )}
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  id="phoneField"
+                  placeholder="State"
+                  value={depotState.selectedCity.state}
+                  disabled
+                />
               </div>
             </div>
             <div className="flex -mx-2 mb-4">
@@ -420,31 +475,16 @@ const UserProfileForm = () => {
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="citySelect"
                 >
-                  Country
+                  <small className="text-red-600">*</small> Country
                 </label>
-                <select
-                  className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                  id="citySelect"
-                  value={depotState.country}
+
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  id="phoneField"
+                  placeholder="Country"
+                  value={depotState.selectedCity.country}
                   disabled
-                  onChange={(e) =>
-                    setDepotState({ ...depotState, country: e.target.value })
-                  }
-                >
-                  <option
-                    value=""
-                    className="focus:outline-none focus:border-b bg-white"
-                  >
-                    Option
-                  </option>
-                  <option value="India">India</option>
-                  <option value="city2">City 2</option>
-                </select>
-                {formErrors.country && (
-                  <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
-                    {formErrors.country}
-                  </p>
-                )}
+                />
               </div>
               <div className="w-1/2 px-2 relative">
                 <label

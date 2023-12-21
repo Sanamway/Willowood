@@ -33,7 +33,7 @@ const MapDepot = () => {
         zoneId: apires[0].z_id,
         regionId: apires[0].r_id,
         territoryId: apires[0].t_id,
-
+        depotId: apires[0].t_id,
         depotName: apires[0].depot_name,
       });
     } catch (error) {
@@ -72,7 +72,7 @@ const MapDepot = () => {
     zoneId: "",
     regionId: "",
     territoryId: "",
-
+    depotId: "",
     depotName: "",
   });
   // Getting Company Information for the dropdown values
@@ -316,7 +316,7 @@ const MapDepot = () => {
     zoneId: Yup.string().required("Zone is required"),
     regionId: Yup.string().required("Region is required"),
     territoryId: Yup.string().required("Territory is required"),
-
+    depotId: Yup.string().required("Depot is required"),
     depotName: Yup.string().required("Depot is required"),
   });
 
@@ -337,7 +337,7 @@ const MapDepot = () => {
         z_id: Number(depotState.zoneId),
         r_id: Number(depotState.regionId),
         t_id: Number(depotState.territoryId),
-
+        w_id: Number(depotState.depotId),
         c_name: "New Man",
         ul_name: "No Man",
         depot_name: depotState.depotName,
@@ -377,7 +377,7 @@ const MapDepot = () => {
         z_id: Number(depotState.zoneId),
         r_id: Number(depotState.regionId),
         t_id: Number(depotState.territoryId),
-
+        w_id: Number(depotState.depotId),
         c_name: "New Man",
         ul_name: "No Man",
         depot_name: depotState.depotName,
@@ -414,41 +414,22 @@ const MapDepot = () => {
     }
   };
 
-  const depotName = [
-    "GANGANAGAR",
-    "JAIPUR",
-    "AHMEDABAD",
-    "JABALPUR",
-    "INDORE",
-    "AKOLA",
-    "PUNE",
-    "NAGPUR",
-    "RUDRAPUR",
-    "LUCKNOW",
-    "GHAZIABAD",
-    "BATHINDA",
-    "LUDHIANA",
-    "BATHINDA",
-    "LUDHIANA",
-    "SRINAGAR",
-    "KARNAL",
-    "HISAR",
-    "BELLARY",
-    "GULBARGA",
-    "KURNOOL",
-    "VIJAYAWADA",
-    "HYDERABAD",
-    "TRICHY",
-    "HUBBALLI",
-    "RAJAHMUNDRY",
-    "NELLORE",
-    "HOWRAH",
-    "SILIGURI",
-    "GUWAHATI",
-    "BHUBANESHWAR",
-    "PATNA",
-    "RAIPUR",
-  ];
+  const [allDepotWarehouse, setAllDepotWarehouse] = useState([]);
+  const getWarehouse = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_warehousedepot`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+
+      setAllDepotWarehouse(apires);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getWarehouse();
+  }, []);
+
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
@@ -711,16 +692,25 @@ const MapDepot = () => {
                   <small className="text-red-600">*</small> Depot Name
                 </label>
                 <select
-                  s
                   className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                   id="stateSelect"
-                  value={depotState.depotName}
-                  onChange={(e) =>
+                  value={depotState.depotId}
+                  onChange={(e) => {
+                    console.log(
+                      "mom",
+                      e.target.value,
+                      allDepotWarehouse.filter(
+                        (item) => Number(item.w_id) === Number(e.target.value)
+                      )[0].depot_name
+                    );
                     setDepotState({
                       ...depotState,
-                      depotName: e.target.value,
-                    })
-                  }
+                      depotId: e.target.value,
+                      depotName: allDepotWarehouse.filter(
+                        (item) => Number(item.w_id) === Number(e.target.value)
+                      )[0].depot_name,
+                    });
+                  }}
                 >
                   <option
                     value={""}
@@ -728,12 +718,12 @@ const MapDepot = () => {
                   >
                     Select
                   </option>
-                  {depotName.map((item) => (
+                  {allDepotWarehouse.map((item) => (
                     <option
-                      value={item}
+                      value={item.w_id}
                       className="focus:outline-none focus:border-b bg-white"
                     >
-                      {item}
+                      {item.depot_name}
                     </option>
                   ))}
                 </select>

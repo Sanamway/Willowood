@@ -111,10 +111,16 @@ const MapDepot = () => {
                   <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Action
                   </th>
-                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
                     Depot
                   </th>
-                  <th className="px-2 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  whitespace-nowrap  tracking-wider">
+                    W/H Id
+                  </th>
+                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  whitespace-nowrap  tracking-wider">
+                    Depot Code
+                  </th>
+                  <th className="px-2 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider  whitespace-nowrap">
                     Depot Name
                   </th>
                   <th className="px-2 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
@@ -127,10 +133,10 @@ const MapDepot = () => {
                     Zone
                   </th>
                   <th className="px-2 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    Business Unit
+                    B.Unit
                   </th>
-                  <th className="px-2 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    Business Segment
+                  <th className="px-2 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  whitespace-nowrap tracking-wider">
+                    B.Segment
                   </th>
                   <th className="px-2 py-2 text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Company
@@ -177,6 +183,12 @@ const MapDepot = () => {
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {menu.d_id}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {menu.w_id}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {menu.depot_code}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {menu.depot_name}
