@@ -46,9 +46,9 @@ const Table = () => {
               </h2> */}
               <h2>
                 <AiTwotoneHome
-                onClick={() => {
-                  router.push("/");
-                }} 
+                  onClick={() => {
+                    router.push("/");
+                  }}
                   className="text-red-500"
                   size={34}
                 ></AiTwotoneHome>

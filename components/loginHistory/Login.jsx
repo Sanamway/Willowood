@@ -16,10 +16,9 @@ const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
-
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
   const loginHandler = async (e) => {
@@ -31,10 +30,12 @@ const Login = () => {
       return;
     }
     const payload = {
-      phone_number: phone
+      phone_number: phone,
     };
     try {
-      const resp = await axios.post(`${url}/api/login_user`, payload, { headers: headers });
+      const resp = await axios.post(`${url}/api/login_user`, payload, {
+        headers: headers,
+      });
       const respdata = await resp.data;
       const phone_number = respdata?.data.phone_no;
       const uid = respdata?.data.uid || respdata?.data?.loginHistory.uid;
@@ -46,11 +47,8 @@ const Login = () => {
       // console.log("datas", respdata?.data?.loginHistory)
       // console.log("status", respdata?.status)
 
-      const userinfo = respdata?.data?.userBSTDetails
-      console.log("logInfo", userinfo?.bg_id)
-
-
- 
+      const userinfo = respdata?.data?.userBSTDetails;
+      console.log("logInfo", userinfo?.bg_id);
 
       if (respdata?.message && respdata?.status == false) {
         setLoading(false);
@@ -58,7 +56,7 @@ const Login = () => {
         setTimeout(() => {
           router.push({
             pathname: "/otp",
-            query: { phone_number: phone_number, uid: uid }
+            query: { phone_number: phone_number, uid: uid },
           });
         }, 1000);
       } else {
@@ -66,7 +64,7 @@ const Login = () => {
         localStorage.setItem("email_id", email_id);
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("id", _id);
-        localStorage.setItem("userinfo", JSON.stringify(userinfo))
+        localStorage.setItem("userinfo", JSON.stringify(userinfo));
 
         router.push("/");
       }
@@ -75,9 +73,9 @@ const Login = () => {
       console.log("err", error?.response?.data?.message);
       const errorMessage = error?.response?.data?.message;
       const status = error?.response?.data?.status;
-      if (errorMessage && status ==false) {
+      if (errorMessage && status == false) {
         toast.error(errorMessage);
-        router.push('/otp')
+        router.push("/otp");
       }
     }
   };
@@ -156,8 +154,15 @@ const Login = () => {
                 <h2 className="text-gray-600">or sign up using</h2>
                 <div className="icons flex items-center justify-center gap-2 mt-2 mb-4">
                   <BsFacebook className="text-blue-600" size={26}></BsFacebook>
-                  <AiFillTwitterCircle className="text-blue-500" size={29} color="blue"></AiFillTwitterCircle>
-                  <AiFillGoogleCircle className="text-red-600" size={29}></AiFillGoogleCircle>
+                  <AiFillTwitterCircle
+                    className="text-blue-500"
+                    size={29}
+                    color="blue"
+                  ></AiFillTwitterCircle>
+                  <AiFillGoogleCircle
+                    className="text-red-600"
+                    size={29}
+                  ></AiFillGoogleCircle>
                 </div>
               </div>
             </div>

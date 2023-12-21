@@ -24,7 +24,7 @@ const CollectionPlans = () => {
       zone: "South Telagana Hyderabad",
       color: "green",
       status: "Approved",
-      progress:"20%"
+      progress: "20%",
     },
 
     {
@@ -37,8 +37,7 @@ const CollectionPlans = () => {
       zone: "South Telagana Hyderabad",
       color: "red",
       status: "Yet to submit",
-      progress:"40%"
-
+      progress: "40%",
     },
 
     {
@@ -51,8 +50,7 @@ const CollectionPlans = () => {
       zone: "South Telagana Hyderabad",
       color: "orange",
       status: "Draft save",
-      progress:"60%"
-
+      progress: "60%",
     },
 
     {
@@ -65,8 +63,7 @@ const CollectionPlans = () => {
       zone: "South Telagana Hyderabad",
       color: "red",
       status: "Submitted by TM/RM/ZM",
-      progress:"80%"
-
+      progress: "80%",
     },
 
     {
@@ -79,8 +76,7 @@ const CollectionPlans = () => {
       zone: "South Telagana Hyderabad",
       color: "green",
       status: "Review stage",
-      progress:"100%"
-
+      progress: "100%",
     },
 
     {
@@ -93,8 +89,7 @@ const CollectionPlans = () => {
       zone: "South Telagana Hyderabad",
       color: "red",
       status: "Yet to sumbit",
-      progress:"20%"
-
+      progress: "20%",
     },
 
     {
@@ -107,8 +102,7 @@ const CollectionPlans = () => {
       zone: "South Telagana Hyderabad",
       color: "green",
       status: "Approved",
-      progress:"80%"
-
+      progress: "80%",
     },
 
     {
@@ -121,8 +115,7 @@ const CollectionPlans = () => {
       zone: "South Telagana Hyderabad",
       color: "orange",
       status: "Draft save",
-      progress:"30%"
-
+      progress: "30%",
     },
 
     {
@@ -134,7 +127,7 @@ const CollectionPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "green",
-      status: "Review stage"
+      status: "Review stage",
     },
 
     {
@@ -146,7 +139,7 @@ const CollectionPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "green",
-      status: "Approved"
+      status: "Approved",
     },
     {
       id: 11,
@@ -157,19 +150,7 @@ const CollectionPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "green",
-      status: "Draft save"
-    },
-
-    {
-      id: 12,
-      icon: GiTakeMyMoney,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "red",
-      status: "Yet to submit"
+      status: "Draft save",
     },
 
     // {
@@ -183,9 +164,6 @@ const CollectionPlans = () => {
     //   color: "red",
     //   status: "Yet to submit"
     // },
-
- 
-    
   ];
   return (
     <>
@@ -194,9 +172,14 @@ const CollectionPlans = () => {
           <div className="container mx-auto px-4 sm:px-8 bg-white text-black">
             <div className="py-2 overflow-y-auto overflow-x-hidden h-screen pb-16 scrollbar-hide ">
               <div className="flex items-center justify-between w-full ">
-                <h2 className="text-lg font-semibold leading-tight"> Collection Plan</h2>
+                <h2 className="text-lg font-semibold leading-tight">
+                  {" "}
+                  Collection Plan
+                </h2>
                 {/* <GiTakeMyMoney size={30} className="text-blue-500"></GiTakeMyMoney> */}
-                <h2 className="text-gray-900 whitespace-no-wrap text-[0.6rem]">2 / 10 Territory submitted</h2>
+                <h2 className="text-gray-900 whitespace-no-wrap text-[0.6rem]">
+                  2 / 10 Territory submitted
+                </h2>
               </div>
               <div className="mt-1 flex sm:flex-row flex-col w-full  ">
                 <div className="flex flex-row mb-1 sm:mb-0 w-full h-1/2">
@@ -298,7 +281,12 @@ const CollectionPlans = () => {
                             <div className="flex items-center">
                               <div className="">
                                 {/* <FcBullish size={30} className="text-green-500"></FcBullish> */}
-                                {<item.icon className="text-blue-500" size={30}></item.icon>}
+                                {
+                                  <item.icon
+                                    className="text-blue-500"
+                                    size={30}
+                                  ></item.icon>
+                                }
                               </div>
                               <div className="ml-3">
                                 <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">
@@ -347,7 +335,10 @@ const CollectionPlans = () => {
                               </span>
                             </span>
                             <div className="popop">
-                              <Popover as="div" className="relative border-none outline-none ">
+                              <Popover
+                                as="div"
+                                className="relative border-none outline-none "
+                              >
                                 {({ open }) => (
                                   <>
                                     <Popover.Button className="focus:outline-none">
@@ -364,13 +355,27 @@ const CollectionPlans = () => {
                                       } absolute z-40 top-1 right-0 mt-2 w-40 bg-white  text-black border rounded-md shadow-md`}
                                     >
                                       <ul className=" text-black text-xs flex flex-col gap-  font-Rale cursor-pointer">
-                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">New</li>
-                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Edit</li>
-                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">View</li>
-                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Previous Period</li>
-                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Current Period</li>
-                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Future Period</li>
-                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">Report</li>
+                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">
+                                          New
+                                        </li>
+                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">
+                                          Edit
+                                        </li>
+                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">
+                                          View
+                                        </li>
+                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">
+                                          Previous Period
+                                        </li>
+                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">
+                                          Current Period
+                                        </li>
+                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">
+                                          Future Period
+                                        </li>
+                                        <li className="hover:bg-gray-100 px-2 py-1 rounded-md">
+                                          Report
+                                        </li>
                                       </ul>
                                     </Popover.Panel>
                                   </>

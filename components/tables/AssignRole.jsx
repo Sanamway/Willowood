@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout";
 import { AiFillFileExcel, AiTwotoneHome } from "react-icons/ai";
 import { BiArrowBack } from "react-icons/bi";
@@ -10,24 +10,23 @@ import axios from "axios";
 import { url } from "@/constants/url";
 import ConfirmModal from "../modals/ConfirmModal";
 
-
 const AssignRole = () => {
-const [data, setData] = useState([])
+  const [data, setData] = useState([]);
 
   const router = useRouter();
 
-  // headers 
+  // headers
 
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
-
-
-  const getAssignRoleDatas = async()=>{
+  const getAssignRoleDatas = async () => {
     try {
-      const resp = await axios.get(`${url}/api/get_assign_role_profile`, { headers: headers });
+      const resp = await axios.get(`${url}/api/get_assign_role_profile`, {
+        headers: headers,
+      });
       const respData = await resp.data.data;
       // setData(respData)
       // console.log("datassss",respData)
@@ -42,14 +41,13 @@ const [data, setData] = useState([])
       const uniqueRecordsArray = Object.values(uniqueRecords);
       setData(uniqueRecordsArray);
     } catch (error) {
-      console.log("er:", error)
+      console.log("er:", error);
     }
-  }
+  };
 
-  useEffect(()=>{
-    getAssignRoleDatas()
-  },[])
-
+  useEffect(() => {
+    getAssignRoleDatas();
+  }, []);
 
   const [isOpen, setisOpen] = useState(false);
   const [userId, setUserId] = useState(null);
@@ -64,11 +62,10 @@ const [data, setData] = useState([])
     setisOpen(false);
   };
 
-
   return (
     <Layout>
       <div className="h-screen overflow-auto w-full ">
-      <ConfirmModal
+        <ConfirmModal
           isOpen={isOpen}
           onClose={() => setisOpen(false)}
           onOpen={() => setisOpen(true)}
@@ -78,7 +75,9 @@ const [data, setData] = useState([])
           onDeletedData={resetData}
         ></ConfirmModal>
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">Assign Role Profile to User</h2>
+          <h2 className="font-arial font-normal text-3xl  py-2">
+            Assign Role Profile to User
+          </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
@@ -88,14 +87,23 @@ const [data, setData] = useState([])
                     placeholder="Search"
                     className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
                   />
-                  <button type="submit" className="bg-blue-500 text-white rounded-r-md p-1 ">
-                    <AiOutlineSearch className="mx-2 my-1" size={20}></AiOutlineSearch>
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white rounded-r-md p-1 "
+                  >
+                    <AiOutlineSearch
+                      className="mx-2 my-1"
+                      size={20}
+                    ></AiOutlineSearch>
                   </button>
                 </form>
               </div>
             </div>
             <h2>
-              <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
+              <TbFileDownload
+                className="text-green-600"
+                size={34}
+              ></TbFileDownload>
             </h2>
 
             <h2>
@@ -111,7 +119,7 @@ const [data, setData] = useState([])
               onClick={() => {
                 router.push({
                   pathname: "/form/assign_role",
-                  query: { type: "CREATE" }
+                  query: { type: "CREATE" },
                 });
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
@@ -158,7 +166,7 @@ const [data, setData] = useState([])
                           router.push({
                             pathname: "/form/assign_role",
 
-                            query: { type: "view", user_id: item?.user_id }
+                            query: { type: "view", user_id: item?.user_id },
                           });
                         }}
                         className="b text-black   hover:text-blue-500  "
@@ -173,16 +181,33 @@ const [data, setData] = useState([])
                       >
                         Edit
                       </button> */}
-                      <button  onClick={() => {
+                      <button
+                        onClick={() => {
                           deleteHandler(item?.user_id);
-                        }} className=" text-black hover:text-red-500 ml-2">Delete</button>
+                        }}
+                        className=" text-black hover:text-red-500 ml-2"
+                      >
+                        Delete
+                      </button>
                     </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.role_id}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.U_profile_name}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.user_id}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.user_name}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.user_phone}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.user_state}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item?.role_id}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item?.U_profile_name}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item?.user_id}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item?.user_name}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item?.user_phone}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item?.user_state}
+                    </td>
                   </tr>
                 ))}
               </tbody>

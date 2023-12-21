@@ -9,19 +9,20 @@ import axios from "axios";
 import { url } from "@/constants/url";
 import { CSVLink } from "react-csv";
 
-
 const UserInformation = () => {
   const router = useRouter();
   const [datas, setDatas] = useState([]);
 
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
   const getApiData = async () => {
     try {
-      const resp = await axios.get(`${url}/api/get_users`, { headers: headers });
+      const resp = await axios.get(`${url}/api/get_users`, {
+        headers: headers,
+      });
       const respdata = await resp.data.data;
       setDatas(respdata);
     } catch (error) {
@@ -51,25 +52,25 @@ const UserInformation = () => {
     { label: "Segment ID", key: "pseg_id" },
     { label: "Product Segment", key: "pseg_name" },
     { label: "Company", key: "c_id" },
-    { label: "Status", key: "isDeleted" }
+    { label: "Status", key: "isDeleted" },
   ];
 
-  const statusUl =(item)=>{
-    if(item.status =="0"){
-      return "Not Active"
+  const statusUl = (item) => {
+    if (item.status == "0") {
+      return "Not Active";
     }
-    if(item.status =="1"){
-      return "Active"
-    }
-
-    if(item.status =="2"){
-      return "Frozen"
+    if (item.status == "1") {
+      return "Active";
     }
 
-    if(item.status =="3"){
-      return "Lock"
+    if (item.status == "2") {
+      return "Frozen";
     }
-  }
+
+    if (item.status == "3") {
+      return "Lock";
+    }
+  };
 
   return (
     <Layout>
@@ -84,7 +85,9 @@ const UserInformation = () => {
           onDeletedData={resetData}
         ></ConfirmModal>
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">User Information</h2>
+          <h2 className="font-arial font-normal text-3xl  py-2">
+            User Information
+          </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
@@ -94,14 +97,23 @@ const UserInformation = () => {
                     placeholder="Search"
                     className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
                   />
-                  <button type="submit" className="bg-blue-500 text-white rounded-r-md p-1 ">
-                    <AiOutlineSearch className="mx-2 my-1" size={20}></AiOutlineSearch>
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white rounded-r-md p-1 "
+                  >
+                    <AiOutlineSearch
+                      className="mx-2 my-1"
+                      size={20}
+                    ></AiOutlineSearch>
                   </button>
                 </form>
               </div>
             </div>
             <h2>
-              <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
+              <TbFileDownload
+                className="text-green-600"
+                size={34}
+              ></TbFileDownload>
             </h2>
 
             <h2>
@@ -117,7 +129,7 @@ const UserInformation = () => {
               onClick={() => {
                 router.push({
                   pathname: "/form/user_information_form",
-                  query: { type: "CREATE" }
+                  query: { type: "CREATE" },
                 });
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
@@ -184,7 +196,7 @@ const UserInformation = () => {
                           router.push({
                             pathname: "/form/user_information_form",
                             // query: { userData: JSON.stringify(item) },
-                            query: { type: "view", id: item?.user_id}
+                            query: { type: "view", id: item?.user_id },
                           });
                         }}
                         className="b text-black   hover:text-blue-500  "
@@ -196,7 +208,7 @@ const UserInformation = () => {
                           router.push({
                             pathname: "/form/user_information_form",
                             // query: { userData: JSON.stringify(item) },
-                            query: { type: "Edit", id: item?.user_id }
+                            query: { type: "Edit", id: item?.user_id },
                           });
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
@@ -212,21 +224,42 @@ const UserInformation = () => {
                         Delete
                       </button>
                     </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.user_id}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{""}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.user_name}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.position}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.address}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.city}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.state}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.email}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.phone_number}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.t_user}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{statusUl(item)}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.isDeleted ==true ? "Disable":"Enable"}</td>
-                    {/* <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.status == 1 ? "Enabled" : "Disabled"}
-                    </td> */}
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.user_id}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {""}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.user_name}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.position}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.address}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.city}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.state}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.email}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.phone_number}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.t_user}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {statusUl(item)}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.isDeleted == true ? "Disable" : "Enable"}
+                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -16,23 +16,25 @@ const ForgotPass = () => {
 
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
   const payload = {
-    phone_number: phone
+    phone_number: phone,
   };
 
   const forgotHandler = async (e) => {
     console.log("fpp", payload);
-    e.preventDefault()
-    
+    e.preventDefault();
+
     try {
-      const resp = await axios.post(`${url}/api/forget_password`, payload, { headers: headers });
+      const resp = await axios.post(`${url}/api/forget_password`, payload, {
+        headers: headers,
+      });
       const respadata = await resp.data;
       console.log("api", respadata);
     } catch (error) {
-      console.log("ee", error)
+      console.log("ee", error);
     }
   };
 
@@ -46,7 +48,9 @@ const ForgotPass = () => {
                 <Image src={Logo}></Image>
               </div>
               <div className="flex flex-col items-center justify-center mt-4">
-                <h2 className="text-lg text-black font-semibold">Forgot Password</h2>
+                <h2 className="text-lg text-black font-semibold">
+                  Forgot Password
+                </h2>
                 <h4 className="text-black mt-2">Enter Your Mobile Number</h4>
               </div>
               <div className="flex flex-col justify-between mt-8 mx-12 ">
@@ -82,8 +86,15 @@ const ForgotPass = () => {
                 <h2 className="text-gray-600">or sign up using</h2>
                 <div className="icons flex items-center justify-center gap-2 mt-2 mb-4">
                   <BsFacebook className="text-blue-600" size={26}></BsFacebook>
-                  <AiFillTwitterCircle className="text-blue-500" size={29} color="blue"></AiFillTwitterCircle>
-                  <AiFillGoogleCircle className="text-red-600" size={29}></AiFillGoogleCircle>
+                  <AiFillTwitterCircle
+                    className="text-blue-500"
+                    size={29}
+                    color="blue"
+                  ></AiFillTwitterCircle>
+                  <AiFillGoogleCircle
+                    className="text-red-600"
+                    size={29}
+                  ></AiFillGoogleCircle>
                 </div>
               </div>
             </div>
