@@ -70,7 +70,7 @@ const HomePage = () => {
 
   return (
     <Layout>
-      <section className=" bg-gray-100 h-screen  ">
+      <section className=" bg-gray-100 min-h-screen  ">
         {/* card one  */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
           <div className="bg-orange-500 p-1.5 flex flex-col items-center justify-center gap-2 rounded-md shadow-md text-white text-center">

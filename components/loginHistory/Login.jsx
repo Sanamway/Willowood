@@ -48,9 +48,9 @@ const Login = () => {
       const userinfo = respdata?.data?.userBSTDetails;
       console.log("logInfo", userinfo?.bg_id);
 
-      if (uid) {
-        gettingMenuSidebar(uid);
-      }
+      // if (uid) {
+      //   gettingMenuSidebar(uid);
+      // }
 
       if (respdata?.message && respdata?.status == false) {
         setLoading(false);
@@ -66,7 +66,7 @@ const Login = () => {
         localStorage.setItem("email_id", email_id);
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("id", _id);
-        localStorage.setItem("userinfo", JSON.stringify(userinfo));
+        // localStorage.setItem("userinfo", JSON.stringify(userinfo));
 
         router.push("/");
       }
@@ -77,6 +77,7 @@ const Login = () => {
       const status = error?.response?.data?.status;
       if (errorMessage && status == false) {
         console.log("loginms", errorMessage == "OTP is not verified");
+
         if (errorMessage == "User Login is locked") {
           toast.error(errorMessage);
           setLoading(false);
@@ -89,6 +90,12 @@ const Login = () => {
         }
 
         if (errorMessage == "User Login is not active") {
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+
+        if (errorMessage == "Invalid User Login mobile no") {
           toast.error(errorMessage);
           setLoading(false);
           return;
@@ -119,19 +126,19 @@ const Login = () => {
 
   //setting up the menus in localStorage
 
-  const gettingMenuSidebar = async (uid) => {
-    try {
-      const resp = await axios.get(
-        `${url}/api/get_assign_role_profile?user_id=${uid}&data_by_parent_id=true`,
-        { headers: headers }
-      );
-      const respData = await resp.data.data;
-      // setMenus(respData);
-      localStorage.setItem("SideMenus", JSON.stringify(respData));
-    } catch (error) {
-      console.log("error : ", error);
-    }
-  };
+  // const gettingMenuSidebar = async (uid) => {
+  //   try {
+  //     const resp = await axios.get(
+  //       `${url}/api/get_assign_role_profile?user_id=${uid}&data_by_parent_id=true`,
+  //       { headers: headers }
+  //     );
+  //     const respData = await resp.data.data;
+  //     // setMenus(respData);
+  //     localStorage.setItem("SideMenus", JSON.stringify(respData));
+  //   } catch (error) {
+  //     console.log("error : ", error);
+  //   }
+  // };
 
   return (
     <>

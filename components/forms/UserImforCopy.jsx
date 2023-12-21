@@ -9,8 +9,7 @@ import axios from "axios";
 import { url } from "@/constants/url";
 import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
-import Select from 'react-select'
-
+import Select from "react-select";
 
 const UserInformation = () => {
   const router = useRouter();
@@ -45,11 +44,11 @@ const UserInformation = () => {
         address: apires[0].address,
         // city: apires[0].city,
         // state: apires[0].state,
-        searchCity:{
-          value:apires[0].value,
-          label:apires[0].city,
-          state:apires[0].state,
-          country:apires[0].country
+        searchCity: {
+          value: apires[0].value,
+          label: apires[0].city,
+          state: apires[0].state,
+          country: apires[0].country
         },
         phone_number: apires[0].phone_number,
         password: apires[0].password,
@@ -81,11 +80,11 @@ const UserInformation = () => {
     user_name: "",
     address: "",
     // city: searchCity.value.label,
-    searchCity:{
-      value:"",
-      label:"",
-      state:"",
-      country:""
+    searchCity: {
+      value: "",
+      label: "",
+      state: "",
+      country: ""
     },
     // state: "",
     email: "",
@@ -202,10 +201,10 @@ const UserInformation = () => {
       const data = {
         user_name: formState.user_name,
         address: formState.address,
-         // city: formState.city,
-         city: formState.searchCity.label.trim(),
-         // state: formState.state,
-         state: formState.searchCity.state.trim(),
+        // city: formState.city,
+        city: formState.searchCity.label.trim(),
+        // state: formState.state,
+        state: formState.searchCity.state.trim(),
         phone_number: formState.phone_number,
         password: formState.password,
         confirm_password: formState.confirm_password,
@@ -219,7 +218,7 @@ const UserInformation = () => {
 
       // console.log("EditData", data)
 
-      // return 
+      // return
 
       const res = await axios.put(`${url}/api/update_user/${id}`, JSON.stringify(data), {
         headers: headers
@@ -266,12 +265,27 @@ const UserInformation = () => {
     setShowPass(!showPass);
   };
 
+  //check file size
+
+  const checkFileSize = (file) => {
+    const maxSize = 200000;
+    if (file.size > maxSize) {
+      toast.error("Image Size Must be Less than 200 KB");
+      return false
+    }
+    return true
+  };
+
   //uploading Image
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
+    if(!checkFileSize(file)){
+      return;
+    }
+    console.log("fillll", file);
     if (file) {
-      // setUserImage(URL.createObjectURL(file));
+      setUserImage(URL.createObjectURL(file));
       setUserImage(file);
     }
   };
@@ -310,12 +324,10 @@ const UserInformation = () => {
     }
   }, []);
 
-  console.log("c_name", userName);
-
   //get all cities data
 
-  const [citySearch, setCitySearch] = useState("")
-  const [filteredCity, setFilteredCity] = useState([])
+  const [citySearch, setCitySearch] = useState("");
+  const [filteredCity, setFilteredCity] = useState([]);
 
   const getCityData = async (city) => {
     try {
@@ -325,27 +337,24 @@ const UserInformation = () => {
       });
       const response = await resp.data.data;
       setFilteredCity(
-        response.map((item)=>{
-        return {
-        value:item?.city,
-        label:item?.city,
-        state:item?.State,
-        country:item?.country
-        }
+        response.map((item) => {
+          return {
+            value: item?.city,
+            label: item?.city,
+            state: item?.State,
+            country: item?.country
+          };
         })
-        )
-      console.log("fdefe", response)
+      );
+      console.log("fdefe", response);
     } catch (error) {}
   };
 
-  useEffect(()=>{
-    if(citySearch){
-      getCityData(citySearch)
+  useEffect(() => {
+    if (citySearch) {
+      getCityData(citySearch);
     }
-  },[citySearch])
-
-
-  console.log("cityform", formState)
+  }, [citySearch]);
 
   return (
     <>
@@ -438,20 +447,20 @@ const UserInformation = () => {
                       width={100}
                       height={100}
                     />
+                    <input
+                      type="file"
+                      accept=".jpeg,.jpg"
+                      onChange={handleImageUpload}
+                      style={{ display: "none" }}
+                      id="fileInput"
+                    />
                     {/* <input
                       type="file"
                       accept="image/*"
                       onChange={handleImageUpload}
-                      style={{ display: "none" }}
-                      id="fileInput"
-                    /> */}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      // onChange={handleImageUpload}
-                      // onChange={(e) => handleImageUpload(e)}
+                      onChange={(e) => handleImageUpload(e)}
 
-                      style={{ display: "none" }}
+                      style={{ display: "block" }}
                       id="fileInput"
                       onChange={(e) =>
                         setFormState({
@@ -459,7 +468,7 @@ const UserInformation = () => {
                           image: e.target.value[0]
                         })
                       }
-                    />
+                    /> */}
                     <label
                       htmlFor="fileInput"
                       // here make the opacity-0 to get hover text effect
@@ -551,11 +560,8 @@ const UserInformation = () => {
                       </p>
                     )}
                   </div> */}
-                    <div className="w-1/2 px-2 relative">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="userSelect"
-                    >
+                  <div className="w-1/2 px-2 relative">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
                       <small className="text-red-600">*</small> City
                     </label>
                     <Select
@@ -567,12 +573,10 @@ const UserInformation = () => {
                       onChange={(value) =>
                         setFormState({
                           ...formState,
-                          searchCity: value,
+                          searchCity: value
                         })
                       }
-                      onInputChange={(searchVal) =>
-                        setCitySearch(searchVal)
-                      }
+                      onInputChange={(searchVal) => setCitySearch(searchVal)}
                     />
                   </div>
 

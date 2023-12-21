@@ -84,23 +84,24 @@ const Layout = ({ children }) => {
   };
 
 
-  // const gettingMenuSidebar = async (uid) => {
-  //   try {
-  //     const resp = await axios.get(
-  //       `${url}/api/get_assign_role_profile?user_id=${uid}&data_by_parent_id=true`,
-  //       { headers: headers }
-  //     );
-  //     const respData = await resp.data.data;
-  //     console.log("laymenus", respData);
-  //     setMenus(respData);
-  //   } catch (error) {
-  //     console.log("error : ", error);
-  //   }
-  // };
+  const gettingMenuSidebar = async (uid) => {
+    try {
+      const resp = await axios.get(
+        `${url}/api/get_assign_role_profile?user_id=${uid}&data_by_parent_id=true`,
+        { headers: headers }
+      );
+      const respData = await resp.data.data;
+      console.log("laymenus", respData);
+      setMenus(respData);
+    } catch (error) {
+      console.log("error : ", error);
+    }
+  };
 
-  // useEffect(() => {
-  //   if (uid) gettingMenuSidebar(uid);
-  // }, [uid]);
+  useEffect(() => {
+    if (uid) gettingMenuSidebar(uid);
+  }, [uid]);
+
 
   
 
@@ -121,7 +122,7 @@ const Layout = ({ children }) => {
                     <Image className="rounded-full h-8 w-8" src={Profile} alt="" />
                   ) : (
                     <div className="flex  items-center justify-center gap-4 ">
-                      <Image className=" h-[4.1rem] w-[4.1rem] rounded-full" src={Profile} alt="" />
+                      <Image onClick={(e)=>{router.push('/')}} className=" h-[4.1rem] w-[4.1rem] rounded-full cursor-pointer" src={Profile} alt="" />
                       <div className="flex flex-col items-start font-sans">
                         <h2 className="font-sm text-white whitespace-nowrap">{user_name}</h2>
                         <div className="flex items-center gap-2">
@@ -144,7 +145,9 @@ const Layout = ({ children }) => {
               </div>
             )}
             <div className="flex flex-col items-center w-full text-white font-Arial ">
-              {menusItems?.map(({ _id, icon: Icon, ...menu }) => (
+              {menusItems?.map(({ _id, icon: Icon, ...menu}) => (
+
+              
                 <>
                   <div
                     key={_id}
@@ -153,7 +156,14 @@ const Layout = ({ children }) => {
                     }  cursor-pointer text-left border-1 rounded-md border-black w-full hover:bg-orange-500  px-2 py-1 `}
                   >
                     <div className="">
-                      <AiOutlineMail
+                      <AiOutlineMail onClick={(e) => {
+                                  e.preventDefault();
+                                  // router.push(`/${item.page_call}`);
+                                  router.push({
+                                    pathname:`/${menu.page_call}`,
+                                    query:{name:`${menu.label}`}
+                                  })
+                                }}
                         size={20}
                       ></AiOutlineMail>
                     </div>
