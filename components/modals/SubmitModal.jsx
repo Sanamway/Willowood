@@ -4,39 +4,49 @@ import axios from "axios";
 import { url } from "@/constants/url";
 import toast, { Toaster } from "react-hot-toast";
 
-function SubmitModal({ onClose, isOpen, onOpen, userId, onDeletedData, method, endpoints }) {
-  console.log("frmmod", userId)
+function SubmitModal({
+  onClose,
+  isOpen,
+  onOpen,
+  userId,
+  onDeletedData,
+  method,
+  endpoints,
+  message,
+}) {
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
   const methodDelete = async (userId) => {
-    console.log("coming", userId)
+    console.log("coming", userId);
     try {
-      const resp = await axios[method](`${url}/api/${endpoints}/${userId}`, { headers });
+      const resp = await axios[method](`${url}/api/${endpoints}/${userId}`, {
+        headers,
+      });
       const respdata = await resp.data.data;
-      const respData = await resp.data
-      console.log("neww", respData)
-      console.log("modres", respdata)
+      const respData = await resp.data;
+      console.log("neww", respData);
+      console.log("modres", respdata);
       if (respdata) {
         onDeletedData();
         onClose();
       }
-      const msgg = respData.message
-      if(msgg){
-        toast.error(msgg)
+      const msgg = respData.message;
+      if (msgg) {
+        toast.error(msgg);
         onClose();
       }
     } catch (error) {
-      console.log("moderr", error?.response?.data.message)
-      const errMsg = error?.response?.data.message
-      if(errMsg){
-        toast.error(errMsg)
-        onClose()
+      console.log("moderr", error?.response?.data.message);
+      const errMsg = error?.response?.data.message;
+      if (errMsg) {
+        toast.error(errMsg);
+        onClose();
       }
       // toast.error(error)
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -73,10 +83,12 @@ function SubmitModal({ onClose, isOpen, onOpen, userId, onDeletedData, method, e
                     as="h3"
                     className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
                   >
-                    Api Success Response
+                    Rolling Plans
                   </Dialog.Title>
                   <div className="mt-2">
-                    <p className="text-sm text-center text-gray-500">Api Success Message Should be Here</p>
+                    <p className="text-sm text-center text-gray-500">
+                      {message}
+                    </p>
                   </div>
 
                   <div className="mt-4 flex items-center justify-center">
@@ -87,8 +99,6 @@ function SubmitModal({ onClose, isOpen, onOpen, userId, onDeletedData, method, e
                     >
                       Close
                     </button>
-
-                   
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
