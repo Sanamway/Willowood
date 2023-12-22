@@ -69,7 +69,7 @@ const Farmer = () => {
 
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full ">
+      <div className=" overflow-auto w-full ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
@@ -122,9 +122,9 @@ const Farmer = () => {
           </div>
         </div>
 
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
+        <div className="bg-white h-screen flex select-none items-start justify-center max-w-full">
           <div
-            className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]"
+            className=" text-black font-arial scrollbar-hide overflow-x-auto tableInfo p-2 "
             ref={tableRef}
           >
             <table className="min-w-full divide-y border- divide-gray-200 ">
@@ -273,6 +273,7 @@ const Farmer = () => {
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
         </div>

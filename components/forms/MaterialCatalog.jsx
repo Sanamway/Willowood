@@ -57,7 +57,7 @@ const MaterialCatalog = () => {
   return (
     <>
       <Layout>
-        <div className="h-screen overflow-auto w-full font-arial bg-white ">
+        <div className="  w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">
               Material SKU e-Catalog{" "}
@@ -83,10 +83,10 @@ const MaterialCatalog = () => {
           </div>
 
           {/* <div className="bg-gray-300"></div> */}
-          <div className="text-black h-screen  ">
-            <div className="bg-gray-100 p-4  h-sceen ">
+          <div className="text-black   relative ">
+            <div className="bg-gray-100 p-4 absolute w-full  ">
               <form
-                className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4"
+                className="max-w-1/2 mx-4 mt mb-12 bg-white  rounded shadow p-4"
                 onSubmit={(e) => e.preventDefault()}
               >
                 <div className="flex -mx-2 mb-4 flex-col">

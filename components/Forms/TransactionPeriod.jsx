@@ -200,7 +200,7 @@ const TrasactionPeriod = () => {
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className=" w-full font-arial bg-white ">
         <div className="flex flex-row justify-between h-max px-5">
           <h4 className="font-arial font-normal text-3xl  py-2">
             Rolling Sales Plan - Open Period
@@ -218,7 +218,7 @@ const TrasactionPeriod = () => {
           </span>
         </div>
 
-        <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start h-full">
+        <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start min-h-screen">
           <form
             className=" flex flex-col gap-4 bg-white rounded shadow p-4 w-full mb-8 "
             onSubmit={(e) => e.preventDefault()}

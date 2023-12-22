@@ -57,12 +57,14 @@ const ZoneTable = () => {
     setisOpen(false);
   };
 
+  const {name} = router.query
+
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className=" overflow-auto w-full font-arial bg-white ">
         <div className="flex flex-row justify-between  h-max  px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">Zone</h2>
+          <h2 className="font-arial font-normal text-3xl tabletitle  py-2">{name?name :"Business Zone"}</h2>
           <span className="flex items-center gap-2 cursor-pointer">
             <span className="flex flex-row">
               <input
@@ -99,8 +101,8 @@ const ZoneTable = () => {
             </button>
           </span>
         </div>
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+        <div className="bg-white  flex items-start select-none justify-center mb-6 max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto tableInfo p-2">
             <table className="min-w-full divide-y border- divide-gray-200 ">
               <thead className="border-b w-max">
                 <tr className="bg-gray-50 font-arial w-max">
@@ -203,10 +205,19 @@ const ZoneTable = () => {
                   </tr>
                 ))}
               </tbody>
+
+
+            
+
+
+
+              
             </table>
           </div>
         </div>
       </div>
+
+
       <ConfirmationModal
         isOpen={isOpen}
         onClose={() => setisOpen(false)}

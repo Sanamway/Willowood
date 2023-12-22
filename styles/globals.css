@@ -312,6 +312,37 @@ body {
   z-index: -1;
 }
 
+/* userInformation grid  */
+
+.tableInfo {
+  width: 86vw;
+ 
+}
+
+@media screen and (min-width: 768px) {
+  .tableInfo {
+    width: 82vw;
+  }
+}
+
+/* tableName  */
+
+.tabletitle{
+font-size: 1.25rem;
+}
+
+/* sidebarmenus  */
+
+.sidemenuActive{
+color:green;
+background-color: #ff5722;
+}
+
+.sidemenuNoActive{
+color:white;
+background-color: #ff5722;
+}
+
 
 /* removing the incre decre */
 

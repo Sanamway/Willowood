@@ -13,7 +13,7 @@ export default function DragAndDrop(props) {
     e.preventDefault();
     props.setFiles(e.target.files[0]);
   }
-
+c()
   const handleConvert = (file) => {
     if (file) {
       const reader = new FileReader();

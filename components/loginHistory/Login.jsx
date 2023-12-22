@@ -27,6 +27,7 @@ const Login = () => {
     console.log("data", phone);
     if (phone.length < 10) {
       toast.error("Enter the valid Mobile number");
+      setLoading(false)
       return;
     }
     const payload = {
@@ -49,14 +50,26 @@ const Login = () => {
 
       const userinfo = respdata?.data?.userBSTDetails;
       console.log("logInfo", userinfo?.bg_id);
+<<<<<<< HEAD
+=======
+
+      // if (uid) {
+      //   gettingMenuSidebar(uid);
+      // }
+>>>>>>> cffb61a8fe5cf87b1fdb11d56b59d52db047ae18
 
       if (respdata?.message && respdata?.status == false) {
         setLoading(false);
         toast.success(respdata?.message);
         setTimeout(() => {
           router.push({
+<<<<<<< HEAD
             pathname: "/otp",
             query: { phone_number: phone_number, uid: uid },
+=======
+            pathname: `/otp`,
+            query: { phone_number: phone_number, uid: uid }
+>>>>>>> cffb61a8fe5cf87b1fdb11d56b59d52db047ae18
           });
         }, 1000);
       } else {
@@ -64,7 +77,11 @@ const Login = () => {
         localStorage.setItem("email_id", email_id);
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("id", _id);
+<<<<<<< HEAD
         localStorage.setItem("userinfo", JSON.stringify(userinfo));
+=======
+        // localStorage.setItem("userinfo", JSON.stringify(userinfo));
+>>>>>>> cffb61a8fe5cf87b1fdb11d56b59d52db047ae18
 
         router.push("/");
       }
@@ -74,8 +91,42 @@ const Login = () => {
       const errorMessage = error?.response?.data?.message;
       const status = error?.response?.data?.status;
       if (errorMessage && status == false) {
+<<<<<<< HEAD
         toast.error(errorMessage);
         router.push("/otp");
+=======
+        console.log("loginms", errorMessage == "OTP is not verified");
+
+        if (errorMessage == "User Login is locked") {
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+        if (errorMessage == "User Login is frozen") {
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+
+        if (errorMessage == "User Login is not active") {
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+
+        if (errorMessage == "Invalid User Login mobile no") {
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+        setLoading(false);
+        if (errorMessage == "OTP is not verified") {
+          router.push({
+            pathname: `/otp`,
+            query: { phone_number: phone }
+          });
+        }
+>>>>>>> cffb61a8fe5cf87b1fdb11d56b59d52db047ae18
       }
     }
   };
@@ -93,13 +144,29 @@ const Login = () => {
     }
   }, [isLoggedIn]);
 
+  //setting up the menus in localStorage
+
+  // const gettingMenuSidebar = async (uid) => {
+  //   try {
+  //     const resp = await axios.get(
+  //       `${url}/api/get_assign_role_profile?user_id=${uid}&data_by_parent_id=true`,
+  //       { headers: headers }
+  //     );
+  //     const respData = await resp.data.data;
+  //     // setMenus(respData);
+  //     localStorage.setItem("SideMenus", JSON.stringify(respData));
+  //   } catch (error) {
+  //     console.log("error : ", error);
+  //   }
+  // };
+
   return (
     <>
       <div className="flex w-full h-screen font-arial">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="relative flex-1 bg-banner bg-cover bg-center bg-no-repeat">
-          <div className="flex items-center justify-center h-screen">
-            <div className="relative form rounded-lg   bg-opacity-[0.35] w-[90%] md:w-[30%] px-8 pb-8">
+          <div className="flex items-center justify-center min-h-screen">
+            <form className="relative form rounded-lg   bg-opacity-[0.35] w-[90%] md:w-[30%] px-8 pb-8">
               <div className="relative top-[1rem] flex items-center justify-center">
                 <Image src={Logo}></Image>
               </div>
@@ -112,6 +179,8 @@ const Login = () => {
                   className="bg-transparent text-black py-1.5 max-w-full text-start outline-none border-0 placeholder:text-black text-sm border-black border-b-2 border-white-200"
                   type="tel"
                   placeholder="Type your Mobile Number"
+                  pattern="[6789][0-9]{9}"
+                  title="Enter Valid Number"
                   minLength={10}
                   maxLength={10}
                   onChange={(e) => {
@@ -120,15 +189,6 @@ const Login = () => {
                 />
               </div>
               <div className="flex flex-col justify-between mx-12 mt-4">
-                {/* <label className="flex text-black items-center gap-1 font-semibold">
-                  <BiSolidLockAlt />
-                  Password
-                </label>
-                <input
-                  className="bg-transparent text-black py-1.5 max-w-full text-start outline-none border-0 placeholder:text-black text-sm border-black border-b-2 border-white-200"
-                  type="password"
-                  placeholder="Type your password"
-                /> */}
                 <div className="flex items-center justify-end mt-2">
                   <h3
                     onClick={() => {
@@ -143,6 +203,7 @@ const Login = () => {
               <div className="flex items-center justify-center mt-4">
                 {/* <button onClick={()=>{router.push('/otp')}} className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full uppercase text-sm text-white"> */}
                 <button
+                  type="submit"
                   onClick={loginHandler}
                   className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full text-sm text-white"
                 >
@@ -165,7 +226,7 @@ const Login = () => {
                   ></AiFillGoogleCircle>
                 </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>

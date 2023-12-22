@@ -339,7 +339,7 @@ const MaterialSkuInfo = () => {
   return (
     <>
       <Layout>
-        <div className="h-screen overflow-auto w-full font-arial bg-white ">
+        <div className=" overflow-auto w-full font-arial bg-white ">
           <Toaster position="bottom-center" reverseOrder={false} />
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">Material SKU Information </h2>
@@ -365,8 +365,8 @@ const MaterialSkuInfo = () => {
             </div>
           </div>
 
-          <div className="text-black h-screen  ">
-            <div className="bg-gray-100 p-4  h-sceen ">
+          <div className="text-black  ">
+            <div className="bg-gray-100 p-4   ">
               <form
                 // onSubmit={handleSubmit}
                 onSubmit={(e) => e.preventDefault()}
@@ -374,12 +374,12 @@ const MaterialSkuInfo = () => {
                 className=" mx-2 mt mb-12 bg-white rounded shadow p-2"
               >
                 <div className="flex -mx-2 mb-4 flex-col">
-                  <div className="w-1/6 px-2 mb-2">
+                  <div className="w-1/2 px-2 mb-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
                       <span className="text-red-500 ">*</span> Mat Code
                     </label>
                     <input
-                      className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      className="w-1/ px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                       type="text"
                       id="inputField"
                       pattern="[0-9]*"
@@ -394,12 +394,12 @@ const MaterialSkuInfo = () => {
                     />
                   </div>
 
-                  <div className="w-1/6 px-2 mb-2">
+                  <div className="w-1/2 px-2 mb-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
                       <span className="text-red-500 ">*</span> Material Code
                     </label>
                     <input
-                      className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      className="w-1/2 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                       type="text"
                       maxLength={10}
                       minLength={10}

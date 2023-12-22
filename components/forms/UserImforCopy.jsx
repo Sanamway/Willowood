@@ -9,6 +9,7 @@ import axios from "axios";
 import { url } from "@/constants/url";
 import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
+import Select from "react-select";
 
 const UserInformation = () => {
   const router = useRouter();
@@ -16,17 +17,16 @@ const UserInformation = () => {
   const [userOptions, setUserOptions] = useState([]);
   const [showPass, setShowPass] = useState(false);
   const { id, view } = router.query;
-
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw"
   };
 
   //getlocaldta
-  const [user, setUser] = useState("")
-  const [userName, setUsername] = useState("")
-  const [ui, setUid] = useState("")
-  const [email_id, setEmailId] = useState("")
+  const [user, setUser] = useState("");
+  const [userName, setUsername] = useState("");
+  const [ui, setUid] = useState("");
+  const [email_id, setEmailId] = useState("");
 
   const getDataById = async (id) => {
     try {
@@ -42,8 +42,14 @@ const UserInformation = () => {
         user_id: apires[0].user_id,
         user_name: apires[0].user_name,
         address: apires[0].address,
-        city: apires[0].city,
-        state: apires[0].state,
+        // city: apires[0].city,
+        // state: apires[0].state,
+        searchCity: {
+          value: apires[0].value,
+          label: apires[0].city,
+          state: apires[0].state,
+          country: apires[0].country
+        },
         phone_number: apires[0].phone_number,
         password: apires[0].password,
         confirm_password: apires[0].confirm_password,
@@ -61,16 +67,26 @@ const UserInformation = () => {
 
   useEffect(() => {
     if (router.query.type === "CREATE") return;
-    getDataById(id);
+    if (id) {
+      getDataById(id);
+    }
   }, [id, view]);
+
+  // const searchCity=""
 
   const [formState, setFormState] = useState({
     cId: "",
     empCode: "",
     user_name: "",
     address: "",
-    city: "",
-    state: "",
+    // city: searchCity.value.label,
+    searchCity: {
+      value: "",
+      label: "",
+      state: "",
+      country: ""
+    },
+    // state: "",
     email: "",
     phone_number: "",
     password: "",
@@ -81,7 +97,7 @@ const UserInformation = () => {
     status: "",
     c_name: userName,
     ul_name: userName,
-    image :userImage
+    image: userImage
   });
   console.log("form", formState);
   //Defining the Validation Schema
@@ -111,8 +127,8 @@ const UserInformation = () => {
       .required("Confirm Password is required"),
     t_user: Yup.string().required("Profile is required"),
     status: Yup.string().required("Status is required"),
-    city: Yup.string().required("City is required"),
-    state: Yup.string().required("State is required"),
+    // city: Yup.string().required("City is required"),
+    // state: Yup.string().required("State is required"),
     position: Yup.string().required("Designation is required")
   });
   const [formErrors, setFormErrors] = useState({});
@@ -124,8 +140,10 @@ const UserInformation = () => {
       const data = {
         user_name: formState.user_name,
         address: formState.address,
-        city: formState.city,
-        state: formState.state,
+        // city: formState.city,
+        city: formState.searchCity.label,
+        // state: formState.state,
+        state: formState.searchCity.state,
         phone_number: formState.phone_number,
         password: formState.password,
         confirm_password: formState.confirm_password,
@@ -154,14 +172,15 @@ const UserInformation = () => {
         });
     } catch (errors) {
       const messageError = errors?.response?.data?.message;
-      if (messageError) {
-        toast.error(messageError);
-        return;
-      }
+      console.log("userinf", messageError);
+      // if (messageError) {
+      //   toast.error(messageError);
+      //   return;
+      // }
       const errorMessage = errors?.response?.data?.error;
       if (errorMessage?.includes("email_1")) {
         toast.error("Email already exist");
-      } else if (errorMessage?.includes("phone_number")) {
+      } else if (errorMessage?.includes("phone_number_1")) {
         toast.error("Phone Number already exist");
       }
       const newErrors = {};
@@ -182,8 +201,10 @@ const UserInformation = () => {
       const data = {
         user_name: formState.user_name,
         address: formState.address,
-        city: formState.city,
-        state: formState.state,
+        // city: formState.city,
+        city: formState.searchCity.label.trim(),
+        // state: formState.state,
+        state: formState.searchCity.state.trim(),
         phone_number: formState.phone_number,
         password: formState.password,
         confirm_password: formState.confirm_password,
@@ -194,6 +215,10 @@ const UserInformation = () => {
         position: formState.position,
         about_me: formState.about_me
       };
+
+      // console.log("EditData", data)
+
+      // return
 
       const res = await axios.put(`${url}/api/update_user/${id}`, JSON.stringify(data), {
         headers: headers
@@ -230,7 +255,7 @@ const UserInformation = () => {
     if (router.query.type !== "Edit") {
       handleSaveCompanyInfo(e);
     } else {
-      handleEditCompanyInfo(e,id);
+      handleEditCompanyInfo(e, id);
     }
   };
 
@@ -240,12 +265,27 @@ const UserInformation = () => {
     setShowPass(!showPass);
   };
 
+  //check file size
+
+  const checkFileSize = (file) => {
+    const maxSize = 200000;
+    if (file.size > maxSize) {
+      toast.error("Image Size Must be Less than 200 KB");
+      return false
+    }
+    return true
+  };
+
   //uploading Image
-  
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
+    if(!checkFileSize(file)){
+      return;
+    }
+    console.log("fillll", file);
     if (file) {
-      // setUserImage(URL.createObjectURL(file));
+      setUserImage(URL.createObjectURL(file));
       setUserImage(file);
     }
   };
@@ -267,7 +307,6 @@ const UserInformation = () => {
   }, []);
 
   console.log("fornmv ", formState);
-  
 
   useEffect(() => {
     if (window.localStorage) {
@@ -275,24 +314,53 @@ const UserInformation = () => {
       const userName = localStorage.getItem("user_name");
       const uid = localStorage.getItem("uid");
       setUser(isLoggedInInLocalStorage);
-      setEmailId(email_id)
-      setUsername(userName)
-      setUid(uid)
+      setEmailId(email_id);
+      setUsername(userName);
+      setUid(uid);
     }
 
-    if(!localStorage.getItem("uid")){
-      router.push('/login')
+    if (!localStorage.getItem("uid")) {
+      router.push("/login");
     }
-  
   }, []);
 
-  console.log("c_name",userName)
+  //get all cities data
+
+  const [citySearch, setCitySearch] = useState("");
+  const [filteredCity, setFilteredCity] = useState([]);
+
+  const getCityData = async (city) => {
+    try {
+      const resp = await axios.get(`${url}/api/get_citystate`, {
+        params: { city: city, search: true },
+        headers: headers
+      });
+      const response = await resp.data.data;
+      setFilteredCity(
+        response.map((item) => {
+          return {
+            value: item?.city,
+            label: item?.city,
+            state: item?.State,
+            country: item?.country
+          };
+        })
+      );
+      console.log("fdefe", response);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (citySearch) {
+      getCityData(citySearch);
+    }
+  }, [citySearch]);
 
   return (
     <>
       <Layout>
         <Toaster position="bottom-center" reverseOrder={false} />
-        <div className="h-screen overflow-auto w-full font-arial bg-white ">
+        <div className="  w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">User Information</h2>
             <div className="flex items-center gap-2 cursor-pointer">
@@ -318,9 +386,8 @@ const UserInformation = () => {
           </div>
 
           {/* <div className="bg-gray-300"></div> */}
-          <div className="text-black h-screen mb- ">
-            <div className="bg-gray-100 p-4  ">
-              {/* <form onSubmit={""} className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4"> */}
+          <div className="text-black  relative ">
+            <div className="bg-gray-100 p-4 absolute w-full min-h-screen  ">
               <form
                 onSubmit={(e) => e.preventDefault()}
                 disabled={router.query.type === "CREATE"}
@@ -380,20 +447,20 @@ const UserInformation = () => {
                       width={100}
                       height={100}
                     />
+                    <input
+                      type="file"
+                      accept=".jpeg,.jpg"
+                      onChange={handleImageUpload}
+                      style={{ display: "none" }}
+                      id="fileInput"
+                    />
                     {/* <input
                       type="file"
                       accept="image/*"
                       onChange={handleImageUpload}
-                      style={{ display: "none" }}
-                      id="fileInput"
-                    /> */}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      // onChange={handleImageUpload}
-                      // onChange={(e) => handleImageUpload(e)}
+                      onChange={(e) => handleImageUpload(e)}
 
-                      style={{ display: "none" }} 
+                      style={{ display: "block" }}
                       id="fileInput"
                       onChange={(e) =>
                         setFormState({
@@ -401,7 +468,7 @@ const UserInformation = () => {
                           image: e.target.value[0]
                         })
                       }
-                    />
+                    /> */}
                     <label
                       htmlFor="fileInput"
                       // here make the opacity-0 to get hover text effect
@@ -465,7 +532,7 @@ const UserInformation = () => {
                   )}
                 </div>
                 <div className="flex -mx-2 mb-4">
-                  <div className="w-1/2 px-2 relative ">
+                  {/* <div className="w-1/2 px-2 relative ">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="citySelect">
                       <span className="text-red-500">*</span> City
                     </label>
@@ -492,34 +559,55 @@ const UserInformation = () => {
                         {formErrors.city}
                       </p>
                     )}
+                  </div> */}
+                  <div className="w-1/2 px-2 relative">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                      <small className="text-red-600">*</small> City
+                    </label>
+                    <Select
+                      className="w-full px-1  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      value={formState.searchCity}
+                      isSearchable={true}
+                      name="color"
+                      options={filteredCity}
+                      onChange={(value) =>
+                        setFormState({
+                          ...formState,
+                          searchCity: value
+                        })
+                      }
+                      onInputChange={(searchVal) => setCitySearch(searchVal)}
+                    />
                   </div>
+
                   <div className="w-1/2 px-2 relative ">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="stateSelect">
                       <span className="text-red-500">*</span> State
                     </label>
-                    <select
+                    <input
                       className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="stateSelect"
                       name="state"
-                      value={formState?.state}
+                      value={formState?.searchCity?.state}
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          state: e.target.value
+                          state: value
                         })
                       }
+                      disabled
                     >
-                      <option value="" className="focus:outline-none focus:border-b bg-white">
+                      {/* <option value="" className="focus:outline-none focus:border-b bg-white">
                         Select State
                       </option>
                       <option value="Haryana">Haryana</option>
-                      <option value="Delhi">Delhi</option>
-                    </select>
-                    {formErrors.state && (
+                      <option value="Delhi">Delhi</option> */}
+                    </input>
+                    {/* {formErrors.state && (
                       <p className="text-red-500 text-sm absolute bottom-10 right-3 cursor-pointer">
                         {formErrors.state}
                       </p>
-                    )}
+                    )} */}
                   </div>
                 </div>
 

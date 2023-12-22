@@ -54,7 +54,7 @@ const Crop = () => {
   };
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className=" overflow-auto w-full font-arial bg-white ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Crop</h2>
@@ -95,8 +95,8 @@ const Crop = () => {
           </span>
         </div>
 
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+        <div className="bg-white  flex items-start  mb-6 justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full p-2">
             <table className=" border divide-gray-200 table-auto w-full ">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial w-max">
@@ -174,6 +174,7 @@ const Crop = () => {
                   </tr>
                 ))}
               </tbody>
+              
             </table>
           </div>
         </div>

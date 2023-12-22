@@ -48,11 +48,16 @@ const UserInformation = () => {
   };
 
   const csvHeaders = [
-    { label: "Id", key: "pseg_id" },
-    { label: "Segment ID", key: "pseg_id" },
-    { label: "Product Segment", key: "pseg_name" },
-    { label: "Company", key: "c_id" },
-    { label: "Status", key: "isDeleted" },
+    { label: "Id", key: "user_id" },
+    { label: "Username", key: "user_name" },
+    { label: "Position", key: "position" },
+    { label: "Address", key: "address" },
+    { label: "City", key: "city" },
+    { label: "State", key: "state" },
+    { label: "Email", key: "email" },
+    { label: "Phone", key: "phone_number" },
+    { label: "User Role", key: "t_user" },
+    { label: "Deleted", key: "isDeleted" },
   ];
 
   const statusUl = (item) => {
@@ -72,9 +77,13 @@ const UserInformation = () => {
     }
   };
 
+  const { name } = router.query;
+
+  console.log("griddata", datas)
+
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full pb-64 bg-white overflow-y-auto  ">
+      <div className=" overflow-auto w-full pb-64 bg-white   ">
         <ConfirmModal
           isOpen={isOpen}
           onClose={() => setisOpen(false)}
@@ -84,10 +93,8 @@ const UserInformation = () => {
           endpoints="delete_user"
           onDeletedData={resetData}
         ></ConfirmModal>
-        <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">
-            User Information
-          </h2>
+        <div className="text-black userinfotext  flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
+          <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name ? name :"Manage - User Registration"}</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
@@ -110,10 +117,10 @@ const UserInformation = () => {
               </div>
             </div>
             <h2>
-              <TbFileDownload
-                className="text-green-600"
-                size={34}
-              ></TbFileDownload>
+              {/* <TbFileDownload className="text-green-600" size={34}></TbFileDownload> */}
+              <CSVLink data={datas} headers={csvHeaders}>
+                <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
+              </CSVLink>
             </h2>
 
             <h2>
@@ -139,9 +146,9 @@ const UserInformation = () => {
           </div>
         </div>
 
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px] overflow-y-auto ">
-            <table className="min-w-full divide-y border- divide-gray-200 ">
+        <div className="bg-white  flex items-center justify-center max-w-full ">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-scroll  tableInfo select-none overflow-y-auto p-2 m-2">
+            <table className="w-full  divide-y border- divide-gray-200 ">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
                   <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
@@ -187,7 +194,7 @@ const UserInformation = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200 text-xs">
+              <tbody className="bg-white divide-y divide-gray-200 text-xs ">
                 {datas?.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
@@ -196,7 +203,7 @@ const UserInformation = () => {
                           router.push({
                             pathname: "/form/user_information_form",
                             // query: { userData: JSON.stringify(item) },
-                            query: { type: "view", id: item?.user_id },
+                            query: { type: "view", id: item?.user_id }
                           });
                         }}
                         className="b text-black   hover:text-blue-500  "
@@ -224,42 +231,23 @@ const UserInformation = () => {
                         Delete
                       </button>
                     </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.user_id}
-                    </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {""}
-                    </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.user_name}
-                    </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.position}
-                    </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.address}
-                    </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.city}
-                    </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.state}
-                    </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.email}
-                    </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.phone_number}
-                    </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.t_user}
-                    </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {statusUl(item)}
-                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.user_id}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{""}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.user_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.position}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.address}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.city}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.state}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.email}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.phone_number}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.t_user}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{statusUl(item)}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.isDeleted == true ? "Disable" : "Enable"}
                     </td>
+                    {/* <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.status == 1 ? "Enabled" : "Disabled"}
+                    </td> */}
                   </tr>
                 ))}
               </tbody>

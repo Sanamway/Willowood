@@ -52,15 +52,17 @@ const BusinessSegment = () => {
     getBusinessSegment();
     setisOpen(false);
   };
+  const{name} = router.query
 
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className="  w-full font-arial bg-white ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">
-            Business Segment
+          <h2 className="font-arial font-normal  tabletitle py-2">
+            {name ? name :"Business Segments"}
           </h2>
+          
           <span className="flex items-center gap-2 cursor-pointer">
             <span className="flex flex-row">
               <input
@@ -105,7 +107,7 @@ const BusinessSegment = () => {
         </div>
 
         <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full p-2">
             <table className="min-w-full divide-y border- divide-gray-200 ">
               <thead className="border-b w-max">
                 <tr className="bg-gray-50 font-arial w-max">
@@ -196,6 +198,7 @@ const BusinessSegment = () => {
                   </tr>
                 ))}
               </tbody>
+              
             </table>
           </div>
         </div>

@@ -59,9 +59,11 @@ const ProductSegment = () => {
     { label: "Status", key: "isDeleted" },
   ];
 
+  const {name} = router.query
+
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full ">
+      <div className=" overflow-auto w-full ">
         <ConfirmModal
           isOpen={isOpen}
           onClose={() => setisOpen(false)}
@@ -73,9 +75,7 @@ const ProductSegment = () => {
           onDeletedData={resetData}
         ></ConfirmModal>
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">
-            Product Segment
-          </h2>
+        <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name ? name :"Product Segment"}</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
@@ -129,8 +129,8 @@ const ProductSegment = () => {
           </div>
         </div>
 
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+        <div className="bg-white mb-4 flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full px-2">
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
@@ -201,6 +201,11 @@ const ProductSegment = () => {
                   </tr>
                 ))}
               </tbody>
+
+
+             
+
+             
             </table>
           </div>
         </div>

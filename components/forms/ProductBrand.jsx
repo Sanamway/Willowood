@@ -194,7 +194,7 @@ const ProductBrand = () => {
     <>
       <Layout>
         <Toaster position="bottom-center" reverseOrder={false} />
-        <div className="h-screen overflow-auto w-full font-arial bg-white ">
+        <div className=" overflow-auto w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
             <h2 className="font-arial font-normal text-3xl  py-2">Product Brand </h2>
             <div className="flex items-center gap-2 cursor-pointer">
