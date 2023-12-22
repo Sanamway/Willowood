@@ -67,7 +67,7 @@ const Login = () => {
         localStorage.setItem("email_id", email_id);
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("id", _id);
-        // localStorage.setItem("userinfo", JSON.stringify(userinfo));
+        localStorage.setItem("userinfo", JSON.stringify(userinfo));
 
         router.push("/");
       }
