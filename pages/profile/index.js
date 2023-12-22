@@ -1,12 +1,11 @@
 import React from 'react'
-// import UserProfile from '@/components/UserProfile'
-import UserProfile from '@/components/forms/UserProfile'
+import MyProfile from '@/components/forms/MyProfile'
 import Layout from '@/components/Layout'
 const index = () => {
   return (
     <>
     <Layout>
-        <UserProfile></UserProfile>
+        <MyProfile></MyProfile>
     </Layout>
     </>
   )

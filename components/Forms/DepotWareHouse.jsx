@@ -249,7 +249,7 @@ const UserProfileForm = () => {
 
   return (
     <Layout>
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className=" w-full font-arial bg-white ">
         <Toaster
           position="bottom-center"
           reverseOrder={false}
@@ -283,7 +283,7 @@ const UserProfileForm = () => {
           </div>
         </div>
 
-        <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start h-full ">
+        <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start min-h-screen ">
           <form
             className=" bg-white rounded shadow p-4 w-full "
             onSubmit={(e) => e.preventDefault()}

@@ -391,7 +391,7 @@ const UserAssignBusiness = () => {
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className="  w-full font-arial bg-white ">
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
             User Map With Business Structure{" "}
@@ -419,8 +419,8 @@ const UserAssignBusiness = () => {
         </div>
 
         {/* <div className="bg-gray-300"></div> */}
-        <div className="text-black h-screen  ">
-          <div className="bg-gray-100 pt-1 h-screen ">
+        <div className="text-black ">
+          <div className="bg-gray-100 pt-1 min-h-screen pb-12  ">
             <div className="max-w-1/2 mx-4 mt-4 bg-white rounded shadow p-4">
               <div className="mb-3 w-1/6">
                 <label
@@ -483,7 +483,7 @@ const UserAssignBusiness = () => {
                     <small className="text-red-600">*</small> Company
                   </label>
                   <select
-                    className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                    className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                     id="citySelect"
                     value={bstState.companyId}
                     onChange={(e) =>
@@ -516,7 +516,7 @@ const UserAssignBusiness = () => {
                     <small className="text-red-600">*</small> Business Segment
                   </label>
                   <select
-                    className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                    className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                     id="stateSelect"
                     value={bstState.bgId}
                     disabled={!bstState.companyId}
@@ -549,7 +549,7 @@ const UserAssignBusiness = () => {
                     <small className="text-red-600">*</small> Unit Division
                   </label>
                   <select
-                    className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                    className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                     id="userSelect"
                     value={bstState.buId}
                     onChange={(e) =>
@@ -584,7 +584,7 @@ const UserAssignBusiness = () => {
                     <small className="text-red-600">*</small> Zone
                   </label>
                   <select
-                    className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                    className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                     id="userSelect"
                     value={bstState.zoneId}
                     onChange={(e) =>
@@ -615,7 +615,7 @@ const UserAssignBusiness = () => {
                     <small className="text-red-600">*</small> Region
                   </label>
                   <select
-                    className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                    className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                     id="userSelect"
                     value={bstState.regionId}
                     onChange={(e) =>
@@ -648,7 +648,7 @@ const UserAssignBusiness = () => {
                     <small className="text-red-600">*</small> Territory
                   </label>
                   <select
-                    className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                    className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                     id="stateSelect"
                     value={bstState.territoryId}
                     onChange={(e) =>

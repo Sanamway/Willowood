@@ -70,6 +70,8 @@ const UserProfile = () => {
     }
   };
 
+  const {name} = router.query
+
   return (
     <>
       <Layout>
@@ -84,9 +86,7 @@ const UserProfile = () => {
             onDeletedData={resetData}
           ></ConfirmModal>
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-            <h2 className="font-arial font-normal text-md lg:text-2xl whitespace-nowrap  py-2">
-              User Profile
-            </h2>
+          <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name ? name :"User Role"}</h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <div className="search gap-2 mx-8">
                 <div className="container">

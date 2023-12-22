@@ -446,7 +446,7 @@ const Village = () => {
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div className="h-screen overflow-auto w-full font-arial bg-white ">
+      <div className=" w-full font-arial bg-white ">
         <div className="text-black flex items-center justify-between bg-white max-w-6/12 font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">Village</h2>
           <div className="flex items-center gap-2 cursor-pointer">
@@ -465,9 +465,9 @@ const Village = () => {
           </div>
         </div>
 
-        <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start h-full ">
+        <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start min-h-screen ">
           <form
-            className=" bg-white rounded shadow p-4 w-full pb-24"
+            className=" bg-white rounded shadow p-4 w-full "
             onSubmit={(e) => e.preventDefault()}
           >
             <div className="mb-4 w-1/6">

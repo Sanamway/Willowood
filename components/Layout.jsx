@@ -55,6 +55,7 @@ const Layout = ({ children }) => {
   const [user_name, setUsername] = useState("");
   const [uid, setUid] = useState("");
   const [userinfo, setUserInfo] = useState("");
+  const [menusItems, setMenus] = useState([]);
 
   useEffect(() => {
     if (window.localStorage) {
@@ -63,11 +64,12 @@ const Layout = ({ children }) => {
       const uid = localStorage.getItem("uid");
       const email_id = localStorage.getItem("email_id");
       const userinfoo = localStorage.getItem("userinfo");
-
+      const sidemenus = localStorage.getItem("SideMenus");
       setUser(isLoggedInInLocalStorage);
       setEmailId(email_id);
       setUsername(user_name);
       setUid(uid);
+      setMenus(JSON.parse(sidemenus));
       setUserInfo(JSON.parse(userinfoo));
     }
 
@@ -80,8 +82,6 @@ const Layout = ({ children }) => {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-
-  const [menusItems, setMenus] = useState([]);
 
   const gettingMenuSidebar = async (uid) => {
     try {
@@ -100,10 +100,6 @@ const Layout = ({ children }) => {
   useEffect(() => {
     if (uid) gettingMenuSidebar(uid);
   }, [uid]);
-
-  const checkck = userinfo;
-
-  console.log("vdv", checkck);
 
   return (
     <>
@@ -137,7 +133,10 @@ const Layout = ({ children }) => {
                   ) : (
                     <div className="flex  items-center justify-center gap-4 ">
                       <Image
-                        className=" h-[4.1rem] w-[4.1rem] rounded-full"
+                        onClick={(e) => {
+                          router.push("/");
+                        }}
+                        className=" h-[4.1rem] w-[4.1rem] rounded-full cursor-pointer"
                         src={Profile}
                         alt=""
                       />
@@ -169,7 +168,7 @@ const Layout = ({ children }) => {
               </div>
             )}
             <div className="flex flex-col items-center w-full text-white font-Arial ">
-              {menusItems.map(({ _id, icon: Icon, ...menu }) => (
+              {menusItems?.map(({ _id, icon: Icon, ...menu }) => (
                 <>
                   <div
                     key={_id}
@@ -180,7 +179,17 @@ const Layout = ({ children }) => {
                     }  cursor-pointer text-left border-1 rounded-md border-black w-full hover:bg-orange-500  px-2 py-1 `}
                   >
                     <div className="">
-                      <AiOutlineMail size={20}></AiOutlineMail>
+                      <AiOutlineMail
+                        onClick={(e) => {
+                          e.preventDefault();
+                          // router.push(`/${item.page_call}`);
+                          router.push({
+                            pathname: `/${menu.page_call}`,
+                            query: { name: `${menu.label}` },
+                          });
+                        }}
+                        size={20}
+                      ></AiOutlineMail>
                     </div>
                     <h2
                       onClick={() => {
@@ -203,7 +212,11 @@ const Layout = ({ children }) => {
                               <li
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  router.push(`/${item.page_call}`);
+                                  // router.push(`/${item.page_call}`);
+                                  router.push({
+                                    pathname: `/${item.page_call}`,
+                                    query: { name: `${item.umenu_Name}` },
+                                  });
                                 }}
                                 className={`text-[0.7rem] flex items-center gap-1.5 py-1 cursor-pointer hover:bg-orange-500 px-2 rounded-md `}
                               >
@@ -316,7 +329,7 @@ const Layout = ({ children }) => {
             </nav>
           </div>
           {/* Main Content Area */}
-          <div className="flex-grow bg-gray bg-white h-screen overflow-auto">
+          <div className="flex-grow bg-gray bg-white h-screen overflow-auto ">
             {children}
           </div>
         </div>

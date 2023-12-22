@@ -61,6 +61,7 @@ const AssignRole = () => {
     getAssignRoleDatas();
     setisOpen(false);
   };
+  const { name } = router.query; 
 
   return (
     <Layout>
@@ -75,9 +76,7 @@ const AssignRole = () => {
           onDeletedData={resetData}
         ></ConfirmModal>
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">
-            Assign Role Profile to User
-          </h2>
+        <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name ? name :"Assign Rights -Role Profile"}</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
@@ -122,15 +121,15 @@ const AssignRole = () => {
                   query: { type: "CREATE" },
                 });
               }}
-              className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
+              className=" text-white py-1.5 whitespace-nowrap px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
               Create New
             </button>
           </div>
         </div>
 
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-[1000px]">
+        <div className="bg-white  flex items-start justify-center max-w-full">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full px-2">
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
