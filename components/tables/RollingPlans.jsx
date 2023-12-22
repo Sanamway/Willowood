@@ -229,7 +229,7 @@ const RollingPlans = () => {
   });
 
   useEffect(() => {
-    const roleId = JSON.parse(window.localStorage.getItem("userinfo")).role_id;
+    const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     switch (roleId) {
       case 6:
         setLocalStorageItems({

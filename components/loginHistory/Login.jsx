@@ -50,26 +50,18 @@ const Login = () => {
 
       const userinfo = respdata?.data?.userBSTDetails;
       console.log("logInfo", userinfo?.bg_id);
-<<<<<<< HEAD
-=======
 
       // if (uid) {
       //   gettingMenuSidebar(uid);
       // }
->>>>>>> cffb61a8fe5cf87b1fdb11d56b59d52db047ae18
 
       if (respdata?.message && respdata?.status == false) {
         setLoading(false);
         toast.success(respdata?.message);
         setTimeout(() => {
           router.push({
-<<<<<<< HEAD
-            pathname: "/otp",
-            query: { phone_number: phone_number, uid: uid },
-=======
             pathname: `/otp`,
             query: { phone_number: phone_number, uid: uid }
->>>>>>> cffb61a8fe5cf87b1fdb11d56b59d52db047ae18
           });
         }, 1000);
       } else {
@@ -77,11 +69,7 @@ const Login = () => {
         localStorage.setItem("email_id", email_id);
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("id", _id);
-<<<<<<< HEAD
         localStorage.setItem("userinfo", JSON.stringify(userinfo));
-=======
-        // localStorage.setItem("userinfo", JSON.stringify(userinfo));
->>>>>>> cffb61a8fe5cf87b1fdb11d56b59d52db047ae18
 
         router.push("/");
       }
@@ -91,10 +79,6 @@ const Login = () => {
       const errorMessage = error?.response?.data?.message;
       const status = error?.response?.data?.status;
       if (errorMessage && status == false) {
-<<<<<<< HEAD
-        toast.error(errorMessage);
-        router.push("/otp");
-=======
         console.log("loginms", errorMessage == "OTP is not verified");
 
         if (errorMessage == "User Login is locked") {
@@ -126,7 +110,6 @@ const Login = () => {
             query: { phone_number: phone }
           });
         }
->>>>>>> cffb61a8fe5cf87b1fdb11d56b59d52db047ae18
       }
     }
   };
