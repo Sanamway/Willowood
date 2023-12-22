@@ -92,7 +92,7 @@ const UserInformation = () => {
           onDeletedData={resetData}
         ></ConfirmModal>
         <div className="text-black userinfotext  flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name}</h2>
+          <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name ? name :"Manage - User Registration"}</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">

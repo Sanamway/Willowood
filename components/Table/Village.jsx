@@ -59,12 +59,14 @@ const Village = () => {
     setisOpen(false);
   };
 
+  const {name} = router.query
+
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
       <div className=" w-full font-arial bg-white ">
         <div className="flex flex-row justify-between  h-max  px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">Village</h2>
+          <h2 className="font-arial font-normal text-3xl tabletitle  py-2">{name ? name :"Village Info"}</h2>
           <span className="flex items-center gap-2 cursor-pointer">
             <span className="flex flex-row">
               <input

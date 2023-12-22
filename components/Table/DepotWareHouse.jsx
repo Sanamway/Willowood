@@ -65,7 +65,7 @@ const DepotWareHouse = () => {
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl tabletitle py-2">
-            {name}
+            {name ? name:"Warehouse Depot"}
           </h2>
           <span className="flex items-center gap-2 cursor-pointer">
             <span className="flex flex-row">

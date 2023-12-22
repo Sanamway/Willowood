@@ -27,6 +27,7 @@ const Login = () => {
     console.log("data", phone);
     if (phone.length < 10) {
       toast.error("Enter the valid Mobile number");
+      setLoading(false)
       return;
     }
     const payload = {
@@ -159,6 +160,8 @@ const Login = () => {
                   className="bg-transparent text-black py-1.5 max-w-full text-start outline-none border-0 placeholder:text-black text-sm border-black border-b-2 border-white-200"
                   type="tel"
                   placeholder="Type your Mobile Number"
+                  pattern="[6789][0-9]{9}"
+                  title="Enter Valid Number"
                   minLength={10}
                   maxLength={10}
                   onChange={(e) => {

@@ -359,7 +359,7 @@ const AssignRoleCopy = () => {
                       </td>
                     </tr>
                   </thead>
-                  <tbody className="font-arial text- text-left">
+                  <tbody className="font-arial  text-left">
                     {allMenus.map(
                       (menu, index) => (
                         console.log("assignrow", menu),
@@ -427,7 +427,7 @@ const AssignRoleCopy = () => {
                                 }}
                               />
                             </td>
-                            <td>
+                            <td  className="border px-4 py-2">
                               <input
                                 type="checkbox"
                                 className="border px-4 py-2"
