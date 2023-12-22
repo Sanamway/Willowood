@@ -3,6 +3,8 @@ import { TbFileDownload } from "react-icons/tb";
 import { url } from "@/constants/url";
 import axios from "axios";
 import { useRouter } from "next/router";
+import * as XLSX from "xlsx";
+
 const RPTable = (props) => {
   const [formActive, setFormActive] = useState(false);
   const router = useRouter();
@@ -10,17 +12,26 @@ const RPTable = (props) => {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-  const header = props.tableData[0].map((item) => item.trim());
 
-  const [result, setResult] = useState(
-    props.tableData.slice(1).map((row) => {
-      const obj = {};
-      header.forEach((header, index) => {
-        obj[header] = row[index];
-      });
-      return obj;
-    })
-  );
+  let header;
+  useEffect(() => {
+    if (Array.isArray(props.tableData[0])) {
+      header = props.tableData[0]?.map((item) => item.trim());
+      setResult(
+        props.tableData.slice(1).map((row) => {
+          const obj = {};
+          header.forEach((header, index) => {
+            obj[header] = row[index];
+          });
+          return obj;
+        })
+      );
+    } else {
+      setResult(props.tableData);
+    }
+  }, [props.tableData]);
+
+  const [result, setResult] = useState([]);
 
   console.log("Fie", result);
   let alteredObjects = [];
@@ -47,6 +58,46 @@ const RPTable = (props) => {
   // useEffect(() => {
   //   getCompanyInfo();
   // }, []);
+
+  const [sumValues, setSumValues] = useState({
+    "Dec 23-24 Revised Fcst Qty": 0,
+    "Dec 23-24 Urgent Qty": 0,
+    "Jan 23-24 Fcst Qty": 0,
+    "Expected Return Qty": 0,
+  });
+
+  const calculateSum = (data) => {
+    const sum = data.reduce(
+      (acc, entry) => {
+        acc["Dec 23-24 Revised Fcst Qty"] +=
+          Number(entry["Dec 23-24 Revised Fcst Qty"]) || 0;
+        acc["Dec 23-24 Urgent Qty"] +=
+          Number(entry["Dec 23-24 Urgent Qty"]) || 0;
+        acc["Jan 23-24 Fcst Qty"] += Number(entry["Jan 23-24 Fcst Qty"]) || 0;
+        acc["Expected Return Qty"] += Number(entry["Expected Return Qty"]) || 0;
+        return acc;
+      },
+      {
+        "Dec 23-24 Revised Fcst Qty": 0,
+        "Dec 23-24 Urgent Qty": 0,
+        "Jan 23-24 Fcst Qty": 0,
+        "Expected Return Qty": 0,
+      }
+    );
+
+    setSumValues(sum);
+  };
+
+  useEffect(() => {
+    if (!result.length) return;
+    calculateSum(result);
+  }, [result]);
+  const handledownloadExcel = (data) => {
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, `RSP.xlsx`);
+  };
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
       <div className=" flex justify-center w-full my-">
@@ -113,8 +164,18 @@ const RPTable = (props) => {
             </select>
           </div>
         </div> */}
+
         <div className="status xls download flex items-center justify-end w-full gap-8">
-        <div className="status flex ">
+          <div className="flex flex-row gap-2 ">
+            {" "}
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={18}
+              onClick={() => handledownloadExcel(result)}
+            ></TbFileDownload>
+            <div className="text-xs whitespace-nowrap">Download XLS</div>
+          </div>
+          <div className="status flex ">
             <h2 className="text-xs text-gray-700">Stage :</h2>
             <h2 className="font-bold text-xs text-gray-700">
               {router.query.status}
@@ -170,10 +231,10 @@ const RPTable = (props) => {
                         Apr 23-24 FSCT Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
-                        Apr 23-24 Revised FCT
+                        Apr 23-24 Revised FCST Value
                       </th>
                       <th scope="col" className="px-2 py-1 text-black ">
-                        Apr 23-24 Revised FCT
+                        Apr 23-24 Revised FCST Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-black  ">
                         Apr 23-24 Urget Qty
@@ -202,9 +263,9 @@ const RPTable = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {result.map((item) => {
-                      console.log("mot", item);
+                    {console.log("nhj", result)}
 
+                    {result.map((item) => {
                       return (
                         <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
                           <th
@@ -234,59 +295,17 @@ const RPTable = (props) => {
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[15]]}
                           </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
-                            <input
-                              type="number"
-                              value={item[Object.keys(item)[17]]}
-                              className="px-auto outline-none border-b-2 w-12 "
-                              min="1"
-                              max="10"
-                              onChange={(e) =>
-                                setResult(
-                                  result.map((el) =>
-                                    item[`${Object.keys(item)[4]}`] ===
-                                    el[`${Object.keys(el)[4]}`]
-                                      ? {
-                                          ...el,
-                                          [Object.keys(item)[17]]:
-                                            e.target.value,
-                                        }
-                                      : el
-                                  )
-                                )
-                              }
-                            />
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[17]]}
                           </td>
                           <td className="px-4 py-1 text-right">
-                            <input
-                              type="number"
-                              value={item[Object.keys(item)[18]]}
-                              className="px-auto outline-none border-b-2 w-16 "
-                              min="1"
-                              max="10"
-                              onChange={(e) =>
-                                setResult(
-                                  result.map((el) =>
-                                    item[`${Object.keys(item)[4]}`] ===
-                                    el[`${Object.keys(el)[4]}`]
-                                      ? {
-                                          ...el,
-                                          [Object.keys(item)[18]]:
-                                            e.target.value,
-                                        }
-                                      : el
-                                  )
-                                )
-                              }
-                            />
+                            {item[Object.keys(item)[18]]}
                           </td>
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
                             <input
                               type="number"
                               value={item[Object.keys(item)[19]]}
                               className="px-auto outline-none border-b-2 w-12 "
-                              min="1"
-                              max="10"
                               onChange={(e) =>
                                 setResult(
                                   result.map((el) =>
@@ -306,10 +325,8 @@ const RPTable = (props) => {
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
                             <input
                               type="number"
-                              value={item[Object.keys(item)[20]]}
+                              value={item[Object.keys(item)[21]]}
                               className="px-auto outline-none border-b-2 w-16"
-                              min="1"
-                              max="10"
                               onChange={(e) =>
                                 setResult(
                                   result.map((el) =>
@@ -317,7 +334,7 @@ const RPTable = (props) => {
                                     el[`${Object.keys(el)[4]}`]
                                       ? {
                                           ...el,
-                                          [Object.keys(item)[20]]:
+                                          [Object.keys(item)[21]]:
                                             e.target.value,
                                         }
                                       : el
@@ -340,8 +357,6 @@ const RPTable = (props) => {
                               type="number"
                               value={item[Object.keys(item)[25]]}
                               className="px-auto outline-none border-b-2 w-16"
-                              min="1"
-                              max="10"
                               onChange={(e) =>
                                 setResult(
                                   result.map((el) =>
@@ -362,8 +377,6 @@ const RPTable = (props) => {
                             <input
                               value={item[Object.keys(item)[27]]}
                               className="px-auto outline-none border-b-2 w-16"
-                              min="1"
-                              max="10"
                               type="number"
                               onChange={(e) =>
                                 setResult(
@@ -386,132 +399,72 @@ const RPTable = (props) => {
                     })}
                   </tbody>
                 </table>
+
+                <div className=" text-black text-xs font-bold w-1/4">
+                  {/* Display the sum values */}
+                  <p className=" flex justify-between">
+                    <span className="w-full">
+                      {" "}
+                      Dec 23-24 Revised Fcst Qty Sum:{" "}
+                    </span>
+
+                    <small className="text-xs">
+                      {sumValues["Dec 23-24 Revised Fcst Qty"]}
+                    </small>
+                  </p>
+                  <p className=" flex justify-between">
+                    <span className="w-full"> Dec 23-24 Urgent Qty Sum: </span>
+
+                    <small className="text-xs">
+                      {sumValues["Dec 23-24 Urgent Qty"]}
+                    </small>
+                  </p>
+                  <p className=" flex justify-between">
+                    <span className="w-full"> Jan 23-24 Fcst Qty Sum:</span>
+
+                    <small className="text-xs">
+                      {sumValues["Jan 23-24 Fcst Qty"]}
+                    </small>
+                  </p>
+                  <p className=" flex justify-between">
+                    <span className="w-full"> Expected Return Qty Sum:</span>
+
+                    <small className="text-xs">
+                      {sumValues["Expected Return Qty"]}
+                    </small>
+                  </p>
+
+                  <p className=" flex justify-between">
+                    <span className="w-full">No of Rows Count: </span>
+
+                    <small className="text-xs">{result.length}</small>
+                  </p>
+                </div>
               </div>
-              <nav
-                class=" bg-white text-black flex flex-col md:flex-row-reverse justify-between items-start md:items-center space-y-3 md:space-y-0 p-1"
-                aria-label="Table navigation"
-              >
-                <span class="text-sm font-normal text-black">
-                  Showing
-                  <span class="font-semibold text-gray-900 ">1-10</span>
-                  of
-                  <span class="font-semibold text-gray-900 ">1000</span>
-                </span>
-                <ul class="inline-flex items-stretch -space-x-px">
-                  <li>
-                    <a
-                      href="#"
-                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-700 bg-blue-500 rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
-                    >
-                      <span class="sr-only">Previous</span>
-                      <svg
-                        class="w-5 h-5"
-                        aria-hidden="true"
-                        fill="currentColor"
-                        viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      aria-current="page"
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:bg-blue-500 dark:hover:text-white"
-                    >
-                      1
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:bg-blue-500 dark:hover:text-white"
-                    >
-                      2
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-blue-500 dark:text-white"
-                    >
-                      3
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700 dark:bg-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
-                    >
-                      ...
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-blue-500  dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
-                    >
-                      100
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-blue-500 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
-                    >
-                      <span class="sr-only">Next</span>
-                      <svg
-                        class="w-5 h-5"
-                        aria-hidden="true"
-                        fill="currentColor"
-                        viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
             </div>
           </div>
         </section>
       </div>
-      {/* <div className="mt-12 flex self-end">
-        <button
-          onClick={() => props.formType("Upload")}
-          className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-lg"
-        >
-          Next
-        </button>
-      </div> */}
 
       <div className="my-2 flex self-end ">
         <div className="flex items-center justify-end w-full gap-4 ">
-          <button
-            onClick={() => props.formType("Upload")}
-            className={`text-center rounded-md hover:bg-green-500 ${
-              formActive ? "bg-green-400" : "bg-gray-400"
-            }  text-white py-1 px-4 text-sm`}
-          >
-            Prev
-          </button>
+          {router.query.formType === "Add" && (
+            <button
+              onClick={() => props.formType("Upload")}
+              className={`text-center w-[8.5em] rounded-md hover:bg-green-500 ${
+                formActive ? "bg-green-400" : "bg-gray-400"
+              }  text-white py-1 px-4 text-sm`}
+            >
+              Prev
+            </button>
+          )}
+
           <button
             onClick={() => {
-              props.setResultTable(result);
+              props.setTableData(result);
               props.formType("RPSummary");
             }}
-            className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
+            className="text-center  w-[8.5em] rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
           >
             Next
           </button>

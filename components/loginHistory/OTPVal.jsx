@@ -20,7 +20,7 @@ const OTPVal = () => {
 
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
   const handleVerify = async (e) => {
@@ -35,11 +35,15 @@ const OTPVal = () => {
     }
     const payload = {
       phone_otp: otp,
-      uid: uid
+      uid: uid,
     };
 
     try {
-      const resp = await axios.post(`${url}/api/verify_otp`, JSON.stringify(payload), { headers: headers });
+      const resp = await axios.post(
+        `${url}/api/verify_otp`,
+        JSON.stringify(payload),
+        { headers: headers }
+      );
       const respdata = await resp.data;
 
       console.log("uid", respdata?.data?.uid);
@@ -96,7 +100,9 @@ const OTPVal = () => {
               <div className="relative top-[1rem] flex flex-col items-center justify-center">
                 <Image src={Logo}></Image>
                 <div className=" ml-4 mt-4 flex flex-wrap items-center justify-center text-center">
-                  <h2 className="text-black text-lg w-3/4">Enter the OTP you received at {phone_number}</h2>
+                  <h2 className="text-black text-lg w-3/4">
+                    Enter the OTP you received at {phone_number}
+                  </h2>
                 </div>
               </div>
 
@@ -133,8 +139,15 @@ const OTPVal = () => {
                 <h2 className="text-gray-600">or sign up using</h2>
                 <div className="icons flex items-center justify-center gap-2 mt-2 mb-4">
                   <BsFacebook className="text-blue-600" size={26}></BsFacebook>
-                  <AiFillTwitterCircle className="text-blue-500" size={29} color="blue"></AiFillTwitterCircle>
-                  <AiFillGoogleCircle className="text-red-600" size={29}></AiFillGoogleCircle>
+                  <AiFillTwitterCircle
+                    className="text-blue-500"
+                    size={29}
+                    color="blue"
+                  ></AiFillTwitterCircle>
+                  <AiFillGoogleCircle
+                    className="text-red-600"
+                    size={29}
+                  ></AiFillGoogleCircle>
                 </div>
               </div>
             </div>

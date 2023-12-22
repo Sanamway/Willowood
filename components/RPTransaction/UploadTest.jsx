@@ -6,13 +6,12 @@ import { useRouter } from "next/router";
 export default function DragAndDrop(props) {
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef(null);
-  const [files, setFiles] = useState(null);
+
   const router = useRouter();
   const [jsonData, setJsonData] = useState("");
   function handleChange(e) {
     e.preventDefault();
-    console.log("File has been added", e.target.file);
-    setFiles(e.target.files[0]);
+    props.setFiles(e.target.files[0]);
   }
 
   const handleConvert = (file) => {
@@ -36,13 +35,13 @@ export default function DragAndDrop(props) {
   console.log("lot", jsonData);
 
   useEffect(() => {
-    handleConvert(files);
-  }, [files]);
+    handleConvert(props.files);
+  }, [props.files]);
 
-  console.log("kjk", files);
+  console.log("kjk", props.files);
 
   function handleSubmitFile(e) {
-    if (files.length === 0) {
+    if (props.files.length === 0) {
       // no file has been submitted
     } else {
       // write submit logic here
@@ -55,7 +54,7 @@ export default function DragAndDrop(props) {
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       for (let i = 0; i < e.dataTransfer.files["length"]; i++) {
-        setFiles((prevState) => [...prevState, e.dataTransfer.files[i]]);
+        props.setFiles((prevState) => [...prevState, e.dataTransfer.files[i]]);
       }
     }
   }
@@ -79,7 +78,7 @@ export default function DragAndDrop(props) {
   }
 
   function removeFile(fileName, idx) {
-    setFiles(null);
+    props.setFiles(null);
   }
 
   function openFileExplorer() {
@@ -105,7 +104,7 @@ export default function DragAndDrop(props) {
           type="file"
           multiple={true}
           onChange={handleChange}
-          accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"
+          accept=".xlsx,.xls"
         />
 
         <div className="flex flex-col gap-2 text-center items-center ">
@@ -126,9 +125,9 @@ export default function DragAndDrop(props) {
 
         <div className="flex flex-col items-start p-3 h-[150px] overflow-y-auto my-4 chat-scrollbar">
           <div className="flex flex-row space-x-5 py-1 justify-between w-full ">
-            <div>{files?.name}</div>
+            <div>{props.files?.name}</div>
 
-            {files && (
+            {props.files && (
               <IoIosRemoveCircleOutline
                 onClick={() => removeFile()}
                 size={20}
@@ -145,13 +144,28 @@ export default function DragAndDrop(props) {
           <span className="p-2 text-white">Submit</span>
         </button> */}
       </form>
-      <div className="mt-12 flex items-center justify-end mx-8">
+      <div className="mt-12 flex items-center justify-end mx-8 gap-4">
+      <button
+          onClick={() => {
+            router.push("/rollingplans");
+          }}
+          className="text-center rounded-md bg-blue-500 text-white py-1 px-4 text-sm"
+        >
+          Back to Rolling Page
+        </button>
         <button
-          onClick={() => props.formType("RPTable")}
+          onClick={() => {
+            if (!props.files) {
+              window.alert("Please upload the rooling plan template xls file");
+            } else {
+              props.formType("RPTable");
+            }
+          }}
           className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
         >
           Next
         </button>
+        
       </div>
     </div>
   );

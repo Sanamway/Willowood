@@ -18,14 +18,16 @@ const ProductCategory = () => {
 
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
   // const payload
 
   const gettingPrdData = async () => {
     try {
-      const resp = await axios.get(`${url}/api/get_product_category`, { headers: headers });
+      const resp = await axios.get(`${url}/api/get_product_category`, {
+        headers: headers,
+      });
       const respdata = await resp.data.data;
       setPrdData(respdata);
       console.log("prd", respdata);
@@ -55,7 +57,7 @@ const ProductCategory = () => {
     { label: "Id", key: "pcat_id" },
     { label: "Product Category", key: "pcat_name" },
     { label: "Comapny", key: "c_id" },
-    { label: "Status", key: "isDeleted" }
+    { label: "Status", key: "isDeleted" },
   ];
 
   return (
@@ -71,7 +73,9 @@ const ProductCategory = () => {
           onDeletedData={resetData}
         ></ConfirmModal>
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">Product Category</h2>
+          <h2 className="font-arial font-normal text-3xl  py-2">
+            Product Category
+          </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
@@ -81,15 +85,24 @@ const ProductCategory = () => {
                     placeholder="Search"
                     className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
                   />
-                  <button type="submit" className="bg-blue-500 text-white rounded-r-md p-1 ">
-                    <AiOutlineSearch className="mx-2 my-1" size={20}></AiOutlineSearch>
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white rounded-r-md p-1 "
+                  >
+                    <AiOutlineSearch
+                      className="mx-2 my-1"
+                      size={20}
+                    ></AiOutlineSearch>
                   </button>
                 </form>
               </div>
             </div>
             <h2>
               <CSVLink data={prdData} headers={csvHeaders}>
-                <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
+                <TbFileDownload
+                  className="text-green-600"
+                  size={34}
+                ></TbFileDownload>
               </CSVLink>
             </h2>
 
@@ -106,7 +119,7 @@ const ProductCategory = () => {
               onClick={() => {
                 router.push({
                   pathname: "/form/product_category",
-                  query: { type: "CREATE" }
+                  query: { type: "CREATE" },
                 });
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
@@ -147,7 +160,7 @@ const ProductCategory = () => {
                           router.push({
                             pathname: "/form/product_category",
 
-                            query: { type: "view", id: item?.pcat_id }
+                            query: { type: "view", id: item?.pcat_id },
                           });
                         }}
                         className="b text-black   hover:text-blue-500  "
@@ -158,7 +171,7 @@ const ProductCategory = () => {
                         onClick={() => {
                           router.push({
                             pathname: "/form/product_category",
-                            query: { type: "Edit", id: item?.pcat_id }
+                            query: { type: "Edit", id: item?.pcat_id },
                           });
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
@@ -174,9 +187,15 @@ const ProductCategory = () => {
                         Delete
                       </button>
                     </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.pcat_id}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.pcat_name}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.cmpny_name}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.pcat_id}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.pcat_name}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.cmpny_name}
+                    </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.isDeleted ? "Disabled" : "Enabled"}
                     </td>

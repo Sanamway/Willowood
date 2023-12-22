@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 
 const ForgetPassForm = () => {
-    const router = useRouter()
+  const router = useRouter();
   return (
     <>
       <div className="flex w-full h-screen font-arial">
@@ -19,13 +19,15 @@ const ForgetPassForm = () => {
                 <Image src={Logo}></Image>
               </div>
               <div className="flex flex-col items-center justify-center mt-4">
-                <h2 className="text-lg text-black font-semibold">Reset Password</h2>
+                <h2 className="text-lg text-black font-semibold">
+                  Reset Password
+                </h2>
                 <h4 className="text-black mt-2">Choose a new Password</h4>
               </div>
               <div className="flex flex-col justify-between mt-8 mx-12 ">
                 <label className="flex  text-black items-center gap-1 font-semibold">
                   <FaUser></FaUser>
-                  New Password 
+                  New Password
                 </label>
                 <input
                   className="bg-transparent text-black py-1.5 max-w-full text-start outline-none border-0 placeholder:text-black text-sm border-black border-b-2 border-white-200"
@@ -37,7 +39,7 @@ const ForgetPassForm = () => {
               <div className="flex flex-col justify-between mt-8 mx-12 ">
                 <label className="flex  text-black items-center gap-1 font-semibold">
                   <FaUser></FaUser>
-                  Confirm Password 
+                  Confirm Password
                 </label>
                 <input
                   className="bg-transparent text-black py-1.5 max-w-full text-start outline-none border-0 placeholder:text-black text-sm border-black border-b-2 border-white-200"
@@ -70,8 +72,15 @@ const ForgetPassForm = () => {
                 <h2 className="text-gray-600">or sign up using</h2>
                 <div className="icons flex items-center justify-center gap-2 mt-2 mb-4">
                   <BsFacebook className="text-blue-600" size={26}></BsFacebook>
-                  <AiFillTwitterCircle className="text-blue-500" size={29} color="blue"></AiFillTwitterCircle>
-                  <AiFillGoogleCircle className="text-red-600" size={29}></AiFillGoogleCircle>
+                  <AiFillTwitterCircle
+                    className="text-blue-500"
+                    size={29}
+                    color="blue"
+                  ></AiFillTwitterCircle>
+                  <AiFillGoogleCircle
+                    className="text-red-600"
+                    size={29}
+                  ></AiFillGoogleCircle>
                 </div>
               </div>
             </div>

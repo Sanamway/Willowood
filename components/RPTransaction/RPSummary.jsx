@@ -23,7 +23,7 @@ const RPSummary = (props) => {
 
   //modal state
   const [isOpen, setisOpen] = useState(false);
-
+  const [apiMessage, setApiMessage] = useState("");
   const submitHandle = (status) => {
     updateRollingPlanStatus(status);
     setisOpen(true);
@@ -73,21 +73,21 @@ const RPSummary = (props) => {
       } else {
         return;
       }
-      const data = props.resultTable.map((item) => {
+      const data = props.tableData.map((item) => {
         return {
           t_year: router.query.yr,
           m_year: router.query.mYr,
           plan_id: router.query.planId,
           tran_id: router.query.tranId,
-          matnr: item[Object.keys(item)[4]],
-          rp_qty: item[Object.keys(item)[17]],
-          rp_value: item[Object.keys(item)[18]],
-          rp_qty_revised: item[Object.keys(item)[19]],
-          rp_val_revised: item[Object.keys(item)[20]],
-          rp_qty_Urgent: item[Object.keys(item)[21]],
-          nx_rp_qty: item[Object.keys(item)[25]],
-          nx_rp_val: item[Object.keys(item)[26]],
-          ret_qty: item[Object.keys(item)[27]],
+          matnr: Number(item[Object.keys(item)[4]]),
+          rp_qty: Number(item[Object.keys(item)[17]]),
+          rp_value: Number(item[Object.keys(item)[18]]),
+          rp_qty_revised: Number(item[Object.keys(item)[19]]),
+          rp_val_revised: Number(item[Object.keys(item)[20]]),
+          rp_qty_Urgent: Number(item[Object.keys(item)[21]]),
+          nx_rp_qty: Number(item[Object.keys(item)[25]]),
+          nx_rp_val: Number(item[Object.keys(item)[26]]),
+          ret_qty: Number(item[Object.keys(item)[27]]),
           w_id: Number(router.query.wId),
           t_id: Number(router.query.tId),
           r_id: Number(router.query.rId),
@@ -108,11 +108,86 @@ const RPSummary = (props) => {
         })
         .then((res) => {
           if (!res) return;
+          setApiMessage(res.data.message);
           submitHandle(status);
-          toast.success("Rolling plan added successfully!");
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.error;
+
+      setApiMessage(errorMessage);
+      submitHandle(status);
+    }
+  };
+
+  const handleEditRsp = async (status) => {
+    try {
+      let endPoint;
+
+      if (JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6) {
+        endPoint = `api/update_rolling_tm?tm=${true}`;
+      } else if (
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5
+      ) {
+        endPoint = `api/add_rolling_tm?rm=${true}`;
+      } else if (
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
+      ) {
+        endPoint = `api/add_rolling_tm?zm=${true}`;
+      } else if (
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
+      ) {
+        endPoint = `api/add_rolling_tm?bum=${true}`;
+      } else if (
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10
+      ) {
+        endPoint = `api/add_rolling_tm?bgm=${true}`;
+      } else {
+        return;
+      }
+      const data = props.tableData.map((item) => {
+        return {
+          t_year: router.query.yr,
+          m_year: router.query.mYr,
+          plan_id: router.query.planId,
+          tran_id: router.query.tranId,
+          matnr: Number(item[Object.keys(item)[4]]),
+          rp_qty: Number(item[Object.keys(item)[17]]),
+          rp_value: Number(item[Object.keys(item)[18]]),
+          rp_qty_revised: Number(item[Object.keys(item)[19]]),
+          rp_val_revised: Number(item[Object.keys(item)[20]]),
+          rp_qty_Urgent: Number(item[Object.keys(item)[21]]),
+          nx_rp_qty: Number(item[Object.keys(item)[25]]),
+          nx_rp_val: Number(item[Object.keys(item)[26]]),
+          ret_qty: Number(item[Object.keys(item)[27]]),
+          w_id: Number(router.query.wId),
+          t_id: Number(router.query.tId),
+          r_id: Number(router.query.rId),
+          z_id: Number(router.query.zId),
+          bu_id: Number(router.query.buId),
+          bg_id: Number(router.query.bgId),
+          c_id: Number(router.query.cId),
+          subm_t_date: new Date(),
+          rp_status: status,
+          c_name: JSON.parse(window.localStorage.getItem("userinfo")).c_name,
+          ul_name: JSON.parse(window.localStorage.getItem("userinfo")).ul_name,
+          user_id: JSON.parse(window.localStorage.getItem("userinfo")).user_id,
+        };
+      });
+      const respond = await axios
+        .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
+          headers: headers,
+        })
+        .then((res) => {
+          console.log("mkl", res);
+          if (!res) return;
+          setApiMessage(res.data.message);
+          submitHandle(status);
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.error;
+
+      setApiMessage(errorMessage);
+      submitHandle(status);
     }
   };
 
@@ -120,8 +195,13 @@ const RPSummary = (props) => {
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
       <SubmitModal
         isOpen={isOpen}
-        onClose={() => setisOpen(false)}
+        onClose={() => {
+          setisOpen(false);
+          setApiMessage("")
+          router.push("/rollingplans");
+        }}
         onOpen={() => setisOpen(true)}
+        message={apiMessage}
       ></SubmitModal>
       <div className=" flex justify-center w-full my-">
         {/* <div className="bcbtn px-2">
@@ -140,24 +220,28 @@ const RPSummary = (props) => {
       <div className="options flex items-center justify-between w-full px-2 py-">
         <div className="zrtdepoty flex items-center justify-between w-full">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-xs text-gray-700">ZRT</h2>
-            <h2 className="font-bold text-xs text-gray-700 ">
-              South Region All Territories
+            <h2 className="text-xs text-gray-700 font-bold">
+              ZRT: {router.query.zrt}
             </h2>
           </div>
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-xs text-gray-700">Depot :</h2>
-            <h2 className="font-bold text-xs text-gray-700">Hyderabad</h2>
+            <h2 className="text-xs text-gray-700">Depot:</h2>
+            <h2 className="font-bold text-xs text-gray-700">
+              {router.query.depot}
+            </h2>
           </div>
         </div>
         {/* <div className="categoryoptions flex items-center justify-center w-full">
           <div className="category flex items-center justify-center px-2">
             <h2 className="text-xs text-gray-700 font-bold">Segment</h2>
             <select
-              className="w-full text-xs text-gray-700 px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              className="w-full text-xs text-gray-700 px-3 py- border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
             >
-              <option value="" className="focus:outline-none focus:border-b bg-white">
+              <option
+                value=""
+                className="focus:outline-none focus:border-b bg-white"
+              >
                 Option
               </option>
               <option value="Cat1">Cat1</option>
@@ -168,10 +252,13 @@ const RPSummary = (props) => {
           <div className="category flex items-center justify-center px-2">
             <h2 className="text-xs text-gray-700 font-bold">Brand</h2>
             <select
-              className="w-full px-3 text-xs text-gray-700 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              className="w-full px-3 text-xs text-gray-700 py- border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
             >
-              <option value="" className="focus:outline-none focus:border-b bg-white">
+              <option
+                value=""
+                className="focus:outline-none focus:border-b bg-white"
+              >
                 Option
               </option>
               <option value="Prod">Prod 1</option>
@@ -180,54 +267,17 @@ const RPSummary = (props) => {
             </select>
           </div>
         </div> */}
-        <div className="flex items-center justify-center w-full text-xs font-bold">
-          <div className="w-full lg:w-auto px-2">
-            <div className="flex items-center whitespace-nowrap ">
-              <input
-                type="checkbox"
-                id="fairCheckbox"
-                className="mr-2 "
-                disabled={formActive}
-                checked={selectedCheckbox === "fair"}
-                onChange={() => handleCheckboxChange("fair")}
-              />
-              <label htmlFor="fairCheckbox">Product Segment</label>
-            </div>
+        <div className="status xls download flex items-center justify-end w-full gap-8">
+          <div className="status flex ">
+            <h2 className="text-xs text-gray-700">Stage :</h2>
+            <h2 className="font-bold text-xs text-gray-700">
+              {router.query.status}
+            </h2>
           </div>
-
-          <div className="w-full lg:w-auto px-2">
-            <div className="flex items-center whitespace-nowrap">
-              <input
-                type="checkbox"
-                id="goodCheckbox"
-                className="mr-2"
-                disabled={formActive}
-                checked={selectedCheckbox === "good"}
-                onChange={() => handleCheckboxChange("good")}
-              />
-              <label htmlFor="goodCheckbox">Product Brand</label>
-            </div>
-          </div>
-
-          <div className="w-full lg:w-auto px-2">
-            <div className="flex items-center whitespace-nowrap">
-              <input
-                type="checkbox"
-                id="goodCheckbox"
-                className="mr-2"
-                disabled={formActive}
-                checked={selectedCheckbox === "cat"}
-                onChange={() => handleCheckboxChange("cat")}
-              />
-              <label htmlFor="goodCheckbox">Category</label>
-            </div>
-          </div>
-        </div>
-        <div className="status xls download flex items-center justify-end w-full">
           <div className="status flex gap-1">
             <h2 className="text-xs text-gray-700">Status :</h2>
             <h2 className="font-bold text-xs text-gray-700">
-              4/10 Territories Submitted
+              {router.query.stage}
             </h2>
           </div>
         </div>
@@ -322,28 +372,39 @@ const RPSummary = (props) => {
         <div className="flex items-center justify-end w-full gap-2 ">
           <button
             onClick={() => props.formType("RPTable")}
-            className={`text-center rounded-md hover:bg-green-500 ${
+            className={`text-center w-[8.5em] rounded-md hover:bg-green-500 ${
               formActive ? "bg-green-400" : "bg-gray-400"
             }  text-white py-1 px-4 text-sm`}
           >
             Prev
           </button>
-          <button
-            // onClick={() => props.formType("RPSummary")}
-            onClick={() => handleSaveRsp("Draft Submit")}
-            className={`text-center rounded-md hover:bg-green-500 ${
-              formActive ? "bg-green-400" : "bg-blue-500"
-            }  text-white py-1 px-4 text-sm`}
-          >
-            Save as Draft
-          </button>
-
-          <button
-            className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
-            onClick={() => handleSaveRsp("Final Submitted")}
-          >
-            Final Submit
-          </button>
+          {router.query.formType === "Add" && (
+            <button
+              // onClick={() => props.formType("RPSummary")}
+              onClick={() => {
+                router.query.formType === "Add"
+                  ? handleSaveRsp("Draft Submit")
+                  : handleEditRsp("Draft Submit");
+              }}
+              className={`text-center rounded-md hover:bg-green-500 ${
+                formActive ? "bg-green-400" : "bg-blue-500"
+              }  text-white py-1 px-4 text-sm`}
+            >
+              Save as Draft
+            </button>
+          )}
+          {router.query.formType !== "View" && (
+            <button
+              className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
+              onClick={() => {
+                router.query.formType === "Add"
+                  ? handleSaveRsp("Final Submitted")
+                  : handleEditRsp("Final Submitted");
+              }}
+            >
+              Final Submit
+            </button>
+          )}
         </div>
       </div>
     </section>

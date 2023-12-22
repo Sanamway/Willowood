@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { FaDownload } from "react-icons/fa";
@@ -21,6 +21,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import { Dialog, Transition } from "@headlessui/react";
 
 import moment from "moment";
 
@@ -226,6 +227,7 @@ const RollingPlans = () => {
     yr: new Date(),
     month: null,
   });
+
   useEffect(() => {
     const roleId = JSON.parse(window.localStorage.getItem("userinfo")).role_id;
     switch (roleId) {
@@ -555,7 +557,7 @@ const RollingPlans = () => {
       });
 
       const apires = await respond.data.data;
-      console.log("jkl", apires);
+
       setAllTableData(apires);
     } catch (error) {
       if (!error) return;
@@ -624,24 +626,6 @@ const RollingPlans = () => {
     w,
     tDes
   ) => {
-    console.log(
-      "Moye Moye",
-      planId,
-      tranId,
-      yr,
-      mYr,
-      depot,
-      zrt,
-      status,
-      stage,
-      bg,
-      bu,
-      z,
-      r,
-      t,
-      c,
-      w
-    );
     switch (status) {
       case "Close Period":
         return (
@@ -662,7 +646,28 @@ const RollingPlans = () => {
             >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() => {
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                  planId,
+                  tranId,
+                  yr,
+                  mYr,
+                  depot,
+                  zrt,
+                  status,
+                  stage,
+                  bg,
+                  bu,
+                  z,
+                  r,
+                  t,
+                  c,
+                  w,
+                });
+              }}
+            >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -698,13 +703,55 @@ const RollingPlans = () => {
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit")
-              }
+              onClick={() => {
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit");
+                router.push({
+                  pathname: "/rptransaction",
+                  query: {
+                    planId: planId,
+                    tranId: tranId,
+                    yr: yr,
+                    mYr: mYr,
+                    depot: depot,
+                    zrt: zrt,
+                    status: status,
+                    stage: stage,
+                    bgId: bg,
+                    buId: bu,
+                    zId: z,
+                    rId: r,
+                    tId: t,
+                    cId: c,
+                    wId: w,
+                    formType: "Edit",
+                  },
+                });
+              }}
             >
               <CiEdit className="text-slate-400" /> Edit
             </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() => {
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                  planId,
+                  tranId,
+                  yr,
+                  mYr,
+                  depot,
+                  zrt,
+                  status,
+                  stage,
+                  bg,
+                  bu,
+                  z,
+                  r,
+                  t,
+                  c,
+                  w,
+                });
+              }}
+            >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -739,13 +786,63 @@ const RollingPlans = () => {
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit")
-              }
+              onClick={() => {
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit", {
+                  planId,
+                  tranId,
+                  yr,
+                  mYr,
+                  depot,
+                  zrt,
+                  status,
+                  stage,
+                  bg,
+                  bu,
+                  z,
+                  r,
+                  t,
+                  c,
+                  w,
+                });
+              }}
             >
               <CiEdit className="text-slate-400" /> Edit
             </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center"
+              onClick={() => {
+                setIsOpen(true);
+                setModalData({
+                  message: `You want to delete ${tranId}`,
+                  type: "Delete",
+                  data: { mYr, planId, tranId, t, tDes, yr },
+                });
+              }}
+            >
+              <CiEdit className="text-slate-400" /> Delete
+            </li>
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() => {
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                  planId,
+                  tranId,
+                  yr,
+                  mYr,
+                  depot,
+                  zrt,
+                  status,
+                  stage,
+                  bg,
+                  bu,
+                  z,
+                  r,
+                  t,
+                  c,
+                  w,
+                });
+              }}
+            >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -779,7 +876,28 @@ const RollingPlans = () => {
               <FaDownload className="text-slate-400" /> Download RP
             </li>
 
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() => {
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                  planId,
+                  tranId,
+                  yr,
+                  mYr,
+                  depot,
+                  zrt,
+                  status,
+                  stage,
+                  bg,
+                  bu,
+                  z,
+                  r,
+                  t,
+                  c,
+                  w,
+                });
+              }}
+            >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -834,20 +952,14 @@ const RollingPlans = () => {
                     tId: t,
                     cId: c,
                     wId: w,
+                    formType: "Add",
                   },
                 });
               }}
             >
               <FaUpload className="text-slate-400" /> Upload RP
             </li>
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit")
-              }
-            >
-              <CiEdit className="text-slate-400" /> Edit
-            </li>
+
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <CgNotes className="text-blue-400" /> Meeting Note
             </li>
@@ -877,14 +989,56 @@ const RollingPlans = () => {
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit")
-              }
+              onClick={() => {
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit");
+                router.push({
+                  pathname: "/rptransaction",
+                  query: {
+                    planId: planId,
+                    tranId: tranId,
+                    yr: yr,
+                    mYr: mYr,
+                    depot: depot,
+                    zrt: zrt,
+                    status: status,
+                    stage: stage,
+                    bgId: bg,
+                    buId: bu,
+                    zId: z,
+                    rId: r,
+                    tId: t,
+                    cId: c,
+                    wId: w,
+                    formType: "Edit",
+                  },
+                });
+              }}
             >
               <CiEdit className="text-slate-400" /> Edit
             </li>
 
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() => {
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                  planId,
+                  tranId,
+                  yr,
+                  mYr,
+                  depot,
+                  zrt,
+                  status,
+                  stage,
+                  bg,
+                  bu,
+                  z,
+                  r,
+                  t,
+                  c,
+                  w,
+                });
+              }}
+            >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -917,7 +1071,28 @@ const RollingPlans = () => {
             >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() => {
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                  planId,
+                  tranId,
+                  yr,
+                  mYr,
+                  depot,
+                  zrt,
+                  status,
+                  stage,
+                  bg,
+                  bu,
+                  z,
+                  r,
+                  t,
+                  c,
+                  w,
+                });
+              }}
+            >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -937,13 +1112,60 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit")
-              }
+              onClick={() => {
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit");
+                router.push({
+                  pathname: "/rptransaction",
+                  query: {
+                    planId: planId,
+                    tranId: tranId,
+                    yr: yr,
+                    mYr: mYr,
+                    depot: depot,
+                    zrt: zrt,
+                    status: status,
+                    stage: stage,
+                    bgId: bg,
+                    buId: bu,
+                    zId: z,
+                    rId: r,
+                    tId: t,
+                    cId: c,
+                    wId: w,
+                    formType: "Edit",
+                  },
+                });
+              }}
             >
               <CiEdit className="text-slate-400" /> Edit
             </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() => {
+                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View");
+                router.push({
+                  pathname: "/rptransaction",
+                  query: {
+                    planId: planId,
+                    tranId: tranId,
+                    yr: yr,
+                    mYr: mYr,
+                    depot: depot,
+                    zrt: zrt,
+                    status: status,
+                    stage: stage,
+                    bgId: bg,
+                    buId: bu,
+                    zId: z,
+                    rId: r,
+                    tId: t,
+                    cId: c,
+                    wId: w,
+                    formType: "View",
+                  },
+                });
+              }}
+            >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -970,9 +1192,11 @@ const RollingPlans = () => {
     tId,
     tDes,
     yr,
-    type
+    type,
+    transfferStat
   ) => {
     try {
+      localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/rsp_download`, {
         headers: headers,
         params: {
@@ -995,10 +1219,7 @@ const RollingPlans = () => {
         },
       });
       const apires = await respond;
-
       const ws = XLSX.utils.json_to_sheet(apires.data.data);
-
-      console.log("nm", apires.data.data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
       if (type === "Download") {
@@ -1006,6 +1227,13 @@ const RollingPlans = () => {
           wb,
           `RSP_${moment(m_year).format("YYYY-MM")}_${tDes}.xlsx`
         );
+
+        setIsOpen(true);
+        setModalData({
+          message: apires.data.message,
+          type: "Download",
+          data: {},
+        });
       } else {
         let keys = Object.keys(apires.data.data[0]);
         // Convert array of objects to array of arrays
@@ -1014,12 +1242,88 @@ const RollingPlans = () => {
           ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
         ];
         localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
+        router.push({
+          pathname: "/rptransaction",
+          query: {
+            planId: transfferStat.planId,
+            tranId: transfferStat.tranId,
+            yr: transfferStat.yr,
+            mYr: transfferStat.mYr,
+            depot: transfferStat.depot,
+            zrt: transfferStat.zrt,
+            status: transfferStat.status,
+            stage: transfferStat.stage,
+            bgId: transfferStat.bg,
+            buId: transfferStat.bu,
+            zId: transfferStat.z,
+            rId: transfferStat.r,
+            tId: transfferStat.t,
+            cId: transfferStat.c,
+            wId: transfferStat.w,
+            formType: type,
+          },
+        });
       }
     } catch (error) {
       console.log("mlo", error);
     }
   };
 
+  const handleDeleteRps = async (data) => {
+    try {
+      localStorage.setItem("RSP", JSON.stringify([]));
+      const respond = axios.get(`${url}/api/delete_rolling_tm`, {
+        headers: headers,
+        params: {
+          plan_id: data.planId,
+          tran_id: data.tranId,
+          t_year: data.yr,
+          m_year: data.mYr,
+          t_id: data.t,
+          tm: true,
+        },
+      });
+      const apires = await respond;
+      console.log("noye", apires.data.message);
+      setIsOpen(true);
+      setModalData({
+        message: apires.data.message,
+        type: "DeleteRes",
+        data: {},
+      });
+      getAllSalesPlanStatus(
+        filterState.yr || null,
+        filterState.month || null,
+        filterState.bgId || null,
+        filterState.buId || null,
+        filterState.zId || null,
+        filterState.rId || null,
+        filterState.tId
+      );
+    } catch (error) {
+      const errorMessage = error?.response?.data?.error;
+      setModalData({
+        message: errorMessage,
+        type: "DeleteRes",
+        data: {},
+      });
+    }
+  };
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalData, setModalData] = useState({
+    message: "",
+    type: "",
+    data: {},
+  });
+  const handleClose = () => {
+    setIsOpen(false);
+    setModalData({
+      message: "",
+      type: "",
+      data: {},
+    });
+  };
   return (
     <Layout>
       <div className="h-screen  w-full font-arial bg-white  ">
@@ -1240,7 +1544,7 @@ const RollingPlans = () => {
                           <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">
                             R S P-({item.tran_id})
                           </p>
-                          <p className="text-gray-900 whitespace-no-wrap text-[0.6rem]">
+                          <p className="text-gray-900 whitespace-no-wrap text-[0.6rem] font-bold">
                             {moment(item.m_year).format("MMM YYYY")} (due date{" "}
                             {moment(item.lastsubm_t_date).format("Do")})
                           </p>
@@ -1367,6 +1671,91 @@ const RollingPlans = () => {
           </div>
         </div>
       </div>
+      <Toaster position="bottom-center" reverseOrder={false} />
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={handleClose}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-[1.99rem] font-medium leading-6 text-center text-gray-900"
+                  >
+                    {modalData.type === "Download"
+                      ? "Rolling Plan"
+                      : "Delete Rollng Plan"}
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    {modalData.type === "Download" && (
+                      <p className="text-md text-center text-gray-500 italic">
+                        {modalData.message}
+                      </p>
+                    )}
+                    {modalData.type === "Delete" && (
+                      <p className="text-md text-center text-gray-500">
+                        {modalData.message}
+                      </p>
+                    )}
+                    {modalData.type === "DeleteRes" && (
+                      <p className="text-md text-center text-gray-500">
+                        {modalData.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-center gap-4">
+                    {modalData.type === "Delete" && (
+                      <button
+                        className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-white-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        onClick={() => handleDeleteRps(modalData.data)}
+                      >
+                      Yes
+                      </button>
+                    )}
+                    {modalData.type === "Delete" ? 
+                       <button
+                       type="button"
+                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                       onClick={handleClose}
+                     >
+                       No
+                     </button>
+                    :   <button
+                    type="button"
+                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    onClick={handleClose}
+                  >
+                    Close
+                  </button>}
+                  
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </Layout>
   );
 };

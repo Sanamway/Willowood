@@ -16,7 +16,9 @@ const DealerForm = () => {
     <Layout>
       <div className="   w-full font-arial bg-white text-black mb-12 ">
         <div className="flex flex-row justify-between  h-max  px-5">
-          <h2 className="font-arial font-normal text-xl lg:text-3xl  py-2">Dealer Details </h2>
+          <h2 className="font-arial font-normal text-xl lg:text-3xl  py-2">
+            Dealer Details{" "}
+          </h2>
           <span className="flex items-center gap-2 cursor-pointer">
             <AiTwotoneHome className="text-red-500" size={34} />
           </span>
@@ -277,9 +279,6 @@ const DealerForm = () => {
               </div>
             </button>
 
-           
-           
-
             <button
               onClick={() => setFormType("BusinessInfo")}
               className={`${
@@ -413,7 +412,9 @@ const DealerForm = () => {
 
         {formType === "Basic" && <Basic formType={setFormType} />}
         {formType === "Personal" && <Personal formType={setFormType} />}
-        {formType === "AdditionalInfo" && <AdditionalInfo formType={setFormType} />}
+        {formType === "AdditionalInfo" && (
+          <AdditionalInfo formType={setFormType} />
+        )}
         {formType === "Security" && <SecurityDeposit formType={setFormType} />}
         {formType === "BusinessInfo" && <BusinessInfo formType={setFormType} />}
         {formType === "Assessment" && <Assessment formType={setFormType} />}

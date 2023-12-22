@@ -10,10 +10,14 @@ const LogoutSuccess = () => {
         <h1 className="text-2xl md:text-2xl lg:text-4xl font-normal mb-4 pt-4">
           You have been logged out successfully
         </h1>
-        <p className="mb-4 text-lg md:text-xl lg:text-2xl pt-4">Thank you for using our application.</p>
+        <p className="mb-4 text-lg md:text-xl lg:text-2xl pt-4">
+          Thank you for using our application.
+        </p>
         <div className="flex items-center justify-center">
           <button
-            onClick={() => {router.push('/login')}}
+            onClick={() => {
+              router.push("/login");
+            }}
             className="bg-green-500 px-2 py-1.5 text-white rounded-md font-arial font-"
           >
             Home

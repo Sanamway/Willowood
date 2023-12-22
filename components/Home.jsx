@@ -28,24 +28,24 @@ const HomePage = () => {
   const chatLog = [
     {
       type: "user",
-      message: "Hello, how are you?"
+      message: "Hello, how are you?",
     },
     {
       type: "other",
-      message: "Hi! I'm doing well, thank you for asking."
+      message: "Hi! I'm doing well, thank you for asking.",
     },
     {
       type: "user",
-      message: "That's great to hear!"
+      message: "That's great to hear!",
     },
     {
       type: "other",
-      message: "Yes, indeed. How about you?"
+      message: "Yes, indeed. How about you?",
     },
     {
       type: "user",
-      message: "I'm good too, thanks."
-    }
+      message: "I'm good too, thanks.",
+    },
   ];
 
   const handleSumbit = () => {};
@@ -60,13 +60,10 @@ const HomePage = () => {
       setUser(isLoggedInInLocalStorage);
     }
 
-    if(!localStorage.getItem("uid")){
-      router.push('/login')
+    if (!localStorage.getItem("uid")) {
+      router.push("/login");
     }
-  
   }, []);
-
-  
 
   return (
     <Layout>
@@ -255,7 +252,10 @@ const HomePage = () => {
             <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2 pb-4">
               {cardData?.map((item) => (
                 <div className="flex flex-col items-center justify-center">
-                  <img className="h-[3.5rem] w-[3.5rem] rounded-full" src={item.img}></img>
+                  <img
+                    className="h-[3.5rem] w-[3.5rem] rounded-full"
+                    src={item.img}
+                  ></img>
                   <div className="mt-2 flex flex-col items-center justify-center">
                     <h2 className="text-sm">{item.name}</h2>
                     <h3 className="text-xs">{item.time}</h3>
@@ -286,18 +286,26 @@ const HomePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-2 ">
               <div className="col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4">
                 <div className="flex flex-col justify-center">
-                  <div className="px-1 text-black font-bold text-sm">Satish</div>
+                  <div className="px-1 text-black font-bold text-sm">
+                    Satish
+                  </div>
                   <div className="h-[200px] overflow-y-scroll chat-scrollbar">
                     {chatLog.map((message, index) => (
                       <div
                         key={index}
-                        className={`flex ${message.type === "user" ? "justify-end" : "justify-start"} mb-4`}
+                        className={`flex ${
+                          message.type === "user"
+                            ? "justify-end"
+                            : "justify-start"
+                        } mb-4`}
                       >
                         <div
                           className={`bg-${
                             message.type === "user" ? "green-500" : "gray-700"
                           } px-4 py-2 rounded-lg ${
-                            message.type === "user" ? "text-white" : "text-black "
+                            message.type === "user"
+                              ? "text-white"
+                              : "text-black "
                           } max-w-[50rem] text-xs  `}
                         >
                           {message.message}
@@ -316,7 +324,10 @@ const HomePage = () => {
                       </div>
                     )}
                   </div>
-                  <form onSubmit={handleSumbit} className="flex-none text-sm pt-2 ">
+                  <form
+                    onSubmit={handleSumbit}
+                    className="flex-none text-sm pt-2 "
+                  >
                     <div className="flex rounded-lg border border-gray-200">
                       <input
                         type="text"
@@ -359,18 +370,26 @@ const HomePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-2  ">
               <div className="col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4">
                 <div className="flex flex-col justify-center">
-                  <div className="px-1 text-black font-bold text-sm">Satish</div>
+                  <div className="px-1 text-black font-bold text-sm">
+                    Satish
+                  </div>
                   <div className="h-[200px] overflow-y-scroll chat-scrollbar">
                     {chatLog.map((message, index) => (
                       <div
                         key={index}
-                        className={`flex ${message.type === "user" ? "justify-end" : "justify-start"} mb-4`}
+                        className={`flex ${
+                          message.type === "user"
+                            ? "justify-end"
+                            : "justify-start"
+                        } mb-4`}
                       >
                         <div
                           className={`bg-${
                             message.type === "user" ? "green-500" : "gray-700"
                           } px-4 py-2 rounded-lg ${
-                            message.type === "user" ? "text-white" : "text-black "
+                            message.type === "user"
+                              ? "text-white"
+                              : "text-black "
                           } max-w-[50rem] text-xs  `}
                         >
                           {message.message}
@@ -389,7 +408,10 @@ const HomePage = () => {
                       </div>
                     )}
                   </div>
-                  <form onSubmit={handleSumbit} className="flex-none text-sm pt-2 ">
+                  <form
+                    onSubmit={handleSumbit}
+                    className="flex-none text-sm pt-2 "
+                  >
                     <div className="flex rounded-lg border border-gray-200">
                       <input
                         type="text"

@@ -78,7 +78,7 @@ const Layout = ({ children }) => {
 
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
   const [menusItems, setMenus] = useState([]);
@@ -101,7 +101,7 @@ const Layout = ({ children }) => {
     if (uid) gettingMenuSidebar(uid);
   }, [uid]);
 
-  const checkck = userinfo
+  const checkck = userinfo;
 
   console.log("vdv", checkck);
 
@@ -111,27 +111,51 @@ const Layout = ({ children }) => {
         {/* Sidebar */}
         <div
           className={`flex-shrink-0   ${
-            isOpen ? (isMobile ? " " : "w-[6rem]  ") : isMobile ? "hidden " : "w-[14rem] "
+            isOpen
+              ? isMobile
+                ? " "
+                : "w-[6rem]  "
+              : isMobile
+              ? "hidden "
+              : "w-[14rem] "
           } bg-[#15283c] text-white custom-scrollbar min-h-screen overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-500`}
         >
-          <div className={`flex flex-col ${isOpen ? "items-center" : "items-start"} w-full  `}>
+          <div
+            className={`flex flex-col ${
+              isOpen ? "items-center" : "items-start"
+            } w-full  `}
+          >
             <div className="flex items-center justify-between relative">
               <div className="flex items-center pl-1 gap-4">
                 <div className="userImg flex items-center py-4 mx justify-center">
                   {isOpen ? (
-                    <Image className="rounded-full h-8 w-8" src={Profile} alt="" />
+                    <Image
+                      className="rounded-full h-8 w-8"
+                      src={Profile}
+                      alt=""
+                    />
                   ) : (
                     <div className="flex  items-center justify-center gap-4 ">
-                      <Image className=" h-[4.1rem] w-[4.1rem] rounded-full" src={Profile} alt="" />
+                      <Image
+                        className=" h-[4.1rem] w-[4.1rem] rounded-full"
+                        src={Profile}
+                        alt=""
+                      />
                       <div className="flex flex-col items-start font-sans">
-                        <h2 className="font-sm text-white whitespace-nowrap">{user_name}</h2>
+                        <h2 className="font-sm text-white whitespace-nowrap">
+                          {user_name}
+                        </h2>
                         <div className="flex items-center gap-2">
                           <h2
                             className={`bg-[#00FF00] h-2 w-2 rounded-full ${
-                              uid == 1 ? "animate-ping" : "bg-gray-200 h-2 w-2 rounded-full"
+                              uid == 1
+                                ? "animate-ping"
+                                : "bg-gray-200 h-2 w-2 rounded-full"
                             }`}
                           ></h2>
-                          <h2 className="text-sm text-text-green font-arial">{"Online"}</h2>
+                          <h2 className="text-sm text-text-green font-arial">
+                            {"Online"}
+                          </h2>
                         </div>
                       </div>
                     </div>
@@ -150,17 +174,19 @@ const Layout = ({ children }) => {
                   <div
                     key={_id}
                     className={`flex ${
-                      isOpen ? "flex-col text-[0.7rem] items-center" : "flex-row gap-2 text-[0.8rem] "
+                      isOpen
+                        ? "flex-col text-[0.7rem] items-center"
+                        : "flex-row gap-2 text-[0.8rem] "
                     }  cursor-pointer text-left border-1 rounded-md border-black w-full hover:bg-orange-500  px-2 py-1 `}
                   >
                     <div className="">
-                      <AiOutlineMail
-                        size={20}
-                      ></AiOutlineMail>
+                      <AiOutlineMail size={20}></AiOutlineMail>
                     </div>
                     <h2
                       onClick={() => {
-                        setSubmenu((prev) => (prev == menu.label ? null : menu.label));
+                        setSubmenu((prev) =>
+                          prev == menu.label ? null : menu.label
+                        );
                       }}
                       className={`select-none whitespace-nowrap `}
                     >
@@ -208,10 +234,16 @@ const Layout = ({ children }) => {
                     className=" bg-[#ff5722] p-[0.9rem] lg:p-[0.8rem] h-full cursor-pointer"
                     onClick={collaps}
                   >
-                    <GiHamburgerMenu className="mx-2 my-2 " size={20}></GiHamburgerMenu>
+                    <GiHamburgerMenu
+                      className="mx-2 my-2 "
+                      size={20}
+                    ></GiHamburgerMenu>
                   </div>
                   <div className="lg:max-w-full lg:max-h-full">
-                    <Image src={WillLogo} className="lg:h-[3.4rem] w-2/3 lg:w-full object-cover"></Image>
+                    <Image
+                      src={WillLogo}
+                      className="lg:h-[3.4rem] w-2/3 lg:w-full object-cover"
+                    ></Image>
                   </div>
                 </div>
 
@@ -232,7 +264,10 @@ const Layout = ({ children }) => {
                           alt=""
                           className="h-10 w-10 object-cover border-2 border-yellow-500 rounded-full"
                         />
-                        <Popover as="div" className="relative border-none outline-none z-50">
+                        <Popover
+                          as="div"
+                          className="relative border-none outline-none z-50"
+                        >
                           {({ open }) => (
                             <>
                               <Popover.Button className="focus:outline-none">
@@ -281,7 +316,9 @@ const Layout = ({ children }) => {
             </nav>
           </div>
           {/* Main Content Area */}
-          <div className="flex-grow bg-gray bg-white h-screen overflow-auto">{children}</div>
+          <div className="flex-grow bg-gray bg-white h-screen overflow-auto">
+            {children}
+          </div>
         </div>
       </div>
     </>

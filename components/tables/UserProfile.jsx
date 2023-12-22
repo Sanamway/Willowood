@@ -9,19 +9,19 @@ import axios from "axios";
 import ConfirmModal from "../modals/ConfirmModal";
 import { CSVLink } from "react-csv";
 
-
-
 const UserProfile = () => {
   const router = useRouter();
   const [menuRecords, setMenuRecords] = useState([]);
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
   const gettingMenusData = async () => {
     try {
-      const resp = await axios.get(`${url}/api/get_menu_rights`, { headers: headers });
+      const resp = await axios.get(`${url}/api/get_menu_rights`, {
+        headers: headers,
+      });
       const respData = resp.data.data;
       const uniqueRecords = {};
       respData.forEach((record) => {
@@ -36,7 +36,6 @@ const UserProfile = () => {
       console.error("Error:", error);
     }
   };
-
 
   useEffect(() => {
     gettingMenusData();
@@ -60,7 +59,7 @@ const UserProfile = () => {
   const csvHeaders = [
     { label: "Id", key: "pseg_id" },
     { label: "Role ID", key: "role_id" },
-    { label: "User Profile", key: "U_profile_name" }
+    { label: "User Profile", key: "U_profile_name" },
   ];
 
   const rowdisable = (menu) => {
@@ -75,17 +74,19 @@ const UserProfile = () => {
     <>
       <Layout>
         <div className="h-screen overflow-auto w-full ">
-        <ConfirmModal
-          isOpen={isOpen}
-          onClose={() => setisOpen(false)}
-          onOpen={() => setisOpen(true)}
-          userId={userId}
-          method="delete"
-          endpoints="delete_menu_rights"
-          onDeletedData={resetData}
-        ></ConfirmModal>
+          <ConfirmModal
+            isOpen={isOpen}
+            onClose={() => setisOpen(false)}
+            onOpen={() => setisOpen(true)}
+            userId={userId}
+            method="delete"
+            endpoints="delete_menu_rights"
+            onDeletedData={resetData}
+          ></ConfirmModal>
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-            <h2 className="font-arial font-normal text-md lg:text-2xl whitespace-nowrap  py-2">User Profile</h2>
+            <h2 className="font-arial font-normal text-md lg:text-2xl whitespace-nowrap  py-2">
+              User Profile
+            </h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <div className="search gap-2 mx-8">
                 <div className="container">
@@ -95,16 +96,25 @@ const UserProfile = () => {
                       placeholder="Search"
                       className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
                     />
-                    <button type="submit" className="bg-blue-500 text-white rounded-r-md p-1 ">
-                      <AiOutlineSearch className="mx-2 my-1" size={20}></AiOutlineSearch>
+                    <button
+                      type="submit"
+                      className="bg-blue-500 text-white rounded-r-md p-1 "
+                    >
+                      <AiOutlineSearch
+                        className="mx-2 my-1"
+                        size={20}
+                      ></AiOutlineSearch>
                     </button>
                   </form>
                 </div>
               </div>
               <h2>
-              <CSVLink data={menuRecords} headers={csvHeaders}>
-                <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
-              </CSVLink>
+                <CSVLink data={menuRecords} headers={csvHeaders}>
+                  <TbFileDownload
+                    className="text-green-600"
+                    size={34}
+                  ></TbFileDownload>
+                </CSVLink>
               </h2>
               <h2>
                 <AiTwotoneHome
@@ -119,7 +129,7 @@ const UserProfile = () => {
                 onClick={() => {
                   router.push({
                     pathname: "/form/user_profile_form",
-                    query: { type: "CREATE" }
+                    query: { type: "CREATE" },
                   });
                 }}
                 className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
@@ -145,35 +155,39 @@ const UserProfile = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                {menuRecords.length > 0 && menuRecords?.map((item) => (
-                  <tr key={item.id}>
-                    <td 
-                    className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
-                      <button
-                        onClick={() => {
-                          router.push({
-                            pathname: "/form/user_profile_form",
-                            query: { type: "view", role_id: item?.role_id }
-                          });
-                        }}
-                        className="b text-black   hover:text-blue-500  "
-                      >
-                        View
-                      </button>
-                      
-                      <button
-                        onClick={() => {
-                          deleteHandler(item?.role_id);
-                        }}
-                        className="b text-black hover:text-red-500 ml-2"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.role_id}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.U_profile_name}</td>
-                  </tr>
-                ))}
+                {menuRecords.length > 0 &&
+                  menuRecords?.map((item) => (
+                    <tr key={item.id}>
+                      <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
+                        <button
+                          onClick={() => {
+                            router.push({
+                              pathname: "/form/user_profile_form",
+                              query: { type: "view", role_id: item?.role_id },
+                            });
+                          }}
+                          className="b text-black   hover:text-blue-500  "
+                        >
+                          View
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            deleteHandler(item?.role_id);
+                          }}
+                          className="b text-black hover:text-red-500 ml-2"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                      <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                        {item.role_id}
+                      </td>
+                      <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                        {item.U_profile_name}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
