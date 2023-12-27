@@ -9,7 +9,7 @@ const MainReport = () => {
     <>
       <section className="outer w-full px-2  bg-gray-100  min-h-screen">
         <div className="flex items-center justify-center w-full">
-          <h2 className="font-arial text-sm font-bold text-teal-500 s">
+          <h2 className="font-arial text-sm font-bold text-teal-500 mt-2">
             Rolling Sales Plan - Dec 2023 - RP-122023
           </h2>
         </div>
@@ -21,7 +21,7 @@ const MainReport = () => {
                   formType === "AllCharts" ? "bg-green-500" : "bg-gray-400"
                 }  py-1.5 px-2 text-white `}
               >
-                <span className="text-sm">1. Graphical View</span>
+                <span className="text-sm">Graphical View</span>
               </button>
             </li>
 
@@ -31,7 +31,7 @@ const MainReport = () => {
                   formType === "Table" ? "bg-green-500" : "bg-gray-400"
                 }  py-1.5 px-2 text-white `}
               >
-                <span className="text-sm "> 2. Table</span>
+                <span className="text-sm ">Table</span>
               </button>
             </li>
 
@@ -41,7 +41,7 @@ const MainReport = () => {
                   formType === "ZoneChart" ? "bg-green-500" : "bg-gray-400"
                 }  py-1.5 px-2 text-white `}
               >
-                <span className="text-sm">3. Zone Chart</span>
+                <span className="text-sm">Zone Chart</span>
               </button>
             </li>
           </ul>
