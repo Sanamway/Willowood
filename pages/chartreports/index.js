@@ -7,7 +7,7 @@ const index = () => {
     <>
       <Topbar></Topbar>
       {/* <Layout> */}
-        <MainReport></MainReport>
+        <MainReport ></MainReport>
       {/* </Layout> */}
     </>
   );

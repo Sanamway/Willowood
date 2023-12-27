@@ -7,13 +7,13 @@ const MainReport = () => {
   const router = useRouter();
   return (
     <>
-      <section className="outer w-full px-2  bg-gray-100  min-h-screen">
+      <section className="outer  w-full px-2  bg-black/5   min-h-screen">
         <div className="flex items-center justify-center w-full">
           <h2 className="font-arial text-sm font-bold text-teal-500 mt-2">
             Rolling Sales Plan - Dec 2023 - RP-122023
           </h2>
         </div>
-        <div className="steps mx-20 mt-2 font-arial ">
+        <div className="steps mx-24 mt-2 font-arial ">
           <ul className="tablist flex items-center justify-center gap-4 lg:gap-[8rem] flex-wrap md:flex-nowrap w-full">
             <li className="mb-2" onClick={() => setFormType("AllCharts")}>
               <button
@@ -21,9 +21,34 @@ const MainReport = () => {
                   formType === "AllCharts" ? "bg-green-500" : "bg-gray-400"
                 }  py-1.5 px-2 text-white `}
               >
-                <span className="text-sm">Graphical View</span>
+                <span className="text-sm">MTD Graphical</span>
               </button>
             </li>
+
+            <li className="mb-2" onClick={() => setFormType("AllCharts")}>
+              <button
+                className={`w-full text-center border-1 rounded-md whitespace-nowrap mx-auto ${
+                  formType === "AllCharts" ? "bg-green-500" : "bg-gray-400"
+                }  py-1.5 px-2 text-white `}
+              >
+                <span className="text-sm">YTD Graphical</span>
+              </button>
+            </li>
+
+            
+            <li className="mb-2" onClick={() => setFormType("AllCharts")}>
+              <button
+                className={`w-full text-center border-1 rounded-md whitespace-nowrap mx-auto ${
+                  formType === "AllCharts" ? "bg-green-500" : "bg-gray-400"
+                }  py-1.5 px-2 text-white `}
+              >
+                <span className="text-sm">Y-O-Y Graphical</span>
+              </button>
+            </li>
+
+            
+
+            
 
             <li className="mb-2" onClick={() => setFormType("Table")}>
               <button
@@ -31,7 +56,7 @@ const MainReport = () => {
                   formType === "Table" ? "bg-green-500" : "bg-gray-400"
                 }  py-1.5 px-2 text-white `}
               >
-                <span className="text-sm ">Table</span>
+                <span className="text-sm ">Table Graph </span>
               </button>
             </li>
 
@@ -41,7 +66,7 @@ const MainReport = () => {
                   formType === "ZoneChart" ? "bg-green-500" : "bg-gray-400"
                 }  py-1.5 px-2 text-white `}
               >
-                <span className="text-sm">Zone Chart</span>
+                <span className="text-sm"> Zone Graph</span>
               </button>
             </li>
           </ul>

@@ -10,8 +10,10 @@ import {
   Tooltip
 } from "chart.js/auto";
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
+import { MdOutlineCloudDownload } from "react-icons/md";
 
 const ChartOne = (props) => {
+  const {lab, datasets} = props
   const [height, setHeight] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -19,50 +21,40 @@ const ChartOne = (props) => {
 
   ChartJs.register(LinearScale, BarElement, PointElement, LineElement, Legend, Tooltip);
 
+  console.log("darta", props.dataset)
+
   //bar charts datas
 
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ];
+
   const data = {
-    labels: labels,
+    labels: lab,
+    datasets:datasets || []
 
-    datasets: [
-      {
-        label: "SK",
-        backgroundColor: "rgb(255, 99, 132)",
-        borderColor: "rgb(255, 99, 132)",
-        data: [3, 10, 5, 2, 20, 30, 45, 34, 56, 34, 56, 20, 30, 45, 20]
-      },
+    // datasets: [
+    //   {
+    //     label: "Budget",
+    //     backgroundColor: "blue",
+    //     borderColor: "rgb(255, 99, 132)",
+    //     data: [200, 150]
+    //   },
+      
 
-      {
-        type: "line",
-        label: "Line",
-        borderWidth: 1.5,
-        borderStyle: "dotted",
-        fill: false,
-        backgroundColor: "#22DD22",
-        borderColor: "#22DD22",
-        data: [20, 23, 12, 4, 12, 23, 30, 12, 34, 50, 90, 12]
-      },
-      {
-        label: "Pk",
-        backgroundColor: "rgb(255, 99, 132)",
-        borderColor: "rgb(255, 99, 132)",
-        data: [7, 10, 5, 2, 20, 30, 45, 34, 56, 34, 56, 20, 30, 45, 20]
-      }
-    ]
+    //   {
+    //     label: "Rolling Plan",
+    //     backgroundColor: "rgb(255, 99, 132)",
+    //     borderColor: "rgb(255, 99, 132)",
+    //     data: [180,120]
+    //   },
+
+    //   {
+    //     label: "Actual Sale",
+    //     backgroundColor: "green",
+    //     borderColor: "rgb(255, 99, 132)",
+    //     data: [200,100]
+    //   },
+      
+    // ]
+    
   };
 
   const chartRef = useRef(null);
@@ -110,15 +102,20 @@ const ChartOne = (props) => {
   return (
     <>
       <div
-        className={`wrapper ${!height ? "h-72 " : ""} lg:w-2/5 flex-col bg-white rounded-lg ${
-          fullScreen ? "fixed min-w-[84%] h-auto  top-8 mx-auto" : "h-auto"
+        className={`wrapper   ${!height ? "h-72 " : ""} lg:w-2/5 flex-col bg-white rounded-lg ${
+          // fullScreen ? "fixed min-w-[84%] h-auto  top-8 mx-auto" : "h-auto"
+          // fullScreen ? "absolute min-w-[90%] h-auto  top-12 mx-auto" : "h-auto"
+          fullScreen ? "fixed top-[53px] min-w-[85%] h-auto   mx-auto" : "h-auto"
         } `}
       >
-        <div className={`flex  items-center justify-between rounded-t-md text-white p-2 ${props.color}`}>
+        <div className={`flex items-center justify-between rounded-t-md text-white p-2 ${props.color}`}>
           <div className="font flex flex-col ">
             <h2>{props.title}</h2>
           </div>
           <div className="btns flex items-center gap-2">
+          <button onClick={() => setHeight(false)}>
+                <MdOutlineCloudDownload size={20}></MdOutlineCloudDownload>
+              </button>
             {fullScreen ? (
               <button onClick={() => setFullScreen(false)}>
                 <FiMinimize></FiMinimize>
@@ -129,7 +126,7 @@ const ChartOne = (props) => {
               </button>
             )}
             {!height ? (
-              <button onClick={() => setHeight(true)}>
+              <button className={`${fullScreen && "hidden"}`} onClick={() => setHeight(true)}>
                 <FiMinus></FiMinus>
               </button>
             ) : (
@@ -137,9 +134,10 @@ const ChartOne = (props) => {
                 <FiPlus></FiPlus>
               </button>
             )}
+            
           </div>
         </div>
-        {!height && <Chart className="min-w-full min-h-full px-2" ref={chartRef} type="bar" data={data} />}
+        {!height && <Chart  className="min-w-full min-h-full px-2" ref={chartRef} type="bar" data={data} />}
       </div>
     </>
   );

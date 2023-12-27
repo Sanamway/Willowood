@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Bar, Chart } from "react-chartjs-2";
+import { MdOutlineCloudDownload } from "react-icons/md";
+
 import {
   Chart as ChartJs,
   LinearScale,
@@ -120,7 +122,7 @@ const ChartTwo = (props) => {
           <div className="font flex flex-col ">
             <h2>{props.title}</h2>
           </div>
-          <div className="btns flex items-center gap-2">
+          {/* <div className="btns flex items-center gap-2">
             {fullScreen ? (
               <button onClick={() => setFullScreen(false)}>
                 <FiMinimize></FiMinimize>
@@ -139,9 +141,33 @@ const ChartTwo = (props) => {
                 <FiPlus></FiPlus>
               </button>
             )}
+          </div> */}
+          <div className="btns flex items-center gap-2">
+          <button onClick={() => setHeight(false)}>
+                <MdOutlineCloudDownload size={20}></MdOutlineCloudDownload>
+              </button>
+            {fullScreen ? (
+              <button onClick={() => setFullScreen(false)}>
+                <FiMinimize></FiMinimize>
+              </button>
+            ) : (
+              <button onClick={() => setFullScreen(true)}>
+                <FiMaximize></FiMaximize>
+              </button>
+            )}
+            {!height ? (
+              <button className={`${fullScreen && "hidden"}`} onClick={() => setHeight(true)}>
+                <FiMinus></FiMinus>
+              </button>
+            ) : (
+              <button onClick={() => setHeight(false)}>
+                <FiPlus></FiPlus>
+              </button>
+            )}
+            
           </div>
         </div>
-        {!height && <Chart className={`min-w-full lg:max-h-64  ${fullScreen ? "lg:max-h-[84%]":""} px-2`} ref={chartRef} type="bar" data={data} />}
+        {!height && <Chart  className={`min-w-full lg:max-h-64  ${fullScreen ? "lg:max-h-[84%]":""} px-2`} ref={chartRef} type="bar" data={data} />}
       </div>
     </>
   );
