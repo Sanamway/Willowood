@@ -111,12 +111,12 @@ const ChartTwo = (props) => {
     <>
       <div
         className={`wrapper mt-2 lg:mt-0  flex-1 ${
-          !height ? "h-72" : "h-auto"
+          !height ? "h-72 " : "h-auto"
         } lg:w-2/5 bg-white  rounded-lg border border-gray-200 flex flex-col ${
           fullScreen ? "fixed min-w-[84%]  h-auto lg:min-h-[84%]  top-8 mx-auto" : "h-auto"
         } `}
       >
-        <div className="flex  items-center justify-between rounded-t-md text-white p-2 bg-[#fe5d70] ">
+        <div className={`flex  items-center justify-between rounded-t-md text-white p-2 ${props.color} `}>
           <div className="font flex flex-col ">
             <h2>{props.title}</h2>
           </div>

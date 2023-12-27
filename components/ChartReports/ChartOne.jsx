@@ -114,7 +114,7 @@ const ChartOne = (props) => {
           fullScreen ? "fixed min-w-[84%] h-auto  top-8 mx-auto" : "h-auto"
         } `}
       >
-        <div className="flex  items-center justify-between rounded-t-md text-white p-2 bg-sky-600 ">
+        <div className={`flex  items-center justify-between rounded-t-md text-white p-2 ${props.color}`}>
           <div className="font flex flex-col ">
             <h2>{props.title}</h2>
           </div>
