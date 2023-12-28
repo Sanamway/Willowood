@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import ChartOne from "./ChartOne";
 import ChartTwo from "./ChartTwo";
-
+import { businessSegment, chartData,businessUnit, zoneData, regionData } from "./sample";
+import { zonelabel ,regionLable, territoryLable} from "./labels";
+import ChartThree from "./ChartThree";
 const AllCharts = (props) => {
   const router = useRouter();
 
@@ -11,57 +13,67 @@ const AllCharts = (props) => {
   const labelNameOne = ["B-2-B", "B-2-C"];
   const labelNameTwo = ["India 1", "India 2", "India 3"];
 
-  //dynamic chart data
-
-  const chartData = [
-    {
-      label: "Budget",
-      backgroundColor: "blue",
-      borderColor: "rgb(255, 99, 132)",
-      data: [200, 150,90],
-    },
-    {
-      label: "Rolling Plan",
-      backgroundColor: "rgb(255, 99, 132)",
-      borderColor: "rgb(255, 99, 132)",
-      data: [180, 120,70],
-    },
-    {
-      label: "Actual Sale",
-      backgroundColor: "green",
-      borderColor: "rgb(255, 99, 132)",
-      data: [200, 100,80],
-    },
-  ]
-
+ 
 
 
   return (
     <>
       <section className="wrapper w-full px-2 mt-2 font-arial ">
-        <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4 ">
-          <ChartOne title={"Business Segments"} color={"bg-blue-500"} lab={labelNameOne} datasets={chartData || []} ></ChartOne>
-          <ChartTwo title={"Business Zone"} color={"bg-pink-500"}></ChartTwo>
+        <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
+          <ChartOne title={"Business Segments"} color={"bg-blue-500"} lab={labelNameOne} datasets={businessSegment || []} ></ChartOne>
+          {/* <ChartTwo title={"Business Zone"} color={"bg-pink-500"} lab={zonelabel} datasets={zoneData || []}></ChartTwo> */}
+          <ChartTwo title={"Business Units"} color={"bg-violet-500"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo>
         </div>
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
-          <ChartOne title={"Business Units"} color={"bg-violet-500"}lab={labelNameTwo} datasets={chartData || []} ></ChartOne>
-          <ChartTwo title={"Business Region"} color={"bg-teal-400"}></ChartTwo>
+          {/* <ChartOne title={"Business Segments"} color={"bg-blue-500"} lab={labelNameOne} datasets={businessSegment || []} ></ChartOne> */}
+          {/* <ChartOne title={"Business Segments"} color={"bg-blue-500"} lab={labelNameOne} datasets={businessSegment || []} ></ChartOne> */}
+          {/* <ChartTwo title={"Depot Warehouse"} color={"bg-pink-500"} lab={zonelabel} datasets={zoneData || []}></ChartTwo> */}
+          <ChartTwo title={"Business Zone"} color={"bg-pink-500"} lab={zonelabel} datasets={zoneData || []}></ChartTwo>
+
+        </div>
+
+        <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
+        <ChartThree title={"Business Region"} color={"bg-teal-400"} lab ={regionLable}  datasets={regionData || []}></ChartThree>
+        </div>
+
+        <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
+        <ChartThree title={"Territory"} color={"bg-rose-500"} lab ={territoryLable}  datasets={regionData || []} ></ChartThree>
+        </div>
+
+        <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
+          <ChartOne title={"Customer Wise"} color={"bg-sky-500"} lab={labelNameTwo} datasets={chartData || []} ></ChartOne>
+          {/* <ChartOne title={"Product Category"} color={"bg-[#15283c]"} lab={labelNameTwo} datasets={chartData || []} ></ChartOne>
+          <ChartOne title={"Product Brand"} color={"bg-indigo-500"} lab={labelNameTwo} datasets={chartData || []}></ChartOne> */}
+          <ChartTwo title={"Customer Wise Data View"} color={"bg-sky-500"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo>
         </div>
 
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
           <ChartOne title={"Product Segment"} color={"bg-orange-500"} lab={labelNameTwo} datasets={chartData || []} ></ChartOne>
-          <ChartTwo title={"Business Territory"} color={"bg-lime-500"}></ChartTwo>
+          {/* <ChartOne title={"Product Category"} color={"bg-[#15283c]"} lab={labelNameTwo} datasets={chartData || []} ></ChartOne>
+          <ChartOne title={"Product Brand"} color={"bg-indigo-500"} lab={labelNameTwo} datasets={chartData || []}></ChartOne> */}
+          <ChartTwo title={"Product Segment Data View"} color={"bg-orange-500"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo>
         </div>
-
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
+          {/* <ChartOne title={"Product Segment"} color={"bg-orange-500"} lab={labelNameTwo} datasets={chartData || []} ></ChartOne> */}
           <ChartOne title={"Product Category"} color={"bg-[#15283c]"} lab={labelNameTwo} datasets={chartData || []} ></ChartOne>
-          <ChartTwo title={"Business Territory"} color={"bg-lime-500"}></ChartTwo>
+          <ChartTwo title={"Product Category Data View"} color={"bg-[#15283c]"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo>
+         
+          {/* <ChartOne title={"Product Brand"} color={"bg-indigo-500"} lab={labelNameTwo} datasets={chartData || []}></ChartOne> */}
+        </div>
+        <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
+
+          {/* <ChartOne title={"Product Segment"} color={"bg-orange-500"} lab={labelNameTwo} datasets={chartData || []} ></ChartOne> */}
+          {/* <ChartOne title={"Product Category"} color={"bg-[#15283c]"} lab={labelNameTwo} datasets={chartData || []} ></ChartOne> */}
+          <ChartOne title={"Product Brand"} color={"bg-indigo-500"} lab={labelNameTwo} datasets={chartData || []}></ChartOne>
+        <ChartTwo title={"Product Brand Data View"} color={"bg-indigo-500"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo>
         </div>
 
-        <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
-          <ChartOne title={"Product Brand"} color={"bg-indigo-500"} lab={labelNameTwo} datasets={chartData || []}></ChartOne>
-          <ChartTwo title={"Territory"} color={"bg-rose-500"}></ChartTwo>
-        </div>
+       
+        
+
+
+   { /* buttons */}
+
 
         <div className="mt-12 flex items-center justify-end mx-8 gap-4 pb-4">
           <button

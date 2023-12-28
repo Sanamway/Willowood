@@ -14,6 +14,7 @@ import {
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
 
 const ChartTwo = (props) => {
+  const {lab,datasets} = props
   const [height, setHeight] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -23,48 +24,49 @@ const ChartTwo = (props) => {
 
   //bar charts datas
 
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ];
+  // const labels = [
+  //   "January",
+  //   "February",
+  //   "March",
+  //   "April",
+  //   "May",
+  //   "June",
+  //   "July",
+  //   "August",
+  //   "September",
+  //   "October",
+  //   "November",
+  //   "December"
+  // ];
   const data = {
-    labels: labels,
+    labels: lab,
+    datasets:datasets || []
 
-    datasets: [
-      {
-        label: "SK",
-        backgroundColor: "rgb(255, 99, 132)",
-        borderColor: "rgb(255, 99, 132)",
-        data: [3, 10, 5, 2, 20, 30, 45, 34, 56, 34, 56, 20, 30, 45, 20]
-      },
+    // datasets: [
+    //   {
+    //     label: "SK",
+    //     backgroundColor: "rgb(255, 99, 132)",
+    //     borderColor: "rgb(255, 99, 132)",
+    //     data: [3, 10, 5, 2, 20, 30, 45, 34, 56, 34, 56, 20, 30, 45, 20]
+    //   },
 
-      {
-        type: "line",
-        label: "Line",
-        borderWidth: 1.5,
-        borderStyle: "dotted",
-        fill: false,
-        backgroundColor: "#22DD22",
-        borderColor: "#22DD22",
-        data: [20, 23, 12, 4, 12, 23, 30, 12, 34, 50, 90, 12]
-      },
-      {
-        label: "Pk",
-        backgroundColor: "rgb(255, 99, 132)",
-        borderColor: "rgb(255, 99, 132)",
-        data: [7, 10, 5, 2, 20, 30, 45, 34, 56, 34, 56, 20, 30, 45, 20]
-      }
-    ]
+    //   {
+    //     type: "line",
+    //     label: "Line",
+    //     borderWidth: 1.5,
+    //     borderStyle: "dotted",
+    //     fill: false,
+    //     backgroundColor: "#22DD22",
+    //     borderColor: "#22DD22",
+    //     data: [20, 23, 12, 4, 12, 23, 30, 12, 34, 50, 90, 12]
+    //   },
+    //   {
+    //     label: "Pk",
+    //     backgroundColor: "rgb(255, 99, 132)",
+    //     borderColor: "rgb(255, 99, 132)",
+    //     data: [7, 10, 5, 2, 20, 30, 45, 34, 56, 34, 56, 20, 30, 45, 20]
+    //   }
+    // ]
   };
 
   const chartRef = useRef(null);
@@ -115,7 +117,7 @@ const ChartTwo = (props) => {
         className={`wrapper mt-2 lg:mt-0  flex-1 ${
           !height ? "h-72 " : "h-auto"
         } lg:w-2/5 bg-white  rounded-lg border border-gray-200 flex flex-col ${
-          fullScreen ? "fixed min-w-[84%]  h-auto lg:min-h-[84%]  top-8 mx-auto" : "h-auto"
+          fullScreen ? "fixed min-w-[100%]  h-auto lg:min-h-[84%]  top-8 mx-auto" : " h-auto"
         } `}
       >
         <div className={`flex  items-center justify-between rounded-t-md text-white p-2 ${props.color} `}>
