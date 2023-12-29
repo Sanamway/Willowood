@@ -55,7 +55,7 @@ const Table = (props) => {
 
   let header;
   useEffect(() => {
-    if (Array.isArray(props.tableData[0])) {
+    if (Array.isArray(props?.tableData[0] || [])) {
       header = props.tableData[0]?.map((item) => item.trim());
       setResult(
         props.tableData.slice(1).map((row) => {

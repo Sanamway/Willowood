@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Table from "./Table";
 import AllCharts from "./AllCharts";
 import { useRouter } from "next/router";
+import { MdBarChart } from "react-icons/md";
+import { FaTable } from "react-icons/fa";
+
+
 const MainReport = () => {
   const [formType, setFormType] = useState("AllCharts");
   const [tableData, setTableData] = useState([]);
   const [files, setFiles] = useState(null);
   const router = useRouter();
+
   useEffect(() => {
     if (router.query.formType === "Add") {
       setFormType("Upload");
@@ -20,12 +25,21 @@ const MainReport = () => {
     }
   }, []);
 
-  // const getTableData = () => {
-  //   const handleClick = this.handleClick.bind(this);
-  //   console.log("Get Data")
-  //   return <button onClick={handleClick}>Click me</button>;
-  // };
-  // getTableData()
+  useEffect(()=>{
+    setFormType("AllCharts")
+  },[])
+
+  const elementRef = useRef()
+
+  useEffect(() => {
+    function getGridButton() {
+      const ele = elementRef.current;
+      const button = ele.querySelectorAll("Button");
+      // button.ref()
+    }
+
+    getGridButton();
+  }, []); 
 
   return (
     <>
@@ -35,39 +49,69 @@ const MainReport = () => {
             Target Vs Achievement - Dec 2023 - RP-122023
           </h2>
         </div>
-        <div className="steps mx-24 mt- font-arial ">
-          <ul className="tablist flex items-center justify-center gap-4 lg:gap-[8rem] flex-wrap md:flex-nowrap w-full">
-            <li className="mb-2" onClick={() => setFormType("AllCharts")}>
-              <button
-                className={`w-full text-center border-1 rounded-md whitespace-nowrap mx-auto ${
-                  formType === "AllCharts" ? "bg-green-500" : "bg-gray-400"
-                }  py- px-2 text-white `}
-              >
-                <span className="text-xs">Graphical View</span>
-              </button>
-            </li>
+       
+        <div className="buttons mt-3  mb-3 flex items-center w-full justify-center gap-4 font-arial" ref={elementRef}>
+            <button
+              onClick={() => setFormType("AllCharts")}
+              className={`${
+                formType === "AllCharts"
+                  ? "py-1 px-2 text-sm rounded-sm text-white  bg-orange-500"
+                  : "py-1 px-2 text-sm rounded-sm text-black  bg-white"
+              }`}
+            >
+              <div className="flex items-center justify-center gap-1 ">
+                <MdBarChart></MdBarChart>
+                All Charts
+              </div>
+            </button>
+            <button
+              onClick={() => setFormType("Table")}
+              className={`${
+                formType === "Table"
+                  ? "py-1 px-2 text-sm rounded-sm  text-white  bg-orange-500"
+                  : "py-1 px-2 text-sm  text-black  bg-white"
+              }`}
+            >
+              <div className="flex items-center justify-center gap-1 ">
+                <FaTable></FaTable>
+                Table
+              </div>
+            </button>
 
-            <li className="mb-2" onClick={() => setFormType("Table")}>
-              <button
-                className={`w-full text-center border-1 rounded-md whitespace-nowrap mx-auto ${
-                  formType === "Table" ? "bg-green-500" : "bg-gray-400"
-                }  py- px-2 text-white `}
-              >
-                <span className="text-xs">Data View </span>
-              </button>
-            </li>
-
-            <li className="mb-2" onClick={() => setFormType("ZoneChart")}>
-              <button
-                className={`w-full text-center border-1 rounded-md whitespace-nowrap mx-auto ${
-                  formType === "ZoneChart" ? "bg-green-500" : "bg-gray-400"
-                }  py- px-2 text-white `}
-              >
-                <span className="text-xs">Summary View</span>
-              </button>
-            </li>
-          </ul>
-        </div>
+            <button
+              onClick={() => setFormType("Summary")}
+              className={`${
+                formType === "Summary"
+                  ? "py-1 px-2 text-sm  text-white  bg-orange-500"
+                  : "py-1 px-2 text-sm  text-black  bg-white"
+              }`}
+            >
+              <div className="flex items-center justify-center gap-1">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 4h-3V2h-2v2h-4V2H8v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zM5 20V7h14V6l.002 14H5z"
+                  ></path>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M7 9h10v2H7zm0 4h5v2H7z"
+                  ></path>
+                </svg>
+                Summary
+              </div>
+            </button>
+           
+          </div>
 
         {formType === "AllCharts" && (
           <AllCharts
@@ -84,10 +128,10 @@ const MainReport = () => {
             setTableData={setTableData}
           />
         )}
-        {formType === "Zone Chart" && (
-          <ZoneChart
+        {formType === "Summary" && (
+          <Table
             formType={setFormType}
-            // tableData={tableData}
+            tableData={tableData}
           />
         )}
       </section>

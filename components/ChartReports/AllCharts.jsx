@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import ChartOne from "./ChartOne";
 import ChartTwo from "./ChartTwo";
+import ChartThree from "./ChartThree";
+import ChartFour from "./ChartFour";
 import { businessSegment, chartData,businessUnit, zoneData, regionData } from "./sample";
 import { zonelabel ,regionLable, territoryLable} from "./labels";
-import ChartThree from "./ChartThree";
+import dummyData from "./TableData";
+
 const AllCharts = (props) => {
   const router = useRouter();
-
   //dynamic labels
-
   const labelNameOne = ["B-2-B", "B-2-C"];
   const labelNameTwo = ["India 1", "India 2", "India 3"];
 
@@ -19,6 +20,7 @@ const AllCharts = (props) => {
   return (
     <>
       <section className="wrapper w-full px-2 mt-2 font-arial ">
+      
         <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
           <ChartOne title={"Business Segments"} color={"bg-blue-500"} lab={labelNameOne} datasets={businessSegment || []} ></ChartOne>
           {/* <ChartTwo title={"Business Zone"} color={"bg-pink-500"} lab={zonelabel} datasets={zoneData || []}></ChartTwo> */}
@@ -34,6 +36,10 @@ const AllCharts = (props) => {
 
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
         <ChartThree title={"Business Region"} color={"bg-teal-400"} lab ={regionLable}  datasets={regionData || []}></ChartThree>
+        </div>
+
+        <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
+          <ChartFour title={"Territory ( Target vs Achievement )  - Annual , YTD , MTD"} color={"bg-white"}lab={labelNameTwo} datas={dummyData || []} ></ChartFour>
         </div>
 
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">

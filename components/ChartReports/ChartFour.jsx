@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Bar, Chart } from "react-chartjs-2";
+// import { MdOutlineCloudDownload } from "react-icons/md";
+import { TbFileDownload } from "react-icons/tb";
+
+import GraphTable from "./GraphTable";
 import {
   Chart as ChartJs,
   LinearScale,
@@ -10,10 +14,9 @@ import {
   Tooltip
 } from "chart.js/auto";
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
-import { MdOutlineCloudDownload } from "react-icons/md";
 
-const ChartOne = (props) => {
-  const {lab, datasets} = props
+const ChartFour = (props) => {
+    const {lab, datas} = props
   const [height, setHeight] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -21,40 +24,11 @@ const ChartOne = (props) => {
 
   ChartJs.register(LinearScale, BarElement, PointElement, LineElement, Legend, Tooltip);
 
-
-  //bar charts datas
-
-
-  const data = {
-    labels: lab,
-    datasets:datasets || []
-
-    // datasets: [
-    //   {
-    //     label: "Budget",
-    //     backgroundColor: "blue",
-    //     borderColor: "rgb(255, 99, 132)",
-    //     data: [200, 150]
-    //   },
-      
-
-    //   {
-    //     label: "Rolling Plan",
-    //     backgroundColor: "rgb(255, 99, 132)",
-    //     borderColor: "rgb(255, 99, 132)",
-    //     data: [180,120]
-    //   },
-
-    //   {
-    //     label: "Actual Sale",
-    //     backgroundColor: "green",
-    //     borderColor: "rgb(255, 99, 132)",
-    //     data: [200,100]
-    //   },
-      
-    // ]
+//   const data = {
+//     labels: lab,
+//     datasets:datasets || []
     
-  };
+//   };
 
   const chartRef = useRef(null);
 
@@ -62,7 +36,6 @@ const ChartOne = (props) => {
 
   function triggerTooltip(chart) {
     const tooltip = chart?.tooltip;
-
     if (!tooltip) {
       return;
     }
@@ -75,16 +48,16 @@ const ChartOne = (props) => {
       //   [
       //     {
       //       datasetIndex: 0,
-      //       index: 2,
+      //       index: 2
       //     },
       //     {
       //       datasetIndex: 1,
-      //       index: 2,
-      //     },
+      //       index: 2
+      //     }
       //   ],
       //   {
       //     x: (chartArea.left + chartArea.right) / 2,
-      //     y: (chartArea.top + chartArea.bottom) / 2,
+      //     y: (chartArea.top + chartArea.bottom) / 2
       //   }
       // );
     }
@@ -94,32 +67,40 @@ const ChartOne = (props) => {
 
   useEffect(() => {
     const chart = chartRef.current;
+
     triggerTooltip(chart);
   }, []);
 
-  //options for chart
-
-  let options ={
-    "responsive": true,
-    "maintainAspectRatio": false
-  }
+  //options 
+  
+  let options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' ,
+      },
+      
+    },
+  };
+  
 
   return (
     <>
       <div
-        className={`wrapper  ${!height ? "h-72 " : ""} lg:w-2/5 flex-col bg-white rounded-lg ${
-          // fullScreen ? "fixed min-w-[84%] h-auto  top-8 mx-auto" : "h-auto "
-          // fullScreen ? "absolute min-w-[90%] h-auto  top-12 mx-auto" : "h-auto"
-          fullScreen ? "fixed min-w-[84%]  h-auto lg:min-h-[84%]  top-8 mx-auto" : "h-auto"
+        className={`wrapper mt-2 lg:mt-0   ${
+          !height ? "h-72 " : "h-auto"
+        } lg:w-[100%] bg-white  rounded-lg border border-gray-200 flex flex-col ${
+          fullScreen ? "fixed min-w-[100%]  h-auto lg:min-h-[84%]  top-8 mx-auto" : " h-auto"
         } `}
       >
-        <div className={`flex items-center justify-between rounded-t-md text-white p-2 ${props.color}`}>
+        <div className={`flex text-blue-500 items-center justify-between rounded-t-md  p-2 ${props.color} `}>
           <div className="font flex flex-col ">
-            <h2>{props.title}</h2>
+            <h2 className="text-xs font-bold font-arial">{props.title}</h2>
           </div>
+          
           <div className="btns flex items-center gap-2">
           <button onClick={() => setHeight(false)}>
-                <MdOutlineCloudDownload size={20}></MdOutlineCloudDownload>
+                <TbFileDownload size={20}></TbFileDownload>
               </button>
             {fullScreen ? (
               <button onClick={() => setFullScreen(false)}>
@@ -142,12 +123,11 @@ const ChartOne = (props) => {
             
           </div>
         </div>
-        {/* {!height && <Chart className="min-w-full min-h-full px-2" ref={chartRef} type="bar" data={data} />} */}
-        {/* {!height && <Chart className="min-w-full min-h-full px-2" ref={chartRef} type="bar" data={data} />} */}
-        {!height && <Chart  className={`min-w-full lg:max-h-64  ${fullScreen ? "lg:max-h-[84%]":""} px-2`} ref={chartRef} type="bar" data={data} />}
+        {/* {!height && <GraphTable  className={`min-w-full lg:max-h-64  ${fullScreen ? "lg:max-h-[84%]":""} px-2`}   data={datas} />} */}
+        {!height && <GraphTable  className={`min-w-full lg:max-h-64  ${fullScreen ? "lg:max-h-[84%]":""} px-2`}   data={datas} />}
       </div>
     </>
   );
 };
 
-export default ChartOne;
+export default ChartFour;
