@@ -624,7 +624,8 @@ const RollingPlans = () => {
     t,
     c,
     w,
-    tDes
+    tDes,
+    rDes
   ) => {
     switch (status) {
       case "Close Period":
@@ -633,14 +634,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() =>
-                handleDownloadExcel(
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
+                  yr,
                   t,
                   tDes,
-                  yr,
-                  "Download"
+                  r,
+                  rDes,
+                  filterState
                 )
               }
             >
@@ -649,15 +652,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                handleDownloadExcelView(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -665,7 +669,9 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
@@ -688,14 +694,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() =>
-                handleDownloadExcel(
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
+                  yr,
                   t,
                   tDes,
-                  yr,
-                  "Download"
+                  r,
+                  rDes,
+                  filterState
                 )
               }
             >
@@ -733,15 +741,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                handleDownloadExcelView(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -749,7 +758,9 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
@@ -771,14 +782,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() =>
-                handleDownloadExcel(
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
+                  yr,
                   t,
                   tDes,
-                  yr,
-                  "Download"
+                  r,
+                  rDes,
+                  filterState
                 )
               }
             >
@@ -824,15 +837,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                handleDownloadExcelView(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -840,7 +854,9 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
@@ -862,14 +878,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() =>
-                handleDownloadExcel(
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
+                  yr,
                   t,
                   tDes,
-                  yr,
-                  "Download"
+                  r,
+                  rDes,
+                  filterState
                 )
               }
             >
@@ -879,15 +897,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                handleDownloadExcelView(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -895,7 +914,9 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
@@ -917,17 +938,19 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcel(
+              onClick={() => {
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
+                  yr,
                   t,
                   tDes,
-                  yr,
-                  "Download"
-                )
-              }
+                  r,
+                  rDes,
+                  filterState
+                );
+              }}
             >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
@@ -953,6 +976,9 @@ const RollingPlans = () => {
                     cId: c,
                     wId: w,
                     formType: "Add",
+                      filterState: encodeURIComponent(
+                      JSON.stringify(filterState)
+                    ),
                   },
                 });
               }}
@@ -974,14 +1000,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() =>
-                handleDownloadExcel(
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
+                  yr,
                   t,
                   tDes,
-                  yr,
-                  "Download"
+                  r,
+                  rDes,
+                  filterState
                 )
               }
             >
@@ -990,7 +1018,6 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit");
                 router.push({
                   pathname: "/rptransaction",
                   query: {
@@ -1020,15 +1047,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                handleDownloadExcelView(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -1036,7 +1064,9 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
@@ -1058,14 +1088,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() =>
-                handleDownloadExcel(
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
+                  yr,
                   t,
                   tDes,
-                  yr,
-                  "Download"
+                  r,
+                  rDes,
+                  filterState
                 )
               }
             >
@@ -1090,6 +1122,7 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
+                  filterState,
                 });
               }}
             >
@@ -1185,6 +1218,89 @@ const RollingPlans = () => {
     }
   };
 
+  const handleDownloadExcelNew = async (
+    m_year,
+    planId,
+    tranId,
+    yr,
+    tId,
+    tDes,
+    rId,
+    rDes,
+    filterState
+  ) => {
+    let paramsData;
+    if (filterState.tId || filterState.tId === "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        t_id: tId,
+        t_des: tDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      (filterState.rId || filterState.rId === "All") &&
+      !filterState.tId
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        r_id: rId,
+        r_des: rDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else {
+      paramsData = {};
+    }
+    try {
+      localStorage.setItem("RSP", JSON.stringify([]));
+      const respond = axios.get(`${url}/api/rsp_download`, {
+        headers: headers,
+        params: paramsData,
+      });
+      const apires = await respond;
+      const ws = XLSX.utils.json_to_sheet(apires.data.data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+      XLSX.writeFile(
+        wb,
+        `RSP_${moment(m_year).format("YYYY-MM")}_${tDes}.xlsx`
+      );
+
+      setIsOpen(true);
+      setModalData({
+        message: apires.data.message,
+        type: "Download",
+        data: {},
+      });
+    } catch (error) {
+      console.log("mlo", error);
+    }
+  };
+
   const handleDownloadExcel = async (
     m_year,
     planId,
@@ -1193,7 +1309,7 @@ const RollingPlans = () => {
     tDes,
     yr,
     type,
-    transfferStat
+    transfferState
   ) => {
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
@@ -1245,25 +1361,133 @@ const RollingPlans = () => {
         router.push({
           pathname: "/rptransaction",
           query: {
-            planId: transfferStat.planId,
-            tranId: transfferStat.tranId,
-            yr: transfferStat.yr,
-            mYr: transfferStat.mYr,
-            depot: transfferStat.depot,
-            zrt: transfferStat.zrt,
-            status: transfferStat.status,
-            stage: transfferStat.stage,
-            bgId: transfferStat.bg,
-            buId: transfferStat.bu,
-            zId: transfferStat.z,
-            rId: transfferStat.r,
-            tId: transfferStat.t,
-            cId: transfferStat.c,
-            wId: transfferStat.w,
+            planId: transfferState.planId,
+            tranId: transfferState.tranId,
+            yr: transfferState.yr,
+            mYr: transfferState.mYr,
+            depot: transfferState.depot,
+            zrt: transfferState.zrt,
+            status: transfferState.status,
+            stage: transfferState.stage,
+            bgId: transfferState.bg,
+            buId: transfferState.bu,
+            zId: transfferState.z,
+            rId: transfferState.r,
+            tId: transfferState.t,
+            cId: transfferState.c,
+            wId: transfferState.w,
             formType: type,
           },
         });
       }
+    } catch (error) {
+      console.log("mlo", error);
+    }
+  };
+  const handleDownloadExcelView = async (
+    m_year,
+    planId,
+    tranId,
+    yr,
+    depot,
+    zrt,
+    status,
+    stage,
+    filterState,
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    c,
+    w,
+    tDes,
+    rDes
+  ) => {
+    let paramsData;
+    if (filterState.tId || filterState.tId === "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        t_id: t,
+        t_des: tDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      (filterState.rId || filterState.rId === "All") &&
+      !filterState.tId
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        r_id: r,
+        r_des: rDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else {
+      paramsData = {};
+    }
+    try {
+      localStorage.setItem("RSP", JSON.stringify([]));
+      const respond = axios.get(`${url}/api/rsp_download`, {
+        headers: headers,
+        params: paramsData,
+      });
+      const apires = await respond;
+      const ws = XLSX.utils.json_to_sheet(apires.data.data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+      let keys = Object.keys(apires.data.data[0]);
+      // Convert array of objects to array of arrays
+      let arrayOfArrays = [
+        keys, // First array with keys
+        ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
+      ];
+      localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
+      router.push({
+        pathname: "/rptransaction",
+        query: {
+          planId: planId,
+          tranId: tranId,
+          yr: yr,
+          mYr: m_year,
+          depot: depot,
+          zrt: zrt,
+          status: status,
+          stage: stage,
+          bgId: bg,
+          buId: bu,
+          zId: z,
+          rId: r,
+          tId: t,
+          cId: c,
+          wId: w,
+          formType: "View",
+        },
+      });
     } catch (error) {
       console.log("mlo", error);
     }
@@ -1557,7 +1781,7 @@ const RollingPlans = () => {
                       </p>
                     </td>
                     <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap text-xs ">
+                      <p className="text-gray-900 whitespace-no-wrap text-xs">
                         {item.business_segment}
                         {item.business_unit_name && "/"}
                         {item.business_unit_name}
@@ -1656,7 +1880,8 @@ const RollingPlans = () => {
                                   item.t_id,
                                   item.c_id,
                                   item.w_id,
-                                  item.territory_name
+                                  item.territory_name,
+                                  item.region_name
                                 )}
                               </Popover.Panel>
                             </>
@@ -1730,25 +1955,26 @@ const RollingPlans = () => {
                         className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-white-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                         onClick={() => handleDeleteRps(modalData.data)}
                       >
-                      Yes
+                        Yes
                       </button>
                     )}
-                    {modalData.type === "Delete" ? 
-                       <button
-                       type="button"
-                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                       onClick={handleClose}
-                     >
-                       No
-                     </button>
-                    :   <button
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    onClick={handleClose}
-                  >
-                    Close
-                  </button>}
-                  
+                    {modalData.type === "Delete" ? (
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        onClick={handleClose}
+                      >
+                        No
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        onClick={handleClose}
+                      >
+                        Close
+                      </button>
+                    )}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

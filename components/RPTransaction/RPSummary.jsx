@@ -29,17 +29,76 @@ const RPSummary = (props) => {
     setisOpen(true);
   };
   const updateRollingPlanStatus = async (status) => {
+    let paramsData;
+    const receivedObject = JSON.parse(
+      decodeURIComponent(router.query.filterState)
+    );
+    if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6 ||
+      receivedObject.tId
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        t_id: Number(router.query.tId) ? Number(router.query.tId) : null,
+        rp_status: status,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        r_id: Number(router.query.rId),
+        rp_status: status,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        t_id: Number(router.query.tId) ? Number(router.query.tId) : null,
+        r_id: Number(router.query.rId),
+        rp_status: status,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        t_id: Number(router.query.tId) ? Number(router.query.tId) : null,
+        r_id: Number(router.query.rId),
+        rp_status: status,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        t_id: Number(router.query.tId) ? Number(router.query.tId) : null,
+        r_id: Number(router.query.rId),
+        rp_status: status,
+      };
+    } else {
+      return;
+    }
     try {
       const respond = await axios.get(`${url}/api/rsp_update_status`, {
         headers: headers,
-        params: {
-          t_year: router.query.yr,
-          m_year: router.query.mYr,
-          plan_id: router.query.planId,
-          tran_id: router.query.tranId,
-          t_id: Number(router.query.tId),
-          rp_status: status,
-        },
+        params: paramsData,
       });
       const apires = await respond.data.data;
       setData(apires);
@@ -52,7 +111,14 @@ const RPSummary = (props) => {
     try {
       let endPoint;
 
-      if (JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6) {
+      const receivedObject = JSON.parse(
+        decodeURIComponent(router.query.filterState)
+      );
+
+      if (
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6 ||
+        receivedObject.tId
+      ) {
         endPoint = `api/add_rolling_tm?tm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5
@@ -126,7 +192,7 @@ const RPSummary = (props) => {
       if (JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6) {
         endPoint = `api/update_rolling_tm?tm=${true}`;
       } else if (
-        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5   
       ) {
         endPoint = `api/add_rolling_tm?rm=${true}`;
       } else if (
@@ -197,7 +263,7 @@ const RPSummary = (props) => {
         isOpen={isOpen}
         onClose={() => {
           setisOpen(false);
-          setApiMessage("")
+          setApiMessage("");
           router.push("/rollingplans");
         }}
         onOpen={() => setisOpen(true)}
