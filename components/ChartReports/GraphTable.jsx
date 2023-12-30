@@ -8,7 +8,14 @@ const GraphTable = (props) => {
     FY_Sales_Val_21_22: 0,
     FY_Sales_Val_22_23: 0,
     Annual_Budget_Qty: 0,
-    Annual_Budget_Val: 0
+    Annual_Budget_Val: 0,
+    MTD_Sale_Qty:0,
+    MTD_Budget_Val:0,
+    MTD_RSP_Value:0,
+    MTD_Actual_Sale_Value:0,
+    YTD_Sale_Qty:0,
+    YTD_Budget_Value:0,
+    YTD_Actual_Sale_Value:0,
   });
 
   const calculateSum = (data) => {
@@ -18,13 +25,28 @@ const GraphTable = (props) => {
         acc["FY_Sales_Val_22_23"] += Number(entry["FY_Sales_Val_22_23"]) || 0;
         acc["Annual_Budget_Qty"] += Number(entry["Annual_Budget_Qty"]) || 0;
         acc["Annual_Budget_Val"] += Number(entry["Annual_Budget_Val"]) || 0;
+        acc["MTD_Sale_Qty"] += Number(entry["MTD_Sale_Qty"]) || 0;
+        acc["MTD_Budget_Val"] += Number(entry["MTD_Budget_Val"]) || 0;
+        acc["MTD_RSP_Value"] += Number(entry["MTD_RSP_Value"]) || 0;
+        acc["MTD_Actual_Sale_Value"] += Number(entry["MTD_Actual_Sale_Value"]) || 0;
+        acc["YTD_Sale_Qty"] += Number(entry["YTD_Sale_Qty"]) || 0;
+        acc["YTD_Budget_Value"] += Number(entry["YTD_Budget_Value"]) || 0;
+        acc["YTD_Actual_Sale_Value"] += Number(entry["YTD_Actual_Sale_Value"]) || 0;
         return acc;
       },
       {
         FY_Sales_Val_21_22: 0,
         FY_Sales_Val_22_23: 0,
         Annual_Budget_Qty: 0,
-        Annual_Budget_Val: 0
+        Annual_Budget_Val: 0,
+        MTD_Sale_Qty:0,
+        MTD_Budget_Val:0,
+        MTD_RSP_Value:0,
+        MTD_Actual_Sale_Value:0,
+        YTD_Sale_Qty:0,
+        YTD_Budget_Value:0,
+        YTD_Actual_Sale_Value:0,
+
       }
     );
 
@@ -38,14 +60,22 @@ const GraphTable = (props) => {
 
   console.log("SUM", resultSum);
 
+  // const columnSums = {
+  //   salesVal2122: data.reduce((sum, item) => sum + item['FY Sales Val 21-22'], 0),
+  //   salesVal2223: data.reduce((sum, item) => sum + item['FY Sales Val 22-23'], 0),
+  //   annualBudgetQty: data.reduce((sum, item) => sum + item['Annual Budget Qty'], 0),
+  //   mtdSaleQty: data.reduce((sum, item) => sum + item['MTD Sale Qty'], 0),
+  //   mtdSaleQty: data.reduce((sum, item) => sum + item['MTD Sale Qty'], 0),
+  // };
+
   return (
     <>
-      <div className="overflow-x-auto chat-scrollbar ">
+      <div className="overflow-x-auto chat-scrollbar select-none ">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
           <thead className="text-xs text-gray-900 text-center bg-gray-100 ">
             <tr className="">
               <th className="px-4 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
-                Territory
+                {props.heading}
               </th>
 
               <th className="px-4 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
@@ -125,25 +155,30 @@ const GraphTable = (props) => {
                 ))}
               </tr>
             ))}
+            <tr className="bg-gray-100">
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border"></td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border whitespace-nowrap">Total ( All Values in Cr.)</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["FY_Sales_Val_21_22"]).toFixed(2)}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["FY_Sales_Val_22_23"]).toFixed(2)}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["Annual_Budget_Qty"])}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["Annual_Budget_Val"])}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["MTD_Sale_Qty"])}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["MTD_Budget_Val"])}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["MTD_RSP_Value"]).toFixed(2)}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["MTD_Actual_Sale_Value"]).toFixed(2)}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{""}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{""}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["YTD_Sale_Qty"])}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["YTD_Budget_Value"])}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["YTD_Actual_Sale_Value"])}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{""}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{""}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{""}</td>
+            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{""}</td>
+          </tr>
           </tbody>
         </table>
-        <div className="sum flex item-center gap-2 mx-2">
-          <div className=" text-black text-xs font-normal w-1/4 my-2">
-            <p className=" flex justify-between">
-              <span className="w-full"> FY Sales Val 21 22: </span>
-              <small className="text-xs">{parseFloat(resultSum["FY_Sales_Val_21_22"]).toFixed(2)}</small>
-            </p>
-
-            <p className=" flex justify-between">
-              <span className="w-full"> FY Sales Val 22-23: </span>
-              <small className="text-xs">{parseFloat(resultSum["FY_Sales_Val_22_23"]).toFixed(2)}</small>
-            </p>
-            <p className=" flex justify-between">
-              <span className="w-full"> Annual Budget Qty: </span>
-              <small className="text-xs">{parseFloat(resultSum["Annual_Budget_Qty"])}</small>
-            </p>
-          </div>
-        </div>
+      
       </div>
     </>
   );

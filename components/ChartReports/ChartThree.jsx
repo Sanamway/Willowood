@@ -101,11 +101,11 @@ const ChartThree = (props) => {
                 <MdOutlineCloudDownload size={20}></MdOutlineCloudDownload>
               </button>
             {fullScreen ? (
-              <button onClick={() => setFullScreen(false)}>
+              <button className="lg:block hidden" onClick={() => setFullScreen(false)}>
                 <FiMinimize></FiMinimize>
               </button>
             ) : (
-              <button onClick={() => setFullScreen(true)}>
+              <button className="lg:block hidden" onClick={() => setFullScreen(true)}>
                 <FiMaximize></FiMaximize>
               </button>
             )}
