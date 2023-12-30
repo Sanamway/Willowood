@@ -13,13 +13,6 @@ const RPSummary = (props) => {
   };
 
   const [formActive, setFormActive] = useState(false);
-  const [selectedCheckbox, setSelectedCheckbox] = useState(null);
-
-  const handleCheckboxChange = (checkboxId) => {
-    if (!formActive) {
-      setSelectedCheckbox(checkboxId);
-    }
-  };
 
   //modal state
   const [isOpen, setisOpen] = useState(false);
@@ -181,32 +174,36 @@ const RPSummary = (props) => {
       const errorMessage = errors?.response?.data?.error;
 
       setApiMessage(errorMessage);
-      submitHandle(status);
     }
   };
 
   const handleEditRsp = async (status) => {
     try {
       let endPoint;
-
-      if (JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6) {
+      const receivedObject = JSON.parse(
+        decodeURIComponent(router.query.filterState)
+      );
+      if (
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6 ||
+        receivedObject.tId
+      ) {
         endPoint = `api/update_rolling_tm?tm=${true}`;
       } else if (
-        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5   
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5
       ) {
-        endPoint = `api/add_rolling_tm?rm=${true}`;
+        endPoint = `api/update_rolling_tm?rm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
       ) {
-        endPoint = `api/add_rolling_tm?zm=${true}`;
+        endPoint = `api/update_rolling_tm?tm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
       ) {
-        endPoint = `api/add_rolling_tm?bum=${true}`;
+        endPoint = `api/update_rolling_tm?tm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10
       ) {
-        endPoint = `api/add_rolling_tm?bgm=${true}`;
+        endPoint = `api/update_rolling_tm?tm=${true}`;
       } else {
         return;
       }
@@ -253,7 +250,6 @@ const RPSummary = (props) => {
       const errorMessage = errors?.response?.data?.error;
 
       setApiMessage(errorMessage);
-      submitHandle(status);
     }
   };
 

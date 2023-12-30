@@ -223,6 +223,7 @@ const RollingPlans = () => {
     buId: null,
     zId: null,
     rId: null,
+
     tId: null,
     yr: new Date(),
     month: null,
@@ -800,15 +801,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit", {
+                handleDownloadExcelEdit(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -816,7 +818,9 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <CiEdit className="text-slate-400" /> Edit
@@ -828,7 +832,7 @@ const RollingPlans = () => {
                 setModalData({
                   message: `You want to delete ${tranId}`,
                   type: "Delete",
-                  data: { mYr, planId, tranId, t, tDes, yr },
+                  data: { mYr, planId, tranId, t, tDes, yr, r },
                 });
               }}
             >
@@ -976,7 +980,7 @@ const RollingPlans = () => {
                     cId: c,
                     wId: w,
                     formType: "Add",
-                      filterState: encodeURIComponent(
+                    filterState: encodeURIComponent(
                       JSON.stringify(filterState)
                     ),
                   },
@@ -1106,15 +1110,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                handleDownloadExcelView(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -1122,8 +1127,9 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                  filterState,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
@@ -1146,7 +1152,6 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit");
                 router.push({
                   pathname: "/rptransaction",
                   query: {
@@ -1175,28 +1180,26 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View");
-                router.push({
-                  pathname: "/rptransaction",
-                  query: {
-                    planId: planId,
-                    tranId: tranId,
-                    yr: yr,
-                    mYr: mYr,
-                    depot: depot,
-                    zrt: zrt,
-                    status: status,
-                    stage: stage,
-                    bgId: bg,
-                    buId: bu,
-                    zId: z,
-                    rId: r,
-                    tId: t,
-                    cId: c,
-                    wId: w,
-                    formType: "View",
-                  },
-                });
+                handleDownloadExcelView(
+                  mYr,
+                  planId,
+                  tranId,
+                  yr,
+                  depot,
+                  zrt,
+                  status,
+                  stage,
+                  filterState,
+                  bg,
+                  bu,
+                  z,
+                  r,
+                  t,
+                  c,
+                  w,
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
@@ -1301,89 +1304,89 @@ const RollingPlans = () => {
     }
   };
 
-  const handleDownloadExcel = async (
-    m_year,
-    planId,
-    tranId,
-    tId,
-    tDes,
-    yr,
-    type,
-    transfferState
-  ) => {
-    try {
-      localStorage.setItem("RSP", JSON.stringify([]));
-      const respond = axios.get(`${url}/api/rsp_download`, {
-        headers: headers,
-        params: {
-          year_1: yr - 2,
-          year_2: yr - 1,
-          year_3: yr,
-          year_2_nm: moment(m_year)
-            .subtract(1, "years")
-            .add(1, "months")
-            .format("YYYY-MM"),
-          year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-          year_3_cm: moment(m_year).format("YYYY-MM"),
-          year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-          plan_id: planId,
-          tran_id: tranId,
-          t_id: tId,
-          t_des: tDes,
-          m_year: m_year,
-          json: true,
-        },
-      });
-      const apires = await respond;
-      const ws = XLSX.utils.json_to_sheet(apires.data.data);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-      if (type === "Download") {
-        XLSX.writeFile(
-          wb,
-          `RSP_${moment(m_year).format("YYYY-MM")}_${tDes}.xlsx`
-        );
+  // const handleDownloadExcel = async (
+  //   m_year,
+  //   planId,
+  //   tranId,
+  //   tId,
+  //   tDes,
+  //   yr,
+  //   type,
+  //   transfferState
+  // ) => {
+  //   try {
+  //     localStorage.setItem("RSP", JSON.stringify([]));
+  //     const respond = axios.get(`${url}/api/rsp_download`, {
+  //       headers: headers,
+  //       params: {
+  //         year_1: yr - 2,
+  //         year_2: yr - 1,
+  //         year_3: yr,
+  //         year_2_nm: moment(m_year)
+  //           .subtract(1, "years")
+  //           .add(1, "months")
+  //           .format("YYYY-MM"),
+  //         year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+  //         year_3_cm: moment(m_year).format("YYYY-MM"),
+  //         year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+  //         plan_id: planId,
+  //         tran_id: tranId,
+  //         t_id: tId,
+  //         t_des: tDes,
+  //         m_year: m_year,
+  //         json: true,
+  //       },
+  //     });
+  //     const apires = await respond;
+  //     const ws = XLSX.utils.json_to_sheet(apires.data.data);
+  //     const wb = XLSX.utils.book_new();
+  //     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  //     if (type === "Download") {
+  //       XLSX.writeFile(
+  //         wb,
+  //         `RSP_${moment(m_year).format("YYYY-MM")}_${tDes}.xlsx`
+  //       );
 
-        setIsOpen(true);
-        setModalData({
-          message: apires.data.message,
-          type: "Download",
-          data: {},
-        });
-      } else {
-        let keys = Object.keys(apires.data.data[0]);
-        // Convert array of objects to array of arrays
-        let arrayOfArrays = [
-          keys, // First array with keys
-          ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
-        ];
-        localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
-        router.push({
-          pathname: "/rptransaction",
-          query: {
-            planId: transfferState.planId,
-            tranId: transfferState.tranId,
-            yr: transfferState.yr,
-            mYr: transfferState.mYr,
-            depot: transfferState.depot,
-            zrt: transfferState.zrt,
-            status: transfferState.status,
-            stage: transfferState.stage,
-            bgId: transfferState.bg,
-            buId: transfferState.bu,
-            zId: transfferState.z,
-            rId: transfferState.r,
-            tId: transfferState.t,
-            cId: transfferState.c,
-            wId: transfferState.w,
-            formType: type,
-          },
-        });
-      }
-    } catch (error) {
-      console.log("mlo", error);
-    }
-  };
+  //       setIsOpen(true);
+  //       setModalData({
+  //         message: apires.data.message,
+  //         type: "Download",
+  //         data: {},
+  //       });
+  //     } else {
+  //       let keys = Object.keys(apires.data.data[0]);
+  //       // Convert array of objects to array of arrays
+  //       let arrayOfArrays = [
+  //         keys, // First array with keys
+  //         ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
+  //       ];
+  //       localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
+  //       router.push({
+  //         pathname: "/rptransaction",
+  //         query: {
+  //           planId: transfferState.planId,
+  //           tranId: transfferState.tranId,
+  //           yr: transfferState.yr,
+  //           mYr: transfferState.mYr,
+  //           depot: transfferState.depot,
+  //           zrt: transfferState.zrt,
+  //           status: transfferState.status,
+  //           stage: transfferState.stage,
+  //           bgId: transfferState.bg,
+  //           buId: transfferState.bu,
+  //           zId: transfferState.z,
+  //           rId: transfferState.r,
+  //           tId: transfferState.t,
+  //           cId: transfferState.c,
+  //           wId: transfferState.w,
+  //           formType: type,
+  //         },
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log("mlo", error);
+  //   }
+  // };
   const handleDownloadExcelView = async (
     m_year,
     planId,
@@ -1492,20 +1495,148 @@ const RollingPlans = () => {
       console.log("mlo", error);
     }
   };
+  const handleDownloadExcelEdit = async (
+    m_year,
+    planId,
+    tranId,
+    yr,
+    depot,
+    zrt,
+    status,
+    stage,
+    filterState,
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    c,
+    w,
+    tDes,
+    rDes
+  ) => {
+    let paramsData;
+    if (filterState.tId || filterState.tId === "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        t_id: t,
+        t_des: tDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      (filterState.rId || filterState.rId === "All") &&
+      !filterState.tId
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        r_id: r,
+        r_des: rDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else {
+      paramsData = {};
+    }
+    try {
+      localStorage.setItem("RSP", JSON.stringify([]));
+      const respond = axios.get(`${url}/api/rsp_download`, {
+        headers: headers,
+        params: paramsData,
+      });
+      const apires = await respond;
+      const ws = XLSX.utils.json_to_sheet(apires.data.data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+      let keys = Object.keys(apires.data.data[0]);
+      // Convert array of objects to array of arrays
+      let arrayOfArrays = [
+        keys, // First array with keys
+        ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
+      ];
+      localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
+      router.push({
+        pathname: "/rptransaction",
+        query: {
+          planId: planId,
+          tranId: tranId,
+          yr: yr,
+          mYr: m_year,
+          depot: depot,
+          zrt: zrt,
+          status: status,
+          stage: stage,
+          bgId: bg,
+          buId: bu,
+          zId: z,
+          rId: r,
+          tId: t,
+          cId: c,
+          wId: w,
+          formType: "Edit",
+          filterState: encodeURIComponent(JSON.stringify(filterState)),
+        },
+      });
+    } catch (error) {
+      console.log("mlo", error);
+    }
+  };
 
   const handleDeleteRps = async (data) => {
     try {
-      localStorage.setItem("RSP", JSON.stringify([]));
-      const respond = axios.get(`${url}/api/delete_rolling_tm`, {
-        headers: headers,
-        params: {
+      let paramsData;
+      if (filterState.tId || filterState.tId === "All") {
+        paramsData = {
           plan_id: data.planId,
           tran_id: data.tranId,
           t_year: data.yr,
           m_year: data.mYr,
           t_id: data.t,
           tm: true,
-        },
+        };
+      } else if (
+        (filterState.rId || filterState.rId === "All") &&
+        !filterState.tId
+      ) {
+        paramsData = {
+          plan_id: data.planId,
+          tran_id: data.tranId,
+          t_year: data.yr,
+          m_year: data.mYr,
+          r_id: data.r,
+          rm: true,
+        };
+      } else {
+        paramsData = {};
+      }
+      localStorage.setItem("RSP", JSON.stringify([]));
+      const respond = axios.get(`${url}/api/delete_rolling_tm`, {
+        headers: headers,
+
+        params: paramsData,
       });
       const apires = await respond;
       console.log("noye", apires.data.message);
@@ -1540,6 +1671,7 @@ const RollingPlans = () => {
     type: "",
     data: {},
   });
+  console.log("jkl", modalData);
   const handleClose = () => {
     setIsOpen(false);
     setModalData({
