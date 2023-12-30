@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 const GraphTable = (props) => {
   const { data } = props;
-  console.log("graphT", data);
 
   const [resultSum, setresultSum] = useState({
     FY_Sales_Val_21_22: 0,
@@ -58,7 +57,6 @@ const GraphTable = (props) => {
     calculateSum(data);
   }, [data]);
 
-  console.log("SUM", resultSum);
 
   // const columnSums = {
   //   salesVal2122: data.reduce((sum, item) => sum + item['FY Sales Val 21-22'], 0),
@@ -70,7 +68,7 @@ const GraphTable = (props) => {
 
   return (
     <>
-      <div className="overflow-x-auto chat-scrollbar select-none ">
+      <div className="overflow-x-auto chat-scrollbar select-none h-[16rem] ">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
           <thead className="text-xs text-gray-900 text-center bg-gray-100 ">
             <tr className="">

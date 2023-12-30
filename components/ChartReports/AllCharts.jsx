@@ -4,6 +4,8 @@ import ChartOne from "./ChartOne";
 import ChartTwo from "./ChartTwo";
 import ChartThree from "./ChartThree";
 import TableChart from "./TableChart";
+import TableChartOne from "./TableChartOne";
+import TableChartTwo from "./TableChartTwo";
 import { businessSegment, chartData,businessUnit, zoneData, regionData } from "./sample";
 import { zonelabel ,regionLable, territoryLable} from "./labels";
 import dummyData from "./TableData";
@@ -19,6 +21,11 @@ const AllCharts = (props) => {
 
     <>
       <section className="wrapper w-full px-2 mt-2 font-arial ">
+
+         <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
+           <TableChartOne heading={"Business Segments"} title={"Business Segments ( Target vs Achievement )  - Annual , YTD , MTD"} color={"bg-white"}lab={labelNameTwo} datas={dummyData || []} ></TableChartOne>
+            <TableChartTwo heading={"Business Units"} title={"Business Units ( Target vs Achievement )  - Annual , YTD , MTD"} color={"bg-white"}lab={labelNameTwo} datas={dummyData || []} ></TableChartTwo>
+         </div>
       
         <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
           <ChartOne title={"Business Segments"} color={"bg-blue-500"} lab={labelNameOne} datasets={businessSegment || []} ></ChartOne>
@@ -56,17 +63,23 @@ const AllCharts = (props) => {
 
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
           <ChartOne title={"Product Segment"} color={"bg-orange-500"} lab={labelNameTwo} datasets={chartData || []} ></ChartOne>
-          <ChartTwo title={"Product Segment Data View"} color={"bg-orange-500"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo>
+          {/* <ChartTwo title={"Product Segment Data View"} color={"bg-orange-500"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo> */}
+          <TableChartTwo heading={"Product Segment"} title={"Product Segment ( Target vs Achievement )  - Annual , YTD , MTD"} color={"bg-white"}lab={labelNameTwo} datas={dummyData || []} ></TableChartTwo>
+
         </div>
 
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
           <ChartOne title={"Product Category"} color={"bg-[#15283c]"} lab={labelNameTwo} datasets={chartData || []} ></ChartOne>
-          <ChartTwo title={"Product Category Data View"} color={"bg-[#15283c]"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo>
+          <TableChartTwo heading={"Product Category"} title={"Product Category ( Target vs Achievement )  - Annual , YTD , MTD"} color={"bg-white"}lab={labelNameTwo} datas={dummyData || []} ></TableChartTwo>
+
+          {/* <ChartTwo title={"Product Category Data View"} color={"bg-[#15283c]"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo> */}
         </div>
 
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
           <ChartOne title={"Product Brand"} color={"bg-indigo-500"} lab={labelNameTwo} datasets={chartData || []}></ChartOne>
-        <ChartTwo title={"Product Brand Data View"} color={"bg-indigo-500"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo>
+          <TableChartTwo heading={"Product Brand"} title={"Product Brand ( Target vs Achievement )  - Annual , YTD , MTD"} color={"bg-white"}lab={labelNameTwo} datas={dummyData || []} ></TableChartTwo>
+
+        {/* <ChartTwo title={"Product Brand Data View"} color={"bg-indigo-500"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo> */}
         </div>
 
 
@@ -90,7 +103,7 @@ const AllCharts = (props) => {
             Next
           </button>
         </div>
-        
+
       </section>
     </>
   );

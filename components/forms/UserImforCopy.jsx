@@ -278,17 +278,65 @@ const UserInformation = () => {
 
   //uploading Image
 
-  const handleImageUpload = (e) => {
+
+  const handleImageUpload = async(e) => {
     const file = e.target.files[0];
+    // const renamedFile = new File([file], 'Satish', {type: file?.type} )
+    const renamedBlob = new Blob([file], { type: file.type });
     if(!checkFileSize(file)){
       return;
     }
-    console.log("fillll", file);
+
+    function getFileExtension(filename) {
+      if (typeof filename !== 'string') {
+        console.error('Invalid input. Expected a string.');
+        return '';
+      }
+    
+      const parts = filename.split('.');
+      if (parts.length > 1) {
+        return parts[parts.length - 1];
+      } else {
+        return ''; // No extension found
+      }
+    }
+    console.log(getFileExtension(file.name))
+    
+   
+
+    if (file) {
+      setUserImage(URL.createObjectURL(file));
+    }
+    if(renamedBlob){
+      const formData = new FormData()
+      console.log("FILLLL", file)
+        // formData.append('myFile', renamedFile)
+        formData.append('myFile', renamedBlob, `9667810716.${getFileExtension(file.name)}`)
+      console.log("Named", formData)
+      
+      if (!renamedBlob) {
+        console.error('Error creating renamed file.');
+        return;
+      }
+
+      // return 
+      const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData)
+      const respo = await res.data
+  
+      console.log("hey hey", respo)
+      }
     if (file) {
       setUserImage(URL.createObjectURL(file));
       setUserImage(file);
     }
   };
+
+  // const handleImageUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setUserImage(URL.createObjectURL(file));
+  //   }
+  // };
 
   //getting dropdown menus
 
@@ -440,8 +488,8 @@ const UserInformation = () => {
                   </div>
                   <div className="profpic relative group">
                     <Image
-                      // src={userImage ? userImage :userimg}
-                      src={userImage}
+                      src={userImage ? userImage :userImage}
+                      // src={userImage}
                       className="h-32 w-32 rounded-full bg-gray-200"
                       // alt="Profile"
                       width={100}

@@ -1,24 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Bar, Chart } from "react-chartjs-2";
 import { TbFileDownload } from "react-icons/tb";
-import { ExportAsExcel, ExportAsPdf, CopyToClipboard, CopyTextToClipboard, PrintDocument, ExcelToJsonConverter, FileUpload } from "react-export-table";
+
 import GraphTable from "./GraphTable";
 
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
 
-const TableChart = (props) => {
+const TableChartOne = (props) => {
   const { lab, datas } = props;
   const [height, setHeight] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
  
   return (
     <>
-    <ExportAsExcel data={datas}>
-
       <div
-        className={`wrapper mt-2 lg:mt-0 ${
+        className={`wrapper mt-2 lg:mt-0   ${
           !height ? "h-72 " : "h-auto"
-        } lg:w-[100%] bg-white  rounded-lg border border-gray-200 flex flex-col ${
+        } lg:w-2/5 bg-white  rounded-lg border border-gray-200 flex flex-col ${
           fullScreen ? "fixed min-w-[100%]  h-auto lg:min-h-[84%]  top-8 mx-auto" : " h-auto"
         } `}
       >
@@ -28,8 +26,8 @@ const TableChart = (props) => {
           </div>
 
           <div className="btns flex items-center gap-2">
-            <button >
-              <TbFileDownload size={20}>Export As Excel</TbFileDownload>
+            <button onClick={() => setHeight(false)}>
+              <TbFileDownload size={20}></TbFileDownload>
             </button>
             {fullScreen ? (
               <button className="lg:block hidden" onClick={() => setFullScreen(false)}>
@@ -59,10 +57,8 @@ const TableChart = (props) => {
           />
         )}
       </div>
-    </ExportAsExcel>
-
     </>
   );
 };
 
-export default TableChart;
+export default TableChartOne;
