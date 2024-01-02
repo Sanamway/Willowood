@@ -13,13 +13,6 @@ const RPSummary = (props) => {
   };
 
   const [formActive, setFormActive] = useState(false);
-  const [selectedCheckbox, setSelectedCheckbox] = useState(null);
-
-  const handleCheckboxChange = (checkboxId) => {
-    if (!formActive) {
-      setSelectedCheckbox(checkboxId);
-    }
-  };
 
   //modal state
   const [isOpen, setisOpen] = useState(false);
@@ -29,17 +22,88 @@ const RPSummary = (props) => {
     setisOpen(true);
   };
   const updateRollingPlanStatus = async (status) => {
+    let paramsData;
+    const receivedObject = router.query.filterState
+      ? JSON.parse(decodeURIComponent(router.query.filterState))
+      : {};
+    if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6 ||
+      receivedObject.tId
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        t_id: Number(router.query.tId) ? Number(router.query.tId) : null,
+        rp_status: status,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        r_id: Number(router.query.rId),
+        rp_status: status,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4 &&
+      router.query.formType === "Review"
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        r_id: Number(router.query.rId),
+        rp_status: status,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        t_id: Number(router.query.tId) ? Number(router.query.tId) : null,
+        r_id: Number(router.query.rId),
+        rp_status: status,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        t_id: Number(router.query.tId) ? Number(router.query.tId) : null,
+        r_id: Number(router.query.rId),
+        rp_status: status,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        t_id: Number(router.query.tId) ? Number(router.query.tId) : null,
+        r_id: Number(router.query.rId),
+        rp_status: status,
+      };
+    } else {
+      return;
+    }
     try {
       const respond = await axios.get(`${url}/api/rsp_update_status`, {
         headers: headers,
-        params: {
-          t_year: router.query.yr,
-          m_year: router.query.mYr,
-          plan_id: router.query.planId,
-          tran_id: router.query.tranId,
-          t_id: Number(router.query.tId),
-          rp_status: status,
-        },
+        params: paramsData,
       });
       const apires = await respond.data.data;
       setData(apires);
@@ -52,7 +116,14 @@ const RPSummary = (props) => {
     try {
       let endPoint;
 
-      if (JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6) {
+      const receivedObject = JSON.parse(
+        decodeURIComponent(router.query.filterState)
+      );
+
+      if (
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6 ||
+        receivedObject.tId
+      ) {
         endPoint = `api/add_rolling_tm?tm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5
@@ -115,32 +186,36 @@ const RPSummary = (props) => {
       const errorMessage = errors?.response?.data?.error;
 
       setApiMessage(errorMessage);
-      submitHandle(status);
     }
   };
 
   const handleEditRsp = async (status) => {
     try {
       let endPoint;
-
-      if (JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6) {
+      const receivedObject = router.query.filterState
+        ? JSON.parse(decodeURIComponent(router.query.filterState))
+        : {};
+      if (
+        JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6 ||
+        receivedObject.tId
+      ) {
         endPoint = `api/update_rolling_tm?tm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5
       ) {
-        endPoint = `api/add_rolling_tm?rm=${true}`;
+        endPoint = `api/update_rolling_tm?rm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
       ) {
-        endPoint = `api/add_rolling_tm?zm=${true}`;
+        endPoint = `api/update_rolling_tm?tm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
       ) {
-        endPoint = `api/add_rolling_tm?bum=${true}`;
+        endPoint = `api/update_rolling_tm?tm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10
       ) {
-        endPoint = `api/add_rolling_tm?bgm=${true}`;
+        endPoint = `api/update_rolling_tm?tm=${true}`;
       } else {
         return;
       }
@@ -185,19 +260,21 @@ const RPSummary = (props) => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.error;
-
       setApiMessage(errorMessage);
-      submitHandle(status);
     }
   };
 
+  const receivedObject = router.query.filterState
+    ? JSON.parse(decodeURIComponent(router.query.filterState))
+    : {};
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
       <SubmitModal
         isOpen={isOpen}
+        territoryId={receivedObject.tId}
         onClose={() => {
           setisOpen(false);
-          setApiMessage("")
+          setApiMessage("");
           router.push("/rollingplans");
         }}
         onOpen={() => setisOpen(true)}
@@ -380,7 +457,6 @@ const RPSummary = (props) => {
           </button>
           {router.query.formType === "Add" && (
             <button
-              // onClick={() => props.formType("RPSummary")}
               onClick={() => {
                 router.query.formType === "Add"
                   ? handleSaveRsp("Draft Submit")
@@ -393,7 +469,8 @@ const RPSummary = (props) => {
               Save as Draft
             </button>
           )}
-          {router.query.formType !== "View" && (
+          {(router.query.formType === "Add" ||
+            router.query.formType === "Edit") && (
             <button
               className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
               onClick={() => {
@@ -403,6 +480,27 @@ const RPSummary = (props) => {
               }}
             >
               Final Submit
+            </button>
+          )}
+
+          {router.query.formType === "Review" && (
+            <button
+              className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-sm"
+              onClick={() => {
+                submitHandle("Review Done");
+              }}
+            >
+              Final Review
+            </button>
+          )}
+          {router.query.formType === "Review" && (
+            <button
+              className="text-center rounded-md bg-red-500 text-white py-1 px-4 text-sm"
+              onClick={() => {
+                // submitHandle("Review Done");
+              }}
+            >
+              Reject as Draft
             </button>
           )}
         </div>

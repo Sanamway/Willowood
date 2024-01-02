@@ -13,6 +13,7 @@ function SubmitModal({
   method,
   endpoints,
   message,
+  territoryId,
 }) {
   const headers = {
     "Content-Type": "application/json",
@@ -50,6 +51,7 @@ function SubmitModal({
     }
   };
 
+  const handleResponseMessage = () => {};
   return (
     <>
       <Toaster position="bottom-center" reverseOrder={false} />

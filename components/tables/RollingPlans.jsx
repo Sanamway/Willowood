@@ -22,11 +22,15 @@ import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { Dialog, Transition } from "@headlessui/react";
+import { MdDelete } from "react-icons/md";
+import SubmitModal from "../modals/SubmitModal";
 
 import moment from "moment";
 
 import { AiOutlineSearch } from "react-icons/ai";
 const RollingPlans = () => {
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
   const datas = [
     {
       id: 1,
@@ -223,13 +227,48 @@ const RollingPlans = () => {
     buId: null,
     zId: null,
     rId: null,
+
     tId: null,
-    yr: new Date(),
+    yr: moment().year(),
     month: null,
   });
+  const [allMonthData, setAllMonthData] = useState([]);
+  const [allYearData, setAllYearData] = useState([]);
+  const getAllTransactionPlan = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_rp`, {
+        headers: headers,
+        params: { status: true },
+      });
+      const apires = await respond.data.data;
+      setAllYearData([...new Set(apires.map((item) => item.t_year))]);
+    } catch (error) {}
+  };
 
   useEffect(() => {
+    getAllTransactionPlan();
+  }, []);
+  const getAllTransactionYear = async (yr) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_rp`, {
+        headers: headers,
+        params: { status: true, year: yr },
+      });
+      const apires = await respond.data.data;
+
+      setAllMonthData(apires);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (!filterState.yr) return;
+    getAllTransactionYear(filterState.yr);
+  }, [filterState.yr]);
+
+  useEffect(() => {
+    if (!allYearData.length) return;
     const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
+
     switch (roleId) {
       case 6:
         setLocalStorageItems({
@@ -248,7 +287,7 @@ const RollingPlans = () => {
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: new Date(),
+          yr: Math.max(...allYearData),
           month: null,
         });
         break;
@@ -270,7 +309,7 @@ const RollingPlans = () => {
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           tId: null,
-          yr: new Date(),
+          yr: Math.max(...allYearData),
           month: null,
         });
         break;
@@ -292,7 +331,7 @@ const RollingPlans = () => {
           rId: null,
 
           tId: null,
-          yr: new Date(),
+          yr: Math.max(...allYearData),
           month: null,
         });
         break;
@@ -313,7 +352,7 @@ const RollingPlans = () => {
           rId: null,
           zId: null,
           tId: null,
-          yr: new Date(),
+          yr: Math.max(...allYearData),
           month: null,
         });
         break;
@@ -334,7 +373,7 @@ const RollingPlans = () => {
           rId: null,
           zId: null,
           tId: null,
-          yr: new Date(),
+          yr: Math.max(...allYearData),
           month: null,
         });
         break;
@@ -355,12 +394,12 @@ const RollingPlans = () => {
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: new Date(),
+          yr: Math.max(...allYearData),
           month: null,
         });
         break;
     }
-  }, []);
+  }, [allYearData]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -494,26 +533,6 @@ const RollingPlans = () => {
     );
   }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
 
-  const [allMonthData, setAllMonthData] = useState([]);
-  const getAllTransactionPlan = async (yr) => {
-    try {
-      const respond = await axios.get(`${url}/api/get_rp`, {
-        headers: headers,
-        params: {
-          year: moment(yr).year(),
-        },
-      });
-      const apires = await respond.data.data;
-
-      setAllMonthData(apires);
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    if (!filterState.yr) return;
-    getAllTransactionPlan(filterState.yr);
-  }, [filterState.yr]);
-
   const [allTableData, setAllTableData] = useState([]);
   const getAllSalesPlanStatus = async (
     yr,
@@ -545,7 +564,7 @@ const RollingPlans = () => {
         headers: headers,
 
         params: {
-          t_year: moment(yr).year() || null,
+          t_year: yr || null,
           m_year:
             month === "All" || !month ? null : moment(month).format("YYYY-MM"),
           bg_id: bgId === "All" || !bgId ? null : bgId,
@@ -600,7 +619,11 @@ const RollingPlans = () => {
       case "Yet to Submit":
         return "#f4141c";
       case "Yet to Approve":
+        return "red";
+      case "Approved":
         return "green";
+      case "Reject":
+        return "red";
       case "Reject":
         return "#f4141c";
 
@@ -608,6 +631,48 @@ const RollingPlans = () => {
         return "black";
     }
   };
+
+  const [rejectDraftModal, setRejectDraftModal] = useState(false);
+  const [rejectModalData, setRejectModalData] = useState({
+    data: "",
+    tranId: "",
+    mYr: "",
+    planId: "",
+  });
+
+  const handleSaveDraft = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/rsp_update_status`, {
+        headers: headers,
+        params: {
+          t_year: filterState.yr,
+          m_year: rejectModalData.mYr,
+          plan_id: rejectModalData.planId,
+          tran_id: rejectModalData.tranId,
+          t_id: Number(filterState.tId),
+          rp_status: "Draft Submit",
+          remarks: rejectModalData.data,
+        },
+      });
+      const apires = await respond.data.data;
+      console.log("bnm", apires);
+      handleDraftClose();
+      setSuccessMsg(respond.data.message);
+      setSuccessOpen(true);
+      getAllSalesPlanStatus(
+        filterState.yr || null,
+        filterState.month || null,
+        filterState.bgId || null,
+        filterState.buId || null,
+        filterState.zId || null,
+        filterState.rId || null,
+        filterState.tId
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getOptions = (
     planId,
     tranId,
@@ -624,7 +689,9 @@ const RollingPlans = () => {
     t,
     c,
     w,
-    tDes
+    tDes,
+    rDes,
+    zDes
   ) => {
     switch (status) {
       case "Close Period":
@@ -633,14 +700,17 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() =>
-                handleDownloadExcel(
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
-                  t,
-                  tDes,
                   yr,
-                  "Download"
+                  t,
+
+                  tDes,
+                  r,
+                  rDes,
+                  filterState
                 )
               }
             >
@@ -649,15 +719,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                handleDownloadExcelView(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -665,13 +736,16 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
-              <TbDeviceDesktopAnalytics className="text-orange-400" /> Report
+              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+              Vs. Actual
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <CgNotes className="text-blue-400" /> Meeting Note
@@ -688,14 +762,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() =>
-                handleDownloadExcel(
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
+                  yr,
                   t,
                   tDes,
-                  yr,
-                  "Download"
+                  r,
+                  rDes,
+                  filterState
                 )
               }
             >
@@ -733,15 +809,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                handleDownloadExcelView(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -749,13 +826,16 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
-              <TbDeviceDesktopAnalytics className="text-orange-400" /> Report
+              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+              Vs. Actual
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <CgNotes className="text-blue-400" /> Meeting Note
@@ -771,14 +851,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() =>
-                handleDownloadExcel(
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
+                  yr,
                   t,
                   tDes,
-                  yr,
-                  "Download"
+                  r,
+                  rDes,
+                  filterState
                 )
               }
             >
@@ -787,15 +869,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit", {
+                handleDownloadExcelEdit(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -803,7 +886,9 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <CiEdit className="text-slate-400" /> Edit
@@ -815,24 +900,25 @@ const RollingPlans = () => {
                 setModalData({
                   message: `You want to delete ${tranId}`,
                   type: "Delete",
-                  data: { mYr, planId, tranId, t, tDes, yr },
+                  data: { mYr, planId, tranId, t, tDes, yr, r },
                 });
               }}
             >
-              <CiEdit className="text-slate-400" /> Delete
+              <MdDelete className="text-slate-400" /> Delete
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                handleDownloadExcelView(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -840,13 +926,16 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
-              <TbDeviceDesktopAnalytics className="text-orange-400" /> Report
+              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+              Vs. Actual
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <CgNotes className="text-blue-400" /> Meeting Note
@@ -862,14 +951,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() =>
-                handleDownloadExcel(
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
+                  yr,
                   t,
                   tDes,
-                  yr,
-                  "Download"
+                  r,
+                  rDes,
+                  filterState
                 )
               }
             >
@@ -879,15 +970,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                handleDownloadExcelView(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -895,13 +987,172 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
+            {(filterState.rId || filterState.rId === "All") &&
+              localStorageItems.roleId === 4 && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    handleDownloadExcelReview(
+                      mYr,
+                      planId,
+                      tranId,
+                      yr,
+                      depot,
+                      zrt,
+                      status,
+                      stage,
+                      filterState,
+                      bg,
+                      bu,
+                      z,
+                      r,
+                      t,
+                      c,
+                      w,
+                      tDes,
+                      rDes
+                    );
+                  }}
+                >
+                  <GrTask className="text-orange-400" /> Review Decision
+                </li>
+              )}
+            {(filterState.tId || filterState.tId === "All") &&
+              localStorageItems.roleId === 5 && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    setRejectDraftModal(true);
+                    setRejectModalData({
+                      ...rejectModalData,
+                      planId: planId,
+                      tranId: tranId,
+                      mYr: mYr,
+                    });
+                  }}
+                >
+                  <GrTask className="text-orange-400" /> Reject as Draft
+                </li>
+              )}
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
-              <TbDeviceDesktopAnalytics className="text-orange-400" /> Report
+              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+              Vs. Actual
+            </li>
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <CgNotes className="text-blue-400" /> Meeting Note
+            </li>
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <GrTask className="text-orange-400" /> Task
+            </li>
+          </ul>
+        );
+
+      case "Review Done":
+        return (
+          <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcelNew(
+                  mYr,
+                  planId,
+                  tranId,
+                  yr,
+                  t,
+                  tDes,
+                  r,
+                  rDes,
+                  filterState
+                )
+              }
+            >
+              <FaDownload className="text-slate-400" /> Download RP
+            </li>
+
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() => {
+                handleDownloadExcelView(
+                  mYr,
+                  planId,
+                  tranId,
+                  yr,
+                  depot,
+                  zrt,
+                  status,
+                  stage,
+                  filterState,
+                  bg,
+                  bu,
+                  z,
+                  r,
+                  t,
+                  c,
+                  w,
+                  tDes,
+                  rDes
+                );
+              }}
+            >
+              <MdOutlinePreview className="text-slate-400" /> View
+            </li>
+            {(filterState.rId || filterState.rId === "All") &&
+              localStorageItems.roleId === 4 && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    handleDownloadExcelReview(
+                      mYr,
+                      planId,
+                      tranId,
+                      yr,
+                      depot,
+                      zrt,
+                      status,
+                      stage,
+                      filterState,
+                      bg,
+                      bu,
+                      z,
+                      r,
+                      t,
+                      c,
+                      w,
+                      tDes,
+                      rDes
+                    );
+                  }}
+                >
+                  <GrTask className="text-orange-400" /> Review
+                </li>
+              )}
+            {(filterState.tId || filterState.tId === "All") &&
+              localStorageItems.roleId === 5 && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    setRejectDraftModal(true);
+                    setRejectModalData({
+                      ...rejectModalData,
+                      planId: planId,
+                      tranId: tranId,
+                      mYr: mYr,
+                    });
+                  }}
+                >
+                  <GrTask className="text-orange-400" /> Reject as Draft
+                </li>
+              )}
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+              Vs. Actual
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <CgNotes className="text-blue-400" /> Meeting Note
@@ -917,17 +1168,19 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcel(
+              onClick={() => {
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
+                  yr,
                   t,
                   tDes,
-                  yr,
-                  "Download"
-                )
-              }
+                  r,
+                  rDes,
+                  filterState
+                );
+              }}
             >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
@@ -953,6 +1206,9 @@ const RollingPlans = () => {
                     cId: c,
                     wId: w,
                     formType: "Add",
+                    filterState: encodeURIComponent(
+                      JSON.stringify(filterState)
+                    ),
                   },
                 });
               }}
@@ -974,61 +1230,37 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() =>
-                handleDownloadExcel(
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
+                  yr,
                   t,
                   tDes,
-                  yr,
-                  "Download"
+                  r,
+                  rDes,
+                  z,
+                  zDes,
+                  filterState
                 )
               }
             >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit");
-                router.push({
-                  pathname: "/rptransaction",
-                  query: {
-                    planId: planId,
-                    tranId: tranId,
-                    yr: yr,
-                    mYr: mYr,
-                    depot: depot,
-                    zrt: zrt,
-                    status: status,
-                    stage: stage,
-                    bgId: bg,
-                    buId: bu,
-                    zId: z,
-                    rId: r,
-                    tId: t,
-                    cId: c,
-                    wId: w,
-                    formType: "Edit",
-                  },
-                });
-              }}
-            >
-              <CiEdit className="text-slate-400" /> Edit
-            </li>
 
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                handleDownloadExcelView(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -1036,13 +1268,16 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
-              <TbDeviceDesktopAnalytics className="text-orange-400" /> Report
+              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+              Vs. Actual
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <CgNotes className="text-blue-400" /> Meeting Note
@@ -1058,14 +1293,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() =>
-                handleDownloadExcel(
+                handleDownloadExcelNew(
                   mYr,
                   planId,
                   tranId,
+                  yr,
                   t,
                   tDes,
-                  yr,
-                  "Download"
+                  r,
+                  rDes,
+                  filterState
                 )
               }
             >
@@ -1074,15 +1311,16 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View", {
+                handleDownloadExcelView(
+                  mYr,
                   planId,
                   tranId,
                   yr,
-                  mYr,
                   depot,
                   zrt,
                   status,
                   stage,
+                  filterState,
                   bg,
                   bu,
                   z,
@@ -1090,13 +1328,16 @@ const RollingPlans = () => {
                   t,
                   c,
                   w,
-                });
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
-              <TbDeviceDesktopAnalytics className="text-orange-400" /> Report
+              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+              Vs. Actual
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <CgNotes className="text-blue-400" /> Meeting Note
@@ -1113,7 +1354,6 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit");
                 router.push({
                   pathname: "/rptransaction",
                   query: {
@@ -1142,28 +1382,26 @@ const RollingPlans = () => {
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
-                handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "View");
-                router.push({
-                  pathname: "/rptransaction",
-                  query: {
-                    planId: planId,
-                    tranId: tranId,
-                    yr: yr,
-                    mYr: mYr,
-                    depot: depot,
-                    zrt: zrt,
-                    status: status,
-                    stage: stage,
-                    bgId: bg,
-                    buId: bu,
-                    zId: z,
-                    rId: r,
-                    tId: t,
-                    cId: c,
-                    wId: w,
-                    formType: "View",
-                  },
-                });
+                handleDownloadExcelView(
+                  mYr,
+                  planId,
+                  tranId,
+                  yr,
+                  depot,
+                  zrt,
+                  status,
+                  stage,
+                  filterState,
+                  bg,
+                  bu,
+                  z,
+                  r,
+                  t,
+                  c,
+                  w,
+                  tDes,
+                  rDes
+                );
               }}
             >
               <MdOutlinePreview className="text-slate-400" /> View
@@ -1178,10 +1416,320 @@ const RollingPlans = () => {
               Future Period
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
-              Report
+              Target Vs. Actual
             </li>
           </ul>
         );
+    }
+  };
+
+  const handleDownloadExcelNew = async (
+    m_year,
+    planId,
+    tranId,
+    yr,
+    tId,
+    tDes,
+    rId,
+    rDes,
+    zId,
+    zDes,
+    filterState
+  ) => {
+    let paramsData;
+    if (filterState.tId || filterState.tId === "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        t_id: tId,
+        t_des: tDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      (filterState.rId || filterState.rId === "All") &&
+      !filterState.tId
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        r_id: rId,
+        r_des: rDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      (filterState.zId || filterState.zId === "All") &&
+      !filterState.rId
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        z_id: zId,
+        z_des: zDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else {
+      paramsData = {};
+    }
+    try {
+      localStorage.setItem("RSP", JSON.stringify([]));
+      const respond = axios.get(`${url}/api/rsp_download`, {
+        headers: headers,
+        params: paramsData,
+      });
+      const apires = await respond;
+      const ws = XLSX.utils.json_to_sheet(apires.data.data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+      if (tDes) {
+        XLSX.writeFile(
+          wb,
+          `RSP_${moment(m_year).format("YYYY-MM")}_${tDes}.xlsx`
+        );
+      } else if (rDes) {
+        XLSX.writeFile(
+          wb,
+          `RSP_${moment(m_year).format("YYYY-MM")}_${rDes}.xlsx`
+        );
+      } else if (zDes) {
+        XLSX.writeFile(
+          wb,
+          `RSP_${moment(m_year).format("YYYY-MM")}_${zDes}.xlsx`
+        );
+      }
+
+      setIsOpen(true);
+      setModalData({
+        message: apires.data.message,
+        type: "Download",
+        data: {},
+      });
+    } catch (error) {
+      console.log("mlo", error);
+    }
+  };
+
+  // const handleDownloadExcel = async (
+  //   m_year,
+  //   planId,
+  //   tranId,
+  //   tId,
+  //   tDes,
+  //   yr,
+  //   type,
+  //   transfferState
+  // ) => {
+  //   try {
+  //     localStorage.setItem("RSP", JSON.stringify([]));
+  //     const respond = axios.get(`${url}/api/rsp_download`, {
+  //       headers: headers,
+  //       params: {
+  //         year_1: yr - 2,
+  //         year_2: yr - 1,
+  //         year_3: yr,
+  //         year_2_nm: moment(m_year)
+  //           .subtract(1, "years")
+  //           .add(1, "months")
+  //           .format("YYYY-MM"),
+  //         year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+  //         year_3_cm: moment(m_year).format("YYYY-MM"),
+  //         year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+  //         plan_id: planId,
+  //         tran_id: tranId,
+  //         t_id: tId,
+  //         t_des: tDes,
+  //         m_year: m_year,
+  //         json: true,
+  //       },
+  //     });
+  //     const apires = await respond;
+  //     const ws = XLSX.utils.json_to_sheet(apires.data.data);
+  //     const wb = XLSX.utils.book_new();
+  //     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  //     if (type === "Download") {
+  //       XLSX.writeFile(
+  //         wb,
+  //         `RSP_${moment(m_year).format("YYYY-MM")}_${tDes}.xlsx`
+  //       );
+
+  //       setIsOpen(true);
+  //       setModalData({
+  //         message: apires.data.message,
+  //         type: "Download",
+  //         data: {},
+  //       });
+  //     } else {
+  //       let keys = Object.keys(apires.data.data[0]);
+  //       // Convert array of objects to array of arrays
+  //       let arrayOfArrays = [
+  //         keys, // First array with keys
+  //         ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
+  //       ];
+  //       localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
+  //       router.push({
+  //         pathname: "/rptransaction",
+  //         query: {
+  //           planId: transfferState.planId,
+  //           tranId: transfferState.tranId,
+  //           yr: transfferState.yr,
+  //           mYr: transfferState.mYr,
+  //           depot: transfferState.depot,
+  //           zrt: transfferState.zrt,
+  //           status: transfferState.status,
+  //           stage: transfferState.stage,
+  //           bgId: transfferState.bg,
+  //           buId: transfferState.bu,
+  //           zId: transfferState.z,
+  //           rId: transfferState.r,
+  //           tId: transfferState.t,
+  //           cId: transfferState.c,
+  //           wId: transfferState.w,
+  //           formType: type,
+  //         },
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log("mlo", error);
+  //   }
+  // };
+  const handleDownloadExcelView = async (
+    m_year,
+    planId,
+    tranId,
+    yr,
+    depot,
+    zrt,
+    status,
+    stage,
+    filterState,
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    c,
+    w,
+    tDes,
+    rDes
+  ) => {
+    let paramsData;
+    if (filterState.tId || filterState.tId === "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        t_id: t,
+        t_des: tDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      (filterState.rId || filterState.rId === "All") &&
+      !filterState.tId
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        r_id: r,
+        r_des: rDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else {
+      paramsData = {};
+    }
+    try {
+      localStorage.setItem("RSP", JSON.stringify([]));
+      const respond = axios.get(`${url}/api/rsp_download`, {
+        headers: headers,
+        params: paramsData,
+      });
+      const apires = await respond;
+      const ws = XLSX.utils.json_to_sheet(apires.data.data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+      let keys = Object.keys(apires.data.data[0]);
+      // Convert array of objects to array of arrays
+      let arrayOfArrays = [
+        keys, // First array with keys
+        ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
+      ];
+      localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
+      router.push({
+        pathname: "/rptransaction",
+        query: {
+          planId: planId,
+          tranId: tranId,
+          yr: yr,
+          mYr: m_year,
+          depot: depot,
+          zrt: zrt,
+          status: status,
+          stage: stage,
+          bgId: bg,
+          buId: bu,
+          zId: z,
+          rId: r,
+          tId: t,
+          cId: c,
+          wId: w,
+          formType: "View",
+        },
+      });
+    } catch (error) {
+      console.log("mlo", error);
     }
   };
 
@@ -1189,81 +1737,216 @@ const RollingPlans = () => {
     m_year,
     planId,
     tranId,
-    tId,
-    tDes,
     yr,
-    type,
-    transfferStat
+    depot,
+    zrt,
+    status,
+    stage,
+    filterState,
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    c,
+    w,
+    tDes,
+    rDes
   ) => {
+    let paramsData;
+    if (filterState.tId || filterState.tId === "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        t_id: t,
+        t_des: tDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      (filterState.rId || filterState.rId === "All") &&
+      !filterState.tId
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        r_id: r,
+        r_des: rDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else {
+      paramsData = {};
+    }
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/rsp_download`, {
         headers: headers,
-        params: {
-          year_1: yr - 2,
-          year_2: yr - 1,
-          year_3: yr,
-          year_2_nm: moment(m_year)
-            .subtract(1, "years")
-            .add(1, "months")
-            .format("YYYY-MM"),
-          year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-          year_3_cm: moment(m_year).format("YYYY-MM"),
-          year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-          plan_id: planId,
-          tran_id: tranId,
-          t_id: tId,
-          t_des: tDes,
-          m_year: m_year,
-          json: true,
-        },
+        params: paramsData,
       });
       const apires = await respond;
       const ws = XLSX.utils.json_to_sheet(apires.data.data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-      if (type === "Download") {
-        XLSX.writeFile(
-          wb,
-          `RSP_${moment(m_year).format("YYYY-MM")}_${tDes}.xlsx`
-        );
 
-        setIsOpen(true);
-        setModalData({
-          message: apires.data.message,
-          type: "Download",
-          data: {},
-        });
-      } else {
-        let keys = Object.keys(apires.data.data[0]);
-        // Convert array of objects to array of arrays
-        let arrayOfArrays = [
-          keys, // First array with keys
-          ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
-        ];
-        localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
-        router.push({
-          pathname: "/rptransaction",
-          query: {
-            planId: transfferStat.planId,
-            tranId: transfferStat.tranId,
-            yr: transfferStat.yr,
-            mYr: transfferStat.mYr,
-            depot: transfferStat.depot,
-            zrt: transfferStat.zrt,
-            status: transfferStat.status,
-            stage: transfferStat.stage,
-            bgId: transfferStat.bg,
-            buId: transfferStat.bu,
-            zId: transfferStat.z,
-            rId: transfferStat.r,
-            tId: transfferStat.t,
-            cId: transfferStat.c,
-            wId: transfferStat.w,
-            formType: type,
-          },
-        });
-      }
+      let keys = Object.keys(apires.data.data[0]);
+      // Convert array of objects to array of arrays
+      let arrayOfArrays = [
+        keys, // First array with keys
+        ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
+      ];
+      localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
+      router.push({
+        pathname: "/rptransaction",
+        query: {
+          planId: planId,
+          tranId: tranId,
+          yr: yr,
+          mYr: m_year,
+          depot: depot,
+          zrt: zrt,
+          status: status,
+          stage: stage,
+          bgId: bg,
+          buId: bu,
+          zId: z,
+          rId: r,
+          tId: t,
+          cId: c,
+          wId: w,
+          formType: "Review",
+        },
+      });
+    } catch (error) {
+      console.log("mlo", error);
+    }
+  };
+
+  const handleDownloadExcelEdit = async (
+    m_year,
+    planId,
+    tranId,
+    yr,
+    depot,
+    zrt,
+    status,
+    stage,
+    filterState,
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    c,
+    w,
+    tDes,
+    rDes
+  ) => {
+    let paramsData;
+    if (filterState.tId || filterState.tId === "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        t_id: t,
+        t_des: tDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      (filterState.rId || filterState.rId === "All") &&
+      !filterState.tId
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        r_id: r,
+        r_des: rDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else {
+      paramsData = {};
+    }
+    try {
+      localStorage.setItem("RSP", JSON.stringify([]));
+      const respond = axios.get(`${url}/api/rsp_download`, {
+        headers: headers,
+        params: paramsData,
+      });
+      const apires = await respond;
+      const ws = XLSX.utils.json_to_sheet(apires.data.data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+      let keys = Object.keys(apires.data.data[0]);
+      // Convert array of objects to array of arrays
+      let arrayOfArrays = [
+        keys, // First array with keys
+        ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
+      ];
+      localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
+      router.push({
+        pathname: "/rptransaction",
+        query: {
+          planId: planId,
+          tranId: tranId,
+          yr: yr,
+          mYr: m_year,
+          depot: depot,
+          zrt: zrt,
+          status: status,
+          stage: stage,
+          bgId: bg,
+          buId: bu,
+          zId: z,
+          rId: r,
+          tId: t,
+          cId: c,
+          wId: w,
+          formType: "Edit",
+          filterState: encodeURIComponent(JSON.stringify(filterState)),
+        },
+      });
     } catch (error) {
       console.log("mlo", error);
     }
@@ -1271,17 +1954,36 @@ const RollingPlans = () => {
 
   const handleDeleteRps = async (data) => {
     try {
-      localStorage.setItem("RSP", JSON.stringify([]));
-      const respond = axios.get(`${url}/api/delete_rolling_tm`, {
-        headers: headers,
-        params: {
+      let paramsData;
+      if (filterState.tId || filterState.tId === "All") {
+        paramsData = {
           plan_id: data.planId,
           tran_id: data.tranId,
           t_year: data.yr,
           m_year: data.mYr,
           t_id: data.t,
           tm: true,
-        },
+        };
+      } else if (
+        (filterState.rId || filterState.rId === "All") &&
+        !filterState.tId
+      ) {
+        paramsData = {
+          plan_id: data.planId,
+          tran_id: data.tranId,
+          t_year: data.yr,
+          m_year: data.mYr,
+          r_id: data.r,
+          rm: true,
+        };
+      } else {
+        paramsData = {};
+      }
+      localStorage.setItem("RSP", JSON.stringify([]));
+      const respond = axios.get(`${url}/api/delete_rolling_tm`, {
+        headers: headers,
+
+        params: paramsData,
       });
       const apires = await respond;
       console.log("noye", apires.data.message);
@@ -1316,6 +2018,7 @@ const RollingPlans = () => {
     type: "",
     data: {},
   });
+
   const handleClose = () => {
     setIsOpen(false);
     setModalData({
@@ -1324,6 +2027,18 @@ const RollingPlans = () => {
       data: {},
     });
   };
+
+  const handleDraftClose = () => {
+    setRejectDraftModal(false);
+    setRejectModalData({
+      data: "",
+      tranId: "",
+      mYr: "",
+      planId: "",
+    });
+  };
+  const isRole56 =
+    localStorageItems.roleId === 6 || localStorageItems.roleId === 5;
   return (
     <Layout>
       <div className="h-screen  w-full font-arial bg-white  ">
@@ -1334,19 +2049,27 @@ const RollingPlans = () => {
         </div>
         <div className="my-4 flex  flex-col w-full gap-4 px-12 ">
           <div className="flex gap-4 w-full">
-            <DatePicker
-              className=" px-2 py-1 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 w-28"
-              selected={filterState.yr}
-              onChange={(date) => {
+            <select
+              className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              id="stateSelect"
+              value={filterState.yr}
+              onChange={(e) =>
                 setFilterState({
                   ...filterState,
-                  yr: date,
-                });
-              }}
-              minDate={new Date()}
-              showYearPicker
-              dateFormat="yyyy"
-            />
+                  yr: e.target.value,
+                })
+              }
+              disabled={!filterState.yr}
+            >
+              <option value="All" className="font-bold" disabled={true}>
+                -- Select --
+              </option>
+              {allYearData.map((item, idx) => (
+                <option value={item} key={idx}>
+                  {item}
+                </option>
+              ))}
+            </select>
             <select
               className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
@@ -1362,17 +2085,11 @@ const RollingPlans = () => {
               <option value="All" className="font-bold">
                 All
               </option>
-              {allMonthData
-                .filter(
-                  (item) =>
-                    item.clos_status === "Open Period" ||
-                    item.clos_status === "Close Period"
-                )
-                .map((item, idx) => (
-                  <option value={item.m_year} key={idx}>
-                    {moment(item.m_year).format("MMM YYYY")}
-                  </option>
-                ))}
+              {allMonthData.map((item, idx) => (
+                <option value={item.m_year} key={idx}>
+                  {moment(item.m_year).format("MMM YYYY")}
+                </option>
+              ))}
             </select>
             <select
               className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -1557,7 +2274,7 @@ const RollingPlans = () => {
                       </p>
                     </td>
                     <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap text-xs ">
+                      <p className="text-gray-900 whitespace-no-wrap text-xs">
                         {item.business_segment}
                         {item.business_unit_name && "/"}
                         {item.business_unit_name}
@@ -1571,14 +2288,20 @@ const RollingPlans = () => {
                     </td>
                     <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
                       <div className="demo-preview">
-                        <div className="progress progress-striped active">
+                        <div className="progress progress-striped active flex flex-row justify-between">
                           <div
                             role="progressbar "
-                            style={{ width: "100%" }}
+                            style={{ width: `${item.actual}%` }}
                             className="progress-bar progress-bar-success rounded-md"
                           >
-                            <span className="inline-block"></span>
+                            <span className="inline-block text-xs font-bold">
+                              {item.actual}
+                            </span>
                           </div>
+                          <span className="font-bold text-xs">
+                            {" "}
+                            {item.target}
+                          </span>
                         </div>
                       </div>
                     </td>
@@ -1602,66 +2325,72 @@ const RollingPlans = () => {
                       <span className="relative inline-block px-2 py-1 italic text-green-900 leading-tight">
                         {item.count}
                       </span>
-
+                      {console.log("nok", filterState.tId)}
                       <div className="popop">
-                        <Popover
-                          as="div"
-                          className="relative border-none outline-none "
-                        >
-                          {({ open }) => (
-                            <>
-                              <Popover.Button className="focus:outline-none">
-                                <BsThreeDotsVertical
-                                  className="text-[#626364] cursor-pointer"
-                                  size={20}
-                                ></BsThreeDotsVertical>
-                              </Popover.Button>
+                        {(isRole56 || !filterState.tId) && (
+                          <Popover
+                            as="div"
+                            className="relative border-none outline-none "
+                          >
+                            {({ open }) => (
+                              <>
+                                <Popover.Button className="focus:outline-none">
+                                  <BsThreeDotsVertical
+                                    className="text-[#626364] cursor-pointer"
+                                    size={20}
+                                  ></BsThreeDotsVertical>
+                                </Popover.Button>
 
-                              <Popover.Panel
-                                as="div"
-                                className={`${
-                                  open ? "block" : "hidden"
-                                } absolute z-40 top-1 right-0 mt-2 w-40 bg-white  text-black border rounded-md shadow-md`}
-                              >
-                                {getOptions(
-                                  item.plan_id,
-                                  item.tran_id,
-                                  item.t_year,
-                                  item.m_year,
-                                  item.depot_name,
-                                  `${
-                                    item.business_segment
-                                      ? item.business_segment
-                                      : ""
-                                  } 
-                                  ${
-                                    item.business_unit_name
-                                      ? item.business_unit_name
-                                      : ""
-                                  }  
-                                  ${item.zone_name ? item.zone_name : ""} 
-                                  ${item.region_name ? item.region_name : ""}
-                                   ${
-                                     item.territory_name
-                                       ? item.territory_name
-                                       : ""
-                                   }`,
-                                  item.rp_status,
-                                  item.count || "",
+                                <Popover.Panel
+                                  as="div"
+                                  className={`${
+                                    open ? "block" : "hidden"
+                                  } absolute z-40 top-1 right-0 mt-2 w-52 bg-white  text-black border rounded-md shadow-md`}
+                                >
+                                  {getOptions(
+                                    item.plan_id,
+                                    item.tran_id,
+                                    item.t_year,
+                                    item.m_year,
+                                    item.depot_name,
+                                    `${
+                                      item.business_segment
+                                        ? item.business_segment
+                                        : ""
+                                    } 
+                                      ${
+                                        item.business_unit_name
+                                          ? item.business_unit_name
+                                          : ""
+                                      }  
+                                      ${item.zone_name ? item.zone_name : ""} 
+                                      ${
+                                        item.region_name ? item.region_name : ""
+                                      }
+                                       ${
+                                         item.territory_name
+                                           ? item.territory_name
+                                           : ""
+                                       }`,
+                                    item.rp_status,
+                                    item.count || "",
 
-                                  item.bg_id,
-                                  item.bu_id,
-                                  item.z_id,
-                                  item.r_id,
-                                  item.t_id,
-                                  item.c_id,
-                                  item.w_id,
-                                  item.territory_name
-                                )}
-                              </Popover.Panel>
-                            </>
-                          )}
-                        </Popover>
+                                    item.bg_id,
+                                    item.bu_id,
+                                    item.z_id,
+                                    item.r_id,
+                                    item.t_id,
+                                    item.c_id,
+                                    item.w_id,
+                                    item.territory_name,
+                                    item.region_name,
+                                    item.zone_name
+                                  )}
+                                </Popover.Panel>
+                              </>
+                            )}
+                          </Popover>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -1672,6 +2401,143 @@ const RollingPlans = () => {
         </div>
       </div>
       <Toaster position="bottom-center" reverseOrder={false} />
+      <Transition appear show={successOpen} as={Fragment}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          onClose={() => {
+            setSuccessOpen(false);
+            setSuccessMsg("");
+          }}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
+                  >
+                    Rolling Plan
+                  </Dialog.Title>
+                  <div className="mt-2">{successMsg}</div>
+                  <div className="mt-4 flex items-center justify-center">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={() => {
+                        setSuccessOpen(false);
+                        setSuccessMsg("");
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+      <Transition appear show={rejectDraftModal} as={Fragment} size="lg">
+        <Dialog
+          as="div"
+          className="relative z-10"
+          onClose={handleDraftClose}
+          style={{ maxHeight: "100vh", maxWidth: "3xl" }}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className=" font-arial  w-[75%] h-[75%] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-[1.25rem]  font-medium leading-6 text-center text-gray-900"
+                  >
+                    Review Message
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <textarea
+                      className="w-full  px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      type="text"
+                      id="inputField"
+                      maxLength={256}
+                      placeholder="Comment Please"
+                      value={rejectModalData.data}
+                      onChange={(e) =>
+                        setRejectModalData({
+                          ...rejectModalData,
+                          data: e.target.value,
+                        })
+                      }
+
+                      // disabled={!formActive}
+                    />
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-start gap-4">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={handleSaveDraft}
+                      disabled={!rejectModalData.data}
+                    >
+                      Send
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={handleDraftClose}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleClose}>
           <Transition.Child
@@ -1730,25 +2596,26 @@ const RollingPlans = () => {
                         className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-white-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                         onClick={() => handleDeleteRps(modalData.data)}
                       >
-                      Yes
+                        Yes
                       </button>
                     )}
-                    {modalData.type === "Delete" ? 
-                       <button
-                       type="button"
-                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                       onClick={handleClose}
-                     >
-                       No
-                     </button>
-                    :   <button
-                    type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    onClick={handleClose}
-                  >
-                    Close
-                  </button>}
-                  
+                    {modalData.type === "Delete" ? (
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        onClick={handleClose}
+                      >
+                        No
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        onClick={handleClose}
+                      >
+                        Close
+                      </button>
+                    )}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
