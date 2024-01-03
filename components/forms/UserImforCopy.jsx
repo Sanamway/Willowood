@@ -99,7 +99,9 @@ const UserInformation = () => {
     ul_name: userName,
     image: userImage
   });
-  console.log("form", formState);
+
+  // console.log("form", formState);
+
   //Defining the Validation Schema
   const validationSchema = Yup.object().shape({
     user_name: Yup.string().required("User name is required"),
@@ -271,60 +273,57 @@ const UserInformation = () => {
     const maxSize = 200000;
     if (file.size > maxSize) {
       toast.error("Image Size Must be Less than 200 KB");
-      return false
+      return false;
     }
-    return true
+    return true;
   };
 
   //uploading Image
 
-
-  const handleImageUpload = async(e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     // const renamedFile = new File([file], 'Satish', {type: file?.type} )
     const renamedBlob = new Blob([file], { type: file.type });
-    if(!checkFileSize(file)){
+    if (!checkFileSize(file)) {
       return;
     }
 
     function getFileExtension(filename) {
-      if (typeof filename !== 'string') {
-        console.error('Invalid input. Expected a string.');
-        return '';
+      if (typeof filename !== "string") {
+        console.error("Invalid input. Expected a string.");
+        return "";
       }
-    
-      const parts = filename.split('.');
+
+      const parts = filename.split(".");
       if (parts.length > 1) {
         return parts[parts.length - 1];
       } else {
-        return ''; // No extension found
+        return ""; // No extension found
       }
     }
-    console.log(getFileExtension(file.name))
-    
-   
+    console.log(getFileExtension(file.name));
 
     if (file) {
       setUserImage(URL.createObjectURL(file));
     }
-    if(renamedBlob){
-      const formData = new FormData()
-      console.log("FILLLL", file)
-        // formData.append('myFile', renamedFile)
-        formData.append('myFile', renamedBlob, `9667810716.${getFileExtension(file.name)}`)
-      console.log("Named", formData)
-      
+    if (renamedBlob) {
+      const formData = new FormData();
+      console.log("FILLLL", file);
+      // formData.append('myFile', renamedFile)
+      formData.append("myFile", renamedBlob, `${formState?.phone_number}.${getFileExtension(file.name)}`);
+      console.log("Named", formData);
+
       if (!renamedBlob) {
-        console.error('Error creating renamed file.');
+        console.error("Error creating renamed file.");
         return;
       }
 
-      // return 
-      const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData)
-      const respo = await res.data
-  
-      console.log("hey hey", respo)
-      }
+      return;
+      const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData);
+      const respo = await res.data;
+
+      console.log("hey hey", respo);
+    }
     if (file) {
       setUserImage(URL.createObjectURL(file));
       setUserImage(file);
@@ -337,6 +336,22 @@ const UserInformation = () => {
   //     setUserImage(URL.createObjectURL(file));
   //   }
   // };
+
+  //getting Image from the API
+
+  const getImage = async () => {
+    try {
+      const res = await axios.get(`${url}/api/get_image`, { headers: headers });
+      const respData = await res.data;
+      console.log("Image", respData);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  useEffect(()=>{
+  getImage()
+  },[])
 
   //getting dropdown menus
 
@@ -353,8 +368,6 @@ const UserInformation = () => {
   useEffect(() => {
     gettingDropdown();
   }, []);
-
-  console.log("fornmv ", formState);
 
   useEffect(() => {
     if (window.localStorage) {
@@ -488,7 +501,7 @@ const UserInformation = () => {
                   </div>
                   <div className="profpic relative group">
                     <Image
-                      src={userImage ? userImage :userImage}
+                      src={userImage ? userImage : userImage}
                       // src={userImage}
                       className="h-32 w-32 rounded-full bg-gray-200"
                       // alt="Profile"

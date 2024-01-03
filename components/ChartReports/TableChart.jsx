@@ -1,19 +1,30 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Bar, Chart } from "react-chartjs-2";
 import { TbFileDownload } from "react-icons/tb";
-import { ExportAsExcel, ExportAsPdf, CopyToClipboard, CopyTextToClipboard, PrintDocument, ExcelToJsonConverter, FileUpload } from "react-export-table";
 import GraphTable from "./GraphTable";
-
+import * as FileSaver from 'file-saver'
+import * as  XLSX from 'xlsx'
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
 
 const TableChart = (props) => {
-  const { lab, datas } = props;
+  const { lab, datas, heading } = props;
   const [height, setHeight] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
+
+
+  //excel export download
+  const fileType = `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;chartset=UTF-8`;
+  const fileExtension = `.xlsx`;
+  const exportExcel = async () => {
+    const ws = XLSX.utils.json_to_sheet(datas);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, `${heading}${fileExtension}`);
+  };
  
   return (
     <>
-    <ExportAsExcel data={datas}>
 
       <div
         className={`wrapper mt-2 lg:mt-0 ${
@@ -29,7 +40,7 @@ const TableChart = (props) => {
 
           <div className="btns flex items-center gap-2">
             <button >
-              <TbFileDownload size={20}>Export As Excel</TbFileDownload>
+              <TbFileDownload onClick={(e) => exportExcel(heading)} size={20}></TbFileDownload>
             </button>
             {fullScreen ? (
               <button className="lg:block hidden" onClick={() => setFullScreen(false)}>
@@ -59,7 +70,6 @@ const TableChart = (props) => {
           />
         )}
       </div>
-    </ExportAsExcel>
 
     </>
   );

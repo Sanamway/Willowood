@@ -90,7 +90,7 @@ const Layout = ({ children }) => {
         { headers: headers }
       );
       const respData = await resp.data.data;
-      console.log("laymenus", respData);
+      // console.log("laymenus", respData);
       setMenus(respData);
     } catch (error) {
       console.log("error : ", error);

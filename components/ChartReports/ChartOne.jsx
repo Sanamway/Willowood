@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Bar, Chart } from "react-chartjs-2";
+import * as FileSaver from 'file-saver'
+import html2canvas from "html2canvas";
 import {
   Chart as ChartJs,
   LinearScale,
@@ -13,6 +15,8 @@ import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
 import { MdOutlineCloudDownload } from "react-icons/md";
 
 const ChartOne = (props) => {
+  const chartRef = useRef(null);
+  const chartContainerRef = useRef(null);
   const {lab, datasets} = props
   const [height, setHeight] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
@@ -56,7 +60,6 @@ const ChartOne = (props) => {
     
   };
 
-  const chartRef = useRef(null);
 
   //tooltip
 
@@ -104,22 +107,38 @@ const ChartOne = (props) => {
     "maintainAspectRatio": false
   }
 
+  //download chart as jpeg
+
+  const downloadImage = async () => {
+    if (chartContainerRef.current) {
+      try {
+        const chartImage = await html2canvas(chartContainerRef.current);
+        chartImage.toBlob((blob) => {
+          FileSaver.saveAs(blob, `${props.title}`);
+        }, 'image/jpeg');
+      } catch (error) {
+        console.error('Error capturing chart image:', error);
+      }
+    }
+  };
+
   return (
     <>
       <div
+      ref={chartContainerRef}
         className={`wrapper  ${!height ? "h-72 " : ""} lg:w-2/5 flex-col bg-white rounded-lg ${
           // fullScreen ? "fixed min-w-[84%] h-auto  top-8 mx-auto" : "h-auto "
           // fullScreen ? "absolute min-w-[90%] h-auto  top-12 mx-auto" : "h-auto"
           fullScreen ? "fixed min-w-[84%]  h-auto lg:min-h-[84%]  top-8 mx-auto" : "h-auto"
         } `}
       >
-        <div className={`flex items-center justify-between rounded-t-md text-white p-2 ${props.color}`}>
+        <div  className={`flex items-center justify-between rounded-t-md text-white p-2 ${props.color}`}>
           <div className="font flex flex-col ">
             <h2>{props.title}</h2>
           </div>
           <div className="btns flex items-center gap-2">
           <button onClick={() => setHeight(false)}>
-                <MdOutlineCloudDownload size={20}></MdOutlineCloudDownload>
+                <MdOutlineCloudDownload onClick={downloadImage} size={20}></MdOutlineCloudDownload>
               </button>
             {fullScreen ? (
               <button className="lg:block hidden" onClick={() => setFullScreen(false)}>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Bar, Chart } from "react-chartjs-2";
 import { MdOutlineCloudDownload } from "react-icons/md";
-
+import * as FileSaver from 'file-saver'
+import html2canvas from "html2canvas";
 import {
   Chart as ChartJs,
   LinearScale,
@@ -17,6 +18,8 @@ const ChartThree = (props) => {
   const {lab,datasets} = props
   const [height, setHeight] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
+  const chartContainerRef = useRef(null);
+
 
   //chartjs
 
@@ -80,11 +83,25 @@ const ChartThree = (props) => {
       
     },
   };
+
+  const downloadImage = async () => {
+    if (chartContainerRef.current) {
+      try {
+        const chartImage = await html2canvas(chartContainerRef.current);
+        chartImage.toBlob((blob) => {
+          FileSaver.saveAs(blob, `${props.title}`);
+        }, 'image/jpeg');
+      } catch (error) {
+        console.error('Error capturing chart image:', error);
+      }
+    }
+  };
   
 
   return (
     <>
       <div
+      ref={chartContainerRef}
         className={`wrapper mt-2 lg:mt-0   ${
           !height ? "h-72 " : "h-auto"
         } lg:w-[100%] bg-white  rounded-lg border border-gray-200 flex flex-col ${
@@ -98,7 +115,7 @@ const ChartThree = (props) => {
           
           <div className="btns flex items-center gap-2">
           <button onClick={() => setHeight(false)}>
-                <MdOutlineCloudDownload size={20}></MdOutlineCloudDownload>
+                <MdOutlineCloudDownload onClick={downloadImage} size={20}></MdOutlineCloudDownload>
               </button>
             {fullScreen ? (
               <button className="lg:block hidden" onClick={() => setFullScreen(false)}>
