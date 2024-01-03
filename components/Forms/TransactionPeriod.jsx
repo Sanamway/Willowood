@@ -237,7 +237,6 @@ const TrasactionPeriod = () => {
                       year: date,
                     })
                   }
-                  minDate={new Date()}
                   showYearPicker
                   dateFormat="yyyy"
                 />

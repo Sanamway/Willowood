@@ -263,8 +263,7 @@ const RPTable = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {console.log("nhj", result)}
-
+                   
                     {result.map((item) => {
                       return (
                         <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
@@ -277,6 +276,7 @@ const RPTable = (props) => {
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[4]]}
                           </td>
+                          {console.log("Roye Moye", Object.keys(item)[24])}
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[7]]}
                           </td>

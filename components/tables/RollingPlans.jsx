@@ -264,7 +264,7 @@ const RollingPlans = () => {
     if (!filterState.yr) return;
     getAllTransactionYear(filterState.yr);
   }, [filterState.yr]);
-
+  console.log("klp", filterState);
   useEffect(() => {
     if (!allYearData.length) return;
     const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
@@ -771,6 +771,8 @@ const RollingPlans = () => {
                   tDes,
                   r,
                   rDes,
+                  z,
+                  zDes,
                   filterState
                 )
               }
@@ -860,6 +862,8 @@ const RollingPlans = () => {
                   tDes,
                   r,
                   rDes,
+                  z,
+                  zDes,
                   filterState
                 )
               }
@@ -960,6 +964,8 @@ const RollingPlans = () => {
                   tDes,
                   r,
                   rDes,
+                  z,
+                  zDes,
                   filterState
                 )
               }
@@ -1069,6 +1075,8 @@ const RollingPlans = () => {
                   tDes,
                   r,
                   rDes,
+                  z,
+                  zDes,
                   filterState
                 )
               }
@@ -1103,36 +1111,7 @@ const RollingPlans = () => {
             >
               <MdOutlinePreview className="text-slate-400" /> View
             </li>
-            {(filterState.rId || filterState.rId === "All") &&
-              localStorageItems.roleId === 4 && (
-                <li
-                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                  onClick={() => {
-                    handleDownloadExcelReview(
-                      mYr,
-                      planId,
-                      tranId,
-                      yr,
-                      depot,
-                      zrt,
-                      status,
-                      stage,
-                      filterState,
-                      bg,
-                      bu,
-                      z,
-                      r,
-                      t,
-                      c,
-                      w,
-                      tDes,
-                      rDes
-                    );
-                  }}
-                >
-                  <GrTask className="text-orange-400" /> Review
-                </li>
-              )}
+
             {(filterState.tId || filterState.tId === "All") &&
               localStorageItems.roleId === 5 && (
                 <li
@@ -1178,6 +1157,8 @@ const RollingPlans = () => {
                   tDes,
                   r,
                   rDes,
+                  z,
+                  zDes,
                   filterState
                 );
               }}
@@ -1302,6 +1283,8 @@ const RollingPlans = () => {
                   tDes,
                   r,
                   rDes,
+                  z,
+                  zDes,
                   filterState
                 )
               }
@@ -1437,7 +1420,7 @@ const RollingPlans = () => {
     filterState
   ) => {
     let paramsData;
-    if (filterState.tId || filterState.tId === "All") {
+    if (filterState?.tId || filterState?.tId === "All") {
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -1457,8 +1440,8 @@ const RollingPlans = () => {
         json: true,
       };
     } else if (
-      (filterState.rId || filterState.rId === "All") &&
-      !filterState.tId
+      (filterState?.rId || filterState?.rId === "All") &&
+      !filterState?.tId
     ) {
       paramsData = {
         year_1: yr - 2,
@@ -1479,8 +1462,8 @@ const RollingPlans = () => {
         json: true,
       };
     } else if (
-      (filterState.zId || filterState.zId === "All") &&
-      !filterState.rId
+      (filterState?.zId || filterState?.zId === "All") &&
+      !filterState?.rId
     ) {
       paramsData = {
         year_1: yr - 2,
@@ -2021,11 +2004,13 @@ const RollingPlans = () => {
 
   const handleClose = () => {
     setIsOpen(false);
-    setModalData({
-      message: "",
-      type: "",
-      data: {},
-    });
+    setTimeout(() => {
+      setModalData({
+        message: "",
+        type: "",
+        data: {},
+      });
+    }, [10]);
   };
 
   const handleDraftClose = () => {

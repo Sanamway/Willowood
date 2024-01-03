@@ -189,6 +189,8 @@ const RPSummary = (props) => {
     }
   };
 
+  console.log("kio", props.tableData);
+
   const handleEditRsp = async (status) => {
     try {
       let endPoint;
@@ -267,6 +269,382 @@ const RPSummary = (props) => {
   const receivedObject = router.query.filterState
     ? JSON.parse(decodeURIComponent(router.query.filterState))
     : {};
+
+  const handleSaveDraft = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/rsp_update_status`, {
+        headers: headers,
+        params: {
+          t_year: filterState.yr,
+          m_year: rejectModalData.mYr,
+          plan_id: rejectModalData.planId,
+          tran_id: rejectModalData.tranId,
+          r_id: Number(router.query.rId),
+          rp_status: "Draft Submit",
+          remarks: rejectModalData.data,
+        },
+      });
+      const apires = await respond.data.data;
+      console.log("bnm", apires);
+      handleDraftClose();
+      setSuccessMsg(respond.data.message);
+      setSuccessOpen(true);
+      getAllSalesPlanStatus(
+        filterState.yr || null,
+        filterState.month || null,
+        filterState.bgId || null,
+        filterState.buId || null,
+        filterState.zId || null,
+        filterState.rId || null,
+        filterState.tId
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [namewiseData, setNamewiseData] = useState([]);
+  useEffect(() => {
+    if (!props.tableData.length) return;
+
+    let result = [];
+    props.tableData.forEach((item) => {
+      const existingItem = result.find(
+        (obj) => obj["Brand Code"] === item["Brand Code"]
+      );
+      if (existingItem) {
+        // If the item already exists in the result array, add the values to the existing item
+        existingItem["Annual Budget Qty 23-24"] +=
+          item["Annual Budget Qty 23-24"];
+        existingItem["Annual Budget Val 23-24"] +=
+          item["Annual Budget Val 23-24"];
+        existingItem["DECEMBER 22-23 Sale Qty"] +=
+          item["DECEMBER 22-23 Sale Qty"];
+        existingItem["DECEMBER 23-24 Fcst Qty"] +=
+          item["DECEMBER 23-24 Fcst Qty"];
+        existingItem["DECEMBER 23-24 Fcst Val"] +=
+          item["DECEMBER 23-24 Fcst Val"];
+        existingItem["DECEMBER 23-24 Revised Fcst Qty"] +=
+          item["DECEMBER 23-24 Revised Fcst Qty"];
+        existingItem["DECEMBER 23-24 Revised Fcst Val"] +=
+          item["DECEMBER 23-24 Revised Fcst Val"];
+        existingItem["DECEMBER 23-24 Urgent Qty"] +=
+          item["DECEMBER 23-24 Urgent Qty"];
+        existingItem["DECEMBER Budget Qty 23-24"] +=
+          item["DECEMBER Budget Qty 23-24"];
+        existingItem["DECEMBER Budget Val 23-24"] +=
+          item["DECEMBER Budget Val 23-24"];
+        existingItem["Expected Return Qty"] += item["Expected Return Qty"];
+        existingItem["FY Sales Qty 21-22"] += item["FY Sales Qty 21-22"];
+        existingItem["FY Sales Qty 22-23"] += item["FY Sales Qty 22-23"];
+        existingItem["FY Sales Val 21-22"] += item["FY Sales Val 21-22"];
+        existingItem["FY Sales Val 22-23"] += item["FY Sales Val 22-23"];
+        existingItem["JANUARY 22-23 Sale Qty"] +=
+          item["JANUARY 22-23 Sale Qty"];
+        existingItem["JANUARY 23-24 Fcst Qty"] +=
+          item["JANUARY 23-24 Fcst Qty"];
+        existingItem["JANUARY 23-24 Fcst Val"] +=
+          item["JANUARY 23-24 Fcst Val"];
+        existingItem["JANUARY Budget Qty 23-24"] +=
+          item["JANUARY Budget Qty 23-24"];
+        existingItem["JANUARY Budget Val 23-24"] +=
+          item["JANUARY Budget Val 23-24"];
+        existingItem["Ytd Net Sale Qty 23-24"] +=
+          item["Ytd Net Sale Qty 23-24"];
+
+        existingItem["Ytd Net Sale Value 23-24"] +=
+          item["Ytd Net Sale Value 23-24"];
+      } else {
+        // If the item does not exist in the result array, create a new item
+        result.push({
+          "Brand Code": item["Brand Code"],
+
+          "Annual Budget Qty 23-24": item["Annual Budget Qty 23-24"],
+          "Annual Budget Val 23-24": item["Annual Budget Val 23-24"],
+          "DECEMBER 22-23 Sale Qty": item["DECEMBER 22-23 Sale Qty"],
+          "DECEMBER 23-24 Fcst Qty": item["DECEMBER 23-24 Fcst Qty"],
+          "DECEMBER 23-24 Fcst Val": item["DECEMBER 23-24 Fcst Val"],
+          "DECEMBER 23-24 Revised Fcst Qty":
+            item["DECEMBER 23-24 Revised Fcst Qty"],
+          "DECEMBER 23-24 Revised Fcst Val":
+            item["DECEMBER 23-24 Revised Fcst Val"],
+          "DECEMBER 23-24 Urgent Qty": item["DECEMBER 23-24 Urgent Qty"],
+          "DECEMBER Budget Qty 23-24": item["DECEMBER Budget Qty 23-24"],
+          "DECEMBER Budget Val 23-24": item["DECEMBER Budget Val 23-24"],
+          "Expected Return Qty": item["Expected Return Qty"],
+          "FY Sales Qty 21-22": item["FY Sales Qty 21-22"],
+          "FY Sales Qty 22-23": item["FY Sales Qty 22-23"],
+          "FY Sales Val 21-22": item["FY Sales Val 21-22"],
+          "FY Sales Val 22-23": item["FY Sales Val 22-23"],
+          "JANUARY 22-23 Sale Qty": item["JANUARY 22-23 Sale Qty"],
+          "JANUARY 23-24 Fcst Qty": item["JANUARY 23-24 Fcst Qty"],
+          "JANUARY 23-24 Fcst Val": item["JANUARY 23-24 Fcst Val"],
+          "JANUARY Budget Qty 23-24": item["JANUARY Budget Qty 23-24"],
+          "JANUARY Budget Val 23-24": item["JANUARY Budget Val 23-24"],
+          "Ytd Net Sale Qty 23-24": item["Ytd Net Sale Qty 23-24"],
+          "Ytd Net Sale Value 23-24": item["Ytd Net Sale Value 23-24"],
+        });
+      }
+    });
+
+    setNamewiseData(result);
+  }, [props.tableData]);
+
+  const [pcatwiseData, setPcatwiseData] = useState([]);
+  useEffect(() => {
+    if (!props.tableData.length) return;
+
+    let result = [];
+    props.tableData.forEach((item) => {
+      const existingItem = result.find(
+        (obj) => obj["Product Category"] === item["Product Category"]
+      );
+      if (existingItem) {
+        // If the item already exists in the result array, add the values to the existing item
+        existingItem["Annual Budget Qty 23-24"] +=
+          item["Annual Budget Qty 23-24"];
+        existingItem["Annual Budget Val 23-24"] +=
+          item["Annual Budget Val 23-24"];
+        existingItem["DECEMBER 22-23 Sale Qty"] +=
+          item["DECEMBER 22-23 Sale Qty"];
+        existingItem["DECEMBER 23-24 Fcst Qty"] +=
+          item["DECEMBER 23-24 Fcst Qty"];
+        existingItem["DECEMBER 23-24 Fcst Val"] +=
+          item["DECEMBER 23-24 Fcst Val"];
+        existingItem["DECEMBER 23-24 Revised Fcst Qty"] +=
+          item["DECEMBER 23-24 Revised Fcst Qty"];
+        existingItem["DECEMBER 23-24 Revised Fcst Val"] +=
+          item["DECEMBER 23-24 Revised Fcst Val"];
+        existingItem["DECEMBER 23-24 Urgent Qty"] +=
+          item["DECEMBER 23-24 Urgent Qty"];
+        existingItem["DECEMBER Budget Qty 23-24"] +=
+          item["DECEMBER Budget Qty 23-24"];
+        existingItem["DECEMBER Budget Val 23-24"] +=
+          item["DECEMBER Budget Val 23-24"];
+        existingItem["Expected Return Qty"] += item["Expected Return Qty"];
+        existingItem["FY Sales Qty 21-22"] += item["FY Sales Qty 21-22"];
+        existingItem["FY Sales Qty 22-23"] += item["FY Sales Qty 22-23"];
+        existingItem["FY Sales Val 21-22"] += item["FY Sales Val 21-22"];
+        existingItem["FY Sales Val 22-23"] += item["FY Sales Val 22-23"];
+        existingItem["JANUARY 22-23 Sale Qty"] +=
+          item["JANUARY 22-23 Sale Qty"];
+        existingItem["JANUARY 23-24 Fcst Qty"] +=
+          item["JANUARY 23-24 Fcst Qty"];
+        existingItem["JANUARY 23-24 Fcst Val"] +=
+          item["JANUARY 23-24 Fcst Val"];
+        existingItem["JANUARY Budget Qty 23-24"] +=
+          item["JANUARY Budget Qty 23-24"];
+        existingItem["JANUARY Budget Val 23-24"] +=
+          item["JANUARY Budget Val 23-24"];
+        existingItem["Ytd Net Sale Qty 23-24"] +=
+          item["Ytd Net Sale Qty 23-24"];
+        existingItem["Ytd Net Sale Value 23-24"] +=
+          item["Ytd Net Sale Value 23-24"];
+      } else {
+        // If the item does not exist in the result array, create a new item
+        result.push({
+          "Product Category": item["Product Category"],
+
+          "Annual Budget Qty 23-24": item["Annual Budget Qty 23-24"],
+          "Annual Budget Val 23-24": item["Annual Budget Val 23-24"],
+          "DECEMBER 22-23 Sale Qty": item["DECEMBER 22-23 Sale Qty"],
+          "DECEMBER 23-24 Fcst Qty": item["DECEMBER 23-24 Fcst Qty"],
+          "DECEMBER 23-24 Fcst Val": item["DECEMBER 23-24 Fcst Val"],
+          "DECEMBER 23-24 Revised Fcst Qty":
+            item["DECEMBER 23-24 Revised Fcst Qty"],
+          "DECEMBER 23-24 Revised Fcst Val":
+            item["DECEMBER 23-24 Revised Fcst Val"],
+          "DECEMBER 23-24 Urgent Qty": item["DECEMBER 23-24 Urgent Qty"],
+          "DECEMBER Budget Qty 23-24": item["DECEMBER Budget Qty 23-24"],
+          "DECEMBER Budget Val 23-24": item["DECEMBER Budget Val 23-24"],
+          "Expected Return Qty": item["Expected Return Qty"],
+          "FY Sales Qty 21-22": item["FY Sales Qty 21-22"],
+          "FY Sales Qty 22-23": item["FY Sales Qty 22-23"],
+          "FY Sales Val 21-22": item["FY Sales Val 21-22"],
+          "FY Sales Val 22-23": item["FY Sales Val 22-23"],
+          "JANUARY 22-23 Sale Qty": item["JANUARY 22-23 Sale Qty"],
+          "JANUARY 23-24 Fcst Qty": item["JANUARY 23-24 Fcst Qty"],
+          "JANUARY 23-24 Fcst Val": item["JANUARY 23-24 Fcst Val"],
+          "JANUARY Budget Qty 23-24": item["JANUARY Budget Qty 23-24"],
+          "JANUARY Budget Val 23-24": item["JANUARY Budget Val 23-24"],
+          "Ytd Net Sale Qty 23-24": item["Ytd Net Sale Qty 23-24"],
+          "Ytd Net Sale Value 23-24": item["Ytd Net Sale Value 23-24"],
+        });
+      }
+    });
+
+    setPcatwiseData(result);
+  }, [props.tableData]);
+  const [psegwiseData, setPsegwiseData] = useState([]);
+  useEffect(() => {
+    if (!props.tableData.length) return;
+
+    let result = [];
+    props.tableData.forEach((item) => {
+      const existingItem = result.find(
+        (obj) => obj["Product Segment"] === item["Product Segment"]
+      );
+      if (existingItem) {
+        // If the item already exists in the result array, add the values to the existing item
+        existingItem["Annual Budget Qty 23-24"] +=
+          item["Annual Budget Qty 23-24"];
+        existingItem["Annual Budget Val 23-24"] +=
+          item["Annual Budget Val 23-24"];
+        existingItem["DECEMBER 22-23 Sale Qty"] +=
+          item["DECEMBER 22-23 Sale Qty"];
+        existingItem["DECEMBER 23-24 Fcst Qty"] +=
+          item["DECEMBER 23-24 Fcst Qty"];
+        existingItem["DECEMBER 23-24 Fcst Val"] +=
+          item["DECEMBER 23-24 Fcst Val"];
+        existingItem["DECEMBER 23-24 Revised Fcst Qty"] +=
+          item["DECEMBER 23-24 Revised Fcst Qty"];
+        existingItem["DECEMBER 23-24 Revised Fcst Val"] +=
+          item["DECEMBER 23-24 Revised Fcst Val"];
+        existingItem["DECEMBER 23-24 Urgent Qty"] +=
+          item["DECEMBER 23-24 Urgent Qty"];
+        existingItem["DECEMBER Budget Qty 23-24"] +=
+          item["DECEMBER Budget Qty 23-24"];
+        existingItem["DECEMBER Budget Val 23-24"] +=
+          item["DECEMBER Budget Val 23-24"];
+        existingItem["Expected Return Qty"] += item["Expected Return Qty"];
+        existingItem["FY Sales Qty 21-22"] += item["FY Sales Qty 21-22"];
+        existingItem["FY Sales Qty 22-23"] += item["FY Sales Qty 22-23"];
+        existingItem["FY Sales Val 21-22"] += item["FY Sales Val 21-22"];
+        existingItem["FY Sales Val 22-23"] += item["FY Sales Val 22-23"];
+        existingItem["JANUARY 22-23 Sale Qty"] +=
+          item["JANUARY 22-23 Sale Qty"];
+        existingItem["JANUARY 23-24 Fcst Qty"] +=
+          item["JANUARY 23-24 Fcst Qty"];
+        existingItem["JANUARY 23-24 Fcst Val"] +=
+          item["JANUARY 23-24 Fcst Val"];
+        existingItem["JANUARY Budget Qty 23-24"] +=
+          item["JANUARY Budget Qty 23-24"];
+        existingItem["JANUARY Budget Val 23-24"] +=
+          item["JANUARY Budget Val 23-24"];
+        existingItem["Ytd Net Sale Qty 23-24"] +=
+          item["Ytd Net Sale Qty 23-24"];
+        existingItem["Ytd Net Sale Value 23-24"] +=
+          item["Ytd Net Sale Value 23-24"];
+      } else {
+        // If the item does not exist in the result array, create a new item
+        result.push({
+          "Product Segment": item["Product Segment"],
+          "Annual Budget Qty 23-24": item["Annual Budget Qty 23-24"],
+          "Annual Budget Val 23-24": item["Annual Budget Val 23-24"],
+          "DECEMBER 22-23 Sale Qty": item["DECEMBER 22-23 Sale Qty"],
+          "DECEMBER 23-24 Fcst Qty": item["DECEMBER 23-24 Fcst Qty"],
+          "DECEMBER 23-24 Fcst Val": item["DECEMBER 23-24 Fcst Val"],
+          "DECEMBER 23-24 Revised Fcst Qty":
+            item["DECEMBER 23-24 Revised Fcst Qty"],
+          "DECEMBER 23-24 Revised Fcst Val":
+            item["DECEMBER 23-24 Revised Fcst Val"],
+          "DECEMBER 23-24 Urgent Qty": item["DECEMBER 23-24 Urgent Qty"],
+          "DECEMBER Budget Qty 23-24": item["DECEMBER Budget Qty 23-24"],
+          "DECEMBER Budget Val 23-24": item["DECEMBER Budget Val 23-24"],
+          "Expected Return Qty": item["Expected Return Qty"],
+          "FY Sales Qty 21-22": item["FY Sales Qty 21-22"],
+          "FY Sales Qty 22-23": item["FY Sales Qty 22-23"],
+          "FY Sales Val 21-22": item["FY Sales Val 21-22"],
+          "FY Sales Val 22-23": item["FY Sales Val 22-23"],
+          "JANUARY 22-23 Sale Qty": item["JANUARY 22-23 Sale Qty"],
+          "JANUARY 23-24 Fcst Qty": item["JANUARY 23-24 Fcst Qty"],
+          "JANUARY 23-24 Fcst Val": item["JANUARY 23-24 Fcst Val"],
+          "JANUARY Budget Qty 23-24": item["JANUARY Budget Qty 23-24"],
+          "JANUARY Budget Val 23-24": item["JANUARY Budget Val 23-24"],
+          "Ytd Net Sale Qty 23-24": item["Ytd Net Sale Qty 23-24"],
+          "Ytd Net Sale Value 23-24": item["Ytd Net Sale Value 23-24"],
+        });
+      }
+    });
+
+    setPsegwiseData(result);
+  }, [props.tableData]);
+
+  const [rolewiseData, setRolewiseData] = useState([]);
+
+  useEffect(() => {
+    if (!props.tableData.length) return;
+    let result = [];
+    props.tableData.forEach((item) => {
+      const existingItem = result.find(
+        (obj) => obj["Territory"] === item["Territory"]
+      );
+      if (existingItem) {
+        // If the item already exists in the result array, add the values to the existing item
+        existingItem["Annual Budget Qty 23-24"] +=
+          item["Annual Budget Qty 23-24"];
+        existingItem["Annual Budget Val 23-24"] +=
+          item["Annual Budget Val 23-24"];
+        existingItem["DECEMBER 22-23 Sale Qty"] +=
+          item["DECEMBER 22-23 Sale Qty"];
+        existingItem["DECEMBER 23-24 Fcst Qty"] +=
+          item["DECEMBER 23-24 Fcst Qty"];
+        existingItem["DECEMBER 23-24 Fcst Val"] +=
+          item["DECEMBER 23-24 Fcst Val"];
+        existingItem["DECEMBER 23-24 Revised Fcst Qty"] +=
+          item["DECEMBER 23-24 Revised Fcst Qty"];
+        existingItem["DECEMBER 23-24 Revised Fcst Val"] +=
+          item["DECEMBER 23-24 Revised Fcst Val"];
+        existingItem["DECEMBER 23-24 Urgent Qty"] +=
+          item["DECEMBER 23-24 Urgent Qty"];
+        existingItem["DECEMBER Budget Qty 23-24"] +=
+          item["DECEMBER Budget Qty 23-24"];
+        existingItem["DECEMBER Budget Val 23-24"] +=
+          item["DECEMBER Budget Val 23-24"];
+        existingItem["Expected Return Qty"] += item["Expected Return Qty"];
+        existingItem["FY Sales Qty 21-22"] += item["FY Sales Qty 21-22"];
+        existingItem["FY Sales Qty 22-23"] += item["FY Sales Qty 22-23"];
+        existingItem["FY Sales Val 21-22"] += item["FY Sales Val 21-22"];
+        existingItem["FY Sales Val 22-23"] += item["FY Sales Val 22-23"];
+        existingItem["JANUARY 22-23 Sale Qty"] +=
+          item["JANUARY 22-23 Sale Qty"];
+        existingItem["JANUARY 23-24 Fcst Qty"] +=
+          item["JANUARY 23-24 Fcst Qty"];
+        existingItem["JANUARY 23-24 Fcst Val"] +=
+          item["JANUARY 23-24 Fcst Val"];
+        existingItem["JANUARY Budget Qty 23-24"] +=
+          item["JANUARY Budget Qty 23-24"];
+        existingItem["JANUARY Budget Val 23-24"] +=
+          item["JANUARY Budget Val 23-24"];
+        existingItem["Ytd Net Sale Qty 23-24"] +=
+          item["Ytd Net Sale Qty 23-24"];
+        existingItem["Ytd Net Sale Value 23-24"] +=
+          item["Ytd Net Sale Value 23-24"];
+      } else {
+        // If the item does not exist in the result array, create a new item
+        result.push({
+          Territory: item["Territory"],
+          "Annual Budget Qty 23-24": item["Annual Budget Qty 23-24"],
+          "Annual Budget Val 23-24": item["Annual Budget Val 23-24"],
+          "DECEMBER 22-23 Sale Qty": item["DECEMBER 22-23 Sale Qty"],
+          "DECEMBER 23-24 Fcst Qty": item["DECEMBER 23-24 Fcst Qty"],
+          "DECEMBER 23-24 Fcst Val": item["DECEMBER 23-24 Fcst Val"],
+          "DECEMBER 23-24 Revised Fcst Qty":
+            item["DECEMBER 23-24 Revised Fcst Qty"],
+          "DECEMBER 23-24 Revised Fcst Val":
+            item["DECEMBER 23-24 Revised Fcst Val"],
+          "DECEMBER 23-24 Urgent Qty": item["DECEMBER 23-24 Urgent Qty"],
+          "DECEMBER Budget Qty 23-24": item["DECEMBER Budget Qty 23-24"],
+          "DECEMBER Budget Val 23-24": item["DECEMBER Budget Val 23-24"],
+          "Expected Return Qty": item["Expected Return Qty"],
+          "FY Sales Qty 21-22": item["FY Sales Qty 21-22"],
+          "FY Sales Qty 22-23": item["FY Sales Qty 22-23"],
+          "FY Sales Val 21-22": item["FY Sales Val 21-22"],
+          "FY Sales Val 22-23": item["FY Sales Val 22-23"],
+          "JANUARY 22-23 Sale Qty": item["JANUARY 22-23 Sale Qty"],
+          "JANUARY 23-24 Fcst Qty": item["JANUARY 23-24 Fcst Qty"],
+          "JANUARY 23-24 Fcst Val": item["JANUARY 23-24 Fcst Val"],
+          "JANUARY Budget Qty 23-24": item["JANUARY Budget Qty 23-24"],
+          "JANUARY Budget Val 23-24": item["JANUARY Budget Val 23-24"],
+          "Ytd Net Sale Qty 23-24": item["Ytd Net Sale Qty 23-24"],
+          "Ytd Net Sale Value 23-24": item["Ytd Net Sale Value 23-24"],
+        });
+      }
+    });
+
+    setRolewiseData(result);
+  }, [props.tableData]);
+
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
       <SubmitModal
@@ -364,23 +742,24 @@ const RPSummary = (props) => {
 
       <div className="table mb-4 w-full">
         {/* <h3>Table Layout</h3> */}
-        <section className="bg-white p-2">
+        <section className="bg-white p-2 flex flex-col gap-2">
           {/* <div className="mx-auto max-w-screen-2xl px-4 lg:px-12"> */}
           <div className="mx-auto max-w-full px- ">
             {/* Start coding here */}
+            <h4 className="w-full flex align-center justify-center font-bold">
+              Brand Code wise total
+            </h4>
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                   <thead className="text-xs text-gray-700 text-center bg-orange-300  dark:text-gray-400">
                     <tr>
                       <th scope="col" className="px-2 py-1 text-black">
-                        Product Name Sku Wise
+                        Brand Code
                       </th>
+
                       <th scope="col" className="px-2 py-1 text-black">
-                        Product Code
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-black">
-                        FY Sales 21-23
+                        FY Sales 21-22
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
                         FY Sales 22-23
@@ -398,25 +777,19 @@ const RPSummary = (props) => {
                         Apr 23-24 Budget Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
-                        Apr 22-23 FSCT Qty
+                        Apr 23-24 FSCT Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
-                        Apr 22-23 Revised FCT
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400"
-                      >
-                        Apr 22-23 Revised FCT
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400"
-                      >
-                        Apr 22-23 Urget Qty
+                        Apr 23-24 Revised FCST Value
                       </th>
                       <th scope="col" className="px-2 py-1 text-black ">
-                        May 22-23 Sale Qty
+                        Apr 23-24 Revised FCST Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black  ">
+                        Apr 23-24 Urget Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black ">
+                        May 23-24 Sale Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
                         May Budget Qty 23-24
@@ -426,18 +799,454 @@ const RPSummary = (props) => {
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400 "
+                        className="px-2 py-1 text-black border-l-2 border-r-2"
                       >
-                        May 22-23 FCST Qty
+                        May 23-24 FCST Qty
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 border-red-400"
+                        className="px-2 py-1 text-black border-l-2 border-r-2 "
                       >
                         Expected Sale Return Qty
                       </th>
                     </tr>
                   </thead>
+                  <tbody>
+                    {namewiseData.map((item) => {
+                      return (
+                        <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                          <td className="px-4 py-1 text-center">
+                            {item["Brand Code"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["FY Sales Val 21-22"]}
+                          </td>
+
+                          <td className="px-4 py-1 text-center">
+                            {item["FY Sales Val 22-23"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["Annual Budget Qty 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["Ytd Net Sale Qty 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER 22-23 Sale Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER Budget Qty 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER 23-24 Fcst Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER 23-24 Fcst Val"]}
+                          </td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                            {item["DECEMBER 23-24 Revised Fcst Qty"]}
+                          </td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                            {item["DECEMBER 23-24 Urgent Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-right">
+                            {item["JANUARY 22-23 Sale Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-right">
+                            {item["JANUARY Budget Val 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-right"></td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                            {item["JANUARY 23-24 Fcst Qty"]}
+                          </td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                            {item["Expected Return Qty"]}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div className="mx-auto max-w-full px- ">
+            {/* Start coding here */}
+            <h4 className="w-full flex align-center justify-center font-bold">
+              Product Categorey wise total
+            </h4>
+            <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 text-center bg-orange-300  dark:text-gray-400">
+                    <tr>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Product Category
+                      </th>
+
+                      <th scope="col" className="px-2 py-1 text-black">
+                        FY Sales 21-22
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        FY Sales 22-23
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black ">
+                        Annual Budget Qty 23-24
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        YTD Net Sale Qty 23-24
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Apr 22-23 Sale Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Apr 23-24 Budget Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Apr 23-24 FSCT Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Apr 23-24 Revised FCST Value
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black ">
+                        Apr 23-24 Revised FCST Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black  ">
+                        Apr 23-24 Urget Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black ">
+                        May 23-24 Sale Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        May Budget Qty 23-24
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        May Net FCST Qty 23-24
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black border-l-2 border-r-2"
+                      >
+                        May 23-24 FCST Qty
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black border-l-2 border-r-2 "
+                      >
+                        Expected Sale Return Qty
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pcatwiseData.map((item) => {
+                      return (
+                        <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                          <td className="px-4 py-1 text-center">
+                            {item["Product Category"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["FY Sales Val 21-22"]}
+                          </td>
+
+                          <td className="px-4 py-1 text-center">
+                            {item["FY Sales Val 22-23"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["Annual Budget Qty 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["Ytd Net Sale Qty 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER 22-23 Sale Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER Budget Qty 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER 23-24 Fcst Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER 23-24 Fcst Val"]}
+                          </td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                            {item["DECEMBER 23-24 Revised Fcst Qty"]}
+                          </td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                            {item["DECEMBER 23-24 Urgent Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-right">
+                            {item["JANUARY 22-23 Sale Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-right">
+                            {item["JANUARY Budget Val 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-right"></td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                            {item["JANUARY 23-24 Fcst Qty"]}
+                          </td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                            {item["Expected Return Qty"]}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div className="mx-auto max-w-full px- ">
+            {/* Start coding here */}
+            <h4 className="w-full flex align-center justify-center font-bold">
+              Product Segment wise total
+            </h4>
+            <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 text-center bg-orange-300  dark:text-gray-400">
+                    <tr>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Product Segment
+                      </th>
+
+                      <th scope="col" className="px-2 py-1 text-black">
+                        FY Sales 21-22
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        FY Sales 22-23
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black ">
+                        Annual Budget Qty 23-24
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        YTD Net Sale Qty 23-24
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Apr 22-23 Sale Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Apr 23-24 Budget Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Apr 23-24 FSCT Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Apr 23-24 Revised FCST Value
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black ">
+                        Apr 23-24 Revised FCST Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black  ">
+                        Apr 23-24 Urget Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black ">
+                        May 23-24 Sale Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        May Budget Qty 23-24
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        May Net FCST Qty 23-24
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black border-l-2 border-r-2"
+                      >
+                        May 23-24 FCST Qty
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black border-l-2 border-r-2 "
+                      >
+                        Expected Sale Return Qty
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {psegwiseData.map((item) => {
+                      return (
+                        <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                          <td className="px-4 py-1 text-center">
+                            {item["Product Segment"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["FY Sales Val 21-22"]}
+                          </td>
+
+                          <td className="px-4 py-1 text-center">
+                            {item["FY Sales Val 22-23"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["Annual Budget Qty 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["Ytd Net Sale Qty 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER 22-23 Sale Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER Budget Qty 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER 23-24 Fcst Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER 23-24 Fcst Val"]}
+                          </td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                            {item["DECEMBER 23-24 Revised Fcst Qty"]}
+                          </td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                            {item["DECEMBER 23-24 Urgent Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-right">
+                            {item["JANUARY 22-23 Sale Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-right">
+                            {item["JANUARY Budget Val 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-right"></td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                            {item["JANUARY 23-24 Fcst Qty"]}
+                          </td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                            {item["Expected Return Qty"]}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div className="mx-auto max-w-full px- ">
+            <h4 className="w-full flex align-center justify-center font-bold">
+              Territory wise total
+            </h4>
+            <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 text-center bg-orange-300  dark:text-gray-400">
+                    <tr>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Territory
+                      </th>
+
+                      <th scope="col" className="px-2 py-1 text-black">
+                        FY Sales 21-22
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        FY Sales 22-23
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black ">
+                        Annual Budget Qty 23-24
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        YTD Net Sale Qty 23-24
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Apr 22-23 Sale Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Apr 23-24 Budget Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Apr 23-24 FSCT Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        Apr 23-24 Revised FCST Value
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black ">
+                        Apr 23-24 Revised FCST Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black  ">
+                        Apr 23-24 Urget Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black ">
+                        May 23-24 Sale Qty
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        May Budget Qty 23-24
+                      </th>
+                      <th scope="col" className="px-2 py-1 text-black">
+                        May Net FCST Qty 23-24
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black border-l-2 border-r-2"
+                      >
+                        May 23-24 FCST Qty
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black border-l-2 border-r-2 "
+                      >
+                        Expected Sale Return Qty
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rolewiseData.map((item) => {
+                      return (
+                        <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                          <td className="px-4 py-1 text-center">
+                            {item["Territory"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["FY Sales Val 21-22"]}
+                          </td>
+
+                          <td className="px-4 py-1 text-center">
+                            {item["FY Sales Val 22-23"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["Annual Budget Qty 23-24"]}
+                          </td>
+                          {console.log("pop", item["Ytd Net Sale Qty 23-24"])}
+                          <td className="px-4 py-1 text-center">
+                            {parseFloat(item["Ytd Net Sale Qty 23-24"])}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER 22-23 Sale Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER Budget Qty 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER 23-24 Fcst Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-center">
+                            {item["DECEMBER 23-24 Fcst Val"]}
+                          </td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                            {item["DECEMBER 23-24 Revised Fcst Qty"]}
+                          </td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                            {item["DECEMBER 23-24 Urgent Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-right">
+                            {item["JANUARY 22-23 Sale Qty"]}
+                          </td>
+                          <td className="px-4 py-1 text-right">
+                            {item["JANUARY Budget Val 23-24"]}
+                          </td>
+                          <td className="px-4 py-1 text-right"></td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                            {item["JANUARY 23-24 Fcst Qty"]}
+                          </td>
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                            {item["Expected Return Qty"]}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
                 </table>
               </div>
             </div>
