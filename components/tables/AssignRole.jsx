@@ -33,7 +33,7 @@ const AssignRole = () => {
 
       const uniqueRecords = {};
       respData.forEach((record) => {
-        const roleId = record.role_id;
+        const roleId = record.user_id;
         if (!uniqueRecords[roleId]) {
           uniqueRecords[roleId] = record;
         }
@@ -136,12 +136,7 @@ const AssignRole = () => {
                   <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     Action
                   </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
-                    Role Id
-                  </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
-                    Role Profile
-                  </th>
+                  
                   <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     User Id
                   </th>
@@ -151,8 +146,14 @@ const AssignRole = () => {
                   <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     Mobile No
                   </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                  {/* <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     Territory
+                  </th> */}
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                    Role Id
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                    Role Profile
                   </th>
                 </tr>
               </thead>
@@ -189,12 +190,7 @@ const AssignRole = () => {
                         Delete
                       </button>
                     </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item?.role_id}
-                    </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item?.U_profile_name}
-                    </td>
+                    
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item?.user_id}
                     </td>
@@ -204,8 +200,14 @@ const AssignRole = () => {
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item?.user_phone}
                     </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                    {/* <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item?.user_state}
+                    </td> */}
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item?.role_id}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item?.U_profile_name}
                     </td>
                   </tr>
                 ))}

@@ -8,7 +8,7 @@ import GraphTable from "./GraphTable";
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
 
 const TableChartOne = (props) => {
-console.log("props", props)
+// console.log("props", props)
   const { lab, datas,heading } = props;
   const [height, setHeight] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
