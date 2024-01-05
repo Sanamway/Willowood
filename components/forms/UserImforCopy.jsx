@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome, AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
@@ -17,6 +17,7 @@ const UserInformation = () => {
   const [userOptions, setUserOptions] = useState([]);
   const [showPass, setShowPass] = useState(false);
   const { id, view } = router.query;
+
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw"
@@ -27,6 +28,8 @@ const UserInformation = () => {
   const [userName, setUsername] = useState("");
   const [ui, setUid] = useState("");
   const [email_id, setEmailId] = useState("");
+
+  const [tempImage, setTempImage] = useState("");
 
   const getDataById = async (id) => {
     try {
@@ -60,6 +63,8 @@ const UserInformation = () => {
         position: apires[0].position,
         about_me: apires[0].about_me
       });
+
+      getImage(apires[0].phone_number);
     } catch (error) {
       console.log(error);
     }
@@ -160,6 +165,45 @@ const UserInformation = () => {
         ul_name: userName
       };
 
+      //Image uploading
+
+      function getFileExtension(filename) {
+        if (typeof filename !== "string") {
+          console.error("Invalid input. Expected a string.");
+          return "";
+        }
+
+        const parts = filename.split(".");
+        if (parts.length > 1) {
+          return parts[parts.length - 1];
+        } else {
+          return "";
+        }
+      }
+
+      try {
+        if (tempImage) {
+          const renamedBlob = new Blob([tempImage], { type: tempImage?.type });
+          if (!checkFileSize(tempImage)) {
+            return;
+          }
+          const formData = new FormData();
+          formData.append("myFile", renamedBlob, `${formState?.phone_number}.${getFileExtension(tempImage?.name)}`);
+          console.log("Named", formData);
+          // return
+          const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData);
+          const respo = await res.data;
+          console.log("Uploaded", respo)
+        } else {
+          toast.error("Upload Image");
+          console.error("Error creating renamed file.");
+          return;
+        }
+      } catch (error) {
+        console.log("Upload Image", error);
+      }
+
+      // return;
       const respond = await axios
         .post(`${url}/api/create_user`, JSON.stringify(data), {
           headers: headers
@@ -278,80 +322,115 @@ const UserInformation = () => {
     return true;
   };
 
-  //uploading Image
+  // Uploading Image....................................
+
+  const fileInputRef = useRef(null);
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    // const renamedFile = new File([file], 'Satish', {type: file?.type} )
-    const renamedBlob = new Blob([file], { type: file.type });
-    if (!checkFileSize(file)) {
-      return;
-    }
-
-    function getFileExtension(filename) {
-      if (typeof filename !== "string") {
-        console.error("Invalid input. Expected a string.");
-        return "";
-      }
-
-      const parts = filename.split(".");
-      if (parts.length > 1) {
-        return parts[parts.length - 1];
-      } else {
-        return ""; // No extension found
-      }
-    }
-    console.log(getFileExtension(file.name));
-
-    if (file) {
-      setUserImage(URL.createObjectURL(file));
-    }
-    if (renamedBlob) {
-      const formData = new FormData();
-      console.log("FILLLL", file);
-      // formData.append('myFile', renamedFile)
-      formData.append("myFile", renamedBlob, `${formState?.phone_number}.${getFileExtension(file.name)}`);
-      console.log("Named", formData);
-
-      if (!renamedBlob) {
-        console.error("Error creating renamed file.");
+    try {
+      const file = e.target.files[0];
+      const renamedBlob = new Blob([file], { type: file?.type });
+      if (!checkFileSize(file)) {
         return;
       }
 
-      return;
-      const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData);
-      const respo = await res.data;
+      function getFileExtension(filename) {
+        if (typeof filename !== "string") {
+          console.error("Invalid input. Expected a string.");
+          return "";
+        }
 
-      console.log("hey hey", respo);
-    }
-    if (file) {
-      setUserImage(URL.createObjectURL(file));
-      setUserImage(file);
-    }
-  };
+        const parts = filename.split(".");
+        if (parts.length > 1) {
+          return parts[parts.length - 1];
+        } else {
+          return "";
+        }
+      }
 
-  // const handleImageUpload = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     setUserImage(URL.createObjectURL(file));
-  //   }
-  // };
+      if (file) {
+        setUserImage(URL.createObjectURL(file));
+      }
+      if (renamedBlob) {
+        const formData = new FormData();
+        formData.append("myFile", renamedBlob, `${formState?.phone_number}.${getFileExtension(file?.name)}`);
+        console.log("Named", formData);
 
-  //getting Image from the API
+        if (!renamedBlob) {
+          console.error("Error creating renamed file.");
+          return;
+        }
 
-  const getImage = async () => {
-    try {
-      const res = await axios.get(`${url}/api/get_image`, { headers: headers });
-      const respData = await res.data;
-      console.log("Image", respData);
+        // return;
+        const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData);
+        const respo = await res.data;
+      }
+      if (file) {
+        setUserImage(URL.createObjectURL(file));
+        // setUserImage(file);
+      }
     } catch (error) {
       console.log("Error", error);
     }
   };
 
-  useEffect(()=>{
-  getImage()
-  },[])
+  // Second Handle Image Upload
+
+  const handleImageCreate = async (e) => {
+    try {
+      const file = e.target.files[0];
+      const renamedBlob = new Blob([file], { type: file?.type });
+      if (!checkFileSize(file)) {
+        return;
+      }
+
+      function getFileExtension(filename) {
+        if (typeof filename !== "string") {
+          console.error("Invalid input. Expected a string.");
+          return "";
+        }
+
+        const parts = filename.split(".");
+        if (parts.length > 1) {
+          return parts[parts.length - 1];
+        } else {
+          return "";
+        }
+      }
+
+      if (file) {
+        setUserImage(URL.createObjectURL(file));
+      }
+
+      if (file) {
+        setTempImage(file);
+      }
+      
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  //getting Image from the API
+
+  const getImage = async (phone_number) => {
+    try {
+      const res = await axios.get(`${url}/api/get_image?phone_number=${phone_number}&file_path=user`, {
+        headers: headers
+      });
+      const respData = await res.data;
+      console.log("Image", respData?.data?.image_url);
+      setUserImage(respData?.data?.image_url);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  // useEffect(()=>{
+  //   if(router.query.id){
+  //     getImage()
+  //   }
+  // },[])
 
   //getting dropdown menus
 
@@ -423,7 +502,7 @@ const UserInformation = () => {
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="  w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-            <h2 className="font-arial font-normal text-3xl  py-2">User Information</h2>
+            <h2 className="font-arial font-normal text-3xl tabletitle py-2">User Information</h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <h2>
                 <TiArrowBack
@@ -500,9 +579,11 @@ const UserInformation = () => {
                     </div>
                   </div>
                   <div className="profpic relative group">
-                    <Image
+                    <img
                       src={userImage ? userImage : userImage}
                       // src={userImage}
+                      // src={userImage}
+                      // src={'https://picsum.photos/200/300'}
                       className="h-32 w-32 rounded-full bg-gray-200"
                       // alt="Profile"
                       width={100}
@@ -511,25 +592,13 @@ const UserInformation = () => {
                     <input
                       type="file"
                       accept=".jpeg,.jpg"
-                      onChange={handleImageUpload}
+                      onChange={router.query.type == "CREATE" ? handleImageCreate : handleImageUpload}
                       style={{ display: "none" }}
                       id="fileInput"
+                      ref={fileInputRef}
+                      // disabled={router.query.type == "view" || !formState.phone_number}
                     />
-                    {/* <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      onChange={(e) => handleImageUpload(e)}
 
-                      style={{ display: "block" }}
-                      id="fileInput"
-                      onChange={(e) =>
-                        setFormState({
-                          ...formState,
-                          image: e.target.value[0]
-                        })
-                      }
-                    /> */}
                     <label
                       htmlFor="fileInput"
                       // here make the opacity-0 to get hover text effect
