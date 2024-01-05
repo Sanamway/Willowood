@@ -101,16 +101,25 @@ const RPSummary = (props) => {
       return;
     }
     try {
-      const respond = await axios.get(`${url}/api/rsp_update_status`, {
-        headers: headers,
-        params: paramsData,
-      });
+      const respond = await axios
+        .get(`${url}/api/rsp_update_status`, {
+          headers: headers,
+          params: paramsData,
+        })
+        .then((res) => {
+          if (!res && status != "Review Done") return;
+          console.log("jio", res);
+          setisOpen(true);
+          setApiMessage(res.data.message);
+        });
       const apires = await respond.data.data;
-      setData(apires);
+      console.log("jio", apires);
     } catch (error) {
       console.log(error);
     }
   };
+
+  // Initialize an object to store the sums based on Brand Code
 
   const handleSaveRsp = async (status) => {
     try {
@@ -266,10 +275,6 @@ const RPSummary = (props) => {
     }
   };
 
-  const receivedObject = router.query.filterState
-    ? JSON.parse(decodeURIComponent(router.query.filterState))
-    : {};
-
   const handleSaveDraft = async () => {
     try {
       const respond = await axios.get(`${url}/api/rsp_update_status`, {
@@ -304,347 +309,167 @@ const RPSummary = (props) => {
   };
 
   const [namewiseData, setNamewiseData] = useState([]);
+  const [totalNamewiseData, setTotalNamewiseData] = useState({});
   useEffect(() => {
     if (!props.tableData.length) return;
-
-    let result = [];
-    props.tableData.forEach((item) => {
-      const existingItem = result.find(
-        (obj) => obj["Brand Code"] === item["Brand Code"]
-      );
-      if (existingItem) {
-        // If the item already exists in the result array, add the values to the existing item
-        existingItem["Annual Budget Qty 23-24"] +=
-          item["Annual Budget Qty 23-24"];
-        existingItem["Annual Budget Val 23-24"] +=
-          item["Annual Budget Val 23-24"];
-        existingItem["DECEMBER 22-23 Sale Qty"] +=
-          item["DECEMBER 22-23 Sale Qty"];
-        existingItem["DECEMBER 23-24 Fcst Qty"] +=
-          item["DECEMBER 23-24 Fcst Qty"];
-        existingItem["DECEMBER 23-24 Fcst Val"] +=
-          item["DECEMBER 23-24 Fcst Val"];
-        existingItem["DECEMBER 23-24 Revised Fcst Qty"] +=
-          item["DECEMBER 23-24 Revised Fcst Qty"];
-        existingItem["DECEMBER 23-24 Revised Fcst Val"] +=
-          item["DECEMBER 23-24 Revised Fcst Val"];
-        existingItem["DECEMBER 23-24 Urgent Qty"] +=
-          item["DECEMBER 23-24 Urgent Qty"];
-        existingItem["DECEMBER Budget Qty 23-24"] +=
-          item["DECEMBER Budget Qty 23-24"];
-        existingItem["DECEMBER Budget Val 23-24"] +=
-          item["DECEMBER Budget Val 23-24"];
-        existingItem["Expected Return Qty"] += item["Expected Return Qty"];
-        existingItem["FY Sales Qty 21-22"] += item["FY Sales Qty 21-22"];
-        existingItem["FY Sales Qty 22-23"] += item["FY Sales Qty 22-23"];
-        existingItem["FY Sales Val 21-22"] += item["FY Sales Val 21-22"];
-        existingItem["FY Sales Val 22-23"] += item["FY Sales Val 22-23"];
-        existingItem["JANUARY 22-23 Sale Qty"] +=
-          item["JANUARY 22-23 Sale Qty"];
-        existingItem["JANUARY 23-24 Fcst Qty"] +=
-          item["JANUARY 23-24 Fcst Qty"];
-        existingItem["JANUARY 23-24 Fcst Val"] +=
-          item["JANUARY 23-24 Fcst Val"];
-        existingItem["JANUARY Budget Qty 23-24"] +=
-          item["JANUARY Budget Qty 23-24"];
-        existingItem["JANUARY Budget Val 23-24"] +=
-          item["JANUARY Budget Val 23-24"];
-        existingItem["Ytd Net Sale Qty 23-24"] +=
-          item["Ytd Net Sale Qty 23-24"];
-
-        existingItem["Ytd Net Sale Value 23-24"] +=
-          item["Ytd Net Sale Value 23-24"];
-      } else {
-        // If the item does not exist in the result array, create a new item
-        result.push({
-          "Brand Code": item["Brand Code"],
-
-          "Annual Budget Qty 23-24": item["Annual Budget Qty 23-24"],
-          "Annual Budget Val 23-24": item["Annual Budget Val 23-24"],
-          "DECEMBER 22-23 Sale Qty": item["DECEMBER 22-23 Sale Qty"],
-          "DECEMBER 23-24 Fcst Qty": item["DECEMBER 23-24 Fcst Qty"],
-          "DECEMBER 23-24 Fcst Val": item["DECEMBER 23-24 Fcst Val"],
-          "DECEMBER 23-24 Revised Fcst Qty":
-            item["DECEMBER 23-24 Revised Fcst Qty"],
-          "DECEMBER 23-24 Revised Fcst Val":
-            item["DECEMBER 23-24 Revised Fcst Val"],
-          "DECEMBER 23-24 Urgent Qty": item["DECEMBER 23-24 Urgent Qty"],
-          "DECEMBER Budget Qty 23-24": item["DECEMBER Budget Qty 23-24"],
-          "DECEMBER Budget Val 23-24": item["DECEMBER Budget Val 23-24"],
-          "Expected Return Qty": item["Expected Return Qty"],
-          "FY Sales Qty 21-22": item["FY Sales Qty 21-22"],
-          "FY Sales Qty 22-23": item["FY Sales Qty 22-23"],
-          "FY Sales Val 21-22": item["FY Sales Val 21-22"],
-          "FY Sales Val 22-23": item["FY Sales Val 22-23"],
-          "JANUARY 22-23 Sale Qty": item["JANUARY 22-23 Sale Qty"],
-          "JANUARY 23-24 Fcst Qty": item["JANUARY 23-24 Fcst Qty"],
-          "JANUARY 23-24 Fcst Val": item["JANUARY 23-24 Fcst Val"],
-          "JANUARY Budget Qty 23-24": item["JANUARY Budget Qty 23-24"],
-          "JANUARY Budget Val 23-24": item["JANUARY Budget Val 23-24"],
-          "Ytd Net Sale Qty 23-24": item["Ytd Net Sale Qty 23-24"],
-          "Ytd Net Sale Value 23-24": item["Ytd Net Sale Value 23-24"],
-        });
-      }
-    });
-
+    const sumObjectsByBrandCode = (inputArray) => {
+      const sumMap = {};
+      // Iterate through the input array
+      inputArray.forEach((obj) => {
+        const brandCode = obj["Brand Code"];
+        // If Brand Code is not in the sumMap, initialize it
+        if (!sumMap[brandCode]) {
+          sumMap[brandCode] = { ...obj };
+        } else {
+          // Sum the values for each property (excluding non-numeric values)
+          for (const key in obj) {
+            if (!isNaN(obj[key])) {
+              sumMap[brandCode][key] = (sumMap[brandCode][key] || 0) + obj[key];
+            }
+          }
+        }
+      });
+      // Create a new array with unique Brand Code and summed values
+      const resultArray = Object.values(sumMap);
+      return resultArray;
+    };
+    const result = sumObjectsByBrandCode(props.tableData);
+    // Display the result
     setNamewiseData(result);
+
+    function sumNumericValues(data) {
+      const sumObject = {};
+
+      data.forEach((item) => {
+        Object.keys(item).forEach((key) => {
+          if (typeof item[key] === "number") {
+            sumObject[key] = (sumObject[key] || 0) + item[key];
+          } else {
+            sumObject[key] = "Moye Moye";
+          }
+        });
+      });
+
+      return sumObject;
+    }
+    const totalResult = sumNumericValues(props.tableData);
+    setTotalNamewiseData(totalResult);
   }, [props.tableData]);
+  console.log("noi", totalNamewiseData);
 
   const [pcatwiseData, setPcatwiseData] = useState([]);
+  const [totalPcatwiseData, setTotalPcatwiseData] = useState({});
   useEffect(() => {
     if (!props.tableData.length) return;
+    const sumObjectsByBrandCode = (inputArray) => {
+      const sumMap = {};
+      // Iterate through the input array
+      inputArray.forEach((obj) => {
+        const brandCode = obj["Product Category"];
 
-    let result = [];
-    props.tableData.forEach((item) => {
-      const existingItem = result.find(
-        (obj) => obj["Product Category"] === item["Product Category"]
-      );
-      if (existingItem) {
-        // If the item already exists in the result array, add the values to the existing item
-        existingItem["Annual Budget Qty 23-24"] +=
-          item["Annual Budget Qty 23-24"];
-        existingItem["Annual Budget Val 23-24"] +=
-          item["Annual Budget Val 23-24"];
-        existingItem["DECEMBER 22-23 Sale Qty"] +=
-          item["DECEMBER 22-23 Sale Qty"];
-        existingItem["DECEMBER 23-24 Fcst Qty"] +=
-          item["DECEMBER 23-24 Fcst Qty"];
-        existingItem["DECEMBER 23-24 Fcst Val"] +=
-          item["DECEMBER 23-24 Fcst Val"];
-        existingItem["DECEMBER 23-24 Revised Fcst Qty"] +=
-          item["DECEMBER 23-24 Revised Fcst Qty"];
-        existingItem["DECEMBER 23-24 Revised Fcst Val"] +=
-          item["DECEMBER 23-24 Revised Fcst Val"];
-        existingItem["DECEMBER 23-24 Urgent Qty"] +=
-          item["DECEMBER 23-24 Urgent Qty"];
-        existingItem["DECEMBER Budget Qty 23-24"] +=
-          item["DECEMBER Budget Qty 23-24"];
-        existingItem["DECEMBER Budget Val 23-24"] +=
-          item["DECEMBER Budget Val 23-24"];
-        existingItem["Expected Return Qty"] += item["Expected Return Qty"];
-        existingItem["FY Sales Qty 21-22"] += item["FY Sales Qty 21-22"];
-        existingItem["FY Sales Qty 22-23"] += item["FY Sales Qty 22-23"];
-        existingItem["FY Sales Val 21-22"] += item["FY Sales Val 21-22"];
-        existingItem["FY Sales Val 22-23"] += item["FY Sales Val 22-23"];
-        existingItem["JANUARY 22-23 Sale Qty"] +=
-          item["JANUARY 22-23 Sale Qty"];
-        existingItem["JANUARY 23-24 Fcst Qty"] +=
-          item["JANUARY 23-24 Fcst Qty"];
-        existingItem["JANUARY 23-24 Fcst Val"] +=
-          item["JANUARY 23-24 Fcst Val"];
-        existingItem["JANUARY Budget Qty 23-24"] +=
-          item["JANUARY Budget Qty 23-24"];
-        existingItem["JANUARY Budget Val 23-24"] +=
-          item["JANUARY Budget Val 23-24"];
-        existingItem["Ytd Net Sale Qty 23-24"] +=
-          item["Ytd Net Sale Qty 23-24"];
-        existingItem["Ytd Net Sale Value 23-24"] +=
-          item["Ytd Net Sale Value 23-24"];
-      } else {
-        // If the item does not exist in the result array, create a new item
-        result.push({
-          "Product Category": item["Product Category"],
-
-          "Annual Budget Qty 23-24": item["Annual Budget Qty 23-24"],
-          "Annual Budget Val 23-24": item["Annual Budget Val 23-24"],
-          "DECEMBER 22-23 Sale Qty": item["DECEMBER 22-23 Sale Qty"],
-          "DECEMBER 23-24 Fcst Qty": item["DECEMBER 23-24 Fcst Qty"],
-          "DECEMBER 23-24 Fcst Val": item["DECEMBER 23-24 Fcst Val"],
-          "DECEMBER 23-24 Revised Fcst Qty":
-            item["DECEMBER 23-24 Revised Fcst Qty"],
-          "DECEMBER 23-24 Revised Fcst Val":
-            item["DECEMBER 23-24 Revised Fcst Val"],
-          "DECEMBER 23-24 Urgent Qty": item["DECEMBER 23-24 Urgent Qty"],
-          "DECEMBER Budget Qty 23-24": item["DECEMBER Budget Qty 23-24"],
-          "DECEMBER Budget Val 23-24": item["DECEMBER Budget Val 23-24"],
-          "Expected Return Qty": item["Expected Return Qty"],
-          "FY Sales Qty 21-22": item["FY Sales Qty 21-22"],
-          "FY Sales Qty 22-23": item["FY Sales Qty 22-23"],
-          "FY Sales Val 21-22": item["FY Sales Val 21-22"],
-          "FY Sales Val 22-23": item["FY Sales Val 22-23"],
-          "JANUARY 22-23 Sale Qty": item["JANUARY 22-23 Sale Qty"],
-          "JANUARY 23-24 Fcst Qty": item["JANUARY 23-24 Fcst Qty"],
-          "JANUARY 23-24 Fcst Val": item["JANUARY 23-24 Fcst Val"],
-          "JANUARY Budget Qty 23-24": item["JANUARY Budget Qty 23-24"],
-          "JANUARY Budget Val 23-24": item["JANUARY Budget Val 23-24"],
-          "Ytd Net Sale Qty 23-24": item["Ytd Net Sale Qty 23-24"],
-          "Ytd Net Sale Value 23-24": item["Ytd Net Sale Value 23-24"],
-        });
-      }
-    });
-
+        // If Brand Code is not in the sumMap, initialize it
+        if (!sumMap[brandCode]) {
+          sumMap[brandCode] = { ...obj };
+        } else {
+          // Sum the values for each property (excluding non-numeric values)
+          for (const key in obj) {
+            if (!isNaN(obj[key])) {
+              sumMap[brandCode][key] = (sumMap[brandCode][key] || 0) + obj[key];
+            }
+          }
+        }
+      });
+      // Create a new array with unique Brand Code and summed values
+      const resultArray = Object.values(sumMap);
+      return resultArray;
+    };
+    const result = sumObjectsByBrandCode(props.tableData);
     setPcatwiseData(result);
+    function sumNumericValues(data) {
+      const sumObject = {};
+
+      data.forEach((item) => {
+        Object.keys(item).forEach((key) => {
+          if (typeof item[key] === "number") {
+            sumObject[key] = (sumObject[key] || 0) + item[key];
+          } else {
+            sumObject[key] = "Moye Moye";
+          }
+        });
+      });
+
+      return sumObject;
+    }
+    const totalResult = sumNumericValues(props.tableData);
+    setTotalPcatwiseData(totalResult);
   }, [props.tableData]);
+
   const [psegwiseData, setPsegwiseData] = useState([]);
   useEffect(() => {
     if (!props.tableData.length) return;
 
-    let result = [];
-    props.tableData.forEach((item) => {
-      const existingItem = result.find(
-        (obj) => obj["Product Segment"] === item["Product Segment"]
-      );
-      if (existingItem) {
-        // If the item already exists in the result array, add the values to the existing item
-        existingItem["Annual Budget Qty 23-24"] +=
-          item["Annual Budget Qty 23-24"];
-        existingItem["Annual Budget Val 23-24"] +=
-          item["Annual Budget Val 23-24"];
-        existingItem["DECEMBER 22-23 Sale Qty"] +=
-          item["DECEMBER 22-23 Sale Qty"];
-        existingItem["DECEMBER 23-24 Fcst Qty"] +=
-          item["DECEMBER 23-24 Fcst Qty"];
-        existingItem["DECEMBER 23-24 Fcst Val"] +=
-          item["DECEMBER 23-24 Fcst Val"];
-        existingItem["DECEMBER 23-24 Revised Fcst Qty"] +=
-          item["DECEMBER 23-24 Revised Fcst Qty"];
-        existingItem["DECEMBER 23-24 Revised Fcst Val"] +=
-          item["DECEMBER 23-24 Revised Fcst Val"];
-        existingItem["DECEMBER 23-24 Urgent Qty"] +=
-          item["DECEMBER 23-24 Urgent Qty"];
-        existingItem["DECEMBER Budget Qty 23-24"] +=
-          item["DECEMBER Budget Qty 23-24"];
-        existingItem["DECEMBER Budget Val 23-24"] +=
-          item["DECEMBER Budget Val 23-24"];
-        existingItem["Expected Return Qty"] += item["Expected Return Qty"];
-        existingItem["FY Sales Qty 21-22"] += item["FY Sales Qty 21-22"];
-        existingItem["FY Sales Qty 22-23"] += item["FY Sales Qty 22-23"];
-        existingItem["FY Sales Val 21-22"] += item["FY Sales Val 21-22"];
-        existingItem["FY Sales Val 22-23"] += item["FY Sales Val 22-23"];
-        existingItem["JANUARY 22-23 Sale Qty"] +=
-          item["JANUARY 22-23 Sale Qty"];
-        existingItem["JANUARY 23-24 Fcst Qty"] +=
-          item["JANUARY 23-24 Fcst Qty"];
-        existingItem["JANUARY 23-24 Fcst Val"] +=
-          item["JANUARY 23-24 Fcst Val"];
-        existingItem["JANUARY Budget Qty 23-24"] +=
-          item["JANUARY Budget Qty 23-24"];
-        existingItem["JANUARY Budget Val 23-24"] +=
-          item["JANUARY Budget Val 23-24"];
-        existingItem["Ytd Net Sale Qty 23-24"] +=
-          item["Ytd Net Sale Qty 23-24"];
-        existingItem["Ytd Net Sale Value 23-24"] +=
-          item["Ytd Net Sale Value 23-24"];
-      } else {
-        // If the item does not exist in the result array, create a new item
-        result.push({
-          "Product Segment": item["Product Segment"],
-          "Annual Budget Qty 23-24": item["Annual Budget Qty 23-24"],
-          "Annual Budget Val 23-24": item["Annual Budget Val 23-24"],
-          "DECEMBER 22-23 Sale Qty": item["DECEMBER 22-23 Sale Qty"],
-          "DECEMBER 23-24 Fcst Qty": item["DECEMBER 23-24 Fcst Qty"],
-          "DECEMBER 23-24 Fcst Val": item["DECEMBER 23-24 Fcst Val"],
-          "DECEMBER 23-24 Revised Fcst Qty":
-            item["DECEMBER 23-24 Revised Fcst Qty"],
-          "DECEMBER 23-24 Revised Fcst Val":
-            item["DECEMBER 23-24 Revised Fcst Val"],
-          "DECEMBER 23-24 Urgent Qty": item["DECEMBER 23-24 Urgent Qty"],
-          "DECEMBER Budget Qty 23-24": item["DECEMBER Budget Qty 23-24"],
-          "DECEMBER Budget Val 23-24": item["DECEMBER Budget Val 23-24"],
-          "Expected Return Qty": item["Expected Return Qty"],
-          "FY Sales Qty 21-22": item["FY Sales Qty 21-22"],
-          "FY Sales Qty 22-23": item["FY Sales Qty 22-23"],
-          "FY Sales Val 21-22": item["FY Sales Val 21-22"],
-          "FY Sales Val 22-23": item["FY Sales Val 22-23"],
-          "JANUARY 22-23 Sale Qty": item["JANUARY 22-23 Sale Qty"],
-          "JANUARY 23-24 Fcst Qty": item["JANUARY 23-24 Fcst Qty"],
-          "JANUARY 23-24 Fcst Val": item["JANUARY 23-24 Fcst Val"],
-          "JANUARY Budget Qty 23-24": item["JANUARY Budget Qty 23-24"],
-          "JANUARY Budget Val 23-24": item["JANUARY Budget Val 23-24"],
-          "Ytd Net Sale Qty 23-24": item["Ytd Net Sale Qty 23-24"],
-          "Ytd Net Sale Value 23-24": item["Ytd Net Sale Value 23-24"],
-        });
-      }
-    });
+    const sumObjectsByBrandCode = (inputArray) => {
+      const sumMap = {};
 
+      // Iterate through the input array
+      inputArray.forEach((obj) => {
+        const brandCode = obj["Product Segment"];
+
+        // If Brand Code is not in the sumMap, initialize it
+        if (!sumMap[brandCode]) {
+          sumMap[brandCode] = { ...obj };
+        } else {
+          // Sum the values for each property (excluding non-numeric values)
+          for (const key in obj) {
+            if (!isNaN(obj[key])) {
+              sumMap[brandCode][key] = (sumMap[brandCode][key] || 0) + obj[key];
+            }
+          }
+        }
+      });
+      // Create a new array with unique Brand Code and summed values
+      const resultArray = Object.values(sumMap);
+      return resultArray;
+    };
+    const result = sumObjectsByBrandCode(props.tableData);
     setPsegwiseData(result);
   }, [props.tableData]);
 
   const [rolewiseData, setRolewiseData] = useState([]);
-
   useEffect(() => {
     if (!props.tableData.length) return;
-    let result = [];
-    props.tableData.forEach((item) => {
-      const existingItem = result.find(
-        (obj) => obj["Territory"] === item["Territory"]
-      );
-      if (existingItem) {
-        // If the item already exists in the result array, add the values to the existing item
-        existingItem["Annual Budget Qty 23-24"] +=
-          item["Annual Budget Qty 23-24"];
-        existingItem["Annual Budget Val 23-24"] +=
-          item["Annual Budget Val 23-24"];
-        existingItem["DECEMBER 22-23 Sale Qty"] +=
-          item["DECEMBER 22-23 Sale Qty"];
-        existingItem["DECEMBER 23-24 Fcst Qty"] +=
-          item["DECEMBER 23-24 Fcst Qty"];
-        existingItem["DECEMBER 23-24 Fcst Val"] +=
-          item["DECEMBER 23-24 Fcst Val"];
-        existingItem["DECEMBER 23-24 Revised Fcst Qty"] +=
-          item["DECEMBER 23-24 Revised Fcst Qty"];
-        existingItem["DECEMBER 23-24 Revised Fcst Val"] +=
-          item["DECEMBER 23-24 Revised Fcst Val"];
-        existingItem["DECEMBER 23-24 Urgent Qty"] +=
-          item["DECEMBER 23-24 Urgent Qty"];
-        existingItem["DECEMBER Budget Qty 23-24"] +=
-          item["DECEMBER Budget Qty 23-24"];
-        existingItem["DECEMBER Budget Val 23-24"] +=
-          item["DECEMBER Budget Val 23-24"];
-        existingItem["Expected Return Qty"] += item["Expected Return Qty"];
-        existingItem["FY Sales Qty 21-22"] += item["FY Sales Qty 21-22"];
-        existingItem["FY Sales Qty 22-23"] += item["FY Sales Qty 22-23"];
-        existingItem["FY Sales Val 21-22"] += item["FY Sales Val 21-22"];
-        existingItem["FY Sales Val 22-23"] += item["FY Sales Val 22-23"];
-        existingItem["JANUARY 22-23 Sale Qty"] +=
-          item["JANUARY 22-23 Sale Qty"];
-        existingItem["JANUARY 23-24 Fcst Qty"] +=
-          item["JANUARY 23-24 Fcst Qty"];
-        existingItem["JANUARY 23-24 Fcst Val"] +=
-          item["JANUARY 23-24 Fcst Val"];
-        existingItem["JANUARY Budget Qty 23-24"] +=
-          item["JANUARY Budget Qty 23-24"];
-        existingItem["JANUARY Budget Val 23-24"] +=
-          item["JANUARY Budget Val 23-24"];
-        existingItem["Ytd Net Sale Qty 23-24"] +=
-          item["Ytd Net Sale Qty 23-24"];
-        existingItem["Ytd Net Sale Value 23-24"] +=
-          item["Ytd Net Sale Value 23-24"];
-      } else {
-        // If the item does not exist in the result array, create a new item
-        result.push({
-          Territory: item["Territory"],
-          "Annual Budget Qty 23-24": item["Annual Budget Qty 23-24"],
-          "Annual Budget Val 23-24": item["Annual Budget Val 23-24"],
-          "DECEMBER 22-23 Sale Qty": item["DECEMBER 22-23 Sale Qty"],
-          "DECEMBER 23-24 Fcst Qty": item["DECEMBER 23-24 Fcst Qty"],
-          "DECEMBER 23-24 Fcst Val": item["DECEMBER 23-24 Fcst Val"],
-          "DECEMBER 23-24 Revised Fcst Qty":
-            item["DECEMBER 23-24 Revised Fcst Qty"],
-          "DECEMBER 23-24 Revised Fcst Val":
-            item["DECEMBER 23-24 Revised Fcst Val"],
-          "DECEMBER 23-24 Urgent Qty": item["DECEMBER 23-24 Urgent Qty"],
-          "DECEMBER Budget Qty 23-24": item["DECEMBER Budget Qty 23-24"],
-          "DECEMBER Budget Val 23-24": item["DECEMBER Budget Val 23-24"],
-          "Expected Return Qty": item["Expected Return Qty"],
-          "FY Sales Qty 21-22": item["FY Sales Qty 21-22"],
-          "FY Sales Qty 22-23": item["FY Sales Qty 22-23"],
-          "FY Sales Val 21-22": item["FY Sales Val 21-22"],
-          "FY Sales Val 22-23": item["FY Sales Val 22-23"],
-          "JANUARY 22-23 Sale Qty": item["JANUARY 22-23 Sale Qty"],
-          "JANUARY 23-24 Fcst Qty": item["JANUARY 23-24 Fcst Qty"],
-          "JANUARY 23-24 Fcst Val": item["JANUARY 23-24 Fcst Val"],
-          "JANUARY Budget Qty 23-24": item["JANUARY Budget Qty 23-24"],
-          "JANUARY Budget Val 23-24": item["JANUARY Budget Val 23-24"],
-          "Ytd Net Sale Qty 23-24": item["Ytd Net Sale Qty 23-24"],
-          "Ytd Net Sale Value 23-24": item["Ytd Net Sale Value 23-24"],
-        });
-      }
-    });
 
+    const sumObjectsByBrandCode = (inputArray) => {
+      const sumMap = {};
+
+      // Iterate through the input array
+      inputArray.forEach((obj) => {
+        const brandCode = obj["Territory"];
+
+        // If Brand Code is not in the sumMap, initialize it
+        if (!sumMap[brandCode]) {
+          sumMap[brandCode] = { ...obj };
+        } else {
+          // Sum the values for each property (excluding non-numeric values)
+          for (const key in obj) {
+            if (!isNaN(obj[key])) {
+              sumMap[brandCode][key] = (sumMap[brandCode][key] || 0) + obj[key];
+            }
+          }
+        }
+      });
+
+      // Create a new array with unique Brand Code and summed values
+      const resultArray = Object.values(sumMap);
+      return resultArray;
+    };
+    const result = sumObjectsByBrandCode(props.tableData);
     setRolewiseData(result);
   }, [props.tableData]);
 
+  const receivedObject = router.query.filterState
+    ? JSON.parse(decodeURIComponent(router.query.filterState))
+    : {};
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
       <SubmitModal
@@ -759,10 +584,10 @@ const RPSummary = (props) => {
                       </th>
 
                       <th scope="col" className="px-2 py-1 text-black">
-                        FY Sales 21-22
+                        FY Sales Qty 21-22
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
-                        FY Sales 22-23
+                        FY Sales Qty 22-23
                       </th>
                       <th scope="col" className="px-2 py-1 text-black ">
                         Annual Budget Qty 23-24
@@ -779,9 +604,14 @@ const RPSummary = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         Apr 23-24 FSCT Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
-                        Apr 23-24 Revised FCST Value
-                      </th>
+                      {!receivedObject.tId && (
+                        <th scope="col" className="px-2 py-1 text-black">
+                          Apr 23-24 Revised FCST
+                          <br />
+                          (TM Cumulative)
+                        </th>
+                      )}
+
                       <th scope="col" className="px-2 py-1 text-black ">
                         Apr 23-24 Revised FCST Qty
                       </th>
@@ -794,9 +624,14 @@ const RPSummary = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         May Budget Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
-                        May Net FCST Qty 23-24
-                      </th>
+                      {!receivedObject?.tId && (
+                        <th scope="col" className="px-2 py-1 text-black">
+                          May FCST Qty 23-24
+                          <br />
+                          (TM Cumulative)
+                        </th>
+                      )}
+
                       <th
                         scope="col"
                         className="px-2 py-1 text-black border-l-2 border-r-2"
@@ -816,55 +651,190 @@ const RPSummary = (props) => {
                       return (
                         <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
                           <td className="px-4 py-1 text-center">
-                            {item["Brand Code"]}
+                            {item[Object.keys(item)[2]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["FY Sales Val 21-22"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[6]]}
                           </td>
-
-                          <td className="px-4 py-1 text-center">
-                            {item["FY Sales Val 22-23"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[8]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["Annual Budget Qty 23-24"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[10]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["Ytd Net Sale Qty 23-24"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[12]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER 22-23 Sale Qty"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[14]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER Budget Qty 23-24"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[15]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER 23-24 Fcst Qty"]}
+                          {console.log("hi", Object.keys(item)[17])}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[17]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER 23-24 Fcst Val"]}
-                          </td>
+                          {!receivedObject?.tId && (
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[36]]}
+                            </td>
+                          )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
-                            {item["DECEMBER 23-24 Revised Fcst Qty"]}
+                            {item[Object.keys(item)[19]]}
                           </td>
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
-                            {item["DECEMBER 23-24 Urgent Qty"]}
+                            {item[Object.keys(item)[21]]}
                           </td>
                           <td className="px-4 py-1 text-right">
-                            {item["JANUARY 22-23 Sale Qty"]}
+                            {item[Object.keys(item)[22]]}
                           </td>
                           <td className="px-4 py-1 text-right">
-                            {item["JANUARY Budget Val 23-24"]}
+                            {item[Object.keys(item)[23]]}
                           </td>
-                          <td className="px-4 py-1 text-right"></td>
+                          {!receivedObject.tId && (
+                            <td className="px-4 py-1 text-right">
+                              {" "}
+                              {item[Object.keys(item)[38]]}
+                            </td>
+                          )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
-                            {item["JANUARY 23-24 Fcst Qty"]}
+                            {item[Object.keys(item)[25]]}
                           </td>
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
-                            {item["Expected Return Qty"]}
+                            {item[Object.keys(item)[27]]}
                           </td>
                         </tr>
                       );
                     })}
+                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                      <td className="px-4 py-1 text-center whitespace-nowrap">
+                        Qty Total
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[6]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[8]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[10]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[12]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[14]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[15]]}
+                      </td>
+                      {console.log("hi", Object.keys(totalNamewiseData)[17])}
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[17]]}
+                      </td>
+                      {!receivedObject?.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[36]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[19]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[21]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[22]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[23]]}
+                      </td>
+                      {!receivedObject.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {" "}
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[38]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[25]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[27]]}
+                      </td>
+                    </tr>
+                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                      <td className="px-4 py-1 text-center whitespace-nowrap">
+                        Value Total
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[
+                          Object.keys(totalNamewiseData)[7]
+                        ]?.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[
+                          Object.keys(totalNamewiseData)[9]
+                        ]?.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[11]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[13]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">-</td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[16]]}
+                      </td>
+
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[18]]}
+                      </td>
+                      {!receivedObject?.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[36]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[20]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        -
+                      </td>
+                      <td className="px-4 py-1 text-right">-</td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[24]]}
+                      </td>
+                      {!receivedObject.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {" "}
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[38]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[26]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        -
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -886,10 +856,10 @@ const RPSummary = (props) => {
                       </th>
 
                       <th scope="col" className="px-2 py-1 text-black">
-                        FY Sales 21-22
+                        FY Sales Qty 21-22
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
-                        FY Sales 22-23
+                        FY Sales Qty 22-23
                       </th>
                       <th scope="col" className="px-2 py-1 text-black ">
                         Annual Budget Qty 23-24
@@ -906,9 +876,14 @@ const RPSummary = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         Apr 23-24 FSCT Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
-                        Apr 23-24 Revised FCST Value
-                      </th>
+                      {!receivedObject.tId && (
+                        <th scope="col" className="px-2 py-1 text-black">
+                          Apr 23-24 Revised FCST
+                          <br />
+                          (TM Cumulative)
+                        </th>
+                      )}
+
                       <th scope="col" className="px-2 py-1 text-black ">
                         Apr 23-24 Revised FCST Qty
                       </th>
@@ -921,9 +896,14 @@ const RPSummary = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         May Budget Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
-                        May Net FCST Qty 23-24
-                      </th>
+                      {!receivedObject?.tId && (
+                        <th scope="col" className="px-2 py-1 text-black">
+                          May FCST Qty 23-24
+                          <br />
+                          (TM Cumulative)
+                        </th>
+                      )}
+
                       <th
                         scope="col"
                         className="px-2 py-1 text-black border-l-2 border-r-2"
@@ -943,61 +923,197 @@ const RPSummary = (props) => {
                       return (
                         <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
                           <td className="px-4 py-1 text-center">
-                            {item["Product Category"]}
+                            {item[Object.keys(item)[1]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["FY Sales Val 21-22"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[6]]}
                           </td>
-
-                          <td className="px-4 py-1 text-center">
-                            {item["FY Sales Val 22-23"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[8]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["Annual Budget Qty 23-24"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[10]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["Ytd Net Sale Qty 23-24"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[12]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER 22-23 Sale Qty"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[14]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER Budget Qty 23-24"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[15]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER 23-24 Fcst Qty"]}
+                          {console.log("hi", Object.keys(item)[17])}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[17]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER 23-24 Fcst Val"]}
-                          </td>
+                          {!receivedObject?.tId && (
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[36]]}
+                            </td>
+                          )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
-                            {item["DECEMBER 23-24 Revised Fcst Qty"]}
+                            {item[Object.keys(item)[19]]}
                           </td>
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
-                            {item["DECEMBER 23-24 Urgent Qty"]}
+                            {item[Object.keys(item)[21]]}
                           </td>
                           <td className="px-4 py-1 text-right">
-                            {item["JANUARY 22-23 Sale Qty"]}
+                            {item[Object.keys(item)[22]]}
                           </td>
                           <td className="px-4 py-1 text-right">
-                            {item["JANUARY Budget Val 23-24"]}
+                            {item[Object.keys(item)[23]]}
                           </td>
-                          <td className="px-4 py-1 text-right"></td>
+                          {!receivedObject.tId && (
+                            <td className="px-4 py-1 text-right">
+                              {" "}
+                              {item[Object.keys(item)[38]]}
+                            </td>
+                          )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
-                            {item["JANUARY 23-24 Fcst Qty"]}
+                            {item[Object.keys(item)[25]]}
                           </td>
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
-                            {item["Expected Return Qty"]}
+                            {item[Object.keys(item)[27]]}
                           </td>
                         </tr>
                       );
                     })}
+                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs">
+                      <td className="px-4 py-1 text-center whitespace-nowrap">
+                        Qty Total
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[6]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[8]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[10]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[12]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[14]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[15]]}
+                      </td>
+                      {console.log("hi", Object.keys(totalPcatwiseData)[17])}
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[17]]}
+                      </td>
+                      {!receivedObject?.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalPcatwiseData[
+                              Object.keys(totalPcatwiseData)[36]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[19]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[21]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[22]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[23]]}
+                      </td>
+                      {!receivedObject.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {" "}
+                          {
+                            totalPcatwiseData[
+                              Object.keys(totalPcatwiseData)[38]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[25]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[27]]}
+                      </td>
+                    </tr>
+                    <tr className="border-b dark:border-gray-700  bg-gray-100 text-gray-600 text-xs">
+                      <td className="px-4 py-1 text-center whitespace-nowrap">
+                        Value Total
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[
+                          Object.keys(totalPcatwiseData)[7]
+                        ]?.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[
+                          Object.keys(totalPcatwiseData)[9]
+                        ]?.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[11]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[13]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">-</td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[16]]}
+                      </td>
+
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[18]]}
+                      </td>
+                      {!receivedObject?.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalPcatwiseData[
+                              Object.keys(totalPcatwiseData)[36]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[20]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        -
+                      </td>
+                      <td className="px-4 py-1 text-right">-</td>
+                      <td className="px-4 py-1 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[24]]}
+                      </td>
+                      {!receivedObject.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {" "}
+                          {
+                            totalPcatwiseData[
+                              Object.keys(totalPcatwiseData)[38]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[26]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        -
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
 
+          
           <div className="mx-auto max-w-full px- ">
             {/* Start coding here */}
             <h4 className="w-full flex align-center justify-center font-bold">
@@ -1009,14 +1125,14 @@ const RPSummary = (props) => {
                   <thead className="text-xs text-gray-700 text-center bg-orange-300  dark:text-gray-400">
                     <tr>
                       <th scope="col" className="px-2 py-1 text-black">
-                        Product Segment
+                        Product Category
                       </th>
 
                       <th scope="col" className="px-2 py-1 text-black">
-                        FY Sales 21-22
+                        FY Sales Qty 21-22
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
-                        FY Sales 22-23
+                        FY Sales Qty 22-23
                       </th>
                       <th scope="col" className="px-2 py-1 text-black ">
                         Annual Budget Qty 23-24
@@ -1033,9 +1149,14 @@ const RPSummary = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         Apr 23-24 FSCT Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
-                        Apr 23-24 Revised FCST Value
-                      </th>
+                      {!receivedObject.tId && (
+                        <th scope="col" className="px-2 py-1 text-black">
+                          Apr 23-24 Revised FCST
+                          <br />
+                          (TM Cumulative)
+                        </th>
+                      )}
+
                       <th scope="col" className="px-2 py-1 text-black ">
                         Apr 23-24 Revised FCST Qty
                       </th>
@@ -1048,9 +1169,14 @@ const RPSummary = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         May Budget Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
-                        May Net FCST Qty 23-24
-                      </th>
+                      {!receivedObject?.tId && (
+                        <th scope="col" className="px-2 py-1 text-black">
+                          May FCST Qty 23-24
+                          <br />
+                          (TM Cumulative)
+                        </th>
+                      )}
+
                       <th
                         scope="col"
                         className="px-2 py-1 text-black border-l-2 border-r-2"
@@ -1070,61 +1196,198 @@ const RPSummary = (props) => {
                       return (
                         <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
                           <td className="px-4 py-1 text-center">
-                            {item["Product Segment"]}
+                            {item[Object.keys(item)[0]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["FY Sales Val 21-22"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[6]]}
                           </td>
-
-                          <td className="px-4 py-1 text-center">
-                            {item["FY Sales Val 22-23"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[8]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["Annual Budget Qty 23-24"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[10]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["Ytd Net Sale Qty 23-24"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[12]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER 22-23 Sale Qty"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[14]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER Budget Qty 23-24"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[15]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER 23-24 Fcst Qty"]}
+                          {console.log("hi", Object.keys(item)[17])}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[17]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER 23-24 Fcst Val"]}
-                          </td>
+                          {!receivedObject?.tId && (
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[36]]}
+                            </td>
+                          )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
-                            {item["DECEMBER 23-24 Revised Fcst Qty"]}
+                            {item[Object.keys(item)[19]]}
                           </td>
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
-                            {item["DECEMBER 23-24 Urgent Qty"]}
+                            {item[Object.keys(item)[21]]}
                           </td>
                           <td className="px-4 py-1 text-right">
-                            {item["JANUARY 22-23 Sale Qty"]}
+                            {item[Object.keys(item)[22]]}
                           </td>
                           <td className="px-4 py-1 text-right">
-                            {item["JANUARY Budget Val 23-24"]}
+                            {item[Object.keys(item)[23]]}
                           </td>
-                          <td className="px-4 py-1 text-right"></td>
+                          {!receivedObject.tId && (
+                            <td className="px-4 py-1 text-right">
+                              {" "}
+                              {item[Object.keys(item)[38]]}
+                            </td>
+                          )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
-                            {item["JANUARY 23-24 Fcst Qty"]}
+                            {item[Object.keys(item)[25]]}
                           </td>
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
-                            {item["Expected Return Qty"]}
+                            {item[Object.keys(item)[27]]}
                           </td>
                         </tr>
                       );
                     })}
+                     <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs">
+                      <td className="px-4 py-1 text-center whitespace-nowrap">
+                        Qty Total
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[6]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[8]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[10]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[12]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[14]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[15]]}
+                      </td>
+                      {console.log("hi", Object.keys(totalNamewiseData)[17])}
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[17]]}
+                      </td>
+                      {!receivedObject?.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[36]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[19]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[21]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[22]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[23]]}
+                      </td>
+                      {!receivedObject.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {" "}
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[38]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[25]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[27]]}
+                      </td>
+                    </tr>
+                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs">
+                      <td className="px-4 py-1 text-center whitespace-nowrap">
+                        Value Total
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[
+                          Object.keys(totalNamewiseData)[7]
+                        ]?.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[
+                          Object.keys(totalNamewiseData)[9]
+                        ]?.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[11]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[13]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">-</td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[16]]}
+                      </td>
+
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[18]]}
+                      </td>
+                      {!receivedObject?.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[36]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[20]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        -
+                      </td>
+                      <td className="px-4 py-1 text-right">-</td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[24]]}
+                      </td>
+                      {!receivedObject.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {" "}
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[38]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[26]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        -
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
+        
 
+         
           <div className="mx-auto max-w-full px- ">
             <h4 className="w-full flex align-center justify-center font-bold">
               Territory wise total
@@ -1135,14 +1398,14 @@ const RPSummary = (props) => {
                   <thead className="text-xs text-gray-700 text-center bg-orange-300  dark:text-gray-400">
                     <tr>
                       <th scope="col" className="px-2 py-1 text-black">
-                        Territory
+                        Product Category
                       </th>
 
                       <th scope="col" className="px-2 py-1 text-black">
-                        FY Sales 21-22
+                        FY Sales Qty 21-22
                       </th>
                       <th scope="col" className="px-2 py-1 text-black">
-                        FY Sales 22-23
+                        FY Sales Qty 22-23
                       </th>
                       <th scope="col" className="px-2 py-1 text-black ">
                         Annual Budget Qty 23-24
@@ -1159,9 +1422,14 @@ const RPSummary = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         Apr 23-24 FSCT Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
-                        Apr 23-24 Revised FCST Value
-                      </th>
+                      {!receivedObject.tId && (
+                        <th scope="col" className="px-2 py-1 text-black">
+                          Apr 23-24 Revised FCST
+                          <br />
+                          (TM Cumulative)
+                        </th>
+                      )}
+
                       <th scope="col" className="px-2 py-1 text-black ">
                         Apr 23-24 Revised FCST Qty
                       </th>
@@ -1174,9 +1442,14 @@ const RPSummary = (props) => {
                       <th scope="col" className="px-2 py-1 text-black">
                         May Budget Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
-                        May Net FCST Qty 23-24
-                      </th>
+                      {!receivedObject?.tId && (
+                        <th scope="col" className="px-2 py-1 text-black">
+                          May FCST Qty 23-24
+                          <br />
+                          (TM Cumulative)
+                        </th>
+                      )}
+
                       <th
                         scope="col"
                         className="px-2 py-1 text-black border-l-2 border-r-2"
@@ -1196,61 +1469,200 @@ const RPSummary = (props) => {
                       return (
                         <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
                           <td className="px-4 py-1 text-center">
-                            {item["Territory"]}
+                            {item[Object.keys(item)[29]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["FY Sales Val 21-22"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[6]]}
                           </td>
-
-                          <td className="px-4 py-1 text-center">
-                            {item["FY Sales Val 22-23"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[8]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["Annual Budget Qty 23-24"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[10]]}
                           </td>
-                          {console.log("pop", item["Ytd Net Sale Qty 23-24"])}
-                          <td className="px-4 py-1 text-center">
-                            {parseFloat(item["Ytd Net Sale Qty 23-24"])}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[12]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER 22-23 Sale Qty"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[14]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER Budget Qty 23-24"]}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[15]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER 23-24 Fcst Qty"]}
+                          {console.log("hi", Object.keys(item)[17])}
+                          <td className="px-4 py-1 text-right">
+                            {item[Object.keys(item)[17]]}
                           </td>
-                          <td className="px-4 py-1 text-center">
-                            {item["DECEMBER 23-24 Fcst Val"]}
-                          </td>
+                          {!receivedObject?.tId && (
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[36]]}
+                            </td>
+                          )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
-                            {item["DECEMBER 23-24 Revised Fcst Qty"]}
+                            {item[Object.keys(item)[19]]}
                           </td>
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
-                            {item["DECEMBER 23-24 Urgent Qty"]}
+                            {item[Object.keys(item)[21]]}
                           </td>
                           <td className="px-4 py-1 text-right">
-                            {item["JANUARY 22-23 Sale Qty"]}
+                            {item[Object.keys(item)[22]]}
                           </td>
                           <td className="px-4 py-1 text-right">
-                            {item["JANUARY Budget Val 23-24"]}
+                            {item[Object.keys(item)[23]]}
                           </td>
-                          <td className="px-4 py-1 text-right"></td>
+                          {!receivedObject.tId && (
+                            <td className="px-4 py-1 text-right">
+                              {" "}
+                              {item[Object.keys(item)[38]]}
+                            </td>
+                          )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
-                            {item["JANUARY 23-24 Fcst Qty"]}
+                            {item[Object.keys(item)[25]]}
                           </td>
                           <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
-                            {item["Expected Return Qty"]}
+                            {item[Object.keys(item)[27]]}
                           </td>
                         </tr>
                       );
                     })}
+                     <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs">
+                      <td className="px-4 py-1 text-center whitespace-nowrap">
+                        Qty Total
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[6]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[8]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[10]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[12]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[14]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[15]]}
+                      </td>
+                      {console.log("hi", Object.keys(totalNamewiseData)[17])}
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[17]]}
+                      </td>
+                      {!receivedObject?.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[36]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[19]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[21]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[22]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[23]]}
+                      </td>
+                      {!receivedObject.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {" "}
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[38]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[25]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[27]]}
+                      </td>
+                    </tr>
+
+
+                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs">
+                      <td className="px-4 py-1 text-center whitespace-nowrap">
+                        Value Total
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[
+                          Object.keys(totalNamewiseData)[7]
+                        ]?.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[
+                          Object.keys(totalNamewiseData)[9]
+                        ]?.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[11]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[13]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">-</td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[16]]}
+                      </td>
+
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[18]]}
+                      </td>
+                      {!receivedObject?.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[36]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[20]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        -
+                      </td>
+                      <td className="px-4 py-1 text-right">-</td>
+                      <td className="px-4 py-1 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[24]]}
+                      </td>
+                      {!receivedObject.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {" "}
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[38]
+                            ]
+                          }
+                        </td>
+                      )}
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        {totalNamewiseData[Object.keys(totalNamewiseData)[26]]}
+                      </td>
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                        -
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
+        
+
+          
         </section>
       </div>
 
@@ -1296,7 +1708,7 @@ const RPSummary = (props) => {
             <button
               className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-sm"
               onClick={() => {
-                submitHandle("Review Done");
+                updateRollingPlanStatus("Review Done");
               }}
             >
               Final Review

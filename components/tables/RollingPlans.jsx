@@ -10,6 +10,10 @@ import { CiEdit } from "react-icons/ci";
 import { MdOutlinePreview } from "react-icons/md";
 import { TbDeviceDesktopAnalytics } from "react-icons/tb";
 import { CgNotes } from "react-icons/cg";
+import { AiOutlineStop } from "react-icons/ai";
+
+import { FaSkullCrossbones } from "react-icons/fa6";
+import { FaWhatsapp } from "react-icons/fa";
 import { GrTask } from "react-icons/gr";
 import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
@@ -638,6 +642,7 @@ const RollingPlans = () => {
     tranId: "",
     mYr: "",
     planId: "",
+    tId: "",
   });
 
   const handleSaveDraft = async () => {
@@ -649,7 +654,7 @@ const RollingPlans = () => {
           m_year: rejectModalData.mYr,
           plan_id: rejectModalData.planId,
           tran_id: rejectModalData.tranId,
-          t_id: Number(filterState.tId),
+          t_id: Number(rejectModalData.tId),
           rp_status: "Draft Submit",
           remarks: rejectModalData.data,
         },
@@ -1041,10 +1046,11 @@ const RollingPlans = () => {
                       planId: planId,
                       tranId: tranId,
                       mYr: mYr,
+                      tId: t,
                     });
                   }}
                 >
-                  <GrTask className="text-orange-400" /> Reject as Draft
+                  <FaSkullCrossbones className="text-red-400" /> Reject as Draft
                 </li>
               )}
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -1123,6 +1129,7 @@ const RollingPlans = () => {
                       planId: planId,
                       tranId: tranId,
                       mYr: mYr,
+                      tId: t,
                     });
                   }}
                 >
@@ -1196,7 +1203,13 @@ const RollingPlans = () => {
             >
               <FaUpload className="text-slate-400" /> Upload RP
             </li>
-
+            {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+              5 &&
+              filterState.tId && (
+                <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+                  <FaWhatsapp className="text-green-400" /> Whatsapp Reminder
+                </li>
+              )}
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <CgNotes className="text-blue-400" /> Meeting Note
             </li>
@@ -1709,6 +1722,117 @@ const RollingPlans = () => {
           cId: c,
           wId: w,
           formType: "View",
+          filterState: encodeURIComponent(JSON.stringify(filterState)),
+        },
+      });
+    } catch (error) {
+      console.log("mlo", error);
+    }
+  };
+
+  const handleDownloadExcelReview = async (
+    m_year,
+    planId,
+    tranId,
+    yr,
+    depot,
+    zrt,
+    status,
+    stage,
+    filterState,
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    c,
+    w,
+    tDes,
+    rDes
+  ) => {
+    let paramsData;
+    if (filterState.tId || filterState.tId === "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        t_id: t,
+        t_des: tDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      (filterState.rId || filterState.rId === "All") &&
+      !filterState.tId
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        r_id: r,
+        r_des: rDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else {
+      paramsData = {};
+    }
+    try {
+      localStorage.setItem("RSP", JSON.stringify([]));
+      const respond = axios.get(`${url}/api/rsp_download`, {
+        headers: headers,
+        params: paramsData,
+      });
+      const apires = await respond;
+      const ws = XLSX.utils.json_to_sheet(apires.data.data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+      let keys = Object.keys(apires.data.data[0]);
+      // Convert array of objects to array of arrays
+      let arrayOfArrays = [
+        keys, // First array with keys
+        ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
+      ];
+      localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
+      router.push({
+        pathname: "/rptransaction",
+        query: {
+          planId: planId,
+          tranId: tranId,
+          yr: yr,
+          mYr: m_year,
+          depot: depot,
+          zrt: zrt,
+          status: status,
+          stage: stage,
+          bgId: bg,
+          buId: bu,
+          zId: z,
+          rId: r,
+          tId: t,
+          cId: c,
+          wId: w,
+          formType: "Review",
+          filterState: encodeURIComponent(JSON.stringify(filterState)),
         },
       });
     } catch (error) {
@@ -2020,6 +2144,7 @@ const RollingPlans = () => {
       tranId: "",
       mYr: "",
       planId: "",
+      tId: "",
     });
   };
   const isRole56 =
@@ -2226,7 +2351,7 @@ const RollingPlans = () => {
                     Segment / Unit / Zone / Region / Territory
                   </th>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
-                    Target Vs Actual
+                    Actual Sale vs Rolling Sales Target
                   </th>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
                     Stage
@@ -2271,21 +2396,22 @@ const RollingPlans = () => {
                         {item.territory_name}
                       </p>
                     </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
                       <div className="demo-preview">
-                        <div className="progress progress-striped active flex flex-row justify-between">
+                        <div className="progress progress-striped active flex flex-row justify-between  ">
                           <div
                             role="progressbar "
-                            style={{ width: `${item.actual}%` }}
+                            style={{
+                              width: `${(item.actual / item.target) * 100}%`,
+                            }}
                             className="progress-bar progress-bar-success rounded-md"
                           >
-                            <span className="inline-block text-xs font-bold">
-                              {item.actual}
+                            <span className="inline-block text-xs font-bold whitespace-nowrap">
+                              {(Number(item.actual / item.target) * 100).toFixed(2)} %
                             </span>
                           </div>
-                          <span className="font-bold text-xs">
-                            {" "}
-                            {item.target}
+                          <span className="font-bold text-xs whitespace-nowrap">
+                            {item.actual} / {item.target}
                           </span>
                         </div>
                       </div>

@@ -356,6 +356,8 @@ const UserInformation = () => {
     }
   }, [citySearch]);
 
+  console.log
+
   return (
     <>
       <Layout>
@@ -439,9 +441,11 @@ const UserInformation = () => {
                     </div>
                   </div>
                   <div className="profpic relative group">
-                    <Image
+                    <img
                       // src={userImage ? userImage :userimg}
-                      src={userImage}
+                      // src={userImage}
+                      src={'https://picsum.photos/200/300'}
+                      // src={`file://192.168.1.126/upload_docs/user/abc.jpg`}
                       className="h-32 w-32 rounded-full bg-gray-200"
                       // alt="Profile"
                       width={100}
