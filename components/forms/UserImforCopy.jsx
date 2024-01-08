@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, use } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome, AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
@@ -102,7 +102,7 @@ const UserInformation = () => {
     status: "",
     c_name: userName,
     ul_name: userName,
-    image: userImage
+    image: tempImage
   });
 
   // console.log("form", formState);
@@ -140,7 +140,7 @@ const UserInformation = () => {
   });
   const [formErrors, setFormErrors] = useState({});
 
-  const handleSaveCompanyInfo = async (e) => {
+  const handleSaveCompanyInfo = async (e, tempImage) => {
     e.preventDefault();
     try {
       await validationSchema.validate(formState, { abortEarly: false });
@@ -160,7 +160,7 @@ const UserInformation = () => {
         status: formState.status,
         position: formState.position,
         about_me: formState.about_me,
-        image: formState.image,
+        image: tempImage,
         c_name: userName,
         ul_name: userName
       };
@@ -181,41 +181,82 @@ const UserInformation = () => {
         }
       }
 
-      try {
-        if (tempImage) {
-          const renamedBlob = new Blob([tempImage], { type: tempImage?.type });
-          if (!checkFileSize(tempImage)) {
+     
+      // return;
+      // const respond = await axios
+      //   .post(`${url}/api/create_user`, JSON.stringify(data), {
+      //     headers: headers
+      //   })
+      //   .then((res) => {
+      //     console.log("newFf", res);
+      //     if (!res) return;
+      //     toast.success("User added successfully!");
+      //     setTimeout(() => {
+      //       router.push("/table/table_user_information");
+      //     }, [3000]);
+      //   });
+      // if (tempImage && respond) {
+      //   console.log("Inside", tempImage);
+      //   const renamedBlob = new Blob([tempImage], { type: tempImage?.type });
+      //   if (!checkFileSize(tempImage)) return;
+      //   const formData = new FormData();
+      //   formData.append(
+      //     "myFile",
+      //     renamedBlob,
+      //     `${formState?.phone_number}.${getFileExtension(tempImage?.name)}`
+      //     );
+      //     console.log("Named", formData);
+
+      //     if (tempImage) {
+      //       console.error("Error creating renamed file.");
+      //       return;
+      //     }
+  
+          
+      //     const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData);
+      //     const respo = await res.data;
+      //   }
+
+      const respond = await axios.post(`${url}/api/create_user`, JSON.stringify(data), {
+        headers: headers
+      });
+      const response = await respond.data.data 
+      const phoneNumber = response.phone_number
+      console.log("POHIBV", phoneNumber)
+      if(tempImage){
+      toast.error("Upload Image")
+      }
+      
+     if (tempImage && phoneNumber) {
+        console.log("Inside", tempImage);
+        const renamedBlob = new Blob([tempImage], { type: tempImage?.type });
+        if (!checkFileSize(tempImage)) return;
+        const formData = new FormData();
+        formData.append(
+          "myFile",
+          renamedBlob,
+          `${phoneNumber}.${getFileExtension(tempImage?.name)}`
+          );
+
+          if (tempImage) {
+            console.error("Error creating renamed file.");
             return;
           }
-          const formData = new FormData();
-          formData.append("myFile", renamedBlob, `${formState?.phone_number}.${getFileExtension(tempImage?.name)}`);
-          console.log("Named", formData);
-          // return
+
           const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData);
           const respo = await res.data;
-          console.log("Uploaded", respo)
-        } else {
-          toast.error("Upload Image");
-          console.error("Error creating renamed file.");
-          return;
-        }
-      } catch (error) {
-        console.log("Upload Image", error);
-      }
 
-      // return;
-      const respond = await axios
-        .post(`${url}/api/create_user`, JSON.stringify(data), {
-          headers: headers
-        })
-        .then((res) => {
-          console.log("newFf", res);
-          if (!res) return;
-          toast.success("User added successfully!");
-          setTimeout(() => {
-            router.push("/table/table_user_information");
-          }, [3000]);
-        });
+          console.log("Image Upload", respo)
+        }
+      
+        // return
+      if (respond) {
+        toast.success("User added successfully!");
+
+        setTimeout(() => {
+          router.push("/table/table_user_information");
+        }, 4000);
+      }
     } catch (errors) {
       const messageError = errors?.response?.data?.message;
       console.log("userinf", messageError);
@@ -297,9 +338,9 @@ const UserInformation = () => {
     }
   };
 
-  const handleSave = (e) => {
+  const handleSave = (e, tempImage) => {
     if (router.query.type !== "Edit") {
-      handleSaveCompanyInfo(e);
+      handleSaveCompanyInfo(e, tempImage);
     } else {
       handleEditCompanyInfo(e, id);
     }
@@ -379,33 +420,14 @@ const UserInformation = () => {
   const handleImageCreate = async (e) => {
     try {
       const file = e.target.files[0];
-      const renamedBlob = new Blob([file], { type: file?.type });
       if (!checkFileSize(file)) {
         return;
       }
-
-      function getFileExtension(filename) {
-        if (typeof filename !== "string") {
-          console.error("Invalid input. Expected a string.");
-          return "";
-        }
-
-        const parts = filename.split(".");
-        if (parts.length > 1) {
-          return parts[parts.length - 1];
-        } else {
-          return "";
-        }
-      }
+      setTempImage(file);
 
       if (file) {
         setUserImage(URL.createObjectURL(file));
       }
-
-      if (file) {
-        setTempImage(file);
-      }
-      
     } catch (error) {
       console.log("Error", error);
     }
@@ -596,7 +618,7 @@ const UserInformation = () => {
                       style={{ display: "none" }}
                       id="fileInput"
                       ref={fileInputRef}
-                      // disabled={router.query.type == "view" || !formState.phone_number}
+                      disabled={router.query.type == "view" }
                     />
 
                     <label

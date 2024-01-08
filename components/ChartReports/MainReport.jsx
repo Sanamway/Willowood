@@ -12,18 +12,18 @@ const MainReport = () => {
   const [files, setFiles] = useState(null);
   const router = useRouter();
 
-  useEffect(() => {
-    if (router.query.formType === "Add") {
-      setFormType("Upload");
-    } else {
-      setFormType("RPTable");
-      if (JSON.parse(window.localStorage.getItem("RSP")).length) {
-        setTableData(JSON.parse(window.localStorage.getItem("RSP")));
-      } else {
-        setTableData([]);
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (router.query.formType === "Add") {
+  //     setFormType("Upload");
+  //   } else {
+  //     setFormType("RPTable");
+  //     if (JSON.parse(window.localStorage.getItem("RSP")).length) {
+  //       setTableData(JSON.parse(window.localStorage.getItem("RSP")));
+  //     } else {
+  //       setTableData([]);
+  //     }
+  //   }
+  // }, []);
 
   useEffect(()=>{
     setFormType("AllCharts")
@@ -38,7 +38,7 @@ const MainReport = () => {
       // button.ref()
     }
 
-    getGridButton();
+    // getGridButton();
   }, []); 
 
   return (
@@ -49,8 +49,44 @@ const MainReport = () => {
             Target Vs Achievement - Dec 2023 - RP-122023
           </h2>
         </div>
+           <div className="flex px-4 w-[80%] mx-auto items-center justify-center font-arial py-2 flex-wrap gap-4">
+              <input type="date" />
+              <select name="" className="px-4 mx-2 outline-none" id="">
+                <option>
+                  All 
+                </option>
+              </select>
+              <select name="" className="px-4 mx-2 outline-none" id="">
+                <option>
+                  B-2-C
+                </option>
+              </select>
+              <select name="" className="px-4 mx-2 outline-none "id="">
+                <option>
+                  India - 1
+                </option>
+              </select>
+              <select name="" className="px-4 mx-2 outline-none " id="">
+                <option>
+                  North Zone
+                </option>
+              </select>
+              <select name="" className="px-4 mx-2 outline-none " id="">
+                <option>
+                  Kashmir
+                </option>
+              </select>
+              <select name="" className="px-4 mx-2 outline-none " id="">
+                <option className="outline-none">
+                  Kulgam
+                </option>
+              </select>
+           </div>
+        <div className="">
+          <AllCharts/>
+        </div>
        
-        <div className="buttons mt-3  mb-3 flex items-center w-full justify-center gap-4 font-arial" ref={elementRef}>
+        {/* <div className="buttons mt-3  mb-3 flex items-center w-full justify-center gap-4 font-arial" ref={elementRef}>
             <button
               onClick={() => setFormType("AllCharts")}
               className={`${
@@ -111,14 +147,11 @@ const MainReport = () => {
               </div>
             </button>
            
-          </div>
+          </div> */}
 
-        {formType === "AllCharts" && (
+        {/* {formType === "AllCharts" && (
           <AllCharts
             formType={setFormType}
-            // setTableData={setTableData}
-            // files={files}
-            // setFiles={setFiles}
           />
         )}
         {formType === "Table" && (
@@ -127,13 +160,8 @@ const MainReport = () => {
             tableData={tableData}
             setTableData={setTableData}
           />
-        )}
-        {formType === "Summary" && (
-          <Table
-            formType={setFormType}
-            tableData={tableData}
-          />
-        )}
+        )} */}
+      
       </section>
     </>
   );

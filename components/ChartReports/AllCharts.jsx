@@ -20,9 +20,9 @@ const AllCharts = (props) => {
   return (
 
     <>
-      <section className="wrapper w-full px-2 mt-2 font-arial ">
+      <section className="wrapper w-full px-2 mt-2 font-arial  ">
 
-         <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
+         <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4  ">
            <TableChartOne heading={"Business Segments"} title={"Business Segments ( Target vs Achievement )  - Annual , YTD , MTD"} color={"bg-white"}lab={labelNameTwo} datas={dummyData || []} ></TableChartOne>
             <TableChartTwo heading={"Business Units"} title={"Business Units ( Target vs Achievement )  - Annual , YTD , MTD"} color={"bg-white"}lab={labelNameTwo} datas={dummyData || []} ></TableChartTwo>
          </div>
@@ -86,7 +86,7 @@ const AllCharts = (props) => {
    { /* buttons */}
 
         <div className="mt-12 flex items-center justify-end mx-8 gap-4 pb-4">
-          <button
+          {/* <button
             onClick={() => {
               router.push("/chartreports");
             }}
@@ -101,7 +101,7 @@ const AllCharts = (props) => {
             className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
           >
             Next
-          </button>
+          </button> */}
         </div>
 
       </section>
