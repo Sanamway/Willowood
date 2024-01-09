@@ -51,38 +51,38 @@ const MainReport = () => {
         </div>
            <div className="flex px-4 w-[80%] mx-auto items-center justify-center font-arial py-2 flex-wrap gap-4">
               <input type="date" />
-              <select name="" className="px-4 mx-2 outline-none" id="">
+              <select  className="px-4 mx-2 outline-none" >
                 <option>
                   All 
                 </option>
               </select>
-              <select name="" className="px-4 mx-2 outline-none" id="">
+              <select className="px-4 mx-2 outline-none" >
                 <option>
                   B-2-C
                 </option>
               </select>
-              <select name="" className="px-4 mx-2 outline-none "id="">
+              <select className="px-4 mx-2 outline-none ">
                 <option>
                   India - 1
                 </option>
               </select>
-              <select name="" className="px-4 mx-2 outline-none " id="">
+              <select  className="px-4 mx-2 outline-none " >
                 <option>
                   North Zone
                 </option>
               </select>
-              <select name="" className="px-4 mx-2 outline-none " id="">
+              <select  className="px-4 mx-2 outline-none ">
                 <option>
                   Kashmir
                 </option>
               </select>
-              <select name="" className="px-4 mx-2 outline-none " id="">
+              <select  className="px-4 mx-2 outline-none " >
                 <option className="outline-none">
                   Kulgam
                 </option>
               </select>
            </div>
-        <div className="">
+        <div className="hey">
           <AllCharts/>
         </div>
        
