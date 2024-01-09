@@ -69,6 +69,68 @@ const RPSummary = (props) => {
         m_year: router.query.mYr,
         plan_id: router.query.planId,
         tran_id: router.query.tranId,
+        z_id: Number(router.query.zId),
+        rp_status: status,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3 &&
+      router.query.formType === "Review"
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        z_id: Number(router.query.zId),
+        rp_status: status,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10 &&
+      router.query.formType === "Review"
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        bu_id: Number(router.query.buId),
+        rp_status: status,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3 &&
+      router.query.formType === "Edit"
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        bu_id: Number(router.query.buId),
+        rp_status: status,
+      };
+    } 
+    else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10 &&
+      router.query.formType === "Edit"
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        bu_id: Number(router.query.buId),
+        rp_status: status,
+      };
+    } 
+    
+    else if (
+      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
+    ) {
+      paramsData = {
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
         t_id: Number(router.query.tId) ? Number(router.query.tId) : null,
         r_id: Number(router.query.rId),
         rp_status: status,
@@ -107,7 +169,7 @@ const RPSummary = (props) => {
           params: paramsData,
         })
         .then((res) => {
-          if (!res && status != "Review Done") return;
+          if (!res && status != "Region Review Done") return;
           console.log("jio", res);
           setisOpen(true);
           setApiMessage(res.data.message);
@@ -218,15 +280,15 @@ const RPSummary = (props) => {
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
       ) {
-        endPoint = `api/update_rolling_tm?tm=${true}`;
+        endPoint = `api/update_rolling_tm?z=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
       ) {
-        endPoint = `api/update_rolling_tm?tm=${true}`;
+        endPoint = `api/update_rolling_tm?bu=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10
       ) {
-        endPoint = `api/update_rolling_tm?tm=${true}`;
+        endPoint = `api/update_rolling_tm?bg=${true}`;
       } else {
         return;
       }
@@ -345,7 +407,7 @@ const RPSummary = (props) => {
           if (typeof item[key] === "number") {
             sumObject[key] = (sumObject[key] || 0) + item[key];
           } else {
-            sumObject[key] = "Moye Moye";
+            sumObject[key] = "";
           }
         });
       });
@@ -393,7 +455,7 @@ const RPSummary = (props) => {
           if (typeof item[key] === "number") {
             sumObject[key] = (sumObject[key] || 0) + item[key];
           } else {
-            sumObject[key] = "Moye Moye";
+            sumObject[key] = "";
           }
         });
       });
@@ -571,61 +633,66 @@ const RPSummary = (props) => {
           {/* <div className="mx-auto max-w-screen-2xl px-4 lg:px-12"> */}
           <div className="mx-auto max-w-full px- ">
             {/* Start coding here */}
-            <h4 className="w-full flex align-center justify-center font-bold">
-              Brand Code wise total
+            <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
+              Summary - Brand wise
             </h4>
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 text-center bg-orange-300  dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 text-center bg-gray-100 dark:text-gray-400">
                     <tr>
-                      <th scope="col" className="px-2 py-1 text-black">
-                        Brand Code
+                      <th scope="col" className="px-8 py-1 text-blue-600">
+                        Brand Description
                       </th>
-
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         FY Sales Qty 21-22
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         FY Sales Qty 22-23
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th scope="col" className="px-2 py-1  text-blue-600 ">
                         Annual Budget Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         YTD Net Sale Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Apr 22-23 Sale Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Apr 23-24 Budget Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Apr 23-24 FSCT Qty
                       </th>
                       {!receivedObject.tId && (
-                        <th scope="col" className="px-2 py-1 text-black">
+                        <th scope="col" className="px-2 py-1  text-blue-600">
                           Apr 23-24 Revised FCST
                           <br />
                           (TM Cumulative)
                         </th>
                       )}
 
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th
+                        scope="col"
+                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+                      >
                         Apr 23-24 Revised FCST Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black  ">
+                      <th
+                        scope="col"
+                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
+                      >
                         Apr 23-24 Urget Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th scope="col" className="px-2 py-1  text-blue-600 ">
                         May 23-24 Sale Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1  text-blue-600">
                         May Budget Qty 23-24
                       </th>
                       {!receivedObject?.tId && (
-                        <th scope="col" className="px-2 py-1 text-black">
+                        <th scope="col" className="px-2 py-1  text-blue-600">
                           May FCST Qty 23-24
                           <br />
                           (TM Cumulative)
@@ -634,13 +701,13 @@ const RPSummary = (props) => {
 
                       <th
                         scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2"
+                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
                       >
                         May 23-24 FCST Qty
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 "
+                        className="px-2 py-1 text-black border-l-2 border-r-2  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
                       >
                         Expected Sale Return Qty
                       </th>
@@ -650,8 +717,8 @@ const RPSummary = (props) => {
                     {namewiseData.map((item) => {
                       return (
                         <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
-                          <td className="px-4 py-1 text-center">
-                            {item[Object.keys(item)[2]]}
+                          <td className="px-4 py-1 text-left">
+                            {item[Object.keys(item)[3]]}
                           </td>
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[6]]}
@@ -672,7 +739,7 @@ const RPSummary = (props) => {
                             {item[Object.keys(item)[15]]}
                           </td>
                           {console.log("hi", Object.keys(item)[17])}
-                          <td className="px-4 py-1 text-right">
+                          <td className="px-4 py-1 text-right ">
                             {item[Object.keys(item)[17]]}
                           </td>
                           {!receivedObject?.tId && (
@@ -680,10 +747,10 @@ const RPSummary = (props) => {
                               {item[Object.keys(item)[36]]}
                             </td>
                           )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
                             {item[Object.keys(item)[19]]}
                           </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
                             {item[Object.keys(item)[21]]}
                           </td>
                           <td className="px-4 py-1 text-right">
@@ -698,10 +765,10 @@ const RPSummary = (props) => {
                               {item[Object.keys(item)[38]]}
                             </td>
                           )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                             {item[Object.keys(item)[25]]}
                           </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                             {item[Object.keys(item)[27]]}
                           </td>
                         </tr>
@@ -742,10 +809,10 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[19]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[21]]}
                       </td>
                       <td className="px-4 py-1 text-right">
@@ -764,16 +831,16 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[25]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[27]]}
                       </td>
                     </tr>
                     <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
                       <td className="px-4 py-1 text-center whitespace-nowrap">
-                        Value Total
+                        Value Total (IN Lac)
                       </td>
                       <td className="px-4 py-1 text-right">
                         {totalNamewiseData[
@@ -808,10 +875,10 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[20]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         -
                       </td>
                       <td className="px-4 py-1 text-right">-</td>
@@ -828,10 +895,10 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[26]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         -
                       </td>
                     </tr>
@@ -843,61 +910,82 @@ const RPSummary = (props) => {
 
           <div className="mx-auto max-w-full px- ">
             {/* Start coding here */}
-            <h4 className="w-full flex align-center justify-center font-bold">
-              Product Categorey wise total
+            <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
+              Summary- Product Category wise
             </h4>
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 text-center bg-orange-300  dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400">
                     <tr>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th
+                        scope="col"
+                        className="px-8 py-1 text-center  text-blue-600"
+                      >
                         Product Category
                       </th>
 
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black  text-blue-600"
+                      >
                         FY Sales Qty 21-22
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black  text-blue-600"
+                      >
                         FY Sales Qty 22-23
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black  text-blue-600"
+                      >
                         Annual Budget Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th
+                        scope="col"
+                        className="px-2 py-1 text-black  text-blue-600"
+                      >
                         YTD Net Sale Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1  text-blue-600">
                         Apr 22-23 Sale Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1  text-blue-600">
                         Apr 23-24 Budget Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1   text-blue-600">
                         Apr 23-24 FSCT Qty
                       </th>
                       {!receivedObject.tId && (
-                        <th scope="col" className="px-2 py-1 text-black">
+                        <th scope="col" className="px-2 py-1  text-blue-600">
                           Apr 23-24 Revised FCST
                           <br />
                           (TM Cumulative)
                         </th>
                       )}
 
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th
+                        scope="col"
+                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+                      >
                         Apr 23-24 Revised FCST Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black  ">
+                      <th
+                        scope="col"
+                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
+                      >
                         Apr 23-24 Urget Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th scope="col" className="px-2 py-1   text-blue-600 ">
                         May 23-24 Sale Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1   text-blue-600">
                         May Budget Qty 23-24
                       </th>
                       {!receivedObject?.tId && (
-                        <th scope="col" className="px-2 py-1 text-black">
+                        <th scope="col" className="px-2 py-1   text-blue-600">
                           May FCST Qty 23-24
                           <br />
                           (TM Cumulative)
@@ -906,13 +994,13 @@ const RPSummary = (props) => {
 
                       <th
                         scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2"
+                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
                       >
                         May 23-24 FCST Qty
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 "
+                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
                       >
                         Expected Sale Return Qty
                       </th>
@@ -922,7 +1010,7 @@ const RPSummary = (props) => {
                     {pcatwiseData.map((item) => {
                       return (
                         <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
-                          <td className="px-4 py-1 text-center">
+                          <td className="px-2 py-1 text-left">
                             {item[Object.keys(item)[1]]}
                           </td>
                           <td className="px-4 py-1 text-right">
@@ -952,10 +1040,10 @@ const RPSummary = (props) => {
                               {item[Object.keys(item)[36]]}
                             </td>
                           )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
                             {item[Object.keys(item)[19]]}
                           </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
                             {item[Object.keys(item)[21]]}
                           </td>
                           <td className="px-4 py-1 text-right">
@@ -970,16 +1058,16 @@ const RPSummary = (props) => {
                               {item[Object.keys(item)[38]]}
                             </td>
                           )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                             {item[Object.keys(item)[25]]}
                           </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                             {item[Object.keys(item)[27]]}
                           </td>
                         </tr>
                       );
                     })}
-                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs">
+                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
                       <td className="px-4 py-1 text-center whitespace-nowrap">
                         Qty Total
                       </td>
@@ -1014,10 +1102,10 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalPcatwiseData[Object.keys(totalPcatwiseData)[19]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalPcatwiseData[Object.keys(totalPcatwiseData)[21]]}
                       </td>
                       <td className="px-4 py-1 text-right">
@@ -1036,16 +1124,16 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalPcatwiseData[Object.keys(totalPcatwiseData)[25]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalPcatwiseData[Object.keys(totalPcatwiseData)[27]]}
                       </td>
                     </tr>
-                    <tr className="border-b dark:border-gray-700  bg-gray-100 text-gray-600 text-xs">
+                    <tr className="border-b dark:border-gray-700  bg-gray-100 text-gray-600 text-xs font-bold">
                       <td className="px-4 py-1 text-center whitespace-nowrap">
-                        Value Total
+                        Value Total (IN Lac)
                       </td>
                       <td className="px-4 py-1 text-right">
                         {totalPcatwiseData[
@@ -1080,10 +1168,10 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalPcatwiseData[Object.keys(totalPcatwiseData)[20]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         -
                       </td>
                       <td className="px-4 py-1 text-right">-</td>
@@ -1100,10 +1188,16 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td
+                        td
+                        className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]"
+                      >
                         {totalPcatwiseData[Object.keys(totalPcatwiseData)[26]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td
+                        td
+                        className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]"
+                      >
                         -
                       </td>
                     </tr>
@@ -1113,64 +1207,69 @@ const RPSummary = (props) => {
             </div>
           </div>
 
-          
           <div className="mx-auto max-w-full px- ">
             {/* Start coding here */}
-            <h4 className="w-full flex align-center justify-center font-bold">
-              Product Segment wise total
+            <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
+              Summary- Product Segment wise
             </h4>
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 text-center bg-orange-300  dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400">
                     <tr>
-                      <th scope="col" className="px-2 py-1 text-black">
-                        Product Category
+                      <th scope="col" className="px-8 py-1  text-blue-600">
+                        Product Segment
                       </th>
 
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1  text-blue-600">
                         FY Sales Qty 21-22
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1  text-blue-600">
                         FY Sales Qty 22-23
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th scope="col" className="px-2 py-1  text-blue-600 ">
                         Annual Budget Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1  text-blue-600">
                         YTD Net Sale Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1  text-blue-600">
                         Apr 22-23 Sale Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1  text-blue-600">
                         Apr 23-24 Budget Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1  text-blue-600">
                         Apr 23-24 FSCT Qty
                       </th>
                       {!receivedObject.tId && (
-                        <th scope="col" className="px-2 py-1 text-black">
+                        <th scope="col" className="px-2 py-1  text-blue-600">
                           Apr 23-24 Revised FCST
                           <br />
                           (TM Cumulative)
                         </th>
                       )}
 
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th
+                        scope="col"
+                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+                      >
                         Apr 23-24 Revised FCST Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black  ">
+                      <th
+                        scope="col"
+                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
+                      >
                         Apr 23-24 Urget Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th scope="col" className="px-2 py-1  text-blue-600 ">
                         May 23-24 Sale Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1  text-blue-600">
                         May Budget Qty 23-24
                       </th>
                       {!receivedObject?.tId && (
-                        <th scope="col" className="px-2 py-1 text-black">
+                        <th scope="col" className="px-2 py-1  text-blue-600">
                           May FCST Qty 23-24
                           <br />
                           (TM Cumulative)
@@ -1179,13 +1278,13 @@ const RPSummary = (props) => {
 
                       <th
                         scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2"
+                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
                       >
                         May 23-24 FCST Qty
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 "
+                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
                       >
                         Expected Sale Return Qty
                       </th>
@@ -1194,8 +1293,8 @@ const RPSummary = (props) => {
                   <tbody>
                     {psegwiseData.map((item) => {
                       return (
-                        <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
-                          <td className="px-4 py-1 text-center">
+                        <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs text-blue-600">
+                          <td className="px-4 py-1 text-left ">
                             {item[Object.keys(item)[0]]}
                           </td>
                           <td className="px-4 py-1 text-right">
@@ -1225,10 +1324,10 @@ const RPSummary = (props) => {
                               {item[Object.keys(item)[36]]}
                             </td>
                           )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
                             {item[Object.keys(item)[19]]}
                           </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
                             {item[Object.keys(item)[21]]}
                           </td>
                           <td className="px-4 py-1 text-right">
@@ -1243,17 +1342,17 @@ const RPSummary = (props) => {
                               {item[Object.keys(item)[38]]}
                             </td>
                           )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                             {item[Object.keys(item)[25]]}
                           </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                             {item[Object.keys(item)[27]]}
                           </td>
                         </tr>
                       );
                     })}
-                     <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs">
-                      <td className="px-4 py-1 text-center whitespace-nowrap">
+                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                      <td className="px-4 py-1 text-center whitespace-nowrap ">
                         Qty Total
                       </td>
                       <td className="px-4 py-1 text-right">
@@ -1287,10 +1386,10 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[19]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[21]]}
                       </td>
                       <td className="px-4 py-1 text-right">
@@ -1309,16 +1408,16 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[25]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[27]]}
                       </td>
                     </tr>
-                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs">
+                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
                       <td className="px-4 py-1 text-center whitespace-nowrap">
-                        Value Total
+                        Value Total (IN Lac)
                       </td>
                       <td className="px-4 py-1 text-right">
                         {totalNamewiseData[
@@ -1353,10 +1452,10 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[20]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         -
                       </td>
                       <td className="px-4 py-1 text-right">-</td>
@@ -1373,10 +1472,10 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[26]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         -
                       </td>
                     </tr>
@@ -1385,65 +1484,69 @@ const RPSummary = (props) => {
               </div>
             </div>
           </div>
-        
 
-         
           <div className="mx-auto max-w-full px- ">
-            <h4 className="w-full flex align-center justify-center font-bold">
-              Territory wise total
+            <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
+              Summary-Business Structure wise
             </h4>
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 text-center bg-orange-300  dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 text-center bg-gray-100 dark:text-gray-400">
                     <tr>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Product Category
                       </th>
 
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         FY Sales Qty 21-22
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         FY Sales Qty 22-23
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Annual Budget Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         YTD Net Sale Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Apr 22-23 Sale Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Apr 23-24 Budget Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Apr 23-24 FSCT Qty
                       </th>
                       {!receivedObject.tId && (
-                        <th scope="col" className="px-2 py-1 text-black">
+                        <th scope="col" className="px-2 py-1 text-blue-600">
                           Apr 23-24 Revised FCST
                           <br />
                           (TM Cumulative)
                         </th>
                       )}
 
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th
+                        scope="col"
+                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+                      >
                         Apr 23-24 Revised FCST Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black  ">
+                      <th
+                        scope="col"
+                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
+                      >
                         Apr 23-24 Urget Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th scope="col" className="px-2 py-1 text-blue-600 ">
                         May 23-24 Sale Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         May Budget Qty 23-24
                       </th>
                       {!receivedObject?.tId && (
-                        <th scope="col" className="px-2 py-1 text-black">
+                        <th scope="col" className="px-2 py-1 text-blue-600">
                           May FCST Qty 23-24
                           <br />
                           (TM Cumulative)
@@ -1452,15 +1555,15 @@ const RPSummary = (props) => {
 
                       <th
                         scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2"
+                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
                       >
                         May 23-24 FCST Qty
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 "
+                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
                       >
-                        Expected Sale Return Qty
+                        Expected Sale Return Qty{" "}
                       </th>
                     </tr>
                   </thead>
@@ -1498,10 +1601,10 @@ const RPSummary = (props) => {
                               {item[Object.keys(item)[36]]}
                             </td>
                           )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
                             {item[Object.keys(item)[19]]}
                           </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
                             {item[Object.keys(item)[21]]}
                           </td>
                           <td className="px-4 py-1 text-right">
@@ -1516,16 +1619,16 @@ const RPSummary = (props) => {
                               {item[Object.keys(item)[38]]}
                             </td>
                           )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                             {item[Object.keys(item)[25]]}
                           </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                             {item[Object.keys(item)[27]]}
                           </td>
                         </tr>
                       );
                     })}
-                     <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs">
+                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
                       <td className="px-4 py-1 text-center whitespace-nowrap">
                         Qty Total
                       </td>
@@ -1560,10 +1663,10 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[19]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[21]]}
                       </td>
                       <td className="px-4 py-1 text-right">
@@ -1582,18 +1685,17 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[25]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[27]]}
                       </td>
                     </tr>
 
-
-                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs">
+                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
                       <td className="px-4 py-1 text-center whitespace-nowrap">
-                        Value Total
+                        Value Total (IN Lac)
                       </td>
                       <td className="px-4 py-1 text-right">
                         {totalNamewiseData[
@@ -1628,10 +1730,10 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-center">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[20]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         -
                       </td>
                       <td className="px-4 py-1 text-right">-</td>
@@ -1648,10 +1750,10 @@ const RPSummary = (props) => {
                           }
                         </td>
                       )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         {totalNamewiseData[Object.keys(totalNamewiseData)[26]]}
                       </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                         -
                       </td>
                     </tr>
@@ -1660,9 +1762,6 @@ const RPSummary = (props) => {
               </div>
             </div>
           </div>
-        
-
-          
         </section>
       </div>
 
@@ -1691,39 +1790,103 @@ const RPSummary = (props) => {
             </button>
           )}
           {(router.query.formType === "Add" ||
-            router.query.formType === "Edit") && (
-            <button
-              className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
-              onClick={() => {
-                router.query.formType === "Add"
-                  ? handleSaveRsp("Final Submitted")
-                  : handleEditRsp("Final Submitted");
-              }}
-            >
-              Final Submit
-            </button>
-          )}
+            router.query.formType === "Edit") &&
+            JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+              4 && (
+              <button
+                className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
+                onClick={() => {
+                  router.query.formType === "Add"
+                    ? handleSaveRsp("Final Submitted")
+                    : handleEditRsp("Final Submitted");
+                }}
+              >
+                Final Submit
+              </button>
+            )}
+          {JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4 &&
+            router.query.formType === "Edit" && (
+              <button
+                className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
+                onClick={() => {
+                  handleEditRsp("Zone Approved");
+                }}
+              >
+                Approve
+              </button>
+            )}
+          {JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10 &&
+            router.query.formType === "Edit" && (
+              <button
+                className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
+                onClick={() => {
+                  handleEditRsp("B.S Approved");
+                }}
+              >
+                Approve
+              </button>
+            )}
+          {JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3 &&
+            router.query.formType === "Edit" && (
+              <button
+                className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
+                onClick={() => {
+                  handleEditRsp("B.U Approved");
+                }}
+              >
+                Approve
+              </button>
+            )}
 
-          {router.query.formType === "Review" && (
-            <button
-              className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-sm"
-              onClick={() => {
-                updateRollingPlanStatus("Review Done");
-              }}
-            >
-              Final Review
-            </button>
-          )}
-          {router.query.formType === "Review" && (
-            <button
-              className="text-center rounded-md bg-red-500 text-white py-1 px-4 text-sm"
-              onClick={() => {
-                // submitHandle("Review Done");
-              }}
-            >
-              Reject as Draft
-            </button>
-          )}
+          {router.query.formType === "Review" &&
+            JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+              3 && (
+              <button
+                className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-sm"
+                onClick={() => {
+                  updateRollingPlanStatus("B.U Review Done");
+                }}
+              >
+                Final Review
+              </button>
+            )}
+          {router.query.formType === "Review" &&
+            JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+              3 && (
+              <button
+                className="text-center rounded-md bg-red-500 text-white py-1 px-4 text-sm"
+                onClick={() => {
+                  // submitHandle("Region Review Done");
+                }}
+              >
+                Reject as Draft
+              </button>
+            )}
+
+          {router.query.formType === "Review" &&
+            JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+              10 && (
+              <button
+                className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-sm"
+                onClick={() => {
+                  updateRollingPlanStatus("B.S Review Done");
+                }}
+              >
+                Final Review
+              </button>
+            )}
+          {router.query.formType === "Review" &&
+            JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+              10 && (
+              <button
+                className="text-center rounded-md bg-red-500 text-white py-1 px-4 text-sm"
+                onClick={() => {
+                  // submitHandle("Region Review Done");
+                }}
+              >
+                Reject as Draft
+              </button>
+            )}
         </div>
       </div>
     </section>

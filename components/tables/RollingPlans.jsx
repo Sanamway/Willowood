@@ -45,7 +45,7 @@ const RollingPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "green",
-      status: "Approved",
+      status: "Zone Approved",
       progress: "20%",
     },
 
@@ -123,7 +123,7 @@ const RollingPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "green",
-      status: "Approved",
+      status: "Zone Approved",
       progress: "80%",
     },
 
@@ -161,7 +161,7 @@ const RollingPlans = () => {
       due_date: "due date 5th",
       zone: "South Telagana Hyderabad",
       color: "green",
-      status: "Approved",
+      status: "Zone Approved",
     },
     {
       id: 11,
@@ -624,7 +624,7 @@ const RollingPlans = () => {
         return "#f4141c";
       case "Yet to Approve":
         return "red";
-      case "Approved":
+      case "Zone Approved":
         return "green";
       case "Reject":
         return "red";
@@ -660,7 +660,6 @@ const RollingPlans = () => {
         },
       });
       const apires = await respond.data.data;
-      console.log("bnm", apires);
       handleDraftClose();
       setSuccessMsg(respond.data.message);
       setSuccessOpen(true);
@@ -679,6 +678,7 @@ const RollingPlans = () => {
   };
 
   const getOptions = (
+    upload,
     planId,
     tranId,
     yr,
@@ -696,7 +696,9 @@ const RollingPlans = () => {
     w,
     tDes,
     rDes,
-    zDes
+    zDes,
+    buDes,
+    bgDes
   ) => {
     switch (status) {
       case "Close Period":
@@ -711,10 +713,15 @@ const RollingPlans = () => {
                   tranId,
                   yr,
                   t,
-
                   tDes,
                   r,
                   rDes,
+                  z,
+                  zDes,
+                  bu,
+                  buDes,
+                  bg,
+                  bgDes,
                   filterState
                 )
               }
@@ -778,6 +785,10 @@ const RollingPlans = () => {
                   rDes,
                   z,
                   zDes,
+                  bu,
+                  buDes,
+                  bg,
+                  bgDes,
                   filterState
                 )
               }
@@ -869,6 +880,10 @@ const RollingPlans = () => {
                   rDes,
                   z,
                   zDes,
+                  bu,
+                  buDes,
+                  bg,
+                  bgDes,
                   filterState
                 )
               }
@@ -896,7 +911,8 @@ const RollingPlans = () => {
                   c,
                   w,
                   tDes,
-                  rDes
+                  rDes,
+                  buDes
                 );
               }}
             >
@@ -971,6 +987,10 @@ const RollingPlans = () => {
                   rDes,
                   z,
                   zDes,
+                  bu,
+                  buDes,
+                  bg,
+                  bgDes,
                   filterState
                 )
               }
@@ -1028,7 +1048,9 @@ const RollingPlans = () => {
                       c,
                       w,
                       tDes,
-                      rDes
+                      rDes,
+                      buDes,
+                      bgDes
                     );
                   }}
                 >
@@ -1066,7 +1088,7 @@ const RollingPlans = () => {
           </ul>
         );
 
-      case "Review Done":
+      case "Region Review Done":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
@@ -1083,6 +1105,10 @@ const RollingPlans = () => {
                   rDes,
                   z,
                   zDes,
+                  bu,
+                  buDes,
+                  bg,
+                  bgDes,
                   filterState
                 )
               }
@@ -1148,6 +1174,223 @@ const RollingPlans = () => {
             </li>
           </ul>
         );
+      case "B.U Review Done":
+        return (
+          <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcelNew(
+                  mYr,
+                  planId,
+                  tranId,
+                  yr,
+                  t,
+                  tDes,
+                  r,
+                  rDes,
+                  z,
+                  zDes,
+                  bu,
+                  buDes,
+                  bg,
+                  bgDes,
+                  filterState
+                )
+              }
+            >
+              <FaDownload className="text-slate-400" /> Download RP
+            </li>
+
+            {(!JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+              4 ||
+              JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
+                3) && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() => {
+                  handleDownloadExcelView(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    depot,
+                    zrt,
+                    status,
+                    stage,
+                    filterState,
+                    bg,
+                    bu,
+                    z,
+                    r,
+                    t,
+                    c,
+                    w,
+                    tDes,
+                    rDes
+                  );
+                }}
+              >
+                <MdOutlinePreview className="text-slate-400" /> View
+              </li>
+            )}
+
+            {(filterState.tId || filterState.tId === "All") &&
+              localStorageItems.roleId === 5 && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    setRejectDraftModal(true);
+                    setRejectModalData({
+                      ...rejectModalData,
+                      planId: planId,
+                      tranId: tranId,
+                      mYr: mYr,
+                      tId: t,
+                    });
+                  }}
+                >
+                  <GrTask className="text-orange-400" /> Reject as Draft
+                </li>
+              )}
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+              Vs. Actual
+            </li>
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <CgNotes className="text-blue-400" /> Meeting Note
+            </li>
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <GrTask className="text-orange-400" /> Task
+            </li>
+          </ul>
+        );
+
+      case "B.U Approved":
+        return (
+          <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcelNew(
+                  mYr,
+                  planId,
+                  tranId,
+                  yr,
+                  t,
+                  tDes,
+                  r,
+                  rDes,
+                  z,
+                  zDes,
+                  bu,
+                  buDes,
+                  bg,
+                  bgDes,
+                  filterState
+                )
+              }
+            >
+              <FaDownload className="text-slate-400" /> Download RP
+            </li>
+
+            {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
+              4 &&
+              JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
+                3 &&
+              JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
+                10 && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    handleDownloadExcelView(
+                      mYr,
+                      planId,
+                      tranId,
+                      yr,
+                      depot,
+                      zrt,
+                      status,
+                      stage,
+                      filterState,
+                      bg,
+                      bu,
+                      z,
+                      r,
+                      t,
+                      c,
+                      w,
+                      tDes,
+                      rDes
+                    );
+                  }}
+                >
+                  <MdOutlinePreview className="text-slate-400" /> View
+                </li>
+              )}
+
+            {(filterState.tId || filterState.tId === "All") &&
+              localStorageItems.roleId === 5 && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    setRejectDraftModal(true);
+                    setRejectModalData({
+                      ...rejectModalData,
+                      planId: planId,
+                      tranId: tranId,
+                      mYr: mYr,
+                      tId: t,
+                    });
+                  }}
+                >
+                  <GrTask className="text-orange-400" /> Reject as Draft
+                </li>
+              )}
+
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() => {
+                handleDownloadExcelReview(
+                  mYr,
+                  planId,
+                  tranId,
+                  yr,
+                  depot,
+                  zrt,
+                  status,
+                  stage,
+                  filterState,
+                  bg,
+                  bu,
+                  z,
+                  r,
+                  t,
+                  c,
+                  w,
+                  tDes,
+                  rDes,
+                  zDes,
+                  buDes,
+                  bgDes
+                );
+              }}
+            >
+              <GrTask className="text-orange-400" /> Review Decision
+            </li>
+
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+              Vs. Actual
+            </li>
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <CgNotes className="text-blue-400" /> Meeting Note
+            </li>
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <GrTask className="text-orange-400" /> Task
+            </li>
+          </ul>
+        );
 
       case "Yet to Submit":
         return (
@@ -1166,47 +1409,54 @@ const RollingPlans = () => {
                   rDes,
                   z,
                   zDes,
+                  bu,
+                  buDes,
+                  bg,
+                  bgDes,
                   filterState
                 );
               }}
             >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() => {
-                router.push({
-                  pathname: "/rptransaction",
-                  query: {
-                    planId: planId,
-                    tranId: tranId,
-                    yr: yr,
-                    mYr: mYr,
-                    depot: depot,
-                    zrt: zrt,
-                    status: status,
-                    stage: stage,
-                    bgId: bg,
-                    buId: bu,
-                    zId: z,
-                    rId: r,
-                    tId: t,
-                    cId: c,
-                    wId: w,
-                    formType: "Add",
-                    filterState: encodeURIComponent(
-                      JSON.stringify(filterState)
-                    ),
-                  },
-                });
-              }}
-            >
-              <FaUpload className="text-slate-400" /> Upload RP
-            </li>
+            {upload && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() => {
+                  router.push({
+                    pathname: "/rptransaction",
+                    query: {
+                      planId: planId,
+                      tranId: tranId,
+                      yr: yr,
+                      mYr: mYr,
+                      depot: depot,
+                      zrt: zrt,
+                      status: status,
+                      stage: stage,
+                      bgId: bg,
+                      buId: bu,
+                      zId: z,
+                      rId: r,
+                      tId: t,
+                      cId: c,
+                      wId: w,
+                      formType: "Add",
+                      filterState: encodeURIComponent(
+                        JSON.stringify(filterState)
+                      ),
+                    },
+                  });
+                }}
+              >
+                <FaUpload className="text-slate-400" /> Upload RP
+              </li>
+            )}
+
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
               5 &&
               filterState.tId && (
-                <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+                <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center whitespace-nowrap">
                   <FaWhatsapp className="text-green-400" /> Whatsapp Reminder
                 </li>
               )}
@@ -1235,6 +1485,10 @@ const RollingPlans = () => {
                   rDes,
                   z,
                   zDes,
+                  bu,
+                  buDes,
+                  bg,
+                  bgDes,
                   filterState
                 )
               }
@@ -1242,6 +1496,222 @@ const RollingPlans = () => {
               <FaDownload className="text-slate-400" /> Download RP
             </li>
 
+            {(JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+              4 ||
+              JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+                3 ||
+              JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+                10) &&
+              upload === true && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    handleDownloadExcelEdit(
+                      mYr,
+                      planId,
+                      tranId,
+                      yr,
+                      depot,
+                      zrt,
+                      status,
+                      stage,
+                      filterState,
+                      bg,
+                      bu,
+                      z,
+                      r,
+                      t,
+                      c,
+                      w,
+                      tDes,
+                      rDes,
+                      zDes,
+                      buDes,
+                      bgDes
+                    );
+                  }}
+                >
+                  <FaUpload className="text-slate-400" /> Final Approve
+                </li>
+              )}
+            {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
+              4 ||
+              (JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
+                3 && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    handleDownloadExcelView(
+                      mYr,
+                      planId,
+                      tranId,
+                      yr,
+                      depot,
+                      zrt,
+                      status,
+                      stage,
+                      filterState,
+                      bg,
+                      bu,
+                      z,
+                      r,
+                      t,
+                      c,
+                      w,
+                      tDes,
+                      rDes
+                    );
+                  }}
+                >
+                  <MdOutlinePreview className="text-slate-400" /> View
+                </li>
+              ))}
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+              Vs. Actual
+            </li>
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <CgNotes className="text-blue-400" /> Meeting Note
+            </li>
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <GrTask className="text-orange-400" /> Task
+            </li>
+          </ul>
+        );
+
+      case "B.S Review Done":
+        return (
+          <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcelNew(
+                  mYr,
+                  planId,
+                  tranId,
+                  yr,
+                  t,
+                  tDes,
+                  r,
+                  rDes,
+                  z,
+                  zDes,
+                  bu,
+                  buDes,
+                  bg,
+                  bgDes,
+                  filterState
+                )
+              }
+            >
+              <FaDownload className="text-slate-400" /> Download RP
+            </li>
+
+            {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+              2 &&
+              upload === true && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    handleDownloadExcelEdit(
+                      mYr,
+                      planId,
+                      tranId,
+                      yr,
+                      depot,
+                      zrt,
+                      status,
+                      stage,
+                      filterState,
+                      bg,
+                      bu,
+                      z,
+                      r,
+                      t,
+                      c,
+                      w,
+                      tDes,
+                      rDes,
+                      zDes,
+                      buDes
+                    );
+                  }}
+                >
+                  <FaUpload className="text-slate-400" /> Final Approve
+                </li>
+              )}
+            {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
+              4 ||
+              (JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
+                3 && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    handleDownloadExcelView(
+                      mYr,
+                      planId,
+                      tranId,
+                      yr,
+                      depot,
+                      zrt,
+                      status,
+                      stage,
+                      filterState,
+                      bg,
+                      bu,
+                      z,
+                      r,
+                      t,
+                      c,
+                      w,
+                      tDes,
+                      rDes
+                    );
+                  }}
+                >
+                  <MdOutlinePreview className="text-slate-400" /> View
+                </li>
+              ))}
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+              Vs. Actual
+            </li>
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <CgNotes className="text-blue-400" /> Meeting Note
+            </li>
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <GrTask className="text-orange-400" /> Task
+            </li>
+          </ul>
+        );
+
+      case "Reject":
+        return (
+          <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcelNew(
+                  mYr,
+                  planId,
+                  tranId,
+                  yr,
+                  t,
+                  tDes,
+                  r,
+                  rDes,
+                  z,
+                  zDes,
+                  bu,
+                  buDes,
+                  bg,
+                  bgDes,
+                  filterState
+                )
+              }
+            >
+              <FaDownload className="text-slate-400" /> Download RP
+            </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
@@ -1281,7 +1751,8 @@ const RollingPlans = () => {
             </li>
           </ul>
         );
-      case "Reject":
+
+      case "Zone Approved":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
@@ -1298,39 +1769,114 @@ const RollingPlans = () => {
                   rDes,
                   z,
                   zDes,
+                  bu,
+                  buDes,
+                  bg,
+                  bgDes,
                   filterState
                 )
               }
             >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() => {
-                handleDownloadExcelView(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  depot,
-                  zrt,
-                  status,
-                  stage,
-                  filterState,
-                  bg,
-                  bu,
-                  z,
-                  r,
-                  t,
-                  c,
-                  w,
-                  tDes,
-                  rDes
-                );
-              }}
-            >
-              <MdOutlinePreview className="text-slate-400" /> View
-            </li>
+
+            {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+              4 &&
+              upload === true && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    handleDownloadExcelEdit(
+                      mYr,
+                      planId,
+                      tranId,
+                      yr,
+                      depot,
+                      zrt,
+                      status,
+                      stage,
+                      filterState,
+                      bg,
+                      bu,
+                      z,
+                      r,
+                      t,
+                      c,
+                      w,
+                      tDes,
+                      rDes,
+                      zDes
+                    );
+                  }}
+                >
+                  <FaUpload className="text-slate-400" /> Final Approve
+                </li>
+              )}
+
+            {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
+              4 &&
+              JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
+                3 && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    handleDownloadExcelView(
+                      mYr,
+                      planId,
+                      tranId,
+                      yr,
+                      depot,
+                      zrt,
+                      status,
+                      stage,
+                      filterState,
+                      bg,
+                      bu,
+                      z,
+                      r,
+                      t,
+                      c,
+                      w,
+                      tDes,
+                      rDes
+                    );
+                  }}
+                >
+                  <MdOutlinePreview className="text-slate-400" /> View
+                </li>
+              )}
+            {(filterState.zId || filterState.zId === "All") && isRole3 && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() => {
+                  handleDownloadExcelReview(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    depot,
+                    zrt,
+                    status,
+                    stage,
+                    filterState,
+                    bg,
+                    bu,
+                    z,
+                    r,
+                    t,
+                    c,
+                    w,
+                    tDes,
+                    rDes,
+                    zDes,
+                    buDes,
+                    bgDes
+                  );
+                }}
+              >
+                <GrTask className="text-orange-400" /> Review Decision
+              </li>
+            )}
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
               Vs. Actual
@@ -1430,6 +1976,10 @@ const RollingPlans = () => {
     rDes,
     zId,
     zDes,
+    buId,
+    buDes,
+    bgId,
+    bgDes,
     filterState
   ) => {
     let paramsData;
@@ -1496,8 +2046,63 @@ const RollingPlans = () => {
         m_year: m_year,
         json: true,
       };
-    } else {
-      paramsData = {};
+    } else if (filterState.buId && !filterState?.zId) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        bu_id: buId,
+        bu_des: buDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (filterState.bgId && filterState?.buId) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        bu_id: buId,
+        bu_des: buDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (filterState.bgId && !filterState?.buId) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        bg_id: bgId,
+        bg_des: bgDes,
+        m_year: m_year,
+        json: true,
+      };
     }
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
@@ -1524,6 +2129,16 @@ const RollingPlans = () => {
           wb,
           `RSP_${moment(m_year).format("YYYY-MM")}_${zDes}.xlsx`
         );
+      } else if (buDes) {
+        XLSX.writeFile(
+          wb,
+          `RSP_${moment(m_year).format("YYYY-MM")}_${buDes}.xlsx`
+        );
+      } else if (bgDes) {
+        XLSX.writeFile(
+          wb,
+          `RSP_${moment(m_year).format("YYYY-MM")}_${bgDes}.xlsx`
+        );
       }
 
       setIsOpen(true);
@@ -1537,89 +2152,6 @@ const RollingPlans = () => {
     }
   };
 
-  // const handleDownloadExcel = async (
-  //   m_year,
-  //   planId,
-  //   tranId,
-  //   tId,
-  //   tDes,
-  //   yr,
-  //   type,
-  //   transfferState
-  // ) => {
-  //   try {
-  //     localStorage.setItem("RSP", JSON.stringify([]));
-  //     const respond = axios.get(`${url}/api/rsp_download`, {
-  //       headers: headers,
-  //       params: {
-  //         year_1: yr - 2,
-  //         year_2: yr - 1,
-  //         year_3: yr,
-  //         year_2_nm: moment(m_year)
-  //           .subtract(1, "years")
-  //           .add(1, "months")
-  //           .format("YYYY-MM"),
-  //         year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-  //         year_3_cm: moment(m_year).format("YYYY-MM"),
-  //         year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-  //         plan_id: planId,
-  //         tran_id: tranId,
-  //         t_id: tId,
-  //         t_des: tDes,
-  //         m_year: m_year,
-  //         json: true,
-  //       },
-  //     });
-  //     const apires = await respond;
-  //     const ws = XLSX.utils.json_to_sheet(apires.data.data);
-  //     const wb = XLSX.utils.book_new();
-  //     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-  //     if (type === "Download") {
-  //       XLSX.writeFile(
-  //         wb,
-  //         `RSP_${moment(m_year).format("YYYY-MM")}_${tDes}.xlsx`
-  //       );
-
-  //       setIsOpen(true);
-  //       setModalData({
-  //         message: apires.data.message,
-  //         type: "Download",
-  //         data: {},
-  //       });
-  //     } else {
-  //       let keys = Object.keys(apires.data.data[0]);
-  //       // Convert array of objects to array of arrays
-  //       let arrayOfArrays = [
-  //         keys, // First array with keys
-  //         ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
-  //       ];
-  //       localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
-  //       router.push({
-  //         pathname: "/rptransaction",
-  //         query: {
-  //           planId: transfferState.planId,
-  //           tranId: transfferState.tranId,
-  //           yr: transfferState.yr,
-  //           mYr: transfferState.mYr,
-  //           depot: transfferState.depot,
-  //           zrt: transfferState.zrt,
-  //           status: transfferState.status,
-  //           stage: transfferState.stage,
-  //           bgId: transfferState.bg,
-  //           buId: transfferState.bu,
-  //           zId: transfferState.z,
-  //           rId: transfferState.r,
-  //           tId: transfferState.t,
-  //           cId: transfferState.c,
-  //           wId: transfferState.w,
-  //           formType: type,
-  //         },
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log("mlo", error);
-  //   }
-  // };
   const handleDownloadExcelView = async (
     m_year,
     planId,
@@ -1682,9 +2214,84 @@ const RollingPlans = () => {
         m_year: m_year,
         json: true,
       };
+    } else if (filterState.zId && !filterState.rId && !filterState.tId) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        z_id: z,
+        z_des: zDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (filterState.buId && !filterState.rId && !filterState.tId) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        z_id: z,
+        z_des: zDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (filterState.buId && filterState.zId) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        z_id: z,
+        z_des: zDes,
+        m_year: m_year,
+        json: true,
+      };
     } else {
-      paramsData = {};
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        z_id: z,
+        z_des: zDes,
+        m_year: m_year,
+        json: true,
+      };
     }
+
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/rsp_download`, {
@@ -1748,9 +2355,13 @@ const RollingPlans = () => {
     c,
     w,
     tDes,
-    rDes
+    rDes,
+    zDes,
+    buDes,
+    bgDes
   ) => {
     let paramsData;
+    console.log("mjj", filterState.buId);
     if (filterState.tId || filterState.tId === "All") {
       paramsData = {
         year_1: yr - 2,
@@ -1792,8 +2403,104 @@ const RollingPlans = () => {
         m_year: m_year,
         json: true,
       };
+    } else if (filterState.zId && !filterState.rId) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        z_id: z,
+        z_des: zDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (filterState.buId && filterState.zId) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        z_id: z,
+        z_des: zDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (filterState.buId && !filterState.zId) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        bu_id: bu,
+        bu_des: buDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      filterState.bgId &&
+      (filterState.buId || filterState.buId === "All")
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        bu_id: bu,
+        bu_des: buDes,
+        m_year: m_year,
+        json: true,
+      };
     } else {
-      paramsData = {};
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        bu_id: bu,
+        bu_des: buDes,
+        m_year: m_year,
+        json: true,
+      };
     }
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
@@ -1967,7 +2674,10 @@ const RollingPlans = () => {
     c,
     w,
     tDes,
-    rDes
+    rDes,
+    zDes,
+    buDes,
+    bgDes
   ) => {
     let paramsData;
     if (filterState.tId || filterState.tId === "All") {
@@ -2011,8 +2721,106 @@ const RollingPlans = () => {
         m_year: m_year,
         json: true,
       };
+    } else if (filterState.zId && !filterState.rId && !filterState.tId) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        z_id: z,
+        z_des: zDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      filterState.buId &&
+      filterState.zId &&
+      !filterState.rId &&
+      !filterState.tId
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        z_id: z,
+        z_des: zDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (filterState.buId && !filterState.zId) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        bu_id: bu,
+        bu_des: buDes,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (filterState.bgId && !filterState.buId) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        bg_id: bg,
+        bg_des: bgDes,
+        m_year: m_year,
+        json: true,
+      };
     } else {
-      paramsData = {};
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        bu_id: bu,
+        bu_des: buDes,
+        m_year: m_year,
+        json: true,
+      };
     }
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
@@ -2149,6 +2957,27 @@ const RollingPlans = () => {
   };
   const isRole56 =
     localStorageItems.roleId === 6 || localStorageItems.roleId === 5;
+  const isRole3 = localStorageItems.roleId === 3;
+  const isRole10 = localStorageItems.roleId === 10;
+  const isRole2 = localStorageItems.roleId === 2;
+
+  const getMenuButton = () => {
+    console.log("Chandan Kr", localStorageItems.roleId);
+    if (localStorageItems.roleId === 6) {
+      return true;
+    } else if (localStorageItems.roleId === 5) {
+      return true;
+    } else if (localStorageItems.roleId === 4 && !filterState.tId) {
+      return true;
+    } else if (localStorageItems.roleId === 3 && !filterState.rId) {
+      return true;
+    } else if (localStorageItems.roleId === 10 && !filterState.zId) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <Layout>
       <div className="h-screen  w-full font-arial bg-white  ">
@@ -2341,7 +3170,7 @@ const RollingPlans = () => {
             <table className="min-w-full divide-y border- divide-gray-200  ">
               <thead className="">
                 <tr>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider ">
                     Rolling Sales Plan
                   </th>
                   <th className="px- py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
@@ -2407,7 +3236,10 @@ const RollingPlans = () => {
                             className="progress-bar progress-bar-success rounded-md"
                           >
                             <span className="inline-block text-xs font-bold whitespace-nowrap">
-                              {(Number(item.actual / item.target) * 100).toFixed(2)} %
+                              {(
+                                Number(item.actual / item.target) * 100
+                              ).toFixed(2)}{" "}
+                              %
                             </span>
                           </div>
                           <span className="font-bold text-xs whitespace-nowrap">
@@ -2436,9 +3268,10 @@ const RollingPlans = () => {
                       <span className="relative inline-block px-2 py-1 italic text-green-900 leading-tight">
                         {item.count}
                       </span>
-                      {console.log("nok", filterState.tId)}
+
                       <div className="popop">
-                        {(isRole56 || !filterState.tId) && (
+                        {console.log("chandan", getMenuButton())}
+                        {getMenuButton() && (
                           <Popover
                             as="div"
                             className="relative border-none outline-none "
@@ -2459,6 +3292,7 @@ const RollingPlans = () => {
                                   } absolute z-40 top-1 right-0 mt-2 w-52 bg-white  text-black border rounded-md shadow-md`}
                                 >
                                   {getOptions(
+                                    item.upload,
                                     item.plan_id,
                                     item.tran_id,
                                     item.t_year,
@@ -2495,7 +3329,9 @@ const RollingPlans = () => {
                                     item.w_id,
                                     item.territory_name,
                                     item.region_name,
-                                    item.zone_name
+                                    item.zone_name,
+                                    item.business_unit_name,
+                                    item.business_segment
                                   )}
                                 </Popover.Panel>
                               </>

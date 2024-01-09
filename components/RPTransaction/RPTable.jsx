@@ -33,7 +33,9 @@ const RPTable = (props) => {
 
   const [result, setResult] = useState([]);
   const [sumTotalRows, setSumTotalRows] = useState({});
+
   useEffect(() => {
+    if (!result) return;
     function sumNumericValues(data) {
       const sumObject = {};
 
@@ -42,7 +44,7 @@ const RPTable = (props) => {
           if (typeof item[key] === "number") {
             sumObject[key] = (sumObject[key] || 0) + item[key];
           } else {
-            sumObject[key] = "Moye Moye";
+            sumObject[key] = 0;
           }
         });
       });
@@ -203,64 +205,70 @@ const RPTable = (props) => {
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 text-center bg-orange-300  dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400">
                     <tr>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Product Segment
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Brand Description
                       </th>
 
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Product Name Sku Wise
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Product Code
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         FY Sales Qty 21-22
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         FY Sales Qty 22-23
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Annual Budget Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         YTD Net Sale Qty 23-24
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Apr 22-23 Sale Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Apr 23-24 Budget Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         Apr 23-24 FSCT Qty
                       </th>
                       {!recievedObject.tId && (
-                        <th scope="col" className="px-2 py-1 text-black">
+                        <th scope="col" className="px-2 py-1 text-blue-600">
                           Apr 23-24 Revised FCST
                           <br />
                           (TM Cumulative)
                         </th>
                       )}
 
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th
+                        scope="col"
+                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+                      >
                         Apr 23-24 Revised FCST Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black  ">
+                      <th
+                        scope="col"
+                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+                      >
                         Apr 23-24 Urget Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black ">
+                      <th scope="col" className="px-2 py-1 text-blue-600 ">
                         May 23-24 Sale Qty
                       </th>
-                      <th scope="col" className="px-2 py-1 text-black">
+                      <th scope="col" className="px-2 py-1 text-blue-600">
                         May Budget Qty 23-24
                       </th>
                       {!recievedObject?.tId && (
-                        <th scope="col" className="px-2 py-1 text-black">
+                        <th scope="col" className="px-2 py-1 text-blue-600">
                           May FCST Qty 23-24
                           <br />
                           (TM Cumulative)
@@ -269,13 +277,13 @@ const RPTable = (props) => {
 
                       <th
                         scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2"
+                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
                         May 23-24 FCST Qty
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 "
+                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
                         Expected Sale Return Qty
                       </th>
@@ -338,7 +346,7 @@ const RPTable = (props) => {
                             </td>
                           )}
 
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 ">
                             <input
                               type="number"
                               value={item[Object.keys(item)[19]]}
@@ -359,7 +367,7 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 ">
                             <input
                               type="number"
                               value={item[Object.keys(item)[21]]}
@@ -390,10 +398,10 @@ const RPTable = (props) => {
                           {!recievedObject.tId && (
                             <td className="px-4 py-1 text-right">
                               {item[Object.keys(item)[38]]}
-                            </td>
+                        A    </td>
                           )}
 
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 ">
                             <input
                               type="number"
                               value={item[Object.keys(item)[25]]}
@@ -414,7 +422,7 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-red-400 text-right">
+                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 ">
                             <input
                               value={item[Object.keys(item)[27]]}
                               className="px-auto outline-none border-b-2 w-16"
@@ -484,8 +492,6 @@ const RPTable = (props) => {
               </div>
             </div>
           </div>
-
-          
         </section>
       </div>
 

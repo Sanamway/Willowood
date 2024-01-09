@@ -15,6 +15,48 @@ function SubmitModal({
   message,
   territoryId,
 }) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  "Annual Budget Qty 23-24",
+  "Annual Budget Val 23-24",
+  "DECEMBER 22-23 Sale Qty",
+  "DECEMBER 23-24 Fcst Qty",
+  "DECEMBER 23-24 Fcst Val",
+  "DECEMBER 23-24 Revised Fcst Qty",
+  "DECEMBER 23-24 Revised Fcst Val",
+  "DECEMBER 23-24 Urgent Qty",
+  "DECEMBER Budget Qty 23-24",
+  "DECEMBER Budget Val 23-24",
+  "Expected Return Qty",
+  "FY Sales Qty 21-22",
+  "FY Sales Qty 22-23",
+  "FY Sales Val 21-22",
+  "FY Sales Val 22-23",
+  "JANUARY 22-23 Sale Qty",
+  "JANUARY 23-24 Fcst Qty",
+  "JANUARY 23-24 Fcst Val",
+  "JANUARY Budget Qty 23-24",
+  "JANUARY Budget Val 23-24",
+  "Ytd Net Sale Qty 23-24",
+  "Ytd Net Sale Value 23-24"
+
+
+
+
+
+
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
