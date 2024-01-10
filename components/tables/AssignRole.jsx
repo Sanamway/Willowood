@@ -11,7 +11,7 @@ import { url } from "@/constants/url";
 import ConfirmModal from "../modals/ConfirmModal";
 
 const AssignRole = () => {
-  const [data, setData] = useState([]);
+          const [data, setData] = useState([]);
 
   const router = useRouter();
 
@@ -34,7 +34,7 @@ const AssignRole = () => {
       const uniqueRecords = {};
       respData.forEach((record) => {
         const roleId = record.role_id;
-        if (!uniqueRecords[roleId]) {
+                  if (!uniqueRecords[roleId]) {
           uniqueRecords[roleId] = record;
         }
       });
@@ -46,7 +46,7 @@ const AssignRole = () => {
   };
 
   useEffect(() => {
-    getAssignRoleDatas();
+            getAssignRoleDatas();
   }, []);
 
   const [isOpen, setisOpen] = useState(false);
@@ -82,7 +82,7 @@ const AssignRole = () => {
               <div className="container">
                 <form className="form flex items-center ">
                   <input
-                    type="search"
+                               type="search"
                     placeholder="Search"
                     className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
                   />

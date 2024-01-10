@@ -14,7 +14,7 @@ const ForgotPass = () => {
   const [phone, setPhone] = useState("");
   const router = useRouter();
 
-  const headers = {
+    const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };

@@ -24,7 +24,7 @@ const Login = () => {
   const loginHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("data", phone);
+         console.log("data", phone);
     if (phone.length < 10) {
       toast.error("Enter the valid Mobile number");
       setLoading(false)
