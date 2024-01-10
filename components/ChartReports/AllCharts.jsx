@@ -288,7 +288,7 @@ const AllCharts = (props) => {
   }
 
   
-//****************************************************************************** */
+//************************************************************************************************//
 
 const [prdCategory, setPrdCategory] = useState("")
 
@@ -324,19 +324,20 @@ const [prdCategory, setPrdCategory] = useState("")
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
-    prdCategory.forEach((item, index) => {
+    prdCategory.forEach((item) => {
       const Keys = Object.keys(item)
+      const Values = Object.values(item)
       if(item["Product Category"]){
         ProdCatLabelData.push(item["Product Category"]);
       }
       if (Keys[11]) {
-        budgetData.data.push(item[Keys[11]]);
+        budgetData.data.push(Values[11]);
       }
-      if (Keys[6]) {
-        targetData.data.push(item[Keys[6]]);
+      if (Keys[15]) {
+        targetData.data.push(Values[15]);
       }
-      if (Keys[20]) {
-        actualData.data.push(item[Keys[20]]);
+      if (Keys[23]) {
+        actualData.data.push(Values[23]);
       }
     });
     if (targetData.data.length > 0) {
