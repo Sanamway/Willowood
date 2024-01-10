@@ -1202,39 +1202,6 @@ const RollingPlans = () => {
               <FaDownload className="text-slate-400" /> Download RP
             </li>
 
-            {(!JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
-              4 ||
-              JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
-                3) && (
-              <li
-                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                onClick={() => {
-                  handleDownloadExcelView(
-                    mYr,
-                    planId,
-                    tranId,
-                    yr,
-                    depot,
-                    zrt,
-                    status,
-                    stage,
-                    filterState,
-                    bg,
-                    bu,
-                    z,
-                    r,
-                    t,
-                    c,
-                    w,
-                    tDes,
-                    rDes
-                  );
-                }}
-              >
-                <MdOutlinePreview className="text-slate-400" /> View
-              </li>
-            )}
-
             {(filterState.tId || filterState.tId === "All") &&
               localStorageItems.roleId === 5 && (
                 <li
@@ -1534,6 +1501,81 @@ const RollingPlans = () => {
                   <FaUpload className="text-slate-400" /> Final Approve
                 </li>
               )}
+
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+              Vs. Actual
+            </li>
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <CgNotes className="text-blue-400" /> Meeting Note
+            </li>
+            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+              <GrTask className="text-orange-400" /> Task
+            </li>
+          </ul>
+        );
+
+      case "B.S Review Done":
+        return (
+          <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
+            <li
+              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              onClick={() =>
+                handleDownloadExcelNew(
+                  mYr,
+                  planId,
+                  tranId,
+                  yr,
+                  t,
+                  tDes,
+                  r,
+                  rDes,
+                  z,
+                  zDes,
+                  bu,
+                  buDes,
+                  bg,
+                  bgDes,
+                  filterState
+                )
+              }
+            >
+              <FaDownload className="text-slate-400" /> Download RP
+            </li>
+
+            {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+              2 &&
+              upload === true && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    handleDownloadExcelEdit(
+                      mYr,
+                      planId,
+                      tranId,
+                      yr,
+                      depot,
+                      zrt,
+                      status,
+                      stage,
+                      filterState,
+                      bg,
+                      bu,
+                      z,
+                      r,
+                      t,
+                      c,
+                      w,
+                      tDes,
+                      rDes,
+                      zDes,
+                      buDes
+                    );
+                  }}
+                >
+                  <FaUpload className="text-slate-400" /> Final Approve
+                </li>
+              )}
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
               4 ||
               (JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
@@ -1579,7 +1621,7 @@ const RollingPlans = () => {
           </ul>
         );
 
-      case "B.S Review Done":
+      case "B.S Approved":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li

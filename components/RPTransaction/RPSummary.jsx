@@ -86,14 +86,14 @@ const RPSummary = (props) => {
       };
     } else if (
       JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10 &&
-      router.query.formType === "Review"
+      router.query.formType === "Edit"
     ) {
       paramsData = {
         t_year: router.query.yr,
         m_year: router.query.mYr,
         plan_id: router.query.planId,
         tran_id: router.query.tranId,
-        bu_id: Number(router.query.buId),
+        bg_id: Number(router.query.bgId),
         rp_status: status,
       };
     } else if (
@@ -108,8 +108,7 @@ const RPSummary = (props) => {
         bu_id: Number(router.query.buId),
         rp_status: status,
       };
-    } 
-    else if (
+    } else if (
       JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10 &&
       router.query.formType === "Edit"
     ) {
@@ -121,9 +120,7 @@ const RPSummary = (props) => {
         bu_id: Number(router.query.buId),
         rp_status: status,
       };
-    } 
-    
-    else if (
+    } else if (
       JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
     ) {
       paramsData = {
@@ -137,18 +134,6 @@ const RPSummary = (props) => {
       };
     } else if (
       JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
-    ) {
-      paramsData = {
-        t_year: router.query.yr,
-        m_year: router.query.mYr,
-        plan_id: router.query.planId,
-        tran_id: router.query.tranId,
-        t_id: Number(router.query.tId) ? Number(router.query.tId) : null,
-        r_id: Number(router.query.rId),
-        rp_status: status,
-      };
-    } else if (
-      JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10
     ) {
       paramsData = {
         t_year: router.query.yr,
@@ -1791,8 +1776,10 @@ const RPSummary = (props) => {
           )}
           {(router.query.formType === "Add" ||
             router.query.formType === "Edit") &&
-            JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
-              4 && (
+            (JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+              4 ||
+              JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+                5) && (
               <button
                 className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
                 onClick={() => {
