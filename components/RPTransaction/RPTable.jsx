@@ -259,7 +259,7 @@ const RPTable = (props) => {
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
-                        Apr 23-24 Urget Qty
+                        Apr 23-24 Urgent Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600 ">
                         May 23-24 Sale Qty
@@ -342,7 +342,7 @@ const RPTable = (props) => {
                           {/* {console.log("hello", recievedObject)} */}
                           {!recievedObject?.tId && (
                             <td className="px-4 py-1 text-right">
-                              {item[Object.keys(item)[36]]}
+                              {item[Object.keys(item)[37]]}
                             </td>
                           )}
 
@@ -350,6 +350,14 @@ const RPTable = (props) => {
                             <input
                               type="number"
                               value={item[Object.keys(item)[19]]}
+                              disabled={
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 6 ||
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 5
+                              }
                               className="px-auto outline-none border-b-2 w-12 "
                               onChange={(e) =>
                                 setResult(
@@ -358,8 +366,9 @@ const RPTable = (props) => {
                                     el[`${Object.keys(el)[4]}`]
                                       ? {
                                           ...el,
-                                          [Object.keys(item)[19]]:
-                                            e.target.value,
+                                          [Object.keys(item)[19]]: Number(
+                                            e.target.value
+                                          ),
                                         }
                                       : el
                                   )
@@ -371,6 +380,14 @@ const RPTable = (props) => {
                             <input
                               type="number"
                               value={item[Object.keys(item)[21]]}
+                              disabled={
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 6 ||
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 5
+                              }
                               className="px-auto outline-none border-b-2 w-16"
                               onChange={(e) =>
                                 setResult(
@@ -379,8 +396,9 @@ const RPTable = (props) => {
                                     el[`${Object.keys(el)[4]}`]
                                       ? {
                                           ...el,
-                                          [Object.keys(item)[21]]:
-                                            e.target.value,
+                                          [Object.keys(item)[21]]: Number(
+                                            e.target.value
+                                          ),
                                         }
                                       : el
                                   )
@@ -397,14 +415,22 @@ const RPTable = (props) => {
 
                           {!recievedObject.tId && (
                             <td className="px-4 py-1 text-right">
-                              {item[Object.keys(item)[38]]}
-                        A    </td>
+                              {item[Object.keys(item)[39]]}
+                            </td>
                           )}
 
                           <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 ">
                             <input
                               type="number"
                               value={item[Object.keys(item)[25]]}
+                              disabled={
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 6 ||
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 5
+                              }
                               className="px-auto outline-none border-b-2 w-16"
                               onChange={(e) =>
                                 setResult(
@@ -413,8 +439,9 @@ const RPTable = (props) => {
                                     el[`${Object.keys(el)[4]}`]
                                       ? {
                                           ...el,
-                                          [Object.keys(item)[25]]:
-                                            e.target.value,
+                                          [Object.keys(item)[25]]: Number(
+                                            e.target.value
+                                          ),
                                         }
                                       : el
                                   )
@@ -422,11 +449,19 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 ">
+                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right ">
                             <input
                               value={item[Object.keys(item)[27]]}
                               className="px-auto outline-none border-b-2 w-16"
                               type="number"
+                              disabled={
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 6 ||
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 5
+                              }
                               onChange={(e) =>
                                 setResult(
                                   result.map((el) =>
@@ -434,8 +469,9 @@ const RPTable = (props) => {
                                     el[`${Object.keys(el)[4]}`]
                                       ? {
                                           ...el,
-                                          [Object.keys(item)[27]]:
-                                            e.target.value,
+                                          [Object.keys(item)[27]]: Number(
+                                            e.target.value
+                                          ),
                                         }
                                       : el
                                   )

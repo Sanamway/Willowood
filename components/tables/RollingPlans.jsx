@@ -2,8 +2,11 @@ import React, { useEffect, useState, Fragment } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { FaDownload } from "react-icons/fa";
+import { IoIosDoneAll } from "react-icons/io";
 import { FaUpload } from "react-icons/fa";
+import { VscPreview } from "react-icons/vsc";
 import { useRouter } from "next/router";
+
 import { url } from "@/constants/url";
 import axios from "axios";
 import { CiEdit } from "react-icons/ci";
@@ -630,8 +633,9 @@ const RollingPlans = () => {
         return "red";
       case "Reject":
         return "#f4141c";
-
-      default:
+      case "Region Review Done":
+        return "green";
+   default:
         return "black";
     }
   };
@@ -998,33 +1002,39 @@ const RollingPlans = () => {
               <FaDownload className="text-slate-400" /> Download RP
             </li>
 
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() => {
-                handleDownloadExcelView(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  depot,
-                  zrt,
-                  status,
-                  stage,
-                  filterState,
-                  bg,
-                  bu,
-                  z,
-                  r,
-                  t,
-                  c,
-                  w,
-                  tDes,
-                  rDes
-                );
-              }}
-            >
-              <MdOutlinePreview className="text-slate-400" /> View
-            </li>
+            {!(
+              JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+                4 && filterState.rId
+            ) && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() => {
+                  handleDownloadExcelView(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    depot,
+                    zrt,
+                    status,
+                    stage,
+                    filterState,
+                    bg,
+                    bu,
+                    z,
+                    r,
+                    t,
+                    c,
+                    w,
+                    tDes,
+                    rDes
+                  );
+                }}
+              >
+                <MdOutlinePreview className="text-slate-400" /> View
+              </li>
+            )}
+
             {(filterState.rId || filterState.rId === "All") &&
               localStorageItems.roleId === 4 && (
                 <li
@@ -1054,7 +1064,7 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <GrTask className="text-orange-400" /> Review Decision
+                  <VscPreview className="text-green-400" /> Review Decision
                 </li>
               )}
             {(filterState.tId || filterState.tId === "All") &&
@@ -1343,7 +1353,7 @@ const RollingPlans = () => {
                 );
               }}
             >
-              <GrTask className="text-orange-400" /> Review Decision
+              <VscPreview className="text-green-400" />  Review Decision
             </li>
 
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -1386,39 +1396,43 @@ const RollingPlans = () => {
             >
               <FaDownload className="text-slate-400" /> Download RP
             </li>
-            {upload && (
-              <li
-                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                onClick={() => {
-                  router.push({
-                    pathname: "/rptransaction",
-                    query: {
-                      planId: planId,
-                      tranId: tranId,
-                      yr: yr,
-                      mYr: mYr,
-                      depot: depot,
-                      zrt: zrt,
-                      status: status,
-                      stage: stage,
-                      bgId: bg,
-                      buId: bu,
-                      zId: z,
-                      rId: r,
-                      tId: t,
-                      cId: c,
-                      wId: w,
-                      formType: "Add",
-                      filterState: encodeURIComponent(
-                        JSON.stringify(filterState)
-                      ),
-                    },
-                  });
-                }}
-              >
-                <FaUpload className="text-slate-400" /> Upload RP
-              </li>
-            )}
+            {upload &&
+              !(
+                JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+                  4 && filterState.rId
+              ) && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    router.push({
+                      pathname: "/rptransaction",
+                      query: {
+                        planId: planId,
+                        tranId: tranId,
+                        yr: yr,
+                        mYr: mYr,
+                        depot: depot,
+                        zrt: zrt,
+                        status: status,
+                        stage: stage,
+                        bgId: bg,
+                        buId: bu,
+                        zId: z,
+                        rId: r,
+                        tId: t,
+                        cId: c,
+                        wId: w,
+                        formType: "Add",
+                        filterState: encodeURIComponent(
+                          JSON.stringify(filterState)
+                        ),
+                      },
+                    });
+                  }}
+                >
+                  <FaUpload className="text-slate-400" /> Upload RP
+                </li>
+              )}
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
               5 &&
@@ -1498,7 +1512,7 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <FaUpload className="text-slate-400" /> Final Approve
+                  <IoIosDoneAll className="text-slate-400" /> Final Approve
                 </li>
               )}
 
@@ -1573,7 +1587,7 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <FaUpload className="text-slate-400" /> Final Approve
+                  <IoIosDoneAll className="text-slate-400" /> Final Approve
                 </li>
               )}
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
@@ -1679,7 +1693,7 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <FaUpload className="text-slate-400" /> Final Approve
+                  <IoIosDoneAll className="text-slate-400" /> Final Approve
                 </li>
               )}
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
@@ -1851,7 +1865,7 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <FaUpload className="text-slate-400" /> Final Approve
+                  <IoIosDoneAll className="text-slate-400" /> Final Approve
                 </li>
               )}
 
@@ -1916,7 +1930,7 @@ const RollingPlans = () => {
                   );
                 }}
               >
-                <GrTask className="text-orange-400" /> Review Decision
+               <VscPreview className="text-green-400" /> Review Decision
               </li>
             )}
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
