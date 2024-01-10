@@ -9,13 +9,24 @@ import { MdLogout } from "react-icons/md";
 import WillLogo from "../../public/Willowood.png";
 import { Popover } from "@headlessui/react";
 import Router, { useRouter } from "next/router";
+import axios from "axios";
+import { url } from "@/constants/url";
 
 const Topbar = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setOpen] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUser, setUser] = useState(false);
+  const [phone_number, setPhoneNumber] = useState("")
+  const [profileImg, setUserImage] = useState("");
+
+
   const router = useRouter();
+
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+  };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -57,6 +68,8 @@ const Topbar = () => {
       const uid = localStorage.getItem("uid");
       const email_id = localStorage.getItem("email_id");
       const userinfoo = localStorage.getItem("userinfo");
+      const phone_number = localStorage.getItem("phone_number");
+      setPhoneNumber(phone_number)
 
       setUser(isLoggedInInLocalStorage);
       setEmailId(email_id);
@@ -70,13 +83,33 @@ const Topbar = () => {
     }
   }, []);
 
+
+  //getting image 
+
+  const getImage = async (phone_number) => {
+    try {
+      const res = await axios.get(`${url}/api/get_image?phone_number=${phone_number}&file_path=user`, {
+        headers: headers
+      });
+      const respData = await res.data;
+      console.log("Image", respData?.data?.image_url);
+      setUserImage(respData?.data?.image_url);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  useEffect(() => {
+    if (phone_number) getImage(phone_number);
+  }, [phone_number]);
+
   return (
     <div className="bg-[#15283c] lg:w-full  text-white ">
       {/* mod w added */}
       <nav className="nav font-playfair  ">
         <div className="navContainer h-[52px] bg-text flex items-center  justify-between lg:max-w-full">
           <div className="flex items-center">
-            <div className="">
+            <div className="cursor-pointer" onClick={()=>{router.push('/')}}>
               <Image
                 src={WillLogo}
                 alt="Will Logo"
@@ -99,10 +132,10 @@ const Topbar = () => {
             {!isMobile && (
               <div className="bg-[#ff5722] max-h-full mx-0 font-arial relative">
                 <div className="flex items-center px-4 py-[0.4rem] h-full gap-1">
-                  <Image
-                    src={Profile}
+                  <img
+                    src={profileImg}
                     alt=""
-                    className="h-10 w-10 object-cover border-2 border-yellow-500 rounded-full"
+                    className="h-10 w-10 border-2 border-yellow-500 rounded-full"
                   />
                   <Popover as="div" className="relative border-none outline-none z-50">
                     {({ open }) => (

@@ -16,7 +16,9 @@ const UserProfile = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [userData, setUserData] = useState([]);
-  const[businessStr, setBusinessStr] = useState([])
+  const [businessStr, setBusinessStr] = useState([]);
+  const [profileImg, setUserImage] = useState("");
+  const [phone_number, setPhoneNumber] = useState("")
   const [formData, setFormdata] = useState({
     about_me: ""
   });
@@ -45,19 +47,19 @@ const UserProfile = () => {
   const getUserData = async (userID) => {
     try {
       const res = await axios.get(`${url}/api/get_user/${userID}`, { headers: headers });
-    // const respdata = await res?.data?.data;
-    const respdata = await res?.data;
-    console.log("apires", [{...respdata.data[0]}])
-    setUserData([{...respdata.data[0]}]);
-    setBusinessStr([{...respdata.data[1].bst_details[0]}]);
+      // const respdata = await res?.data?.data;
+      const respdata = await res?.data;
+      console.log("apires", [{ ...respdata.data[0] }]);
+      setUserData([{ ...respdata.data[0] }]);
+      setBusinessStr([{ ...respdata.data[1].bst_details[0] }]);
     } catch (error) {
-      console.log("error:", error)
+      console.log("error:", error);
     }
-    
   };
 
   useEffect(() => {
     const current = localStorage.getItem("uid");
+
     if (current) {
       setUserID(current);
     }
@@ -68,6 +70,14 @@ const UserProfile = () => {
       getUserData(userID);
     }
   }, [userID]);
+
+  useEffect(() => {
+    if (window.localStorage) {
+      const isLoggedInInLocalStorage = !!localStorage.getItem("uid");
+      const phone_number = localStorage.getItem("phone_number");
+      setPhoneNumber(phone_number)
+    }
+  }, []);
 
   //updating aboutme
   const saveHandle = async () => {
@@ -90,7 +100,24 @@ const UserProfile = () => {
     }
   };
 
-  console.log("business", businessStr)
+  console.log("business", businessStr);
+
+  const getImage = async (phone_number) => {
+    try {
+      const res = await axios.get(`${url}/api/get_image?phone_number=${phone_number}&file_path=user`, {
+        headers: headers
+      });
+      const respData = await res.data;
+      console.log("Image", respData?.data?.image_url);
+      setUserImage(respData?.data?.image_url);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  useEffect(() => {
+    if (phone_number) getImage(phone_number);
+  }, [phone_number]);
 
   return (
     <>
@@ -126,7 +153,7 @@ const UserProfile = () => {
               userData?.map((item) => (
                 <div className="relative flex rounded-lg bg-white mt-8  items-center justify-start max-w-full p-12 mx-20 gap-12 ">
                   <div className="flex ">
-                    <Image className=" w-52 h-52 rounded-full" src={ProfImg}></Image>
+                    <img className=" w-52 h-52 rounded-full" src={profileImg}></img>
                   </div>
                   <div className="flex md:flex-col flex-items-center justify-between">
                     <div className="grid grid-cols-2 w-full gap-4">
@@ -188,96 +215,114 @@ const UserProfile = () => {
               <h1 className="font-arial font-normal text-3xl  py-2">Business Structure</h1>
             </div>
 
-           {businessStr.length > 0 && businessStr?.map((item)=>
-           ( <div className=" flex mx-20 mt-2 bg-white  items-center justify-start max-w-full px-2 ">
-           <div className="flex  items-center flex-wrap justify-start py-5 px-12 gap-4 ">
-             <div className="mb-4">
-               <label className="block text-center text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                 Territory
-               </label>
-               <input
-                 disabled
-                 className="w-full text-center px-2 py-2 borde rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
-                 type="text"
-                 id="inputField"
-                 value={item.territory_name}
-                 placeholder="Territory"
-               />
-             </div>
+            {businessStr.length > 0 &&
+              businessStr?.map((item) => (
+                <div className=" flex mx-20 mt-2 bg-white  items-center justify-start max-w-full px-2 ">
+                  <div className="flex  items-center flex-wrap justify-start py-5 px-12 gap-4 ">
+                    <div className="mb-4">
+                      <label
+                        className="block text-center text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="inputField"
+                      >
+                        Territory
+                      </label>
+                      <input
+                        disabled
+                        className="w-full text-center px-2 py-2 borde rounded-md border-gray-300 focus:outline-none focus:border-indigo-500"
+                        type="text"
+                        id="inputField"
+                        value={item.territory_name}
+                        placeholder="Territory"
+                      />
+                    </div>
 
-             <div className="mb-4">
-               <label className="block text-center text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                 Region
-               </label>
-               <input
-                 disabled
-                 className="w-full text-center px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                 type="text"
-                 id="inputField"
-                 value={item.region_name}
-                 placeholder="Region"
-               />
-             </div>
+                    <div className="mb-4">
+                      <label
+                        className="block text-center text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="inputField"
+                      >
+                        Region
+                      </label>
+                      <input
+                        disabled
+                        className="w-full text-center px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        type="text"
+                        id="inputField"
+                        value={item.region_name}
+                        placeholder="Region"
+                      />
+                    </div>
 
-             <div className="mb-4">
-               <label className="block text-center text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                 Zone
-               </label>
-               <input
-                 disabled
-                 className="w-full text-center px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                 type="text"
-                 id="inputField"
-                 value={item.zone_name}
-                 placeholder="Zone"
-               />
-             </div>
+                    <div className="mb-4">
+                      <label
+                        className="block text-center text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="inputField"
+                      >
+                        Zone
+                      </label>
+                      <input
+                        disabled
+                        className="w-full text-center px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        type="text"
+                        id="inputField"
+                        value={item.zone_name}
+                        placeholder="Zone"
+                      />
+                    </div>
 
-             <div className="mb-4">
-               <label className="block text-center text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                 Business Unit
-               </label>
-               <input
-                 disabled
-                 className="w-full text-center px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                 type="text"
-                 id="inputField"
-                 value={item.business_unit_name}
-                 placeholder="Business Unit"
-               />
-             </div>
+                    <div className="mb-4">
+                      <label
+                        className="block text-center text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="inputField"
+                      >
+                        Business Unit
+                      </label>
+                      <input
+                        disabled
+                        className="w-full text-center px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        type="text"
+                        id="inputField"
+                        value={item.business_unit_name}
+                        placeholder="Business Unit"
+                      />
+                    </div>
 
-             <div className="mb-4">
-               <label className="block text-center text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
-                 Segment
-               </label>
-               <input
-                 disabled
-                 className="w-full text-center px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                 type="text"
-                 id="inputField"
-                 value={item.business_segment}
-                 placeholder="Segment"
-               />
-             </div>
+                    <div className="mb-4">
+                      <label
+                        className="block text-center text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="inputField"
+                      >
+                        Segment
+                      </label>
+                      <input
+                        disabled
+                        className="w-full text-center px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        type="text"
+                        id="inputField"
+                        value={item.business_segment}
+                        placeholder="Segment"
+                      />
+                    </div>
 
-             <div className="mb-4">
-               <label className="block text-gray-700 text-center text-sm font-bold mb-2" htmlFor="inputField">
-                 Company
-               </label>
-               <input
-                 disabled
-                 className="w-full px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                 type="text"
-                 id="inputField"
-                 value={item.cmpny_name}
-                 placeholder="Company"
-               />
-             </div>
-           </div>
-         </div>)
-           ) 
-           }
+                    <div className="mb-4">
+                      <label
+                        className="block text-gray-700 text-center text-sm font-bold mb-2"
+                        htmlFor="inputField"
+                      >
+                        Company
+                      </label>
+                      <input
+                        disabled
+                        className="w-full px-3 py-2 borde rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        type="text"
+                        id="inputField"
+                        value={item.cmpny_name}
+                        placeholder="Company"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
 
             <div className=" flex bg-white mt-2 mx-20 items-center justify-start max-w-full px-5 ">
               <h1 className="font-arial font-normal text-3xl  py-2">Target vs Actual</h1>
@@ -286,7 +331,7 @@ const UserProfile = () => {
             <div className=" flex flex-col bg-white mt-2 mx-20 items-center justify-start max-w-full px-5 ">
               <div className="flex flex-col w-full p-2 mt-4">
                 <h2>Rolling Vs Actual Sales</h2>
-               
+
                 <div className="demo-preview ">
                   <div className="progress progress-striped active">
                     <div

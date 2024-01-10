@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, use } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome, AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
@@ -17,6 +17,7 @@ const UserInformation = () => {
   const [userOptions, setUserOptions] = useState([]);
   const [showPass, setShowPass] = useState(false);
   const { id, view } = router.query;
+
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw"
@@ -27,6 +28,8 @@ const UserInformation = () => {
   const [userName, setUsername] = useState("");
   const [ui, setUid] = useState("");
   const [email_id, setEmailId] = useState("");
+
+  const [tempImage, setTempImage] = useState("");
 
   const getDataById = async (id) => {
     try {
@@ -60,6 +63,8 @@ const UserInformation = () => {
         position: apires[0].position,
         about_me: apires[0].about_me
       });
+
+      getImage(apires[0].phone_number);
     } catch (error) {
       console.log(error);
     }
@@ -97,9 +102,11 @@ const UserInformation = () => {
     status: "",
     c_name: userName,
     ul_name: userName,
-    image: userImage
+    image: tempImage
   });
-  console.log("form", formState);
+
+  // console.log("form", formState);
+
   //Defining the Validation Schema
   const validationSchema = Yup.object().shape({
     user_name: Yup.string().required("User name is required"),
@@ -133,7 +140,7 @@ const UserInformation = () => {
   });
   const [formErrors, setFormErrors] = useState({});
 
-  const handleSaveCompanyInfo = async (e) => {
+  const handleSaveCompanyInfo = async (e, tempImage) => {
     e.preventDefault();
     try {
       await validationSchema.validate(formState, { abortEarly: false });
@@ -153,23 +160,103 @@ const UserInformation = () => {
         status: formState.status,
         position: formState.position,
         about_me: formState.about_me,
-        image: formState.image,
+        image: tempImage,
         c_name: userName,
         ul_name: userName
       };
 
-      const respond = await axios
-        .post(`${url}/api/create_user`, JSON.stringify(data), {
-          headers: headers
-        })
-        .then((res) => {
-          console.log("newFf", res);
-          if (!res) return;
-          toast.success("User added successfully!");
-          setTimeout(() => {
-            router.push("/table/table_user_information");
-          }, [3000]);
-        });
+      //Image uploading
+
+      function getFileExtension(filename) {
+        if (typeof filename !== "string") {
+          console.error("Invalid input. Expected a string.");
+          return "";
+        }
+
+        const parts = filename.split(".");
+        if (parts.length > 1) {
+          return parts[parts.length - 1];
+        } else {
+          return "";
+        }
+      }
+
+     
+      // return;
+      // const respond = await axios
+      //   .post(`${url}/api/create_user`, JSON.stringify(data), {
+      //     headers: headers
+      //   })
+      //   .then((res) => {
+      //     console.log("newFf", res);
+      //     if (!res) return;
+      //     toast.success("User added successfully!");
+      //     setTimeout(() => {
+      //       router.push("/table/table_user_information");
+      //     }, [3000]);
+      //   });
+      // if (tempImage && respond) {
+      //   console.log("Inside", tempImage);
+      //   const renamedBlob = new Blob([tempImage], { type: tempImage?.type });
+      //   if (!checkFileSize(tempImage)) return;
+      //   const formData = new FormData();
+      //   formData.append(
+      //     "myFile",
+      //     renamedBlob,
+      //     `${formState?.phone_number}.${getFileExtension(tempImage?.name)}`
+      //     );
+      //     console.log("Named", formData);
+
+      //     if (tempImage) {
+      //       console.error("Error creating renamed file.");
+      //       return;
+      //     }
+  
+          
+      //     const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData);
+      //     const respo = await res.data;
+      //   }
+
+      const respond = await axios.post(`${url}/api/create_user`, JSON.stringify(data), {
+        headers: headers
+      });
+      const response = await respond.data.data 
+      const phoneNumber = response.phone_number
+      console.log("POHIBV", phoneNumber)
+      if(tempImage){
+      toast.error("Upload Image")
+      }
+      
+     if (tempImage && phoneNumber) {
+        console.log("Inside", tempImage);
+        const renamedBlob = new Blob([tempImage], { type: tempImage?.type });
+        if (!checkFileSize(tempImage)) return;
+        const formData = new FormData();
+        formData.append(
+          "myFile",
+          renamedBlob,
+          `${phoneNumber}.${getFileExtension(tempImage?.name)}`
+          );
+
+          if (tempImage) {
+            console.error("Error creating renamed file.");
+            return;
+          }
+
+          const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData);
+          const respo = await res.data;
+
+          console.log("Image Upload", respo)
+        }
+      
+        // return
+      if (respond) {
+        toast.success("User added successfully!");
+
+        setTimeout(() => {
+          router.push("/table/table_user_information");
+        }, 4000);
+      }
     } catch (errors) {
       const messageError = errors?.response?.data?.message;
       console.log("userinf", messageError);
@@ -251,9 +338,9 @@ const UserInformation = () => {
     }
   };
 
-  const handleSave = (e) => {
+  const handleSave = (e, tempImage) => {
     if (router.query.type !== "Edit") {
-      handleSaveCompanyInfo(e);
+      handleSaveCompanyInfo(e, tempImage);
     } else {
       handleEditCompanyInfo(e, id);
     }
@@ -271,24 +358,101 @@ const UserInformation = () => {
     const maxSize = 200000;
     if (file.size > maxSize) {
       toast.error("Image Size Must be Less than 200 KB");
-      return false
+      return false;
     }
-    return true
+    return true;
   };
 
-  //uploading Image
+  // Uploading Image....................................
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if(!checkFileSize(file)){
-      return;
-    }
-    console.log("fillll", file);
-    if (file) {
-      setUserImage(URL.createObjectURL(file));
-      setUserImage(file);
+  const fileInputRef = useRef(null);
+
+  const handleImageUpload = async (e) => {
+    try {
+      const file = e.target.files[0];
+      const renamedBlob = new Blob([file], { type: file?.type });
+      if (!checkFileSize(file)) {
+        return;
+      }
+
+      function getFileExtension(filename) {
+        if (typeof filename !== "string") {
+          console.error("Invalid input. Expected a string.");
+          return "";
+        }
+
+        const parts = filename.split(".");
+        if (parts.length > 1) {
+          return parts[parts.length - 1];
+        } else {
+          return "";
+        }
+      }
+
+      if (file) {
+        setUserImage(URL.createObjectURL(file));
+      }
+      if (renamedBlob) {
+        const formData = new FormData();
+        formData.append("myFile", renamedBlob, `${formState?.phone_number}.${getFileExtension(file?.name)}`);
+        console.log("Named", formData);
+
+        if (!renamedBlob) {
+          console.error("Error creating renamed file.");
+          return;
+        }
+
+        // return;
+        const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData);
+        const respo = await res.data;
+      }
+      if (file) {
+        setUserImage(URL.createObjectURL(file));
+        // setUserImage(file);
+      }
+    } catch (error) {
+      console.log("Error", error);
     }
   };
+
+  // Second Handle Image Upload
+
+  const handleImageCreate = async (e) => {
+    try {
+      const file = e.target.files[0];
+      if (!checkFileSize(file)) {
+        return;
+      }
+      setTempImage(file);
+
+      if (file) {
+        setUserImage(URL.createObjectURL(file));
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  //getting Image from the API
+
+  const getImage = async (phone_number) => {
+    try {
+      const res = await axios.get(`${url}/api/get_image?phone_number=${phone_number}&file_path=user`, {
+        headers: headers
+      });
+      const respData = await res.data;
+      console.log("Image", respData?.data?.image_url);
+      setUserImage(respData?.data?.image_url);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  // useEffect(()=>{
+  //   if(router.query.id){
+  //     getImage()
+  //   }
+  // },[])
 
   //getting dropdown menus
 
@@ -305,8 +469,6 @@ const UserInformation = () => {
   useEffect(() => {
     gettingDropdown();
   }, []);
-
-  console.log("fornmv ", formState);
 
   useEffect(() => {
     if (window.localStorage) {
@@ -364,7 +526,7 @@ const UserInformation = () => {
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="  w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-            <h2 className="font-arial font-normal text-3xl  py-2">User Information</h2>
+            <h2 className="font-arial font-normal text-3xl tabletitle py-2">User Information</h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <h2>
                 <TiArrowBack
@@ -442,10 +604,10 @@ const UserInformation = () => {
                   </div>
                   <div className="profpic relative group">
                     <img
-                      // src={userImage ? userImage :userimg}
+                      src={userImage ? userImage : userImage}
                       // src={userImage}
-                      src={'https://picsum.photos/200/300'}
-                      // src={`file://192.168.1.126/upload_docs/user/abc.jpg`}
+                      // src={userImage}
+                      // src={'https://picsum.photos/200/300'}
                       className="h-32 w-32 rounded-full bg-gray-200"
                       // alt="Profile"
                       width={100}
@@ -454,25 +616,13 @@ const UserInformation = () => {
                     <input
                       type="file"
                       accept=".jpeg,.jpg"
-                      onChange={handleImageUpload}
+                      onChange={router.query.type == "CREATE" ? handleImageCreate : handleImageUpload}
                       style={{ display: "none" }}
                       id="fileInput"
+                      ref={fileInputRef}
+                      disabled={router.query.type == "view" }
                     />
-                    {/* <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      onChange={(e) => handleImageUpload(e)}
 
-                      style={{ display: "block" }}
-                      id="fileInput"
-                      onChange={(e) =>
-                        setFormState({
-                          ...formState,
-                          image: e.target.value[0]
-                        })
-                      }
-                    /> */}
                     <label
                       htmlFor="fileInput"
                       // here make the opacity-0 to get hover text effect

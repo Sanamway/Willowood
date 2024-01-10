@@ -116,7 +116,7 @@ const UserAssignBusiness = () => {
         </div>
 
         <div className="bg-white mb-12 flex items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full p-2 ">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto tableInfo p-2 ">
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
