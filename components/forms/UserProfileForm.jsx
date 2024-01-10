@@ -7,7 +7,7 @@ import axios from "axios";
 import { url } from "@/constants/url";
 import toast, { Toaster } from "react-hot-toast";
 
-const UserProfileForm = () => {
+     const UserProfileForm = () => {
   const router = useRouter();
   const [menuRole, setMenusRole] = useState([]);
   const [menus, setMenus] = useState([]);

@@ -12,7 +12,7 @@ const ForgetPassForm = () => {
   return (
     <>
       <div className="flex w-full h-screen font-arial">
-        <div className="relative flex-1 bg-banner bg-cover bg-center bg-no-repeat">
+            <div className="relative flex-1 bg-banner bg-cover bg-center bg-no-repeat">
           <div className="flex items-center justify-center h-screen">
             <div className="relative form rounded-lg   bg-opacity-[0.35] w-[90%] md:w-[30%] px-8 pb-8">
               <div className="relative top-[1rem] flex items-center justify-center">

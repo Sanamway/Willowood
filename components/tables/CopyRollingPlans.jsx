@@ -167,15 +167,15 @@ const CollectionPlans = () => {
   ];
   return (
     <>
-      <Layout>
-        <div className="">
-          <div className="container mx-auto px-4 sm:px-8 bg-white text-black">
-            <div className="py-2 overflow-y-auto overflow-x-hidden h-screen pb-16 scrollbar-hide ">
-              <div className="flex items-center justify-between w-full ">
-                <h2 className="text-lg font-semibold leading-tight">
-                  {" "}
-                  Collection Plan
-                </h2>
+                        <Layout>
+                   <div className="">
+                    <div className="container mx-auto px-4 sm:px-8 bg-white text-black">
+                     <div className="py-2 overflow-y-auto overflow-x-hidden h-screen pb-16 scrollbar-hide ">
+                       <div className="flex items-center justify-between w-full ">
+                         <h2 className="text-lg font-semibold leading-tight">
+                             {" "}
+                             Collection Plan
+                           </h2>
                 {/* <GiTakeMyMoney size={30} className="text-blue-500"></GiTakeMyMoney> */}
                 <h2 className="text-gray-900 whitespace-no-wrap text-[0.6rem]">
                   2 / 10 Territory submitted
