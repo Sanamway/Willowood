@@ -291,6 +291,7 @@ const AllCharts = (props) => {
 //************************************************************************************************//
 
 const [prdCategory, setPrdCategory] = useState("")
+const [prdSegment, setPrdSegment] = useState("")
 
   //getting Product Category Data
 
@@ -310,12 +311,30 @@ const [prdCategory, setPrdCategory] = useState("")
     }
   };
 
+  const getProductSegment = async () => {
+    try {
+      const res = await axios.get(`${url}/api/RSP_downloadAnalytical`, {
+        headers: headers,
+        params: {year_1: 2021,year_2:2022,year_3:2023, year_2_cm:"2023-12",year_2_nm:"2023-01",year_3_cm:"2023-12",
+        year_3_nm:"2024-01",t_des:"Moga",t_id:37,plan_id:1,tran_id:"RP-122023",m_year:"2023-12-01T00:00:00.00Z",json:true,
+        analytical_key:"Product Segment"
+      }
+      });
+      const respdata = await res.data.data;
+      setPrdSegment(respdata);
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
   useEffect(()=>{
     getProductCategory()
+    getProductSegment()
   },[])
 
-  console.log("PrdCat",prdCategory)
+  console.log("PrdSegment",prdSegment)
 
+//Product Category 
 
   let ProdCatGraphData = [];
   let ProdCatLabelData =[];
@@ -351,8 +370,46 @@ const [prdCategory, setPrdCategory] = useState("")
     }
   }
 
-console.log("Prd name", ProdCatLabelData)
-console.log("Prd graph", ProdCatGraphData)
+
+//Product Segments
+
+  let ProdSegGraphData = [];
+  let ProdSegLabelData =[];
+
+  if (prdSegment) {
+    const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
+    const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
+    const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
+    prdSegment.forEach((item) => {
+      const Keys = Object.keys(item)
+      const Values = Object.values(item)
+      if(item["Product Segment"]){
+        ProdSegLabelData.push(item["Product Segment"]);
+      }
+      if (Keys[11]) {
+        budgetData.data.push(Values[11]);
+      }
+      if (Keys[15]) {
+        targetData.data.push(Values[15]);
+      }
+      if (Keys[23]) {
+        actualData.data.push(Values[23]);
+      }
+    });
+    if (targetData.data.length > 0) {
+      ProdSegGraphData.push(budgetData);
+    }
+    if (targetData.data.length > 0) {
+      ProdSegGraphData.push(targetData);
+    }
+    if (actualData.data.length > 0) {
+      ProdSegGraphData.push(actualData);
+    }
+  }
+
+  // console.log("Prd graph", ProdCatGraphData)
+  console.log("Prd Seg", prdSegment)
+  console.log("Prd Label", ProdSegLabelData)
 
 
 
@@ -469,8 +526,8 @@ console.log("Prd graph", ProdCatGraphData)
           <ChartOne
             title={"Product Segment"}
             color={"bg-orange-500"}
-            lab={labelNameTwo}
-            datasets={chartData || []}
+            lab={ProdSegLabelData}
+            datasets={ProdSegGraphData || []}
           ></ChartOne>
           {/* <ChartTwo title={"Product Segment Data View"} color={"bg-orange-500"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo> */}
           <TableChartTwo
