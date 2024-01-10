@@ -20,6 +20,7 @@ const Layout = ({ children }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [showSubmenu, setSubmenu] = useState(null);
+  const [profileImg, setUserImage] = useState("")
 
   const [isUser, setUser] = useState(false);
 
@@ -56,6 +57,7 @@ const Layout = ({ children }) => {
   const [uid, setUid] = useState("");
   const [userinfo, setUserInfo] = useState("");
   const [menusItems, setMenus] = useState([]);
+  const [phone_number, setPhoneNumber] = useState("")
 
   useEffect(() => {
     if (window.localStorage) {
@@ -63,6 +65,7 @@ const Layout = ({ children }) => {
       const user_name = localStorage.getItem("user_name");
       const uid = localStorage.getItem("uid");
       const email_id = localStorage.getItem("email_id");
+      const phone_number = localStorage.getItem("phone_number");
       const userinfoo = localStorage.getItem("userinfo");
       const sidemenus = localStorage.getItem("SideMenus");
       setUser(isLoggedInInLocalStorage);
@@ -71,6 +74,7 @@ const Layout = ({ children }) => {
       setUid(uid);
       setMenus(JSON.parse(sidemenus));
       setUserInfo(JSON.parse(userinfoo));
+      setPhoneNumber(phone_number)
     }
 
     if (!localStorage.getItem("uid")) {
@@ -90,7 +94,7 @@ const Layout = ({ children }) => {
         { headers: headers }
       );
       const respData = await resp.data.data;
-      console.log("laymenus", respData);
+      // console.log("laymenus", respData);
       setMenus(respData);
     } catch (error) {
       console.log("error : ", error);
@@ -100,6 +104,26 @@ const Layout = ({ children }) => {
   useEffect(() => {
     if (uid) gettingMenuSidebar(uid);
   }, [uid]);
+
+
+  //get user image 
+
+  const getImage = async (phone_number) => {
+    try {
+      const res = await axios.get(`${url}/api/get_image?phone_number=${phone_number}&file_path=user`, {
+        headers: headers
+      });
+      const respData = await res.data;
+      console.log("Image", respData?.data?.image_url);
+      setUserImage(respData?.data?.image_url);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  useEffect(()=>{
+    if(phone_number) getImage(phone_number)
+  },[phone_number])
 
   return (
     <>
@@ -125,19 +149,19 @@ const Layout = ({ children }) => {
               <div className="flex items-center pl-1 gap-4">
                 <div className="userImg flex items-center py-4 mx justify-center">
                   {isOpen ? (
-                    <Image
+                    <img
                       className="rounded-full h-8 w-8"
-                      src={Profile}
+                      src={profileImg}
                       alt=""
                     />
                   ) : (
                     <div className="flex  items-center justify-center gap-4 ">
-                      <Image
+                      <img
                         onClick={(e) => {
                           router.push("/");
                         }}
                         className=" h-[4.1rem] w-[4.1rem] rounded-full cursor-pointer"
-                        src={Profile}
+                        src={profileImg}
                         alt=""
                       />
                       <div className="flex flex-col items-start font-sans">
@@ -272,10 +296,10 @@ const Layout = ({ children }) => {
                   {!isMobile && (
                     <div className="bg-[#ff5722] max-h-full mx-0 font-arial relative">
                       <div className="flex items-center px-4 py-[0.4rem] h-full gap-1">
-                        <Image
-                          src={Profile}
+                        <img
+                          src={profileImg}
                           alt=""
-                          className="h-10 w-10 object-cover border-2 border-yellow-500 rounded-full"
+                          className="h-10 w-10  border-2 border-yellow-500 rounded-full"
                         />
                         <Popover
                           as="div"

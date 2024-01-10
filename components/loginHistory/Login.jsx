@@ -38,7 +38,7 @@ const Login = () => {
         headers: headers,
       });
       const respdata = await resp.data;
-      const phone_number = respdata?.data.phone_no;
+      const phone_number = respdata?.data?.loginHistory?.phone_no;
       const uid = respdata?.data.uid || respdata?.data?.loginHistory.uid;
 
       const email_id = respdata?.data?.loginHistory?.email_id;
@@ -67,6 +67,7 @@ const Login = () => {
       } else {
         localStorage.setItem("uid", uid);
         localStorage.setItem("email_id", email_id);
+        localStorage.setItem("phone_number", phone_number);
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("id", _id);
         localStorage.setItem("userinfo", JSON.stringify(userinfo));
