@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Bar, Chart } from "react-chartjs-2";
+// import { Bar, Chart } from "react-chartjs-2";
 import { TbFileDownload } from "react-icons/tb";
 import GraphTable from "./GraphTable";
 import * as FileSaver from 'file-saver'

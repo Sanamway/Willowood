@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Bar, Chart } from "react-chartjs-2";
+// import { Bar, Chart } from "react-chartjs-2";
 import { TbFileDownload } from "react-icons/tb";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
