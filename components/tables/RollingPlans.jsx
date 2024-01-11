@@ -2998,7 +2998,7 @@ const RollingPlans = () => {
         type: "",
         data: {},
       });
-    }, [10]);
+    }, [1000]);
   };
 
   const handleDraftClose = () => {

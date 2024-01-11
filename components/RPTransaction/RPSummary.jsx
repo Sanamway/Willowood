@@ -110,7 +110,7 @@ const RPSummary = (props) => {
       };
     } else if (
       JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10 &&
-      router.query.formType === "Edit"
+      router.query.formType === "Review"
     ) {
       paramsData = {
         t_year: router.query.yr,
