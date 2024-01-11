@@ -17,7 +17,7 @@ const AllCharts = (props) => {
   const [TerriData, setTerriData] = useState("");
   const[RegionData, setRegionData] = useState("")
   const[ZoneData, setZoneData] = useState("")
-  const[BusinessData, setBusinessData] = useState("")
+  const[BusUnitData, setBusUnitData] = useState("")
   const[BsegmentData, setBSegmentData] = useState("")
 
   const headers = {
@@ -78,14 +78,14 @@ const AllCharts = (props) => {
 
 //getting Business Data
 
-  const getBusinessData = async ()=>{
+  const getBusUnitData = async ()=>{
     try {
       const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_bu`, {
         headers: headers,
         params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
       });
       const respdata = await res.data.data;
-      setBusinessData(respdata);
+      setBusUnitData(respdata);
     } catch (error) {
       console.log("Error:", error);
     }
@@ -109,7 +109,7 @@ const AllCharts = (props) => {
     getTerriData();
     getRegionData();
     getZoneData()
-    getBusinessData()
+    getBusUnitData()
     getBSegmentsData()
   }, []);
 
@@ -219,35 +219,35 @@ const AllCharts = (props) => {
 
 //creating business unit graph
 
-  let BusinessGraphData = [];
-  let BusinesslabelData =[];
+  let BusUnitGraphData = [];
+  let BusUnitlabelData =[];
 
-  if (BusinessData) {
+  if (BusUnitData) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
-    BusinessData.forEach((item) => {
+    BusUnitData.forEach((item) => {
       if(item.business_unit_name){
-        BusinesslabelData.push(item.business_unit_name);
+        BusUnitlabelData.push(item.business_unit_name);
       }
       if (item.target) {
-        budgetData.data.push(item.target);
+        budgetData.data.push(item.budget);
       }
       if (item.budget) {
-        targetData.data.push(item.budget);
+        targetData.data.push(item.target);
       }
       if (item.actual) {
         actualData.data.push(item.actual);
       }
     });
     if (budgetData.data.length > 0) {
-      BusinessGraphData.push(budgetData);
+      BusUnitGraphData.push(budgetData);
     }
     if (targetData.data.length > 0) {
-      BusinessGraphData.push(targetData);
+      BusUnitGraphData.push(targetData);
     }
     if (actualData.data.length > 0) {
-      BusinessGraphData.push(actualData);
+      BusUnitGraphData.push(actualData);
     }
   }
 
@@ -292,7 +292,7 @@ const AllCharts = (props) => {
 
 const [prdCategory, setPrdCategory] = useState("")
 const [prdSegment, setPrdSegment] = useState("")
-
+const [prdBrand, setPrdBrand] = useState("")
   //getting Product Category Data
 
   const getProductCategory = async () => {
@@ -327,12 +327,28 @@ const [prdSegment, setPrdSegment] = useState("")
     }
   };
 
+  const getProductBrand = async () => {
+    try {
+      const res = await axios.get(`${url}/api/RSP_downloadAnalytical`, {
+        headers: headers,
+        params: {year_1: 2021,year_2:2022,year_3:2023, year_2_cm:"2023-12",year_2_nm:"2023-01",year_3_cm:"2023-12",
+        year_3_nm:"2024-01",t_des:"Moga",t_id:37,plan_id:1,tran_id:"RP-122023",m_year:"2023-12-01T00:00:00.00Z",json:true,
+        analytical_key:"Brand Desc"
+      }
+      });
+      const respdata = await res.data.data;
+      setPrdBrand(respdata);
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
   useEffect(()=>{
     getProductCategory()
     getProductSegment()
+    getProductBrand()
   },[])
 
-  console.log("PrdSegment",prdSegment)
 
 //Product Category 
 
@@ -359,7 +375,7 @@ const [prdSegment, setPrdSegment] = useState("")
         actualData.data.push(Values[23]);
       }
     });
-    if (targetData.data.length > 0) {
+    if (budgetData.data.length > 0) {
       ProdCatGraphData.push(budgetData);
     }
     if (targetData.data.length > 0) {
@@ -407,10 +423,46 @@ const [prdSegment, setPrdSegment] = useState("")
     }
   }
 
-  // console.log("Prd graph", ProdCatGraphData)
-  console.log("Prd Seg", prdSegment)
-  console.log("Prd Label", ProdSegLabelData)
+  //Product Brand
 
+
+  let ProdBrandGraphData = [];
+  let ProdBrandLabelData =[];
+
+  if (prdBrand) {
+    const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
+    const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
+    const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
+    prdBrand.forEach((item) => {
+      const Keys = Object.keys(item)
+      const Values = Object.values(item)
+      console.log("Keys", Keys)
+      console.log("Values", Values)
+      if(item["Brand Desc"]){
+        ProdBrandLabelData.push(item["Brand Desc"]);
+      }
+      if (Keys[11]) {
+        budgetData.data.push(Values[11]);
+      }
+      if (Keys[15]) {
+        targetData.data.push(Values[15]);
+      }
+      if (Keys[23]) {
+        actualData.data.push(Values[23]);
+      }
+    });
+    if (budgetData.data.length > 0) {
+      ProdBrandGraphData.push(budgetData);
+    }
+    if (targetData.data.length > 0) {
+      ProdBrandGraphData.push(targetData);
+    }
+    if (actualData.data.length > 0) {
+      ProdBrandGraphData.push(actualData);
+    }
+  }
+
+  
 
 
   return (
@@ -443,8 +495,8 @@ const [prdSegment, setPrdSegment] = useState("")
           <ChartTwo
             title={"Business Units"}
             color={"bg-violet-500"}
-            lab={BusinesslabelData}
-            datasets={BusinessGraphData || []}
+            lab={BusUnitlabelData}
+            datasets={BusUnitGraphData || []}
           ></ChartTwo>
         </div>
 
@@ -561,8 +613,8 @@ const [prdSegment, setPrdSegment] = useState("")
           <ChartOne
             title={"Product Brand"}
             color={"bg-indigo-500"}
-            lab={labelNameTwo}
-            datasets={chartData || []}
+            lab={ProdBrandLabelData}
+            datasets={ProdBrandGraphData || []}
           ></ChartOne>
           <TableChartTwo
             heading={"Product Brand"}
