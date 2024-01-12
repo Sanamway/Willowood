@@ -64,7 +64,7 @@ const TableChartTwo = (props) => {
         {!height && (
           <GraphTable
             className={`min-w-full lg:max-h-64  ${fullScreen ? "lg:max-h-[84%]" : ""} px-2`}
-            data={datas}
+            data={datas ||[]}
             heading={props.heading}
           />
         )}
