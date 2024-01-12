@@ -158,7 +158,7 @@ const Table = (props) => {
         <div className="zrtdepoty flex items-center justify-between w-full">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xs text-gray-700 font-bold">
-              ZRT: {router.query.zrt}
+              ZRT: {router.query.zrt?.map((item) => item).join(" ")}
             </h2>
           </div>
           <div className="flex items-center justify-between gap-2">

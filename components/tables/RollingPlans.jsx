@@ -2,7 +2,8 @@ import React, { useEffect, useState, Fragment } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { FaDownload } from "react-icons/fa";
-import { IoIosDoneAll } from "react-icons/io";
+import { FcApprovall } from "react-icons/io";
+import { FcApproval } from "react-icons/fc";
 import { FaUpload } from "react-icons/fa";
 import { VscPreview } from "react-icons/vsc";
 import { useRouter } from "next/router";
@@ -635,7 +636,7 @@ const RollingPlans = () => {
         return "#f4141c";
       case "Region Review Done":
         return "green";
-   default:
+      default:
         return "black";
     }
   };
@@ -704,6 +705,7 @@ const RollingPlans = () => {
     buDes,
     bgDes
   ) => {
+    console.log("nji", zrt);
     switch (status) {
       case "Close Period":
         return (
@@ -1353,7 +1355,7 @@ const RollingPlans = () => {
                 );
               }}
             >
-              <VscPreview className="text-green-400" />  Review Decision
+              <VscPreview className="text-green-400" /> Review Decision
             </li>
 
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -1512,7 +1514,7 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <IoIosDoneAll className="text-slate-400" /> Final Approve
+                  <FcApprovall className="text-green-400" /> Final Approve
                 </li>
               )}
 
@@ -1587,7 +1589,7 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <IoIosDoneAll className="text-slate-400" /> Final Approve
+                  <FcApprovall className="text-green-400" /> Final Approve
                 </li>
               )}
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
@@ -1693,7 +1695,7 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <IoIosDoneAll className="text-slate-400" /> Final Approve
+                  <FcApprovall className="text-green-400" /> Final Approve
                 </li>
               )}
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
@@ -1865,7 +1867,7 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <IoIosDoneAll className="text-slate-400" /> Final Approve
+                  <FcApprovall className="text-green-400" /> Final Approve
                 </li>
               )}
 
@@ -1930,7 +1932,7 @@ const RollingPlans = () => {
                   );
                 }}
               >
-               <VscPreview className="text-green-400" /> Review Decision
+                <VscPreview className="text-green-400" /> Review Decision
               </li>
             )}
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -3354,25 +3356,19 @@ const RollingPlans = () => {
                                     item.t_year,
                                     item.m_year,
                                     item.depot_name,
-                                    `${
+                                    [
                                       item.business_segment
                                         ? item.business_segment
-                                        : ""
-                                    } 
-                                      ${
-                                        item.business_unit_name
-                                          ? item.business_unit_name
-                                          : ""
-                                      }  
-                                      ${item.zone_name ? item.zone_name : ""} 
-                                      ${
-                                        item.region_name ? item.region_name : ""
-                                      }
-                                       ${
-                                         item.territory_name
-                                           ? item.territory_name
-                                           : ""
-                                       }`,
+                                        : "",
+                                      item.business_unit_name
+                                        ? item.business_unit_name
+                                        : "",
+                                      item.zone_name ? item.zone_name : "",
+                                      item.region_name ? item.region_name : "",
+                                      item.territory_name
+                                        ? item.territory_name
+                                        : "",
+                                    ],
                                     item.rp_status,
                                     item.count || "",
 

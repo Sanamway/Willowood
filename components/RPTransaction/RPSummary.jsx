@@ -166,6 +166,8 @@ const RPSummary = (props) => {
     }
   };
 
+  const getSummary = () => {};
+
   // Initialize an object to store the sums based on Brand Code
 
   const handleSaveRsp = async (status) => {
@@ -517,6 +519,14 @@ const RPSummary = (props) => {
   const receivedObject = router.query.filterState
     ? JSON.parse(decodeURIComponent(router.query.filterState))
     : {};
+  function getLastNonEmptyElement(arr) {
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (arr[i] !== null && arr[i] !== undefined && arr[i] !== "") {
+        return arr[i];
+      }
+    }
+    return null; // Return null if no non-empty element is found
+  }
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
       <SubmitModal
@@ -548,7 +558,8 @@ const RPSummary = (props) => {
         <div className="zrtdepoty flex items-center justify-between w-full">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xs text-gray-700 font-bold">
-              ZRT: {router.query.zrt}
+              ZRT: {router.query.zrt?.map((item) => item).join(" ")}
+              {console.log("poi", router.query.zrt)}
             </h2>
           </div>
           <div className="flex items-center justify-between gap-2">
@@ -1557,7 +1568,7 @@ const RPSummary = (props) => {
                       return (
                         <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
                           <td className="px-4 py-1 text-center">
-                            {item[Object.keys(item)[29]]}
+                            {getLastNonEmptyElement(router.query.zrt)}
                           </td>
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[6]]}
