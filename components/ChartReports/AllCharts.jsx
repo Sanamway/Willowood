@@ -527,8 +527,8 @@ if (prdSegment) {
   prdSegment.forEach((item) => {
     const Keys = Object.keys(item)
     const Values = Object.values(item)
-    console.log("Keys", Keys)
-    console.log("Values", Values)
+    // console.log("Keys", Keys)
+    // console.log("Values", Values)
     const targetIndices = [0, 2, 4, 5, 6, 0, 11, 15, 23, 0, 0,7, 25, 8,0,0,0,0];
     
     const filteredItem = targetIndices.reduce((acc, index) => {

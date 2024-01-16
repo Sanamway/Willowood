@@ -3,6 +3,14 @@ import React, { useState, useEffect } from "react";
 const GraphTable = (props) => {
   const { data, datas } = props;
 
+  //function to get Keys
+
+ 
+  const  keys = Object?.keys(data[0] ||[])
+   console.log("ur",keys[2])
+
+
+
   const [resultSum, setresultSum] = useState({
     "FY Sales Val 21-22": 0,
     "FY Sales Val 22-23": 0,
@@ -17,11 +25,12 @@ const GraphTable = (props) => {
     "YTD Budget Value": 0,
     "YTD Actual Sale Value": 0,
     "Ytd Net Sale Qty  23-24": 0,
-    "MTD_sale": 0,
-    "Ytd Net Sale Value  23-24": 0,
+   " MTD_sale": 0,
+    "Ytd Net Sale Value  23-24": 0
   });
 
   const calculateSum = (data) => {
+    
     const sum = data.reduce(
       (acc, entry) => {
         acc["FY Sales Val 21-22"] += Number(entry["FY Sales Val 21-22"]) || 0;
@@ -56,8 +65,7 @@ const GraphTable = (props) => {
         "YTD Actual Sale Value": 0,
         "MTD_sale": 0,
         "Ytd Net Sale Qty  23-24": 0,
-        "Ytd Net Sale Value  23-24": 0,
-
+        "Ytd Net Sale Value  23-24": 0
       }
     );
 
@@ -69,14 +77,7 @@ const GraphTable = (props) => {
     calculateSum(data);
   }, [data]);
 
-  // const columnSums = {
-  //   salesVal2122: data.reduce((sum, item) => sum + item['FY Sales Val 21-22'], 0),
-  //   salesVal2223: data.reduce((sum, item) => sum + item['FY Sales Val 22-23'], 0),
-  //   annualBudgetQty: data.reduce((sum, item) => sum + item['Annual Budget Qty'], 0),
-  //   mtdSaleQty: data.reduce((sum, item) => sum + item['MTD Sale Qty'], 0),
-  //   mtdSaleQty: data.reduce((sum, item) => sum + item['MTD Sale Qty'], 0),
-  // };
-
+  
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -154,99 +155,63 @@ const GraphTable = (props) => {
                   <tr key={item.id}>
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-left whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[0]]}
                     </td>
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-center whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[2]]}
                     </td>
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-center whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[4]]}
                     </td>
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-center whitespace-nowrap 
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[5]]}
                     </td>
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-center whitespace-nowrap 
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[6]]}
                     </td>
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-center whitespace-nowrap 
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[""]]}
                     </td>
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-center whitespace-nowrap 
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[11]]}
                     </td>
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-center whitespace-nowrap 
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[15]]}
                     </td>
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-center whitespace-nowrap 
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[23]]}
@@ -254,55 +219,49 @@ const GraphTable = (props) => {
                     <td
                       key={item}
                       className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
+                        index == 9 || index == 10 ? "bg-green-200" : "bg-green-200"
                       }
                   ${index == 14 || index == 15 ? "bg-green-200" : ""}
                   ${index == 16 || index == 17 ? "bg-orange-100" : ""}
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
-                      {item[Object.keys(item)[""]]}
+                      {item[Object.keys(item)[11]] !== 0
+                        ? ((item[Object.keys(item)[23]] / item[Object.keys(item)[11]]) * 100).toFixed(2) +
+                          " %"
+                        : "0 %"}
                     </td>
                     <td
                       key={item}
                       className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
+                        index == 9 || index == 10 ? "bg-green-200" : "bg-green-200"
                       }
                   ${index == 14 || index == 15 ? "bg-green-200" : ""}
                   ${index == 16 || index == 17 ? "bg-orange-100" : ""}
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
-                      {item[Object.keys(item)[""]]}
+                      {item[Object.keys(item)[15]] !== 0
+                        ? ((item[Object.keys(item)[23]] / item[Object.keys(item)[15]]) * 100).toFixed(2) +
+                          " %"
+                        : "0 %"}
                     </td>
 
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-center whitespace-nowrap 
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[7]]}
                     </td>
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-center whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[25]]}
                     </td>
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-center whitespace-nowrap 
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[8]]}
@@ -310,46 +269,48 @@ const GraphTable = (props) => {
                     <td
                       key={item}
                       className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
+                        index == 9 || index == 10 ? "bg-green-200" : "bg-green-200"
                       }
                   ${index == 14 || index == 15 ? "bg-green-200" : ""}
                   ${index == 16 || index == 17 ? "bg-orange-100" : ""}
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
-                      {item[Object.keys(item)[""]]}
+                       {item[Object.keys(item)[25]] !== 0
+                        ? ((item[Object.keys(item)[8]] / item[Object.keys(item)[25]]) * 100).toFixed(2) +
+                          " %"
+                        : "0 %"}
                     </td>
                     <td
                       key={item}
                       className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
+                        index == 9 || index == 10 ? "bg-green-200" : "bg-green-200"
                       }
                   ${index == 14 || index == 15 ? "bg-green-200" : ""}
                   ${index == 16 || index == 17 ? "bg-orange-100" : ""}
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
-                      {item[Object.keys(item)[""]]}
+                      {'0%'}
+                      {/* {item[Object.keys(item)["%"]]} */}
                     </td>
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-center whitespace-nowrap 
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
-                      {item[Object.keys(item)[""]]}
+                       {item[Object.keys(item)[5]] !== 0
+                        ? ((item[Object.keys(item)[7]] / item[Object.keys(item)[5]]) * 100).toFixed(2) +
+                          " %"
+                        : "0 %"}
                     </td>
                     <td
                       key={item}
-                      className={`px-2 text-center whitespace-nowrap ${
-                        index == 9 || index == 10 ? "bg-green-200" : ""
-                      }
-                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
-                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                      className={`px-2 text-center whitespace-nowrap 
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
-                      {item[Object.keys(item)[""]]}
+                      {item[Object.keys(item)[6]] !== 0
+                        ? ((item[Object.keys(item)[8]] / item[Object.keys(item)[6]]) * 100).toFixed(2) +
+                          " %"
+                        : "0 %"}
                     </td>
                   </tr>
                 ))}
@@ -394,8 +355,11 @@ const GraphTable = (props) => {
                   {parseFloat(resultSum["Annual Budget Val"])}
                 </td>
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{""}</td>
-                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["Dec Budget Val 23-24"])}</td>
-                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["Dec 23-24 Revised Fcst Val"])}
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum["Dec Budget Val 23-24"])}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum["Dec 23-24 Revised Fcst Val"])}
                 </td>
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
                   {parseFloat(resultSum["MTD_sale"])}
