@@ -252,8 +252,8 @@ const HomePage = () => {
               </div>
             </div>
             <div className={`grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2 pb-4 ${!height ? "block":"hidden"}`}>
-              {cardData?.map((item) => (
-                <div className="flex flex-col items-center justify-center">
+              {cardData?.map((item, index) => (
+                <div key={index} className="flex flex-col items-center justify-center">
                   <img
                     className="h-[3.5rem] w-[3.5rem] rounded-full"
                     src={item.img}

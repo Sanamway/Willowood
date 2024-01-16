@@ -1,7 +1,5 @@
 const dummyData = Array.from({ length: 10 }, (_, i) => ({
-    // id: i + 1,
     Territory: `Ahmednagar`,
-    Sales_Person_Name: `Uttam Aggarwal….1`,
     FY_Sales_Val_21_22: `2.12`,
     FY_Sales_Val_22_23: `1.89`,
     Annual_Budget_Qty: `888888`,
