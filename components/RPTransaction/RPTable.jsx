@@ -32,13 +32,13 @@ const RPTable = (props) => {
   }, [props.tableData]);
 
   const [result, setResult] = useState([]);
-  const [sumTotalRows, setSumTotalRows] = useState({});
 
+  const [totalSumObject, setTotalSumObject] = useState({});
   useEffect(() => {
-    if (!result) return;
+    if (!result.length) return;
     function sumNumericValues(data) {
       const sumObject = {};
-
+      console.log("olp", data);
       data.forEach((item) => {
         Object.keys(item).forEach((key) => {
           if (typeof item[key] === "number") {
@@ -51,10 +51,10 @@ const RPTable = (props) => {
 
       return sumObject;
     }
-    const totalResult = sumNumericValues(props.tableData);
-    setSumTotalRows(totalResult);
+    const totalResult = sumNumericValues(result);
+    setTotalSumObject(totalResult);
   }, [result]);
-  console.log("Fie", result);
+  console.log("mkl", totalSumObject);
 
   const [sumValues, setSumValues] = useState({
     "Dec 23-24 Revised Fcst Qty": 0,
@@ -101,7 +101,7 @@ const RPTable = (props) => {
     if (!router.query.filterState) return;
     setRecievedObject(JSON.parse(decodeURIComponent(router.query.filterState)));
   }, [router]);
-
+  
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
       <div className=" flex justify-center w-full my-">
@@ -122,7 +122,7 @@ const RPTable = (props) => {
         <div className="zrtdepoty flex items-center justify-between w-full">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xs text-gray-700 font-bold">
-              ZRT: {router.query.zrt}
+            ZRT: {router.query.zrt?.map((item) => item).join(" ")}
             </h2>
           </div>
           <div className="flex items-center justify-between gap-2">
@@ -193,7 +193,17 @@ const RPTable = (props) => {
           </div>
         </div>
       </div>
-
+      <br />
+      <div className="flex items-center justify-end w-full gap-4 ">
+        <button
+          onClick={() => {
+            handleCopyFcst()
+          }}
+          className="text-center rounded-md bg-blue-500 text-white py-1 px-4 text-sm"
+        >
+          Copy FCST Qty
+        </button>
+      </div>
       {/* table layout */}
 
       <div className="table mb-4 w-full">
@@ -259,7 +269,7 @@ const RPTable = (props) => {
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
-                        Apr 23-24 Urget Qty
+                        Apr 23-24 Urgent Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600 ">
                         May 23-24 Sale Qty
@@ -342,14 +352,22 @@ const RPTable = (props) => {
                           {/* {console.log("hello", recievedObject)} */}
                           {!recievedObject?.tId && (
                             <td className="px-4 py-1 text-right">
-                              {item[Object.keys(item)[36]]}
+                              {item[Object.keys(item)[37]]}
                             </td>
                           )}
 
-                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 ">
+                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right">
                             <input
                               type="number"
                               value={item[Object.keys(item)[19]]}
+                              disabled={
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 6 ||
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 5
+                              }
                               className="px-auto outline-none border-b-2 w-12 "
                               onChange={(e) =>
                                 setResult(
@@ -358,8 +376,9 @@ const RPTable = (props) => {
                                     el[`${Object.keys(el)[4]}`]
                                       ? {
                                           ...el,
-                                          [Object.keys(item)[19]]:
-                                            e.target.value,
+                                          [Object.keys(item)[19]]: Number(
+                                            e.target.value
+                                          ),
                                         }
                                       : el
                                   )
@@ -367,10 +386,18 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 ">
+                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right">
                             <input
                               type="number"
                               value={item[Object.keys(item)[21]]}
+                              disabled={
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 6 ||
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 5
+                              }
                               className="px-auto outline-none border-b-2 w-16"
                               onChange={(e) =>
                                 setResult(
@@ -379,8 +406,9 @@ const RPTable = (props) => {
                                     el[`${Object.keys(el)[4]}`]
                                       ? {
                                           ...el,
-                                          [Object.keys(item)[21]]:
-                                            e.target.value,
+                                          [Object.keys(item)[21]]: Number(
+                                            e.target.value
+                                          ),
                                         }
                                       : el
                                   )
@@ -397,14 +425,22 @@ const RPTable = (props) => {
 
                           {!recievedObject.tId && (
                             <td className="px-4 py-1 text-right">
-                              {item[Object.keys(item)[38]]}
-                        A    </td>
+                              {item[Object.keys(item)[39]]}
+                            </td>
                           )}
 
-                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 ">
+                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right">
                             <input
                               type="number"
                               value={item[Object.keys(item)[25]]}
+                              disabled={
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 6 ||
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 5
+                              }
                               className="px-auto outline-none border-b-2 w-16"
                               onChange={(e) =>
                                 setResult(
@@ -413,8 +449,9 @@ const RPTable = (props) => {
                                     el[`${Object.keys(el)[4]}`]
                                       ? {
                                           ...el,
-                                          [Object.keys(item)[25]]:
-                                            e.target.value,
+                                          [Object.keys(item)[25]]: Number(
+                                            e.target.value
+                                          ),
                                         }
                                       : el
                                   )
@@ -422,11 +459,19 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 ">
+                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right ">
                             <input
                               value={item[Object.keys(item)[27]]}
                               className="px-auto outline-none border-b-2 w-16"
                               type="number"
+                              disabled={
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 6 ||
+                                JSON.parse(
+                                  window.localStorage.getItem("userinfo")
+                                ).role_id !== 5
+                              }
                               onChange={(e) =>
                                 setResult(
                                   result.map((el) =>
@@ -434,8 +479,9 @@ const RPTable = (props) => {
                                     el[`${Object.keys(el)[4]}`]
                                       ? {
                                           ...el,
-                                          [Object.keys(item)[27]]:
-                                            e.target.value,
+                                          [Object.keys(item)[27]]: Number(
+                                            e.target.value
+                                          ),
                                         }
                                       : el
                                   )
@@ -446,49 +492,189 @@ const RPTable = (props) => {
                         </tr>
                       );
                     })}
+                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                      <td className="px-4 py-1 text-left  whitespace-nowrap">
+                        QTY
+                      </td>
+                      <td className="px-4 py-1 text-left  whitespace-nowrap">
+                        -
+                      </td>
+
+                      <th
+                        scope="row"
+                        className="px-4  py-1 font-medium whitespace-nowrap  "
+                      >
+                        -
+                      </th>
+                      <td className="px-4 py-1 text-right">-</td>
+
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[6]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[8]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[10]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[12]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[14]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[15]]}
+                      </td>
+                      {console.log("hi", Object.keys(totalSumObject)[17])}
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[17]]}
+                      </td>
+
+                      {/* {console.log("hello", recievedObject)} */}
+                      {!recievedObject?.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {totalSumObject[Object.keys(totalSumObject)[37]]}
+                        </td>
+                      )}
+
+                      <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200  text-right">
+                        <input
+                          type="number"
+                          value={
+                            totalSumObject[Object.keys(totalSumObject)[19]]
+                          }
+                          disabled={true}
+                          className="px-auto outline-none border-b-2 w-12 "
+                        />
+                      </td>
+                      <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200  text-right">
+                        <input
+                          type="number"
+                          value={
+                            totalSumObject[Object.keys(totalSumObject)[21]]
+                          }
+                          disabled={true}
+                          className="px-auto outline-none border-b-2 w-16"
+                        />
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[22]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[23]]}
+                      </td>
+
+                      {!recievedObject.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {totalSumObject[Object.keys(totalSumObject)[39]]}
+                        </td>
+                      )}
+
+                      <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200  text-right">
+                        <input
+                          type="number"
+                          value={
+                            totalSumObject[Object.keys(totalSumObject)[25]]
+                          }
+                          disabled={true}
+                          className="px-auto outline-none border-b-2 w-16"
+                        />
+                      </td>
+                      <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right ">
+                        <input
+                          value={
+                            totalSumObject[Object.keys(totalSumObject)[27]]
+                          }
+                          className="px-auto outline-none border-b-2 w-16"
+                          type="number"
+                          disabled={true}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                      <td
+                        scope="row"
+                        className="px-4 py-1 text-left  whitespace-nowrap"
+                      >
+                        Value Total(in LAC)
+                      </td>
+                      <td className="px-4 py-1 text-left  whitespace-nowrap">
+                        -
+                      </td>
+
+                      <th
+                        scope="row"
+                        className="px-4  py-1 font-medium whitespace-nowrap  "
+                      >
+                        -
+                      </th>
+                      <td className="px-4 py-1 text-right">-</td>
+
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[7]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[9]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[11]]}
+                      </td>
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[13]]}
+                      </td>
+
+                      <td className="px-4 py-1 text-right">-</td>
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[16]]}
+                      </td>
+
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[18]]}
+                      </td>
+
+                      {/* {console.log("hello", recievedObject)} */}
+                      {!recievedObject?.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {" "}
+                          {totalSumObject[Object.keys(totalSumObject)[37]]}
+                        </td>
+                      )}
+
+                      <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[20]]}
+                      </td>
+                      <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right">
+                        -
+                      </td>
+                      <td className="px-4 py-1 text-right">-</td>
+                      <td className="px-4 py-1 text-right">
+                        {totalSumObject[Object.keys(totalSumObject)[24]]}
+                      </td>
+
+                      {!recievedObject.tId && (
+                        <td className="px-4 py-1 text-right">
+                          {totalSumObject[Object.keys(totalSumObject)[39]]}
+                        </td>
+                      )}
+
+                      <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200  text-right">
+                        <input
+                          type="number"
+                          value={
+                            totalSumObject[Object.keys(totalSumObject)[26]]
+                          }
+                          disabled={true}
+                          className="px-auto outline-none border-b-2 w-16"
+                        />
+                      </td>
+                      <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right ">
+                        -
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
-
-                <div className=" text-black text-xs font-bold w-1/4">
-                  {/* Display the sum values */}
-                  <p className=" flex justify-between">
-                    <span className="w-full">
-                      {" "}
-                      Dec 23-24 Revised Fcst Qty Sum:{" "}
-                    </span>
-
-                    <small className="text-xs">
-                      {sumValues["Dec 23-24 Revised Fcst Qty"]}
-                    </small>
-                  </p>
-                  <p className=" flex justify-between">
-                    <span className="w-full"> Dec 23-24 Urgent Qty Sum: </span>
-
-                    <small className="text-xs">
-                      {sumValues["Dec 23-24 Urgent Qty"]}
-                    </small>
-                  </p>
-                  <p className=" flex justify-between">
-                    <span className="w-full"> Jan 23-24 Fcst Qty Sum:</span>
-
-                    <small className="text-xs">
-                      {sumValues["Jan 23-24 Fcst Qty"]}
-                    </small>
-                  </p>
-                  <p className=" flex justify-between">
-                    <span className="w-full"> Expected Return Qty Sum:</span>
-
-                    <small className="text-xs">
-                      {sumValues["Expected Return Qty"]}
-                    </small>
-                  </p>
-
-                  <p className=" flex justify-between">
-                    <span className="w-full">No of Rows Count: </span>
-
-                    <small className="text-xs">{result.length}</small>
-                  </p>
-                </div>
               </div>
             </div>
           </div>

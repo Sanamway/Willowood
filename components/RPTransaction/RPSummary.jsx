@@ -110,7 +110,7 @@ const RPSummary = (props) => {
       };
     } else if (
       JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10 &&
-      router.query.formType === "Edit"
+      router.query.formType === "Review"
     ) {
       paramsData = {
         t_year: router.query.yr,
@@ -165,6 +165,8 @@ const RPSummary = (props) => {
       console.log(error);
     }
   };
+
+  const getSummary = () => {};
 
   // Initialize an object to store the sums based on Brand Code
 
@@ -386,13 +388,13 @@ const RPSummary = (props) => {
 
     function sumNumericValues(data) {
       const sumObject = {};
-
+      console.log("olp", data);
       data.forEach((item) => {
         Object.keys(item).forEach((key) => {
           if (typeof item[key] === "number") {
             sumObject[key] = (sumObject[key] || 0) + item[key];
           } else {
-            sumObject[key] = "";
+            sumObject[key] = 0;
           }
         });
       });
@@ -517,6 +519,14 @@ const RPSummary = (props) => {
   const receivedObject = router.query.filterState
     ? JSON.parse(decodeURIComponent(router.query.filterState))
     : {};
+  function getLastNonEmptyElement(arr) {
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (arr[i] !== null && arr[i] !== undefined && arr[i] !== "") {
+        return arr[i];
+      }
+    }
+    return null; // Return null if no non-empty element is found
+  }
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
       <SubmitModal
@@ -548,7 +558,8 @@ const RPSummary = (props) => {
         <div className="zrtdepoty flex items-center justify-between w-full">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xs text-gray-700 font-bold">
-              ZRT: {router.query.zrt}
+              ZRT: {router.query.zrt?.map((item) => item).join(" ")}
+              {console.log("poi", router.query.zrt)}
             </h2>
           </div>
           <div className="flex items-center justify-between gap-2">
@@ -668,7 +679,7 @@ const RPSummary = (props) => {
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
                       >
-                        Apr 23-24 Urget Qty
+                        Apr 23-24 Urgent Qty
                       </th>
                       <th scope="col" className="px-2 py-1  text-blue-600 ">
                         May 23-24 Sale Qty
@@ -729,7 +740,7 @@ const RPSummary = (props) => {
                           </td>
                           {!receivedObject?.tId && (
                             <td className="px-4 py-1 text-right">
-                              {item[Object.keys(item)[36]]}
+                              {item[Object.keys(item)[37]]}
                             </td>
                           )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
@@ -747,7 +758,7 @@ const RPSummary = (props) => {
                           {!receivedObject.tId && (
                             <td className="px-4 py-1 text-right">
                               {" "}
-                              {item[Object.keys(item)[38]]}
+                              {item[Object.keys(item)[39]]}
                             </td>
                           )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
@@ -789,7 +800,7 @@ const RPSummary = (props) => {
                         <td className="px-4 py-1 text-right">
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[36]
+                              Object.keys(totalNamewiseData)[37]
                             ]
                           }
                         </td>
@@ -811,7 +822,7 @@ const RPSummary = (props) => {
                           {" "}
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[38]
+                              Object.keys(totalNamewiseData)[39]
                             ]
                           }
                         </td>
@@ -855,7 +866,7 @@ const RPSummary = (props) => {
                         <td className="px-4 py-1 text-right">
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[36]
+                              Object.keys(totalNamewiseData)[37]
                             ]
                           }
                         </td>
@@ -875,7 +886,7 @@ const RPSummary = (props) => {
                           {" "}
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[38]
+                              Object.keys(totalNamewiseData)[39]
                             ]
                           }
                         </td>
@@ -961,7 +972,7 @@ const RPSummary = (props) => {
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
                       >
-                        Apr 23-24 Urget Qty
+                        Apr 23-24 Urgent Qty
                       </th>
                       <th scope="col" className="px-2 py-1   text-blue-600 ">
                         May 23-24 Sale Qty
@@ -1022,7 +1033,7 @@ const RPSummary = (props) => {
                           </td>
                           {!receivedObject?.tId && (
                             <td className="px-4 py-1 text-right">
-                              {item[Object.keys(item)[36]]}
+                              {item[Object.keys(item)[37]]}
                             </td>
                           )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
@@ -1040,7 +1051,7 @@ const RPSummary = (props) => {
                           {!receivedObject.tId && (
                             <td className="px-4 py-1 text-right">
                               {" "}
-                              {item[Object.keys(item)[38]]}
+                              {item[Object.keys(item)[39]]}
                             </td>
                           )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
@@ -1082,7 +1093,7 @@ const RPSummary = (props) => {
                         <td className="px-4 py-1 text-right">
                           {
                             totalPcatwiseData[
-                              Object.keys(totalPcatwiseData)[36]
+                              Object.keys(totalPcatwiseData)[37]
                             ]
                           }
                         </td>
@@ -1104,7 +1115,7 @@ const RPSummary = (props) => {
                           {" "}
                           {
                             totalPcatwiseData[
-                              Object.keys(totalPcatwiseData)[38]
+                              Object.keys(totalPcatwiseData)[39]
                             ]
                           }
                         </td>
@@ -1148,7 +1159,7 @@ const RPSummary = (props) => {
                         <td className="px-4 py-1 text-right">
                           {
                             totalPcatwiseData[
-                              Object.keys(totalPcatwiseData)[36]
+                              Object.keys(totalPcatwiseData)[37]
                             ]
                           }
                         </td>
@@ -1168,7 +1179,7 @@ const RPSummary = (props) => {
                           {" "}
                           {
                             totalPcatwiseData[
-                              Object.keys(totalPcatwiseData)[38]
+                              Object.keys(totalPcatwiseData)[39]
                             ]
                           }
                         </td>
@@ -1245,7 +1256,7 @@ const RPSummary = (props) => {
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
                       >
-                        Apr 23-24 Urget Qty
+                        Apr 23-24 Urgent Qty
                       </th>
                       <th scope="col" className="px-2 py-1  text-blue-600 ">
                         May 23-24 Sale Qty
@@ -1306,7 +1317,7 @@ const RPSummary = (props) => {
                           </td>
                           {!receivedObject?.tId && (
                             <td className="px-4 py-1 text-right">
-                              {item[Object.keys(item)[36]]}
+                              {item[Object.keys(item)[37]]}
                             </td>
                           )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
@@ -1324,7 +1335,7 @@ const RPSummary = (props) => {
                           {!receivedObject.tId && (
                             <td className="px-4 py-1 text-right">
                               {" "}
-                              {item[Object.keys(item)[38]]}
+                              {item[Object.keys(item)[39]]}
                             </td>
                           )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
@@ -1366,7 +1377,7 @@ const RPSummary = (props) => {
                         <td className="px-4 py-1 text-right">
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[36]
+                              Object.keys(totalNamewiseData)[37]
                             ]
                           }
                         </td>
@@ -1388,7 +1399,7 @@ const RPSummary = (props) => {
                           {" "}
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[38]
+                              Object.keys(totalNamewiseData)[39]
                             ]
                           }
                         </td>
@@ -1432,7 +1443,7 @@ const RPSummary = (props) => {
                         <td className="px-4 py-1 text-right">
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[36]
+                              Object.keys(totalNamewiseData)[37]
                             ]
                           }
                         </td>
@@ -1452,7 +1463,7 @@ const RPSummary = (props) => {
                           {" "}
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[38]
+                              Object.keys(totalNamewiseData)[39]
                             ]
                           }
                         </td>
@@ -1480,7 +1491,7 @@ const RPSummary = (props) => {
                   <thead className="text-xs text-gray-700 text-center bg-gray-100 dark:text-gray-400">
                     <tr>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        Product Category
+                        Business Structure
                       </th>
 
                       <th scope="col" className="px-2 py-1 text-blue-600">
@@ -1522,7 +1533,7 @@ const RPSummary = (props) => {
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
                       >
-                        Apr 23-24 Urget Qty
+                        Apr 23-24 Urgent Qty
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600 ">
                         May 23-24 Sale Qty
@@ -1557,7 +1568,7 @@ const RPSummary = (props) => {
                       return (
                         <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
                           <td className="px-4 py-1 text-center">
-                            {item[Object.keys(item)[29]]}
+                            {getLastNonEmptyElement(router.query.zrt)}
                           </td>
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[6]]}
@@ -1583,7 +1594,7 @@ const RPSummary = (props) => {
                           </td>
                           {!receivedObject?.tId && (
                             <td className="px-4 py-1 text-right">
-                              {item[Object.keys(item)[36]]}
+                              {item[Object.keys(item)[37]]}
                             </td>
                           )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
@@ -1601,7 +1612,7 @@ const RPSummary = (props) => {
                           {!receivedObject.tId && (
                             <td className="px-4 py-1 text-right">
                               {" "}
-                              {item[Object.keys(item)[38]]}
+                              {item[Object.keys(item)[39]]}
                             </td>
                           )}
                           <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
@@ -1643,7 +1654,7 @@ const RPSummary = (props) => {
                         <td className="px-4 py-1 text-right">
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[36]
+                              Object.keys(totalNamewiseData)[37]
                             ]
                           }
                         </td>
@@ -1665,7 +1676,7 @@ const RPSummary = (props) => {
                           {" "}
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[38]
+                              Object.keys(totalNamewiseData)[39]
                             ]
                           }
                         </td>
@@ -1710,7 +1721,7 @@ const RPSummary = (props) => {
                         <td className="px-4 py-1 text-right">
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[36]
+                              Object.keys(totalNamewiseData)[37]
                             ]
                           }
                         </td>
@@ -1730,7 +1741,7 @@ const RPSummary = (props) => {
                           {" "}
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[38]
+                              Object.keys(totalNamewiseData)[39]
                             ]
                           }
                         </td>
@@ -1777,9 +1788,9 @@ const RPSummary = (props) => {
           {(router.query.formType === "Add" ||
             router.query.formType === "Edit") &&
             (JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
-              4 ||
+              5 ||
               JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
-                5) && (
+                6) && (
               <button
                 className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
                 onClick={() => {
@@ -1832,6 +1843,18 @@ const RPSummary = (props) => {
                 className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-sm"
                 onClick={() => {
                   updateRollingPlanStatus("B.U Review Done");
+                }}
+              >
+                Final Review
+              </button>
+            )}
+          {router.query.formType === "Review" &&
+            JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+              4 && (
+              <button
+                className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-sm"
+                onClick={() => {
+                  updateRollingPlanStatus("Region Review Done");
                 }}
               >
                 Final Review
