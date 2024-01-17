@@ -2871,84 +2871,9 @@ const MainReport = () => {
           </select>
         </div>
         <div className="hey">
-          <AllCharts param={param} allTable={allTableData} />
+          <AllCharts param={param} allTable={allTableData} filterState={filterState} />
         </div>
 
-        {/* <div className="buttons mt-3  mb-3 flex items-center w-full justify-center gap-4 font-arial" ref={elementRef}>
-            <button
-              onClick={() => setFormType("AllCharts")}
-              className={`${
-                formType === "AllCharts"
-                  ? "py-1 px-2 text-sm rounded-sm text-white  bg-orange-500"
-                  : "py-1 px-2 text-sm rounded-sm text-black  bg-white"
-              }`}
-            >
-              <div className="flex items-center justify-center gap-1 ">
-                <MdBarChart></MdBarChart>
-                All Charts
-              </div>
-            </button>
-            <button
-              onClick={() => setFormType("Table")}
-              className={`${
-                formType === "Table"
-                  ? "py-1 px-2 text-sm rounded-sm  text-white  bg-orange-500"
-                  : "py-1 px-2 text-sm  text-black  bg-white"
-              }`}
-            >
-              <div className="flex items-center justify-center gap-1 ">
-                <FaTable></FaTable>
-                Table
-              </div>
-            </button>
-
-            <button
-              onClick={() => setFormType("Summary")}
-              className={`${
-                formType === "Summary"
-                  ? "py-1 px-2 text-sm  text-white  bg-orange-500"
-                  : "py-1 px-2 text-sm  text-black  bg-white"
-              }`}
-            >
-              <div className="flex items-center justify-center gap-1">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 4h-3V2h-2v2h-4V2H8v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zM5 20V7h14V6l.002 14H5z"
-                  ></path>
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M7 9h10v2H7zm0 4h5v2H7z"
-                  ></path>
-                </svg>
-                Summary
-              </div>
-            </button>
-           
-          </div> */}
-
-        {/* {formType === "AllCharts" && (
-          <AllCharts
-            formType={setFormType}
-          />
-        )}
-        {formType === "Table" && (
-          <Table
-            formType={setFormType}
-            tableData={tableData}
-            setTableData={setTableData}
-          />
-        )} */}
       </section>
     </>
   );

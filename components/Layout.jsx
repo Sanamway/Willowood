@@ -231,9 +231,9 @@ const Layout = ({ children }) => {
                     <div className="flex items-start justify-center  ">
                       <>
                         <ul className="gap-2 flex flex-col w-full items-start ">
-                          {menu.submenu?.map((item) => (
+                          {menu.submenu?.map((item, index) => (
                             <>
-                              <li
+                              <li key={index}
                                 onClick={(e) => {
                                   e.preventDefault();
                                   // router.push(`/${item.page_call}`);

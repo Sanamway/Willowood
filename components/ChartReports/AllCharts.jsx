@@ -13,17 +13,19 @@ import { url } from "@/constants/url";
 import axios from "axios";
 
 const AllCharts = (props) => {
-   const {param, allTable} = props
+  const { param, allTable, filterState } = props;
   const [TerriData, setTerriData] = useState("");
-  const[RegionData, setRegionData] = useState("")
-  const[ZoneData, setZoneData] = useState("")
-  const[BusUnitData, setBusUnitData] = useState("")
-  const[BsegmentData, setBSegmentData] = useState("")
+  const [RegionData, setRegionData] = useState("");
+  const [ZoneData, setZoneData] = useState("");
+  const [BusUnitData, setBusUnitData] = useState("");
+  const [BsegmentData, setBSegmentData] = useState("");
 
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw"
   };
+
+  console.log("AllChart", filterState);
 
   const router = useRouter();
 
@@ -33,14 +35,24 @@ const AllCharts = (props) => {
 
   //getting terri api data
 
-  const getTerriData = async () => {
+  const getTerriData = async (yr, month, bgId, buId, zId, rId, tId) => {
+    
     try {
       const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_t`, {
         headers: headers,
-        params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
+        // params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
+        params: {
+          t_year: yr || null,
+          m_year: month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+          bg_id: bgId === "All" || !bgId ? null : bgId,
+          bu_id: buId === "All" || !buId ? null : buId,
+          z_id: zId === "All" || !zId ? null : zId,
+          r_id: rId === "All" || !rId ? null : rId,
+          t_id: tId === "All" || !tId ? null : tId
+        }
       });
       const respdata = await res.data.data;
-      console.log("Terri", respdata)
+      console.log("Terri", respdata);
 
       setTerriData(respdata);
     } catch (error) {
@@ -48,16 +60,36 @@ const AllCharts = (props) => {
     }
   };
 
-  //getting region data 
+  useEffect(() => {
+    getTerriData(
+      filterState.yr || null,
+      filterState.month || null,
+      filterState.bgId || null,
+      filterState.buId || null,
+      filterState.zId || null,
+      filterState.rId || null,
+      filterState.tId
+    );
+  }, [
+    filterState.yr,
+    filterState.month,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId
+  ]);
+
+  //getting region data
 
   const getRegionData = async () => {
     try {
       const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_r`, {
         headers: headers,
-        params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
+        params: { bu_id: 1, bg_id: 1, m_year: "2023-12", t_year: 2023, z_id: 3 }
       });
       const respdata = await res.data.data;
-      console.log("Region", respdata)
+      console.log("Region", respdata);
 
       setRegionData(respdata);
     } catch (error) {
@@ -71,68 +103,65 @@ const AllCharts = (props) => {
     try {
       const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_z`, {
         headers: headers,
-        params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
+        params: { bu_id: 1, bg_id: 1, m_year: "2023-12", t_year: 2023, z_id: 3 }
       });
       const respdata = await res.data.data;
-      console.log("Zoneeee", respdata)
+      console.log("Zoneeee", respdata);
       setZoneData(respdata);
     } catch (error) {
       console.log("Error:", error);
     }
   };
 
-//getting Business Data
+  //getting Business Data
 
-  const getBusUnitData = async ()=>{
+  const getBusUnitData = async () => {
     try {
       const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_bu`, {
         headers: headers,
-        params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
+        params: { bu_id: 1, bg_id: 1, m_year: "2023-12", t_year: 2023, z_id: 3 }
       });
       const respdata = await res.data.data;
       setBusUnitData(respdata);
-      console.log("Business", respdata)
-
+      console.log("Business", respdata);
     } catch (error) {
       console.log("Error:", error);
     }
-  }
+  };
   //getting Business Segments
 
-  const getBSegmentsData = async ()=>{
+  const getBSegmentsData = async () => {
     try {
       const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_bg`, {
         headers: headers,
-        params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
+        params: { bu_id: 1, bg_id: 1, m_year: "2023-12", t_year: 2023, z_id: 3 }
       });
       const respdata = await res.data.data;
       setBSegmentData(respdata);
     } catch (error) {
       console.log("Error:", error);
     }
-  }
+  };
 
   useEffect(() => {
-    getTerriData();
+    // getTerriData();
     getRegionData();
-    getZoneData()
-    getBusUnitData()
-    getBSegmentsData()
+    getZoneData();
+    getBusUnitData();
+    getBSegmentsData();
   }, []);
-
-
 
   //creating data for graph Territory
 
   let TerriGraphData = [];
-  let TerrilabelData =[];
+  let TerrilabelData = [];
 
-  if (allTable) {
+  if (TerriData) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
-    allTable.forEach((item) => {
-      if(item.territory_name){
+    TerriData.forEach((item) => {
+      if (item.territory_name) {
         TerrilabelData.push(item.territory_name);
       }
       if (item.budget) {
@@ -159,14 +188,14 @@ const AllCharts = (props) => {
   //creating data for graph Region
 
   let RegionGraphData = [];
-  let RegionlabelData =[];
+  let RegionlabelData = [];
 
   if (RegionData) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     RegionData.forEach((item) => {
-      if(item.region_name){
+      if (item.region_name) {
         RegionlabelData.push(item.region_name);
       }
       if (item.budget) {
@@ -193,14 +222,14 @@ const AllCharts = (props) => {
   //creating Zone graph data
 
   let ZoneGraphData = [];
-  let ZonelabelData =[];
+  let ZonelabelData = [];
 
   if (ZoneData) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     ZoneData.forEach((item) => {
-      if(item.zone_name){
+      if (item.zone_name) {
         ZonelabelData.push(item.zone_name);
       }
       if (item.budget) {
@@ -224,17 +253,17 @@ const AllCharts = (props) => {
     }
   }
 
-//creating business unit graph
+  //creating business unit graph
 
   let BusUnitGraphData = [];
-  let BusUnitlabelData =[];
+  let BusUnitlabelData = [];
 
   if (BusUnitData) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     BusUnitData.forEach((item) => {
-      if(item.business_unit_name){
+      if (item.business_unit_name) {
         BusUnitlabelData.push(item.business_unit_name);
       }
       if (item.target) {
@@ -258,19 +287,17 @@ const AllCharts = (props) => {
     }
   }
 
-
-
-//creating business segment graph
+  //creating business segment graph
 
   let BSegmentGraphData = [];
-  let BSegmentlabelData =[];
+  let BSegmentlabelData = [];
 
   if (BsegmentData) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     BsegmentData.forEach((item) => {
-      if(item.business_segment){
+      if (item.business_segment) {
         BSegmentlabelData.push(item.business_segment);
       }
       if (item.target) {
@@ -294,22 +321,33 @@ const AllCharts = (props) => {
     }
   }
 
-  
-//************************************************************************************************//
+  //************************************************************************************************//
 
-const [prdCategory, setPrdCategory] = useState("")
-const [prdSegment, setPrdSegment] = useState("")
-const [prdBrand, setPrdBrand] = useState("")
+  const [prdCategory, setPrdCategory] = useState("");
+  const [prdSegment, setPrdSegment] = useState("");
+  const [prdBrand, setPrdBrand] = useState("");
   //getting Product Category Data
 
   const getProductCategory = async () => {
     try {
       const res = await axios.get(`${url}/api/RSP_downloadAnalytical`, {
         headers: headers,
-        params: {year_1: 2021,year_2:2022,year_3:2023, year_2_cm:"2023-12",year_2_nm:"2023-01",year_3_cm:"2023-12",
-        year_3_nm:"2024-01",t_des:"Moga",t_id:37,plan_id:1,tran_id:"RP-122023",m_year:"2023-12-01T00:00:00.00Z",json:true,
-        analytical_key:"Product Category"
-      }
+        params: {
+          year_1: 2021,
+          year_2: 2022,
+          year_3: 2023,
+          year_2_cm: "2023-12",
+          year_2_nm: "2023-01",
+          year_3_cm: "2023-12",
+          year_3_nm: "2024-01",
+          t_des: "Moga",
+          t_id: 37,
+          plan_id: 1,
+          tran_id: "RP-122023",
+          m_year: "2023-12-01T00:00:00.00Z",
+          json: true,
+          analytical_key: "Product Category"
+        }
       });
       const respdata = await res.data.data;
       setPrdCategory(respdata);
@@ -322,10 +360,22 @@ const [prdBrand, setPrdBrand] = useState("")
     try {
       const res = await axios.get(`${url}/api/RSP_downloadAnalytical`, {
         headers: headers,
-        params: {year_1: 2021,year_2:2022,year_3:2023, year_2_cm:"2023-12",year_2_nm:"2023-01",year_3_cm:"2023-12",
-        year_3_nm:"2024-01",t_des:"Moga",t_id:37,plan_id:1,tran_id:"RP-122023",m_year:"2023-12-01T00:00:00.00Z",json:true,
-        analytical_key:"Product Segment"
-      }
+        params: {
+          year_1: 2021,
+          year_2: 2022,
+          year_3: 2023,
+          year_2_cm: "2023-12",
+          year_2_nm: "2023-01",
+          year_3_cm: "2023-12",
+          year_3_nm: "2024-01",
+          t_des: "Moga",
+          t_id: 37,
+          plan_id: 1,
+          tran_id: "RP-122023",
+          m_year: "2023-12-01T00:00:00.00Z",
+          json: true,
+          analytical_key: "Product Segment"
+        }
       });
       const respdata = await res.data.data;
       setPrdSegment(respdata);
@@ -338,10 +388,22 @@ const [prdBrand, setPrdBrand] = useState("")
     try {
       const res = await axios.get(`${url}/api/RSP_downloadAnalytical`, {
         headers: headers,
-        params: {year_1: 2021,year_2:2022,year_3:2023, year_2_cm:"2023-12",year_2_nm:"2023-01",year_3_cm:"2023-12",
-        year_3_nm:"2024-01",t_des:"Moga",t_id:37,plan_id:1,tran_id:"RP-122023",m_year:"2023-12-01T00:00:00.00Z",json:true,
-        analytical_key:"Brand Desc"
-      }
+        params: {
+          year_1: 2021,
+          year_2: 2022,
+          year_3: 2023,
+          year_2_cm: "2023-12",
+          year_2_nm: "2023-01",
+          year_3_cm: "2023-12",
+          year_3_nm: "2024-01",
+          t_des: "Moga",
+          t_id: 37,
+          plan_id: 1,
+          tran_id: "RP-122023",
+          m_year: "2023-12-01T00:00:00.00Z",
+          json: true,
+          analytical_key: "Brand Desc"
+        }
       });
       const respdata = await res.data.data;
       setPrdBrand(respdata);
@@ -350,26 +412,25 @@ const [prdBrand, setPrdBrand] = useState("")
     }
   };
 
-  useEffect(()=>{
-    getProductCategory()
-    getProductSegment()
-    getProductBrand()
-  },[])
+  useEffect(() => {
+    getProductCategory();
+    getProductSegment();
+    getProductBrand();
+  }, []);
 
-
-//Product Category Graph
+  //Product Category Graph
 
   let ProdCatGraphData = [];
-  let ProdCatLabelData =[];
+  let ProdCatLabelData = [];
 
   if (prdCategory) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     prdCategory.forEach((item) => {
-      const Keys = Object.keys(item)
-      const Values = Object.values(item)
-      if(item["Product Category"]){
+      const Keys = Object.keys(item);
+      const Values = Object.values(item);
+      if (item["Product Category"]) {
         ProdCatLabelData.push(item["Product Category"]);
       }
       if (Keys[11]) {
@@ -393,20 +454,19 @@ const [prdBrand, setPrdBrand] = useState("")
     }
   }
 
-
-//Product Segments Graph
+  //Product Segments Graph
 
   let ProdSegGraphData = [];
-  let ProdSegLabelData =[];
+  let ProdSegLabelData = [];
 
   if (prdSegment) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     prdSegment.forEach((item) => {
-      const Keys = Object.keys(item)
-      const Values = Object.values(item)
-      if(item["Product Segment"]){
+      const Keys = Object.keys(item);
+      const Values = Object.values(item);
+      if (item["Product Segment"]) {
         ProdSegLabelData.push(item["Product Segment"]);
       }
       if (Keys[11]) {
@@ -432,18 +492,17 @@ const [prdBrand, setPrdBrand] = useState("")
 
   //Product Brand Graph
 
-
   let ProdBrandGraphData = [];
-  let ProdBrandLabelData =[];
+  let ProdBrandLabelData = [];
 
   if (prdBrand) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     prdBrand.forEach((item) => {
-      const Keys = Object.keys(item)
-      const Values = Object.values(item)
-      if(item["Brand Desc"]){
+      const Keys = Object.keys(item);
+      const Values = Object.values(item);
+      if (item["Brand Desc"]) {
         ProdBrandLabelData.push(item["Brand Desc"]);
       }
       if (Keys[11]) {
@@ -467,89 +526,84 @@ const [prdBrand, setPrdBrand] = useState("")
     }
   }
 
-
   //Product Segment Table Data
 
-// console.log("Product Segment", prdSegment)
+  // console.log("Product Segment", prdSegment)
 
-const PrdSegTableData =[]
+  const PrdSegTableData = [];
 
-// if(prdSegment){
-//     prdSegment.forEach((item)=>{
-//       const Keys = Object.keys(item)
-//       const Values = Object.values(item)
-//       console.log(Keys)
-//       console.log(Values)
-//       if(Keys[0] && Keys[2] && Keys[4] && Keys[5] && Keys[6] && Keys[7] && Keys[8] && Keys[11] && Keys[15] && Keys[23] && Keys[25])
-//       PrdSegTableData.push(item)
-//     })
-// }
+  // if(prdSegment){
+  //     prdSegment.forEach((item)=>{
+  //       const Keys = Object.keys(item)
+  //       const Values = Object.values(item)
+  //       console.log(Keys)
+  //       console.log(Values)
+  //       if(Keys[0] && Keys[2] && Keys[4] && Keys[5] && Keys[6] && Keys[7] && Keys[8] && Keys[11] && Keys[15] && Keys[23] && Keys[25])
+  //       PrdSegTableData.push(item)
+  //     })
+  // }
 
+  // if (prdSegment) {
+  //   prdSegment.forEach((item) => {
+  //     const Keys = Object.keys(item);
+  //     const Values = Object.values(item);
+  //     console.log("Keys", Values)
+  //     const targetIndices = [0, 2, 4, 5, 6, , , 11, 15, 23, 6 , 7, 25, 8, 6,];
+  //     const targetKeys = targetIndices.map(index => Keys[index]);
 
-// if (prdSegment) {
-//   prdSegment.forEach((item) => {
-//     const Keys = Object.keys(item);
-//     const Values = Object.values(item);
-//     console.log("Keys", Values)
-//     const targetIndices = [0, 2, 4, 5, 6, , , 11, 15, 23, 6 , 7, 25, 8, 6,];
-//     const targetKeys = targetIndices.map(index => Keys[index]);
-    
-//     const filteredItem = Object.fromEntries(
-//       Object.entries(item).filter(([key, value]) => targetKeys.includes(key))
-//     );
+  //     const filteredItem = Object.fromEntries(
+  //       Object.entries(item).filter(([key, value]) => targetKeys.includes(key))
+  //     );
 
-//     PrdSegTableData.push(filteredItem);
-//   });
-// }
+  //     PrdSegTableData.push(filteredItem);
+  //   });
+  // }
 
-// if (prdSegment) {
-//   prdSegment.forEach((item) => {
-//     const Keys = Object.keys(item);
-//     const Values = Object.values(item)
-//     console.log("Keys", Keys)
-//     console.log("Values", Values)
+  // if (prdSegment) {
+  //   prdSegment.forEach((item) => {
+  //     const Keys = Object.keys(item);
+  //     const Values = Object.values(item)
+  //     console.log("Keys", Keys)
+  //     console.log("Values", Values)
 
-//     const targetIndices = [0, 2, 4, 5, 6, 11, 15, 23, 6, 7, 25, 8, 6];
-//     const filteredItem = {};
+  //     const targetIndices = [0, 2, 4, 5, 6, 11, 15, 23, 6, 7, 25, 8, 6];
+  //     const filteredItem = {};
 
-//     targetIndices.forEach((index) => {
-//       const key = Keys[index];
-//       if (key) {
-//         filteredItem[key] = item[key];
-//       }
-//     });
+  //     targetIndices.forEach((index) => {
+  //       const key = Keys[index];
+  //       if (key) {
+  //         filteredItem[key] = item[key];
+  //       }
+  //     });
 
-//     PrdSegTableData.push(filteredItem);
-//   });
-// }
+  //     PrdSegTableData.push(filteredItem);
+  //   });
+  // }
 
-if (prdSegment) {
-  prdSegment.forEach((item) => {
-    const Keys = Object.keys(item)
-    const Values = Object.values(item)
-    // console.log("Keys", Keys)
-    // console.log("Values", Values)
-    const targetIndices = [0, 2, 4, 5, 6, 0, 11, 15, 23, 0, 0,7, 25, 8,0,0,0,0];
-    
-    const filteredItem = targetIndices.reduce((acc, index) => {
-      const key = Object.keys(item)[index];
-      if (key) {
-        acc[key] = item[key];
-      }
-      return acc;
-    }, {});
+  if (prdSegment) {
+    prdSegment.forEach((item) => {
+      const Keys = Object.keys(item);
+      const Values = Object.values(item);
+      // console.log("Keys", Keys)
+      // console.log("Values", Values)
+      const targetIndices = [0, 2, 4, 5, 6, 0, 11, 15, 23, 0, 0, 7, 25, 8, 0, 0, 0, 0];
 
-    PrdSegTableData.push(filteredItem);
-  });
-}
+      const filteredItem = targetIndices.reduce((acc, index) => {
+        const key = Object.keys(item)[index];
+        if (key) {
+          acc[key] = item[key];
+        }
+        return acc;
+      }, {});
 
+      PrdSegTableData.push(filteredItem);
+    });
+  }
 
-// console.log("ModData", PrdSegTableData);
-console.log("PropsAll", allTable)
+  // console.log("ModData", PrdSegTableData);
+  console.log("PropsAll", allTable);
 
-
-  
-// ***************************************** JSX START *******************************************************************/
+  // ***************************************** JSX START *******************************************************************/
 
   return (
     <>
@@ -687,7 +741,7 @@ console.log("PropsAll", allTable)
             datasets={ProdCatGraphData || []}
           ></ChartOne>
 
-           {/* Product Category Table  */}
+          {/* Product Category Table  */}
 
           <TableChartTwo
             heading={"Product Category"}
@@ -696,7 +750,6 @@ console.log("PropsAll", allTable)
             lab={labelNameTwo}
             datas={prdCategory || []}
           ></TableChartTwo>
-
         </div>
 
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
@@ -707,7 +760,7 @@ console.log("PropsAll", allTable)
             datasets={ProdBrandGraphData || []}
           ></ChartOne>
 
-           {/* Product Brand Table  */}
+          {/* Product Brand Table  */}
 
           <TableChartTwo
             heading={"Product Brand"}
