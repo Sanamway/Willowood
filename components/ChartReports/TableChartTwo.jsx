@@ -8,7 +8,8 @@ import GraphTable from "./GraphTable";
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
 
 const TableChartTwo = (props) => {
-  const { lab, datas, heading } = props;
+  const {  datas, heading } = props;
+  console.log("njk", props)
   const [height, setHeight] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -63,7 +64,7 @@ const TableChartTwo = (props) => {
         </div>
         {!height && (
           <GraphTable
-            className={`min-w-full lg:max-h-64  ${fullScreen ? "lg:max-h-[84%]" : ""} px-2`}
+             className={`min-w-full lg:max-h-64  ${fullScreen ? "lg:max-h-[84%]" : ""} px-2`}
             data={datas ||[]}
             heading={props.heading}
           />
