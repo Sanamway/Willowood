@@ -16,7 +16,7 @@ const SaleCards = () => {
     let timer = setTimeout(() => {
       setData(sampleData);
       setData2(sampleData2);
-    }, 9000);
+    }, 6000);
     return () => {
       clearTimeout(timer);
     };

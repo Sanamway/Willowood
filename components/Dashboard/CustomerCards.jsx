@@ -11,12 +11,15 @@ const CustomerCards = () => {
     { name: "New Customers", data: "675" },
     { name: "Inactive Customers", data: "675" },
     { name: "Customers Overdue", data: "675" },
+    { name: "Customers Overdue", data: "675" },
+    { name: "Customers Overdue", data: "675" },
+    { name: "Customers Overdue", data: "675" }
   ];
 
   useEffect(() => {
     let timer = setTimeout(() => {
       setData(sampleData);
-    }, 9000);
+    }, 4000);
     return () => {
       clearTimeout(timer);
     };
@@ -26,7 +29,10 @@ const CustomerCards = () => {
     return (
       <>
         {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="bg-white p-1 flex flex-col items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
+          <div
+            key={index}
+            className="bg-white p-1 flex flex-col items-center justify-center gap-4 rounded-md shadow-md text-white text-center"
+          >
             <div className="flex items-start justify-start w-full px-1 p-1">
               <div className="w-3/4 px-4 h-4 bg-gray-300 rounded-md animate-pulse"></div>
             </div>
@@ -42,10 +48,13 @@ const CustomerCards = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3  ">
         {data?.length ? (
-          data.map((item, index) => (
-            <div key={index} className="bg-white p-1 flex flex-col items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
+          data.slice(0, 4).map((item, index) => (
+            <div
+              key={index}
+              className="bg-white p-1 flex flex-col items-center justify-center gap-4 rounded-md shadow-md text-white text-center"
+            >
               <div className="icon ">
                 <h2 className="text-gray-500 font-bold  text-sm whitespace-nowrap">{item.name}</h2>
               </div>
@@ -60,7 +69,6 @@ const CustomerCards = () => {
         ) : (
           <Skeleton />
         )}
-
       </div>
     </>
   );
