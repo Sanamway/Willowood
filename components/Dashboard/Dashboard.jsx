@@ -10,6 +10,8 @@ import RecentOrder from "./RecentOrder";
 import StaCards from "./StaCards";
 import GraphCard from "./GraphCard";
 import ProductCards from "./ProductCards";
+import { LiaFileDownloadSolid } from "react-icons/lia";
+import ViewCard from "./ViewCards";
 
 const Dashboard = () => {
   return (
@@ -58,7 +60,7 @@ const Dashboard = () => {
 
           {/* right wrapper  */}
 
-          <div className="rightwrapper h-64 flex-1    mt- border-green rounded-md">
+          <div className="rightwrapper h-64 flex-1  mt- border-green rounded-md">
             {/* credit balance  */}
 
             <CreditBalance></CreditBalance>
@@ -78,12 +80,23 @@ const Dashboard = () => {
         </div>
 
         {/* bottom sale products  */}
-        <div className="h- bg-white rounded-l-md rounded-r-md flex items-center px-2  mt-3">
-        <h2 className="text-[0.85rem] font-semibold py-2 ">Top Sale Products</h2>
-      </div>
-        <div className="filterwrap w-full px-4 mt- h-32  font-arial  rounded-b-md bg-white pt-2.5 pb-4"
-          style={{ boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)" }}>
+        <div className="h- bg-white rounded-l-md rounded-r-md flex justify-between w-full items-center px-2  mt-3">
+          <h2 className="text-[0.85rem] font-semibold py-2 ">Top Sale Products</h2>
+          <button className="flex items-center bg-[#9BB456] rounded-sm py-1 px-1 gap-1">
+            <LiaFileDownloadSolid className="text-white" size={20}></LiaFileDownloadSolid>
+            <h2 className="text-white text-[0.7rem] font-bold">Export Excel</h2>
+          </button>
+        </div>
+        <div
+          className="filterwrap w-full flex items-center justify-center  font-arial  rounded-b-md bg-white  py-1 "
+          style={{ boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)" }}
+        >
           <ProductCards></ProductCards>
+        </div>
+
+        {/* View Cards  */}
+        <div className="flex items-center justify-between w-full">
+          <ViewCard></ViewCard>
         </div>
       </section>
     </>
