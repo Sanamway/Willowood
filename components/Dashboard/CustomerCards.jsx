@@ -7,11 +7,11 @@ const CustomerCards = () => {
   const [data, setData] = useState([]);
 
   const sampleData = [
-    { name: "Active Members", data: "675" },
-    { name: "New Customers", data: "675" },
-    { name: "Inactive Customers", data: "675" },
-    { name: "Customers Overdue", data: "675" },
-    { name: "Customers Overdue", data: "675" },
+    { name: "Active Customers", order:"0", data: "675" },
+    { name: "New Customers", order:"This Month", data: "96" },
+    { name: "Inactive Customers", order:"0 Order This Month", data: "78" },
+    { name: "Customers with Overdue", order:"0", data: "45" },
+    { name: "Customers Overdue",order:"", data: "675" },
     { name: "Customers Overdue", data: "675" },
     { name: "Customers Overdue", data: "675" }
   ];
@@ -53,13 +53,16 @@ const CustomerCards = () => {
           data.slice(0, 4).map((item, index) => (
             <div
               key={index}
-              className="bg-white p-1 flex flex-col items-center justify-center gap-4 rounded-md shadow-md text-white text-center"
+              className="bg-white p-1  flex flex-col items-center justify-start gap-4 rounded-md shadow-md text-white text-center"
             >
-              <div className="icon ">
-                <h2 className="text-gray-500 font-bold  text-sm whitespace-nowrap">{item.name}</h2>
+              <div className="icon">
+                <h2 className="text-gray-600 font-semibold text-[0.72rem] whitespace-nowrap ">{item.name}</h2>
+                {item.order !=="0" ?(<h2 className={`text-gray-400 text-[0.6rem] `}>({item.order})</h2>):
+                (<h2 className={`text-gray-400 text-[0.6rem] py-2 invisible`}></h2>)
+                }
               </div>
-              <div className="flex items-center justify-between w-full px-2">
-                <h2 className="text-xl text-[#3B6ADB] font-bold ">675</h2>
+              <div className="flex items-center  justify-between w-full px-2">
+                <h2 className="text-xl text-[#3B6ADB] font-bold cursor-pointer ">{item.data}</h2>
                 <div className="bg-[#EBEFFD] px-1.5 py-1 rounded-md">
                   <RiGroupLine className="text-[#5d7eda] " size={18}></RiGroupLine>
                 </div>

@@ -15,33 +15,33 @@ const SaleSummary = () => {
                 <FaCalendarAlt size={20} className="text-blue-400 bg-blue-100"></FaCalendarAlt>
               </div>
               <div className="flex  items-start flex-col ">
-                <h2 className="text-[#3A322E]">Current Year Till Date Sale</h2>
+                <h2 className="text-[0.75rem] text-gray-600 font-semibold">Current Year Till Date Sale</h2>
                 <h2>2023</h2>
               </div>
             </div>
 
-            <h2>$93,485,62</h2>
+            <h2 className="font-bold">₹93,485,62</h2>
           </div>
 
           <div className="flex items-center justify-between w-full text-[0.75rem] text-gray-600">
             <div className="flex items-center gap-2">
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
-                <h2 className="text-[#3A322E]">Last Year Till Date Sale</h2>
-                <h2>2023</h2>
+                <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Year Till Date Sale</h2>
+                <h2>26-12-2022</h2>
               </div>
             </div>
-            <h2>$93,485,62</h2>
+            <h2 className="font-bold">₹93,485,62</h2>
           </div>
           <div className="flex items-center justify-between w-full text-[0.75rem] text-[#3A322E]">
             <div className="flex items-center gap-2">
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
-                <h2 className="text-[#3A322E]">Last Year Total Sale</h2>
-                <h2>2023</h2>
+                <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Year Total Sale</h2>
+                <h2>2022</h2>
               </div>
             </div>
-            <h2>$93,485,62</h2>
+            <h2 className="font-bold">₹93,485,62</h2>
           </div>
 
           <div className="flex items-center justify-end w-full text-gray-600">
@@ -58,33 +58,33 @@ const SaleSummary = () => {
                 <LuCalendarClock size={20} className="text-orange-400"></LuCalendarClock>
               </div>
               <div className="flex  items-start flex-col ">
-                <h2 className="">Current Month Till Date Sale</h2>
-                <h2>2023</h2>
+                <h2 className="text-[0.75rem] text-gray-600 font-semibold">Current Month Till Date Sale</h2>
+                <h2>December</h2>
               </div>
             </div>
 
-            <h2>$93,485,62</h2>
+            <h2 className="font-bold">₹14,380.62</h2>
           </div>
 
           <div className="flex items-center justify-between w-full text-[0.75rem] text-gray-600">
             <div className="flex items-center gap-2">
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
-                <h2 className="">Last Month Till Date Sale</h2>
-                <h2>2023</h2>
+                <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Month Till Date Sale</h2>
+                <h2>26-12-2022</h2>
               </div>
             </div>
-            <h2>$93,485,62</h2>
+            <h2 className="font-bold">₹19,283.10</h2>
           </div>
           <div className="flex items-center justify-between w-full text-[0.75rem] text-gray-600">
             <div className="flex items-center gap-2">
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
-                <h2 className="">Last Month Total Sale</h2>
-                <h2>2023</h2>
+                <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Month Total Sale</h2>
+                <h2>12-2022</h2>
               </div>
             </div>
-            <h2>$93,485,62</h2>
+            <h2 className="font-bold">₹19,283.10</h2>
           </div>
           <div className="flex items-center justify-end w-full text-gray-600">
             <h2 className="text-[0.6rem]">

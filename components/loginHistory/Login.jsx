@@ -3,7 +3,7 @@ import { FaUser } from "react-icons/fa";
 import { BiSolidLockAlt } from "react-icons/bi";
 import { AiFillGoogleCircle, AiFillTwitterCircle } from "react-icons/ai";
 import { BsFacebook } from "react-icons/bs";
-import Logo from "../../public/Willowood.png";
+import Logo from "../../public/NewLogo.png";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -195,7 +195,7 @@ const Login = () => {
                 </button>
               </div>
 
-              <div className="googleWrap flex items-center flex-col justify-center mt-10">
+              {/* <div className="googleWrap flex items-center flex-col justify-center mt-10">
                 <h2 className="text-gray-600">or sign up using</h2>
                 <div className="icons flex items-center justify-center gap-2 mt-2 mb-4">
                   <BsFacebook className="text-blue-600" size={26}></BsFacebook>
@@ -209,7 +209,7 @@ const Login = () => {
                     size={29}
                   ></AiFillGoogleCircle>
                 </div>
-              </div>
+              </div> */}
             </form>
           </div>
         </div>

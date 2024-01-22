@@ -59,8 +59,9 @@ let randomizedDataSet = shuffleArray(dataSet);
         <div className="bg-white p-2 h-auto flex-1 md:flex items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
           <div className="flex flex-col w-full">
             <div className="text-left p-1.5 flex items-center justify-between w-full ">
-              <h2 className="text-[0.78rem]  text-gray-600 font-bold">Recent Order Status</h2>
+              <h2 className="text-[0.78rem]  text-gray-600 font-bold">Diamond, Gold and Bronze</h2>
               <div className="flex items-center">
+                <label className="text-gray-500 text-[0.5rem] px-2 font-bold">Based On Category</label>
                 <input
                   type="checkbox"
                   id="toggleSwitch"
@@ -70,13 +71,13 @@ let randomizedDataSet = shuffleArray(dataSet);
                 />
                 <label
                   htmlFor="toggleSwitch"
-                  className={`cursor-pointer relative w-10 h-4 rounded-full ${
-                    isChecked ? "bg-blue-500" : "bg-gray-400"
+                  className={`cursor-pointer  relative w-10 h-4 rounded-full ${
+                    isChecked ? "bg-gray-100  border-2 border-gray-400 " : "bg-white border-2 border-gray-400"
                   } transition-all duration-300`}
                 >
                   <div
-                    className={`absolute left-1 top-1 w-2 h-2 rounded-full bg-white transition-all duration-300 transform ${
-                      isChecked ? "translate-x-6" : "translate-x-0"
+                    className={`absolute left-1 top-[3px] w-2 h-2 rounded-full bg-teal-500 transition-all duration-300 transform ${
+                      isChecked ? "translate-x-5" : "translate-x-0"
                     }`}
                     id="toggleSwitchHandle"
                   ></div>

@@ -16,7 +16,7 @@ import ViewCard from "./ViewCards";
 const Dashboard = () => {
   return (
     <>
-      <section className="w-full px-6 bg-[#f0eff2] min-h-screen  pb-12 font-arial">
+      <section className="w-full px-3 bg-[#f0eff2] min-h-screen  pb-12 font-arial">
         {/* typography  */}
         <div className="flex items-center justify-between w-full px-1">
           <h2 className="font-arial text-lg font-bold text-gray-500 mt-2">Dashboard</h2>
@@ -31,9 +31,9 @@ const Dashboard = () => {
           <FilterComponent></FilterComponent>
         </div>
         {/* cards and graphs  */}
-        <div className="cardgraphwrapper w-full px- mt-4 flex lg:flex-row flex-col gap-4 font-arial   rounded-md">
+        <div className="cardgraphwrapper w-full px- mt-4 flex lg:flex-row flex-col gap-3 font-arial   rounded-md">
           {/* left wrapper  */}
-          <div className="leftwrapper lg:w-[60%]  rounded-md ">
+          <div className="leftwrapper lg:w-[65%]  rounded-md ">
             {/* customer four cards  */}
 
             <CustomerCards></CustomerCards>

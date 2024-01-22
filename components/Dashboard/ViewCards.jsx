@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { GiNetworkBars } from "react-icons/gi";
 import { FaFileDownload } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa6";
 import { LuClipboardList } from "react-icons/lu";
-import { BsFillBoxSeamFill } from "react-icons/bs";
 import { RxCodesandboxLogo } from "react-icons/rx";
 import { PiQrCode } from "react-icons/pi";
 const ViewCard = () => {
   const [data, setData] = useState([]);
-  const [data2, setData2] = useState([]);
 
   const sampleData = [
     { name: "Download Ledger", data: "67Cr", icon: FaFileDownload },
@@ -20,7 +17,6 @@ const ViewCard = () => {
   useEffect(() => {
     let timer = setTimeout(() => {
       setData(sampleData);
-      //   setData2(sampleData2);
     }, 6000);
     return () => {
       clearTimeout(timer);
