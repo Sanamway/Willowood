@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { RiGroupLine } from "react-icons/ri";
-import { HiOutlineUserGroup } from "react-icons/hi2";
-import { IoNewspaperOutline } from "react-icons/io5";
+import PopupModals from "./Popup";
+import { categoryData, regionData, customerData } from "./sampleData";
 
 const CustomerCards = () => {
   const [data, setData] = useState([]);
@@ -46,6 +46,13 @@ const CustomerCards = () => {
     );
   }
 
+  const [open, setOpen] = useState(true)
+
+  const closeModal = ()=>{
+    console.log("Open", open)
+  setOpen((prev)=> !prev)
+  }
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3  ">
@@ -62,7 +69,7 @@ const CustomerCards = () => {
                 }
               </div>
               <div className="flex items-center  justify-between w-full px-2">
-                <h2 className="text-xl text-[#3B6ADB] font-bold cursor-pointer ">{item.data}</h2>
+                <h2 className="text-xl text-[#3B6ADB] font-bold cursor-pointer " onClick={()=> setOpen(true)}>{item.data}</h2>
                 <div className="bg-[#EBEFFD] px-1.5 py-1 rounded-md">
                   <RiGroupLine className="text-[#5d7eda] " size={18}></RiGroupLine>
                 </div>
@@ -73,6 +80,7 @@ const CustomerCards = () => {
           <Skeleton />
         )}
       </div>
+     {open && <PopupModals customer={customerData||[]} closeModal={closeModal} regionData = {regionData||[]} catData = {categoryData||[]}></PopupModals>}
     </>
   );
 };

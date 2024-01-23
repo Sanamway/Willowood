@@ -467,7 +467,7 @@ const Employee = () => {
                     <Image
                       className="  h-[3.1rem] w-[3.1rem] rounded-full   "
                       src={Profile}
-                      alt=""
+                      alt="img"
                     />
                   </div>
                   <Dialog.Panel className="relative max-h-full overflow-hidden  font-arial  max-w-md transform  rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">

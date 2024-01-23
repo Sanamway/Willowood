@@ -23,7 +23,7 @@ const RecentOrder = () => {
     return (
       <>
         {Array.from({ length: 4 }).map((_, index) => (
-          <tr>
+          <tr key={index}>
             <td className="px-2 py-1 text-left whitespace-nowrap border">
               <div className="w-3/4 h-3 bg-gray-300 rounded-md animate-pulse"></div>
             </td>
@@ -68,7 +68,7 @@ const RecentOrder = () => {
                 <tbody className="bg-white divide-y divide-gray-200 break-normal ">
                   {data.length ? (
                     data.map((item) => (
-                      <tr>
+                      <tr key={item?.id}>
                         <td
                           className={`px-2 text-left whitespace-nowrap py-1 text-[0.6rem] text-gray-900 border `}
                         >

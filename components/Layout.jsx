@@ -280,6 +280,7 @@ const Layout = ({ children }) => {
                   <div className="lg:max-w-full lg:max-h-full">
                     <Image
                       src={WillLogo}
+                      alt="logo"
                       className="lg:h-[3.4rem] w-2/3 lg:w-full object-cover"
                     ></Image>
                   </div>

@@ -510,7 +510,7 @@ const AdditionalInfo = (props) => {
         </div>
         <div className="wrap ">
           <div className=" w-full px-2 profpic relative group">
-            <Image src={""} className="h-32 w-32 rounded bg-gray-200" width={100} height={100} />
+            <Image src={""} className="h-32 w-32 rounded bg-gray-200" alt="img" width={100} height={100} />
             <input type="file" accept="image/*" style={{ display: "none" }} id="fileInput" />
             <label
               htmlFor="fileInput "

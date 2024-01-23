@@ -42,7 +42,7 @@ const ProductCards = () => {
           {sampleData.map((item, i) => (
             <div key={i} className="img flex items-center justify-center mt-1    border-none cursor-pointer">
               <div className="image">
-                <img className="object-contain w-24 h-24" src={item.image} alt="" />
+                <img className="object-contain w-24 h-24" src={item.image} alt="image" />
               </div>
               <div className="content flex flex-col">
                 <h2 className="text-[1rem] text-gray-600">{item.title}</h2>
