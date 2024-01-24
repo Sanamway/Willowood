@@ -14,7 +14,7 @@ const StaCards = () => {
   useEffect(() => {
     let timer = setTimeout(() => {
       setData(sampleData);
-    }, 9000);
+    }, 1000);
     return () => {
       clearTimeout(timer);
     };

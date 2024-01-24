@@ -1,10 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BsCashCoin } from "react-icons/bs";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { GiAlarmClock } from "react-icons/gi";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
+import TotalOutStandPop from "./TotalOsPopup";
+import { totalOsData } from "./sampleData";
+import TotalOverDueAmtPop from "./TotalOverDueAmtPop";
 
 const TotalCards = () => {
+  const [open, setOpen] = useState(false);
+  const [openTwo, setOpenTwo] = useState(false);
+
+  const closeModal = () => {
+    setOpen(false);
+    setOpenTwo(false);
+  };
+
+  const handlePopup = (param) => {
+    if (param == "Total Outstanding") {
+      setOpen(true);
+    }
+    if (param == "Total Overdue") {
+      setOpenTwo(true);
+    }
+  };
+
   return (
     <>
       <div className="totalwrapper mt-2">
@@ -20,7 +40,10 @@ const TotalCards = () => {
                   <h2 className="text-[0.78rem] text-gray-600 font-bold">&#8377;24,96,843.55</h2>
                 </div>
               </div>
-              <div className="rounded-full shadow-md cursor-pointer">
+              <div
+                onClick={() => handlePopup("Total Outstanding")}
+                className="rounded-full shadow-md cursor-pointer"
+              >
                 <MdKeyboardArrowRight className="text-gray-800" size={22}></MdKeyboardArrowRight>
               </div>
             </div>
@@ -39,7 +62,10 @@ const TotalCards = () => {
                   <h2 className="text-[0.78rem] text-gray-600 font-bold">&#8377;23,29,150.85</h2>
                 </div>
               </div>
-              <div className="rounded-full shadow-md cursor-pointer">
+              <div
+                onClick={() => handlePopup("Total Overdue")}
+                className="rounded-full shadow-md cursor-pointer"
+              >
                 <MdKeyboardArrowRight className="text-gray-800" size={22}></MdKeyboardArrowRight>
               </div>
             </div>
@@ -63,6 +89,8 @@ const TotalCards = () => {
             </div>
           </div>
         </div>
+        {open && <TotalOutStandPop closeModal={closeModal} dueData={totalOsData || []}></TotalOutStandPop>}
+        {openTwo && <TotalOverDueAmtPop closeModal={closeModal} dueData={totalOsData || []}></TotalOverDueAmtPop>}
       </div>
     </>
   );

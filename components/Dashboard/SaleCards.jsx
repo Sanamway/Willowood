@@ -7,16 +7,16 @@ const SaleCards = () => {
 
   const sampleData = [{ name: "Total Sales", data: "67Cr" }];
   const sampleData2 = [
-    { name: "Diamond", data: "43 Cr" },
-    { name: "Gold", data: "23 Cr" },
-    { name: "Bronze", data: "35 Cr" }
+    { name: "X-Factor", data: "43 Cr" },
+    { name: "Core", data: "23 Cr" },
+    { name: "Other Products", data: "35 Cr" }
   ];
 
   useEffect(() => {
     let timer = setTimeout(() => {
       setData(sampleData);
       setData2(sampleData2);
-    }, 6000);
+    }, 1000);
     return () => {
       clearTimeout(timer);
     };
@@ -88,7 +88,7 @@ const SaleCards = () => {
                   index == 1 ? "md:border-r-2 md:border-l-2 px-2" : ""
                 }`}
               >
-                <h2 className="text-gray-500 text-sm font-bold"> {item.name}: </h2>
+                <h2 className="text-gray-500 text-sm font-bold whitespace-nowrap"> {item.name}: </h2>
                 <h2 className="text-lg text-[#ADBD5B] font-bold whitespace-nowrap">{item.data}</h2>
               </div>
             ))

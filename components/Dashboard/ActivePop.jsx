@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
+import { useSpring, animated } from "react-spring";
 
 const PopupModals = ({ closeModal, regionData, catData }) => {
   const [selected, setSelected] = useState("category");
@@ -64,10 +65,15 @@ const PopupModals = ({ closeModal, regionData, catData }) => {
     );
   }
 
+  const springProps = useSpring({
+    from: { opacity: 0, scale: 0.8 },
+    to: { opacity: 1, scale: 1 },
+  });
+
   return (
     <>
-      <div className=" bg-gray-300/40 opacity-1  from-gray-50 to-transparent z-10 w-full flex items-center justify-center min-h-screen fixed top-0 right-0 left-0 bottom-0 ">
-        <div className="mainContainer lg:w-[55%] w-full mx-2 h-auto   bg-white rounded-lg  ">
+      <animated.div  className=" bg-gray-300/40 opacity-1 backdrop-blur-[4px]  from-gray-50 to-transparent z-10 w-full flex items-center justify-center min-h-screen fixed top-0 right-0 left-0 bottom-0 ">
+        <animated.div style={springProps} className="mainContainer lg:w-[55%] w-full mx-2 h-auto   bg-white rounded-lg  ">
           <div className="flex items-center justify-between py-1.5 px-2 border-b-2">
             <div className="px-2 text-[0.89rem] font-semibold text-gray-500 py-1">Active Customer</div>
             <button className="" onClick={closeModal}>
@@ -270,8 +276,8 @@ const PopupModals = ({ closeModal, regionData, catData }) => {
             </div>
           )}
           
-        </div>
-      </div>
+        </animated.div>
+      </animated.div>
     </>
   );
 };

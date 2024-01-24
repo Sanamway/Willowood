@@ -15,10 +15,10 @@ const GraphCard = () => {
   ChartJS.register(ArcElement, Tooltip, Legend);
 
   const data = {
-    labels: ["Diamond", "Gold", "Bronze", "Others"],
+    labels: ["X-Factor", "Core", "Other Products"],
     datasets: [
       {
-        label: "# of Votes",
+        label: "",
         data: dataSets,
         backgroundColor: ["#FC9F40", "#EB4654", "#1C6C9D", "#34D0DC"]
       }
@@ -34,7 +34,7 @@ const GraphCard = () => {
 
 useEffect(()=>{
   if(isChecked){
-    setDataSet([200, 200, 50, 50])
+    setDataSet([200, 200, 50])
   }else{
     setDataSet(randomizedDataSet)
   }
@@ -50,7 +50,7 @@ function shuffleArray(array) {
   return array;
 }
 
-let dataSet = [100, 20, 30, 70];
+let dataSet = [100, 20, 30];
 let randomizedDataSet = shuffleArray(dataSet);
 
   return (
@@ -59,7 +59,7 @@ let randomizedDataSet = shuffleArray(dataSet);
         <div className="bg-white p-2 h-auto flex-1 md:flex items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
           <div className="flex flex-col w-full">
             <div className="text-left p-1.5 flex items-center justify-between w-full ">
-              <h2 className="text-[0.78rem]  text-gray-600 font-bold">Diamond, Gold and Bronze</h2>
+              <h2 className="text-[0.78rem]  text-gray-600 font-bold">X-Factor, Core and Other Products</h2>
               <div className="flex items-center">
                 <label className="text-gray-500 text-[0.5rem] px-2 font-bold">Based On Category</label>
                 <input

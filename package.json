@@ -30,6 +30,7 @@
     "react-responsive-carousel": "^3.2.23",
     "react-select": "^5.8.0",
     "react-slick": "^0.29.0",
+    "react-spring": "^9.7.3",
     "sheetjs-style": "^0.15.8",
     "solid-icons": "^1.0.12",
     "xlsx": "^0.18.5",

@@ -13,7 +13,7 @@ const RecentOrder = () => {
   useEffect(() => {
     let timer = setTimeout(() => {
       setData(sampleData);
-    }, 4000);
+    }, 1000);
     return () => {
       clearTimeout(timer);
     };
