@@ -6,77 +6,33 @@ const GraphTable = (props) => {
   //function to get Keys
 
   const keys = Object?.keys(data[0] || []);
-  console.log("ur", keys[2]);
+ 
 
-  const [resultSum, setresultSum] = useState({
-    "FY Sales Val 21-22": 0,
-    "FY Sales Val 22-23": 0,
-    "Annual Budget Qty": 0,
-    "Annual Budget Val": 0,
-    "MTD Sale Qty": 0,
-    "MTD Budget Val": 0,
-    "Dec 23-24 Revised Fcst Val": 0,
-    "Dec Budget Val 23-24": 0,
-    "MTD Actual Sale Value": 0,
-    "YTD Sale Qty": 0,
-    "YTD Budget Value": 0,
-    "YTD Actual Sale Value": 0,
-    "Ytd Net Sale Qty  23-24": 0,
-    " MTD_sale": 0,
-    "Ytd Net Sale Value  23-24": 0,
-  });
+  const [resultSum, setresultSum] = useState({});
+  const dataSum = (tableData) => {
+    if (!tableData.length) return;
 
-  const calculateSum = (data) => {
-    const sum = data.reduce(
-      (acc, entry) => {
-        acc["FY Sales Val 21-22"] += Number(entry["FY Sales Val 21-22"]) || 0;
-        acc["FY Sales Val 22-23"] += Number(entry["FY Sales Val 22-23"]) || 0;
-        acc["Annual Budget_Qty"] += Number(entry["Annual Budget Qty"]) || 0;
-        acc["Annual Budget Val"] += Number(entry["Annual Budget Val"]) || 0;
-        acc["MTD Sale Qty"] += Number(entry["MTD Sale Qty"]) || 0;
-        acc["MTD Budget Val"] += Number(entry["MTD Budget Val"]) || 0;
-        acc["Dec 23-24 Revised Fcst Val"] +=
-          Number(entry["Dec 23-24 Revised Fcst Val"]) || 0;
-        acc["Dec Budget Val 23-24"] +=
-          Number(entry["Dec Budget Val 23-24"]) || 0;
-        acc["MTD Actual Sale Value"] +=
-          Number(entry["MTD Actual Sale Value"]) || 0;
-        acc["YTD Sale Qty"] += Number(entry["YTD Sale Qty"]) || 0;
-        acc["YTD Budget Value"] += Number(entry["YTD Budget Value"]) || 0;
-        acc["YTD Actual Sale Value"] +=
-          Number(entry["YTD Actual Sale Value"]) || 0;
-        acc["MTD_sale"] += Number(entry["MTD_sale"]) || 0;
-        acc["Ytd Net Sale Qty  23-24"] +=
-          Number(entry["Ytd Net Sale Qty  23-24"]) || 0;
-        acc["Ytd Net Sale Value  23-24"] +=
-          Number(entry["Ytd Net Sale Value  23-24"]) || 0;
-        return acc;
-      },
-      {
-        "FY Sales Val 21-22": 0,
-        "FY Sales Val 22-23": 0,
-        "Annual Budget Qty": 0,
-        "Annual Budget Val": 0,
-        "MTD Sale Qty": 0,
-        "MTD Budget Val": 0,
-        "Dec Budget Val 23-24": 0,
-        "Dec 23-24 Revised Fcst Val": 0,
-        "MTD Actual Sale Value": 0,
-        "YTD Sale Qty": 0,
-        "YTD Budget Value": 0,
-        "YTD Actual Sale Value": 0,
-        MTD_sale: 0,
-        "Ytd Net Sale Qty  23-24": 0,
-        "Ytd Net Sale Value  23-24": 0,
-      }
-    );
+    // Initialize an object to store the sum of values for each key
+    const sumObject = {};
 
-    setresultSum(sum);
+    // Loop through each object in the data array
+    data.forEach((item, index) => {
+      // Loop through each key in the object
+      Object.keys(item).forEach((key) => {
+        // Check if the key exists in the sumObject, if not, initialize it to 0
+        if (!sumObject[key]) {
+          sumObject[key] = 0;
+        }
+
+        // Add the value of the current object's key to the sumObject's key
+        sumObject[key] += Number(item[key]);
+      });
+    });
+    setresultSum(sumObject);
   };
-
+ 
   useEffect(() => {
-    if (!data.length) return;
-    calculateSum(data);
+    dataSum(data);
   }, [data]);
 
   const [mounted, setMounted] = useState(false);
@@ -349,43 +305,43 @@ const GraphTable = (props) => {
                   Total ( All Values in Cr.)
                 </td>
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
-                  {parseFloat(resultSum["FY Sales Val 21-22"]).toFixed(2)}
+                  {parseFloat(resultSum[Object.keys(resultSum)[2]]).toFixed(2)}
                 </td>
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
-                  {parseFloat(resultSum["FY Sales Val 22-23"]).toFixed(2)}
+                  {parseFloat(resultSum[Object.keys(resultSum)[4]]).toFixed(2)}
                 </td>
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
-                  {parseFloat(resultSum["Annual Budget Qty"])}
+                  {parseFloat(resultSum[Object.keys(resultSum)[5]]).toFixed(2)}
                 </td>
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
-                  {parseFloat(resultSum["Annual Budget Val"])}
-                </td>
-                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
-                  {""}
-                </td>
-                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
-                  {parseFloat(resultSum["Dec Budget Val 23-24"])}
-                </td>
-                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
-                  {parseFloat(resultSum["Dec 23-24 Revised Fcst Val"])}
-                </td>
-                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
-                  {parseFloat(resultSum["MTD_sale"])}
+                  {parseFloat(resultSum[Object.keys(resultSum)[6]]).toFixed(2)}
                 </td>
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
                   {""}
                 </td>
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[11]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[15]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[23]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
                   {""}
                 </td>
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
-                  {parseFloat(resultSum["Ytd Net Sale Qty  23-24"])}
+                  {""}
                 </td>
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
-                  {parseFloat(resultSum["YTD Budget Value"])}
+                  {parseFloat(resultSum[Object.keys(resultSum)[7]]).toFixed(2)}
                 </td>
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
-                  {parseFloat(resultSum["Ytd Net Sale Value  23-24"])}
+                  {parseFloat(resultSum[Object.keys(resultSum)[25]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[8]]).toFixed(2)}
                 </td>
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
                   {""}

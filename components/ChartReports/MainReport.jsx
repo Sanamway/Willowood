@@ -321,7 +321,7 @@ const MainReport = () => {
       );
     } catch (error) {}
   };
-
+  console.log("lmjk", allTerritoryData);
   useEffect(() => {
     if (
       !filterState.bgId ||
@@ -459,6 +459,7 @@ const MainReport = () => {
           m_year:
             month === "All" || !month ? null : moment(month).format("YYYY-MM"),
           bu_id: buId === "All" || !buId ? null : buId,
+          bg_id: bgId === "All" || !bgId ? null : bgId,
         },
       });
 
@@ -495,6 +496,7 @@ const MainReport = () => {
           m_year:
             month === "All" || !month ? null : moment(month).format("YYYY-MM"),
           z_id: zId === "All" || !zId ? null : zId,
+          bu_id: buId === "All" || !buId ? null : buId,
         },
       });
 
@@ -538,6 +540,7 @@ const MainReport = () => {
           m_year:
             month === "All" || !month ? null : moment(month).format("YYYY-MM"),
           r_id: rId === "All" || !rId ? null : rId,
+          z_id: rId === "All" || !zId ? null : zId,
         },
       });
 
@@ -583,6 +586,7 @@ const MainReport = () => {
           m_year:
             month === "All" || !month ? null : moment(month).format("YYYY-MM"),
           t_id: tId === "All" || !tId ? null : tId,
+          r_id: rId === "All" || !rId ? null : rId,
         },
       });
 
@@ -786,11 +790,6 @@ const MainReport = () => {
     filterState.tId,
   ]);
 
-
-
-
-
-
   const [categoryData, setCategoryData] = useState([]);
   const getCategoryData = async (yr, month, bgId, buId, zId, rId, tId) => {
     console.log(
@@ -962,9 +961,6 @@ const MainReport = () => {
     filterState.tId,
   ]);
 
-
-
-
   const [brandData, setBrandData] = useState([]);
   const getBrandData = async (yr, month, bgId, buId, zId, rId, tId) => {
     console.log(
@@ -1027,6 +1023,7 @@ const MainReport = () => {
         bu_des: businessUnitData.filter(
           (item) => Number(item.bu_id) === Number(filterState.buId)
         )[0]?.business_unit_name,
+        
         bu_id: filterState.buId,
         m_year: month,
         json: true,
@@ -1068,7 +1065,6 @@ const MainReport = () => {
           (item) => Number(item.r_id) === Number(filterState.rId)
         )[0]?.region_name,
         r_id: filterState.rId,
-
         m_year: month,
         json: true,
         analytical_key: "Brand Desc",
@@ -1088,8 +1084,8 @@ const MainReport = () => {
         t_des: allTerritoryData.filter(
           (item) => Number(item.t_id) === Number(filterState.tId)
         )[0]?.territory_name,
-        t_id: filterState.tId,
 
+        t_id: filterState.tId,
         m_year: month,
         json: true,
         analytical_key: "Brand Desc",
@@ -1135,6 +1131,12 @@ const MainReport = () => {
     filterState.rId,
     filterState.tId,
   ]);
+  console.log("mln", filterState);
+
+
+
+
+  
 
 
   return (
@@ -1145,45 +1147,7 @@ const MainReport = () => {
             Target Vs Achievement - Dec 2023 - RP-122023
           </h2>
         </div>
-        {/* <div className="flex px-4 w-[80%] mx-auto items-center justify-center font-arial py-2 flex-wrap gap-4">
-              <input type="date" />
-              <select onChange={(e)=> handleParam(e)} value={param} className="px-4 mx-2 outline-none" >
-                <option value="All">
-                  All 
-                </option>
-                <option value="r">
-                  Region 
-                </option>
-                <option value='z'>
-                  Zone
-                </option>
-              </select>
-              <select className="px-4 mx-2 outline-none" >
-                <option>
-                  B-2-C
-                </option>
-              </select>
-              <select className="px-4 mx-2 outline-none ">
-                <option>
-                  India - 1
-                </option>
-              </select>
-              <select  className="px-4 mx-2 outline-none " >
-                <option>
-                  North Zone
-                </option>
-              </select>
-              <select  className="px-4 mx-2 outline-none ">
-                <option>
-                  Kashmir
-                </option>
-              </select>
-              <select  className="px-4 mx-2 outline-none " >
-                <option className="outline-none">
-                  Kulgam
-                </option>
-              </select>
-           </div> */}
+      
 
         <div className="my-4 flex  flex-col w-full gap-4 px-12 ">
           <div className="flex gap-4 w-full">
@@ -1252,9 +1216,9 @@ const MainReport = () => {
               }
             >
               <option value={""} className="font-bold">
-                - Business Segment -
+                - All Business Segment -
               </option>
-              <option value={"All"}>All Segment</option>
+             
               {bgData.map((item, idx) => (
                 <option value={item.bg_id} key={idx}>
                   {item.business_segment}
@@ -1282,8 +1246,8 @@ const MainReport = () => {
                 localStorageItems.roleId === 3
               }
             >
-              <option value={""}>- Business Unit -</option>
-              <option value={"All"}>All Unit</option>
+              <option value={""}>- All Business Unit -</option>
+             
               {buData.map((item, idx) => (
                 <option value={item.bu_id} key={idx}>
                   {item.business_unit_name}
@@ -1309,8 +1273,8 @@ const MainReport = () => {
                 localStorageItems.roleId === 4
               }
             >
-              <option value={""}>- Zone -</option>
-              <option value={"All"}>All Zone</option>
+              <option value={""}>- All  Zone -</option>
+           
               {allZoneData.map((item, idx) => (
                 <option value={item.z_id} key={idx}>
                   {item.zone_name}
@@ -1333,8 +1297,8 @@ const MainReport = () => {
                 })
               }
             >
-              <option value={""}>- Region -</option>
-              <option value={"All"}>All Region</option>
+              <option value={""}>-All Region -</option>
+              
               {allRegionData.map((item, idx) => (
                 <option value={item.r_id} key={idx}>
                   {item.region_name}
@@ -1350,15 +1314,14 @@ const MainReport = () => {
               onChange={(e) =>
                 setFilterState({
                   ...filterState,
-                  tId: e.target.value.id,
-                  tDes: e.target.value.id,
+                  tId: e.target.value,
                 })
               }
             >
-              <option value={""}>- Territory -</option>
-              <option value="All">All Territory</option>
+              <option value={""}>- All Territory -</option>
+   
               {allTerritoryData.map((item, idx) => (
-                <option value={{ id: item.t_id, des: item.t_des }} key={idx}>
+                <option value={item.t_id} key={idx}>
                   {item.territory_name}
                 </option>
               ))}
