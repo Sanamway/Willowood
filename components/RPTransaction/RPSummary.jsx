@@ -166,8 +166,6 @@ const RPSummary = (props) => {
     }
   };
 
-  const getSummary = () => {};
-
   // Initialize an object to store the sums based on Brand Code
 
   const handleSaveRsp = async (status) => {
@@ -241,13 +239,13 @@ const RPSummary = (props) => {
           submitHandle(status);
         });
     } catch (errors) {
-      const errorMessage = errors?.response?.data?.error;
-
+      const errorMessage = errors?.response?.data?.message;
+      console.log("koi",errors)
+      if (!errorMessage) return;
+      setisOpen(true);
       setApiMessage(errorMessage);
     }
   };
-
-  console.log("kio", props.tableData);
 
   const handleEditRsp = async (status) => {
     try {
@@ -319,7 +317,10 @@ const RPSummary = (props) => {
           submitHandle(status);
         });
     } catch (errors) {
-      const errorMessage = errors?.response?.data?.error;
+      const errorMessage = errors?.response?.data?.message;
+
+      if (!errorMessage) return;
+      setisOpen(true);
       setApiMessage(errorMessage);
     }
   };
@@ -931,13 +932,17 @@ const RPSummary = (props) => {
                             </td>
 
                             <td className="px-4 py-1 text-right ">
-                              {item[Object.keys(item)[18]].toFixed(2)}
+                              {(item[Object.keys(item)[18]] / 100000).toFixed(
+                                2
+                              )}
                             </td>
                             {!receivedObject?.tId && (
                               <td className="px-4 py-1 text-right">-</td>
                             )}
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
-                              {item[Object.keys(item)[20]].toFixed(2)}
+                              {(item[Object.keys(item)[20]] / 100000).toFixed(
+                                2
+                              )}
                             </td>
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
                               -
@@ -950,7 +955,9 @@ const RPSummary = (props) => {
                               <td className="px-4 py-1 text-right"> -</td>
                             )}
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                              {item[Object.keys(item)[26]].toFixed(2)}
+                              {(item[Object.keys(item)[26]] / 100000).toFixed(
+                                2
+                              )}
                             </td>
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               -
@@ -958,6 +965,7 @@ const RPSummary = (props) => {
                           </tr>
                         );
                       })}
+
                     {filterDropDown === "Value" && (
                       <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
                         <td className="px-4 py-1 text-center whitespace-nowrap">
@@ -991,17 +999,21 @@ const RPSummary = (props) => {
                         </td>
 
                         <td className="px-4 py-1 text-right">
-                          {totalNamewiseData[
-                            Object.keys(totalNamewiseData)[18]
-                          ]?.toFixed(2)}
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[18]
+                            ] / 100000
+                          )?.toFixed(2)}
                         </td>
                         {!receivedObject?.tId && (
                           <td className="px-4 py-1 text-right">-</td>
                         )}
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                          {totalNamewiseData[
-                            Object.keys(totalNamewiseData)[20]
-                          ]?.toFixed(2)}
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[20]
+                            ] / 100000
+                          )?.toFixed(2)}
                         </td>
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
@@ -1016,9 +1028,11 @@ const RPSummary = (props) => {
                           <td className="px-4 py-1 text-right"> -</td>
                         )}
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                          {totalNamewiseData[
-                            Object.keys(totalNamewiseData)[26]
-                          ]?.toFixed(2)}
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[26]
+                            ] / 100000
+                          )?.toFixed(2)}
                         </td>
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
@@ -1329,13 +1343,17 @@ const RPSummary = (props) => {
                             </td>
 
                             <td className="px-4 py-1 text-right ">
-                              {item[Object.keys(item)[18]]?.toFixed(2)}
+                              {(item[Object.keys(item)[18]] / 100000)?.toFixed(
+                                2
+                              )}
                             </td>
                             {!receivedObject?.tId && (
                               <td className="px-4 py-1 text-right">-</td>
                             )}
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
-                              {item[Object.keys(item)[20]]?.toFixed(2)}
+                              {(item[Object.keys(item)[20]] / 100000)?.toFixed(
+                                2
+                              )}
                             </td>
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
                               -
@@ -1348,7 +1366,9 @@ const RPSummary = (props) => {
                               <td className="px-4 py-1 text-right"> -</td>
                             )}
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                              {item[Object.keys(item)[26]]?.toFixed(2)}
+                              {(item[Object.keys(item)[26]] / 100000)?.toFixed(
+                                2
+                              )}
                             </td>
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               -
@@ -1389,17 +1409,21 @@ const RPSummary = (props) => {
                         </td>
 
                         <td className="px-4 py-1 text-right">
-                          {totalNamewiseData[
-                            Object.keys(totalNamewiseData)[18]
-                          ]?.toFixed(2)}
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[18]
+                            ] / 100000
+                          )?.toFixed(2)}
                         </td>
                         {!receivedObject?.tId && (
                           <td className="px-4 py-1 text-right">-</td>
                         )}
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                          {totalNamewiseData[
-                            Object.keys(totalNamewiseData)[20]
-                          ]?.toFixed(2)}
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[20]
+                            ] / 100000
+                          )?.toFixed(2)}
                         </td>
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
@@ -1414,9 +1438,11 @@ const RPSummary = (props) => {
                           <td className="px-4 py-1 text-right">-</td>
                         )}
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                          {totalNamewiseData[
-                            Object.keys(totalNamewiseData)[26]
-                          ]?.toFixed(2)}
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[26]
+                            ] / 100000
+                          )?.toFixed(2)}
                         </td>
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
@@ -1712,13 +1738,17 @@ const RPSummary = (props) => {
                             </td>
 
                             <td className="px-4 py-1 text-right ">
-                              {item[Object.keys(item)[18]]?.toFixed(2)}
+                              {(item[Object.keys(item)[18]] / 100000)?.toFixed(
+                                2
+                              )}
                             </td>
                             {!receivedObject?.tId && (
                               <td className="px-4 py-1 text-right">-</td>
                             )}
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
-                              {item[Object.keys(item)[20]]?.toFixed(2)}
+                              {(item[Object.keys(item)[20]] / 100000)?.toFixed(
+                                2
+                              )}
                             </td>
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
                               -
@@ -1731,7 +1761,9 @@ const RPSummary = (props) => {
                               <td className="px-4 py-1 text-right"> -</td>
                             )}
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                              {item[Object.keys(item)[26]]?.toFixed(2)}
+                              {(item[Object.keys(item)[26]] / 100000)?.toFixed(
+                                2
+                              )}
                             </td>
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               -
@@ -1772,17 +1804,21 @@ const RPSummary = (props) => {
                         </td>
 
                         <td className="px-4 py-1 text-right">
-                          {totalNamewiseData[
-                            Object.keys(totalNamewiseData)[18]
-                          ]?.toFixed(2)}
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[18]
+                            ] / 100000
+                          )?.toFixed(2)}
                         </td>
                         {!receivedObject?.tId && (
                           <td className="px-4 py-1 text-right">-</td>
                         )}
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                          {totalNamewiseData[
-                            Object.keys(totalNamewiseData)[20]
-                          ]?.toFixed(2)}
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[20]
+                            ] / 100000
+                          )?.toFixed(2)}
                         </td>
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
@@ -1797,9 +1833,11 @@ const RPSummary = (props) => {
                           <td className="px-4 py-1 text-right">-</td>
                         )}
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                          {totalNamewiseData[
-                            Object.keys(totalNamewiseData)[26]
-                          ]?.toFixed(2)}
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[26]
+                            ] / 100000
+                          )?.toFixed(2)}
                         </td>
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
@@ -2095,13 +2133,17 @@ const RPSummary = (props) => {
                             </td>
 
                             <td className="px-4 py-1 text-right ">
-                              {item[Object.keys(item)[18]]}
+                              {(item[Object.keys(item)[18]] / 100000).toFixed(
+                                2
+                              )}
                             </td>
                             {!receivedObject?.tId && (
                               <td className="px-4 py-1 text-right">-</td>
                             )}
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
-                              {item[Object.keys(item)[20]]}
+                              {(item[Object.keys(item)[20]] / 100000).toFixed(
+                                2
+                              )}
                             </td>
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
                               -
@@ -2114,7 +2156,7 @@ const RPSummary = (props) => {
                               <td className="px-4 py-1 text-right"> -</td>
                             )}
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                              {item[Object.keys(item)[26]]}
+                              {item[Object.keys(item)[26]] / 100000}
                             </td>
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               -
@@ -2138,65 +2180,55 @@ const RPSummary = (props) => {
                           ]?.toFixed(2)}
                         </td>
                         <td className="px-4 py-1 text-right">
-                          {
-                            totalNamewiseData[
-                              Object.keys(totalNamewiseData)[11]
-                            ]?.toFixed(2)
-                          }
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[11]
+                          ]?.toFixed(2)}
                         </td>
                         <td className="px-4 py-1 text-right">
-                          {
-                            totalNamewiseData[
-                              Object.keys(totalNamewiseData)[13]
-                            ]?.toFixed(2)
-                          }
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[13]
+                          ]?.toFixed(2)}
                         </td>
                         <td className="px-4 py-1 text-right">-</td>
                         <td className="px-4 py-1 text-right">
-                          {
-                            totalNamewiseData[
-                              Object.keys(totalNamewiseData)[16]
-                            ]?.toFixed(2)
-                          }
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[16]
+                          ]?.toFixed(2)}
                         </td>
 
                         <td className="px-4 py-1 text-right">
-                          {
+                          {(
                             totalNamewiseData[
                               Object.keys(totalNamewiseData)[18]
-                            ]?.toFixed(2)
-                          }
+                            ] / 100000
+                          )?.toFixed(2)}
                         </td>
                         {!receivedObject?.tId && (
                           <td className="px-4 py-1 text-right">-</td>
                         )}
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                          {
+                          {(
                             totalNamewiseData[
                               Object.keys(totalNamewiseData)[20]
-                            ]?.toFixed(2)
-                          }
+                            ] / 100000
+                          )?.toFixed(2)}
                         </td>
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
                         </td>
                         <td className="px-4 py-1 text-right">-</td>
                         <td className="px-4 py-1 text-right">
-                          {
-                            totalNamewiseData[
-                              Object.keys(totalNamewiseData)[24]
-                            ]?.toFixed(2)
-                          }
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[24]
+                          ]?.toFixed(2)}
                         </td>
                         {!receivedObject.tId && (
                           <td className="px-4 py-1 text-right"> -</td>
                         )}
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                          {
-                            totalNamewiseData[
-                              Object.keys(totalNamewiseData)[26]
-                            ]?.toFixed(2)
-                          }
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[26]
+                          ]?.toFixed(2)}
                         </td>
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -

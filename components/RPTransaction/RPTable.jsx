@@ -117,6 +117,7 @@ const RPTable = (props) => {
   const handleColourBlock = (fcst, revised) => {
     const colorNum = (revised / fcst) * 100 - 100;
     const positiveColorNum = Math.abs(colorNum);
+    console.log("nbh", colorNum)
     let color;
     switch (true) {
       case positiveColorNum < 10:
@@ -136,7 +137,7 @@ const RPTable = (props) => {
         break;
 
       default:
-        break;
+        color = "bg-white";
     }
 
     return color;
