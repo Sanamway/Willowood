@@ -1047,7 +1047,15 @@ const RollingPlans = () => {
               <li
                 className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
                 onClick={() =>
-                  handleDownloadExcelDepot(mYr, planId, tranId, yr, w, wDes)
+                  handleDownloadExcelDepot(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    w,
+                    wDes,
+                    "Single"
+                  )
                 }
               >
                 <FaDownload className="text-slate-400" /> Download RP
@@ -1067,7 +1075,48 @@ const RollingPlans = () => {
                     stage,
                     filterState,
                     w,
-                    wDes
+                    wDes,
+                    "All"
+                  );
+                }}
+              >
+                <MdOutlinePreview className="text-slate-400" /> View All
+              </li>
+
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelDepot(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    w,
+                    wDes,
+                    "All"
+                  )
+                }
+              >
+                <FaDownload className="text-slate-400" />
+                All Download RP
+              </li>
+
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() => {
+                  handleDepotExcelView(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    depot,
+                    zrt,
+                    status,
+                    stage,
+                    filterState,
+                    w,
+                    wDes,
+                    "Single"
                   );
                 }}
               >
@@ -2317,31 +2366,52 @@ const RollingPlans = () => {
     tranId,
     yr,
     wId,
-    wDes
+    wDes,
+    type
   ) => {
     let paramsData;
-    paramsData = {
-      year_1: yr - 2,
-      year_2: yr - 1,
-      year_3: yr,
-      year_2_nm: moment(m_year)
-        .subtract(1, "years")
-        .add(1, "months")
-        .format("YYYY-MM"),
-      year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-      year_3_cm: moment(m_year).format("YYYY-MM"),
-      year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-      plan_id: planId,
-      tran_id: tranId,
-      w_id: wId,
-      d_des: wDes,
-      m_year: m_year,
-      json: true,
-    };
+    if (type === "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        download: "all",
+        m_year: m_year,
+        json: true,
+      };
+    } else {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        w_id: wId,
+        d_des: wDes,
+        m_year: m_year,
+        json: true,
+      };
+    }
 
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
-      const respond = axios.get(`${url}/api/rsp_depot`, {
+      const respond = axios.get(`${url}/api/RSP_depot`, {
         headers: headers,
         params: paramsData,
       });
@@ -2376,33 +2446,53 @@ const RollingPlans = () => {
     status,
     stage,
     filterState,
-    w,
-    wDes
+    wId,
+    wDes,
+    type
   ) => {
     let paramsData;
-
-    paramsData = {
-      year_1: yr - 2,
-      year_2: yr - 1,
-      year_3: yr,
-      year_2_nm: moment(m_year)
-        .subtract(1, "years")
-        .add(1, "months")
-        .format("YYYY-MM"),
-      year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-      year_3_cm: moment(m_year).format("YYYY-MM"),
-      year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-      plan_id: planId,
-      tran_id: tranId,
-      w_id: w,
-      d_des: wDes,
-      m_year: m_year,
-      json: true,
-    };
+    if (type === "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        download: "all",
+        m_year: m_year,
+        json: true,
+      };
+    } else {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        w_id: wId,
+        d_des: wDes,
+        m_year: m_year,
+        json: true,
+      };
+    }
 
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
-      const respond = axios.get(`${url}/api/rsp_depot`, {
+      const respond = axios.get(`${url}/api/RSP_depot`, {
         headers: headers,
         params: paramsData,
       });
@@ -2430,10 +2520,11 @@ const RollingPlans = () => {
           status: status,
           stage: stage,
 
-          wId: w,
+          wId: wId,
           wDes: wDes,
           formType: "View",
           filterState: encodeURIComponent(JSON.stringify(filterState)),
+          depotType: type,
         },
       });
     } catch (error) {
@@ -3466,6 +3557,7 @@ const RollingPlans = () => {
               className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
               value={filterState.wId}
+              disabled={localStorageItems.roleId !== 11}
               onChange={(e) =>
                 setFilterState({
                   ...filterState,

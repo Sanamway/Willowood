@@ -240,7 +240,7 @@ const RPSummary = (props) => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
-      console.log("koi",errors)
+      console.log("koi", errors);
       if (!errorMessage) return;
       setisOpen(true);
       setApiMessage(errorMessage);
@@ -362,6 +362,7 @@ const RPSummary = (props) => {
   const [totalNamewiseData, setTotalNamewiseData] = useState({});
   useEffect(() => {
     if (!props.tableData.length) return;
+    console.log("koi", props.tableData);
     const sumObjectsByBrandCode = (inputArray) => {
       const sumMap = {};
       // Iterate through the input array
@@ -389,7 +390,7 @@ const RPSummary = (props) => {
 
     function sumNumericValues(data) {
       const sumObject = {};
-      console.log("olp", data);
+
       data.forEach((item) => {
         Object.keys(item).forEach((key) => {
           if (typeof item[key] === "number") {
@@ -568,7 +569,9 @@ const RPSummary = (props) => {
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xs text-gray-700">Depot:</h2>
             <h2 className="font-bold text-xs text-gray-700">
-              {router.query.depot}
+              {router.query.depotType === "All"
+                ? "All Depot"
+                : router.query.depot}
             </h2>
           </div>
         </div>
@@ -730,6 +733,13 @@ const RPSummary = (props) => {
                       >
                         Expected Sale Return Qty
                       </th>
+                      {router.query.depotType === "All" ? (
+                        <th scope="col" className="px-8 py-1 text-blue-600">
+                          Depot
+                        </th>
+                      ) : (
+                        ""
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -791,6 +801,13 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               {item[Object.keys(item)[27]]}
                             </td>
+                            {router.query.depotType === "All" ? (
+                              <td className="px-4 py-1 text-right">
+                                {item[Object.keys(item)[28]]}
+                              </td>
+                            ) : (
+                              ""
+                            )}
                           </tr>
                         );
                       })}
@@ -902,6 +919,11 @@ const RPSummary = (props) => {
                             ]
                           }
                         </td>
+                        {router.query.depotType === "All" ? (
+                          <td className="px-4 py-1 text-right">-</td>
+                        ) : (
+                          ""
+                        )}
                       </tr>
                     )}
                   </tbody>
@@ -962,6 +984,13 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               -
                             </td>
+                            {router.query.depotType === "All" ? (
+                              <td className="px-4 py-1 text-right">
+                                {item[Object.keys(item)[28]]}
+                              </td>
+                            ) : (
+                              ""
+                            )}
                           </tr>
                         );
                       })}
@@ -1037,6 +1066,11 @@ const RPSummary = (props) => {
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
                         </td>
+                        {router.query.depotType === "All" ? (
+                          <td className="px-4 py-1 text-right">-</td>
+                        ) : (
+                          ""
+                        )}
                       </tr>
                     )}
                   </tbody>
@@ -1141,6 +1175,13 @@ const RPSummary = (props) => {
                       >
                         Expected Sale Return Qty
                       </th>
+                      {router.query.depotType === "All" ? (
+                        <th scope="col" className="px-8 py-1 text-blue-600">
+                          Depot
+                        </th>
+                      ) : (
+                        ""
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -1202,6 +1243,13 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               {item[Object.keys(item)[27]]}
                             </td>
+                            {router.query.depotType === "All" ? (
+                              <td className="px-4 py-1 text-right">
+                                {item[Object.keys(item)[28]]}
+                              </td>
+                            ) : (
+                              ""
+                            )}
                           </tr>
                         );
                       })}
@@ -1313,6 +1361,11 @@ const RPSummary = (props) => {
                             ]
                           }
                         </td>
+                        {router.query.depotType === "All" ? (
+                          <td className="px-4 py-1 text-right">-</td>
+                        ) : (
+                          ""
+                        )}
                       </tr>
                     )}
                   </tbody>
@@ -1373,6 +1426,13 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               -
                             </td>
+                            {router.query.depotType === "All" ? (
+                              <td className="px-4 py-1 text-right">
+                                {item[Object.keys(item)[28]]}
+                              </td>
+                            ) : (
+                              ""
+                            )}
                           </tr>
                         );
                       })}
@@ -1447,6 +1507,11 @@ const RPSummary = (props) => {
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
                         </td>
+                        {router.query.depotType === "All" ? (
+                          <td className="px-4 py-1 text-right">-</td>
+                        ) : (
+                          ""
+                        )}
                       </tr>
                     )}
                   </tbody>
@@ -1536,6 +1601,13 @@ const RPSummary = (props) => {
                       >
                         Expected Sale Return Qty
                       </th>
+                      {router.query.depotType === "All" ? (
+                        <th scope="col" className="px-8 py-1  text-blue-600">
+                          Depot
+                        </th>
+                      ) : (
+                        ""
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -1597,6 +1669,14 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               {item[Object.keys(item)[27]]}
                             </td>
+                            {router.query.depotType === "All" ? (
+                              <td className="px-4 py-1 text-left">
+                                {" "}
+                                {item[Object.keys(item)[28]]}
+                              </td>
+                            ) : (
+                              ""
+                            )}
                           </tr>
                         );
                       })}
@@ -1708,6 +1788,12 @@ const RPSummary = (props) => {
                             ]
                           }
                         </td>
+
+                        {router.query.depotType === "All" ? (
+                          <td className="px-4 py-1 text-right">-</td>
+                        ) : (
+                          ""
+                        )}
                       </tr>
                     )}
                   </tbody>
@@ -1768,6 +1854,13 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               -
                             </td>
+                            {router.query.depotType === "All" ? (
+                              <td className="px-4 py-1 text-left">
+                                {item[Object.keys(item)[28]]}
+                              </td>
+                            ) : (
+                              ""
+                            )}
                           </tr>
                         );
                       })}
@@ -1842,6 +1935,11 @@ const RPSummary = (props) => {
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
                         </td>
+                        {router.query.depotType === "All" ? (
+                          <td className="px-4 py-1 text-right">-</td>
+                        ) : (
+                          ""
+                        )}
                       </tr>
                     )}
                   </tbody>
@@ -1930,6 +2028,13 @@ const RPSummary = (props) => {
                       >
                         Expected Sale Return Qty{" "}
                       </th>
+                      {router.query.depotType === "All" ? (
+                        <th scope="col" className="px-2 py-1 text-blue-600">
+                          Depot
+                        </th>
+                      ) : (
+                        ""
+                      )}
                     </tr>
                   </thead>
 
@@ -1992,6 +2097,14 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               {item[Object.keys(item)[27]]}
                             </td>
+
+                            {router.query.depotType === "All" ? (
+                              <td className="px-4 py-1 text-left">
+                                {item[Object.keys(item)[28]]}
+                              </td>
+                            ) : (
+                              ""
+                            )}
                           </tr>
                         );
                       })}
@@ -2103,6 +2216,11 @@ const RPSummary = (props) => {
                             ]
                           }
                         </td>
+                        {router.query.depotType === "All" ? (
+                          <td className="px-4 py-1 text-right">-</td>
+                        ) : (
+                          ""
+                        )}
                       </tr>
                     )}
                   </tbody>
@@ -2150,17 +2268,29 @@ const RPSummary = (props) => {
                             </td>
                             <td className="px-4 py-1 text-right">-</td>
                             <td className="px-4 py-1 text-right">
-                              {item[Object.keys(item)[24]]}
+                              {(item[Object.keys(item)[24]] / 100000).toFixed(
+                                2
+                              )}
                             </td>
                             {!receivedObject.tId && (
                               <td className="px-4 py-1 text-right"> -</td>
                             )}
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                              {item[Object.keys(item)[26]] / 100000}
+                              {(item[Object.keys(item)[26]] / 100000).toFixed(
+                                2
+                              )}
                             </td>
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               -
                             </td>
+
+                            {router.query.depotType === "All" ? (
+                              <td className="px-4 py-1 text-left">
+                                {item[Object.keys(item)[28]]}
+                              </td>
+                            ) : (
+                              ""
+                            )}
                           </tr>
                         );
                       })}
@@ -2226,13 +2356,20 @@ const RPSummary = (props) => {
                           <td className="px-4 py-1 text-right"> -</td>
                         )}
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                          {totalNamewiseData[
-                            Object.keys(totalNamewiseData)[26]
-                          ]?.toFixed(2)}
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[26]
+                            ] / 100000
+                          )?.toFixed(2)}
                         </td>
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
                         </td>
+                        {router.query.depotType === "All" ? (
+                          <td className="px-4 py-1 text-right">-</td>
+                        ) : (
+                          ""
+                        )}
                       </tr>
                     )}
                   </tbody>

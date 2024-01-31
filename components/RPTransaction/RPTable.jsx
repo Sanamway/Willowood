@@ -17,6 +17,8 @@ const RPTable = (props) => {
   useEffect(() => {
     if (Array.isArray(props.tableData[0])) {
       header = props.tableData[0]?.map((item) => item.trim());
+      setHeaderData(props.tableData[0]?.map((item) => item.trim()));
+
       setResult(
         props.tableData.slice(1).map((row) => {
           const obj = {};
@@ -31,6 +33,7 @@ const RPTable = (props) => {
     }
   }, [props.tableData]);
 
+  const [headerData, setHeaderData] = useState({});
   const [result, setResult] = useState([]);
 
   const [totalSumObject, setTotalSumObject] = useState({});
@@ -54,7 +57,6 @@ const RPTable = (props) => {
     const totalResult = sumNumericValues(result);
     setTotalSumObject(totalResult);
   }, [result]);
-  console.log("mkl", totalSumObject);
 
   const [sumValues, setSumValues] = useState({
     "Dec 23-24 Revised Fcst Qty": 0,
@@ -97,7 +99,6 @@ const RPTable = (props) => {
   };
   const [recievedObject, setRecievedObject] = useState({});
   useEffect(() => {
-    console.log("hello", router);
     if (!router.query.filterState) return;
     setRecievedObject(JSON.parse(decodeURIComponent(router.query.filterState)));
   }, [router]);
@@ -117,7 +118,7 @@ const RPTable = (props) => {
   const handleColourBlock = (fcst, revised) => {
     const colorNum = (revised / fcst) * 100 - 100;
     const positiveColorNum = Math.abs(colorNum);
-    console.log("nbh", colorNum)
+
     let color;
     switch (true) {
       case positiveColorNum < 10:
@@ -168,7 +169,9 @@ const RPTable = (props) => {
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xs text-gray-700">Depot:</h2>
             <h2 className="font-bold text-xs text-gray-700">
-              {router.query.depot}
+              {router.query.depotType === "All"
+                ? "All Depot"
+                : router.query.depot}
             </h2>
           </div>
         </div>
@@ -257,47 +260,45 @@ const RPTable = (props) => {
                   <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400">
                     <tr>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        Product Segment
+                        {headerData[Object.keys(headerData)[0]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        Brand Description
+                        {headerData[Object.keys(headerData)[3]]}
                       </th>
 
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        Product Name Sku Wise
+                        {headerData[Object.keys(headerData)[5]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        Product Code
+                        {headerData[Object.keys(headerData)[4]]}
                       </th>
                       <th scope="col" className="px-2 py-1    text-blue-600">
-                        Budget Price
+                        {headerData[Object.keys(headerData)[43]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        FY Sales Qty 21-22
+                        {headerData[Object.keys(headerData)[6]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        FY Sales Qty 22-23
+                        {headerData[Object.keys(headerData)[8]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        Annual Budget Qty 23-24
+                        {headerData[Object.keys(headerData)[10]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        YTD Net Sale Qty 23-24
+                        {headerData[Object.keys(headerData)[12]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 22-23 Sale Qty
+                        {headerData[Object.keys(headerData)[14]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 23-24 Budget Qty
+                        {headerData[Object.keys(headerData)[15]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 23-24 FSCT Qty
+                        {headerData[Object.keys(headerData)[17]]}
                       </th>
                       {!recievedObject.tId && (
                         <th scope="col" className="px-2 py-1 text-blue-600">
-                          Apr 23-24 Revised FCST
-                          <br />
-                          (TM Cumulative)
+                          {headerData[Object.keys(headerData)[37]]}
                         </th>
                       )}
 
@@ -305,25 +306,23 @@ const RPTable = (props) => {
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
-                        Apr 23-24 Revised FCST Qty
+                        {headerData[Object.keys(headerData)[19]]}
                       </th>
                       <th
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
-                        Apr 23-24 Urgent Qty
+                        {headerData[Object.keys(headerData)[21]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600 ">
-                        May 23-24 Sale Qty
+                        {headerData[Object.keys(headerData)[22]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        May Budget Qty 23-24
+                        {headerData[Object.keys(headerData)[23]]}
                       </th>
                       {!recievedObject?.tId && (
                         <th scope="col" className="px-2 py-1 text-blue-600">
-                          May FCST Qty 23-24
-                          <br />
-                          (TM Cumulative)
+                          {headerData[Object.keys(headerData)[39]]}
                         </th>
                       )}
 
@@ -331,16 +330,24 @@ const RPTable = (props) => {
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
-                        May 23-24 FCST Qty
+                        {headerData[Object.keys(headerData)[25]]}
                       </th>
                       <th
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
-                        Expected Sale Return Qty
+                        {headerData[Object.keys(headerData)[27]]}
                       </th>
+                      {router.query.depotType === "All" ? (
+                        <th scope="col" className="px-2 py-1 text-blue-600">
+                          {headerData[Object.keys(headerData)[28]]}
+                        </th>
+                      ) : (
+                        ""
+                      )}
                     </tr>
                   </thead>
+                  {console.log("mkn", result)}
                   <tbody>
                     {result.map((item) => {
                       return (
@@ -546,9 +553,17 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
+                          {router.query.depotType === "All" ? (
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[28]]}
+                            </td>
+                          ) : (
+                            ""
+                          )}
                         </tr>
                       );
                     })}
+
                     <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
                       <td className="px-4 py-1 text-left  whitespace-nowrap">
                         QTY
