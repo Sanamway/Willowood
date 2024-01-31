@@ -235,7 +235,8 @@ const RollingPlans = () => {
     buId: null,
     zId: null,
     rId: null,
-
+    wId: null,
+    wDes: null,
     tId: null,
     yr: moment().year(),
     month: null,
@@ -422,7 +423,14 @@ const RollingPlans = () => {
       });
       const apires = await respond.data.data;
 
-      setBgData(apires.filter((item, idx) => item.isDeleted === false));
+      setBgData(
+        apires.filter((item, idx) => {
+          item.isDeleted === false;
+
+          Number(item.c_id) ===
+            Number(window.localStorage.getItem("userinfo").c_id);
+        })
+      );
     } catch (error) {
       console.log(error);
     }
@@ -541,6 +549,25 @@ const RollingPlans = () => {
     );
   }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
 
+  const [depotData, setDepotData] = useState([]);
+
+  const getAllDepotData = async (cId) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_warehousedepot`, {
+        headers: headers,
+      });
+
+      const apires = await respond.data.data;
+
+      setDepotData(apires.filter((item) => item.c_id === cId));
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (!JSON.parse(window.localStorage.getItem("userinfo")).c_id) return;
+    getAllDepotData(JSON.parse(window.localStorage.getItem("userinfo")).c_id);
+  }, []);
+
   const [allTableData, setAllTableData] = useState([]);
   const getAllSalesPlanStatus = async (
     yr,
@@ -593,6 +620,9 @@ const RollingPlans = () => {
   };
 
   useEffect(() => {
+    if (!JSON.parse(window.localStorage.getItem("userinfo")).role_id === 11)
+      return;
+
     getAllSalesPlanStatus(
       filterState.yr || null,
       filterState.month || null,
@@ -611,6 +641,38 @@ const RollingPlans = () => {
     filterState.rId,
     filterState.tId,
   ]);
+
+  const getAllDepotSalesPlan = async (yr, month, wId) => {
+    let endPoint;
+    endPoint = "api/get_rollingdata_based_on_roll_r";
+
+    try {
+      const respond = await axios.get(`${url}/${endPoint}`, {
+        headers: headers,
+
+        params: {
+          t_year: yr || null,
+          m_year:
+            month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+          w_id: wId === "All" || !wId ? null : wId,
+        },
+      });
+
+      const apires = await respond.data.data;
+      setAllTableData(apires);
+    } catch (error) {
+      if (!error) return;
+      setAllTableData([]);
+    }
+  };
+
+  useEffect(() => {
+    getAllDepotSalesPlan(
+      filterState.yr || null,
+      filterState.month || null,
+      filterState.wId || null
+    );
+  }, [filterState.yr, filterState.month, filterState.wId]);
 
   const getStatus = (status) => {
     switch (status) {
@@ -703,9 +765,9 @@ const RollingPlans = () => {
     rDes,
     zDes,
     buDes,
-    bgDes
+    bgDes,
+    wDes
   ) => {
-    console.log("nji", zrt);
     switch (status) {
       case "Close Period":
         return (
@@ -977,41 +1039,24 @@ const RollingPlans = () => {
           </ul>
         );
       case "Final Submitted":
-        return (
-          <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  filterState
-                )
-              }
-            >
-              <FaDownload className="text-slate-400" /> Download RP
-            </li>
+        if (
+          JSON.parse(window.localStorage.getItem("userinfo")).role_id === 11
+        ) {
+          return (
+            <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelDepot(mYr, planId, tranId, yr, w, wDes)
+                }
+              >
+                <FaDownload className="text-slate-400" /> Download RP
+              </li>
 
-            {!(
-              JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
-                4 && filterState.rId
-            ) && (
               <li
                 className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
                 onClick={() => {
-                  handleDownloadExcelView(
+                  handleDepotExcelView(
                     mYr,
                     planId,
                     tranId,
@@ -1021,28 +1066,51 @@ const RollingPlans = () => {
                     status,
                     stage,
                     filterState,
-                    bg,
-                    bu,
-                    z,
-                    r,
-                    t,
-                    c,
                     w,
-                    tDes,
-                    rDes
+                    wDes
                   );
                 }}
               >
                 <MdOutlinePreview className="text-slate-400" /> View
               </li>
-            )}
+            </ul>
+          );
+        } else {
+          return (
+            <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    filterState
+                  )
+                }
+              >
+                <FaDownload className="text-slate-400" /> Download RP
+              </li>
 
-            {(filterState.rId || filterState.rId === "All") &&
-              localStorageItems.roleId === 4 && (
+              {!(
+                JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
+                  4 && filterState.rId
+              ) && (
                 <li
                   className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
                   onClick={() => {
-                    handleDownloadExcelReview(
+                    handleDownloadExcelView(
                       mYr,
                       planId,
                       tranId,
@@ -1060,45 +1128,78 @@ const RollingPlans = () => {
                       c,
                       w,
                       tDes,
-                      rDes,
-                      buDes,
-                      bgDes
+                      rDes
                     );
                   }}
                 >
-                  <VscPreview className="text-green-400" /> Review Decision
+                  <MdOutlinePreview className="text-slate-400" /> View
                 </li>
               )}
-            {(filterState.tId || filterState.tId === "All") &&
-              localStorageItems.roleId === 5 && (
-                <li
-                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                  onClick={() => {
-                    setRejectDraftModal(true);
-                    setRejectModalData({
-                      ...rejectModalData,
-                      planId: planId,
-                      tranId: tranId,
-                      mYr: mYr,
-                      tId: t,
-                    });
-                  }}
-                >
-                  <FaSkullCrossbones className="text-red-400" /> Reject as Draft
-                </li>
-              )}
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
-              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
-              Vs. Actual
-            </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
-              <CgNotes className="text-blue-400" /> Meeting Note
-            </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
-              <GrTask className="text-orange-400" /> Task
-            </li>
-          </ul>
-        );
+
+              {(filterState.rId || filterState.rId === "All") &&
+                localStorageItems.roleId === 4 && (
+                  <li
+                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                    onClick={() => {
+                      handleDownloadExcelReview(
+                        mYr,
+                        planId,
+                        tranId,
+                        yr,
+                        depot,
+                        zrt,
+                        status,
+                        stage,
+                        filterState,
+                        bg,
+                        bu,
+                        z,
+                        r,
+                        t,
+                        c,
+                        w,
+                        tDes,
+                        rDes,
+                        buDes,
+                        bgDes
+                      );
+                    }}
+                  >
+                    <VscPreview className="text-green-400" /> Review Decision
+                  </li>
+                )}
+              {(filterState.tId || filterState.tId === "All") &&
+                localStorageItems.roleId === 5 && (
+                  <li
+                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                    onClick={() => {
+                      setRejectDraftModal(true);
+                      setRejectModalData({
+                        ...rejectModalData,
+                        planId: planId,
+                        tranId: tranId,
+                        mYr: mYr,
+                        tId: t,
+                      });
+                    }}
+                  >
+                    <FaSkullCrossbones className="text-red-400" /> Reject as
+                    Draft
+                  </li>
+                )}
+              <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+                <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+                Vs. Actual
+              </li>
+              <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+                <CgNotes className="text-blue-400" /> Meeting Note
+              </li>
+              <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+                <GrTask className="text-orange-400" /> Task
+              </li>
+            </ul>
+          );
+        }
 
       case "Region Review Done":
         return (
@@ -2210,6 +2311,136 @@ const RollingPlans = () => {
     }
   };
 
+  const handleDownloadExcelDepot = async (
+    m_year,
+    planId,
+    tranId,
+    yr,
+    wId,
+    wDes
+  ) => {
+    let paramsData;
+    paramsData = {
+      year_1: yr - 2,
+      year_2: yr - 1,
+      year_3: yr,
+      year_2_nm: moment(m_year)
+        .subtract(1, "years")
+        .add(1, "months")
+        .format("YYYY-MM"),
+      year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+      year_3_cm: moment(m_year).format("YYYY-MM"),
+      year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+      plan_id: planId,
+      tran_id: tranId,
+      w_id: wId,
+      d_des: wDes,
+      m_year: m_year,
+      json: true,
+    };
+
+    try {
+      localStorage.setItem("RSP", JSON.stringify([]));
+      const respond = axios.get(`${url}/api/rsp_depot`, {
+        headers: headers,
+        params: paramsData,
+      });
+      const apires = await respond;
+      const ws = XLSX.utils.json_to_sheet(apires.data.data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+      XLSX.writeFile(
+        wb,
+        `RSP_${moment(m_year).format("YYYY-MM")}_${wDes}.xlsx`
+      );
+
+      setIsOpen(true);
+      setModalData({
+        message: apires.data.message,
+        type: "Download",
+        data: {},
+      });
+    } catch (error) {
+      console.log("mlo", error);
+    }
+  };
+
+  const handleDepotExcelView = async (
+    m_year,
+    planId,
+    tranId,
+    yr,
+    depot,
+    zrt,
+    status,
+    stage,
+    filterState,
+    w,
+    wDes
+  ) => {
+    let paramsData;
+
+    paramsData = {
+      year_1: yr - 2,
+      year_2: yr - 1,
+      year_3: yr,
+      year_2_nm: moment(m_year)
+        .subtract(1, "years")
+        .add(1, "months")
+        .format("YYYY-MM"),
+      year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+      year_3_cm: moment(m_year).format("YYYY-MM"),
+      year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+      plan_id: planId,
+      tran_id: tranId,
+      w_id: w,
+      d_des: wDes,
+      m_year: m_year,
+      json: true,
+    };
+
+    try {
+      localStorage.setItem("RSP", JSON.stringify([]));
+      const respond = axios.get(`${url}/api/rsp_depot`, {
+        headers: headers,
+        params: paramsData,
+      });
+      const apires = await respond;
+      const ws = XLSX.utils.json_to_sheet(apires.data.data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+      let keys = Object.keys(apires.data.data[0]);
+      // Convert array of objects to array of arrays
+      let arrayOfArrays = [
+        keys, // First array with keys
+        ...apires.data.data.map((obj) => keys.map((key) => obj[key])),
+      ];
+      localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
+      router.push({
+        pathname: "/rptransaction",
+        query: {
+          planId: planId,
+          tranId: tranId,
+          yr: yr,
+          mYr: m_year,
+          depot: depot,
+          zrt: zrt,
+          status: status,
+          stage: stage,
+
+          wId: w,
+          wDes: wDes,
+          formType: "View",
+          filterState: encodeURIComponent(JSON.stringify(filterState)),
+        },
+      });
+    } catch (error) {
+      console.log("mlo", error);
+    }
+  };
+
   const handleDownloadExcelView = async (
     m_year,
     planId,
@@ -3020,8 +3251,7 @@ const RollingPlans = () => {
   const isRole2 = localStorageItems.roleId === 2;
 
   const getMenuButton = () => {
-    console.log("Chandan Kr", localStorageItems.roleId);
-    if (localStorageItems.roleId === 6) {
+    if (localStorageItems.roleId === 11) {
       return true;
     } else if (localStorageItems.roleId === 5) {
       return true;
@@ -3031,6 +3261,8 @@ const RollingPlans = () => {
       return true;
     } else if (localStorageItems.roleId === 10 && !filterState.zId) {
       return true;
+    } else if (localStorageItems.roleId === 6) {
+      return true;
     } else {
       return false;
     }
@@ -3038,7 +3270,7 @@ const RollingPlans = () => {
 
   return (
     <Layout>
-      <div className="h-screen  w-full font-arial bg-white  ">
+      <div className="h-screen  w-full font-arial bg-white">
         <div className="grid justify-items-stretch grid-flow-col px-8 py-2">
           <h2 className="flex font-arial  text-xl  py-2 font-bold  text-teal-400  justify-self-center underline">
             Rolling Sales Plan Status
@@ -3103,6 +3335,7 @@ const RollingPlans = () => {
                 })
               }
               disabled={
+                localStorageItems.roleId === 11 ||
                 localStorageItems.roleId === 6 ||
                 localStorageItems.roleId === 5 ||
                 localStorageItems.roleId === 4 ||
@@ -3135,6 +3368,7 @@ const RollingPlans = () => {
                 })
               }
               disabled={
+                localStorageItems.roleId === 11 ||
                 localStorageItems.roleId === 6 ||
                 localStorageItems.roleId === 5 ||
                 localStorageItems.roleId === 4 ||
@@ -3163,6 +3397,7 @@ const RollingPlans = () => {
                 })
               }
               disabled={
+                localStorageItems.roleId === 11 ||
                 localStorageItems.roleId === 6 ||
                 localStorageItems.roleId === 5 ||
                 localStorageItems.roleId === 4
@@ -3182,7 +3417,9 @@ const RollingPlans = () => {
               id="stateSelect"
               value={filterState.rId}
               disabled={
-                localStorageItems.roleId === 6 || localStorageItems.roleId === 5
+                localStorageItems.roleId === 11 ||
+                localStorageItems.roleId === 6 ||
+                localStorageItems.roleId === 5
               }
               onChange={(e) =>
                 setFilterState({
@@ -3205,7 +3442,10 @@ const RollingPlans = () => {
               className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
               value={filterState.tId}
-              disabled={localStorageItems.roleId === 6}
+              disabled={
+                localStorageItems.roleId === 11 ||
+                localStorageItems.roleId === 6
+              }
               onChange={(e) =>
                 setFilterState({
                   ...filterState,
@@ -3218,6 +3458,26 @@ const RollingPlans = () => {
               {territoryData.map((item, idx) => (
                 <option value={item.t_id} key={idx}>
                   {item.territory_name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              id="stateSelect"
+              value={filterState.wId}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  wId: e.target.value,
+                })
+              }
+            >
+              <option value={""}>- Depot -</option>
+              <option value="All">All Depot</option>
+              {depotData.map((item, idx) => (
+                <option value={item.w_id} key={idx}>
+                  {item.depot_name}
                 </option>
               ))}
             </select>
@@ -3328,7 +3588,6 @@ const RollingPlans = () => {
                       </span>
 
                       <div className="popop">
-                        {console.log("chandan", getMenuButton())}
                         {getMenuButton() && (
                           <Popover
                             as="div"
@@ -3383,7 +3642,8 @@ const RollingPlans = () => {
                                     item.region_name,
                                     item.zone_name,
                                     item.business_unit_name,
-                                    item.business_segment
+                                    item.business_segment,
+                                    item.depot_name
                                   )}
                                 </Popover.Panel>
                               </>
