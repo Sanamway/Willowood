@@ -556,7 +556,7 @@ const RPTable = (props) => {
                             />
                           </td>
                           {router.query.depotType === "All" ? (
-                            <td className="px-4 py-1 text-right">
+                            <td className="px-4 py-1 text-left">
                               {item[Object.keys(item)[28]]}
                             </td>
                           ) : (

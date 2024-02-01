@@ -360,12 +360,7 @@ const RPSummary = (props) => {
   };
 
   const [namewiseData, setNamewiseData] = useState([]);
-  
   const [totalNamewiseData, setTotalNamewiseData] = useState({});
-
-
-  console.log("njk", namewiseData);
-  console.log("mjk",totalNamewiseData);
   useEffect(() => {
     if (!props.tableData.length) return;
     console.log("koi", props.tableData);
@@ -492,6 +487,37 @@ const RPSummary = (props) => {
     setPsegwiseData(result);
   }, [props.tableData]);
 
+  const [depotData, setDepotData] = useState([]);
+  useEffect(() => {
+    if (!props.tableData.length) return;
+
+    const sumObjectsByBrandCode = (inputArray) => {
+      const sumMap = {};
+
+      // Iterate through the input array
+      inputArray.forEach((obj) => {
+        const brandCode = obj["Depot"];
+
+        // If Brand Code is not in the sumMap, initialize it
+        if (!sumMap[brandCode]) {
+          sumMap[brandCode] = { ...obj };
+        } else {
+          // Sum the values for each property (excluding non-numeric values)
+          for (const key in obj) {
+            if (!isNaN(obj[key])) {
+              sumMap[brandCode][key] = (sumMap[brandCode][key] || 0) + obj[key];
+            }
+          }
+        }
+      });
+      // Create a new array with unique Brand Code and summed values
+      const resultArray = Object.values(sumMap);
+      return resultArray;
+    };
+    const result = sumObjectsByBrandCode(props.tableData);
+    setDepotData(result);
+  }, [props.tableData]);
+
   const [rolewiseData, setRolewiseData] = useState([]);
   useEffect(() => {
     if (!props.tableData.length) return;
@@ -543,7 +569,7 @@ const RPSummary = (props) => {
       <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400">
         <tr>
           <th scope="col" className="px-2 py-1 text-blue-600">
-            {props.headerData[Object.keys(props.headerData)[3]]}
+            {props.headerData[Object.keys(props.headerData)[28]]}
           </th>
 
           {/* <th scope="col" className="px-2 py-1 text-blue-600">
@@ -618,17 +644,23 @@ const RPSummary = (props) => {
           >
             {props.headerData[Object.keys(props.headerData)[27]]}
           </th>
-          {router.query.depotType === "All" ? (
-            <th scope="col" className="px-2 py-1 text-blue-600">
-              {props.headerData[Object.keys(props.headerData)[28]]}
-            </th>
-          ) : (
-            ""
-          )}
         </tr>
       </thead>
     );
   };
+
+  const handledownloadBrandExcel = (data) => {
+    console.log("mlop", data);
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, `RSP.xlsx`);
+  };
+  const [recievedObject, setRecievedObject] = useState({});
+  useEffect(() => {
+    if (!router.query.filterState) return;
+    setRecievedObject(JSON.parse(decodeURIComponent(router.query.filterState)));
+  }, [router]);
 
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
@@ -738,7 +770,11 @@ const RPSummary = (props) => {
               <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
                 Summary - Brand wise
               </h4>
-
+              <TbFileDownload
+                className="text-green-600 cursor-pointer "
+                size={18}
+                onClick={() => handledownloadBrandExcel(namewiseData)}
+              ></TbFileDownload>
               <select
                 className=" max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-38 "
                 id="stateSelect"
@@ -820,13 +856,6 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               {item[Object.keys(item)[27]]}
                             </td>
-                            {router.query.depotType === "All" ? (
-                              <td className="px-4 py-1 text-right">
-                                {item[Object.keys(item)[28]]}
-                              </td>
-                            ) : (
-                              ""
-                            )}
                           </tr>
                         );
                       })}
@@ -938,11 +967,6 @@ const RPSummary = (props) => {
                             ]
                           }
                         </td>
-                        {router.query.depotType === "All" ? (
-                          <td className="px-4 py-1 text-right">-</td>
-                        ) : (
-                          ""
-                        )}
                       </tr>
                     )}
                   </tbody>
@@ -1003,13 +1027,6 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               -
                             </td>
-                            {router.query.depotType === "All" ? (
-                              <td className="px-4 py-1 text-right">
-                                {item[Object.keys(item)[28]]}
-                              </td>
-                            ) : (
-                              ""
-                            )}
                           </tr>
                         );
                       })}
@@ -1085,11 +1102,6 @@ const RPSummary = (props) => {
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
                         </td>
-                        {router.query.depotType === "All" ? (
-                          <td className="px-4 py-1 text-right">-</td>
-                        ) : (
-                          ""
-                        )}
                       </tr>
                     )}
                   </tbody>
@@ -1103,6 +1115,11 @@ const RPSummary = (props) => {
             <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
               Summary- Product Category wise
             </h4>
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={18}
+              onClick={() => handledownloadBrandExcel(pcatwiseData)}
+            ></TbFileDownload>
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -1166,13 +1183,6 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               {item[Object.keys(item)[27]]}
                             </td>
-                            {router.query.depotType === "All" ? (
-                              <td className="px-4 py-1 text-right">
-                                {item[Object.keys(item)[28]]}
-                              </td>
-                            ) : (
-                              ""
-                            )}
                           </tr>
                         );
                       })}
@@ -1284,11 +1294,6 @@ const RPSummary = (props) => {
                             ]
                           }
                         </td>
-                        {router.query.depotType === "All" ? (
-                          <td className="px-4 py-1 text-right">-</td>
-                        ) : (
-                          ""
-                        )}
                       </tr>
                     )}
                   </tbody>
@@ -1349,13 +1354,6 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               -
                             </td>
-                            {router.query.depotType === "All" ? (
-                              <td className="px-4 py-1 text-right">
-                                {item[Object.keys(item)[28]]}
-                              </td>
-                            ) : (
-                              ""
-                            )}
                           </tr>
                         );
                       })}
@@ -1430,11 +1428,6 @@ const RPSummary = (props) => {
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
                         </td>
-                        {router.query.depotType === "All" ? (
-                          <td className="px-4 py-1 text-right">-</td>
-                        ) : (
-                          ""
-                        )}
                       </tr>
                     )}
                   </tbody>
@@ -1447,6 +1440,11 @@ const RPSummary = (props) => {
             {/* Start coding here */}
             <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
               Summary- Product Segment wise
+              <TbFileDownload
+                className="text-green-600 cursor-pointer "
+                size={18}
+                onClick={() => handledownloadBrandExcel(psegwiseData)}
+              ></TbFileDownload>
             </h4>
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
@@ -1511,14 +1509,6 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               {item[Object.keys(item)[27]]}
                             </td>
-                            {router.query.depotType === "All" ? (
-                              <td className="px-4 py-1 text-left">
-                                {" "}
-                                {item[Object.keys(item)[28]]}
-                              </td>
-                            ) : (
-                              ""
-                            )}
                           </tr>
                         );
                       })}
@@ -1630,12 +1620,6 @@ const RPSummary = (props) => {
                             ]
                           }
                         </td>
-
-                        {router.query.depotType === "All" ? (
-                          <td className="px-4 py-1 text-right">-</td>
-                        ) : (
-                          ""
-                        )}
                       </tr>
                     )}
                   </tbody>
@@ -1696,13 +1680,6 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               -
                             </td>
-                            {router.query.depotType === "All" ? (
-                              <td className="px-4 py-1 text-left">
-                                {item[Object.keys(item)[28]]}
-                              </td>
-                            ) : (
-                              ""
-                            )}
                           </tr>
                         );
                       })}
@@ -1777,11 +1754,6 @@ const RPSummary = (props) => {
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
                         </td>
-                        {router.query.depotType === "All" ? (
-                          <td className="px-4 py-1 text-right">-</td>
-                        ) : (
-                          ""
-                        )}
                       </tr>
                     )}
                   </tbody>
@@ -1793,6 +1765,11 @@ const RPSummary = (props) => {
           <div className="mx-auto max-w-full px- ">
             <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
               Summary-Business Structure wise
+              <TbFileDownload
+                className="text-green-600 cursor-pointer "
+                size={18}
+                onClick={() => handledownloadBrandExcel(rolewiseData)}
+              ></TbFileDownload>
             </h4>
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
@@ -1858,14 +1835,6 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               {item[Object.keys(item)[27]]}
                             </td>
-
-                            {router.query.depotType === "All" ? (
-                              <td className="px-4 py-1 text-left">
-                                {item[Object.keys(item)[28]]}
-                              </td>
-                            ) : (
-                              ""
-                            )}
                           </tr>
                         );
                       })}
@@ -1977,11 +1946,6 @@ const RPSummary = (props) => {
                             ]
                           }
                         </td>
-                        {router.query.depotType === "All" ? (
-                          <td className="px-4 py-1 text-right">-</td>
-                        ) : (
-                          ""
-                        )}
                       </tr>
                     )}
                   </tbody>
@@ -2044,14 +2008,6 @@ const RPSummary = (props) => {
                             <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                               -
                             </td>
-
-                            {router.query.depotType === "All" ? (
-                              <td className="px-4 py-1 text-left">
-                                {item[Object.keys(item)[28]]}
-                              </td>
-                            ) : (
-                              ""
-                            )}
                           </tr>
                         );
                       })}
@@ -2126,11 +2082,332 @@ const RPSummary = (props) => {
                         <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           -
                         </td>
-                        {router.query.depotType === "All" ? (
-                          <td className="px-4 py-1 text-right">-</td>
-                        ) : (
-                          ""
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div className="mx-auto max-w-full px- ">
+            {/* Start coding here */}
+            <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
+              Summary- Depot wise
+            </h4>
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={18}
+              onClick={() => handledownloadBrandExcel(depotData)}
+            ></TbFileDownload>
+            <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                  {getSummaryHeading("Brand", receivedObject)}
+                  <tbody>
+                    {filterDropDown === "Qty" &&
+                      depotData.map((item) => {
+                        return (
+                          <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                            <td className="px-4 py-1 text-left">
+                              {item[Object.keys(item)[28]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[6]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[8]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[10]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[12]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[14]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[15]]}
+                            </td>
+                            {console.log("hi", Object.keys(item)[17])}
+                            <td className="px-4 py-1 text-right ">
+                              {item[Object.keys(item)[17]]}
+                            </td>
+                            {!receivedObject?.tId && (
+                              <td className="px-4 py-1 text-right">
+                                {item[Object.keys(item)[37]]}
+                              </td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
+                              {item[Object.keys(item)[19]]}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
+                              {item[Object.keys(item)[21]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[22]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[23]]}
+                            </td>
+                            {!receivedObject.tId && (
+                              <td className="px-4 py-1 text-right">
+                                {" "}
+                                {item[Object.keys(item)[39]]}
+                              </td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {item[Object.keys(item)[25]]}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {item[Object.keys(item)[27]]}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {filterDropDown === "Qty" && (
+                      <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                        <td className="px-4 py-1 text-center whitespace-nowrap">
+                          Qty Total
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[Object.keys(totalNamewiseData)[6]]}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[Object.keys(totalNamewiseData)[8]]}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[10]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[12]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[14]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[15]
+                            ]
+                          }
+                        </td>
+                        {console.log("hi", Object.keys(totalNamewiseData)[17])}
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[17]
+                            ]
+                          }
+                        </td>
+                        {!receivedObject?.tId && (
+                          <td className="px-4 py-1 text-right">
+                            {
+                              totalNamewiseData[
+                                Object.keys(totalNamewiseData)[37]
+                              ]
+                            }
+                          </td>
                         )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[19]
+                            ]
+                          }
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[21]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[22]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[23]
+                            ]
+                          }
+                        </td>
+                        {!receivedObject.tId && (
+                          <td className="px-4 py-1 text-right">
+                            {" "}
+                            {
+                              totalNamewiseData[
+                                Object.keys(totalNamewiseData)[39]
+                              ]
+                            }
+                          </td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[25]
+                            ]
+                          }
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[27]
+                            ]
+                          }
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+
+                  <tbody>
+                    {filterDropDown === "Value" &&
+                      depotData.map((item) => {
+                        return (
+                          <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                            <td className="px-4 py-1 text-left">
+                              {item[Object.keys(item)[28]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[7]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[9]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[11]]?.toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[13]]?.toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">-</td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[16]]?.toFixed(2)}
+                            </td>
+
+                            <td className="px-4 py-1 text-right ">
+                              {(item[Object.keys(item)[18]] / 100000)?.toFixed(
+                                2
+                              )}
+                            </td>
+                            {!receivedObject?.tId && (
+                              <td className="px-4 py-1 text-right">-</td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
+                              {(item[Object.keys(item)[20]] / 100000)?.toFixed(
+                                2
+                              )}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
+                              -
+                            </td>
+                            <td className="px-4 py-1 text-right">-</td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[24]]?.toFixed(2)}
+                            </td>
+                            {!receivedObject.tId && (
+                              <td className="px-4 py-1 text-right"> -</td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {(item[Object.keys(item)[26]] / 100000)?.toFixed(
+                                2
+                              )}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              -
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {filterDropDown === "Value" && (
+                      <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                        <td className="px-4 py-1 text-center whitespace-nowrap">
+                          Value Total (IN Lac)
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[7]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[9]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[11]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[13]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">-</td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[16]
+                          ]?.toFixed(2)}
+                        </td>
+
+                        <td className="px-4 py-1 text-right">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[18]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        {!receivedObject?.tId && (
+                          <td className="px-4 py-1 text-right">-</td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[20]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          -
+                        </td>
+                        <td className="px-4 py-1 text-right">-</td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[24]
+                          ]?.toFixed(2)}
+                        </td>
+                        {!receivedObject.tId && (
+                          <td className="px-4 py-1 text-right">-</td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[26]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          -
+                        </td>
                       </tr>
                     )}
                   </tbody>
