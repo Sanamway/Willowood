@@ -17,7 +17,7 @@ const RPTable = (props) => {
   useEffect(() => {
     if (Array.isArray(props.tableData[0])) {
       header = props.tableData[0]?.map((item) => item.trim());
-      setHeaderData(props.tableData[0]?.map((item) => item.trim()));
+      props.setHeaderData(props.tableData[0]?.map((item) => item.trim()));
 
       setResult(
         props.tableData.slice(1).map((row) => {
@@ -30,10 +30,10 @@ const RPTable = (props) => {
       );
     } else {
       setResult(props.tableData);
-    }
+     }
   }, [props.tableData]);
-
-  const [headerData, setHeaderData] = useState({});
+console.log("mkl", props.headerData)
+  
   const [result, setResult] = useState([]);
 
   const [totalSumObject, setTotalSumObject] = useState({});
@@ -238,14 +238,16 @@ const RPTable = (props) => {
       </div>
       <br />
       <div className="flex items-center justify-end w-full gap-4 ">
-        <button
-          onClick={() => {
-            handleCopyFcst();
-          }}
-          className="text-center rounded-md bg-blue-500 text-white py-1 px-4 text-sm"
-        >
-          Copy FCST Qty
-        </button>
+        {router.query.formType !== "View" && (
+          <button
+            onClick={() => {
+              handleCopyFcst();
+            }}
+            className="text-center rounded-md bg-blue-500 text-white py-1 px-4 text-sm"
+          >
+            Copy FCST Qty
+          </button>
+        )}
       </div>
       {/* table layout */}
       <div className="table mb-4 w-full">
@@ -260,45 +262,45 @@ const RPTable = (props) => {
                   <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400">
                     <tr>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        {headerData[Object.keys(headerData)[0]]}
+                        {props.headerData[Object.keys(props.headerData)[0]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        {headerData[Object.keys(headerData)[3]]}
+                        {props.headerData[Object.keys(props.headerData)[3]]}
                       </th>
 
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        {headerData[Object.keys(headerData)[5]]}
+                        {props.headerData[Object.keys(props.headerData)[5]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        {headerData[Object.keys(headerData)[4]]}
+                        {props.headerData[Object.keys(props.headerData)[4]]}
                       </th>
                       <th scope="col" className="px-2 py-1    text-blue-600">
-                        {headerData[Object.keys(headerData)[43]]}
+                        {props.headerData[Object.keys(props.headerData)[43]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        {headerData[Object.keys(headerData)[6]]}
+                        {props.headerData[Object.keys(props.headerData)[6]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        {headerData[Object.keys(headerData)[8]]}
+                        {props.headerData[Object.keys(props.headerData)[8]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        {headerData[Object.keys(headerData)[10]]}
+                        {props.headerData[Object.keys(props.headerData)[10]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        {headerData[Object.keys(headerData)[12]]}
+                        {props.headerData[Object.keys(props.headerData)[12]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        {headerData[Object.keys(headerData)[14]]}
+                        {props.headerData[Object.keys(props.headerData)[14]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        {headerData[Object.keys(headerData)[15]]}
+                        {props.headerData[Object.keys(props.headerData)[15]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        {headerData[Object.keys(headerData)[17]]}
+                        {props.headerData[Object.keys(props.headerData)[17]]}
                       </th>
                       {!recievedObject.tId && (
                         <th scope="col" className="px-2 py-1 text-blue-600">
-                          {headerData[Object.keys(headerData)[37]]}
+                          {props.headerData[Object.keys(props.headerData)[37]]}
                         </th>
                       )}
 
@@ -306,23 +308,23 @@ const RPTable = (props) => {
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
-                        {headerData[Object.keys(headerData)[19]]}
+                        {props.headerData[Object.keys(props.headerData)[19]]}
                       </th>
                       <th
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
-                        {headerData[Object.keys(headerData)[21]]}
+                        {props.headerData[Object.keys(props.headerData)[21]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600 ">
-                        {headerData[Object.keys(headerData)[22]]}
+                        {props.headerData[Object.keys(props.headerData)[22]]}
                       </th>
                       <th scope="col" className="px-2 py-1 text-blue-600">
-                        {headerData[Object.keys(headerData)[23]]}
+                        {props.headerData[Object.keys(props.headerData)[23]]}
                       </th>
                       {!recievedObject?.tId && (
                         <th scope="col" className="px-2 py-1 text-blue-600">
-                          {headerData[Object.keys(headerData)[39]]}
+                          {props.headerData[Object.keys(props.headerData)[39]]}
                         </th>
                       )}
 
@@ -330,24 +332,24 @@ const RPTable = (props) => {
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
-                        {headerData[Object.keys(headerData)[25]]}
+                        {props.headerData[Object.keys(props.headerData)[25]]}
                       </th>
                       <th
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
-                        {headerData[Object.keys(headerData)[27]]}
+                        {props.headerData[Object.keys(props.headerData)[27]]}
                       </th>
                       {router.query.depotType === "All" ? (
                         <th scope="col" className="px-2 py-1 text-blue-600">
-                          {headerData[Object.keys(headerData)[28]]}
+                          {props.headerData[Object.keys(props.headerData)[28]]}
                         </th>
                       ) : (
                         ""
                       )}
                     </tr>
                   </thead>
-                  {console.log("mkn", result)}
+
                   <tbody>
                     {result.map((item) => {
                       return (

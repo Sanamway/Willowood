@@ -8,6 +8,7 @@ const TabsTwo = () => {
   const [formType, setFormType] = useState("");
   const [tableData, setTableData] = useState([]);
   const [files, setFiles] = useState(null);
+  const [headerData, setHeaderData] = useState({});
   const router = useRouter();
   useEffect(() => {
     if (router.query.formType === "Add") {
@@ -99,10 +100,12 @@ const TabsTwo = () => {
             formType={setFormType}
             tableData={tableData}
             setTableData={setTableData}
+            headerData={headerData}
+            setHeaderData={setHeaderData}
           />
         )}
         {formType === "RPSummary" && (
-          <RPSummary formType={setFormType} tableData={tableData} />
+          <RPSummary formType={setFormType} tableData={tableData}    headerData={headerData} />
         )}
       </section>
     </>

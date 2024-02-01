@@ -531,6 +531,99 @@ const RPSummary = (props) => {
   }
 
   const [filterDropDown, setFilterDropDown] = useState("Qty");
+
+  const getSummaryHeading = (type, recievedObject) => {
+    return (
+      <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400">
+        <tr>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[3]]}
+          </th>
+
+          {/* <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[5]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[4]]}
+          </th>
+          <th scope="col" className="px-2 py-1    text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[43]]}
+          </th> */}
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[6]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[8]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[10]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[12]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[14]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[15]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[17]]}
+          </th>
+          {!recievedObject.tId && (
+            <th scope="col" className="px-2 py-1 text-blue-600">
+              {props.headerData[Object.keys(props.headerData)[37]]}
+            </th>
+          )}
+
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            {props.headerData[Object.keys(props.headerData)[19]]}
+          </th>
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            {props.headerData[Object.keys(props.headerData)[21]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600 ">
+            {props.headerData[Object.keys(props.headerData)[22]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[23]]}
+          </th>
+          {!recievedObject?.tId && (
+            <th scope="col" className="px-2 py-1 text-blue-600">
+              {props.headerData[Object.keys(props.headerData)[39]]}
+            </th>
+          )}
+
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            {props.headerData[Object.keys(props.headerData)[25]]}
+          </th>
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            {props.headerData[Object.keys(props.headerData)[27]]}
+          </th>
+          {router.query.depotType === "All" ? (
+            <th scope="col" className="px-2 py-1 text-blue-600">
+              {props.headerData[Object.keys(props.headerData)[28]]}
+            </th>
+          ) : (
+            ""
+          )}
+        </tr>
+      </thead>
+    );
+  };
+
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
       <SubmitModal
@@ -661,87 +754,7 @@ const RPSummary = (props) => {
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 text-center bg-gray-100 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="px-8 py-1 text-blue-600">
-                        Brand Description
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        FY Sales Qty 21-22
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        FY Sales Qty 22-23
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600 ">
-                        Annual Budget Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        YTD Net Sale Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 22-23 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 23-24 Budget Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 23-24 FSCT Qty
-                      </th>
-                      {!receivedObject.tId && (
-                        <th scope="col" className="px-2 py-1  text-blue-600">
-                          Apr 23-24 Revised FCST
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
-                      >
-                        Apr 23-24 Revised FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Apr 23-24 Urgent Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600 ">
-                        May 23-24 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        May Budget Qty 23-24
-                      </th>
-                      {!receivedObject?.tId && (
-                        <th scope="col" className="px-2 py-1  text-blue-600">
-                          May FCST Qty 23-24
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        May 23-24 FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Expected Sale Return Qty
-                      </th>
-                      {router.query.depotType === "All" ? (
-                        <th scope="col" className="px-8 py-1 text-blue-600">
-                          Depot
-                        </th>
-                      ) : (
-                        ""
-                      )}
-                    </tr>
-                  </thead>
+                  {getSummaryHeading("Brand", receivedObject)}
                   <tbody>
                     {filterDropDown === "Qty" &&
                       namewiseData.map((item) => {
@@ -1087,103 +1100,7 @@ const RPSummary = (props) => {
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-8 py-1 text-center  text-blue-600"
-                      >
-                        Product Category
-                      </th>
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black  text-blue-600"
-                      >
-                        FY Sales Qty 21-22
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black  text-blue-600"
-                      >
-                        FY Sales Qty 22-23
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black  text-blue-600"
-                      >
-                        Annual Budget Qty 23-24
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black  text-blue-600"
-                      >
-                        YTD Net Sale Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        Apr 22-23 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        Apr 23-24 Budget Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1   text-blue-600">
-                        Apr 23-24 FSCT Qty
-                      </th>
-                      {!receivedObject.tId && (
-                        <th scope="col" className="px-2 py-1  text-blue-600">
-                          Apr 23-24 Revised FCST
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
-                      >
-                        Apr 23-24 Revised FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Apr 23-24 Urgent Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1   text-blue-600 ">
-                        May 23-24 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1   text-blue-600">
-                        May Budget Qty 23-24
-                      </th>
-                      {!receivedObject?.tId && (
-                        <th scope="col" className="px-2 py-1   text-blue-600">
-                          May FCST Qty 23-24
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        May 23-24 FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Expected Sale Return Qty
-                      </th>
-                      {router.query.depotType === "All" ? (
-                        <th scope="col" className="px-8 py-1 text-blue-600">
-                          Depot
-                        </th>
-                      ) : (
-                        ""
-                      )}
-                    </tr>
-                  </thead>
+                  {getSummaryHeading("Brand", receivedObject)}
                   <tbody>
                     {filterDropDown === "Qty" &&
                       pcatwiseData.map((item) => {
@@ -1528,88 +1445,7 @@ const RPSummary = (props) => {
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="px-8 py-1  text-blue-600">
-                        Product Segment
-                      </th>
-
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        FY Sales Qty 21-22
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        FY Sales Qty 22-23
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600 ">
-                        Annual Budget Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        YTD Net Sale Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        Apr 22-23 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        Apr 23-24 Budget Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        Apr 23-24 FSCT Qty
-                      </th>
-                      {!receivedObject.tId && (
-                        <th scope="col" className="px-2 py-1  text-blue-600">
-                          Apr 23-24 Revised FCST
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
-                      >
-                        Apr 23-24 Revised FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Apr 23-24 Urgent Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600 ">
-                        May 23-24 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        May Budget Qty 23-24
-                      </th>
-                      {!receivedObject?.tId && (
-                        <th scope="col" className="px-2 py-1  text-blue-600">
-                          May FCST Qty 23-24
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        May 23-24 FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Expected Sale Return Qty
-                      </th>
-                      {router.query.depotType === "All" ? (
-                        <th scope="col" className="px-8 py-1  text-blue-600">
-                          Depot
-                        </th>
-                      ) : (
-                        ""
-                      )}
-                    </tr>
-                  </thead>
+                  {getSummaryHeading("Brand", receivedObject)}
                   <tbody>
                     {filterDropDown === "Qty" &&
                       psegwiseData.map((item) => {
@@ -1955,88 +1791,7 @@ const RPSummary = (props) => {
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 text-center bg-gray-100 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Business Structure
-                      </th>
-
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        FY Sales Qty 21-22
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        FY Sales Qty 22-23
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Annual Budget Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        YTD Net Sale Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 22-23 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 23-24 Budget Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 23-24 FSCT Qty
-                      </th>
-                      {!receivedObject.tId && (
-                        <th scope="col" className="px-2 py-1 text-blue-600">
-                          Apr 23-24 Revised FCST
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
-                      >
-                        Apr 23-24 Revised FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Apr 23-24 Urgent Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600 ">
-                        May 23-24 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        May Budget Qty 23-24
-                      </th>
-                      {!receivedObject?.tId && (
-                        <th scope="col" className="px-2 py-1 text-blue-600">
-                          May FCST Qty 23-24
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        May 23-24 FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Expected Sale Return Qty{" "}
-                      </th>
-                      {router.query.depotType === "All" ? (
-                        <th scope="col" className="px-2 py-1 text-blue-600">
-                          Depot
-                        </th>
-                      ) : (
-                        ""
-                      )}
-                    </tr>
-                  </thead>
+                  {getSummaryHeading("Brand", receivedObject)}
 
                   <tbody>
                     {filterDropDown === "Qty" &&
