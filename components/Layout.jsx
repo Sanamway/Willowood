@@ -14,6 +14,8 @@ import menuItems from "@/constants/sidebarMenus";
 import axios from "axios";
 import { url } from "@/constants/url";
 import Link from "next/link";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { MdKeyboardArrowDown } from "react-icons/md";
 
 const Layout = ({ children }) => {
   const router = useRouter();
@@ -95,7 +97,7 @@ const Layout = ({ children }) => {
         { headers: headers }
       );
       const respData = await resp.data.data;
-      // console.log("laymenus", respData);
+      console.log("laymenus", respData);
       setMenus(respData);
     } catch (error) {
       console.log("error : ", error);
@@ -203,29 +205,49 @@ const Layout = ({ children }) => {
                         : "flex-row gap-2 text-[0.8rem] "
                     }  cursor-pointer text-left border-1 rounded-md border-black w-full hover:bg-orange-500  px-2 py-1 `}
                   >
-                    <div className="">
+                    <div className="" 
+                    // onClick={(e) => {
+                    //       e.preventDefault();
+                    //       // router.push(`/${item.page_call}`);
+                    //       router.push({
+                    //         pathname: `/${menu.page_call}`,
+                    //         query: { name: `${menu.label}` },
+                    //       });
+                    //     }}
+                        >
                       <AiOutlineMail
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // router.push(`/${item.page_call}`);
+                        size={20}
+                      ></AiOutlineMail>
+                    </div>
+                    <div
+                      // onClick={() => {
+                      //   setSubmenu((prev) =>
+                      //     prev == menu.label ? null : menu.label
+                      //   );
+                      // }}
+
+                      onClick={(e) => {
+                        e.preventDefault();
+                        // router.push(`/${item.page_call}`);
+                        if(!menu.page_call.startsWith("/")){
                           router.push({
                             pathname: `/${menu.page_call}`,
                             query: { name: `${menu.label}` },
                           });
-                        }}
-                        size={20}
-                      ></AiOutlineMail>
-                    </div>
-                    <h2
-                      onClick={() => {
+                        }
+                        
+                      }}
+                      className={`select-none whitespace-nowrap  flex items-center justify-between w-full`}
+                    >
+                      {menu.label} 
+                       </div>
+                     <div>
+                     <h2  onClick={() => {
                         setSubmenu((prev) =>
                           prev == menu.label ? null : menu.label
                         );
-                      }}
-                      className={`select-none whitespace-nowrap `}
-                    >
-                      {menu.label}
-                    </h2>
+                      }}>{showSubmenu == menu.label ? <MdKeyboardArrowDown size={20}/>:<MdKeyboardArrowRight size={20}/>}</h2>
+                     </div>
                   </div>
 
                   {showSubmenu == menu.label && (
