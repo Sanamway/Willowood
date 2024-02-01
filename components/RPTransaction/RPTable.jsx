@@ -30,10 +30,9 @@ const RPTable = (props) => {
       );
     } else {
       setResult(props.tableData);
-     }
+    }
   }, [props.tableData]);
-console.log("mkl", props.headerData)
-  
+
   const [result, setResult] = useState([]);
 
   const [totalSumObject, setTotalSumObject] = useState({});
@@ -92,6 +91,7 @@ console.log("mkl", props.headerData)
     calculateSum(result);
   }, [result]);
   const handledownloadExcel = (data) => {
+    console.log("mlop", data);
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");

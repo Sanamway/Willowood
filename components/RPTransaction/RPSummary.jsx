@@ -4,6 +4,7 @@ import SubmitModal from "../modals/SubmitModal";
 import { url } from "@/constants/url";
 import axios from "axios";
 import { useRouter } from "next/router";
+import * as XLSX from "xlsx";
 const RPSummary = (props) => {
   const router = useRouter();
 
@@ -359,7 +360,12 @@ const RPSummary = (props) => {
   };
 
   const [namewiseData, setNamewiseData] = useState([]);
+  
   const [totalNamewiseData, setTotalNamewiseData] = useState({});
+
+
+  console.log("njk", namewiseData);
+  console.log("mjk",totalNamewiseData);
   useEffect(() => {
     if (!props.tableData.length) return;
     console.log("koi", props.tableData);
