@@ -305,7 +305,7 @@ const Layout = ({ children }) => {
                         />
                         <Popover
                           as="div"
-                          className="relative border-none outline-none z-50"
+                          className="relative border-none outline-none z-10"
                         >
                           {({ open }) => (
                             <>
