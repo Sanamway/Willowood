@@ -128,6 +128,49 @@ const Layout = ({ children }) => {
     if (phone_number) getImage(phone_number);
   }, [phone_number]);
 
+  //send whatsApp message Api
+
+  const whatsAppMsg = async () => {
+    try {
+      const payLoad = {
+        recipient: phone_number,
+        tem_id: "142125",
+        placeholders: [user_name, userinfo?.U_profile_name, phone_number]
+      };
+      const res = await axios.post(`${url}/api/whatsAppChat`, JSON.stringify(payLoad), {
+        headers: headers
+      });
+      const respData = await res.data;
+      console.log("Image", respData?.data?.image_url);
+      setUserImage(respData?.data?.image_url);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+const messageContent = `
+*Willowood Support*
+
+Hello! It's really great to see you here. Tell us just a few details about you and we are ready to start.
+
+*Name:* ${user_name}
+
+*Role:* ${userinfo?.U_profile_name}
+
+*Mobile:* ${phone_number}
+
+if you're available, I'd be grateful for your assistance !
+
+Application End User
+*Digital Application Support*
+`;
+
+  const sendWhatsApp = () => {
+    const encodedMessage = encodeURIComponent(messageContent);
+    window.open(`https://wa.me/+917428086211?text=${encodedMessage}`, "_blank");
+    whatsAppMsg();
+  };
+
   return (
     <>
       <div className="flex fixed w-full h-screen  font-arial bg-[#15283c]   ">
@@ -363,17 +406,21 @@ const Layout = ({ children }) => {
             </div> */}
 
             <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 group">
-              <div className="cursor-pointer w-12 h-12 rounded-full px-2 py-2 bg-green-600 ">
+              <div
+                onClick={sendWhatsApp}
+                className="cursor-pointer w-12 h-12 rounded-full px-2 py-2 bg-green-600 "
+              >
                 <div
                   id="tooltip-default"
                   role="tooltip"
-                  className="absolute whitespace-nowrap z-800 bottom-14 -left-24 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 group-hover:opacity-100"
+                  className="absolute whitespace-nowrap z-800 bottom-14 -left-32 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 group-hover:opacity-100"
                 >
-                  WhatsApp Chat Help
+                  Willowood Helpdesk Support
                   <div className="tooltip-arrow" data-popper-arrow></div>
                 </div>
                 <Image data-tooltip-target="tooltip-default" src={WhatsAppChat} alt="whatsapp" />
               </div>
+              <contentMessage />
             </div>
           </div>
         </div>
