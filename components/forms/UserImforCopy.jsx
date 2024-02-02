@@ -252,7 +252,7 @@ const UserInformation = () => {
         // return
       if (respond) {
         toast.success("User added successfully!");
-
+        whatsAppMsg()
         setTimeout(() => {
           router.push("/table/table_user_information");
         }, 4000);
@@ -517,6 +517,26 @@ const UserInformation = () => {
       getCityData(citySearch);
     }
   }, [citySearch]);
+
+  //Send WhatsApp Message on Successful Registration
+
+  async function whatsAppMsg() {
+    try {
+      const payLoad = {
+        recipient: formState.phone_number,
+        tem_id: "142125",
+        placeholders: [formState.user_name, formState.t_user, formState.phone_number]
+      };
+      const res = await axios.post(`${url}/api/whatsAppChat`, JSON.stringify(payLoad), {
+        headers: headers
+      });
+      const respData = await res.data;
+      console.log("Image", respData?.data?.image_url);
+      setUserImage(respData?.data?.image_url);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
 
   return (
     <>

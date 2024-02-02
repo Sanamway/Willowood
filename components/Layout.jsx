@@ -119,6 +119,7 @@ const Layout = ({ children }) => {
       const respData = await res.data;
       console.log("Image", respData?.data?.image_url);
       setUserImage(respData?.data?.image_url);
+      localStorage.setItem("ImageLink",respData?.data?.image_url)
     } catch (error) {
       console.log("Error", error);
     }

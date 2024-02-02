@@ -1,6 +1,8 @@
-import {useState, useEffect} from 'react'
+import {useState, Fragment,  useEffect} from 'react'
 import { useRouter} from 'next/router';
 import Layout from "../../components/Layout";
+import { Dialog, Transition } from "@headlessui/react";
+
 import { AiFillFileExcel, AiTwotoneHome } from "react-icons/ai";
 import { BiArrowBack } from "react-icons/bi";
 import { TiArrowBack } from "react-icons/ti";
@@ -9,36 +11,40 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { url } from "@/constants/url";
 import axios from "axios";
 import ConfirmModal from "../modals/ConfirmModal";
+import toast, { Toaster } from "react-hot-toast";
+import Image from 'next/image';
 import { CSVLink } from "react-csv";
+import DealerOn from '../../public/dealeron.png'
 
 const Dealer = () => {
   const router = useRouter();
-  const [prdSegmentData, setPrdSegment] = useState([]);
+  const [dealerData, setDealerData] = useState([]);
 
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
-  const gettingProductSegment = async () => {
+  const gettingDealerData = async () => {
     try {
       const resp = await axios.get(`${url}/api/get_dealer`, {
         headers: headers,
       });
       const respData = await resp.data.data;
-      setPrdSegment(respData);
+      setDealerData(respData);
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log("ff", prdSegmentData);
+  console.log("ff", dealerData);
 
   useEffect(() => {
-    gettingProductSegment();
+    gettingDealerData();
   }, []);
 
   const [isOpen, setisOpen] = useState(false);
+  const [isGenOpen, setGenOpen] = useState(false);
   const [userId, setUserId] = useState(null);
 
   const deleteHandler = (id) => {
@@ -47,7 +53,7 @@ const Dealer = () => {
   };
 
   const resetData = () => {
-    gettingProductSegment();
+    gettingDealerData();
     setisOpen(false);
   };
 
@@ -62,6 +68,52 @@ const Dealer = () => {
   ];
 
   const {name} = router.query
+
+  const [empIdState, setEmpIdState] = useState(false);
+  const [ImageLink, setImageLink] = useState(null)
+  const [dealerDetails, setdealerDetails] = useState({
+    appNo: "",
+    firstName: "",
+    midName: "",
+    lastName: "",
+    prefix: "",
+    mobile: "",
+    email: "",
+    position: "",
+    commpany: "",
+    territory: "",
+  });
+
+
+  //modal openclose 
+
+  const handleCloseModal = () => {
+    setGenOpen(false);
+    // getAllEmployees();
+    setdealerDetails({
+      appNo: "",
+      firstName: "",
+      midName: "",
+      lastName: "",
+      prefix: "",
+      mobile: "",
+      email: "",
+      position: "",
+      commpany: "",
+      territory: "",
+    });
+    setEmpIdState(null);
+  };
+
+  //setting Imag on Generate App
+
+  useEffect(() => {
+    if (window.localStorage) {
+      const ImageLink = localStorage.getItem("ImageLink");
+      setImageLink(ImageLink);
+    }
+  }, []);
+
 
   return (
     <Layout>
@@ -100,7 +152,7 @@ const Dealer = () => {
               </div>
             </div>
             <h2>
-              <CSVLink data={prdSegmentData} headers={csvHeaders}>
+              <CSVLink data={dealerData} headers={csvHeaders}>
                 <TbFileDownload
                   className="text-green-600"
                   size={34}
@@ -118,12 +170,14 @@ const Dealer = () => {
               ></AiTwotoneHome>
             </h2>
             <button
-              onClick={() => {
-                router.push({
-                  pathname: "/form/product_segment",
-                  query: { type: "CREATE" },
-                });
-              }}
+              // onClick={() => {
+              //   router.push({
+              //     pathname: "/form/product_segment",
+              //     query: { type: "CREATE" },
+              //   });
+              // }}
+              onClick={() => setGenOpen(true)}
+
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
               Generate Application
@@ -160,7 +214,7 @@ const Dealer = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                {prdSegmentData?.map((item) => (
+                {dealerData?.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
                       <button
@@ -214,16 +268,408 @@ const Dealer = () => {
                     </td>
                   </tr>
                 ))}
-              </tbody>
-
-
-             
-
-             
+              </tbody> 
             </table>
           </div>
         </div>
       </div>
+
+      <Transition appear show={isGenOpen} as={Fragment}>
+        <Dialog
+          as="div"
+          className="relative z-10   "
+          onClose={() => handleCloseModal()}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto mt-2 ">
+            <div className="flex h-full items-center justify-center p-4 text-center  ">
+              <Toaster position="bottom-center" reverseOrder={false} />
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <div className="relative  z-20 flex items-center justify-center ">
+                  <div className="absolute z-40 flex  -top-6 ">
+                    <img
+                      className="  h-[3.1rem] w-[3.1rem] rounded-full   "
+                      src={ImageLink}
+                      alt="img"
+                    />
+                  </div>
+                  <Dialog.Panel className="relative max-h-full overflow-hidden  font-arial  max-w-md transform  rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                    <div>
+                      <p className="text-sm  text-gray-500 ">
+                        Its incredible to have a young, fresh and talented mew
+                        member join our team. By working together, we can take
+                        the company a great heights, Welcome Aboard!
+                      </p>
+                    </div>
+
+                    <hr className="mt-1 mb-1" />
+                    <div className="flex flex-col justify-center">
+                      <h4 className="text-center text-gray-500">Welcome!</h4>
+                      <h3 className="text-center text-gray-500 text-lg">
+                        {/* {dealerDetails.firstName} {dealerDetails.midName}{" "}
+                        {dealerDetails.lastName} */}
+                      </h3>
+                    </div>
+                    {!empIdState && (
+                      <div className="flex justify-center py-2">
+                        <Image
+                          className="max-w-full "
+                          height={20}
+                          src={DealerOn}
+                          alt="Picture of the author"
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex flex-col gap-1 py-2">
+                      <div className="flex flex-row gap-2 justify-between px-2 ">
+                        <label
+                          className="block text-gray-700 text-sm font-bold justify-self-center"
+                          htmlFor="inputField"
+                        >
+                          First Name
+                        </label>
+                        <div className="flex flex-row gap-1 w-1/2 lg:flex ">
+                          {" "}
+                          <select
+                            className="  text-sm   text-gray-700  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                            id="stateSelect"
+                            value={dealerDetails.prefix}
+                            disabled={empIdState}
+                            onChange={(e) =>
+                              setdealerDetails({
+                                ...dealerDetails,
+                                prefix: e.target.value,
+                              })
+                            }
+                          >
+                            <option
+                              value=""
+                              className="focus:outline-none focus:border-b bg-white"
+                            >
+                              -- Prefix --
+                            </option>
+
+                            <option
+                              value="Mr."
+                              className="focus:outline-none focus:border-b bg-white"
+                            >
+                              Mr.
+                            </option>
+                            <option
+                              value="Mrs."
+                              className="focus:outline-none focus:border-b bg-white"
+                            >
+                              Mrs.
+                            </option>
+                          </select>
+                          <input
+                            className="text-black px-3 py-1 text-sm border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                            type="text"
+                            id="small-input"
+                            placeholder="First Name"
+                            value={dealerDetails.firstName}
+                            disabled={empIdState}
+                            onChange={(e) =>
+                              setdealerDetails({
+                                ...dealerDetails,
+                                firstName: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-row gap-2 justify-between px-2">
+                        <label
+                          className="block text-gray-700 text-sm font-bold justify-self-center"
+                          htmlFor="inputField"
+                        >
+                          Mid Name
+                        </label>
+                        <input
+                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="small-input"
+                          placeholder="Middle Name"
+                          value={dealerDetails.midName}
+                          disabled={empIdState}
+                          onChange={(e) =>
+                            setdealerDetails({
+                              ...dealerDetails,
+                              midName: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div className="flex flex-row gap-2 justify-between px-2">
+                        <label
+                          className="block text-gray-700 text-sm font-bold justify-self-center"
+                          htmlFor="inputField"
+                        >
+                          Last Name
+                        </label>
+                        <input
+                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="small-input"
+                          placeholder="Last Name"
+                          value={dealerDetails.lastName}
+                          disabled={empIdState}
+                          onChange={(e) =>
+                            setdealerDetails({
+                              ...dealerDetails,
+                              lastName: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div className="flex flex-row gap-2 justify-between px-2">
+                        <label
+                          className="block text-gray-700 text-sm font-bold justify-self-center"
+                          htmlFor="inputField"
+                        >
+                          Mobile No
+                        </label>
+                        <input
+                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="number"
+                          id="small-input"
+                          placeholder="Mobile No"
+                          value={dealerDetails.mobile}
+                          disabled={empIdState}
+                          onChange={(e) =>
+                            setdealerDetails({
+                              ...dealerDetails,
+                              mobile: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex flex-row gap-2 justify-between px-2">
+                        <label
+                          className="block text-gray-700 text-sm font-bold justify-self-center"
+                          htmlFor="inputField"
+                        >
+                          Email
+                        </label>
+                        <input
+                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="small-input"
+                          placeholder="Email"
+                          value={dealerDetails.email}
+                          disabled={empIdState}
+                          onChange={(e) =>
+                            setdealerDetails({
+                              ...dealerDetails,
+                              email: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex flex-row gap-2 justify-between px-2">
+                        <label
+                          className="block text-gray-700 text-sm font-bold justify-self-center"
+                          htmlFor="inputField"
+                        >
+                          Position
+                        </label>
+                        <input
+                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="small-input"
+                          placeholder="Position"
+                          value={dealerDetails.position}
+                          disabled={empIdState}
+                          onChange={(e) =>
+                            setdealerDetails({
+                              ...dealerDetails,
+                              position: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div className="flex flex-row gap-2 justify-between px-2">
+                        <label
+                          className="block text-gray-700 text-sm font-bold justify-self-center"
+                          htmlFor="inputField"
+                        >
+                          Territory
+                        </label>
+                        {/* <select
+                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          id="stateSelect"
+                          value={dealerDetails.territory}
+                          disabled={empIdState}
+                          onChange={(e) =>
+                            setdealerDetails({
+                              ...dealerDetails,
+                              territory: e.target.value,
+                            })
+                          }
+                        >
+                          <option
+                            value=""
+                            className="focus:outline-none focus:border-b bg-white"
+                          >
+                            Select
+                          </option>
+                          {allTerritory.map((item, idx) => (
+                            <option
+                              value={item.t_id}
+                              className="focus:outline-none focus:border-b bg-white"
+                              key={idx}
+                            >
+                              {item.territory_name}
+                            </option>
+                          ))}
+                        </select> */}
+                      </div>
+
+                      <div className="flex flex-row gap-2 justify-between px-2">
+                        <label
+                          className="block text-gray-700 text-sm font-bold justify-self-center"
+                          htmlFor="inputField"
+                        >
+                          Company
+                        </label>
+                        {/* <select
+                          className="text-black w-[70%] px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          id="stateSelect"
+                          value={dealerDetails.commpany}
+                          disabled={empIdState}
+                          onChange={(e) =>
+                            setdealerDetails({
+                              ...dealerDetails,
+                              commpany: e.target.value,
+                            })
+                          }
+                        >
+                          <option
+                            value=""
+                            className="focus:outline-none focus:border-b bg-white"
+                          >
+                            Select
+                          </option>
+                          {allCompany.map((item, idx) => (
+                            <option
+                              value={item.c_id}
+                              className="focus:outline-none focus:border-b bg-white"
+                              key={idx}
+                            >
+                              {item.cmpny_name}
+                            </option>
+                          ))}
+                        </select> */}
+                      </div>
+
+                      {empIdState && (
+                        <div className="flex flex-row gap-2 justify-between px-2">
+                          <label
+                            className="block text-gray-700 text-sm font-bold justify-self-center"
+                            htmlFor="inputField"
+                          >
+                            Application No.
+                          </label>
+
+                          <input
+                            className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                            type="text"
+                            id="small-input"
+                            placeholder="Position"
+                            value={dealerDetails.appNo}
+                            disabled={empIdState}
+                            onChange={(e) =>
+                              setdealerDetails({
+                                ...dealerDetails,
+                                appNo: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                      )}
+                      {empIdState && (
+                        <div className="flex flex-col items-center gap-1 w-full mt-3">
+                          <BiCheckCircle className="text-green-500 text-4xl" />
+
+                          <p className="text-lg font-bold">
+                            Thankyou for filling out the form
+                          </p>
+                          <small className="text-center">
+                            Please don'nt forget your employee application
+                            refrence number to your fill the form
+                            <br />
+                            For any furthur inquery please, contact{" "}
+                            <a
+                              href="mailto: hr@willowood.com"
+                              className="underline"
+                            >
+                              hr@willowood.com
+                            </a>
+                          </small>
+                        </div>
+                      )}
+                      {empIdState ? (
+                        <div className="flex justify-center mt-2">
+                          <div
+                            className="text-center w-40   bg-green-700 px-4 py-1 text-white  cursor-pointer"
+                            onClick={() => handleCloseModal()}
+                          >
+                            Close
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex justify-around bg-green-400 m-4 mx-2 rounded-sm w-full">
+                          <button
+                            type="button"
+                            className="text-white"
+                            onClick={() => handleGenerateEmployee()}
+                            // disabled={generateLoading}
+                          >
+                            Generate
+                          </button>
+
+                          <button
+                            type="button"
+                            className="text-white"
+                            onClick={() => handleCloseModal()}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </Dialog.Panel>
+                </div>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+     
     </Layout>
   );
 };
