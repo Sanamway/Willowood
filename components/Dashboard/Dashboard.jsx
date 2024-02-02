@@ -18,9 +18,9 @@ const Dashboard = () => {
     <>
       <section className="w-full px-3 bg-[#f0eff2] min-h-screen  pb-12 font-arial">
         {/* typography  */}
-        <div className="flex items-center justify-between w-full px-1">
-          <h2 className="font-arial text-lg font-bold text-gray-500 mt-2">Dashboard</h2>
-          <h2 className="font-arial text-sm font-bold text-gray-500 mt-2">Any Random Text</h2>
+        <div className="flex items-center justify-center w-full px-1">
+          <h2 className="font-arial text-lg font-bold text-red-500 mt-2"> This is the Sample Dashboard</h2>
+          {/* <h2 className="font-arial text-sm font-bold text-gray-500 mt-2">Any Random Text</h2> */}
         </div>
 
         {/* filter options  */}

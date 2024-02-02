@@ -17,6 +17,7 @@ import Link from "next/link";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import WhatsAppChat from "../public/whatsappchat.webp";
+import { FcVoicePresentation } from "react-icons/fc";
 
 const Layout = ({ children }) => {
   const router = useRouter();
@@ -238,7 +239,7 @@ Application End User
                       //       });
                       //     }}
                     >
-                      <AiOutlineMail size={20}></AiOutlineMail>
+                      <FcVoicePresentation size={20}></FcVoicePresentation>
                     </div>
                     <div
                       // onClick={() => {
@@ -295,7 +296,7 @@ Application End User
                                 className={`text-[0.7rem] flex items-center gap-1.5 py-1 cursor-pointer hover:bg-orange-500 px-2 rounded-md `}
                               >
                                 <div className="">
-                                  <AiOutlineMail size={15}></AiOutlineMail>
+                                  <FcVoicePresentation size={15}></FcVoicePresentation>
                                 </div>
                                 {item.umenu_Name}
                               </li>
