@@ -3,9 +3,7 @@ import { useRouter} from 'next/router';
 import Layout from "../../components/Layout";
 import { Dialog, Transition } from "@headlessui/react";
 
-import { AiFillFileExcel, AiTwotoneHome } from "react-icons/ai";
-import { BiArrowBack } from "react-icons/bi";
-import { TiArrowBack } from "react-icons/ti";
+import { AiTwotoneHome } from "react-icons/ai";
 import { TbFileDownload } from "react-icons/tb";
 import { AiOutlineSearch } from "react-icons/ai";
 import { url } from "@/constants/url";
@@ -70,42 +68,31 @@ const Dealer = () => {
   const {name} = router.query
 
   const [empIdState, setEmpIdState] = useState(false);
+
   const [ImageLink, setImageLink] = useState(null)
+
   const [dealerDetails, setdealerDetails] = useState({
     appNo: "",
-    firstName: "",
-    midName: "",
-    lastName: "",
-    prefix: "",
+    partyName: "",
     mobile: "",
     email: "",
-    position: "",
-    commpany: "",
-    territory: "",
   });
 
 
   //modal openclose 
-
   const handleCloseModal = () => {
     setGenOpen(false);
     // getAllEmployees();
     setdealerDetails({
       appNo: "",
-      firstName: "",
-      midName: "",
-      lastName: "",
-      prefix: "",
+      partyName: "",
       mobile: "",
       email: "",
-      position: "",
-      commpany: "",
-      territory: "",
     });
     setEmpIdState(null);
   };
 
-  //setting Imag on Generate App
+  //setting Image on Generate App
 
   useEffect(() => {
     if (window.localStorage) {
@@ -314,11 +301,11 @@ const Dealer = () => {
                   </div>
                   <Dialog.Panel className="relative max-h-full overflow-hidden  font-arial  max-w-md transform  rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                     <div>
-                      <p className="text-sm  text-gray-500 ">
+                      <h2 className="text-sm  text-gray-500 ">
                         Its incredible to have a young, fresh and talented mew
                         member join our team. By working together, we can take
                         the company a great heights, Welcome Aboard!
-                      </p>
+                      </h2>
                     </div>
 
                     <hr className="mt-1 mb-1" />
@@ -341,77 +328,19 @@ const Dealer = () => {
                     )}
 
                     <div className="flex flex-col gap-1 py-2">
-                      <div className="flex flex-row gap-2 justify-between px-2 ">
+                    <div className="flex flex-row gap-2 justify-between px-2">
                         <label
                           className="block text-gray-700 text-sm font-bold justify-self-center"
                           htmlFor="inputField"
                         >
-                          First Name
-                        </label>
-                        <div className="flex flex-row gap-1 w-1/2 lg:flex ">
-                          {" "}
-                          <select
-                            className="  text-sm   text-gray-700  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                            id="stateSelect"
-                            value={dealerDetails.prefix}
-                            disabled={empIdState}
-                            onChange={(e) =>
-                              setdealerDetails({
-                                ...dealerDetails,
-                                prefix: e.target.value,
-                              })
-                            }
-                          >
-                            <option
-                              value=""
-                              className="focus:outline-none focus:border-b bg-white"
-                            >
-                              -- Prefix --
-                            </option>
-
-                            <option
-                              value="Mr."
-                              className="focus:outline-none focus:border-b bg-white"
-                            >
-                              Mr.
-                            </option>
-                            <option
-                              value="Mrs."
-                              className="focus:outline-none focus:border-b bg-white"
-                            >
-                              Mrs.
-                            </option>
-                          </select>
-                          <input
-                            className="text-black px-3 py-1 text-sm border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                            type="text"
-                            id="small-input"
-                            placeholder="First Name"
-                            value={dealerDetails.firstName}
-                            disabled={empIdState}
-                            onChange={(e) =>
-                              setdealerDetails({
-                                ...dealerDetails,
-                                firstName: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex flex-row gap-2 justify-between px-2">
-                        <label
-                          className="block text-gray-700 text-sm font-bold justify-self-center"
-                          htmlFor="inputField"
-                        >
-                          Mid Name
+                          Party Name
                         </label>
                         <input
                           className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
                           id="small-input"
-                          placeholder="Middle Name"
-                          value={dealerDetails.midName}
+                          placeholder="Party Name"
+                          value={dealerDetails.partyName}
                           disabled={empIdState}
                           onChange={(e) =>
                             setdealerDetails({
@@ -421,30 +350,7 @@ const Dealer = () => {
                           }
                         />
                       </div>
-
-                      <div className="flex flex-row gap-2 justify-between px-2">
-                        <label
-                          className="block text-gray-700 text-sm font-bold justify-self-center"
-                          htmlFor="inputField"
-                        >
-                          Last Name
-                        </label>
-                        <input
-                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                          type="text"
-                          id="small-input"
-                          placeholder="Last Name"
-                          value={dealerDetails.lastName}
-                          disabled={empIdState}
-                          onChange={(e) =>
-                            setdealerDetails({
-                              ...dealerDetails,
-                              lastName: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-
+                      
                       <div className="flex flex-row gap-2 justify-between px-2">
                         <label
                           className="block text-gray-700 text-sm font-bold justify-self-center"
@@ -489,102 +395,7 @@ const Dealer = () => {
                           }
                         />
                       </div>
-                      <div className="flex flex-row gap-2 justify-between px-2">
-                        <label
-                          className="block text-gray-700 text-sm font-bold justify-self-center"
-                          htmlFor="inputField"
-                        >
-                          Position
-                        </label>
-                        <input
-                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                          type="text"
-                          id="small-input"
-                          placeholder="Position"
-                          value={dealerDetails.position}
-                          disabled={empIdState}
-                          onChange={(e) =>
-                            setdealerDetails({
-                              ...dealerDetails,
-                              position: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-
-                      <div className="flex flex-row gap-2 justify-between px-2">
-                        <label
-                          className="block text-gray-700 text-sm font-bold justify-self-center"
-                          htmlFor="inputField"
-                        >
-                          Territory
-                        </label>
-                        {/* <select
-                          className="text-black w-1/2 px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                          id="stateSelect"
-                          value={dealerDetails.territory}
-                          disabled={empIdState}
-                          onChange={(e) =>
-                            setdealerDetails({
-                              ...dealerDetails,
-                              territory: e.target.value,
-                            })
-                          }
-                        >
-                          <option
-                            value=""
-                            className="focus:outline-none focus:border-b bg-white"
-                          >
-                            Select
-                          </option>
-                          {allTerritory.map((item, idx) => (
-                            <option
-                              value={item.t_id}
-                              className="focus:outline-none focus:border-b bg-white"
-                              key={idx}
-                            >
-                              {item.territory_name}
-                            </option>
-                          ))}
-                        </select> */}
-                      </div>
-
-                      <div className="flex flex-row gap-2 justify-between px-2">
-                        <label
-                          className="block text-gray-700 text-sm font-bold justify-self-center"
-                          htmlFor="inputField"
-                        >
-                          Company
-                        </label>
-                        {/* <select
-                          className="text-black w-[70%] px-3 py-1 text-sm  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                          id="stateSelect"
-                          value={dealerDetails.commpany}
-                          disabled={empIdState}
-                          onChange={(e) =>
-                            setdealerDetails({
-                              ...dealerDetails,
-                              commpany: e.target.value,
-                            })
-                          }
-                        >
-                          <option
-                            value=""
-                            className="focus:outline-none focus:border-b bg-white"
-                          >
-                            Select
-                          </option>
-                          {allCompany.map((item, idx) => (
-                            <option
-                              value={item.c_id}
-                              className="focus:outline-none focus:border-b bg-white"
-                              key={idx}
-                            >
-                              {item.cmpny_name}
-                            </option>
-                          ))}
-                        </select> */}
-                      </div>
+                    
 
                       {empIdState && (
                         <div className="flex flex-row gap-2 justify-between px-2">
