@@ -6,24 +6,44 @@ import ChartThree from "./ChartThree";
 import TableChart from "./TableChart";
 import TableChartOne from "./TableChartOne";
 import TableChartTwo from "./TableChartTwo";
-import { businessSegment, chartData, businessUnit, zoneData, regionData } from "./sample";
+import {
+  businessSegment,
+  chartData,
+  businessUnit,
+  zoneData,
+  regionData,
+} from "./sample";
 import { zonelabel, regionLable, territoryLable } from "./labels";
 import dummyData from "./TableData";
 import { url } from "@/constants/url";
 import axios from "axios";
 
 const AllCharts = (props) => {
-
+  const { param, allTable, filterState } = props;
   const [TerriData, setTerriData] = useState("");
-  const[RegionData, setRegionData] = useState("")
-  const[ZoneData, setZoneData] = useState("")
-  const[BusinessData, setBusinessData] = useState("")
-  const[BsegmentData, setBSegmentData] = useState("")
+  const [RegionData, setRegionData] = useState("");
+  const [ZoneData, setZoneData] = useState("");
+  const [BusUnitData, setBusUnitData] = useState("");
+  const [BsegmentData, setBSegmentData] = useState("");
 
-  const headers = {
-    "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
-  };
+    if (props.territoryData) {
+      const budgetData = {
+        label: "Budget",
+        backgroundColor: "#3B82F6",
+        data: [],
+      };
+      const targetData = {
+        label: "Rolling",
+        backgroundColor: "#F97316",
+        data: [],
+      };
+      const actualData = {
+        label: "Actual",
+        backgroundColor: "#22C55E",
+        data: [],
+      };
+
+  console.log("AllChart", filterState);
 
   const router = useRouter();
 
@@ -33,99 +53,143 @@ const AllCharts = (props) => {
 
   //getting terri api data
 
-  const getTerriData = async () => {
+  const getTerriData = async (yr, month, bgId, buId, zId, rId, tId) => {
+    
     try {
       const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_t`, {
         headers: headers,
-        params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
+        // params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
+        params: {
+          t_year: yr || null,
+          m_year: month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+          bg_id: bgId === "All" || !bgId ? null : bgId,
+          bu_id: buId === "All" || !buId ? null : buId,
+          z_id: zId === "All" || !zId ? null : zId,
+          r_id: rId === "All" || !rId ? null : rId,
+          t_id: tId === "All" || !tId ? null : tId
+        }
       });
       const respdata = await res.data.data;
+      console.log("Terri", respdata);
+
       setTerriData(respdata);
     } catch (error) {
       console.log("Error:", error);
     }
-  };
+    setTerritoryGraphData(territoryData);
+    setTerritoryLabelData(territoryLabel);
+  }, [props.territoryData]);
 
-  //getting region data 
+  useEffect(() => {
+    getTerriData(
+      filterState.yr || null,
+      filterState.month || null,
+      filterState.bgId || null,
+      filterState.buId || null,
+      filterState.zId || null,
+      filterState.rId || null,
+      filterState.tId
+    );
+  }, [
+    filterState.yr,
+    filterState.month,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId
+  ]);
+
+  //getting region data
 
   const getRegionData = async () => {
     try {
       const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_r`, {
         headers: headers,
-        params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
+        params: { bu_id: 1, bg_id: 1, m_year: "2023-12", t_year: 2023, z_id: 3 }
       });
       const respdata = await res.data.data;
+      console.log("Region", respdata);
+
       setRegionData(respdata);
     } catch (error) {
       console.log("Error:", error);
     }
-  };
+    setRegionGraphData(regionData);
+    setRegionLabelData(regionLabel);
+  }, [props.regionData]);
 
-  //getting Zone Data
+  const [zoneGraphData, setZoneGraphData] = useState([]);
+  const [zonetLabelData, setZoneLabelData] = useState([]);
+  useEffect(() => {
+    let zoneData = [];
+    let zoneLabel = [];
 
   const getZoneData = async () => {
     try {
       const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_z`, {
         headers: headers,
-        params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
+        params: { bu_id: 1, bg_id: 1, m_year: "2023-12", t_year: 2023, z_id: 3 }
       });
       const respdata = await res.data.data;
+      console.log("Zoneeee", respdata);
       setZoneData(respdata);
     } catch (error) {
       console.log("Error:", error);
     }
-  };
+    setZoneGraphData(zoneData);
+    setZoneLabelData(zoneLabel);
+  }, [props.zoneData]);
 
-//getting Business Data
+  //getting Business Data
 
-  const getBusinessData = async ()=>{
+  const getBusUnitData = async () => {
     try {
       const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_bu`, {
         headers: headers,
-        params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
+        params: { bu_id: 1, bg_id: 1, m_year: "2023-12", t_year: 2023, z_id: 3 }
       });
       const respdata = await res.data.data;
-      setBusinessData(respdata);
+      setBusUnitData(respdata);
+      console.log("Business", respdata);
     } catch (error) {
       console.log("Error:", error);
     }
-  }
+  };
   //getting Business Segments
 
-  const getBSegmentsData = async ()=>{
+  const getBSegmentsData = async () => {
     try {
       const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_bg`, {
         headers: headers,
-        params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
+        params: { bu_id: 1, bg_id: 1, m_year: "2023-12", t_year: 2023, z_id: 3 }
       });
       const respdata = await res.data.data;
       setBSegmentData(respdata);
     } catch (error) {
       console.log("Error:", error);
     }
-  }
+  };
 
   useEffect(() => {
-    getTerriData();
+    // getTerriData();
     getRegionData();
-    getZoneData()
-    getBusinessData()
-    getBSegmentsData()
+    getZoneData();
+    getBusUnitData();
+    getBSegmentsData();
   }, []);
-
-
 
   //creating data for graph Territory
 
   let TerriGraphData = [];
-  let TerrilabelData =[];
+  let TerrilabelData = [];
 
   if (TerriData) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     TerriData.forEach((item) => {
-      if(item.territory_name){
+      if (item.territory_name) {
         TerrilabelData.push(item.territory_name);
       }
       if (item.budget) {
@@ -152,14 +216,14 @@ const AllCharts = (props) => {
   //creating data for graph Region
 
   let RegionGraphData = [];
-  let RegionlabelData =[];
+  let RegionlabelData = [];
 
   if (RegionData) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     RegionData.forEach((item) => {
-      if(item.region_name){
+      if (item.region_name) {
         RegionlabelData.push(item.region_name);
       }
       if (item.budget) {
@@ -186,14 +250,14 @@ const AllCharts = (props) => {
   //creating Zone graph data
 
   let ZoneGraphData = [];
-  let ZonelabelData =[];
+  let ZonelabelData = [];
 
   if (ZoneData) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     ZoneData.forEach((item) => {
-      if(item.zone_name){
+      if (item.zone_name) {
         ZonelabelData.push(item.zone_name);
       }
       if (item.budget) {
@@ -217,53 +281,51 @@ const AllCharts = (props) => {
     }
   }
 
-//creating business unit graph
+  //creating business unit graph
 
-  let BusinessGraphData = [];
-  let BusinesslabelData =[];
+  let BusUnitGraphData = [];
+  let BusUnitlabelData = [];
 
-  if (BusinessData) {
+  if (BusUnitData) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
-    BusinessData.forEach((item) => {
-      if(item.business_unit_name){
-        BusinesslabelData.push(item.business_unit_name);
+    BusUnitData.forEach((item) => {
+      if (item.business_unit_name) {
+        BusUnitlabelData.push(item.business_unit_name);
       }
       if (item.target) {
-        budgetData.data.push(item.target);
+        budgetData.data.push(item.budget);
       }
       if (item.budget) {
-        targetData.data.push(item.budget);
+        targetData.data.push(item.target);
       }
       if (item.actual) {
         actualData.data.push(item.actual);
       }
     });
     if (budgetData.data.length > 0) {
-      BusinessGraphData.push(budgetData);
+      BusUnitGraphData.push(budgetData);
     }
     if (targetData.data.length > 0) {
-      BusinessGraphData.push(targetData);
+      BusUnitGraphData.push(targetData);
     }
     if (actualData.data.length > 0) {
-      BusinessGraphData.push(actualData);
+      BusUnitGraphData.push(actualData);
     }
   }
 
-
-
-//creating business segment graph
+  //creating business segment graph
 
   let BSegmentGraphData = [];
-  let BSegmentlabelData =[];
+  let BSegmentlabelData = [];
 
   if (BsegmentData) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     BsegmentData.forEach((item) => {
-      if(item.business_segment){
+      if (item.business_segment) {
         BSegmentlabelData.push(item.business_segment);
       }
       if (item.target) {
@@ -287,22 +349,33 @@ const AllCharts = (props) => {
     }
   }
 
-  
-//************************************************************************************************//
+  //************************************************************************************************//
 
-const [prdCategory, setPrdCategory] = useState("")
-const [prdSegment, setPrdSegment] = useState("")
-
+  const [prdCategory, setPrdCategory] = useState("");
+  const [prdSegment, setPrdSegment] = useState("");
+  const [prdBrand, setPrdBrand] = useState("");
   //getting Product Category Data
 
   const getProductCategory = async () => {
     try {
       const res = await axios.get(`${url}/api/RSP_downloadAnalytical`, {
         headers: headers,
-        params: {year_1: 2021,year_2:2022,year_3:2023, year_2_cm:"2023-12",year_2_nm:"2023-01",year_3_cm:"2023-12",
-        year_3_nm:"2024-01",t_des:"Moga",t_id:37,plan_id:1,tran_id:"RP-122023",m_year:"2023-12-01T00:00:00.00Z",json:true,
-        analytical_key:"Product Category"
-      }
+        params: {
+          year_1: 2021,
+          year_2: 2022,
+          year_3: 2023,
+          year_2_cm: "2023-12",
+          year_2_nm: "2023-01",
+          year_3_cm: "2023-12",
+          year_3_nm: "2024-01",
+          t_des: "Moga",
+          t_id: 37,
+          plan_id: 1,
+          tran_id: "RP-122023",
+          m_year: "2023-12-01T00:00:00.00Z",
+          json: true,
+          analytical_key: "Product Category"
+        }
       });
       const respdata = await res.data.data;
       setPrdCategory(respdata);
@@ -315,10 +388,22 @@ const [prdSegment, setPrdSegment] = useState("")
     try {
       const res = await axios.get(`${url}/api/RSP_downloadAnalytical`, {
         headers: headers,
-        params: {year_1: 2021,year_2:2022,year_3:2023, year_2_cm:"2023-12",year_2_nm:"2023-01",year_3_cm:"2023-12",
-        year_3_nm:"2024-01",t_des:"Moga",t_id:37,plan_id:1,tran_id:"RP-122023",m_year:"2023-12-01T00:00:00.00Z",json:true,
-        analytical_key:"Product Segment"
-      }
+        params: {
+          year_1: 2021,
+          year_2: 2022,
+          year_3: 2023,
+          year_2_cm: "2023-12",
+          year_2_nm: "2023-01",
+          year_3_cm: "2023-12",
+          year_3_nm: "2024-01",
+          t_des: "Moga",
+          t_id: 37,
+          plan_id: 1,
+          tran_id: "RP-122023",
+          m_year: "2023-12-01T00:00:00.00Z",
+          json: true,
+          analytical_key: "Product Segment"
+        }
       });
       const respdata = await res.data.data;
       setPrdSegment(respdata);
@@ -327,63 +412,193 @@ const [prdSegment, setPrdSegment] = useState("")
     }
   };
 
-  useEffect(()=>{
-    getProductCategory()
-    getProductSegment()
-  },[])
+  const getProductBrand = async () => {
+    try {
+      const res = await axios.get(`${url}/api/RSP_downloadAnalytical`, {
+        headers: headers,
+        params: {
+          year_1: 2021,
+          year_2: 2022,
+          year_3: 2023,
+          year_2_cm: "2023-12",
+          year_2_nm: "2023-01",
+          year_3_cm: "2023-12",
+          year_3_nm: "2024-01",
+          t_des: "Moga",
+          t_id: 37,
+          plan_id: 1,
+          tran_id: "RP-122023",
+          m_year: "2023-12-01T00:00:00.00Z",
+          json: true,
+          analytical_key: "Brand Desc"
+        }
+      });
+      const index23Values = props.productSegmentData.map((item) => {
+        return String(item[Object.keys(item)[23]]);
+      });
 
-  console.log("PrdSegment",prdSegment)
+      // Push values into the respective data arrays
+      budgetData.data.push(...index6Values);
+      targetData.data.push(...index15Values);
+      actualData.data.push(...index23Values);
+      if (budgetData.data.length > 0) {
+        PSegmentGraphData.push(budgetData);
+      }
+      if (targetData.data.length > 0) {
+        PSegmentGraphData.push(targetData);
+      }
+      if (actualData.data.length > 0) {
+        PSegmentGraphData.push(actualData);
+      }
+      setPsGraphData(PSegmentGraphData);
+      setPsLabelData(PSegmentlabelData);
+    }
+  }, [props.productSegmentData]);
 
-//Product Category 
+<<<<<<< HEAD
+  const [pcGraphData, setPcGraphData] = useState([]);
+  const [pcLabelData, setPcLabelData] = useState([]);
+
+  useEffect(() => {
+    let PCegmentGraphData = [];
+    let PCegmentlabelData = [];
+    if (props.productCategoryData) {
+      const budgetData = {
+        label: "Budget",
+        backgroundColor: "#3B82F6",
+        data: [],
+      };
+      const targetData = {
+        label: "Rolling",
+        backgroundColor: "#F97316",
+        data: [],
+      };
+      const actualData = {
+        label: "Actual",
+        backgroundColor: "#22C55E",
+        data: [],
+      };
+      // Extract values at indexes 6, 15, and 23 from each object in newdata
+      const index6Values = props.productCategoryData.map((item) => {
+        PCegmentlabelData.push(item["Product Category"]);
+        return String(item[Object.keys(item)[6]]);
+      });
+      const index15Values = props.productCategoryData.map((item) => {
+        return String(item[Object.keys(item)[15]]);
+      });
+      const index23Values = props.productCategoryData.map((item) => {
+        return String(item[Object.keys(item)[23]]);
+      });
+
+      // Push values into the respective data arrays
+      budgetData.data.push(...index6Values);
+      targetData.data.push(...index15Values);
+      actualData.data.push(...index23Values);
+      if (budgetData.data.length > 0) {
+        PCegmentGraphData.push(budgetData);
+=======
+  useEffect(() => {
+    getProductCategory();
+    getProductSegment();
+    getProductBrand();
+  }, []);
+
+  //Product Category Graph
 
   let ProdCatGraphData = [];
-  let ProdCatLabelData =[];
+  let ProdCatLabelData = [];
 
   if (prdCategory) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     prdCategory.forEach((item) => {
-      const Keys = Object.keys(item)
-      const Values = Object.values(item)
-      if(item["Product Category"]){
+      const Keys = Object.keys(item);
+      const Values = Object.values(item);
+      if (item["Product Category"]) {
         ProdCatLabelData.push(item["Product Category"]);
+>>>>>>> 724552d069eb957e423be166b2ea89bc0d1c0b0d
       }
-      if (Keys[11]) {
-        budgetData.data.push(Values[11]);
+      if (targetData.data.length > 0) {
+        PCegmentGraphData.push(targetData);
       }
-      if (Keys[15]) {
-        targetData.data.push(Values[15]);
+      if (actualData.data.length > 0) {
+        PCegmentGraphData.push(actualData);
       }
-      if (Keys[23]) {
-        actualData.data.push(Values[23]);
-      }
-    });
-    if (targetData.data.length > 0) {
-      ProdCatGraphData.push(budgetData);
+      setPcGraphData(PCegmentGraphData);
+      setPcLabelData(PCegmentlabelData);
     }
-    if (targetData.data.length > 0) {
-      ProdCatGraphData.push(targetData);
-    }
-    if (actualData.data.length > 0) {
-      ProdCatGraphData.push(actualData);
-    }
-  }
+  }, [props.productCategoryData]);
 
+  const [pbGraphData, setPbGraphData] = useState([]);
+  const [pbLabelData, setPbLabelData] = useState([]);
 
-//Product Segments
+  useEffect(() => {
+    let PBrandGraphData = [];
+    let PBrandlabelData = [];
+    if (props.productBrandData) {
+      const budgetData = {
+        label: "Budget",
+        backgroundColor: "#3B82F6",
+        data: [],
+      };
+      const targetData = {
+        label: "Rolling",
+        backgroundColor: "#F97316",
+        data: [],
+      };
+      const actualData = {
+        label: "Actual",
+        backgroundColor: "#22C55E",
+        data: [],
+      };
+      // Extract values at indexes 6, 15, and 23 from each object in newdata
+      const index6Values = props.productBrandData.map((item) => {
+        PBrandlabelData.push(item["Brand Desc"]);
+        return String(item[Object.keys(item)[6]]);
+      });
+      const index15Values = props.productBrandData.map((item) => {
+        return String(item[Object.keys(item)[15]]);
+      });
+      const index23Values = props.productBrandData.map((item) => {
+        return String(item[Object.keys(item)[23]]);
+      });
+
+      // Push values into the respective data arrays
+      budgetData.data.push(...index6Values);
+      targetData.data.push(...index15Values);
+      actualData.data.push(...index23Values);
+      if (budgetData.data.length > 0) {
+        PBrandGraphData.push(budgetData);
+      }
+      if (targetData.data.length > 0) {
+        PBrandGraphData.push(targetData);
+      }
+      if (actualData.data.length > 0) {
+        PBrandGraphData.push(actualData);
+      }
+      setPbGraphData(PBrandGraphData);
+      setPbLabelData(PBrandlabelData);
+    }
+  }, [props.productBrandData]);
+
+<<<<<<< HEAD
+  console.log("hgf", pbGraphData, pbLabelData)
+  //************************************************************************************************//
+=======
+  //Product Segments Graph
 
   let ProdSegGraphData = [];
-  let ProdSegLabelData =[];
+  let ProdSegLabelData = [];
 
   if (prdSegment) {
     const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
     const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
     const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
     prdSegment.forEach((item) => {
-      const Keys = Object.keys(item)
-      const Values = Object.values(item)
-      if(item["Product Segment"]){
+      const Keys = Object.keys(item);
+      const Values = Object.values(item);
+      if (item["Product Segment"]) {
         ProdSegLabelData.push(item["Product Segment"]);
       }
       if (Keys[11]) {
@@ -407,93 +622,209 @@ const [prdSegment, setPrdSegment] = useState("")
     }
   }
 
-  // console.log("Prd graph", ProdCatGraphData)
-  console.log("Prd Seg", prdSegment)
-  console.log("Prd Label", ProdSegLabelData)
+  //Product Brand Graph
 
+  let ProdBrandGraphData = [];
+  let ProdBrandLabelData = [];
 
+  if (prdBrand) {
+    const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
+    const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
+    const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
+    prdBrand.forEach((item) => {
+      const Keys = Object.keys(item);
+      const Values = Object.values(item);
+      if (item["Brand Desc"]) {
+        ProdBrandLabelData.push(item["Brand Desc"]);
+      }
+      if (Keys[11]) {
+        budgetData.data.push(Values[11]);
+      }
+      if (Keys[15]) {
+        targetData.data.push(Values[15]);
+      }
+      if (Keys[23]) {
+        actualData.data.push(Values[23]);
+      }
+    });
+    if (budgetData.data.length > 0) {
+      ProdBrandGraphData.push(budgetData);
+    }
+    if (targetData.data.length > 0) {
+      ProdBrandGraphData.push(targetData);
+    }
+    if (actualData.data.length > 0) {
+      ProdBrandGraphData.push(actualData);
+    }
+  }
+
+  //Product Segment Table Data
+
+  // console.log("Product Segment", prdSegment)
+
+  const PrdSegTableData = [];
+
+  // if(prdSegment){
+  //     prdSegment.forEach((item)=>{
+  //       const Keys = Object.keys(item)
+  //       const Values = Object.values(item)
+  //       console.log(Keys)
+  //       console.log(Values)
+  //       if(Keys[0] && Keys[2] && Keys[4] && Keys[5] && Keys[6] && Keys[7] && Keys[8] && Keys[11] && Keys[15] && Keys[23] && Keys[25])
+  //       PrdSegTableData.push(item)
+  //     })
+  // }
+
+  // if (prdSegment) {
+  //   prdSegment.forEach((item) => {
+  //     const Keys = Object.keys(item);
+  //     const Values = Object.values(item);
+  //     console.log("Keys", Values)
+  //     const targetIndices = [0, 2, 4, 5, 6, , , 11, 15, 23, 6 , 7, 25, 8, 6,];
+  //     const targetKeys = targetIndices.map(index => Keys[index]);
+
+  //     const filteredItem = Object.fromEntries(
+  //       Object.entries(item).filter(([key, value]) => targetKeys.includes(key))
+  //     );
+
+  //     PrdSegTableData.push(filteredItem);
+  //   });
+  // }
+
+  // if (prdSegment) {
+  //   prdSegment.forEach((item) => {
+  //     const Keys = Object.keys(item);
+  //     const Values = Object.values(item)
+  //     console.log("Keys", Keys)
+  //     console.log("Values", Values)
+
+  //     const targetIndices = [0, 2, 4, 5, 6, 11, 15, 23, 6, 7, 25, 8, 6];
+  //     const filteredItem = {};
+
+  //     targetIndices.forEach((index) => {
+  //       const key = Keys[index];
+  //       if (key) {
+  //         filteredItem[key] = item[key];
+  //       }
+  //     });
+
+  //     PrdSegTableData.push(filteredItem);
+  //   });
+  // }
+
+  if (prdSegment) {
+    prdSegment.forEach((item) => {
+      const Keys = Object.keys(item);
+      const Values = Object.values(item);
+      // console.log("Keys", Keys)
+      // console.log("Values", Values)
+      const targetIndices = [0, 2, 4, 5, 6, 0, 11, 15, 23, 0, 0, 7, 25, 8, 0, 0, 0, 0];
+
+      const filteredItem = targetIndices.reduce((acc, index) => {
+        const key = Object.keys(item)[index];
+        if (key) {
+          acc[key] = item[key];
+        }
+        return acc;
+      }, {});
+
+      PrdSegTableData.push(filteredItem);
+    });
+  }
+
+  // console.log("ModData", PrdSegTableData);
+  console.log("PropsAll", allTable);
+
+  // ***************************************** JSX START *******************************************************************/
+>>>>>>> 724552d069eb957e423be166b2ea89bc0d1c0b0d
 
   return (
     <>
       <section className="wrapper w-full px-2 mt-2 font-arial  ">
-        <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4  ">
-          <TableChartOne
+        <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4">
+          {/* <TableChartOne
             heading={"Business Segments"}
-            title={"Business Segments ( Target vs Achievement )  - Annual , YTD , MTD"}
+            title={
+              "Business Segments ( Target vs Achievement )  - Annual , YTD , MTD"
+            }
             color={"bg-white"}
             lab={labelNameTwo}
             datas={dummyData || []}
-          ></TableChartOne>
-          <TableChartTwo
+          /> */}
+
+          {/* <TableChartTwo
             heading={"Business Units"}
-            title={"Business Units ( Target vs Achievement )  - Annual , YTD , MTD"}
+            title={
+              "Business Units ( Target vs Achievement )  - Annual , YTD , MTD"
+            }
             color={"bg-white"}
             lab={labelNameTwo}
             datas={dummyData || []}
-          ></TableChartTwo>
+          ></TableChartTwo> */}
         </div>
 
         <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
           <ChartOne
             title={"Business Segments"}
             color={"bg-blue-500"}
-            lab={BSegmentlabelData}
-            datasets={BSegmentGraphData || []}
-          ></ChartOne>
+            lab={bsLabelData}
+            datasets={bsGraphData || []}
+          />
+
           <ChartTwo
             title={"Business Units"}
             color={"bg-violet-500"}
-            lab={BusinesslabelData}
-            datasets={BusinessGraphData || []}
-          ></ChartTwo>
+            lab={bsUnitLabelData}
+            datasets={bsUnitGraphData || []}
+          />
         </div>
 
         <div className=" mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
-          <TableChart
+          {/* <TableChart
             heading={"Zone"}
             title={"Zone ( Target vs Achievement )  - Annual , YTD , MTD"}
             color={"bg-white"}
             lab={labelNameTwo}
             datas={dummyData || []}
-          ></TableChart>
+          ></TableChart> */}
         </div>
 
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
           <ChartTwo
             title={"Business Zone"}
             color={"bg-pink-500"}
-            lab={ZonelabelData}
-            datasets={ZoneGraphData || []}
+            lab={zonetLabelData}
+            datasets={zoneGraphData || []}
           ></ChartTwo>
         </div>
 
         <div className=" mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
-          <TableChart
+          {/* <TableChart
             heading={"Region"}
             title={"Region ( Target vs Achievement )  - Annual , YTD , MTD"}
             color={"bg-white"}
             lab={labelNameTwo}
             datas={dummyData || []}
-          ></TableChart>
+          ></TableChart> */}
         </div>
 
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
           <ChartThree
             title={"Business Region"}
             color={"bg-teal-400"}
-            lab={RegionlabelData}
-            datasets={RegionGraphData || []}
+            lab={regiontLabelData}
+            datasets={regionGraphData || []}
           ></ChartThree>
         </div>
 
         <div className=" mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
-          <TableChart
+          {/* <TableChart
             heading={"Territory"}
             title={"Territory ( Target vs Achievement )  - Annual , YTD , MTD"}
             color={"bg-white"}
             lab={labelNameTwo}
             datas={dummyData || []}
-          ></TableChart>
+          ></TableChart> */}
         </div>
 
         {/* territory label  */}
@@ -502,13 +833,13 @@ const [prdSegment, setPrdSegment] = useState("")
           <ChartThree
             title={"Territory"}
             color={"bg-rose-500"}
-            lab={TerrilabelData}
-            datasets={TerriGraphData || []}
+            lab={territorytLabelData}
+            datasets={territoryGraphData || []}
           ></ChartThree>
         </div>
 
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
-          <ChartOne
+          {/* <ChartOne
             title={"Customer Wise"}
             color={"bg-sky-500"}
             lab={labelNameTwo}
@@ -519,23 +850,26 @@ const [prdSegment, setPrdSegment] = useState("")
             color={"bg-sky-500"}
             lab={labelNameTwo}
             datasets={businessUnit || []}
-          ></ChartTwo>
+          ></ChartTwo> */}
         </div>
 
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
           <ChartOne
             title={"Product Segment"}
             color={"bg-orange-500"}
-            lab={ProdSegLabelData}
-            datasets={ProdSegGraphData || []}
+            lab={psLabelData}
+            datasets={psGraphData || []}
           ></ChartOne>
-          {/* <ChartTwo title={"Product Segment Data View"} color={"bg-orange-500"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo> */}
+
+          {/* Product Segment Table  */}
+
           <TableChartTwo
             heading={"Product Segment"}
-            title={"Product Segment ( Target vs Achievement )  - Annual , YTD , MTD"}
+            title={
+              "Product Segment ( Target vs Achievement )  - Annual , YTD , MTD"
+            }
             color={"bg-white"}
-            lab={labelNameTwo}
-            datas={dummyData || []}
+            datas={props.productSegmentData || []}
           ></TableChartTwo>
         </div>
 
@@ -543,33 +877,39 @@ const [prdSegment, setPrdSegment] = useState("")
           <ChartOne
             title={"Product Category"}
             color={"bg-[#15283c]"}
-            lab={ProdCatLabelData}
-            datasets={ProdCatGraphData || []}
+            lab={pcLabelData}
+            datasets={pcGraphData || []}
           ></ChartOne>
+
+          {/* Product Category Table  */}
+
           <TableChartTwo
             heading={"Product Category"}
-            title={"Product Category ( Target vs Achievement )  - Annual , YTD , MTD"}
+            title={
+              "Product Category ( Target vs Achievement )  - Annual , YTD , MTD"
+            }
             color={"bg-white"}
-            lab={labelNameTwo}
-            datas={dummyData || []}
+            datas={props.productCategoryData || []}
           ></TableChartTwo>
-
-          {/* <ChartTwo title={"Product Category Data View"} color={"bg-[#15283c]"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo> */}
         </div>
 
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
           <ChartOne
             title={"Product Brand"}
             color={"bg-indigo-500"}
-            lab={labelNameTwo}
-            datasets={chartData || []}
+            lab={pbLabelData}
+            datasets={pbGraphData || []}
           ></ChartOne>
+
+          {/* Product Brand Table  */}
+
           <TableChartTwo
             heading={"Product Brand"}
-            title={"Product Brand ( Target vs Achievement )  - Annual , YTD , MTD"}
+            title={
+              "Product Brand ( Target vs Achievement )  - Annual , YTD , MTD"
+            }
             color={"bg-white"}
-            lab={labelNameTwo}
-            datas={dummyData || []}
+            datas={props.productBrandData || []}
           ></TableChartTwo>
 
           {/* <ChartTwo title={"Product Brand Data View"} color={"bg-indigo-500"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo> */}

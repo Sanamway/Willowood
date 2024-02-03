@@ -167,6 +167,10 @@ const TrasactionPeriod = () => {
       const planId = allTransactionData.filter(
         (item) => item.isEditable === true
       )[0].plan_id;
+      const subDate = moment(
+        allTransactionData.filter((item) => item.isEditable === true)[0]
+          .subm_t_date
+      ).format("YYYY-MM-DD");
       const data = {
         rolling_plan_data: {
           plan_id: planId,
@@ -174,6 +178,7 @@ const TrasactionPeriod = () => {
           bu_id: Number(selectionState.businessUnitId),
           bg_id: Number(selectionState.businessSegmentId),
           c_id: Number(selectionState.companyId),
+          lastsubm_t_date: subDate,
           c_name: "New Man",
           ul_name: "No Man",
         },
@@ -197,6 +202,8 @@ const TrasactionPeriod = () => {
       toast.error(errorMessage);
     }
   };
+
+  console.log("moye", allTransactionData);
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />

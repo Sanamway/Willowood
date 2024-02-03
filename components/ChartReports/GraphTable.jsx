@@ -1,183 +1,365 @@
 import React, { useState, useEffect } from "react";
 
 const GraphTable = (props) => {
-  const { data } = props;
+  const { data, datas } = props;
 
-  const [resultSum, setresultSum] = useState({
-    FY_Sales_Val_21_22: 0,
-    FY_Sales_Val_22_23: 0,
-    Annual_Budget_Qty: 0,
-    Annual_Budget_Val: 0,
-    MTD_Sale_Qty:0,
-    MTD_Budget_Val:0,
-    MTD_RSP_Value:0,
-    MTD_Actual_Sale_Value:0,
-    YTD_Sale_Qty:0,
-    YTD_Budget_Value:0,
-    YTD_Actual_Sale_Value:0,
-  });
+  //function to get Keys
 
-  const calculateSum = (data) => {
-    const sum = data.reduce(
-      (acc, entry) => {
-        acc["FY_Sales_Val_21_22"] += Number(entry["FY_Sales_Val_21_22"]) || 0;
-        acc["FY_Sales_Val_22_23"] += Number(entry["FY_Sales_Val_22_23"]) || 0;
-        acc["Annual_Budget_Qty"] += Number(entry["Annual_Budget_Qty"]) || 0;
-        acc["Annual_Budget_Val"] += Number(entry["Annual_Budget_Val"]) || 0;
-        acc["MTD_Sale_Qty"] += Number(entry["MTD_Sale_Qty"]) || 0;
-        acc["MTD_Budget_Val"] += Number(entry["MTD_Budget_Val"]) || 0;
-        acc["MTD_RSP_Value"] += Number(entry["MTD_RSP_Value"]) || 0;
-        acc["MTD_Actual_Sale_Value"] += Number(entry["MTD_Actual_Sale_Value"]) || 0;
-        acc["YTD_Sale_Qty"] += Number(entry["YTD_Sale_Qty"]) || 0;
-        acc["YTD_Budget_Value"] += Number(entry["YTD_Budget_Value"]) || 0;
-        acc["YTD_Actual_Sale_Value"] += Number(entry["YTD_Actual_Sale_Value"]) || 0;
-        return acc;
-      },
-      {
-        FY_Sales_Val_21_22: 0,
-        FY_Sales_Val_22_23: 0,
-        Annual_Budget_Qty: 0,
-        Annual_Budget_Val: 0,
-        MTD_Sale_Qty:0,
-        MTD_Budget_Val:0,
-        MTD_RSP_Value:0,
-        MTD_Actual_Sale_Value:0,
-        YTD_Sale_Qty:0,
-        YTD_Budget_Value:0,
-        YTD_Actual_Sale_Value:0,
+  const keys = Object?.keys(data[0] || []);
+ 
 
-      }
-    );
+  const [resultSum, setresultSum] = useState({});
+  const dataSum = (tableData) => {
+    if (!tableData.length) return;
 
-    setresultSum(sum);
+    // Initialize an object to store the sum of values for each key
+    const sumObject = {};
+
+    // Loop through each object in the data array
+    data.forEach((item, index) => {
+      // Loop through each key in the object
+      Object.keys(item).forEach((key) => {
+        // Check if the key exists in the sumObject, if not, initialize it to 0
+        if (!sumObject[key]) {
+          sumObject[key] = 0;
+        }
+
+        // Add the value of the current object's key to the sumObject's key
+        sumObject[key] += Number(item[key]);
+      });
+    });
+    setresultSum(sumObject);
   };
-
+ 
   useEffect(() => {
-    if (!data.length) return;
-    calculateSum(data);
+    dataSum(data);
   }, [data]);
 
-
-  // const columnSums = {
-  //   salesVal2122: data.reduce((sum, item) => sum + item['FY Sales Val 21-22'], 0),
-  //   salesVal2223: data.reduce((sum, item) => sum + item['FY Sales Val 22-23'], 0),
-  //   annualBudgetQty: data.reduce((sum, item) => sum + item['Annual Budget Qty'], 0),
-  //   mtdSaleQty: data.reduce((sum, item) => sum + item['MTD Sale Qty'], 0),
-  //   mtdSaleQty: data.reduce((sum, item) => sum + item['MTD Sale Qty'], 0),
-  // };
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <>
-      <div className="overflow-x-auto chat-scrollbar select-none h-[16rem] ">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-          <thead className="text-xs text-gray-900 text-center bg-gray-100 ">
-            <tr className="">
-              <th className="px-4 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
-                {props.heading}
-              </th>
+      {mounted && (
+        <div className="overflow-x-auto chat-scrollbar select-none h-[16rem] ">
+          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
+            <thead className="text-xs text-gray-900 text-center bg-gray-100 ">
+              <tr className="">
+                <th className="px-4 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
+                  {props.heading}
+                </th>
 
-              <th className="px-4 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
-                Sales Person Name
-              </th>
+                <th className="px-4 py-1 text-center text-[0.6rem]  border font-medium text-gray-800 t">
+                  FY Sales Val 21-22
+                </th>
 
-              <th className="px-4 py-1 text-center text-[0.6rem]  border font-medium text-gray-800 t">
-                FY Sales Val 21-22
-              </th>
+                <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
+                  FY Sales Val 22-23
+                </th>
 
-              <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
-                FY Sales Val 22-23
-              </th>
-
-              <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
-                Annual Budget Qty
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
-                Annual Budget Val
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
-                MTD Sale Qty
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
-                MTD Budget Val
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
-                MTD RSP Value
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem]   border font-medium text-gray-800   ">
-                MTD Actual Sale Value
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem]  bg-green-200 border font-medium text-gray-800   ">
-                MTD Budget Achivement %
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem] bg-green-200 border font-medium text-gray-800   ">
-                MTD RSP Achivement %
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
-                YTD Sale Qty
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
-                YTD Budget Value
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
-                YTD Actual Sale Value
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem] bg-green-200 border font-medium text-gray-800   ">
-                YTD Budget Achivement %
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem] bg-green-200 border font-medium text-gray-800   ">
-                YTD RSP Achivement %
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem]  bg-orange-100 border font-medium text-gray-800   ">
-                Anual Qty Achivement %
-              </th>
-              <th className="px-2 py-1 text-center text-[0.6rem] bg-orange-100 border font-medium text-gray-800   ">
-                Anual Value Achivement %
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200 break-normal ">
-            {data.map((item) => (
-              <tr key={item.id}>
-                {Object.values(item).map((value, index) => (
-                  <td
-                    key={value}
-                    className={`px-2 text-center whitespace-nowrap ${
-                      index == 10 || index == 11 ? "bg-green-200" : ""
-                    }
-                  ${index == 15 || index == 16 ? "bg-green-200" : ""}
-                  ${index == 17 || index == 18 ? "bg-orange-100" : ""}
-                   py-1 text-[0.6rem] text-gray-900 border `}
-                  >
-                    {value}
-                  </td>
-                ))}
+                <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
+                  Annual Budget Qty
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
+                  Annual Budget Val
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
+                  MTD Sale Qty
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
+                  MTD Budget Val
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
+                  MTD RSP Value
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem]   border font-medium text-gray-800   ">
+                  MTD Actual Sale Value
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem]  bg-green-200 border font-medium text-gray-800   ">
+                  MTD Budget Achivement %
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem] bg-green-200 border font-medium text-gray-800   ">
+                  MTD RSP Achivement %
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
+                  YTD Sale Qty
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
+                  YTD Budget Value
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
+                  YTD Actual Sale Value
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem] bg-green-200 border font-medium text-gray-800   ">
+                  YTD Budget Achivement %
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem] bg-green-200 border font-medium text-gray-800   ">
+                  YTD RSP Achivement %
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem]  bg-orange-100 border font-medium text-gray-800   ">
+                  Anual Qty Achivement %
+                </th>
+                <th className="px-2 py-1 text-center text-[0.6rem] bg-orange-100 border font-medium text-gray-800   ">
+                  Anual Value Achivement %
+                </th>
               </tr>
-            ))}
-            <tr className="bg-gray-100">
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border"></td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border whitespace-nowrap">Total ( All Values in Cr.)</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["FY_Sales_Val_21_22"]).toFixed(2)}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["FY_Sales_Val_22_23"]).toFixed(2)}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["Annual_Budget_Qty"])}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["Annual_Budget_Val"])}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["MTD_Sale_Qty"])}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["MTD_Budget_Val"])}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["MTD_RSP_Value"]).toFixed(2)}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["MTD_Actual_Sale_Value"]).toFixed(2)}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{""}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{""}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["YTD_Sale_Qty"])}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["YTD_Budget_Value"])}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{parseFloat(resultSum["YTD_Actual_Sale_Value"])}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{""}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{""}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{""}</td>
-            <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">{""}</td>
-          </tr>
-          </tbody>
-        </table>
-      
-      </div>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200 break-normal ">
+              {data?.length &&
+                data?.map((item, index) => (
+                  <tr key={index}>
+                    <td
+                      className={`px-2 text-left whitespace-nowrap
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[0]]}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[2]]}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[4]]}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap 
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[5]]}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap 
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[6]]}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap 
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[""]]}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap 
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[11]]}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap 
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[15]]}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap 
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[23]]}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap ${
+                        index == 9 || index == 10
+                          ? "bg-green-200"
+                          : "bg-green-200"
+                      }
+                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
+                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[11]] !== 0
+                        ? (
+                            (item[Object.keys(item)[23]] /
+                              item[Object.keys(item)[11]]) *
+                            100
+                          ).toFixed(2) + " %"
+                        : "0 %"}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap ${
+                        index == 9 || index == 10
+                          ? "bg-green-200"
+                          : "bg-green-200"
+                      }
+                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
+                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[15]] !== 0
+                        ? (
+                            (item[Object.keys(item)[23]] /
+                              item[Object.keys(item)[15]]) *
+                            100
+                          ).toFixed(2) + " %"
+                        : "0 %"}
+                    </td>
+
+                    <td
+                      className={`px-2 text-center whitespace-nowrap 
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[7]]}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[25]]}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap 
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[8]]}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap ${
+                        index == 9 || index == 10
+                          ? "bg-green-200"
+                          : "bg-green-200"
+                      }
+                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
+                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[25]] !== 0
+                        ? (
+                            (item[Object.keys(item)[8]] /
+                              item[Object.keys(item)[25]]) *
+                            100
+                          ).toFixed(2) + " %"
+                        : "0 %"}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap ${
+                        index == 9 || index == 10
+                          ? "bg-green-200"
+                          : "bg-green-200"
+                      }
+                  ${index == 14 || index == 15 ? "bg-green-200" : ""}
+                  ${index == 16 || index == 17 ? "bg-orange-100" : ""}
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {"0%"}
+                      {/* {item[Object.keys(item)["%"]]} */}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap 
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[5]] !== 0
+                        ? (
+                            (item[Object.keys(item)[7]] /
+                              item[Object.keys(item)[5]]) *
+                            100
+                          ).toFixed(2) + " %"
+                        : "0 %"}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap 
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item[Object.keys(item)[6]] !== 0
+                        ? (
+                            (item[Object.keys(item)[8]] /
+                              item[Object.keys(item)[6]]) *
+                            100
+                          ).toFixed(2) + " %"
+                        : "0 %"}
+                    </td>
+                  </tr>
+                ))}
+              {/* {data.length &&
+                data?.map((item, index) => (
+                  <tr key={item.id}>
+                    {Object.values(item).map((value, columnIndex) => (
+                      <td
+                        key={columnIndex}
+                        className={`px-2 text-center whitespace-nowrap ${
+                          columnIndex === 9 || columnIndex === 10 ? "bg-green-200" : ""
+                        }
+        ${columnIndex === 14 || columnIndex === 15 ? "bg-green-200" : ""}
+        ${columnIndex === 16 || columnIndex === 17 ? "bg-orange-100" : ""}
+        py-1 text-[0.6rem] text-gray-900 border `}
+                      >
+                        {columnIndex === 9 || columnIndex === 10 || columnIndex === 5
+                          ? ""
+                          : columnIndex === 1
+                          ? value
+                          : columnIndex === 5
+                          ? "Value2"
+                          : value}
+                      </td>
+                    ))}
+                  </tr>
+                ))} */}
+              <tr className="bg-gray-100">
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border whitespace-nowrap">
+                  Total ( All Values in Cr.)
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[2]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[4]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[5]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[6]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {""}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[11]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[15]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[23]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {""}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {""}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[7]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[25]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[8]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {""}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {""}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {""}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {""}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
     </>
   );
 };

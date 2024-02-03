@@ -708,7 +708,7 @@ const Territory = () => {
                 <button
                   className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
                   onClick={() => {
-                    router.push("/table/table_zone");
+                    router.push("/table/table_territory");
                   }}
                 >
                   Close

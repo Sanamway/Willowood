@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Bar, Chart } from "react-chartjs-2";
-import * as FileSaver from 'file-saver'
+import { Chart } from "react-chartjs-2";
+import * as FileSaver from "file-saver";
 import html2canvas from "html2canvas";
 import {
   Chart as ChartJs,
@@ -9,7 +9,7 @@ import {
   PointElement,
   LineElement,
   Legend,
-  Tooltip
+  Tooltip,
 } from "chart.js/auto";
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
 import { MdOutlineCloudDownload } from "react-icons/md";
@@ -17,21 +17,27 @@ import { MdOutlineCloudDownload } from "react-icons/md";
 const ChartOne = (props) => {
   const chartRef = useRef(null);
   const chartContainerRef = useRef(null);
-  const {lab, datasets} = props
+  const { lab, datasets } = props;
+  console.log("mkl", props)
   const [height, setHeight] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
 
   //chartjs
 
-  ChartJs.register(LinearScale, BarElement, PointElement, LineElement, Legend, Tooltip);
-
+  ChartJs.register(
+    LinearScale,
+    BarElement,
+    PointElement,
+    LineElement,
+    Legend,
+    Tooltip
+  );
 
   //bar charts datas
 
-
   const data = {
     labels: lab,
-    datasets:datasets || []
+    datasets: datasets || [],
 
     // datasets: [
     //   {
@@ -40,7 +46,6 @@ const ChartOne = (props) => {
     //     borderColor: "rgb(255, 99, 132)",
     //     data: [200, 150]
     //   },
-      
 
     //   {
     //     label: "Rolling Plan",
@@ -55,11 +60,9 @@ const ChartOne = (props) => {
     //     borderColor: "rgb(255, 99, 132)",
     //     data: [200,100]
     //   },
-      
-    // ]
-    
-  };
 
+    // ]
+  };
 
   //tooltip
 
@@ -102,10 +105,10 @@ const ChartOne = (props) => {
 
   //options for chart
 
-  let options ={
-    "responsive": true,
-    "maintainAspectRatio": false
-  }
+  let options = {
+    responsive: true,
+    maintainAspectRatio: false,
+  };
 
   //download chart as jpeg
 
@@ -115,42 +118,60 @@ const ChartOne = (props) => {
         const chartImage = await html2canvas(chartContainerRef.current);
         chartImage.toBlob((blob) => {
           FileSaver.saveAs(blob, `${props.title}`);
-        }, 'image/jpeg');
+        }, "image/jpeg");
       } catch (error) {
-        console.error('Error capturing chart image:', error);
+        console.error("Error capturing chart image:", error);
       }
     }
   };
-
+  console.log("mio", data);
   return (
     <>
       <div
-      ref={chartContainerRef}
-        className={`wrapper  ${!height ? "h-72 " : ""} lg:w-2/5 flex-col bg-white rounded-lg ${
+        ref={chartContainerRef}
+        className={`wrapper  ${
+          !height ? "h-72 " : ""
+        } lg:w-2/5 flex-col bg-white rounded-lg ${
           // fullScreen ? "fixed min-w-[84%] h-auto  top-8 mx-auto" : "h-auto "
           // fullScreen ? "absolute min-w-[90%] h-auto  top-12 mx-auto" : "h-auto"
-          fullScreen ? "fixed min-w-[84%]  h-auto lg:min-h-[84%]  top-8 mx-auto" : "h-auto"
+          fullScreen
+            ? "fixed min-w-[84%]  h-auto lg:min-h-[84%]  top-8 mx-auto"
+            : "h-auto"
         } `}
       >
-        <div  className={`flex items-center justify-between rounded-t-md text-white p-2 ${props.color}`}>
+        <div
+          className={`flex items-center justify-between rounded-t-md text-white p-2 ${props.color}`}
+        >
           <div className="font flex flex-col ">
             <h2>{props.title}</h2>
           </div>
           <div className="btns flex items-center gap-2">
-          <button onClick={() => setHeight(false)}>
-                <MdOutlineCloudDownload onClick={downloadImage} size={20}></MdOutlineCloudDownload>
-              </button>
+            <button onClick={() => setHeight(false)}>
+              <MdOutlineCloudDownload
+                onClick={downloadImage}
+                size={20}
+              ></MdOutlineCloudDownload>
+            </button>
             {fullScreen ? (
-              <button className="lg:block hidden" onClick={() => setFullScreen(false)}>
+              <button
+                className="lg:block hidden"
+                onClick={() => setFullScreen(false)}
+              >
                 <FiMinimize></FiMinimize>
               </button>
             ) : (
-              <button className="lg:block hidden" onClick={() => setFullScreen(true)}>
+              <button
+                className="lg:block hidden"
+                onClick={() => setFullScreen(true)}
+              >
                 <FiMaximize></FiMaximize>
               </button>
             )}
             {!height ? (
-              <button className={`${fullScreen && "hidden"}`} onClick={() => setHeight(true)}>
+              <button
+                className={`${fullScreen && "hidden"}`}
+                onClick={() => setHeight(true)}
+              >
                 <FiMinus></FiMinus>
               </button>
             ) : (
@@ -158,12 +179,20 @@ const ChartOne = (props) => {
                 <FiPlus></FiPlus>
               </button>
             )}
-            
           </div>
         </div>
         {/* {!height && <Chart className="min-w-full min-h-full px-2" ref={chartRef} type="bar" data={data} />} */}
         {/* {!height && <Chart className="min-w-full min-h-full px-2" ref={chartRef} type="bar" data={data} />} */}
-        {!height && <Chart  className={`min-w-full lg:max-h-64  ${fullScreen ? "lg:max-h-[84%]":""} px-2`} ref={chartRef} type="bar" data={data} />}
+        {!height && (
+          <Chart
+            className={`min-w-full lg:max-h-64  ${
+              fullScreen ? "lg:max-h-[84%]" : ""
+            } px-2`}
+            ref={chartRef}
+            type="bar"
+            data={data}
+          />
+        )}
       </div>
     </>
   );

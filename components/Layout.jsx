@@ -6,13 +6,18 @@ import Profile from "../public/userimg.jpg";
 import Image from "next/image";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdLogout } from "react-icons/md";
-import WillLogo from "../public/Willowood.png";
+// import WillLogo from "../public/Willowood.png";
+import WillLogo from "../public/NewLogo.png";
 import { Popover } from "@headlessui/react";
 import { useRouter } from "next/router";
 import menuItems from "@/constants/sidebarMenus";
 import axios from "axios";
 import { url } from "@/constants/url";
 import Link from "next/link";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import WhatsAppChat from "../public/whatsappchat.webp";
+import { FcVoicePresentation } from "react-icons/fc";
 
 const Layout = ({ children }) => {
   const router = useRouter();
@@ -20,7 +25,7 @@ const Layout = ({ children }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [showSubmenu, setSubmenu] = useState(null);
-  const [profileImg, setUserImage] = useState("")
+  const [profileImg, setUserImage] = useState("");
 
   const [isUser, setUser] = useState(false);
 
@@ -57,7 +62,7 @@ const Layout = ({ children }) => {
   const [uid, setUid] = useState("");
   const [userinfo, setUserInfo] = useState("");
   const [menusItems, setMenus] = useState([]);
-  const [phone_number, setPhoneNumber] = useState("")
+  const [phone_number, setPhoneNumber] = useState("");
 
   useEffect(() => {
     if (window.localStorage) {
@@ -74,7 +79,7 @@ const Layout = ({ children }) => {
       setUid(uid);
       setMenus(JSON.parse(sidemenus));
       setUserInfo(JSON.parse(userinfoo));
-      setPhoneNumber(phone_number)
+      setPhoneNumber(phone_number);
     }
 
     if (!localStorage.getItem("uid")) {
@@ -84,7 +89,7 @@ const Layout = ({ children }) => {
 
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
   };
 
   const gettingMenuSidebar = async (uid) => {
@@ -94,7 +99,7 @@ const Layout = ({ children }) => {
         { headers: headers }
       );
       const respData = await resp.data.data;
-      // console.log("laymenus", respData);
+      console.log("laymenus", respData);
       setMenus(respData);
     } catch (error) {
       console.log("error : ", error);
@@ -105,12 +110,36 @@ const Layout = ({ children }) => {
     if (uid) gettingMenuSidebar(uid);
   }, [uid]);
 
-
-  //get user image 
+  //get user image
 
   const getImage = async (phone_number) => {
     try {
       const res = await axios.get(`${url}/api/get_image?phone_number=${phone_number}&file_path=user`, {
+        headers: headers
+      });
+      const respData = await res.data;
+      console.log("Image", respData?.data?.image_url);
+      setUserImage(respData?.data?.image_url);
+      localStorage.setItem("ImageLink",respData?.data?.image_url)
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  useEffect(() => {
+    if (phone_number) getImage(phone_number);
+  }, [phone_number]);
+
+  //send whatsApp message Api
+
+  const whatsAppMsg = async () => {
+    try {
+      const payLoad = {
+        recipient: phone_number,
+        tem_id: "142125",
+        placeholders: [user_name, userinfo?.U_profile_name, phone_number]
+      };
+      const res = await axios.post(`${url}/api/whatsAppChat`, JSON.stringify(payLoad), {
         headers: headers
       });
       const respData = await res.data;
@@ -121,9 +150,28 @@ const Layout = ({ children }) => {
     }
   };
 
-  useEffect(()=>{
-    if(phone_number) getImage(phone_number)
-  },[phone_number])
+const messageContent = `
+*Willowood Support*
+
+Hello! It's really great to see you here. Tell us just a few details about you and we are ready to start.
+
+*Name:* ${user_name}
+
+*Role:* ${userinfo?.U_profile_name}
+
+*Mobile:* ${phone_number}
+
+if you're available, I'd be grateful for your assistance !
+
+Application End User
+*Digital Application Support*
+`;
+
+  const sendWhatsApp = () => {
+    const encodedMessage = encodeURIComponent(messageContent);
+    window.open(`https://wa.me/+917428086211?text=${encodedMessage}`, "_blank");
+    whatsAppMsg();
+  };
 
   return (
     <>
@@ -131,29 +179,15 @@ const Layout = ({ children }) => {
         {/* Sidebar */}
         <div
           className={`flex-shrink-0   ${
-            isOpen
-              ? isMobile
-                ? " "
-                : "w-[6rem]  "
-              : isMobile
-              ? "hidden "
-              : "w-[14rem] "
+            isOpen ? (isMobile ? " " : "w-[6rem]  ") : isMobile ? "hidden " : "w-[14rem] "
           } bg-[#15283c] text-white custom-scrollbar min-h-screen overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-500`}
         >
-          <div
-            className={`flex flex-col ${
-              isOpen ? "items-center" : "items-start"
-            } w-full  `}
-          >
+          <div className={`flex flex-col ${isOpen ? "items-center" : "items-start"} w-full  `}>
             <div className="flex items-center justify-between relative">
               <div className="flex items-center pl-1 gap-4">
                 <div className="userImg flex items-center py-4 mx justify-center">
                   {isOpen ? (
-                    <img
-                      className="rounded-full h-8 w-8"
-                      src={profileImg}
-                      alt=""
-                    />
+                    <img className="rounded-full h-8 w-8" src={profileImg} alt="" />
                   ) : (
                     <div className="flex  items-center justify-center gap-4 ">
                       <img
@@ -165,20 +199,14 @@ const Layout = ({ children }) => {
                         alt=""
                       />
                       <div className="flex flex-col items-start font-sans">
-                        <h2 className="font-sm text-white whitespace-nowrap">
-                          {user_name}
-                        </h2>
+                        <h2 className="font-sm text-white whitespace-nowrap">{user_name}</h2>
                         <div className="flex items-center gap-2">
                           <h2
                             className={`bg-[#00FF00] h-2 w-2 rounded-full ${
-                              uid == 1
-                                ? "animate-ping"
-                                : "bg-gray-200 h-2 w-2 rounded-full"
+                              uid == 1 ? "animate-ping" : "bg-gray-200 h-2 w-2 rounded-full"
                             }`}
                           ></h2>
-                          <h2 className="text-sm text-text-green font-arial">
-                            {"Online"}
-                          </h2>
+                          <h2 className="text-sm text-text-green font-arial">{"Online"}</h2>
                         </div>
                       </div>
                     </div>
@@ -197,55 +225,78 @@ const Layout = ({ children }) => {
                   <div
                     key={_id}
                     className={`flex ${
-                      isOpen
-                        ? "flex-col text-[0.7rem] items-center"
-                        : "flex-row gap-2 text-[0.8rem] "
+                      isOpen ? "flex-col text-[0.7rem] items-center" : "flex-row gap-2 text-[0.8rem] "
                     }  cursor-pointer text-left border-1 rounded-md border-black w-full hover:bg-orange-500  px-2 py-1 `}
                   >
-                    <div className="">
-                      <AiOutlineMail
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // router.push(`/${item.page_call}`);
+                    <div
+                      className=""
+                      // onClick={(e) => {
+                      //       e.preventDefault();
+                      //       // router.push(`/${item.page_call}`);
+                      //       router.push({
+                      //         pathname: `/${menu.page_call}`,
+                      //         query: { name: `${menu.label}` },
+                      //       });
+                      //     }}
+                    >
+                      <FcVoicePresentation size={20}></FcVoicePresentation>
+                    </div>
+                    <div
+                      // onClick={() => {
+                      //   setSubmenu((prev) =>
+                      //     prev == menu.label ? null : menu.label
+                      //   );
+                      // }}
+
+                      onClick={(e) => {
+                        e.preventDefault();
+                        // router.push(`/${item.page_call}`);
+                        if (!menu.page_call.startsWith("/")) {
                           router.push({
                             pathname: `/${menu.page_call}`,
-                            query: { name: `${menu.label}` },
+                            query: { name: `${menu.label}` }
                           });
-                        }}
-                        size={20}
-                      ></AiOutlineMail>
-                    </div>
-                    <h2
-                      onClick={() => {
-                        setSubmenu((prev) =>
-                          prev == menu.label ? null : menu.label
-                        );
+                        }
                       }}
-                      className={`select-none whitespace-nowrap `}
+                      className={`select-none whitespace-nowrap  flex items-center justify-between w-full`}
                     >
                       {menu.label}
-                    </h2>
+                    </div>
+                    <div>
+                      <h2
+                        onClick={() => {
+                          setSubmenu((prev) => (prev == menu.label ? null : menu.label));
+                        }}
+                      >
+                        {showSubmenu == menu.label ? (
+                          <MdKeyboardArrowDown size={20} />
+                        ) : (
+                          <MdKeyboardArrowRight size={20} />
+                        )}
+                      </h2>
+                    </div>
                   </div>
 
                   {showSubmenu == menu.label && (
                     <div className="flex items-start justify-center  ">
                       <>
                         <ul className="gap-2 flex flex-col w-full items-start ">
-                          {menu.submenu?.map((item) => (
+                          {menu.submenu?.map((item, index) => (
                             <>
                               <li
+                                key={index}
                                 onClick={(e) => {
                                   e.preventDefault();
                                   // router.push(`/${item.page_call}`);
                                   router.push({
                                     pathname: `/${item.page_call}`,
-                                    query: { name: `${item.umenu_Name}` },
+                                    query: { name: `${item.umenu_Name}` }
                                   });
                                 }}
                                 className={`text-[0.7rem] flex items-center gap-1.5 py-1 cursor-pointer hover:bg-orange-500 px-2 rounded-md `}
                               >
                                 <div className="">
-                                  <AiOutlineMail size={15}></AiOutlineMail>
+                                  <FcVoicePresentation size={15}></FcVoicePresentation>
                                 </div>
                                 {item.umenu_Name}
                               </li>
@@ -271,14 +322,12 @@ const Layout = ({ children }) => {
                     className=" bg-[#ff5722] p-[0.9rem] lg:p-[0.8rem] h-full cursor-pointer"
                     onClick={collaps}
                   >
-                    <GiHamburgerMenu
-                      className="mx-2 my-2 "
-                      size={20}
-                    ></GiHamburgerMenu>
+                    <GiHamburgerMenu className="mx-2 my-2 " size={20}></GiHamburgerMenu>
                   </div>
                   <div className="lg:max-w-full lg:max-h-full">
                     <Image
                       src={WillLogo}
+                      alt="logo"
                       className="lg:h-[3.4rem] w-2/3 lg:w-full object-cover"
                     ></Image>
                   </div>
@@ -301,10 +350,7 @@ const Layout = ({ children }) => {
                           alt=""
                           className="h-10 w-10  border-2 border-yellow-500 rounded-full"
                         />
-                        <Popover
-                          as="div"
-                          className="relative border-none outline-none z-50"
-                        >
+                        <Popover as="div" className="relative border-none outline-none z-10">
                           {({ open }) => (
                             <>
                               <Popover.Button className="focus:outline-none">
@@ -353,8 +399,31 @@ const Layout = ({ children }) => {
             </nav>
           </div>
           {/* Main Content Area */}
-          <div className="flex-grow bg-gray bg-white h-screen overflow-auto ">
+          <div className="flex-grow bg-gray relative bg-white h-screen overflow-auto ">
             {children}
+            {/* <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
+              <div className=" cursor-pointer w-12 h-12 rounded-full  px-2 py-2 bg-green-600">
+                <Image src={WhatsAppChat} alt="whatsapp" />
+              </div>
+            </div> */}
+
+            <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 group">
+              <div
+                onClick={sendWhatsApp}
+                className="cursor-pointer w-12 h-12 rounded-full px-2 py-2 bg-green-600 "
+              >
+                <div
+                  id="tooltip-default"
+                  role="tooltip"
+                  className="absolute whitespace-nowrap z-800 bottom-14 -left-32 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 group-hover:opacity-100"
+                >
+                  Willowood Helpdesk Support
+                  <div className="tooltip-arrow" data-popper-arrow></div>
+                </div>
+                <Image data-tooltip-target="tooltip-default" src={WhatsAppChat} alt="whatsapp" />
+              </div>
+              <contentMessage />
+            </div>
           </div>
         </div>
       </div>

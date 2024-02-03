@@ -4,6 +4,7 @@ import SubmitModal from "../modals/SubmitModal";
 import { url } from "@/constants/url";
 import axios from "axios";
 import { useRouter } from "next/router";
+import * as XLSX from "xlsx";
 const RPSummary = (props) => {
   const router = useRouter();
 
@@ -166,8 +167,6 @@ const RPSummary = (props) => {
     }
   };
 
-  const getSummary = () => {};
-
   // Initialize an object to store the sums based on Brand Code
 
   const handleSaveRsp = async (status) => {
@@ -241,13 +240,13 @@ const RPSummary = (props) => {
           submitHandle(status);
         });
     } catch (errors) {
-      const errorMessage = errors?.response?.data?.error;
-
+      const errorMessage = errors?.response?.data?.message;
+      console.log("koi", errors);
+      if (!errorMessage) return;
+      setisOpen(true);
       setApiMessage(errorMessage);
     }
   };
-
-  console.log("kio", props.tableData);
 
   const handleEditRsp = async (status) => {
     try {
@@ -319,7 +318,10 @@ const RPSummary = (props) => {
           submitHandle(status);
         });
     } catch (errors) {
-      const errorMessage = errors?.response?.data?.error;
+      const errorMessage = errors?.response?.data?.message;
+
+      if (!errorMessage) return;
+      setisOpen(true);
       setApiMessage(errorMessage);
     }
   };
@@ -361,6 +363,7 @@ const RPSummary = (props) => {
   const [totalNamewiseData, setTotalNamewiseData] = useState({});
   useEffect(() => {
     if (!props.tableData.length) return;
+    console.log("koi", props.tableData);
     const sumObjectsByBrandCode = (inputArray) => {
       const sumMap = {};
       // Iterate through the input array
@@ -388,7 +391,7 @@ const RPSummary = (props) => {
 
     function sumNumericValues(data) {
       const sumObject = {};
-      console.log("olp", data);
+
       data.forEach((item) => {
         Object.keys(item).forEach((key) => {
           if (typeof item[key] === "number") {
@@ -484,6 +487,37 @@ const RPSummary = (props) => {
     setPsegwiseData(result);
   }, [props.tableData]);
 
+  const [depotData, setDepotData] = useState([]);
+  useEffect(() => {
+    if (!props.tableData.length) return;
+
+    const sumObjectsByBrandCode = (inputArray) => {
+      const sumMap = {};
+
+      // Iterate through the input array
+      inputArray.forEach((obj) => {
+        const brandCode = obj["Depot"];
+
+        // If Brand Code is not in the sumMap, initialize it
+        if (!sumMap[brandCode]) {
+          sumMap[brandCode] = { ...obj };
+        } else {
+          // Sum the values for each property (excluding non-numeric values)
+          for (const key in obj) {
+            if (!isNaN(obj[key])) {
+              sumMap[brandCode][key] = (sumMap[brandCode][key] || 0) + obj[key];
+            }
+          }
+        }
+      });
+      // Create a new array with unique Brand Code and summed values
+      const resultArray = Object.values(sumMap);
+      return resultArray;
+    };
+    const result = sumObjectsByBrandCode(props.tableData);
+    setDepotData(result);
+  }, [props.tableData]);
+
   const [rolewiseData, setRolewiseData] = useState([]);
   useEffect(() => {
     if (!props.tableData.length) return;
@@ -527,6 +561,209 @@ const RPSummary = (props) => {
     }
     return null; // Return null if no non-empty element is found
   }
+
+  const [filterDropDown, setFilterDropDown] = useState("Qty");
+
+  const getSummaryHeadingQty = (type, recievedObject) => {
+    let dynamicBlock;
+    if (type === "Brand") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[3]];
+    } else if (type === "Category") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[1]];
+    } else if (type === "Segment") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[0]];
+    } else if (type === "Structure") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[29]];
+    } else if (type === "Depot") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[28]];
+    }
+
+    return (
+      <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400">
+        <tr>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {dynamicBlock}
+          </th>
+
+          {/* <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[5]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[4]]}
+          </th>
+          <th scope="col" className="px-2 py-1    text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[43]]}
+          </th> */}
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[6]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[8]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[10]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[12]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[14]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[15]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[17]]}
+          </th>
+          {!recievedObject.tId && (
+            <th scope="col" className="px-2 py-1 text-blue-600">
+              {props.headerData[Object.keys(props.headerData)[37]]}
+            </th>
+          )}
+
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            {props.headerData[Object.keys(props.headerData)[19]]}
+          </th>
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            {props.headerData[Object.keys(props.headerData)[21]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600 ">
+            {props.headerData[Object.keys(props.headerData)[22]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[23]]}
+          </th>
+          {!recievedObject?.tId && (
+            <th scope="col" className="px-2 py-1 text-blue-600">
+              {props.headerData[Object.keys(props.headerData)[39]]}
+            </th>
+          )}
+
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            {props.headerData[Object.keys(props.headerData)[25]]}
+          </th>
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            {props.headerData[Object.keys(props.headerData)[27]]}
+          </th>
+        </tr>
+      </thead>
+    );
+  };
+
+  const getSummaryHeadingVal = (type, recievedObject) => {
+    let dynamicBlock;
+    if (type === "Brand") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[3]];
+    } else if (type === "Category") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[1]];
+    } else if (type === "Segment") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[0]];
+    } else if (type === "Structure") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[29]];
+    } else if (type === "Depot") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[28]];
+    }
+
+    return (
+      <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400 ">
+        <tr>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {dynamicBlock}
+          </th>
+
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[7]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[9]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[11]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[13]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            Empty-Column For Val
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[16]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[18]]}
+          </th>
+          {!recievedObject.tId && (
+            <th scope="col" className="px-2 py-1 text-blue-600">
+              -
+            </th>
+          )}
+
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            {props.headerData[Object.keys(props.headerData)[20]]}
+          </th>
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            Empty-Column For Val
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600 ">
+            Empty-Column For Val
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[24]]}
+          </th>
+          {!recievedObject?.tId && (
+            <th scope="col" className="px-2 py-1 text-blue-600">
+              -
+            </th>
+          )}
+
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            {props.headerData[Object.keys(props.headerData)[26]]}
+          </th>
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            Empty-Column For Val
+          </th>
+        </tr>
+      </thead>
+    );
+  };
+
+  const handledownloadBrandExcel = (data) => {
+    console.log("mlop", data);
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, `RSP.xlsx`);
+  };
+  const [recievedObject, setRecievedObject] = useState({});
+  useEffect(() => {
+    if (!router.query.filterState) return;
+    setRecievedObject(JSON.parse(decodeURIComponent(router.query.filterState)));
+  }, [router]);
+
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
       <SubmitModal
@@ -565,7 +802,9 @@ const RPSummary = (props) => {
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xs text-gray-700">Depot:</h2>
             <h2 className="font-bold text-xs text-gray-700">
-              {router.query.depot}
+              {router.query.depotType === "All"
+                ? "All Depot"
+                : router.query.depot}
             </h2>
           </div>
         </div>
@@ -629,275 +868,347 @@ const RPSummary = (props) => {
           {/* <div className="mx-auto max-w-screen-2xl px-4 lg:px-12"> */}
           <div className="mx-auto max-w-full px- ">
             {/* Start coding here */}
-            <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
-              Summary - Brand wise
-            </h4>
+            <div className="flex  justify-between">
+              <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
+                Summary - Brand wise
+                <TbFileDownload
+                  className="text-green-600 cursor-pointer "
+                  size={18}
+                  onClick={() => handledownloadBrandExcel(namewiseData)}
+                ></TbFileDownload>
+              </h4>
+
+              <select
+                className=" max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-38 "
+                id="stateSelect"
+                value={filterDropDown}
+                onChange={(e) => setFilterDropDown(e.target.value)}
+              >
+                <option value="All" className="font-bold">
+                  -- Select --
+                </option>
+                <option value="Qty" className="font-bold">
+                  Qty
+                </option>
+                <option value="Value" className="font-bold">
+                  Value
+                </option>
+              </select>
+            </div>
+
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 text-center bg-gray-100 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="px-8 py-1 text-blue-600">
-                        Brand Description
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        FY Sales Qty 21-22
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        FY Sales Qty 22-23
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600 ">
-                        Annual Budget Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        YTD Net Sale Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 22-23 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 23-24 Budget Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 23-24 FSCT Qty
-                      </th>
-                      {!receivedObject.tId && (
-                        <th scope="col" className="px-2 py-1  text-blue-600">
-                          Apr 23-24 Revised FCST
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
-                      >
-                        Apr 23-24 Revised FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Apr 23-24 Urgent Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600 ">
-                        May 23-24 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        May Budget Qty 23-24
-                      </th>
-                      {!receivedObject?.tId && (
-                        <th scope="col" className="px-2 py-1  text-blue-600">
-                          May FCST Qty 23-24
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        May 23-24 FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Expected Sale Return Qty
-                      </th>
-                    </tr>
-                  </thead>
+                  {filterDropDown === "Qty"
+                    ? getSummaryHeadingQty("Brand", receivedObject)
+                    : getSummaryHeadingVal("Brand", receivedObject)}
                   <tbody>
-                    {namewiseData.map((item) => {
-                      return (
-                        <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
-                          <td className="px-4 py-1 text-left">
-                            {item[Object.keys(item)[3]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[6]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[8]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[10]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[12]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[14]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[15]]}
-                          </td>
-                          {console.log("hi", Object.keys(item)[17])}
-                          <td className="px-4 py-1 text-right ">
-                            {item[Object.keys(item)[17]]}
-                          </td>
-                          {!receivedObject?.tId && (
-                            <td className="px-4 py-1 text-right">
-                              {item[Object.keys(item)[37]]}
+                    {filterDropDown === "Qty" &&
+                      namewiseData.map((item) => {
+                        return (
+                          <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                            <td className="px-4 py-1 text-left">
+                              {item[Object.keys(item)[3]]}
                             </td>
-                          )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
-                            {item[Object.keys(item)[19]]}
-                          </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
-                            {item[Object.keys(item)[21]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[22]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[23]]}
-                          </td>
-                          {!receivedObject.tId && (
                             <td className="px-4 py-1 text-right">
-                              {" "}
-                              {item[Object.keys(item)[39]]}
+                              {item[Object.keys(item)[6]]}
                             </td>
-                          )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                            {item[Object.keys(item)[25]]}
-                          </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                            {item[Object.keys(item)[27]]}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
-                      <td className="px-4 py-1 text-center whitespace-nowrap">
-                        Qty Total
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[6]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[8]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[10]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[12]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[14]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[15]]}
-                      </td>
-                      {console.log("hi", Object.keys(totalNamewiseData)[17])}
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[17]]}
-                      </td>
-                      {!receivedObject?.tId && (
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[8]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[10]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[12]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[14]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[15]]}
+                            </td>
+                            {console.log("hi", Object.keys(item)[17])}
+                            <td className="px-4 py-1 text-right ">
+                              {item[Object.keys(item)[17]]}
+                            </td>
+                            {!receivedObject?.tId && (
+                              <td className="px-4 py-1 text-right">
+                                {item[Object.keys(item)[37]]}
+                              </td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
+                              {item[Object.keys(item)[19]]}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
+                              {item[Object.keys(item)[21]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[22]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[23]]}
+                            </td>
+                            {!receivedObject.tId && (
+                              <td className="px-4 py-1 text-right">
+                                {" "}
+                                {item[Object.keys(item)[39]]}
+                              </td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {item[Object.keys(item)[25]]}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {item[Object.keys(item)[27]]}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {filterDropDown === "Qty" && (
+                      <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                        <td className="px-4 py-1 text-center whitespace-nowrap">
+                          Qty Total
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[Object.keys(totalNamewiseData)[6]]}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[Object.keys(totalNamewiseData)[8]]}
+                        </td>
                         <td className="px-4 py-1 text-right">
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[37]
+                              Object.keys(totalNamewiseData)[10]
                             ]
                           }
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[19]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[21]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[22]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[23]]}
-                      </td>
-                      {!receivedObject.tId && (
                         <td className="px-4 py-1 text-right">
-                          {" "}
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[39]
+                              Object.keys(totalNamewiseData)[12]
                             ]
                           }
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[25]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[27]]}
-                      </td>
-                    </tr>
-                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
-                      <td className="px-4 py-1 text-center whitespace-nowrap">
-                        Value Total (IN Lac)
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[
-                          Object.keys(totalNamewiseData)[7]
-                        ]?.toFixed(2)}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[
-                          Object.keys(totalNamewiseData)[9]
-                        ]?.toFixed(2)}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[11]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[13]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">-</td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[16]]}
-                      </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[14]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[15]
+                            ]
+                          }
+                        </td>
+                        {console.log("hi", Object.keys(totalNamewiseData)[17])}
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[17]
+                            ]
+                          }
+                        </td>
+                        {!receivedObject?.tId && (
+                          <td className="px-4 py-1 text-right">
+                            {
+                              totalNamewiseData[
+                                Object.keys(totalNamewiseData)[37]
+                              ]
+                            }
+                          </td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[19]
+                            ]
+                          }
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[21]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[22]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[23]
+                            ]
+                          }
+                        </td>
+                        {!receivedObject.tId && (
+                          <td className="px-4 py-1 text-right">
+                            {" "}
+                            {
+                              totalNamewiseData[
+                                Object.keys(totalNamewiseData)[39]
+                              ]
+                            }
+                          </td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[25]
+                            ]
+                          }
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[27]
+                            ]
+                          }
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
 
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[18]]}
-                      </td>
-                      {!receivedObject?.tId && (
-                        <td className="px-4 py-1 text-right">
-                          {
-                            totalNamewiseData[
-                              Object.keys(totalNamewiseData)[37]
-                            ]
-                          }
+                  <tbody>
+                    {filterDropDown === "Value" &&
+                      namewiseData.map((item) => {
+                        return (
+                          <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                            <td className="px-4 py-1 text-left">
+                              {item[Object.keys(item)[3]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[7]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[9]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[11]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[13]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">-</td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[16]].toFixed(2)}
+                            </td>
+
+                            <td className="px-4 py-1 text-right ">
+                              {(item[Object.keys(item)[18]] / 100000).toFixed(
+                                2
+                              )}
+                            </td>
+                            {!receivedObject?.tId && (
+                              <td className="px-4 py-1 text-right">-</td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
+                              {(item[Object.keys(item)[20]] / 100000).toFixed(
+                                2
+                              )}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
+                              -
+                            </td>
+                            <td className="px-4 py-1 text-right">-</td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[24]].toFixed(2)}
+                            </td>
+                            {!receivedObject.tId && (
+                              <td className="px-4 py-1 text-right"> -</td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {(item[Object.keys(item)[26]] / 100000).toFixed(
+                                2
+                              )}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              -
+                            </td>
+                          </tr>
+                        );
+                      })}
+
+                    {filterDropDown === "Value" && (
+                      <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                        <td className="px-4 py-1 text-center whitespace-nowrap">
+                          Value Total (IN Lac)
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[20]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        -
-                      </td>
-                      <td className="px-4 py-1 text-right">-</td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[24]]}
-                      </td>
-                      {!receivedObject.tId && (
                         <td className="px-4 py-1 text-right">
-                          {" "}
-                          {
-                            totalNamewiseData[
-                              Object.keys(totalNamewiseData)[39]
-                            ]
-                          }
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[7]
+                          ]?.toFixed(2)}
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[26]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        -
-                      </td>
-                    </tr>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[9]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[11]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[13]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">-</td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[16]
+                          ]?.toFixed(2)}
+                        </td>
+
+                        <td className="px-4 py-1 text-right">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[18]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        {!receivedObject?.tId && (
+                          <td className="px-4 py-1 text-right">-</td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[20]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          -
+                        </td>
+                        <td className="px-4 py-1 text-right">-</td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[24]
+                          ]?.toFixed(2)}
+                        </td>
+                        {!receivedObject.tId && (
+                          <td className="px-4 py-1 text-right"> -</td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[26]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          -
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -909,294 +1220,323 @@ const RPSummary = (props) => {
             <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
               Summary- Product Category wise
             </h4>
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={18}
+              onClick={() => handledownloadBrandExcel(pcatwiseData)}
+            ></TbFileDownload>
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-8 py-1 text-center  text-blue-600"
-                      >
-                        Product Category
-                      </th>
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black  text-blue-600"
-                      >
-                        FY Sales Qty 21-22
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black  text-blue-600"
-                      >
-                        FY Sales Qty 22-23
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black  text-blue-600"
-                      >
-                        Annual Budget Qty 23-24
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black  text-blue-600"
-                      >
-                        YTD Net Sale Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        Apr 22-23 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        Apr 23-24 Budget Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1   text-blue-600">
-                        Apr 23-24 FSCT Qty
-                      </th>
-                      {!receivedObject.tId && (
-                        <th scope="col" className="px-2 py-1  text-blue-600">
-                          Apr 23-24 Revised FCST
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
-                      >
-                        Apr 23-24 Revised FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Apr 23-24 Urgent Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1   text-blue-600 ">
-                        May 23-24 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1   text-blue-600">
-                        May Budget Qty 23-24
-                      </th>
-                      {!receivedObject?.tId && (
-                        <th scope="col" className="px-2 py-1   text-blue-600">
-                          May FCST Qty 23-24
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        May 23-24 FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Expected Sale Return Qty
-                      </th>
-                    </tr>
-                  </thead>
+                  {filterDropDown === "Qty"
+                    ? getSummaryHeadingQty("Category", receivedObject)
+                    : getSummaryHeadingVal("Category", receivedObject)}
                   <tbody>
-                    {pcatwiseData.map((item) => {
-                      return (
-                        <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
-                          <td className="px-2 py-1 text-left">
-                            {item[Object.keys(item)[1]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[6]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[8]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[10]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[12]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[14]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[15]]}
-                          </td>
-                          {console.log("hi", Object.keys(item)[17])}
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[17]]}
-                          </td>
-                          {!receivedObject?.tId && (
-                            <td className="px-4 py-1 text-right">
-                              {item[Object.keys(item)[37]]}
+                    {filterDropDown === "Qty" &&
+                      pcatwiseData.map((item) => {
+                        return (
+                          <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                            <td className="px-4 py-1 text-left">
+                              {item[Object.keys(item)[1]]}
                             </td>
-                          )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
-                            {item[Object.keys(item)[19]]}
-                          </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
-                            {item[Object.keys(item)[21]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[22]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[23]]}
-                          </td>
-                          {!receivedObject.tId && (
                             <td className="px-4 py-1 text-right">
-                              {" "}
-                              {item[Object.keys(item)[39]]}
+                              {item[Object.keys(item)[6]]}
                             </td>
-                          )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                            {item[Object.keys(item)[25]]}
-                          </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                            {item[Object.keys(item)[27]]}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
-                      <td className="px-4 py-1 text-center whitespace-nowrap">
-                        Qty Total
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[6]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[8]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[10]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[12]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[14]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[15]]}
-                      </td>
-                      {console.log("hi", Object.keys(totalPcatwiseData)[17])}
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[17]]}
-                      </td>
-                      {!receivedObject?.tId && (
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[8]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[10]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[12]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[14]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[15]]}
+                            </td>
+                            {console.log("hi", Object.keys(item)[17])}
+                            <td className="px-4 py-1 text-right ">
+                              {item[Object.keys(item)[17]]}
+                            </td>
+                            {!receivedObject?.tId && (
+                              <td className="px-4 py-1 text-right">
+                                {item[Object.keys(item)[37]]}
+                              </td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
+                              {item[Object.keys(item)[19]]}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
+                              {item[Object.keys(item)[21]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[22]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[23]]}
+                            </td>
+                            {!receivedObject.tId && (
+                              <td className="px-4 py-1 text-right">
+                                {" "}
+                                {item[Object.keys(item)[39]]}
+                              </td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {item[Object.keys(item)[25]]}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {item[Object.keys(item)[27]]}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {filterDropDown === "Qty" && (
+                      <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                        <td className="px-4 py-1 text-center whitespace-nowrap">
+                          Qty Total
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[Object.keys(totalNamewiseData)[6]]}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[Object.keys(totalNamewiseData)[8]]}
+                        </td>
                         <td className="px-4 py-1 text-right">
                           {
-                            totalPcatwiseData[
-                              Object.keys(totalPcatwiseData)[37]
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[10]
                             ]
                           }
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[19]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[21]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[22]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[23]]}
-                      </td>
-                      {!receivedObject.tId && (
                         <td className="px-4 py-1 text-right">
-                          {" "}
                           {
-                            totalPcatwiseData[
-                              Object.keys(totalPcatwiseData)[39]
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[12]
                             ]
                           }
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[25]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[27]]}
-                      </td>
-                    </tr>
-                    <tr className="border-b dark:border-gray-700  bg-gray-100 text-gray-600 text-xs font-bold">
-                      <td className="px-4 py-1 text-center whitespace-nowrap">
-                        Value Total (IN Lac)
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[
-                          Object.keys(totalPcatwiseData)[7]
-                        ]?.toFixed(2)}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[
-                          Object.keys(totalPcatwiseData)[9]
-                        ]?.toFixed(2)}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[11]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[13]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">-</td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[16]]}
-                      </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[14]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[15]
+                            ]
+                          }
+                        </td>
+                        {console.log("hi", Object.keys(totalNamewiseData)[17])}
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[17]
+                            ]
+                          }
+                        </td>
+                        {!receivedObject?.tId && (
+                          <td className="px-4 py-1 text-right">
+                            {
+                              totalNamewiseData[
+                                Object.keys(totalNamewiseData)[37]
+                              ]
+                            }
+                          </td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[19]
+                            ]
+                          }
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[21]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[22]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[23]
+                            ]
+                          }
+                        </td>
+                        {!receivedObject.tId && (
+                          <td className="px-4 py-1 text-right">
+                            {" "}
+                            {
+                              totalNamewiseData[
+                                Object.keys(totalNamewiseData)[39]
+                              ]
+                            }
+                          </td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[25]
+                            ]
+                          }
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[27]
+                            ]
+                          }
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
 
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[18]]}
-                      </td>
-                      {!receivedObject?.tId && (
-                        <td className="px-4 py-1 text-right">
-                          {
-                            totalPcatwiseData[
-                              Object.keys(totalPcatwiseData)[37]
-                            ]
-                          }
+                  <tbody>
+                    {filterDropDown === "Value" &&
+                      pcatwiseData.map((item) => {
+                        return (
+                          <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                            <td className="px-4 py-1 text-left">
+                              {item[Object.keys(item)[1]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[7]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[9]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[11]]?.toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[13]]?.toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">-</td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[16]]?.toFixed(2)}
+                            </td>
+
+                            <td className="px-4 py-1 text-right ">
+                              {(item[Object.keys(item)[18]] / 100000)?.toFixed(
+                                2
+                              )}
+                            </td>
+                            {!receivedObject?.tId && (
+                              <td className="px-4 py-1 text-right">-</td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
+                              {(item[Object.keys(item)[20]] / 100000)?.toFixed(
+                                2
+                              )}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
+                              -
+                            </td>
+                            <td className="px-4 py-1 text-right">-</td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[24]]?.toFixed(2)}
+                            </td>
+                            {!receivedObject.tId && (
+                              <td className="px-4 py-1 text-right"> -</td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {(item[Object.keys(item)[26]] / 100000)?.toFixed(
+                                2
+                              )}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              -
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {filterDropDown === "Value" && (
+                      <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                        <td className="px-4 py-1 text-center whitespace-nowrap">
+                          Value Total (IN Lac)
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[20]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        -
-                      </td>
-                      <td className="px-4 py-1 text-right">-</td>
-                      <td className="px-4 py-1 text-right">
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[24]]}
-                      </td>
-                      {!receivedObject.tId && (
                         <td className="px-4 py-1 text-right">
-                          {" "}
-                          {
-                            totalPcatwiseData[
-                              Object.keys(totalPcatwiseData)[39]
-                            ]
-                          }
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[7]
+                          ]?.toFixed(2)}
                         </td>
-                      )}
-                      <td
-                        td
-                        className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]"
-                      >
-                        {totalPcatwiseData[Object.keys(totalPcatwiseData)[26]]}
-                      </td>
-                      <td
-                        td
-                        className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]"
-                      >
-                        -
-                      </td>
-                    </tr>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[9]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[11]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[13]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">-</td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[16]
+                          ]?.toFixed(2)}
+                        </td>
+
+                        <td className="px-4 py-1 text-right">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[18]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        {!receivedObject?.tId && (
+                          <td className="px-4 py-1 text-right">-</td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[20]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          -
+                        </td>
+                        <td className="px-4 py-1 text-right">-</td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[24]
+                          ]?.toFixed(2)}
+                        </td>
+                        {!receivedObject.tId && (
+                          <td className="px-4 py-1 text-right">-</td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[26]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          -
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -1207,274 +1547,325 @@ const RPSummary = (props) => {
             {/* Start coding here */}
             <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
               Summary- Product Segment wise
+              <TbFileDownload
+                className="text-green-600 cursor-pointer "
+                size={18}
+                onClick={() => handledownloadBrandExcel(psegwiseData)}
+              ></TbFileDownload>
             </h4>
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="px-8 py-1  text-blue-600">
-                        Product Segment
-                      </th>
+                  {filterDropDown === "Qty"
+                    ? getSummaryHeadingQty("Segment", receivedObject)
+                    : getSummaryHeadingVal("Segment", receivedObject)}
 
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        FY Sales Qty 21-22
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        FY Sales Qty 22-23
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600 ">
-                        Annual Budget Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        YTD Net Sale Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        Apr 22-23 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        Apr 23-24 Budget Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        Apr 23-24 FSCT Qty
-                      </th>
-                      {!receivedObject.tId && (
-                        <th scope="col" className="px-2 py-1  text-blue-600">
-                          Apr 23-24 Revised FCST
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
-                      >
-                        Apr 23-24 Revised FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Apr 23-24 Urgent Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600 ">
-                        May 23-24 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1  text-blue-600">
-                        May Budget Qty 23-24
-                      </th>
-                      {!receivedObject?.tId && (
-                        <th scope="col" className="px-2 py-1  text-blue-600">
-                          May FCST Qty 23-24
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        May 23-24 FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Expected Sale Return Qty
-                      </th>
-                    </tr>
-                  </thead>
                   <tbody>
-                    {psegwiseData.map((item) => {
-                      return (
-                        <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs text-blue-600">
-                          <td className="px-4 py-1 text-left ">
-                            {item[Object.keys(item)[0]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[6]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[8]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[10]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[12]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[14]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[15]]}
-                          </td>
-                          {console.log("hi", Object.keys(item)[17])}
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[17]]}
-                          </td>
-                          {!receivedObject?.tId && (
-                            <td className="px-4 py-1 text-right">
-                              {item[Object.keys(item)[37]]}
+                    {filterDropDown === "Qty" &&
+                      psegwiseData.map((item) => {
+                        return (
+                          <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                            <td className="px-4 py-1 text-left">
+                              {item[Object.keys(item)[0]]}
                             </td>
-                          )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
-                            {item[Object.keys(item)[19]]}
-                          </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
-                            {item[Object.keys(item)[21]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[22]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[23]]}
-                          </td>
-                          {!receivedObject.tId && (
                             <td className="px-4 py-1 text-right">
-                              {" "}
-                              {item[Object.keys(item)[39]]}
+                              {item[Object.keys(item)[6]]}
                             </td>
-                          )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                            {item[Object.keys(item)[25]]}
-                          </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                            {item[Object.keys(item)[27]]}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
-                      <td className="px-4 py-1 text-center whitespace-nowrap ">
-                        Qty Total
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[6]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[8]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[10]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[12]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[14]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[15]]}
-                      </td>
-                      {console.log("hi", Object.keys(totalNamewiseData)[17])}
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[17]]}
-                      </td>
-                      {!receivedObject?.tId && (
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[8]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[10]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[12]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[14]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[15]]}
+                            </td>
+                            {console.log("hi", Object.keys(item)[17])}
+                            <td className="px-4 py-1 text-right ">
+                              {item[Object.keys(item)[17]]}
+                            </td>
+                            {!receivedObject?.tId && (
+                              <td className="px-4 py-1 text-right">
+                                {item[Object.keys(item)[37]]}
+                              </td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
+                              {item[Object.keys(item)[19]]}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
+                              {item[Object.keys(item)[21]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[22]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[23]]}
+                            </td>
+                            {!receivedObject.tId && (
+                              <td className="px-4 py-1 text-right">
+                                {" "}
+                                {item[Object.keys(item)[39]]}
+                              </td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {item[Object.keys(item)[25]]}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {item[Object.keys(item)[27]]}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {filterDropDown === "Qty" && (
+                      <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                        <td className="px-4 py-1 text-center whitespace-nowrap">
+                          Qty Total
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[Object.keys(totalNamewiseData)[6]]}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[Object.keys(totalNamewiseData)[8]]}
+                        </td>
                         <td className="px-4 py-1 text-right">
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[37]
+                              Object.keys(totalNamewiseData)[10]
                             ]
                           }
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[19]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[21]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[22]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[23]]}
-                      </td>
-                      {!receivedObject.tId && (
                         <td className="px-4 py-1 text-right">
-                          {" "}
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[39]
+                              Object.keys(totalNamewiseData)[12]
                             ]
                           }
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[25]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[27]]}
-                      </td>
-                    </tr>
-                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
-                      <td className="px-4 py-1 text-center whitespace-nowrap">
-                        Value Total (IN Lac)
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[
-                          Object.keys(totalNamewiseData)[7]
-                        ]?.toFixed(2)}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[
-                          Object.keys(totalNamewiseData)[9]
-                        ]?.toFixed(2)}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[11]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[13]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">-</td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[16]]}
-                      </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[14]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[15]
+                            ]
+                          }
+                        </td>
+                        {console.log("hi", Object.keys(totalNamewiseData)[17])}
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[17]
+                            ]
+                          }
+                        </td>
+                        {!receivedObject?.tId && (
+                          <td className="px-4 py-1 text-right">
+                            {
+                              totalNamewiseData[
+                                Object.keys(totalNamewiseData)[37]
+                              ]
+                            }
+                          </td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[19]
+                            ]
+                          }
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[21]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[22]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[23]
+                            ]
+                          }
+                        </td>
+                        {!receivedObject.tId && (
+                          <td className="px-4 py-1 text-right">
+                            {" "}
+                            {
+                              totalNamewiseData[
+                                Object.keys(totalNamewiseData)[39]
+                              ]
+                            }
+                          </td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[25]
+                            ]
+                          }
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[27]
+                            ]
+                          }
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
 
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[18]]}
-                      </td>
-                      {!receivedObject?.tId && (
-                        <td className="px-4 py-1 text-right">
-                          {
-                            totalNamewiseData[
-                              Object.keys(totalNamewiseData)[37]
-                            ]
-                          }
+                  <tbody>
+                    {filterDropDown === "Value" &&
+                      psegwiseData.map((item) => {
+                        return (
+                          <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                            <td className="px-4 py-1 text-left">
+                              {item[Object.keys(item)[0]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[7]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[9]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[11]]?.toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[13]]?.toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">-</td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[16]]?.toFixed(2)}
+                            </td>
+
+                            <td className="px-4 py-1 text-right ">
+                              {(item[Object.keys(item)[18]] / 100000)?.toFixed(
+                                2
+                              )}
+                            </td>
+                            {!receivedObject?.tId && (
+                              <td className="px-4 py-1 text-right">-</td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
+                              {(item[Object.keys(item)[20]] / 100000)?.toFixed(
+                                2
+                              )}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
+                              -
+                            </td>
+                            <td className="px-4 py-1 text-right">-</td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[24]]?.toFixed(2)}
+                            </td>
+                            {!receivedObject.tId && (
+                              <td className="px-4 py-1 text-right"> -</td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {(item[Object.keys(item)[26]] / 100000)?.toFixed(
+                                2
+                              )}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              -
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {filterDropDown === "Value" && (
+                      <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                        <td className="px-4 py-1 text-center whitespace-nowrap">
+                          Value Total (IN Lac)
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[20]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        -
-                      </td>
-                      <td className="px-4 py-1 text-right">-</td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[24]]}
-                      </td>
-                      {!receivedObject.tId && (
                         <td className="px-4 py-1 text-right">
-                          {" "}
-                          {
-                            totalNamewiseData[
-                              Object.keys(totalNamewiseData)[39]
-                            ]
-                          }
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[7]
+                          ]?.toFixed(2)}
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[26]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        -
-                      </td>
-                    </tr>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[9]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[11]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[13]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">-</td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[16]
+                          ]?.toFixed(2)}
+                        </td>
+
+                        <td className="px-4 py-1 text-right">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[18]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        {!receivedObject?.tId && (
+                          <td className="px-4 py-1 text-right">-</td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[20]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          -
+                        </td>
+                        <td className="px-4 py-1 text-right">-</td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[24]
+                          ]?.toFixed(2)}
+                        </td>
+                        {!receivedObject.tId && (
+                          <td className="px-4 py-1 text-right">-</td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[26]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          -
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -1484,275 +1875,656 @@ const RPSummary = (props) => {
           <div className="mx-auto max-w-full px- ">
             <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
               Summary-Business Structure wise
+              <TbFileDownload
+                className="text-green-600 cursor-pointer "
+                size={18}
+                onClick={() => handledownloadBrandExcel(rolewiseData)}
+              ></TbFileDownload>
             </h4>
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 text-center bg-gray-100 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Business Structure
-                      </th>
+                  {filterDropDown === "Qty"
+                    ? getSummaryHeadingQty("Structure", receivedObject)
+                    : getSummaryHeadingVal("Structure", receivedObject)}
 
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        FY Sales Qty 21-22
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        FY Sales Qty 22-23
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Annual Budget Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        YTD Net Sale Qty 23-24
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 22-23 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 23-24 Budget Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        Apr 23-24 FSCT Qty
-                      </th>
-                      {!receivedObject.tId && (
-                        <th scope="col" className="px-2 py-1 text-blue-600">
-                          Apr 23-24 Revised FCST
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
-                      >
-                        Apr 23-24 Revised FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1  bg-[#BBF7D0]  text-blue-600  border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Apr 23-24 Urgent Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600 ">
-                        May 23-24 Sale Qty
-                      </th>
-                      <th scope="col" className="px-2 py-1 text-blue-600">
-                        May Budget Qty 23-24
-                      </th>
-                      {!receivedObject?.tId && (
-                        <th scope="col" className="px-2 py-1 text-blue-600">
-                          May FCST Qty 23-24
-                          <br />
-                          (TM Cumulative)
-                        </th>
-                      )}
-
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        May 23-24 FCST Qty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-2 py-1 text-black border-l-2 border-r-2 bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200"
-                      >
-                        Expected Sale Return Qty{" "}
-                      </th>
-                    </tr>
-                  </thead>
                   <tbody>
-                    {rolewiseData.map((item) => {
-                      return (
-                        <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
-                          <td className="px-4 py-1 text-center">
-                            {getLastNonEmptyElement(router.query.zrt)}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[6]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[8]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[10]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[12]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[14]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[15]]}
-                          </td>
-                          {console.log("hi", Object.keys(item)[17])}
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[17]]}
-                          </td>
-                          {!receivedObject?.tId && (
-                            <td className="px-4 py-1 text-right">
-                              {item[Object.keys(item)[37]]}
+                    {filterDropDown === "Qty" &&
+                      rolewiseData.map((item) => {
+                        return (
+                          <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                            <td className="px-4 py-1 text-left">
+                              {getLastNonEmptyElement(router.query.zrt)}
                             </td>
-                          )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
-                            {item[Object.keys(item)[19]]}
-                          </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
-                            {item[Object.keys(item)[21]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[22]]}
-                          </td>
-                          <td className="px-4 py-1 text-right">
-                            {item[Object.keys(item)[23]]}
-                          </td>
-                          {!receivedObject.tId && (
                             <td className="px-4 py-1 text-right">
-                              {" "}
-                              {item[Object.keys(item)[39]]}
+                              {item[Object.keys(item)[6]]}
                             </td>
-                          )}
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                            {item[Object.keys(item)[25]]}
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[8]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[10]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[12]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[14]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[15]]}
+                            </td>
+                            {console.log("hi", Object.keys(item)[17])}
+                            <td className="px-4 py-1 text-right ">
+                              {item[Object.keys(item)[17]]}
+                            </td>
+                            {!receivedObject?.tId && (
+                              <td className="px-4 py-1 text-right">
+                                {item[Object.keys(item)[37]]}
+                              </td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
+                              {item[Object.keys(item)[19]]}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
+                              {item[Object.keys(item)[21]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[22]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[23]]}
+                            </td>
+                            {!receivedObject.tId && (
+                              <td className="px-4 py-1 text-right">
+                                {" "}
+                                {item[Object.keys(item)[39]]}
+                              </td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {item[Object.keys(item)[25]]}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {item[Object.keys(item)[27]]}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {filterDropDown === "Qty" && (
+                      <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                        <td className="px-4 py-1 text-center whitespace-nowrap">
+                          Qty Total
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[Object.keys(totalNamewiseData)[6]]}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[Object.keys(totalNamewiseData)[8]]}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[10]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[12]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[14]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[15]
+                            ]
+                          }
+                        </td>
+                        {console.log("hi", Object.keys(totalNamewiseData)[17])}
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[17]
+                            ]
+                          }
+                        </td>
+                        {!receivedObject?.tId && (
+                          <td className="px-4 py-1 text-right">
+                            {
+                              totalNamewiseData[
+                                Object.keys(totalNamewiseData)[37]
+                              ]
+                            }
                           </td>
-                          <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                            {item[Object.keys(item)[27]]}
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[19]
+                            ]
+                          }
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[21]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[22]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[23]
+                            ]
+                          }
+                        </td>
+                        {!receivedObject.tId && (
+                          <td className="px-4 py-1 text-right">
+                            {" "}
+                            {
+                              totalNamewiseData[
+                                Object.keys(totalNamewiseData)[39]
+                              ]
+                            }
                           </td>
-                        </tr>
-                      );
-                    })}
-                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
-                      <td className="px-4 py-1 text-center whitespace-nowrap">
-                        Qty Total
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[6]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[8]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[10]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[12]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[14]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[15]]}
-                      </td>
-                      {console.log("hi", Object.keys(totalNamewiseData)[17])}
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[17]]}
-                      </td>
-                      {!receivedObject?.tId && (
-                        <td className="px-4 py-1 text-right">
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[37]
+                              Object.keys(totalNamewiseData)[25]
                             ]
                           }
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[19]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[21]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[22]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[23]]}
-                      </td>
-                      {!receivedObject.tId && (
-                        <td className="px-4 py-1 text-right">
-                          {" "}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[39]
+                              Object.keys(totalNamewiseData)[27]
                             ]
                           }
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[25]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[27]]}
-                      </td>
-                    </tr>
+                      </tr>
+                    )}
+                  </tbody>
 
-                    <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
-                      <td className="px-4 py-1 text-center whitespace-nowrap">
-                        Value Total (IN Lac)
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[
-                          Object.keys(totalNamewiseData)[7]
-                        ]?.toFixed(2)}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[
-                          Object.keys(totalNamewiseData)[9]
-                        ]?.toFixed(2)}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[11]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[13]]}
-                      </td>
-                      <td className="px-4 py-1 text-right">-</td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[16]]}
-                      </td>
+                  <tbody>
+                    {filterDropDown === "Value" &&
+                      rolewiseData.map((item) => {
+                        return (
+                          <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                            <td className="px-4 py-1 text-left">
+                              {getLastNonEmptyElement(router.query.zrt)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[7]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[9]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[11]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[13]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">-</td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[16]]}
+                            </td>
 
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[18]]}
-                      </td>
-                      {!receivedObject?.tId && (
+                            <td className="px-4 py-1 text-right ">
+                              {(item[Object.keys(item)[18]] / 100000).toFixed(
+                                2
+                              )}
+                            </td>
+                            {!receivedObject?.tId && (
+                              <td className="px-4 py-1 text-right">-</td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
+                              {(item[Object.keys(item)[20]] / 100000).toFixed(
+                                2
+                              )}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
+                              -
+                            </td>
+                            <td className="px-4 py-1 text-right">-</td>
+                            <td className="px-4 py-1 text-right">
+                              {(item[Object.keys(item)[24]] / 100000).toFixed(
+                                2
+                              )}
+                            </td>
+                            {!receivedObject.tId && (
+                              <td className="px-4 py-1 text-right"> -</td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {(item[Object.keys(item)[26]] / 100000).toFixed(
+                                2
+                              )}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              -
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {filterDropDown === "Value" && (
+                      <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                        <td className="px-4 py-1 text-center whitespace-nowrap">
+                          Value Total (IN Lac)
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[7]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[9]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[11]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[13]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">-</td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[16]
+                          ]?.toFixed(2)}
+                        </td>
+
+                        <td className="px-4 py-1 text-right">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[18]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        {!receivedObject?.tId && (
+                          <td className="px-4 py-1 text-right">-</td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[20]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          -
+                        </td>
+                        <td className="px-4 py-1 text-right">-</td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[24]
+                          ]?.toFixed(2)}
+                        </td>
+                        {!receivedObject.tId && (
+                          <td className="px-4 py-1 text-right"> -</td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[26]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          -
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div className="mx-auto max-w-full px- ">
+            {/* Start coding here */}
+            <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
+              Summary- Depot wise
+            </h4>
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={18}
+              onClick={() => handledownloadBrandExcel(depotData)}
+            ></TbFileDownload>
+            <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                  {filterDropDown === "Qty"
+                    ? getSummaryHeadingQty("Depot", receivedObject)
+                    : getSummaryHeadingVal("Depot", receivedObject)}
+
+                  <tbody>
+                    {filterDropDown === "Qty" &&
+                      depotData.map((item) => {
+                        return (
+                          <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                            <td className="px-4 py-1 text-left">
+                              {item[Object.keys(item)[28]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[6]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[8]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[10]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[12]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[14]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[15]]}
+                            </td>
+                            {console.log("hi", Object.keys(item)[17])}
+                            <td className="px-4 py-1 text-right ">
+                              {item[Object.keys(item)[17]]}
+                            </td>
+                            {!receivedObject?.tId && (
+                              <td className="px-4 py-1 text-right">
+                                {item[Object.keys(item)[37]]}
+                              </td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
+                              {item[Object.keys(item)[19]]}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
+                              {item[Object.keys(item)[21]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[22]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[23]]}
+                            </td>
+                            {!receivedObject.tId && (
+                              <td className="px-4 py-1 text-right">
+                                {" "}
+                                {item[Object.keys(item)[39]]}
+                              </td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {item[Object.keys(item)[25]]}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {item[Object.keys(item)[27]]}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {filterDropDown === "Qty" && (
+                      <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                        <td className="px-4 py-1 text-center whitespace-nowrap">
+                          Qty Total
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[Object.keys(totalNamewiseData)[6]]}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[Object.keys(totalNamewiseData)[8]]}
+                        </td>
                         <td className="px-4 py-1 text-right">
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[37]
+                              Object.keys(totalNamewiseData)[10]
                             ]
                           }
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[20]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        -
-                      </td>
-                      <td className="px-4 py-1 text-right">-</td>
-                      <td className="px-4 py-1 text-right">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[24]]}
-                      </td>
-                      {!receivedObject.tId && (
                         <td className="px-4 py-1 text-right">
-                          {" "}
                           {
                             totalNamewiseData[
-                              Object.keys(totalNamewiseData)[39]
+                              Object.keys(totalNamewiseData)[12]
                             ]
                           }
                         </td>
-                      )}
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        {totalNamewiseData[Object.keys(totalNamewiseData)[26]]}
-                      </td>
-                      <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
-                        -
-                      </td>
-                    </tr>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[14]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[15]
+                            ]
+                          }
+                        </td>
+                        {console.log("hi", Object.keys(totalNamewiseData)[17])}
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[17]
+                            ]
+                          }
+                        </td>
+                        {!receivedObject?.tId && (
+                          <td className="px-4 py-1 text-right">
+                            {
+                              totalNamewiseData[
+                                Object.keys(totalNamewiseData)[37]
+                              ]
+                            }
+                          </td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[19]
+                            ]
+                          }
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[21]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[22]
+                            ]
+                          }
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[23]
+                            ]
+                          }
+                        </td>
+                        {!receivedObject.tId && (
+                          <td className="px-4 py-1 text-right">
+                            {" "}
+                            {
+                              totalNamewiseData[
+                                Object.keys(totalNamewiseData)[39]
+                              ]
+                            }
+                          </td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[25]
+                            ]
+                          }
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[27]
+                            ]
+                          }
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+
+                  <tbody>
+                    {filterDropDown === "Value" &&
+                      depotData.map((item) => {
+                        return (
+                          <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                            <td className="px-4 py-1 text-left">
+                              {item[Object.keys(item)[28]]}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[7]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[9]].toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[11]]?.toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[13]]?.toFixed(2)}
+                            </td>
+                            <td className="px-4 py-1 text-right">-</td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[16]]?.toFixed(2)}
+                            </td>
+
+                            <td className="px-4 py-1 text-right ">
+                              {(item[Object.keys(item)[18]] / 100000)?.toFixed(
+                                2
+                              )}
+                            </td>
+                            {!receivedObject?.tId && (
+                              <td className="px-4 py-1 text-right">-</td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0]  text-right">
+                              {(item[Object.keys(item)[20]] / 100000)?.toFixed(
+                                2
+                              )}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 bg-[#BBF7D0] text-right">
+                              -
+                            </td>
+                            <td className="px-4 py-1 text-right">-</td>
+                            <td className="px-4 py-1 text-right">
+                              {item[Object.keys(item)[24]]?.toFixed(2)}
+                            </td>
+                            {!receivedObject.tId && (
+                              <td className="px-4 py-1 text-right"> -</td>
+                            )}
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              {(item[Object.keys(item)[26]] / 100000)?.toFixed(
+                                2
+                              )}
+                            </td>
+                            <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                              -
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    {filterDropDown === "Value" && (
+                      <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
+                        <td className="px-4 py-1 text-center whitespace-nowrap">
+                          Value Total (IN Lac)
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[7]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[9]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[11]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[13]
+                          ]?.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-1 text-right">-</td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[16]
+                          ]?.toFixed(2)}
+                        </td>
+
+                        <td className="px-4 py-1 text-right">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[18]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        {!receivedObject?.tId && (
+                          <td className="px-4 py-1 text-right">-</td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[20]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          -
+                        </td>
+                        <td className="px-4 py-1 text-right">-</td>
+                        <td className="px-4 py-1 text-right">
+                          {totalNamewiseData[
+                            Object.keys(totalNamewiseData)[24]
+                          ]?.toFixed(2)}
+                        </td>
+                        {!receivedObject.tId && (
+                          <td className="px-4 py-1 text-right">-</td>
+                        )}
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          {(
+                            totalNamewiseData[
+                              Object.keys(totalNamewiseData)[26]
+                            ] / 100000
+                          )?.toFixed(2)}
+                        </td>
+                        <td className="px-2 py-1 border-l-2 border-r-2 border-blue-200 text-right bg-[#BBF7D0]">
+                          -
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>

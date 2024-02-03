@@ -470,7 +470,7 @@ const BusinessUnit = () => {
                 <button
                   className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
                   onClick={() => {
-                    router.push("/table/table_business_segment");
+                    router.push("/table/table_business_unit_division");
                   }}
                 >
                   Close
