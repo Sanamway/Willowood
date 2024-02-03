@@ -19,11 +19,12 @@ import { url } from "@/constants/url";
 import axios from "axios";
 
 const AllCharts = (props) => {
-  const [territoryGraphData, setTerritoryGraphData] = useState([]);
-  const [territorytLabelData, setTerritoryLabelData] = useState([]);
-  useEffect(() => {
-    let territoryData = [];
-    let territoryLabel = [];
+  const { param, allTable, filterState } = props;
+  const [TerriData, setTerriData] = useState("");
+  const [RegionData, setRegionData] = useState("");
+  const [ZoneData, setZoneData] = useState("");
+  const [BusUnitData, setBusUnitData] = useState("");
+  const [BsegmentData, setBSegmentData] = useState("");
 
     if (props.territoryData) {
       const budgetData = {
@@ -42,80 +43,77 @@ const AllCharts = (props) => {
         data: [],
       };
 
-      props.territoryData.forEach((item) => {
-        if (item.zone_name) {
-          territoryLabel.push(item.territory_name);
-        }
-        if (item.target) {
-          budgetData.data.push(item.budget);
-        }
-        if (item.budget) {
-          targetData.data.push(item.target);
-        }
-        if (item.actual) {
-          actualData.data.push(item.actual);
+  console.log("AllChart", filterState);
+
+  const router = useRouter();
+
+  //dynamic labels
+  const labelNameOne = ["B-2-B", "B-2-C"];
+  const labelNameTwo = ["India 1", "India 2", "India 3"];
+
+  //getting terri api data
+
+  const getTerriData = async (yr, month, bgId, buId, zId, rId, tId) => {
+    
+    try {
+      const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_t`, {
+        headers: headers,
+        // params: {bu_id: 1,bg_id: 1,m_year: "2023-12", t_year: 2023, z_id: 3}
+        params: {
+          t_year: yr || null,
+          m_year: month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+          bg_id: bgId === "All" || !bgId ? null : bgId,
+          bu_id: buId === "All" || !buId ? null : buId,
+          z_id: zId === "All" || !zId ? null : zId,
+          r_id: rId === "All" || !rId ? null : rId,
+          t_id: tId === "All" || !tId ? null : tId
         }
       });
-      if (budgetData.data.length > 0) {
-        territoryData.push(budgetData);
-      }
-      if (targetData.data.length > 0) {
-        territoryData.push(targetData);
-      }
-      if (actualData.data.length > 0) {
-        territoryData.push(actualData);
-      }
+      const respdata = await res.data.data;
+      console.log("Terri", respdata);
+
+      setTerriData(respdata);
+    } catch (error) {
+      console.log("Error:", error);
     }
     setTerritoryGraphData(territoryData);
     setTerritoryLabelData(territoryLabel);
   }, [props.territoryData]);
 
-  const [regionGraphData, setRegionGraphData] = useState([]);
-  const [regiontLabelData, setRegionLabelData] = useState([]);
   useEffect(() => {
-    let regionData = [];
-    let regionLabel = [];
+    getTerriData(
+      filterState.yr || null,
+      filterState.month || null,
+      filterState.bgId || null,
+      filterState.buId || null,
+      filterState.zId || null,
+      filterState.rId || null,
+      filterState.tId
+    );
+  }, [
+    filterState.yr,
+    filterState.month,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId
+  ]);
 
-    if (props.regionData) {
-      const budgetData = {
-        label: "Budget",
-        backgroundColor: "#3B82F6",
-        data: [],
-      };
-      const targetData = {
-        label: "Rolling",
-        backgroundColor: "#F97316",
-        data: [],
-      };
-      const actualData = {
-        label: "Actual",
-        backgroundColor: "#22C55E",
-        data: [],
-      };
+  //getting region data
 
-      props.regionData.forEach((item) => {
-        if (item.zone_name) {
-          regionLabel.push(item.region_name);
-        }
-        if (item.target) {
-          budgetData.data.push(item.budget);
-        }
-        if (item.budget) {
-          targetData.data.push(item.target);
-        }
-        if (item.actual) {
-          actualData.data.push(item.actual);
-        }
+  const getRegionData = async () => {
+    try {
+      const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_r`, {
+        headers: headers,
+        params: { bu_id: 1, bg_id: 1, m_year: "2023-12", t_year: 2023, z_id: 3 }
       });
-      if (budgetData.data.length > 0) {
-        regionData.push(budgetData);
-      }
-      if (targetData.data.length > 0) {
-        regionData.push(targetData);
-      }
-      if (actualData.data.length > 0) {
-        regionData.push(actualData);
-      }
+      const respdata = await res.data.data;
+      console.log("Region", respdata);
+
+      setRegionData(respdata);
+    } catch (error) {
+      console.log("Error:", error);
     }
     setRegionGraphData(regionData);
     setRegionLabelData(regionLabel);
@@ -127,188 +125,313 @@ const AllCharts = (props) => {
     let zoneData = [];
     let zoneLabel = [];
 
-    if (props.zoneData) {
-      const budgetData = {
-        label: "Budget",
-        backgroundColor: "#3B82F6",
-        data: [],
-      };
-      const targetData = {
-        label: "Rolling",
-        backgroundColor: "#F97316",
-        data: [],
-      };
-      const actualData = {
-        label: "Actual",
-        backgroundColor: "#22C55E",
-        data: [],
-      };
-
-      props.zoneData.forEach((item) => {
-        if (item.zone_name) {
-          zoneLabel.push(item.zone_name);
-        }
-        if (item.target) {
-          budgetData.data.push(item.budget);
-        }
-        if (item.budget) {
-          targetData.data.push(item.target);
-        }
-        if (item.actual) {
-          actualData.data.push(item.actual);
-        }
+  const getZoneData = async () => {
+    try {
+      const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_z`, {
+        headers: headers,
+        params: { bu_id: 1, bg_id: 1, m_year: "2023-12", t_year: 2023, z_id: 3 }
       });
-      if (budgetData.data.length > 0) {
-        zoneData.push(budgetData);
-      }
-      if (targetData.data.length > 0) {
-        zoneData.push(targetData);
-      }
-      if (actualData.data.length > 0) {
-        zoneData.push(actualData);
-      }
+      const respdata = await res.data.data;
+      console.log("Zoneeee", respdata);
+      setZoneData(respdata);
+    } catch (error) {
+      console.log("Error:", error);
     }
     setZoneGraphData(zoneData);
     setZoneLabelData(zoneLabel);
   }, [props.zoneData]);
 
-  const [bsUnitGraphData, setBsUnitGraphData] = useState([]);
-  const [bsUnitLabelData, setBsUnitLabelData] = useState([]);
-  useEffect(() => {
-    let BusUnitGraphData = [];
-    let BusUnitlabelData = [];
+  //getting Business Data
 
-    if (props.businessUnitData) {
-      const budgetData = {
-        label: "Budget",
-        backgroundColor: "#3B82F6",
-        data: [],
-      };
-      const targetData = {
-        label: "Rolling",
-        backgroundColor: "#F97316",
-        data: [],
-      };
-      const actualData = {
-        label: "Actual",
-        backgroundColor: "#22C55E",
-        data: [],
-      };
-
-      props.businessUnitData.forEach((item) => {
-        if (item.business_unit_name) {
-          BusUnitlabelData.push(item.business_unit_name);
-        }
-        if (item.target) {
-          budgetData.data.push(item.budget);
-        }
-        if (item.budget) {
-          targetData.data.push(item.target);
-        }
-        if (item.actual) {
-          actualData.data.push(item.actual);
-        }
+  const getBusUnitData = async () => {
+    try {
+      const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_bu`, {
+        headers: headers,
+        params: { bu_id: 1, bg_id: 1, m_year: "2023-12", t_year: 2023, z_id: 3 }
       });
-      if (budgetData.data.length > 0) {
-        BusUnitGraphData.push(budgetData);
-      }
-      if (targetData.data.length > 0) {
-        BusUnitGraphData.push(targetData);
-      }
-      if (actualData.data.length > 0) {
-        BusUnitGraphData.push(actualData);
-      }
+      const respdata = await res.data.data;
+      setBusUnitData(respdata);
+      console.log("Business", respdata);
+    } catch (error) {
+      console.log("Error:", error);
     }
-    setBsUnitGraphData(BusUnitGraphData);
-    setBsUnitLabelData(BusUnitlabelData);
-  }, [props.businessUnitData]);
+  };
+  //getting Business Segments
 
-  console.log("klop", bsUnitGraphData, bsUnitLabelData);
+  const getBSegmentsData = async () => {
+    try {
+      const res = await axios.get(`${url}/api/get_rollingdata_based_on_roll_bg`, {
+        headers: headers,
+        params: { bu_id: 1, bg_id: 1, m_year: "2023-12", t_year: 2023, z_id: 3 }
+      });
+      const respdata = await res.data.data;
+      setBSegmentData(respdata);
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    // getTerriData();
+    getRegionData();
+    getZoneData();
+    getBusUnitData();
+    getBSegmentsData();
+  }, []);
+
+  //creating data for graph Territory
+
+  let TerriGraphData = [];
+  let TerrilabelData = [];
+
+  if (TerriData) {
+    const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
+    const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
+    const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
+    TerriData.forEach((item) => {
+      if (item.territory_name) {
+        TerrilabelData.push(item.territory_name);
+      }
+      if (item.budget) {
+        budgetData.data.push(item.budget);
+      }
+      if (item.actual) {
+        actualData.data.push(item.actual);
+      }
+      if (item.target) {
+        targetData.data.push(item.target);
+      }
+    });
+    if (budgetData.data.length > 0) {
+      TerriGraphData.push(budgetData);
+    }
+    if (targetData.data.length > 0) {
+      TerriGraphData.push(targetData);
+    }
+    if (actualData.data.length > 0) {
+      TerriGraphData.push(actualData);
+    }
+  }
+
+  //creating data for graph Region
+
+  let RegionGraphData = [];
+  let RegionlabelData = [];
+
+  if (RegionData) {
+    const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
+    const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
+    const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
+    RegionData.forEach((item) => {
+      if (item.region_name) {
+        RegionlabelData.push(item.region_name);
+      }
+      if (item.budget) {
+        budgetData.data.push(item.budget);
+      }
+      if (item.actual) {
+        actualData.data.push(item.actual);
+      }
+      if (item.target) {
+        targetData.data.push(item.target);
+      }
+    });
+    if (budgetData.data.length > 0) {
+      RegionGraphData.push(budgetData);
+    }
+    if (targetData.data.length > 0) {
+      RegionGraphData.push(targetData);
+    }
+    if (actualData.data.length > 0) {
+      RegionGraphData.push(actualData);
+    }
+  }
+
+  //creating Zone graph data
+
+  let ZoneGraphData = [];
+  let ZonelabelData = [];
+
+  if (ZoneData) {
+    const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
+    const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
+    const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
+    ZoneData.forEach((item) => {
+      if (item.zone_name) {
+        ZonelabelData.push(item.zone_name);
+      }
+      if (item.budget) {
+        budgetData.data.push(item.budget);
+      }
+      if (item.target) {
+        targetData.data.push(item.target);
+      }
+      if (item.actual) {
+        actualData.data.push(item.actual);
+      }
+    });
+    if (budgetData.data.length > 0) {
+      ZoneGraphData.push(budgetData);
+    }
+    if (targetData.data.length > 0) {
+      ZoneGraphData.push(targetData);
+    }
+    if (actualData.data.length > 0) {
+      ZoneGraphData.push(actualData);
+    }
+  }
+
+  //creating business unit graph
+
+  let BusUnitGraphData = [];
+  let BusUnitlabelData = [];
+
+  if (BusUnitData) {
+    const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
+    const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
+    const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
+    BusUnitData.forEach((item) => {
+      if (item.business_unit_name) {
+        BusUnitlabelData.push(item.business_unit_name);
+      }
+      if (item.target) {
+        budgetData.data.push(item.budget);
+      }
+      if (item.budget) {
+        targetData.data.push(item.target);
+      }
+      if (item.actual) {
+        actualData.data.push(item.actual);
+      }
+    });
+    if (budgetData.data.length > 0) {
+      BusUnitGraphData.push(budgetData);
+    }
+    if (targetData.data.length > 0) {
+      BusUnitGraphData.push(targetData);
+    }
+    if (actualData.data.length > 0) {
+      BusUnitGraphData.push(actualData);
+    }
+  }
 
   //creating business segment graph
 
-  const [bsGraphData, setBsGraphData] = useState([]);
-  const [bsLabelData, setBsLabelData] = useState([]);
+  let BSegmentGraphData = [];
+  let BSegmentlabelData = [];
 
-  useEffect(() => {
-    let BSegmentGraphData = [];
-    let BSegmentlabelData = [];
-    if (props.businessSegmentData) {
-      const budgetData = {
-        label: "Budget",
-        backgroundColor: "#3B82F6",
-        data: [],
-      };
-      const targetData = {
-        label: "Rolling",
-        backgroundColor: "#F97316",
-        data: [],
-      };
-      const actualData = {
-        label: "Actual",
-        backgroundColor: "#22C55E",
-        data: [],
-      };
-      props.businessSegmentData.forEach((item) => {
-        if (item.business_segment) {
-          BSegmentlabelData.push(item.business_segment);
-        }
-        if (item.budget) {
-          budgetData.data.push(item.budget);
-        }
-        if (item.target) {
-          targetData.data.push(item.target);
-        }
-        if (item.actual) {
-          actualData.data.push(item.actual);
-        }
-      });
-      if (budgetData.data.length > 0) {
-        BSegmentGraphData.push(budgetData);
+  if (BsegmentData) {
+    const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
+    const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
+    const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
+    BsegmentData.forEach((item) => {
+      if (item.business_segment) {
+        BSegmentlabelData.push(item.business_segment);
       }
-      if (targetData.data.length > 0) {
-        BSegmentGraphData.push(targetData);
+      if (item.target) {
+        budgetData.data.push(item.budget);
       }
-      if (actualData.data.length > 0) {
-        BSegmentGraphData.push(actualData);
+      if (item.target) {
+        targetData.data.push(item.target);
       }
-      console.log("lio", BSegmentGraphData);
-      setBsGraphData(BSegmentGraphData);
-      setBsLabelData(BSegmentlabelData);
+      if (item.actual) {
+        actualData.data.push(item.actual);
+      }
+    });
+    if (targetData.data.length > 0) {
+      BSegmentGraphData.push(budgetData);
     }
-  }, [props.businessSegmentData]);
+    if (targetData.data.length > 0) {
+      BSegmentGraphData.push(targetData);
+    }
+    if (actualData.data.length > 0) {
+      BSegmentGraphData.push(actualData);
+    }
+  }
 
-  //creating business segment graph
+  //************************************************************************************************//
 
-  const [psGraphData, setPsGraphData] = useState([]);
-  const [psLabelData, setPsLabelData] = useState([]);
+  const [prdCategory, setPrdCategory] = useState("");
+  const [prdSegment, setPrdSegment] = useState("");
+  const [prdBrand, setPrdBrand] = useState("");
+  //getting Product Category Data
 
-  useEffect(() => {
-    let PSegmentGraphData = [];
-    let PSegmentlabelData = [];
-    if (props.productSegmentData) {
-      const budgetData = {
-        label: "Budget",
-        backgroundColor: "#3B82F6",
-        data: [],
-      };
-      const targetData = {
-        label: "Rolling",
-        backgroundColor: "#F97316",
-        data: [],
-      };
-      const actualData = {
-        label: "Actual",
-        backgroundColor: "#22C55E",
-        data: [],
-      };
-      // Extract values at indexes 6, 15, and 23 from each object in newdata
-      const index6Values = props.productSegmentData.map((item) => {
-        PSegmentlabelData.push(item["Product Segment"]);
-        return String(item[Object.keys(item)[6]]);
+  const getProductCategory = async () => {
+    try {
+      const res = await axios.get(`${url}/api/RSP_downloadAnalytical`, {
+        headers: headers,
+        params: {
+          year_1: 2021,
+          year_2: 2022,
+          year_3: 2023,
+          year_2_cm: "2023-12",
+          year_2_nm: "2023-01",
+          year_3_cm: "2023-12",
+          year_3_nm: "2024-01",
+          t_des: "Moga",
+          t_id: 37,
+          plan_id: 1,
+          tran_id: "RP-122023",
+          m_year: "2023-12-01T00:00:00.00Z",
+          json: true,
+          analytical_key: "Product Category"
+        }
       });
-      const index15Values = props.productSegmentData.map((item) => {
-        return String(item[Object.keys(item)[15]]);
+      const respdata = await res.data.data;
+      setPrdCategory(respdata);
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
+  const getProductSegment = async () => {
+    try {
+      const res = await axios.get(`${url}/api/RSP_downloadAnalytical`, {
+        headers: headers,
+        params: {
+          year_1: 2021,
+          year_2: 2022,
+          year_3: 2023,
+          year_2_cm: "2023-12",
+          year_2_nm: "2023-01",
+          year_3_cm: "2023-12",
+          year_3_nm: "2024-01",
+          t_des: "Moga",
+          t_id: 37,
+          plan_id: 1,
+          tran_id: "RP-122023",
+          m_year: "2023-12-01T00:00:00.00Z",
+          json: true,
+          analytical_key: "Product Segment"
+        }
+      });
+      const respdata = await res.data.data;
+      setPrdSegment(respdata);
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
+  const getProductBrand = async () => {
+    try {
+      const res = await axios.get(`${url}/api/RSP_downloadAnalytical`, {
+        headers: headers,
+        params: {
+          year_1: 2021,
+          year_2: 2022,
+          year_3: 2023,
+          year_2_cm: "2023-12",
+          year_2_nm: "2023-01",
+          year_3_cm: "2023-12",
+          year_3_nm: "2024-01",
+          t_des: "Moga",
+          t_id: 37,
+          plan_id: 1,
+          tran_id: "RP-122023",
+          m_year: "2023-12-01T00:00:00.00Z",
+          json: true,
+          analytical_key: "Brand Desc"
+        }
       });
       const index23Values = props.productSegmentData.map((item) => {
         return String(item[Object.keys(item)[23]]);
@@ -332,6 +455,7 @@ const AllCharts = (props) => {
     }
   }, [props.productSegmentData]);
 
+<<<<<<< HEAD
   const [pcGraphData, setPcGraphData] = useState([]);
   const [pcLabelData, setPcLabelData] = useState([]);
 
@@ -372,6 +496,28 @@ const AllCharts = (props) => {
       actualData.data.push(...index23Values);
       if (budgetData.data.length > 0) {
         PCegmentGraphData.push(budgetData);
+=======
+  useEffect(() => {
+    getProductCategory();
+    getProductSegment();
+    getProductBrand();
+  }, []);
+
+  //Product Category Graph
+
+  let ProdCatGraphData = [];
+  let ProdCatLabelData = [];
+
+  if (prdCategory) {
+    const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
+    const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
+    const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
+    prdCategory.forEach((item) => {
+      const Keys = Object.keys(item);
+      const Values = Object.values(item);
+      if (item["Product Category"]) {
+        ProdCatLabelData.push(item["Product Category"]);
+>>>>>>> 724552d069eb957e423be166b2ea89bc0d1c0b0d
       }
       if (targetData.data.length > 0) {
         PCegmentGraphData.push(targetData);
@@ -436,8 +582,161 @@ const AllCharts = (props) => {
     }
   }, [props.productBrandData]);
 
+<<<<<<< HEAD
   console.log("hgf", pbGraphData, pbLabelData)
   //************************************************************************************************//
+=======
+  //Product Segments Graph
+
+  let ProdSegGraphData = [];
+  let ProdSegLabelData = [];
+
+  if (prdSegment) {
+    const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
+    const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
+    const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
+    prdSegment.forEach((item) => {
+      const Keys = Object.keys(item);
+      const Values = Object.values(item);
+      if (item["Product Segment"]) {
+        ProdSegLabelData.push(item["Product Segment"]);
+      }
+      if (Keys[11]) {
+        budgetData.data.push(Values[11]);
+      }
+      if (Keys[15]) {
+        targetData.data.push(Values[15]);
+      }
+      if (Keys[23]) {
+        actualData.data.push(Values[23]);
+      }
+    });
+    if (targetData.data.length > 0) {
+      ProdSegGraphData.push(budgetData);
+    }
+    if (targetData.data.length > 0) {
+      ProdSegGraphData.push(targetData);
+    }
+    if (actualData.data.length > 0) {
+      ProdSegGraphData.push(actualData);
+    }
+  }
+
+  //Product Brand Graph
+
+  let ProdBrandGraphData = [];
+  let ProdBrandLabelData = [];
+
+  if (prdBrand) {
+    const budgetData = { label: "Budget", backgroundColor: "#3B82F6", data: [] };
+    const targetData = { label: "Rolling", backgroundColor: "#F97316", data: [] };
+    const actualData = { label: "Actual", backgroundColor: "#22C55E", data: [] };
+    prdBrand.forEach((item) => {
+      const Keys = Object.keys(item);
+      const Values = Object.values(item);
+      if (item["Brand Desc"]) {
+        ProdBrandLabelData.push(item["Brand Desc"]);
+      }
+      if (Keys[11]) {
+        budgetData.data.push(Values[11]);
+      }
+      if (Keys[15]) {
+        targetData.data.push(Values[15]);
+      }
+      if (Keys[23]) {
+        actualData.data.push(Values[23]);
+      }
+    });
+    if (budgetData.data.length > 0) {
+      ProdBrandGraphData.push(budgetData);
+    }
+    if (targetData.data.length > 0) {
+      ProdBrandGraphData.push(targetData);
+    }
+    if (actualData.data.length > 0) {
+      ProdBrandGraphData.push(actualData);
+    }
+  }
+
+  //Product Segment Table Data
+
+  // console.log("Product Segment", prdSegment)
+
+  const PrdSegTableData = [];
+
+  // if(prdSegment){
+  //     prdSegment.forEach((item)=>{
+  //       const Keys = Object.keys(item)
+  //       const Values = Object.values(item)
+  //       console.log(Keys)
+  //       console.log(Values)
+  //       if(Keys[0] && Keys[2] && Keys[4] && Keys[5] && Keys[6] && Keys[7] && Keys[8] && Keys[11] && Keys[15] && Keys[23] && Keys[25])
+  //       PrdSegTableData.push(item)
+  //     })
+  // }
+
+  // if (prdSegment) {
+  //   prdSegment.forEach((item) => {
+  //     const Keys = Object.keys(item);
+  //     const Values = Object.values(item);
+  //     console.log("Keys", Values)
+  //     const targetIndices = [0, 2, 4, 5, 6, , , 11, 15, 23, 6 , 7, 25, 8, 6,];
+  //     const targetKeys = targetIndices.map(index => Keys[index]);
+
+  //     const filteredItem = Object.fromEntries(
+  //       Object.entries(item).filter(([key, value]) => targetKeys.includes(key))
+  //     );
+
+  //     PrdSegTableData.push(filteredItem);
+  //   });
+  // }
+
+  // if (prdSegment) {
+  //   prdSegment.forEach((item) => {
+  //     const Keys = Object.keys(item);
+  //     const Values = Object.values(item)
+  //     console.log("Keys", Keys)
+  //     console.log("Values", Values)
+
+  //     const targetIndices = [0, 2, 4, 5, 6, 11, 15, 23, 6, 7, 25, 8, 6];
+  //     const filteredItem = {};
+
+  //     targetIndices.forEach((index) => {
+  //       const key = Keys[index];
+  //       if (key) {
+  //         filteredItem[key] = item[key];
+  //       }
+  //     });
+
+  //     PrdSegTableData.push(filteredItem);
+  //   });
+  // }
+
+  if (prdSegment) {
+    prdSegment.forEach((item) => {
+      const Keys = Object.keys(item);
+      const Values = Object.values(item);
+      // console.log("Keys", Keys)
+      // console.log("Values", Values)
+      const targetIndices = [0, 2, 4, 5, 6, 0, 11, 15, 23, 0, 0, 7, 25, 8, 0, 0, 0, 0];
+
+      const filteredItem = targetIndices.reduce((acc, index) => {
+        const key = Object.keys(item)[index];
+        if (key) {
+          acc[key] = item[key];
+        }
+        return acc;
+      }, {});
+
+      PrdSegTableData.push(filteredItem);
+    });
+  }
+
+  // console.log("ModData", PrdSegTableData);
+  console.log("PropsAll", allTable);
+
+  // ***************************************** JSX START *******************************************************************/
+>>>>>>> 724552d069eb957e423be166b2ea89bc0d1c0b0d
 
   return (
     <>

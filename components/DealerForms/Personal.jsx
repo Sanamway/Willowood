@@ -539,7 +539,7 @@ const Personal = (props) => {
           </label>
         </div>
         <div className=" px-2 profpic relative group">
-            <Image src={""} className="h-32 w-32 rounded bg-gray-200" width={100} height={100} />
+            <Image src={""} className="h-32 w-32 rounded bg-gray-200" width={100} alt="img" height={100} />
             <input type="file" accept="image/*" style={{ display: "none" }} id="fileInput" />
             <label
               htmlFor="fileInput "

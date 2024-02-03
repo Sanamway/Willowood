@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef, use } from "react";
 import Layout from "../Layout";
-import { AiTwotoneHome, AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+import {
+  AiTwotoneHome,
+  AiOutlineEyeInvisible,
+  AiOutlineEye,
+} from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
 import userimg from "../../public/userimg.jpg";
@@ -20,7 +24,7 @@ const UserInformation = () => {
 
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
   //getlocaldta
@@ -34,7 +38,7 @@ const UserInformation = () => {
   const getDataById = async (id) => {
     try {
       const respond = await axios.get(`${url}/api/get_user/${id}`, {
-        headers: headers
+        headers: headers,
       });
       const apires = await respond.data.data;
       console.log("ff", apires);
@@ -51,7 +55,7 @@ const UserInformation = () => {
           value: apires[0].value,
           label: apires[0].city,
           state: apires[0].state,
-          country: apires[0].country
+          country: apires[0].country,
         },
         phone_number: apires[0].phone_number,
         password: apires[0].password,
@@ -61,7 +65,7 @@ const UserInformation = () => {
         t_user: apires[0].t_user,
         status: apires[0].status,
         position: apires[0].position,
-        about_me: apires[0].about_me
+        about_me: apires[0].about_me,
       });
 
       getImage(apires[0].phone_number);
@@ -89,7 +93,7 @@ const UserInformation = () => {
       value: "",
       label: "",
       state: "",
-      country: ""
+      country: "",
     },
     // state: "",
     email: "",
@@ -102,7 +106,7 @@ const UserInformation = () => {
     status: "",
     c_name: userName,
     ul_name: userName,
-    image: tempImage
+    image: tempImage,
   });
 
   // console.log("form", formState);
@@ -111,7 +115,9 @@ const UserInformation = () => {
   const validationSchema = Yup.object().shape({
     user_name: Yup.string().required("User name is required"),
     address: Yup.string().required("Address is required"),
-    email: Yup.string().email("Invalid email format").required("Email is required"),
+    email: Yup.string()
+      .email("Invalid email format")
+      .required("Email is required"),
     phone_number: Yup.number()
       .transform((value, originalValue) => {
         if (originalValue === "") return undefined;
@@ -136,7 +142,7 @@ const UserInformation = () => {
     status: Yup.string().required("Status is required"),
     // city: Yup.string().required("City is required"),
     // state: Yup.string().required("State is required"),
-    position: Yup.string().required("Designation is required")
+    position: Yup.string().required("Designation is required"),
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -162,7 +168,7 @@ const UserInformation = () => {
         about_me: formState.about_me,
         image: tempImage,
         c_name: userName,
-        ul_name: userName
+        ul_name: userName,
       };
 
       //Image uploading
@@ -181,7 +187,6 @@ const UserInformation = () => {
         }
       }
 
-     
       // return;
       // const respond = await axios
       //   .post(`${url}/api/create_user`, JSON.stringify(data), {
@@ -211,23 +216,26 @@ const UserInformation = () => {
       //       console.error("Error creating renamed file.");
       //       return;
       //     }
-  
-          
+
       //     const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData);
       //     const respo = await res.data;
       //   }
 
-      const respond = await axios.post(`${url}/api/create_user`, JSON.stringify(data), {
-        headers: headers
-      });
-      const response = await respond.data.data 
-      const phoneNumber = response.phone_number
-      console.log("POHIBV", phoneNumber)
-      if(tempImage){
-      toast.error("Upload Image")
+      const respond = await axios.post(
+        `${url}/api/create_user`,
+        JSON.stringify(data),
+        {
+          headers: headers,
+        }
+      );
+      const response = await respond.data.data;
+      const phoneNumber = response.phone_number;
+      console.log("POHIBV", phoneNumber);
+      if (tempImage) {
+        toast.error("Upload Image");
       }
-      
-     if (tempImage && phoneNumber) {
+
+      if (tempImage && phoneNumber) {
         console.log("Inside", tempImage);
         const renamedBlob = new Blob([tempImage], { type: tempImage?.type });
         if (!checkFileSize(tempImage)) return;
@@ -236,23 +244,26 @@ const UserInformation = () => {
           "myFile",
           renamedBlob,
           `${phoneNumber}.${getFileExtension(tempImage?.name)}`
-          );
+        );
 
-          if (tempImage) {
-            console.error("Error creating renamed file.");
-            return;
-          }
-
-          const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData);
-          const respo = await res.data;
-
-          console.log("Image Upload", respo)
+        if (tempImage) {
+          console.error("Error creating renamed file.");
+          return;
         }
-      
-        // return
+
+        const res = await axios.post(
+          `${url}/api/upload_file/?file_path=user`,
+          formData
+        );
+        const respo = await res.data;
+
+        console.log("Image Upload", respo);
+      }
+
+      // return
       if (respond) {
         toast.success("User added successfully!");
-
+        whatsAppMsg();
         setTimeout(() => {
           router.push("/table/table_user_information");
         }, 4000);
@@ -300,16 +311,20 @@ const UserInformation = () => {
         t_user: formState.t_user,
         status: formState.status,
         position: formState.position,
-        about_me: formState.about_me
+        about_me: formState.about_me,
       };
 
       // console.log("EditData", data)
 
       // return
 
-      const res = await axios.put(`${url}/api/update_user/${id}`, JSON.stringify(data), {
-        headers: headers
-      });
+      const res = await axios.put(
+        `${url}/api/update_user/${id}`,
+        JSON.stringify(data),
+        {
+          headers: headers,
+        }
+      );
       const resp = await res.data;
 
       toast.success(resp.message);
@@ -394,7 +409,11 @@ const UserInformation = () => {
       }
       if (renamedBlob) {
         const formData = new FormData();
-        formData.append("myFile", renamedBlob, `${formState?.phone_number}.${getFileExtension(file?.name)}`);
+        formData.append(
+          "myFile",
+          renamedBlob,
+          `${formState?.phone_number}.${getFileExtension(file?.name)}`
+        );
         console.log("Named", formData);
 
         if (!renamedBlob) {
@@ -403,7 +422,10 @@ const UserInformation = () => {
         }
 
         // return;
-        const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData);
+        const res = await axios.post(
+          `${url}/api/upload_file/?file_path=user`,
+          formData
+        );
         const respo = await res.data;
       }
       if (file) {
@@ -437,9 +459,12 @@ const UserInformation = () => {
 
   const getImage = async (phone_number) => {
     try {
-      const res = await axios.get(`${url}/api/get_image?phone_number=${phone_number}&file_path=user`, {
-        headers: headers
-      });
+      const res = await axios.get(
+        `${url}/api/get_image?phone_number=${phone_number}&file_path=user`,
+        {
+          headers: headers,
+        }
+      );
       const respData = await res.data;
       console.log("Image", respData?.data?.image_url);
       setUserImage(respData?.data?.image_url);
@@ -458,7 +483,9 @@ const UserInformation = () => {
 
   const gettingDropdown = async () => {
     try {
-      const resoptions = await axios.get(`${url}/api/user_profiles`, { headers: headers });
+      const resoptions = await axios.get(`${url}/api/user_profiles`, {
+        headers: headers,
+      });
       const respData = await resoptions.data.data;
       setUserOptions(respData);
     } catch (error) {
@@ -495,7 +522,7 @@ const UserInformation = () => {
     try {
       const resp = await axios.get(`${url}/api/get_citystate`, {
         params: { city: city, search: true },
-        headers: headers
+        headers: headers,
       });
       const response = await resp.data.data;
       setFilteredCity(
@@ -504,7 +531,7 @@ const UserInformation = () => {
             value: item?.city,
             label: item?.city,
             state: item?.State,
-            country: item?.country
+            country: item?.country,
           };
         })
       );
@@ -518,15 +545,15 @@ const UserInformation = () => {
     }
   }, [citySearch]);
 
-  console.log
-
   return (
     <>
       <Layout>
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="  w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-            <h2 className="font-arial font-normal text-3xl tabletitle py-2">User Information</h2>
+            <h2 className="font-arial font-normal text-3xl tabletitle py-2">
+              User Information
+            </h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <h2>
                 <TiArrowBack
@@ -560,7 +587,10 @@ const UserInformation = () => {
                 <div className="flex items-center justify-between w-full">
                   <div className="flex gap-4 items-start justify-between mb-4 w-3/4">
                     <div className="w-1/2 ">
-                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="emailField">
+                      <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="emailField"
+                      >
                         Employee
                       </label>
                       <input
@@ -572,13 +602,16 @@ const UserInformation = () => {
                         onChange={(e) =>
                           setFormState({
                             ...formState,
-                            empCode: e.target.value
+                            empCode: e.target.value,
                           })
                         }
                       />
                     </div>
                     <div className="w-1/2 relative ">
-                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneField">
+                      <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="phoneField"
+                      >
                         <span className="text-red-500">*</span> User name
                       </label>
                       <input
@@ -591,7 +624,7 @@ const UserInformation = () => {
                         onChange={(e) =>
                           setFormState({
                             ...formState,
-                            user_name: e.target.value
+                            user_name: e.target.value,
                           })
                         }
                       />
@@ -616,11 +649,15 @@ const UserInformation = () => {
                     <input
                       type="file"
                       accept=".jpeg,.jpg"
-                      onChange={router.query.type == "CREATE" ? handleImageCreate : handleImageUpload}
+                      onChange={
+                        router.query.type == "CREATE"
+                          ? handleImageCreate
+                          : handleImageUpload
+                      }
                       style={{ display: "none" }}
                       id="fileInput"
                       ref={fileInputRef}
-                      disabled={router.query.type == "view" }
+                      disabled={router.query.type == "view"}
                     />
 
                     <label
@@ -629,7 +666,9 @@ const UserInformation = () => {
                       className={`text-black absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
                         userImage == "" ? "opacity-50" : "opacity-0"
                       } ${
-                        userImage !== "" ? "group-hover:opacity-100" : "group-hover:opacity-0"
+                        userImage !== ""
+                          ? "group-hover:opacity-100"
+                          : "group-hover:opacity-0"
                       }  transition-opacity duration-300`}
                     >
                       <span className="text-red-500">*</span> Upload Image
@@ -638,7 +677,10 @@ const UserInformation = () => {
                 </div>
 
                 <div className="mb-4 designation relative ">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="inputField"
+                  >
                     <span className="text-red-500">*</span> Designation
                   </label>
                   <input
@@ -651,7 +693,7 @@ const UserInformation = () => {
                     onChange={(e) =>
                       setFormState({
                         ...formState,
-                        position: e.target.value
+                        position: e.target.value,
                       })
                     }
                   />
@@ -662,7 +704,10 @@ const UserInformation = () => {
                   )}
                 </div>
                 <div className="mb-1 relative">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="textareaField">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="textareaField"
+                  >
                     <span className="text-red-500">*</span> Address
                   </label>
                   <textarea
@@ -675,7 +720,7 @@ const UserInformation = () => {
                     onChange={(e) =>
                       setFormState({
                         ...formState,
-                        address: e.target.value
+                        address: e.target.value,
                       })
                     }
                   ></textarea>
@@ -715,7 +760,10 @@ const UserInformation = () => {
                     )}
                   </div> */}
                   <div className="w-1/2 px-2 relative">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="userSelect"
+                    >
                       <small className="text-red-600">*</small> City
                     </label>
                     <Select
@@ -727,7 +775,7 @@ const UserInformation = () => {
                       onChange={(value) =>
                         setFormState({
                           ...formState,
-                          searchCity: value
+                          searchCity: value,
                         })
                       }
                       onInputChange={(searchVal) => setCitySearch(searchVal)}
@@ -735,7 +783,10 @@ const UserInformation = () => {
                   </div>
 
                   <div className="w-1/2 px-2 relative ">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="stateSelect">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="stateSelect"
+                    >
                       <span className="text-red-500">*</span> State
                     </label>
                     <input
@@ -746,7 +797,7 @@ const UserInformation = () => {
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          state: value
+                          state: value,
                         })
                       }
                       disabled
@@ -767,7 +818,10 @@ const UserInformation = () => {
 
                 <div className="flex gap-4 items-center justify-between mb-4">
                   <div className="w-1/2 relative">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="emailField">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="emailField"
+                    >
                       <span className="text-red-500">*</span> Email
                     </label>
                     <input
@@ -780,7 +834,7 @@ const UserInformation = () => {
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          email: e.target.value
+                          email: e.target.value,
                         })
                       }
                     />
@@ -791,7 +845,10 @@ const UserInformation = () => {
                     )}
                   </div>
                   <div className="w-1/2 relative ">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneField">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="phoneField"
+                    >
                       <span className="text-red-500">*</span> Mobile No
                     </label>
                     <input
@@ -806,7 +863,7 @@ const UserInformation = () => {
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          phone_number: e.target.value
+                          phone_number: e.target.value,
                         })
                       }
                     />
@@ -820,7 +877,10 @@ const UserInformation = () => {
 
                 <div className="flex gap-4 items-center justify-between mb-4">
                   <div className="w-1/2 relative ">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="emailField">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="emailField"
+                    >
                       <span className="text-red-500">*</span> Password
                     </label>
                     <input
@@ -833,11 +893,14 @@ const UserInformation = () => {
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          password: e.target.value
+                          password: e.target.value,
                         })
                       }
                     />
-                    <span className="absolute bottom-2 right-3 cursor-pointer" onClick={togglePassword}>
+                    <span
+                      className="absolute bottom-2 right-3 cursor-pointer"
+                      onClick={togglePassword}
+                    >
                       {showPass ? (
                         <AiOutlineEye className="text-green-500" size={23} />
                       ) : (
@@ -851,7 +914,10 @@ const UserInformation = () => {
                     )}
                   </div>
                   <div className="w-1/2 relative ">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneField">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="phoneField"
+                    >
                       <span className="text-red-500">*</span> Confirm Password
                     </label>
                     <input
@@ -864,11 +930,14 @@ const UserInformation = () => {
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          confirm_password: e.target.value
+                          confirm_password: e.target.value,
                         })
                       }
                     />
-                    <span className="absolute bottom-2 right-3 cursor-pointer" onClick={togglePassword}>
+                    <span
+                      className="absolute bottom-2 right-3 cursor-pointer"
+                      onClick={togglePassword}
+                    >
                       {showPass ? (
                         <AiOutlineEye className="text-green-500" size={23} />
                       ) : (
@@ -884,7 +953,10 @@ const UserInformation = () => {
                 </div>
                 <div className="flex -mx-2 mb-4">
                   <div className="w-1/2 px-2 relative ">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="userSelect"
+                    >
                       <span className="text-red-500">*</span> User Profile
                     </label>
                     <select
@@ -895,7 +967,7 @@ const UserInformation = () => {
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          t_user: e.target.value
+                          t_user: e.target.value,
                         })
                       }
                     >
@@ -914,7 +986,10 @@ const UserInformation = () => {
                     )}
                   </div>
                   <div className="w-1/2 px-2 relative ">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="statusSelect">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="statusSelect"
+                    >
                       <span className="text-red-500">*</span> Status
                     </label>
                     <select
@@ -925,7 +1000,7 @@ const UserInformation = () => {
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          status: e.target.value
+                          status: e.target.value,
                         })
                       }
                     >
@@ -949,7 +1024,10 @@ const UserInformation = () => {
                 </div>
 
                 <div className="mb-1">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="textareaField">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="textareaField"
+                  >
                     About Me
                   </label>
                   <textarea
@@ -962,7 +1040,7 @@ const UserInformation = () => {
                     onChange={(e) =>
                       setFormState({
                         ...formState,
-                        about_me: e.target.value
+                        about_me: e.target.value,
                       })
                     }
                   ></textarea>
