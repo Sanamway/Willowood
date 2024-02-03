@@ -48,7 +48,7 @@ const Village = () => {
   }, [router]);
 
   // Getting Company Information for the dropdown values
-   const getCompanyInfo = async () => {
+  const getCompanyInfo = async () => {
     try {
       const respond = await axios.get(`${url}/api/get_company_information`, {
         headers: headers,
@@ -832,7 +832,7 @@ const Village = () => {
                 <button
                   className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
                   onClick={() => {
-                    router.push("/table/table_district");
+                    router.push("/table/table_village");
                   }}
                 >
                   Close

@@ -564,12 +564,25 @@ const RPSummary = (props) => {
 
   const [filterDropDown, setFilterDropDown] = useState("Qty");
 
-  const getSummaryHeading = (type, recievedObject) => {
+  const getSummaryHeadingQty = (type, recievedObject) => {
+    let dynamicBlock;
+    if (type === "Brand") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[3]];
+    } else if (type === "Category") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[1]];
+    } else if (type === "Segment") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[0]];
+    } else if (type === "Structure") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[29]];
+    } else if (type === "Depot") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[28]];
+    }
+
     return (
       <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400">
         <tr>
           <th scope="col" className="px-2 py-1 text-blue-600">
-            {props.headerData[Object.keys(props.headerData)[28]]}
+            {dynamicBlock}
           </th>
 
           {/* <th scope="col" className="px-2 py-1 text-blue-600">
@@ -643,6 +656,95 @@ const RPSummary = (props) => {
             className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
           >
             {props.headerData[Object.keys(props.headerData)[27]]}
+          </th>
+        </tr>
+      </thead>
+    );
+  };
+
+  const getSummaryHeadingVal = (type, recievedObject) => {
+    let dynamicBlock;
+    if (type === "Brand") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[3]];
+    } else if (type === "Category") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[1]];
+    } else if (type === "Segment") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[0]];
+    } else if (type === "Structure") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[29]];
+    } else if (type === "Depot") {
+      dynamicBlock = props.headerData[Object.keys(props.headerData)[28]];
+    }
+
+    return (
+      <thead className="text-xs text-gray-700 text-center bg-gray-100  dark:text-gray-400 ">
+        <tr>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {dynamicBlock}
+          </th>
+
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[7]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[9]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[11]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[13]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            Empty-Column For Val
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[16]]}
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[18]]}
+          </th>
+          {!recievedObject.tId && (
+            <th scope="col" className="px-2 py-1 text-blue-600">
+              -
+            </th>
+          )}
+
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            {props.headerData[Object.keys(props.headerData)[20]]}
+          </th>
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            Empty-Column For Val
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600 ">
+            Empty-Column For Val
+          </th>
+          <th scope="col" className="px-2 py-1 text-blue-600">
+            {props.headerData[Object.keys(props.headerData)[24]]}
+          </th>
+          {!recievedObject?.tId && (
+            <th scope="col" className="px-2 py-1 text-blue-600">
+              -
+            </th>
+          )}
+
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            {props.headerData[Object.keys(props.headerData)[26]]}
+          </th>
+          <th
+            scope="col"
+            className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
+          >
+            Empty-Column For Val
           </th>
         </tr>
       </thead>
@@ -769,12 +871,13 @@ const RPSummary = (props) => {
             <div className="flex  justify-between">
               <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
                 Summary - Brand wise
+                <TbFileDownload
+                  className="text-green-600 cursor-pointer "
+                  size={18}
+                  onClick={() => handledownloadBrandExcel(namewiseData)}
+                ></TbFileDownload>
               </h4>
-              <TbFileDownload
-                className="text-green-600 cursor-pointer "
-                size={18}
-                onClick={() => handledownloadBrandExcel(namewiseData)}
-              ></TbFileDownload>
+
               <select
                 className=" max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-38 "
                 id="stateSelect"
@@ -796,7 +899,9 @@ const RPSummary = (props) => {
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  {getSummaryHeading("Brand", receivedObject)}
+                  {filterDropDown === "Qty"
+                    ? getSummaryHeadingQty("Brand", receivedObject)
+                    : getSummaryHeadingVal("Brand", receivedObject)}
                   <tbody>
                     {filterDropDown === "Qty" &&
                       namewiseData.map((item) => {
@@ -1123,7 +1228,9 @@ const RPSummary = (props) => {
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  {getSummaryHeading("Brand", receivedObject)}
+                  {filterDropDown === "Qty"
+                    ? getSummaryHeadingQty("Category", receivedObject)
+                    : getSummaryHeadingVal("Category", receivedObject)}
                   <tbody>
                     {filterDropDown === "Qty" &&
                       pcatwiseData.map((item) => {
@@ -1449,7 +1556,10 @@ const RPSummary = (props) => {
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  {getSummaryHeading("Brand", receivedObject)}
+                  {filterDropDown === "Qty"
+                    ? getSummaryHeadingQty("Segment", receivedObject)
+                    : getSummaryHeadingVal("Segment", receivedObject)}
+
                   <tbody>
                     {filterDropDown === "Qty" &&
                       psegwiseData.map((item) => {
@@ -1774,7 +1884,9 @@ const RPSummary = (props) => {
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  {getSummaryHeading("Brand", receivedObject)}
+                  {filterDropDown === "Qty"
+                    ? getSummaryHeadingQty("Structure", receivedObject)
+                    : getSummaryHeadingVal("Structure", receivedObject)}
 
                   <tbody>
                     {filterDropDown === "Qty" &&
@@ -2103,7 +2215,10 @@ const RPSummary = (props) => {
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  {getSummaryHeading("Brand", receivedObject)}
+                  {filterDropDown === "Qty"
+                    ? getSummaryHeadingQty("Depot", receivedObject)
+                    : getSummaryHeadingVal("Depot", receivedObject)}
+
                   <tbody>
                     {filterDropDown === "Qty" &&
                       depotData.map((item) => {
