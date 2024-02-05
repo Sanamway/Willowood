@@ -6,7 +6,6 @@ import ChartThree from "./ChartThree";
 import TableChart from "./TableChart";
 import TableChartOne from "./TableChartOne";
 import TableChartTwo from "./TableChartTwo";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
   businessSegment,
   chartData,
