@@ -385,7 +385,7 @@ const Territory = () => {
                 value={
                   router.query.type === "Edit" || router.query.type === "View"
                     ? router.query.id
-                    : "Auto Genrated"
+                    : "Auto Generated"
                 }
                 disabled={true}
               />

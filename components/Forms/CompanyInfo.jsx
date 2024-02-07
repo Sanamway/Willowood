@@ -236,7 +236,7 @@ const CompanyInfo = () => {
           return {
             value: item.city,
             label: item.city,
-            state: item.State,
+            state: item.state,
             country: item.country,
           };
         })

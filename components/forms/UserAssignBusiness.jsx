@@ -438,7 +438,7 @@ const UserAssignBusiness = () => {
                   value={
                     router.query.type === "Edit" || router.query.type === "View"
                       ? router.query.id
-                      : "Auto Genrated"
+                      : "Auto Generated"
                   }
                 />
               </div>

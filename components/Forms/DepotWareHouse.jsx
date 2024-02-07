@@ -237,7 +237,7 @@ const UserProfileForm = () => {
           return {
             value: item.city,
             label: item.city,
-            state: item.State,
+            state: item.state,
             country: item.country,
           };
         })
@@ -303,7 +303,7 @@ const UserProfileForm = () => {
                 value={
                   router.query.type === "Edit" || router.query.type === "View"
                     ? router.query.id
-                    : "Auto Genrated"
+                    : "Auto Generated"
                 }
                 disabled={true}
               />
@@ -419,7 +419,7 @@ const UserProfileForm = () => {
                   onChange={(e) =>
                     setDepotState({ ...depotState, address: e.target.value })
                   }
-                 ></textarea>
+                ></textarea>
                 {formErrors.address && (
                   <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
                     {formErrors.address}
