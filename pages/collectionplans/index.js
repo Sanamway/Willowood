@@ -1,12 +1,12 @@
-import React from 'react'
-import CopyRollingPlans from '@/components/tables/CopyRollingPlans'
+import React from "react";
+import CollectionPlans from "@/components/tables/CollectionPlans";
 const index = () => {
   return (
     <>
-    {/* <RollingPlans></RollingPlans> */}
-    <CopyRollingPlans></CopyRollingPlans>
+      {/* <RollingPlans></RollingPlans> */}
+      <CollectionPlans></CollectionPlans>
     </>
-  )
-}
+  );
+};
 
-export default index
+export default index;

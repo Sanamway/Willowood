@@ -33,7 +33,7 @@ const MapDepot = () => {
         zoneId: apires[0].z_id,
         regionId: apires[0].r_id,
         territoryId: apires[0].t_id,
-        depotId: apires[0].t_id,
+        depotId: apires[0].w_id,
         depotName: apires[0].depot_name,
       });
     } catch (error) {
@@ -696,13 +696,6 @@ const MapDepot = () => {
                   id="stateSelect"
                   value={depotState.depotId}
                   onChange={(e) => {
-                    console.log(
-                      "mom",
-                      e.target.value,
-                      allDepotWarehouse.filter(
-                        (item) => Number(item.w_id) === Number(e.target.value)
-                      )[0].depot_name
-                    );
                     setDepotState({
                       ...depotState,
                       depotId: e.target.value,
@@ -720,7 +713,7 @@ const MapDepot = () => {
                   </option>
                   {allDepotWarehouse.map((item) => (
                     <option
-                      value={item.w_id}
+                       value={item.w_id}
                       className="focus:outline-none focus:border-b bg-white"
                     >
                       {item.depot_name}
