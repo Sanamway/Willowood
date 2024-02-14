@@ -181,23 +181,23 @@ const RPSummary = (props) => {
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6 ||
         receivedObject.tId
       ) {
-        endPoint = `api/add_rolling_tm?tm=${true}`;
+        endPoint = `api/add_cp_tm?tm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5
       ) {
-        endPoint = `api/add_rolling_tm?rm=${true}`;
+        endPoint = `api/add_cp_tm?rm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
       ) {
-        endPoint = `api/add_rolling_tm?zm=${true}`;
+        endPoint = `api/add_cp_tm?zm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
       ) {
-        endPoint = `api/add_rolling_tm?bum=${true}`;
+        endPoint = `api/add_cp_tm?bum=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10
       ) {
-        endPoint = `api/add_rolling_tm?bgm=${true}`;
+        endPoint = `api/add_cp_tm?bgm=${true}`;
       } else {
         return;
       }
@@ -258,23 +258,23 @@ const RPSummary = (props) => {
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6 ||
         receivedObject.tId
       ) {
-        endPoint = `api/update_rolling_tm?tm=${true}`;
+        endPoint = `api/update_cp_tm?tm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5
       ) {
-        endPoint = `api/update_rolling_tm?rm=${true}`;
+        endPoint = `api/update_cp_tm?rm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
       ) {
-        endPoint = `api/update_rolling_tm?z=${true}`;
+        endPoint = `api/update_cp_tm?z=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
       ) {
-        endPoint = `api/update_rolling_tm?bu=${true}`;
+        endPoint = `api/update_cp_tm?bu=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10
       ) {
-        endPoint = `api/update_rolling_tm?bg=${true}`;
+        endPoint = `api/update_cp_tm?bg=${true}`;
       } else {
         return;
       }

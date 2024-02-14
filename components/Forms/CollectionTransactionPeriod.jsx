@@ -10,7 +10,7 @@ import toast, { Toaster } from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
-const TrasactionPeriod = () => {
+const CollectionTrasactionPeriod = () => {
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
@@ -88,14 +88,14 @@ const TrasactionPeriod = () => {
 
   useEffect(() => {
     if (!selectionState.businessSegmentId || !selectionState.companyId) return;
-     getBUInfo(selectionState.companyId, selectionState.businessSegmentId);
+    getBUInfo(selectionState.companyId, selectionState.businessSegmentId);
   }, [selectionState.businessSegmentId, selectionState.companyId]);
 
-   const [allTransactionData, setAllTransactionData] = useState([]);
+  const [allTransactionData, setAllTransactionData] = useState([]);
   const getAllTransactionData = async (year, cId, bgId, buId) => {
     if (!year || !cId || !bgId || !buId) return;
     try {
-      const respond = await axios.get(`${url}/api/get_rp`, {
+      const respond = await axios.get(`${url}/api/get_cp`, {
         headers: headers,
         params: {
           year: moment(year).year(),
@@ -185,14 +185,14 @@ const TrasactionPeriod = () => {
       };
 
       const respond = await axios
-        .post(`${url}/api/add_rptm`, JSON.stringify(data), {
+        .post(`${url}/api/add_cp`, JSON.stringify(data), {
           headers: headers,
         })
         .then((res) => {
           if (!res) return;
           toast.success(res.data.message);
           setTimeout(() => {
-            router.push("/table/table_transaction_open");
+            router.push("/table/table_collectiontransaction_open");
           }, [3000]);
         });
     } catch (errors) {
@@ -210,12 +210,12 @@ const TrasactionPeriod = () => {
       <div className=" w-full font-arial bg-white ">
         <div className="flex flex-row justify-between h-max px-5">
           <h4 className="font-arial font-normal text-3xl  py-2">
-            Rolling Sales Plan - Open Period
+            Collection Sales Plan - Open Period
           </h4>
           <span className="flex items-center gap-2 cursor-pointer">
             <TiArrowBack
               onClick={() => {
-                router.push("/table/table_transaction_open");
+                router.push("/table/table_collectiontransaction_open");
               }}
               className="text-gray-400"
               size={35}
@@ -552,7 +552,7 @@ const TrasactionPeriod = () => {
                 <button
                   className="bg-yellow-500 px-4 py-1 text-white"
                   onClick={() => {
-                    router.push("/table/table_transaction_open");
+                    router.push("/table/table_collectiontransaction_open");
                   }}
                 >
                   Close
@@ -566,4 +566,4 @@ const TrasactionPeriod = () => {
   );
 };
 
-export default TrasactionPeriod;
+export default CollectionTrasactionPeriod;

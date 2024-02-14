@@ -39,182 +39,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 const RollingPlans = () => {
   const [successOpen, setSuccessOpen] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
-  const datas = [
-    {
-      id: 1,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "green",
-      status: "Zone Approved",
-      progress: "20%",
-    },
 
-    {
-      id: 2,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "red",
-      status: "Yet to submit",
-      progress: "40%",
-    },
-
-    {
-      id: 3,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "orange",
-      status: "Draft save",
-      progress: "60%",
-    },
-
-    {
-      id: 4,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "red",
-      status: "Submitted by TM/RM/ZM",
-      progress: "80%",
-    },
-
-    {
-      id: 5,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "green",
-      status: "Review stage",
-      progress: "100%",
-    },
-
-    {
-      id: 6,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "red",
-      status: "Yet to sumbit",
-      progress: "20%",
-    },
-
-    {
-      id: 7,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "green",
-      status: "Zone Approved",
-      progress: "80%",
-    },
-
-    {
-      id: 8,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "orange",
-      status: "Draft save",
-      progress: "30%",
-    },
-
-    {
-      id: 9,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "green",
-      status: "Review stage",
-    },
-
-    {
-      id: 10,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "green",
-      status: "Zone Approved",
-    },
-    {
-      id: 11,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "green",
-      status: "Draft save",
-    },
-
-    {
-      id: 12,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "red",
-      status: "Yet to submit",
-    },
-
-    {
-      id: 13,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "red",
-      status: "Yet to submit",
-    },
-
-    {
-      id: 13,
-      icon: FcBullish,
-      name: "Rolling Sales Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "red",
-      status: "Yet to submit",
-    },
-  ];
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
@@ -265,7 +90,7 @@ const RollingPlans = () => {
       });
       const apires = await respond.data.data;
 
-      setAllMonthData(apires);
+      setAllMonthData([...new Set(apires.map((item) => item.m_year))]);
     } catch (error) {}
   };
 
@@ -273,7 +98,7 @@ const RollingPlans = () => {
     if (!filterState.yr) return;
     getAllTransactionYear(filterState.yr);
   }, [filterState.yr]);
-  console.log("klp", filterState);
+
   useEffect(() => {
     if (!allYearData.length) return;
     const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
@@ -283,7 +108,7 @@ const RollingPlans = () => {
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -292,7 +117,7 @@ const RollingPlans = () => {
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -410,9 +235,9 @@ const RollingPlans = () => {
     }
   }, [allYearData]);
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+  // const toggleDropdown = () => {
+  //   setIsDropdownOpen(!isDropdownOpen);
+  // };
 
   const [bgData, setBgData] = useState([]);
 
@@ -422,14 +247,14 @@ const RollingPlans = () => {
         headers: headers,
       });
       const apires = await respond.data.data;
-
+      console.log("Bye", window.localStorage.getItem("userinfo").c_id);
       setBgData(
-        apires.filter((item, idx) => {
-          item.isDeleted === false;
-
-          Number(item.c_id) ===
-            Number(window.localStorage.getItem("userinfo").c_id);
-        })
+        apires.filter(
+          (item) =>
+            item.isDeleted === false &&
+            Number(item.c_id) ===
+              JSON.parse(window.localStorage.getItem("userinfo")).c_id
+        )
       );
     } catch (error) {
       console.log(error);
@@ -459,6 +284,7 @@ const RollingPlans = () => {
   };
 
   useEffect(() => {
+    if (!filterState.bgId) return;
     getBusinessUnitInfo(filterState.bgId);
   }, [filterState.bgId]);
 
@@ -667,6 +493,7 @@ const RollingPlans = () => {
   };
 
   useEffect(() => {
+    if (!filterState.yr || !filterState.month || !filterState.wId) return;
     getAllDepotSalesPlan(
       filterState.yr || null,
       filterState.month || null,

@@ -25,7 +25,7 @@ const MapDepot = () => {
         params: { d_id: router.query.id },
       });
       const apires = await respond.data.data;
-
+      
       setDepotState({
         companyId: apires[0].c_id,
         bgId: apires[0].bg_id,

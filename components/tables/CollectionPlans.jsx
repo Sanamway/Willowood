@@ -245,7 +245,7 @@ const CollectionPlans = () => {
   const [allYearData, setAllYearData] = useState([]);
   const getAllTransactionPlan = async () => {
     try {
-      const respond = await axios.get(`${url}/api/get_rp`, {
+      const respond = await axios.get(`${url}/api/get_cp`, {
         headers: headers,
         params: { status: true },
       });
@@ -259,7 +259,7 @@ const CollectionPlans = () => {
   }, []);
   const getAllTransactionYear = async (yr) => {
     try {
-      const respond = await axios.get(`${url}/api/get_rp`, {
+      const respond = await axios.get(`${url}/api/get_cp`, {
         headers: headers,
         params: { status: true, year: yr },
       });
@@ -581,15 +581,15 @@ const CollectionPlans = () => {
     let endPoint;
 
     if (bgId && buId && zId && rId && tId) {
-      endPoint = "api/get_rollingdata_based_on_roll_t";
+      endPoint = "api/get_collectiondata_based_on_roll_t";
     } else if (bgId && buId && zId && rId && !tId) {
-      endPoint = "api/get_rollingdata_based_on_roll_r";
+      endPoint = "api/get_collectiondata_based_on_roll_r";
     } else if (bgId && buId && zId && !rId && !tId) {
-      endPoint = "api/get_rollingdata_based_on_roll_z";
+      endPoint = "api/get_collectiondata_based_on_roll_z";
     } else if (bgId && buId && !zId && !rId && !tId) {
-      endPoint = "api/get_rollingdata_based_on_roll_bu";
+      endPoint = "api/get_collectiondata_based_on_roll_bu";
     } else if (bgId && !buId && !zId && !rId && !tId) {
-      endPoint = "api/get_rollingdata_based_on_roll_bg";
+      endPoint = "api/get_collectiondata_based_on_roll_bg";
     } else {
       return;
     }
@@ -644,7 +644,7 @@ const CollectionPlans = () => {
 
   const getAllDepotSalesPlan = async (yr, month, wId) => {
     let endPoint;
-    endPoint = "api/get_rollingdata_based_on_roll_r";
+    endPoint = "api/get_collectiondata_based_on_roll_r";
 
     try {
       const respond = await axios.get(`${url}/${endPoint}`, {
