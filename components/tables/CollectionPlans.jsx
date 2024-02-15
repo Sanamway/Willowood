@@ -24,9 +24,9 @@ import toast, { Toaster } from "react-hot-toast";
 import { FcBullish } from "react-icons/fc";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Popover } from "@headlessui/react";
-
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { Dialog, Transition } from "@headlessui/react";
@@ -36,185 +36,10 @@ import SubmitModal from "../modals/SubmitModal";
 import moment from "moment";
 
 import { AiOutlineSearch } from "react-icons/ai";
-const CollectionPlans = () => {
+const RollingPlans = () => {
   const [successOpen, setSuccessOpen] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
-  const datas = [
-    {
-      id: 1,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "green",
-      status: "Zone Approved",
-      progress: "20%",
-    },
 
-    {
-      id: 2,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "red",
-      status: "Yet to submit",
-      progress: "40%",
-    },
-
-    {
-      id: 3,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "orange",
-      status: "Draft save",
-      progress: "60%",
-    },
-
-    {
-      id: 4,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "red",
-      status: "Submitted by TM/RM/ZM",
-      progress: "80%",
-    },
-
-    {
-      id: 5,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "green",
-      status: "Review stage",
-      progress: "100%",
-    },
-
-    {
-      id: 6,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "red",
-      status: "Yet to sumbit",
-      progress: "20%",
-    },
-
-    {
-      id: 7,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "green",
-      status: "Zone Approved",
-      progress: "80%",
-    },
-
-    {
-      id: 8,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "orange",
-      status: "Draft save",
-      progress: "30%",
-    },
-
-    {
-      id: 9,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "green",
-      status: "Review stage",
-    },
-
-    {
-      id: 10,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "green",
-      status: "Zone Approved",
-    },
-    {
-      id: 11,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "green",
-      status: "Draft save",
-    },
-
-    {
-      id: 12,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "red",
-      status: "Yet to submit",
-    },
-
-    {
-      id: 13,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "red",
-      status: "Yet to submit",
-    },
-
-    {
-      id: 13,
-      icon: FcBullish,
-      name: "Collection Plan",
-      month: "April 2023",
-      depot: "Hyderabad",
-      due_date: "due date 5th",
-      zone: "South Telagana Hyderabad",
-      color: "red",
-      status: "Yet to submit",
-    },
-  ];
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
@@ -265,7 +90,7 @@ const CollectionPlans = () => {
       });
       const apires = await respond.data.data;
 
-      setAllMonthData(apires);
+      setAllMonthData([...new Set(apires.map((item) => item.m_year))]);
     } catch (error) {}
   };
 
@@ -283,7 +108,7 @@ const CollectionPlans = () => {
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -292,7 +117,7 @@ const CollectionPlans = () => {
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -304,7 +129,7 @@ const CollectionPlans = () => {
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -313,7 +138,7 @@ const CollectionPlans = () => {
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
 
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
@@ -410,9 +235,9 @@ const CollectionPlans = () => {
     }
   }, [allYearData]);
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+  // const toggleDropdown = () => {
+  //   setIsDropdownOpen(!isDropdownOpen);
+  // };
 
   const [bgData, setBgData] = useState([]);
 
@@ -422,14 +247,14 @@ const CollectionPlans = () => {
         headers: headers,
       });
       const apires = await respond.data.data;
-
+      console.log("Bye", window.localStorage.getItem("userinfo").c_id);
       setBgData(
-        apires.filter((item, idx) => {
-          item.isDeleted === false;
-
-          Number(item.c_id) ===
-            Number(window.localStorage.getItem("userinfo").c_id);
-        })
+        apires.filter(
+          (item) =>
+            item.isDeleted === false &&
+            Number(item.c_id) ===
+              JSON.parse(window.localStorage.getItem("userinfo")).c_id
+        )
       );
     } catch (error) {
       console.log(error);
@@ -459,6 +284,7 @@ const CollectionPlans = () => {
   };
 
   useEffect(() => {
+    if (!filterState.bgId) return;
     getBusinessUnitInfo(filterState.bgId);
   }, [filterState.bgId]);
 
@@ -579,7 +405,7 @@ const CollectionPlans = () => {
     tId
   ) => {
     let endPoint;
-
+    console.log("salesplan", yr, month, bgId, buId, zId, rId, tId);
     if (bgId && buId && zId && rId && tId) {
       endPoint = "api/get_collectiondata_based_on_roll_t";
     } else if (bgId && buId && zId && rId && !tId) {
@@ -595,6 +421,16 @@ const CollectionPlans = () => {
     }
 
     try {
+      console.log("dataBlog", {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        bg_id: bgId === "All" || !bgId ? null : bgId,
+        bu_id: buId === "All" || !buId ? null : buId,
+        z_id: zId === "All" || !zId ? null : zId,
+        r_id: rId === "All" || !rId ? null : rId,
+        t_id: tId === "All" || !tId ? null : tId,
+      });
       const respond = await axios.get(`${url}/${endPoint}`, {
         headers: headers,
 
@@ -611,7 +447,7 @@ const CollectionPlans = () => {
       });
 
       const apires = await respond.data.data;
-
+      console.log("new data", apires);
       setAllTableData(apires);
     } catch (error) {
       if (!error) return;
@@ -620,6 +456,10 @@ const CollectionPlans = () => {
   };
 
   useEffect(() => {
+    console.log(
+      "local item",
+      JSON.parse(window.localStorage.getItem("userinfo"))
+    );
     if (!JSON.parse(window.localStorage.getItem("userinfo")).role_id === 11)
       return;
 
@@ -667,6 +507,7 @@ const CollectionPlans = () => {
   };
 
   useEffect(() => {
+    if (!filterState.yr || !filterState.month || !filterState.wId) return;
     getAllDepotSalesPlan(
       filterState.yr || null,
       filterState.month || null,
@@ -799,7 +640,7 @@ const CollectionPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              <FaDownload className="text-slate-400" /> Download CP
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -866,14 +707,14 @@ const CollectionPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              <FaDownload className="text-slate-400" /> Download CP
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
                 handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit");
                 router.push({
-                  pathname: "/cptransaction",
+                  pathname: "/rptransaction",
                   query: {
                     planId: planId,
                     tranId: tranId,
@@ -961,7 +802,7 @@ const CollectionPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              <FaDownload className="text-slate-400" /> Download CP
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -1063,7 +904,7 @@ const CollectionPlans = () => {
                   )
                 }
               >
-                <FaDownload className="text-slate-400" /> Download RP
+                <FaDownload className="text-slate-400" /> Download CP
               </li>
 
               <li
@@ -1103,7 +944,7 @@ const CollectionPlans = () => {
                 }
               >
                 <FaDownload className="text-slate-400" />
-                All Download RP
+                All Download CP
               </li>
 
               <li
@@ -1154,7 +995,7 @@ const CollectionPlans = () => {
                   )
                 }
               >
-                <FaDownload className="text-slate-400" /> Download RP
+                <FaDownload className="text-slate-400" /> Download CP
               </li>
 
               {!(
@@ -1281,7 +1122,7 @@ const CollectionPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              <FaDownload className="text-slate-400" /> Download CP
             </li>
 
             <li
@@ -1367,7 +1208,7 @@ const CollectionPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              <FaDownload className="text-slate-400" /> Download CP
             </li>
 
             {(filterState.tId || filterState.tId === "All") &&
@@ -1426,7 +1267,7 @@ const CollectionPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              <FaDownload className="text-slate-400" /> Download CP
             </li>
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
@@ -1552,7 +1393,7 @@ const CollectionPlans = () => {
                 );
               }}
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              <FaDownload className="text-slate-400" /> Download CP
             </li>
             {upload &&
               !(
@@ -1563,7 +1404,7 @@ const CollectionPlans = () => {
                   className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
                   onClick={() => {
                     router.push({
-                      pathname: "/cptransaction",
+                      pathname: "/rptransaction",
                       query: {
                         planId: planId,
                         tranId: tranId,
@@ -1588,7 +1429,7 @@ const CollectionPlans = () => {
                     });
                   }}
                 >
-                  <FaUpload className="text-slate-400" /> Upload RP
+                  <FaUpload className="text-slate-400" /> Upload CP
                 </li>
               )}
 
@@ -1637,7 +1478,7 @@ const CollectionPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              <FaDownload className="text-slate-400" /> Download CP
             </li>
 
             {(JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
@@ -1646,7 +1487,7 @@ const CollectionPlans = () => {
                 3 ||
               JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
                 10) &&
-              upload === true && (
+              upload && (
                 <li
                   className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
                   onClick={() => {
@@ -1675,7 +1516,7 @@ const CollectionPlans = () => {
                     );
                   }}
                 >
-                  <FcApprovall className="text-green-400" /> Final Approve
+                  <FcApproval className="text-green-400" /> Final Approve
                 </li>
               )}
 
@@ -1717,7 +1558,7 @@ const CollectionPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              <FaDownload className="text-slate-400" /> Download CP
             </li>
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
@@ -1823,7 +1664,7 @@ const CollectionPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              <FaDownload className="text-slate-400" /> Download CP
             </li>
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
@@ -1929,7 +1770,7 @@ const CollectionPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              <FaDownload className="text-slate-400" /> Download CP
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -1996,7 +1837,7 @@ const CollectionPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              <FaDownload className="text-slate-400" /> Download CP
             </li>
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
@@ -2116,7 +1957,7 @@ const CollectionPlans = () => {
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
                 router.push({
-                  pathname: "/cptransaction",
+                  pathname: "/rptransaction",
                   query: {
                     planId: planId,
                     tranId: tranId,
@@ -2520,7 +2361,7 @@ const CollectionPlans = () => {
       ];
       localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
       router.push({
-        pathname: "/cptransaction",
+        pathname: "/rptransaction",
         query: {
           planId: planId,
           tranId: tranId,
@@ -2702,7 +2543,7 @@ const CollectionPlans = () => {
       ];
       localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
       router.push({
-        pathname: "/cptransaction",
+        pathname: "/rptransaction",
         query: {
           planId: planId,
           tranId: tranId,
@@ -2912,7 +2753,7 @@ const CollectionPlans = () => {
       ];
       localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
       router.push({
-        pathname: "/cptransaction",
+        pathname: "/rptransaction",
         query: {
           planId: planId,
           tranId: tranId,
@@ -3022,7 +2863,7 @@ const CollectionPlans = () => {
       ];
       localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
       router.push({
-        pathname: "/cptransaction",
+        pathname: "/rptransaction",
         query: {
           planId: planId,
           tranId: tranId,
@@ -3232,7 +3073,7 @@ const CollectionPlans = () => {
       ];
       localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
       router.push({
-        pathname: "/cptransaction",
+        pathname: "/rptransaction",
         query: {
           planId: planId,
           tranId: tranId,
@@ -3286,7 +3127,7 @@ const CollectionPlans = () => {
         paramsData = {};
       }
       localStorage.setItem("RSP", JSON.stringify([]));
-      const respond = axios.get(`${url}/api/delete_rolling_tm`, {
+      const respond = axios.get(`${url}/api/delete_cp_tm`, {
         headers: headers,
 
         params: paramsData,
@@ -3672,7 +3513,7 @@ const CollectionPlans = () => {
                         <div className=""></div>
                         <div className="ml-3">
                           <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">
-                            C S P-({item.tran_id})
+                            C P-({item.tran_id})
                           </p>
                           <p className="text-gray-900 whitespace-no-wrap text-[0.6rem] font-bold">
                             {moment(item.m_year).format("MMM YYYY")} (due date{" "}
@@ -3937,6 +3778,22 @@ const CollectionPlans = () => {
                         </option>
                       ))}
                     </select>
+                    {/* <textarea
+                      className="w-full  px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      type="text"
+                      id="inputField"
+                      maxLength={256}
+                      placeholder="Comment Please"
+                      value={rejectModalData.data}
+                      onChange={(e) =>
+                        setRejectModalData({
+                          ...rejectModalData,
+                          data: e.target.value,
+                        })
+                      }
+
+                      // disabled={!formActive}
+                    /> */}
                   </div>
 
                   <div className="mt-4 flex items-center justify-start gap-4">
@@ -4051,4 +3908,4 @@ const CollectionPlans = () => {
   );
 };
 
-export default CollectionPlans;
+export default RollingPlans;

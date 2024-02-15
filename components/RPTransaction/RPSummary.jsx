@@ -397,7 +397,7 @@ const RPSummary = (props) => {
           if (typeof item[key] === "number") {
             sumObject[key] = (sumObject[key] || 0) + item[key];
           } else {
-            sumObject[key] = 0;
+            sumObject[key] = sumObject[key];
           }
         });
       });
@@ -407,7 +407,6 @@ const RPSummary = (props) => {
     const totalResult = sumNumericValues(props.tableData);
     setTotalNamewiseData(totalResult);
   }, [props.tableData]);
-  console.log("noi", totalNamewiseData);
 
   const [pcatwiseData, setPcatwiseData] = useState([]);
   const [totalPcatwiseData, setTotalPcatwiseData] = useState({});

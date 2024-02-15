@@ -210,7 +210,7 @@ const CollectionTrasactionPeriod = () => {
       <div className=" w-full font-arial bg-white ">
         <div className="flex flex-row justify-between h-max px-5">
           <h4 className="font-arial font-normal text-3xl  py-2">
-            Collection Sales Plan - Open Period
+            Collection Plan - Open Period
           </h4>
           <span className="flex items-center gap-2 cursor-pointer">
             <TiArrowBack

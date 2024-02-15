@@ -40,13 +40,13 @@ const RPTable = (props) => {
     if (!result.length) return;
     function sumNumericValues(data) {
       const sumObject = {};
-      console.log("olp", data);
+
       data.forEach((item) => {
         Object.keys(item).forEach((key) => {
           if (typeof item[key] === "number") {
             sumObject[key] = (sumObject[key] || 0) + item[key];
           } else {
-            sumObject[key] = 0;
+            sumObject[key] = sumObject[key];
           }
         });
       });
@@ -146,9 +146,7 @@ const RPTable = (props) => {
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
       <div className=" flex justify-center w-full my-">
-        {/* <div className="bcbtn px-2">
-          <button className="px-4 py-1 bg-white border-2 border-teal-400 rounded-md text-teal-400">Back</button>
-        </div> */}
+       
         <div className="headingtext">
           {/* <h2 className="text-lg text-teal-400 font-bold">Rolling Sales Plan - Apr 2023</h2> */}
         </div>
@@ -407,12 +405,15 @@ const RPTable = (props) => {
                             </td>
                           )}
 
+                        
                           <td
                             className={`${"px-2 py-1  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right "} ${handleColourBlock(
                               item[Object.keys(item)[17]],
                               item[Object.keys(item)[19]]
                             )}`}
                           >
+
+                            
                             <input
                               type="number"
                               value={item[Object.keys(item)[19]]}
