@@ -65,7 +65,7 @@ const MainReport = () => {
       });
       const apires = await respond.data.data;
 
-      setAllMonthData(apires);
+      setAllMonthData([...new Set(apires.map((item) => item.m_year))]);
     } catch (error) {}
   };
 
@@ -83,7 +83,7 @@ const MainReport = () => {
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -92,7 +92,7 @@ const MainReport = () => {
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -104,7 +104,7 @@ const MainReport = () => {
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -113,7 +113,7 @@ const MainReport = () => {
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
 
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
@@ -126,7 +126,7 @@ const MainReport = () => {
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -148,7 +148,7 @@ const MainReport = () => {
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -169,7 +169,7 @@ const MainReport = () => {
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -190,7 +190,7 @@ const MainReport = () => {
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -199,7 +199,7 @@ const MainReport = () => {
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -283,6 +283,7 @@ const MainReport = () => {
 
       const apires = await respond.data.data;
 
+      setAllRegionData(apires);
       setAllRegionData(
         apires
           .filter((item) => Number(item.bg_id) === Number(segmentId))
@@ -621,6 +622,7 @@ const MainReport = () => {
 
   const [segmentData, setSegmentData] = useState([]);
   const getSegmentData = async (yr, month, bgId, buId, zId, rId, tId) => {
+    if (!yr || !month || !bgId || !buId || !zId || !rId || !tId) return;
     console.log(
       "jio",
       allZoneData.filter(
@@ -642,7 +644,7 @@ const MainReport = () => {
       t_id: filterState.tId,
       plan_id: 1,
       tran_id: "RP-122023",
-      m_year: month,
+      m_year: moment(month).format("YYYY-MM"),
       json: true,
       analytical_key: "Product Segment",
     };
@@ -662,7 +664,7 @@ const MainReport = () => {
           (item) => Number(item.bg_id) === Number(filterState.bgId)
         )[0]?.business_segment,
         bg_id: filterState.bgId,
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Product Segment",
       };
@@ -682,7 +684,7 @@ const MainReport = () => {
           (item) => Number(item.bu_id) === Number(filterState.buId)
         )[0]?.business_unit_name,
         bu_id: filterState.buId,
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Product Segment",
       };
@@ -702,7 +704,7 @@ const MainReport = () => {
           (item) => Number(item.z_id) === Number(filterState.zId)
         )[0]?.zone_name,
         z_id: filterState.zId,
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Product Segment",
       };
@@ -723,7 +725,7 @@ const MainReport = () => {
         )[0]?.region_name,
         r_id: filterState.rId,
 
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Product Segment",
       };
@@ -744,7 +746,7 @@ const MainReport = () => {
         )[0]?.territory_name,
         t_id: filterState.tId,
 
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Product Segment",
       };
@@ -798,6 +800,7 @@ const MainReport = () => {
         (item) => Number(item.z_id) === Number(filterState.zId)
       )
     );
+    if (!yr || !month || !bgId || !buId || !zId || !rId || !tId) return;
     let paramsData = {
       year_1: yr - 2,
       year_2: yr - 1,
@@ -813,7 +816,7 @@ const MainReport = () => {
       t_id: filterState.tId,
       plan_id: 1,
       tran_id: "RP-122023",
-      m_year: month,
+      m_year: moment(month).format("YYYY-MM"),
       json: true,
       analytical_key: "Product Category",
     };
@@ -833,7 +836,7 @@ const MainReport = () => {
           (item) => Number(item.bg_id) === Number(filterState.bgId)
         )[0]?.business_segment,
         bg_id: filterState.bgId,
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Product Category",
       };
@@ -853,7 +856,7 @@ const MainReport = () => {
           (item) => Number(item.bu_id) === Number(filterState.buId)
         )[0]?.business_unit_name,
         bu_id: filterState.buId,
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Product Category",
       };
@@ -873,7 +876,7 @@ const MainReport = () => {
           (item) => Number(item.z_id) === Number(filterState.zId)
         )[0]?.zone_name,
         z_id: filterState.zId,
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Product Category",
       };
@@ -894,7 +897,7 @@ const MainReport = () => {
         )[0]?.region_name,
         r_id: filterState.rId,
 
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Product Category",
       };
@@ -915,7 +918,7 @@ const MainReport = () => {
         )[0]?.territory_name,
         t_id: filterState.tId,
 
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Product Category",
       };
@@ -963,6 +966,7 @@ const MainReport = () => {
 
   const [brandData, setBrandData] = useState([]);
   const getBrandData = async (yr, month, bgId, buId, zId, rId, tId) => {
+    if (!yr || !month || !bgId || !buId || !zId || !rId || !tId) return;
     console.log(
       "jio",
       allZoneData.filter(
@@ -984,7 +988,7 @@ const MainReport = () => {
       t_id: filterState.tId,
       plan_id: 1,
       tran_id: "RP-122023",
-      m_year: month,
+      m_year: moment(month).format("YYYY-MM"),
       json: true,
       analytical_key: "Brand Desc",
     };
@@ -1004,7 +1008,7 @@ const MainReport = () => {
           (item) => Number(item.bg_id) === Number(filterState.bgId)
         )[0]?.business_segment,
         bg_id: filterState.bgId,
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Brand Desc",
       };
@@ -1023,9 +1027,9 @@ const MainReport = () => {
         bu_des: businessUnitData.filter(
           (item) => Number(item.bu_id) === Number(filterState.buId)
         )[0]?.business_unit_name,
-        
+
         bu_id: filterState.buId,
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Brand Desc",
       };
@@ -1045,7 +1049,7 @@ const MainReport = () => {
           (item) => Number(item.z_id) === Number(filterState.zId)
         )[0]?.zone_name,
         z_id: filterState.zId,
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Brand Desc",
       };
@@ -1065,7 +1069,7 @@ const MainReport = () => {
           (item) => Number(item.r_id) === Number(filterState.rId)
         )[0]?.region_name,
         r_id: filterState.rId,
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Brand Desc",
       };
@@ -1086,7 +1090,7 @@ const MainReport = () => {
         )[0]?.territory_name,
 
         t_id: filterState.tId,
-        m_year: month,
+        m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Brand Desc",
       };
@@ -1133,22 +1137,24 @@ const MainReport = () => {
   ]);
   console.log("mln", filterState);
 
-
-
-
-  
-
-
   return (
     <>
       <section className="outer  w-full px-2  bg-black/5   min-h-screen">
         <div className="flex items-center justify-center w-full">
           <h2 className="font-arial text-sm font-bold text-teal-500 mt-2">
-            Target Vs Achievement - Dec 2023 - RP-122023
+            Target Vs Achievement - {filterState.month && filterState.month}
           </h2>
         </div>
-      
-
+        <div className="flex w-full justify-end">
+          <button
+            onClick={() => {
+              router.push("/rollingplans");
+            }}
+            className="text-center rounded-md bg-blue-500 text-white py-1 px-6 h-12 text-sm"
+          >
+            Back to Rolling Page
+          </button>
+        </div>
         <div className="my-4 flex  flex-col w-full gap-4 px-12 ">
           <div className="flex gap-4 w-full">
             <select
@@ -1185,7 +1191,7 @@ const MainReport = () => {
               disabled={!filterState.yr}
             >
               <option value="All" className="font-bold">
-                All
+                Select
               </option>
               {allMonthData.map((item, idx) => (
                 <option value={item.m_year} key={idx}>
@@ -1218,7 +1224,7 @@ const MainReport = () => {
               <option value={""} className="font-bold">
                 - All Business Segment -
               </option>
-             
+
               {bgData.map((item, idx) => (
                 <option value={item.bg_id} key={idx}>
                   {item.business_segment}
@@ -1247,14 +1253,14 @@ const MainReport = () => {
               }
             >
               <option value={""}>- All Business Unit -</option>
-             
+
               {buData.map((item, idx) => (
                 <option value={item.bu_id} key={idx}>
                   {item.business_unit_name}
                 </option>
               ))}
             </select>
-
+            {console.log("qkl", filterState)}
             <select
               className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
@@ -1273,8 +1279,8 @@ const MainReport = () => {
                 localStorageItems.roleId === 4
               }
             >
-              <option value={""}>- All  Zone -</option>
-           
+              <option value={""}>- All Zone -</option>
+
               {allZoneData.map((item, idx) => (
                 <option value={item.z_id} key={idx}>
                   {item.zone_name}
@@ -1298,7 +1304,7 @@ const MainReport = () => {
               }
             >
               <option value={""}>-All Region -</option>
-              
+
               {allRegionData.map((item, idx) => (
                 <option value={item.r_id} key={idx}>
                   {item.region_name}
@@ -1319,7 +1325,7 @@ const MainReport = () => {
               }
             >
               <option value={""}>- All Territory -</option>
-   
+
               {allTerritoryData.map((item, idx) => (
                 <option value={item.t_id} key={idx}>
                   {item.territory_name}
@@ -1330,17 +1336,16 @@ const MainReport = () => {
         </div>
         <div className="hey">
           <AllCharts
-            businessSegmentData={busniessSegmentData}
-            businessUnitData={businessUnitData}
-            zoneData={zoneData}
-            regionData={regionData}
-            territoryData={territoryData}
-            productSegmentData={segmentData}
-            productCategoryData={categoryData}
-            productBrandData={brandData}
+                   businessSegmentData =   {busniessSegmentData}
+                   businessUnitData    =   {businessUnitData}
+                   zoneData            =   {zoneData}
+                   regionData          =   {regionData}
+                   territoryData       =   {territoryData}
+                   productSegmentData  =   {segmentData}
+                   productCategoryData =   {categoryData}
+                   productBrandData    =   {brandData}
           />
         </div>
-
       </section>
     </>
   );

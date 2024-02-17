@@ -129,7 +129,7 @@ const RollingPlans = () => {
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -138,11 +138,10 @@ const RollingPlans = () => {
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          tId: null,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           yr: Math.max(...allYearData),
           month: null,
         });
@@ -151,7 +150,7 @@ const RollingPlans = () => {
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -160,11 +159,10 @@ const RollingPlans = () => {
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          rId: null,
-
-          tId: null,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           yr: Math.max(...allYearData),
           month: null,
         });
@@ -173,7 +171,7 @@ const RollingPlans = () => {
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -182,10 +180,10 @@ const RollingPlans = () => {
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          rId: null,
-          zId: null,
-          tId: null,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           yr: Math.max(...allYearData),
           month: null,
         });
@@ -2151,6 +2149,8 @@ const RollingPlans = () => {
       };
     }
     try {
+
+      
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/rsp_download`, {
         headers: headers,
@@ -2160,6 +2160,8 @@ const RollingPlans = () => {
       const ws = XLSX.utils.json_to_sheet(apires.data.data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+
       if (tDes) {
         XLSX.writeFile(
           wb,
@@ -3365,7 +3367,7 @@ const RollingPlans = () => {
                 </option>
               ))}
             </select>
-
+          
             <select
               className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"

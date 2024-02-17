@@ -22,7 +22,7 @@ const TableChart = (props) => {
     const data = new Blob([excelBuffer], { type: fileType });
     FileSaver.saveAs(data, `${heading}${fileExtension}`);
   };
- 
+  console.log("mlop", heading)
   return (
     <>
 
@@ -63,7 +63,7 @@ const TableChart = (props) => {
           </div>
         </div>
         {!height && (
-          <GraphTable
+          < GraphTable
             className={`min-w-full lg:max-h-64  ${fullScreen ? "lg:max-h-[84%]" : ""} px-2`}
             data={datas}
             heading={props.heading}

@@ -46,15 +46,12 @@ const AllCharts = (props) => {
         if (item.zone_name) {
           territoryLabel.push(item.territory_name);
         }
-        if (item.target) {
-          budgetData.data.push(item.budget);
-        }
-        if (item.budget) {
-          targetData.data.push(item.target);
-        }
-        if (item.actual) {
-          actualData.data.push(item.actual);
-        }
+
+        targetData.data.push(item.target ? item.target : 0);
+
+        budgetData.data.push(item.budget ? item.budget : 0);
+
+        actualData.data.push(item.actual ? item.actual : 0);
       });
       if (budgetData.data.length > 0) {
         territoryData.push(budgetData);
@@ -94,18 +91,11 @@ const AllCharts = (props) => {
       };
 
       props.regionData.forEach((item) => {
-        if (item.zone_name) {
-          regionLabel.push(item.region_name);
-        }
-        if (item.target) {
-          budgetData.data.push(item.budget);
-        }
-        if (item.budget) {
-          targetData.data.push(item.target);
-        }
-        if (item.actual) {
-          actualData.data.push(item.actual);
-        }
+        targetData.data.push(item.target ? item.target : 0);
+
+        budgetData.data.push(item.budget ? item.budget : 0);
+
+        actualData.data.push(item.actual ? item.actual : 0);
       });
       if (budgetData.data.length > 0) {
         regionData.push(budgetData);
@@ -145,18 +135,9 @@ const AllCharts = (props) => {
       };
 
       props.zoneData.forEach((item) => {
-        if (item.zone_name) {
-          zoneLabel.push(item.zone_name);
-        }
-        if (item.target) {
-          budgetData.data.push(item.budget);
-        }
-        if (item.budget) {
-          targetData.data.push(item.target);
-        }
-        if (item.actual) {
-          actualData.data.push(item.actual);
-        }
+        targetData.data.push(item.target ? item.target : 0);
+        budgetData.data.push(item.budget ? item.budget : 0);
+        actualData.data.push(item.actual ? item.actual : 0);
       });
       if (budgetData.data.length > 0) {
         zoneData.push(budgetData);
@@ -199,15 +180,11 @@ const AllCharts = (props) => {
         if (item.business_unit_name) {
           BusUnitlabelData.push(item.business_unit_name);
         }
-        if (item.target) {
-          budgetData.data.push(item.budget);
-        }
-        if (item.budget) {
-          targetData.data.push(item.target);
-        }
-        if (item.actual) {
-          actualData.data.push(item.actual);
-        }
+        targetData.data.push(item.target ? item.target : 0);
+
+        budgetData.data.push(item.budget ? item.budget : 0);
+
+        actualData.data.push(item.actual ? item.actual : 0);
       });
       if (budgetData.data.length > 0) {
         BusUnitGraphData.push(budgetData);
@@ -253,15 +230,11 @@ const AllCharts = (props) => {
         if (item.business_segment) {
           BSegmentlabelData.push(item.business_segment);
         }
-        if (item.budget) {
-          budgetData.data.push(item.budget);
-        }
-        if (item.target) {
-          targetData.data.push(item.target);
-        }
-        if (item.actual) {
-          actualData.data.push(item.actual);
-        }
+        targetData.data.push(item.target ? item.target : 0);
+
+        budgetData.data.push(item.budget ? item.budget : 0);
+
+        actualData.data.push(item.actual ? item.actual : 0);
       });
       if (budgetData.data.length > 0) {
         BSegmentGraphData.push(budgetData);
@@ -272,7 +245,7 @@ const AllCharts = (props) => {
       if (actualData.data.length > 0) {
         BSegmentGraphData.push(actualData);
       }
-     
+
       setBsGraphData(BSegmentGraphData);
       setBsLabelData(BSegmentlabelData);
     }
@@ -436,14 +409,61 @@ const AllCharts = (props) => {
     }
   }, [props.productBrandData]);
 
-  console.log("hgf", pbGraphData, pbLabelData)
+  console.log("hgf", pbGraphData, pbLabelData);
+
+  const [showChart, setShowChart] = useState({
+    t: false,
+    r: false,
+    z: false,
+    bu: false,
+    bg: false,
+  });
+  useEffect(() => {
+    if (JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 4) {
+      setShowChart({
+        t: true,
+        r: true,
+        z: false,
+        bu: false,
+        bg: false,
+      });
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 5
+    ) {
+      setShowChart({
+        t: true,
+        r: false,
+        z: false,
+        bu: false,
+        bg: false,
+      });
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 6
+    ) {
+      setShowChart({
+        t: false,
+        r: false,
+        z: false,
+        bu: false,
+        bg: false,
+      });
+    } else {
+      setShowChart({
+        t: true,
+        r: true,
+        z: true,
+        bu: true,
+        bg: true,
+      });
+    }
+  }, []);
   //************************************************************************************************//
 
   return (
     <>
       <section className="wrapper w-full px-2 mt-2 font-arial  ">
-        <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4">
-          {/* <TableChartOne
+        {/* <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4">
+          <TableChartOne
             heading={"Business Segments"}
             title={
               "Business Segments ( Target vs Achievement )  - Annual , YTD , MTD"
@@ -451,9 +471,9 @@ const AllCharts = (props) => {
             color={"bg-white"}
             lab={labelNameTwo}
             datas={dummyData || []}
-          /> */}
+          />
 
-          {/* <TableChartTwo
+          <TableChartTwo
             heading={"Business Units"}
             title={
               "Business Units ( Target vs Achievement )  - Annual , YTD , MTD"
@@ -461,86 +481,97 @@ const AllCharts = (props) => {
             color={"bg-white"}
             lab={labelNameTwo}
             datas={dummyData || []}
-          ></TableChartTwo> */}
-        </div>
+          ></TableChartTwo>
+        </div> */}
 
-        <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
-          <ChartOne
-            title={"Business Segments"}
-            color={"bg-blue-500"}
-            lab={bsLabelData}
-            datasets={bsGraphData || []}
-          />
+        {showChart.bg && (
+          <div className="mt-2 lg:mt- md:flex items-start justify-center gap-4 ">
+            <ChartOne
+              title={"Business Segments"}
+              color={"bg-blue-500"}
+              lab={bsLabelData}
+              datasets={bsGraphData || []}
+            />
+          </div>
+        )}
+        {showChart.bu && (
+          <div className="mt-2 lg:mt- md:flex items-start justify-center gap-4 ">
+            <ChartTwo
+              title={"Business Units"}
+              color={"bg-violet-500"}
+              lab={bsUnitLabelData}
+              datasets={bsUnitGraphData || []}
+            />
+          </div>
+        )}
 
-          <ChartTwo
-            title={"Business Units"}
-            color={"bg-violet-500"}
-            lab={bsUnitLabelData}
-            datasets={bsUnitGraphData || []}
-          />
-        </div>
-
-        <div className=" mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
-          {/* <TableChart
+        {/* <div className=" mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
+          <TableChart
             heading={"Zone"}
             title={"Zone ( Target vs Achievement )  - Annual , YTD , MTD"}
             color={"bg-white"}
             lab={labelNameTwo}
             datas={dummyData || []}
-          ></TableChart> */}
-        </div>
+          ></TableChart>
+        </div> */}
 
-        <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
-          <ChartTwo
-            title={"Business Zone"}
-            color={"bg-pink-500"}
-            lab={zonetLabelData}
-            datasets={zoneGraphData || []}
-          ></ChartTwo>
-        </div>
+        {showChart.z && (
+          <div className="mt-2 lg:mt- md:flex items-start justify-center gap-4  ">
+            <ChartTwo
+              title={"Business Zone"}
+              color={"bg-pink-500"}
+              lab={zonetLabelData}
+              datasets={zoneGraphData || []}
+            ></ChartTwo>
+          </div>
+        )}
 
-        <div className=" mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
-          {/* <TableChart
+        {/* <div className=" mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
+          <TableChart
             heading={"Region"}
             title={"Region ( Target vs Achievement )  - Annual , YTD , MTD"}
             color={"bg-white"}
             lab={labelNameTwo}
             datas={dummyData || []}
-          ></TableChart> */}
-        </div>
+          ></TableChart>
+        </div> */}
 
-        <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
-          <ChartThree
-            title={"Business Region"}
-            color={"bg-teal-400"}
-            lab={regiontLabelData}
-            datasets={regionGraphData || []}
-          ></ChartThree>
-        </div>
+        {showChart.r && (
+          <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
+            <ChartThree
+              title={"Business Region"}
+              color={"bg-teal-400"}
+              lab={regiontLabelData}
+              datasets={regionGraphData || []}
+            ></ChartThree>
+          </div>
+        )}
 
-        <div className=" mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
-          {/* <TableChart
+        {/* <div className=" mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
+          <TableChart
             heading={"Territory"}
             title={"Territory ( Target vs Achievement )  - Annual , YTD , MTD"}
             color={"bg-white"}
             lab={labelNameTwo}
             datas={dummyData || []}
-          ></TableChart> */}
-        </div>
+          ></TableChart>
+        </div> */}
 
         {/* territory label  */}
 
-        <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
-          <ChartThree
-            title={"Territory"}
-            color={"bg-rose-500"}
-            lab={territorytLabelData}
-            datasets={territoryGraphData || []}
-          ></ChartThree>
-        </div>
+        {showChart.t && (
+          <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
+            <ChartThree
+              title={"Territory"}
+              color={"bg-rose-500"}
+              lab={territorytLabelData}
+              datasets={territoryGraphData || []}
+            ></ChartThree>
+          </div>
+        )}
 
-        <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
-          {/* <ChartOne
+        {/* <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
+          <ChartOne
             title={"Customer Wise"}
             color={"bg-sky-500"}
             lab={labelNameTwo}
@@ -551,8 +582,8 @@ const AllCharts = (props) => {
             color={"bg-sky-500"}
             lab={labelNameTwo}
             datasets={businessUnit || []}
-          ></ChartTwo> */}
-        </div>
+          ></ChartTwo>
+        </div> */}
 
         <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
           <ChartOne
