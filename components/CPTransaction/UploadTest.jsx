@@ -145,7 +145,7 @@ export default function DragAndDrop(props) {
         </button> */}
       </form>
       <div className="mt-12 flex items-center justify-end mx-8 gap-4">
-      <button
+        <button
           onClick={() => {
             router.push("/collectionplans");
           }}
@@ -165,7 +165,6 @@ export default function DragAndDrop(props) {
         >
           Next
         </button>
-        
       </div>
     </div>
   );

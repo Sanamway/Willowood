@@ -636,6 +636,7 @@ const RollingPlans = () => {
                   buDes,
                   bg,
                   bgDes,
+                  cId,
                   filterState
                 )
               }
@@ -654,6 +655,7 @@ const RollingPlans = () => {
                   zrt,
                   status,
                   stage,
+                  cId,
                   filterState,
                   bg,
                   bu,
@@ -703,6 +705,7 @@ const RollingPlans = () => {
                   buDes,
                   bg,
                   bgDes,
+                  cId,
                   filterState
                 )
               }
@@ -714,7 +717,7 @@ const RollingPlans = () => {
               onClick={() => {
                 handleDownloadExcel(mYr, planId, tranId, t, tDes, yr, "Edit");
                 router.push({
-                  pathname: "/rptransaction",
+                  pathname: "/cptransaction",
                   query: {
                     planId: planId,
                     tranId: tranId,
@@ -750,6 +753,7 @@ const RollingPlans = () => {
                   zrt,
                   status,
                   stage,
+                  cId,
                   filterState,
                   bg,
                   bu,
@@ -759,7 +763,8 @@ const RollingPlans = () => {
                   c,
                   w,
                   tDes,
-                  rDes
+                  rDes,
+                  cId
                 );
               }}
             >
@@ -798,6 +803,7 @@ const RollingPlans = () => {
                   buDes,
                   bg,
                   bgDes,
+                  cId,
                   filterState
                 )
               }
@@ -816,6 +822,7 @@ const RollingPlans = () => {
                   zrt,
                   status,
                   stage,
+                  cId,
                   filterState,
                   bg,
                   bu,
@@ -857,6 +864,7 @@ const RollingPlans = () => {
                   zrt,
                   status,
                   stage,
+                  cId,
                   filterState,
                   bg,
                   bu,
@@ -866,7 +874,8 @@ const RollingPlans = () => {
                   c,
                   w,
                   tDes,
-                  rDes
+                  rDes,
+                  cId
                 );
               }}
             >
@@ -1014,6 +1023,7 @@ const RollingPlans = () => {
                       zrt,
                       status,
                       stage,
+                      cId,
                       filterState,
                       bg,
                       bu,
@@ -1118,6 +1128,7 @@ const RollingPlans = () => {
                   buDes,
                   bg,
                   bgDes,
+                  cId,
                   filterState
                 )
               }
@@ -1137,6 +1148,7 @@ const RollingPlans = () => {
                   zrt,
                   status,
                   stage,
+                  cId,
                   filterState,
                   bg,
                   bu,
@@ -1146,7 +1158,8 @@ const RollingPlans = () => {
                   c,
                   w,
                   tDes,
-                  rDes
+                  rDes,
+                  cId
                 );
               }}
             >
@@ -1204,6 +1217,7 @@ const RollingPlans = () => {
                   buDes,
                   bg,
                   bgDes,
+                  cId,
                   filterState
                 )
               }
@@ -1263,6 +1277,7 @@ const RollingPlans = () => {
                   buDes,
                   bg,
                   bgDes,
+                  cId,
                   filterState
                 )
               }
@@ -1288,6 +1303,7 @@ const RollingPlans = () => {
                       zrt,
                       status,
                       stage,
+                      cId,
                       filterState,
                       bg,
                       bu,
@@ -1389,6 +1405,7 @@ const RollingPlans = () => {
                   buDes,
                   bg,
                   bgDes,
+                  cId,
                   filterState
                 );
               }}
@@ -1404,7 +1421,7 @@ const RollingPlans = () => {
                   className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
                   onClick={() => {
                     router.push({
-                      pathname: "/rptransaction",
+                      pathname: "/cptransaction",
                       query: {
                         planId: planId,
                         tranId: tranId,
@@ -1474,6 +1491,7 @@ const RollingPlans = () => {
                   buDes,
                   bg,
                   bgDes,
+                  cId,
                   filterState
                 )
               }
@@ -1500,6 +1518,7 @@ const RollingPlans = () => {
                       zrt,
                       status,
                       stage,
+                      cId,
                       filterState,
                       bg,
                       bu,
@@ -1554,6 +1573,7 @@ const RollingPlans = () => {
                   buDes,
                   bg,
                   bgDes,
+                  cId,
                   filterState
                 )
               }
@@ -1576,6 +1596,7 @@ const RollingPlans = () => {
                       zrt,
                       status,
                       stage,
+                      cId,
                       filterState,
                       bg,
                       bu,
@@ -1610,6 +1631,7 @@ const RollingPlans = () => {
                       zrt,
                       status,
                       stage,
+                      cId,
                       filterState,
                       bg,
                       bu,
@@ -1660,6 +1682,7 @@ const RollingPlans = () => {
                   buDes,
                   bg,
                   bgDes,
+                  cId,
                   filterState
                 )
               }
@@ -1682,6 +1705,7 @@ const RollingPlans = () => {
                       zrt,
                       status,
                       stage,
+                      cId,
                       filterState,
                       bg,
                       bu,
@@ -1716,6 +1740,7 @@ const RollingPlans = () => {
                       zrt,
                       status,
                       stage,
+                      cId,
                       filterState,
                       bg,
                       bu,
@@ -1766,6 +1791,7 @@ const RollingPlans = () => {
                   buDes,
                   bg,
                   bgDes,
+                  cId,
                   filterState
                 )
               }
@@ -1784,6 +1810,7 @@ const RollingPlans = () => {
                   zrt,
                   status,
                   stage,
+                  cId,
                   filterState,
                   bg,
                   bu,
@@ -1833,6 +1860,7 @@ const RollingPlans = () => {
                   buDes,
                   bg,
                   bgDes,
+                  cId,
                   filterState
                 )
               }
@@ -1855,6 +1883,7 @@ const RollingPlans = () => {
                       zrt,
                       status,
                       stage,
+                      cId,
                       filterState,
                       bg,
                       bu,
@@ -1889,6 +1918,7 @@ const RollingPlans = () => {
                       zrt,
                       status,
                       stage,
+                      cId,
                       filterState,
                       bg,
                       bu,
@@ -1957,7 +1987,7 @@ const RollingPlans = () => {
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
                 router.push({
-                  pathname: "/rptransaction",
+                  pathname: "/cptransaction",
                   query: {
                     planId: planId,
                     tranId: tranId,
@@ -1993,6 +2023,7 @@ const RollingPlans = () => {
                   zrt,
                   status,
                   stage,
+                  cId,
                   filterState,
                   bg,
                   bu,
@@ -2040,133 +2071,62 @@ const RollingPlans = () => {
     buDes,
     bgId,
     bgDes,
+    cId,
     filterState
   ) => {
     let paramsData;
     if (filterState?.tId || filterState?.tId === "All") {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
+        c_id: cId,
         t_id: tId,
         t_des: tDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
       };
     } else if (
       (filterState?.rId || filterState?.rId === "All") &&
       !filterState?.tId
     ) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
+        c_id: cId,
         r_id: rId,
         r_des: rDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
       };
     } else if (
       (filterState?.zId || filterState?.zId === "All") &&
       !filterState?.rId
     ) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
+        c_id: cId,
         z_id: zId,
         z_des: zDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
       };
     } else if (filterState.buId && !filterState?.zId) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
+        c_id: cId,
         bu_id: buId,
         bu_des: buDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
       };
     } else if (filterState.bgId && filterState?.buId) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
+        c_id: cId,
         bu_id: buId,
         bu_des: buDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
       };
     } else if (filterState.bgId && !filterState?.buId) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
+        c_id: cId,
         bg_id: bgId,
         bg_des: bgDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
       };
     }
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
-      const respond = axios.get(`${url}/api/rsp_download`, {
+      const respond = axios.get(`${url}/api/getsapCollectiondata`, {
         headers: headers,
         params: paramsData,
       });
@@ -2177,27 +2137,27 @@ const RollingPlans = () => {
       if (tDes) {
         XLSX.writeFile(
           wb,
-          `RSP_${moment(m_year).format("YYYY-MM")}_${tDes}.xlsx`
+          `CSP_${moment(m_year).format("YYYY-MM")}_${tDes}.xlsx`
         );
       } else if (rDes) {
         XLSX.writeFile(
           wb,
-          `RSP_${moment(m_year).format("YYYY-MM")}_${rDes}.xlsx`
+          `CSP_${moment(m_year).format("YYYY-MM")}_${rDes}.xlsx`
         );
       } else if (zDes) {
         XLSX.writeFile(
           wb,
-          `RSP_${moment(m_year).format("YYYY-MM")}_${zDes}.xlsx`
+          `CSP_${moment(m_year).format("YYYY-MM")}_${zDes}.xlsx`
         );
       } else if (buDes) {
         XLSX.writeFile(
           wb,
-          `RSP_${moment(m_year).format("YYYY-MM")}_${buDes}.xlsx`
+          `CSP_${moment(m_year).format("YYYY-MM")}_${buDes}.xlsx`
         );
       } else if (bgDes) {
         XLSX.writeFile(
           wb,
-          `RSP_${moment(m_year).format("YYYY-MM")}_${bgDes}.xlsx`
+          `CSP_${moment(m_year).format("YYYY-MM")}_${bgDes}.xlsx`
         );
       }
 
@@ -2237,7 +2197,7 @@ const RollingPlans = () => {
         plan_id: planId,
         tran_id: tranId,
         download: "all",
-        m_year: m_year,
+        m_year: moment(m_year).format("YYYY-MM"),
         json: true,
       };
     } else {
@@ -2256,7 +2216,7 @@ const RollingPlans = () => {
         tran_id: tranId,
         w_id: wId,
         d_des: wDes,
-        m_year: m_year,
+        m_year: moment(m_year).format("YYYY-MM"),
         json: true,
       };
     }
@@ -2274,7 +2234,7 @@ const RollingPlans = () => {
 
       XLSX.writeFile(
         wb,
-        `RSP_${moment(m_year).format("YYYY-MM")}_${wDes}.xlsx`
+        `CSP_${moment(m_year).format("YYYY-MM")}_${wDes}.xlsx`
       );
 
       setIsOpen(true);
@@ -2298,9 +2258,15 @@ const RollingPlans = () => {
     status,
     stage,
     filterState,
-    wId,
-    wDes,
-    type
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    c,
+    w,
+    tDes,
+    rDes
   ) => {
     let paramsData;
     if (type === "All") {
@@ -2318,7 +2284,7 @@ const RollingPlans = () => {
         plan_id: planId,
         tran_id: tranId,
         download: "all",
-        m_year: m_year,
+        m_year: moment(m_year).format("YYYY-MM"),
         json: true,
       };
     } else {
@@ -2337,7 +2303,7 @@ const RollingPlans = () => {
         tran_id: tranId,
         w_id: wId,
         d_des: wDes,
-        m_year: m_year,
+        m_year: moment(m_year).format("YYYY-MM"),
         json: true,
       };
     }
@@ -2361,7 +2327,7 @@ const RollingPlans = () => {
       ];
       localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
       router.push({
-        pathname: "/rptransaction",
+        pathname: "/cptransaction",
         query: {
           planId: planId,
           tranId: tranId,
@@ -2393,6 +2359,7 @@ const RollingPlans = () => {
     zrt,
     status,
     stage,
+    cId,
     filterState,
     bg,
     bu,
@@ -2402,131 +2369,61 @@ const RollingPlans = () => {
     c,
     w,
     tDes,
-    rDes
+    rDes,
+    
   ) => {
     let paramsData;
+
     if (filterState.tId || filterState.tId === "All") {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
+        c_id: cId,
         t_id: t,
         t_des: tDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
       };
     } else if (
       (filterState.rId || filterState.rId === "All") &&
       !filterState.tId
     ) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
+        c_id: cId,
         r_id: r,
         r_des: rDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
       };
     } else if (filterState.zId && !filterState.rId && !filterState.tId) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
+        c_id: cId,
         z_id: z,
         z_des: zDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
       };
     } else if (filterState.buId && !filterState.rId && !filterState.tId) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
+        c_id: cId,
         z_id: z,
         z_des: zDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
       };
     } else if (filterState.buId && filterState.zId) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
+        c_id: cId,
         z_id: z,
         z_des: zDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
       };
     } else {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
+        c_id: cId,
         z_id: z,
         z_des: zDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
       };
     }
 
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
-      const respond = axios.get(`${url}/api/rsp_download`, {
+      const respond = axios.get(`${url}/api/getsapCollectiondata`, {
         headers: headers,
         params: paramsData,
       });
@@ -2543,7 +2440,7 @@ const RollingPlans = () => {
       ];
       localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
       router.push({
-        pathname: "/rptransaction",
+        pathname: "/cptransaction",
         query: {
           planId: planId,
           tranId: tranId,
@@ -2610,7 +2507,7 @@ const RollingPlans = () => {
         tran_id: tranId,
         t_id: t,
         t_des: tDes,
-        m_year: m_year,
+        m_year: moment(m_year).format("YYYY-MM"),
         json: true,
       };
     } else if (
@@ -2632,7 +2529,7 @@ const RollingPlans = () => {
         tran_id: tranId,
         r_id: r,
         r_des: rDes,
-        m_year: m_year,
+        m_year: moment(m_year).format("YYYY-MM"),
         json: true,
       };
     } else if (filterState.zId && !filterState.rId) {
@@ -2651,7 +2548,7 @@ const RollingPlans = () => {
         tran_id: tranId,
         z_id: z,
         z_des: zDes,
-        m_year: m_year,
+        m_year: moment(m_year).format("YYYY-MM"),
         json: true,
       };
     } else if (filterState.buId && filterState.zId) {
@@ -2670,7 +2567,7 @@ const RollingPlans = () => {
         tran_id: tranId,
         z_id: z,
         z_des: zDes,
-        m_year: m_year,
+        m_year: moment(m_year).format("YYYY-MM"),
         json: true,
       };
     } else if (filterState.buId && !filterState.zId) {
@@ -2689,7 +2586,7 @@ const RollingPlans = () => {
         tran_id: tranId,
         bu_id: bu,
         bu_des: buDes,
-        m_year: m_year,
+        m_year: moment(m_year).format("YYYY-MM"),
         json: true,
       };
     } else if (
@@ -2711,7 +2608,7 @@ const RollingPlans = () => {
         tran_id: tranId,
         bu_id: bu,
         bu_des: buDes,
-        m_year: m_year,
+        m_year: moment(m_year).format("YYYY-MM"),
         json: true,
       };
     } else {
@@ -2730,7 +2627,7 @@ const RollingPlans = () => {
         tran_id: tranId,
         bu_id: bu,
         bu_des: buDes,
-        m_year: m_year,
+        m_year: moment(m_year).format("YYYY-MM"),
         json: true,
       };
     }
@@ -2753,7 +2650,7 @@ const RollingPlans = () => {
       ];
       localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
       router.push({
-        pathname: "/rptransaction",
+        pathname: "/cptransaction",
         query: {
           planId: planId,
           tranId: tranId,
@@ -2816,7 +2713,7 @@ const RollingPlans = () => {
         tran_id: tranId,
         t_id: t,
         t_des: tDes,
-        m_year: m_year,
+        m_year: moment(m_year).format("YYYY-MM"),
         json: true,
       };
     } else if (
@@ -2838,7 +2735,7 @@ const RollingPlans = () => {
         tran_id: tranId,
         r_id: r,
         r_des: rDes,
-        m_year: m_year,
+        m_year: moment(m_year).format("YYYY-MM"),
         json: true,
       };
     } else {
@@ -2863,7 +2760,7 @@ const RollingPlans = () => {
       ];
       localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
       router.push({
-        pathname: "/rptransaction",
+        pathname: "/cptransaction",
         query: {
           planId: planId,
           tranId: tranId,
@@ -2897,6 +2794,7 @@ const RollingPlans = () => {
     zrt,
     status,
     stage,
+    cId,
     filterState,
     bg,
     bu,
@@ -2914,63 +2812,27 @@ const RollingPlans = () => {
     let paramsData;
     if (filterState.tId || filterState.tId === "All") {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
         t_id: t,
         t_des: tDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
+        c_id: cId,
       };
     } else if (
       (filterState.rId || filterState.rId === "All") &&
       !filterState.tId
     ) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
         r_id: r,
         r_des: rDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
+        c_id: cId,
       };
     } else if (filterState.zId && !filterState.rId && !filterState.tId) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
         z_id: z,
         z_des: zDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
+        c_id: cId,
       };
     } else if (
       filterState.buId &&
@@ -2979,84 +2841,36 @@ const RollingPlans = () => {
       !filterState.tId
     ) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
         z_id: z,
         z_des: zDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
+        c_id: cId,
       };
     } else if (filterState.buId && !filterState.zId) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
         bu_id: bu,
         bu_des: buDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
+        c_id: cId,
       };
     } else if (filterState.bgId && !filterState.buId) {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
         bg_id: bg,
         bg_des: bgDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
+        c_id: cId,
       };
     } else {
       paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(m_year)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(m_year).format("YYYY-MM"),
-        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
-        plan_id: planId,
-        tran_id: tranId,
         bu_id: bu,
         bu_des: buDes,
-        m_year: m_year,
-        json: true,
+        m_year: moment(m_year).format("YYYY-MM"),
+        c_id: cId,
       };
     }
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
-      const respond = axios.get(`${url}/api/rsp_download`, {
+      const respond = axios.get(`${url}/api/getsapCollectiondata`, {
         headers: headers,
         params: paramsData,
       });
@@ -3073,7 +2887,7 @@ const RollingPlans = () => {
       ];
       localStorage.setItem("RSP", JSON.stringify(arrayOfArrays));
       router.push({
-        pathname: "/rptransaction",
+        pathname: "/cptransaction",
         query: {
           planId: planId,
           tranId: tranId,
@@ -3127,7 +2941,7 @@ const RollingPlans = () => {
         paramsData = {};
       }
       localStorage.setItem("RSP", JSON.stringify([]));
-      const respond = axios.get(`${url}/api/delete_cp_tm`, {
+      const respond = axios.get(`${url}/api/delete_cp`, {
         headers: headers,
 
         params: paramsData,
@@ -3850,7 +3664,7 @@ const RollingPlans = () => {
                     className="text-[1.99rem] font-medium leading-6 text-center text-gray-900"
                   >
                     {modalData.type === "Download"
-                      ? "Rolling Plan"
+                      ? "Collection Plan"
                       : "Delete Rollng Plan"}
                   </Dialog.Title>
                   <div className="mt-2">

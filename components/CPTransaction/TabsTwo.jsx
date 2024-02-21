@@ -56,35 +56,6 @@ const TabsTwo = () => {
                 <span className="text-sm">2.  Validate Collection Plan</span>
               </button>
             </li>
-
-            <li className="mb-2" onClick={() => setFormType("RPSummary")}>
-              {router.query.formType === "View" ? (
-                <button
-                  className={`w-full text-center border-1 rounded-md whitespace-nowrap mx-auto ${
-                    formType === "RPSummary" ? "bg-green-500" : "bg-gray-400"
-                  }  py-1.5 px-2 text-white `}
-                  disabled={true}
-                >
-                  <span className="text-sm">3. Summary Sheet</span>
-                </button>
-              ) : (
-                <button
-                  className={`w-full text-center border-1 rounded-md whitespace-nowrap mx-auto ${
-                    formType === "RPSummary" ? "bg-green-500" : "bg-gray-400"
-                  }  py-1.5 px-2 text-white `}
-                  href="#"
-                  disabled={true}
-                >
-                  <span className="text-sm">3. Summary Sheet</span>
-                </button>
-              )}
-            </li>
-
-            {/* <li className="mb-5">
-                  <a className={`w-1/5 text-center border-1 whitespace-nowrap mx-auto bg-teal-500 py-1.5 px-2 text-white `} href="#">
-                    <span className="text-sm">Upload RP XLS</span>
-                  </a>
-                </li> */}
           </ul>
         </div>
         {formType === "Upload" && (
