@@ -3,6 +3,8 @@ import Image from "next/image";
 import { BsCheck2Circle } from "react-icons/bs";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaUpload } from "react-icons/fa";
+import { FaCameraRetro } from "react-icons/fa";
+import { AiOutlineFileAdd } from "react-icons/ai";
 const AdditionalInfo = (props) => {
   const [formActive, setFormActive] = useState(false);
   const [userImage, setUserImage] = useState("");
@@ -144,22 +146,21 @@ const AdditionalInfo = (props) => {
             htmlFor="inputField"
           >
             <small className="text-red-600">*</small> Farmer Mobile No
-            <button
-              onClick={() => {
-                // deleteHandler("");
-              }}
-              className="flex justify-center items-center ml-2 "
-            >
-              +
-            </button>
           </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="Farmer Mobile No"
-            // disabled={!formActive}
-          />
+          <div className="flex flex-row ">
+            {" "}
+            <input
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              type="text"
+              id="inputField"
+              placeholder="Farmer Mobile No"
+              // disabled={!formActive}
+            />
+            <AiOutlineFileAdd
+              size={42}
+              className="  self-center size-120 text-black-400 text-blue-400"
+            />
+          </div>
         </div>
         <div className="w-full px-2">
           <label
@@ -641,7 +642,7 @@ const AdditionalInfo = (props) => {
 
       {/* tables */}
 
-      <div className="overflow-x-auto my-6 sm:overflow-hidden w-full  lg:w-full">
+      <div className="overflow-x-auto my-6 sm:over<flow-hidden w-full  lg:w-full">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
             <tr className="border-2">
@@ -730,19 +731,18 @@ const AdditionalInfo = (props) => {
         </table>
       </div>
 
-      <h1 className="flex justify-start font-bold m-4">
-        {" "}
-        <FaUpload className="mr-2 text-blue-400 self-center" /> Upload the field
-        day Image
-      </h1>
-      <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
+      <div className="flex items-center justify-center gap-4  my-2 mb-2 flex-col">
         <div className="wrap ">
-          <div className=" w-full px-2 profpic relative group">
+          <h1 className="flex justify-start font-bold m-4">
+            Capture Demo Photo
+          </h1>
+          <div className=" w-full px-2 profpic relative group bo">
             <Image
               src={""}
-              className="h-32 w-32 rounded bg-gray-200"
-              width={100}
-              height={100}
+              className=" rounded  bg-gray-200"
+              alt="img"
+              width={300}
+              height={200}
             />
             <input
               type="file"
@@ -752,27 +752,26 @@ const AdditionalInfo = (props) => {
             />
             <label
               htmlFor="fileInput "
-              className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
-                userImage == "" ? "opacity-50" : "opacity-0"
-              } ${
-                userImage !== ""
-                  ? "group-hover:opacity-100"
-                  : "group-hover:opacity-0"
-              }  transition-opacity duration-300`}
+              className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
             >
-              <span className="text-red-500 whitespace-nowrap text-xs">*</span>{" "}
-              Image
+              <FaCameraRetro
+                size={50}
+                className="mr-2  self-center size-120 text-black-400"
+              />
             </label>
           </div>
         </div>
         <div className="wrap ">
+          <h1 className="flex justify-start font-bold m-4">
+            Capture Fields Photo
+          </h1>
           <div className=" w-full px-2 profpic relative group">
             <Image
               src={""}
-              className="h-32 w-32 rounded bg-gray-200"
+              className=" rounded bg-gray-200"
               alt="img"
-              width={100}
-              height={100}
+              width={300}
+              height={200}
             />
             <input
               type="file"
@@ -782,15 +781,12 @@ const AdditionalInfo = (props) => {
             />
             <label
               htmlFor="fileInput "
-              className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
-                userImage == "" ? "opacity-50" : "opacity-0"
-              } ${
-                userImage !== ""
-                  ? "group-hover:opacity-100"
-                  : "group-hover:opacity-0"
-              }  transition-opacity duration-300`}
+              className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
             >
-              <span className="text-red-500 whitespace-nowrap">*</span>
+              <FaCameraRetro
+                size={50}
+                className="mr-2  self-center size-120 text-black-400"
+              />
             </label>
           </div>
         </div>

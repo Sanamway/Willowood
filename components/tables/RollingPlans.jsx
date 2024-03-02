@@ -91,6 +91,8 @@ const RollingPlans = () => {
       const apires = await respond.data.data;
 
       setAllMonthData([...new Set(apires.map((item) => item.m_year))]);
+
+      console.log("dolly", allMonthData);
     } catch (error) {}
   };
 
@@ -2149,8 +2151,6 @@ const RollingPlans = () => {
       };
     }
     try {
-
-      
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/rsp_download`, {
         headers: headers,
@@ -2160,7 +2160,6 @@ const RollingPlans = () => {
       const ws = XLSX.utils.json_to_sheet(apires.data.data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
 
       if (tDes) {
         XLSX.writeFile(
@@ -3298,9 +3297,10 @@ const RollingPlans = () => {
               <option value="All" className="font-bold">
                 All
               </option>
+
               {allMonthData.map((item, idx) => (
-                <option value={item.m_year} key={idx}>
-                  {moment(item.m_year).format("MMM YYYY")}
+                <option value={item} key={idx}>
+                  {moment(item).format("MMM YYYY")}
                 </option>
               ))}
             </select>
@@ -3367,7 +3367,7 @@ const RollingPlans = () => {
                 </option>
               ))}
             </select>
-          
+
             <select
               className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"

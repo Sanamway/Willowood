@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { BsCheck2Circle } from "react-icons/bs";
+import { FaUpload } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineFileAdd } from "react-icons/ai";
 
 const AdditionalInfo = (props) => {
   const [formActive, setFormActive] = useState(false);
@@ -142,19 +143,21 @@ const AdditionalInfo = (props) => {
             htmlFor="inputField"
           >
             <small className="text-red-600">*</small> Farmer Mobile No
-            {/* <button
-              onClick={() => {}}
-              className="flex justify-center items-center ml-2 "
-            >
-              +
-            </button> */}
           </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="Farmer Mobile No"
-          />
+          <div className="flex flex-row ">
+            {" "}
+            <input
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              type="text"
+              id="inputField"
+              placeholder="Farmer Mobile No"
+              // disabled={!formActive}
+            />
+            <AiOutlineFileAdd
+              size={42}
+              className="  self-center size-120 text-black-400 text-blue-400"
+            />
+          </div>
         </div>
         <div className="w-full px-2">
           <label
@@ -408,64 +411,70 @@ const AdditionalInfo = (props) => {
           This is the default text inside the textarea.
         </textarea>
       </div>
-      <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
-        <div className="wrap ">
-          <div className=" w-full px-2 profpic relative group">
-            <Image
-              src={""}
-              className="h-32 w-32 rounded bg-gray-200"
-              width={100}
-              height={100}
-            />
-            <input
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              id="fileInput"
-            />
-            <label
-              htmlFor="fileInput "
-              className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
-                userImage == "" ? "opacity-50" : "opacity-0"
-              } ${
-                userImage !== ""
-                  ? "group-hover:opacity-100"
-                  : "group-hover:opacity-0"
-              }  transition-opacity duration-300`}
-            >
-              <span className="text-red-500 whitespace-nowrap text-xs">*</span>{" "}
-              Image
-            </label>
-          </div>
+      <div className="wrap ">
+        <h1 className="flex justify-start font-bold m-4">
+          <FaUpload className="mr-2 text-blue-400 self-center" /> Video
+          Testimonials
+        </h1>
+        <div className=" w-full px-2 profpic relative group">
+          <Image
+            src={""}
+            className="rounded bg-gray-200"
+            width={300}
+            height={200}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            id="fileInput"
+          />
+          <label
+            htmlFor="fileInput "
+            className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
+              userImage == "" ? "opacity-50" : "opacity-0"
+            } ${
+              userImage !== ""
+                ? "group-hover:opacity-100"
+                : "group-hover:opacity-0"
+            }  transition-opacity duration-300`}
+          >
+            <span className="text-red-500 whitespace-nowrap">*</span>
+          </label>
         </div>
-        <div className="wrap ">
-          <div className=" w-full px-2 profpic relative group">
-            <Image
-              src={""}
-              className="h-32 w-32 rounded bg-gray-200"
-              alt="img"
-              width={100}
-              height={100}
-            />
-            <input
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              id="fileInput"
-            />
-            <label
-              htmlFor="fileInput "
-              className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
-                userImage == "" ? "opacity-50" : "opacity-0"
-              } ${
-                userImage !== ""
-                  ? "group-hover:opacity-100"
-                  : "group-hover:opacity-0"
-              }  transition-opacity duration-300`}
-            >
-              <span className="text-red-500 whitespace-nowrap">*</span>
-            </label>
-          </div>
+      </div>
+
+      <div className="wrap ">
+        <h1 className="flex justify-start font-bold m-4">
+          <FaUpload className="mr-2 text-blue-400 self-center" /> Handwritten
+          Testimonials
+        </h1>
+        <div className=" w-full px-2 profpic relative group">
+          <Image
+            src={""}
+            className=" rounded bg-gray-200"
+            width={300}
+            height={200}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            id="fileInput"
+          />
+          <label
+            htmlFor="fileInput "
+            className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
+              userImage == "" ? "opacity-50" : "opacity-0"
+            } ${
+              userImage !== ""
+                ? "group-hover:opacity-100"
+                : "group-hover:opacity-0"
+            }  transition-opacity duration-300`}
+          >
+            <span className="text-red-500 whitespace-nowrap text-xs">*</span>{" "}
+            Image
+          </label>
         </div>
       </div>
 

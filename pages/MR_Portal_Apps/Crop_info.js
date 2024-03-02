@@ -91,15 +91,15 @@ const AdditionalInfo = (props) => {
           <div className="overflow-x-auto">
             <table className="border-collapse border border-gray-400 w-full">
               <colgroup>
-                <col style={{ width: "15%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "14%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "11%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "10%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "10%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "10%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "10%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "10%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "20%" }} /> {/* Adjust width as needed */}
+                <col style={{ width: "15%" }} /> 
+                <col style={{ width: "14%" }} /> 
+                <col style={{ width: "11%" }} /> 
+                <col style={{ width: "10%" }} /> 
+                <col style={{ width: "10%" }} /> 
+                <col style={{ width: "10%" }} /> 
+                <col style={{ width: "10%" }} /> 
+                <col style={{ width: "10%" }} /> 
+                <col style={{ width: "20%" }} /> 
               </colgroup>
               <thead>
                 <tr className="bg-orange-500 text-white">
@@ -132,7 +132,7 @@ const AdditionalInfo = (props) => {
                     <select className="w-full px-2 py-1 border border-gray-300 rounded">
                       <option value="0">0</option>
                       <option value="10">10mfvonasf</option>
-                      {/* Add more options as needed */}
+                     
                     </select>
                   </td>
                   <td className="border border-gray-400 px-4 py-2">
@@ -415,12 +415,18 @@ const AdditionalInfo = (props) => {
             </table>
           </div>
 
-          <div className="w-full flex mt-12">
+          <div className="w-full flex mt-12 gap-12">
             <button
               className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-lg"
               type="submit"
             >
               Submit
+            </button>
+            <button
+              className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-lg"
+              type="submit"
+            >
+              Close
             </button>
           </div>
         </div>
