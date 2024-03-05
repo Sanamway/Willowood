@@ -225,8 +225,8 @@ const RPSummary = (props) => {
           c_id: Number(router.query.cId),
           subm_t_date: new Date(),
           rp_status: status,
-          c_name: JSON.parse(window.localStorage.getItem("userinfo")).c_name,
-          ul_name: JSON.parse(window.localStorage.getItem("userinfo")).ul_name,
+          c_name: JSON.parse(window.localStorage.getItem("U_profile_name")),
+          ul_name: JSON.parse(window.localStorage.getItem("U_profile_name")),
           user_id: JSON.parse(window.localStorage.getItem("userinfo")).user_id,
         };
       });
@@ -302,8 +302,8 @@ const RPSummary = (props) => {
           c_id: Number(router.query.cId),
           subm_t_date: new Date(),
           rp_status: status,
-          c_name: JSON.parse(window.localStorage.getItem("userinfo")).c_name,
-          ul_name: JSON.parse(window.localStorage.getItem("userinfo")).ul_name,
+          c_name: JSON.parse(window.localStorage.getItem("U_profile_name")),
+          ul_name: JSON.parse(window.localStorage.getItem("U_profile_name")),
           user_id: JSON.parse(window.localStorage.getItem("userinfo")).user_id,
         };
       });
