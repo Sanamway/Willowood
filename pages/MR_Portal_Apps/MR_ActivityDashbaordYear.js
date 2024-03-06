@@ -38,12 +38,8 @@ const AdditionalInfo = (props) => {
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
-      <h1 className="text-2xl font-bold text-center mb-4">
-        Monthly Summary - Activity
-      </h1>
-
       {/* Second table */}
-      <div className="overflow-x-auto mt-8 flex flex-col gap-2">
+      <div className="overflow-x-auto  flex flex-col gap-2">
         <div className="bg-white h-40 p-2  sticky left-0">
           <h1 className="font-bold ">Employee Details:</h1>
           <div className="flex mb-4 mt-2">
@@ -55,7 +51,7 @@ const AdditionalInfo = (props) => {
               />
             </div>
 
-            <div className="flex  flex-col px-4 w-full mt-4">
+            <div className="flex  flex-col px-2 w-full mt-4">
               <div className="flex  justify-between w-full  w-28">
                 <div className="flex">
                   <p className=" font-bold text-sm text-blue-800 w-28">
@@ -85,80 +81,99 @@ const AdditionalInfo = (props) => {
             </div>
           </div>
         </div>
-        <table className="w-full border-collapse border border-gray-200 ">
+
+        <h1 className="text-2xl font-bold text-center mb-2">
+          Monthly Summary - Activity
+        </h1>
+
+        <table className="w-full border-collapse border border-gray-200 text-[10px]">
           <thead>
             <tr className="bg-blue-400 text-white">
-              <th className="border border-gray-200 py-2 px-4 whitespace-nowrap font-bold">
-                Day Activity
+              <th className="border border-gray-200 py-2 px-2 whitespace-nowrap font-bold font-thin">
+                Day 
               </th>
-              <th className="border border-gray-200 py-2 px-4">Demo</th>
-              <th className="border border-gray-200 py-2 px-4">F.Day</th>
-              <th className="border border-gray-200 py-2 px-4">O2O</th>
-              <th className="border border-gray-200 py-2 px-4">SVN</th>
-              <th className="border border-gray-200 py-2 px-4">GVM</th>
-              <th className="border border-gray-200 py-2 px-4">CAP</th>
-              <th className="border border-gray-200 py-2 px-4">SHC</th>
-              <th className="border border-gray-200 py-2 px-4">AT</th>
+              <th className="border border-gray-200 py-2 px-2 font-thin">
+                Dmo
+              </th>
+              <th className="border border-gray-200 py-2 px-2 font-thin">
+                F.Day
+              </th>
+              <th className="border border-gray-200 py-2 px-2 font-thin">
+                O2O
+              </th>
+              <th className="border border-gray-200 py-2 px-2 font-thin">
+                SVN
+              </th>
+              <th className="border border-gray-200 py-2 px-2 font-thin">
+                GVM
+              </th>
+              <th className="border border-gray-200 py-2 px-2 font-thin">
+                CAP
+              </th>
+              <th className="border border-gray-200 py-2 px-2 font-thin">
+                SHC
+              </th>
+              <th className="border border-gray-200 py-2 px-2 font-thin">AT</th>
             </tr>
           </thead>
           <tbody>
             <tr className="bg-green-100">
-              <td className="border border-gray-200 py-2 px-4 whitespace-nowrap font-bold ">
+              <td className="border border-gray-200 py-2 px-2 whitespace-nowrap font-thin ">
                 Target
               </td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
             </tr>
             <tr className="bg-white">
-              <td className="border border-gray-200 py-2 px-4 whitespace-nowrap font-bold">
+              <td className="border border-gray-200 py-2 px-2 whitespace-nowrap font-thin">
                 Total
               </td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
             </tr>
             <tr className="bg-white">
-              <td className="border border-gray-200 py-2 px-4 whitespace-nowrap font-bold">
+              <td className="border border-gray-200 py-2 px-2 whitespace-nowrap font-thin">
                 Achiv %
               </td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
-              <td className="border border-gray-200 py-2 px-4">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
             </tr>
             {/* Render rows based on day activity data */}
             {dayActivityData.map((data, index) => (
               <tr key={index} className="bg-white">
-                <td className="border border-gray-200 py-2 px-4 whitespace-nowrap">
+                <td className="border border-gray-200 py-2 px-2 whitespace-nowrap">
                   {data.date}
                 </td>
-                <td className="border border-gray-200 py-2 px-4">
+                <td className="border border-gray-200 py-2 px-2">
                   {data.demo}
                 </td>
-                <td className="border border-gray-200 py-2 px-4">
+                <td className="border border-gray-200 py-2 px-2">
                   {data.fDay}
                 </td>
-                <td className="border border-gray-200 py-2 px-4">{data.o2o}</td>
-                <td className="border border-gray-200 py-2 px-4">{data.svn}</td>
-                <td className="border border-gray-200 py-2 px-4">{data.gvm}</td>
-                <td className="border border-gray-200 py-2 px-4">{data.cap}</td>
-                <td className="border border-gray-200 py-2 px-4">{data.shc}</td>
-                <td className="border border-gray-200 py-2 px-4">{data.at}</td>
+                <td className="border border-gray-200 py-2 px-2">{data.o2o}</td>
+                <td className="border border-gray-200 py-2 px-2">{data.svn}</td>
+                <td className="border border-gray-200 py-2 px-2">{data.gvm}</td>
+                <td className="border border-gray-200 py-2 px-2">{data.cap}</td>
+                <td className="border border-gray-200 py-2 px-2">{data.shc}</td>
+                <td className="border border-gray-200 py-2 px-2">{data.at}</td>
               </tr>
             ))}
           </tbody>

@@ -572,6 +572,15 @@ const RollingPlans = () => {
     }
   };
 
+  const Loader = () => {
+    return (
+      <div class="flex space-x-1   justify-center items-center bg-white  ">
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce"></div>
+      </div>
+    );
+  };
   const getOptions = (
     upload,
     planId,
@@ -606,6 +615,7 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer ">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              disabled={downloadLoading}
               onClick={() =>
                 handleDownloadExcelNew(
                   mYr,
@@ -626,7 +636,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download RP{" "}
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -673,6 +688,7 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              disabled={downloadLoading}
               onClick={() =>
                 handleDownloadExcelNew(
                   mYr,
@@ -693,7 +709,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download RP{" "}
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -768,6 +789,7 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              disabled={downloadLoading}
               onClick={() =>
                 handleDownloadExcelNew(
                   mYr,
@@ -788,7 +810,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download RP{" "}
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -890,6 +917,10 @@ const RollingPlans = () => {
                   )
                 }
               >
+                <svg
+                  class="animate-spin h-5 w-5 mr-3 ..."
+                  viewBox="0 0 24 24"
+                ></svg>
                 <FaDownload className="text-slate-400" /> Download RP
               </li>
 
@@ -981,6 +1012,10 @@ const RollingPlans = () => {
                   )
                 }
               >
+                <svg
+                  class="animate-spin h-5 w-5 mr-3 ..."
+                  viewBox="0 0 24 24"
+                ></svg>
                 <FaDownload className="text-slate-400" /> Download RP
               </li>
 
@@ -1088,6 +1123,7 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              disabled={downloadLoading}
               onClick={() =>
                 handleDownloadExcelNew(
                   mYr,
@@ -1108,7 +1144,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download RP{" "}
             </li>
 
             <li
@@ -1174,6 +1215,7 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              disabled={downloadLoading}
               onClick={() =>
                 handleDownloadExcelNew(
                   mYr,
@@ -1194,7 +1236,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download RP{" "}
             </li>
 
             {(filterState.tId || filterState.tId === "All") &&
@@ -1233,6 +1280,7 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              disabled={downloadLoading}
               onClick={() =>
                 handleDownloadExcelNew(
                   mYr,
@@ -1253,7 +1301,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download RP{" "}
             </li>
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
@@ -1379,7 +1432,12 @@ const RollingPlans = () => {
                 );
               }}
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download RP{" "}
             </li>
             {upload &&
               !(
@@ -1444,6 +1502,7 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              disabled={downloadLoading}
               onClick={() =>
                 handleDownloadExcelNew(
                   mYr,
@@ -1464,7 +1523,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download RP{" "}
             </li>
 
             {(JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
@@ -1524,6 +1588,7 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              disabled={downloadLoading}
               onClick={() =>
                 handleDownloadExcelNew(
                   mYr,
@@ -1544,7 +1609,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download RP{" "}
             </li>
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
@@ -1630,6 +1700,7 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              disabled={downloadLoading}
               onClick={() =>
                 handleDownloadExcelNew(
                   mYr,
@@ -1650,7 +1721,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download RP{" "}
             </li>
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
@@ -1736,6 +1812,7 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              disabled={downloadLoading}
               onClick={() =>
                 handleDownloadExcelNew(
                   mYr,
@@ -1756,7 +1833,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download RP{" "}
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -1803,6 +1885,7 @@ const RollingPlans = () => {
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+              disabled={downloadLoading}
               onClick={() =>
                 handleDownloadExcelNew(
                   mYr,
@@ -1823,7 +1906,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download RP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download RP{" "}
             </li>
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
@@ -2010,7 +2098,7 @@ const RollingPlans = () => {
         );
     }
   };
-
+  const [downloadLoading, setDownloadingLoading] = useState(false);
   const handleDownloadExcelNew = async (
     m_year,
     planId,
@@ -2028,6 +2116,7 @@ const RollingPlans = () => {
     bgDes,
     filterState
   ) => {
+    if (downloadLoading === true) return;
     let paramsData;
     if (filterState?.tId || filterState?.tId === "All") {
       paramsData = {
@@ -2151,6 +2240,7 @@ const RollingPlans = () => {
       };
     }
     try {
+      setDownloadingLoading(true);
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/rsp_download`, {
         headers: headers,
@@ -2194,6 +2284,7 @@ const RollingPlans = () => {
         type: "Download",
         data: {},
       });
+      setDownloadingLoading(false);
     } catch (error) {
       console.log("mlo", error);
     }
