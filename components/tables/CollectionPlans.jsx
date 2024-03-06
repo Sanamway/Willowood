@@ -1425,22 +1425,22 @@ const RollingPlans = () => {
                       query: {
                         planId: planId,
                         tranId: tranId,
-                        yr: yr,
-                        mYr: mYr,
+                        yr:   yr,
+                        mYr:  mYr,
                         depot: depot,
                         zrt: zrt,
                         status: status,
                         stage: stage,
                         bgId: bg,
                         buId: bu,
-                        zId: z,
-                        rId: r,
-                        tId: t,
-                        cId: c,
-                        wId: w,
+                        zId:   z,
+                        rId:   r,
+                        tId:   t,
+                        cId:   c,
+                        wId:   w,
                         formType: "Add",
                         filterState: encodeURIComponent(
-                          JSON.stringify(filterState)
+                            JSON.stringify(filterState)
                         ),
                       },
                     });

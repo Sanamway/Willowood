@@ -27,7 +27,7 @@ export default function DragAndDrop(props) {
           blankrows: false,
         });
         setJsonData(json);
-        props.setTableData(json);
+        props.setTableData(json );
       };
       reader.readAsBinaryString(file);
     }

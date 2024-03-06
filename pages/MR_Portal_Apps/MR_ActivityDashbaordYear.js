@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaEye } from "react-icons/fa";
 import Image from "next/image";
 import Profile from "../../public/userimg.jpg";
@@ -23,23 +23,9 @@ const AdditionalInfo = (props) => {
     // Add data for other months...
   ];
 
-  // Dummy data for the new table
-  const dayActivityData = Array.from({ length: 31 }, (_, i) => ({
-    date: `01-${i + 1}-2024`,
-    demo: Math.floor(Math.random() * 100),
-    fDay: Math.floor(Math.random() * 100),
-    o2o: Math.floor(Math.random() * 100),
-    svn: Math.floor(Math.random() * 100),
-    gvm: Math.floor(Math.random() * 100),
-    cap: Math.floor(Math.random() * 100),
-    shc: Math.floor(Math.random() * 100),
-    at: Math.floor(Math.random() * 100),
-  }));
-
   return (
-    <div className="bg-gray-100 min-h-screen p-4">
-      {/* Second table */}
-      <div className="overflow-x-auto  flex flex-col gap-2">
+    <div className="bg-white min-h-screen p-4">
+      <div className="overflow-x-auto">
         <div className="bg-white h-40 p-2  sticky left-0">
           <h1 className="font-bold ">Employee Details:</h1>
           <div className="flex mb-4 mt-2">
@@ -81,16 +67,22 @@ const AdditionalInfo = (props) => {
             </div>
           </div>
         </div>
-
-        <h1 className="text-2xl font-bold text-center mb-2">
-          Monthly Summary - Activity
+        <h1 className="text-2xl font-bold text-center ">
+          Yearly Summary - Activity
         </h1>
-
-        <table className="w-full border-collapse border border-gray-200 text-[10px]">
+        <table className="w-full border-collapse border border-gray-200 text-[10px] ">
           <thead>
-            <tr className="bg-blue-400 text-white">
-              <th className="border border-gray-200 py-2 px-2 whitespace-nowrap font-bold font-thin">
-                Day 
+            <tr className="bg-blue-400 text-white text-[10px]">
+              <th className="border border-gray-200  font-thin">Month-Year</th>
+              <th className="border border-gray-200  font-thin">Tar</th>
+              <th className="border border-gray-200 py-2 px-2 font-thin">
+                Tot
+              </th>
+              <th className="border border-gray-200 py-2 px-2 font-thin">
+                Ach.
+              </th>
+              <th className="border border-gray-200 py-2 px-2 font-thin">
+                Scr
               </th>
               <th className="border border-gray-200 py-2 px-2 font-thin">
                 Dmo
@@ -100,6 +92,9 @@ const AdditionalInfo = (props) => {
               </th>
               <th className="border border-gray-200 py-2 px-2 font-thin">
                 O2O
+              </th>
+              <th className="border border-gray-200 py-2 px-2 font-thin">
+                GMT
               </th>
               <th className="border border-gray-200 py-2 px-2 font-thin">
                 SVN
@@ -117,65 +112,71 @@ const AdditionalInfo = (props) => {
             </tr>
           </thead>
           <tbody>
-            <tr className="bg-green-100">
-              <td className="border border-gray-200 py-2 px-2 whitespace-nowrap font-thin ">
-                Target
-              </td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
+            {/* Example row */}
+            <tr className="bg-white whitespace-nowrap">
+              <td className="border border-gray-200 py-2 px-2"> April-24</td>
+              <td className="border border-gray-200 py-2 px-2"> 85 </td>
+              <td className="border border-gray-200 py-2 px-2"> 70 </td>
+              <td className="border border-gray-200 py-2 px-2"> 82% </td>
+              <td className="border border-gray-200 py-2 px-2"> 75 </td>
+              <td className="border border-gray-200 py-2 px-2"> 20 </td>
+              <td className="border border-gray-200 py-2 px-2"> 18 </td>
+              <td className="border border-gray-200 py-2 px-2"> 15</td>
+              <td className="border border-gray-200 py-2 px-2"> 12</td>
+              <td className="border border-gray-200 py-2 px-2"> 10</td>
+              <td className="border border-gray-200 py-2 px-2"> 8</td>
+              <td className="border border-gray-200 py-2 px-2"> 5</td>
+              <td className="border border-gray-200 py-2 px-2"> 2</td>
+              <td className="border border-gray-200 py-2 px-2"> 3</td>
             </tr>
             <tr className="bg-white">
-              <td className="border border-gray-200 py-2 px-2 whitespace-nowrap font-thin">
-                Total
-              </td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">April-24</td>
+              <td className="border border-gray-200 py-2 px-2">85</td>
+              <td className="border border-gray-200 py-2 px-2">70</td>
+              <td className="border border-gray-200 py-2 px-2">82%</td>
+              <td className="border border-gray-200 py-2 px-2">75</td>
+              <td className="border border-gray-200 py-2 px-2">20</td>
+              <td className="border border-gray-200 py-2 px-2">18</td>
+              <td className="border border-gray-200 py-2 px-2">15</td>
+              <td className="border border-gray-200 py-2 px-2">12</td>
+              <td className="border border-gray-200 py-2 px-2">10</td>
+              <td className="border border-gray-200 py-2 px-2">8</td>
+              <td className="border border-gray-200 py-2 px-2">5</td>
+              <td className="border border-gray-200 py-2 px-2">2</td>
+              <td className="border border-gray-200 py-2 px-2">3</td>
             </tr>
             <tr className="bg-white">
-              <td className="border border-gray-200 py-2 px-2 whitespace-nowrap font-thin">
-                Achiv %
-              </td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">April-24</td>
+              <td className="border border-gray-200 py-2 px-2">85</td>
+              <td className="border border-gray-200 py-2 px-2">70</td>
+              <td className="border border-gray-200 py-2 px-2">82%</td>
+              <td className="border border-gray-200 py-2 px-2">75</td>
+              <td className="border border-gray-200 py-2 px-2">20</td>
+              <td className="border border-gray-200 py-2 px-2">18</td>
+              <td className="border border-gray-200 py-2 px-2">15</td>
+              <td className="border border-gray-200 py-2 px-2">12</td>
+              <td className="border border-gray-200 py-2 px-2">10</td>
+              <td className="border border-gray-200 py-2 px-2">8</td>
+              <td className="border border-gray-200 py-2 px-2">5</td>
+              <td className="border border-gray-200 py-2 px-2">2</td>
+              <td className="border border-gray-200 py-2 px-2">3</td>
             </tr>
-            {/* Render rows based on day activity data */}
-            {dayActivityData.map((data, index) => (
-              <tr key={index} className="bg-white">
-                <td className="border border-gray-200 py-2 px-2 whitespace-nowrap">
-                  {data.date}
-                </td>
-                <td className="border border-gray-200 py-2 px-2">
-                  {data.demo}
-                </td>
-                <td className="border border-gray-200 py-2 px-2">
-                  {data.fDay}
-                </td>
-                <td className="border border-gray-200 py-2 px-2">{data.o2o}</td>
-                <td className="border border-gray-200 py-2 px-2">{data.svn}</td>
-                <td className="border border-gray-200 py-2 px-2">{data.gvm}</td>
-                <td className="border border-gray-200 py-2 px-2">{data.cap}</td>
-                <td className="border border-gray-200 py-2 px-2">{data.shc}</td>
-                <td className="border border-gray-200 py-2 px-2">{data.at}</td>
-              </tr>
-            ))}
+            <tr className="bg-white">
+              <td className="border border-gray-200 py-2 px-2">April-24</td>
+              <td className="border border-gray-200 py-2 px-2">85</td>
+              <td className="border border-gray-200 py-2 px-2">70</td>
+              <td className="border border-gray-200 py-2 px-2">82%</td>
+              <td className="border border-gray-200 py-2 px-2">75</td>
+              <td className="border border-gray-200 py-2 px-2">20</td>
+              <td className="border border-gray-200 py-2 px-2">18</td>
+              <td className="border border-gray-200 py-2 px-2">15</td>
+              <td className="border border-gray-200 py-2 px-2">12</td>
+              <td className="border border-gray-200 py-2 px-2">10</td>
+              <td className="border border-gray-200 py-2 px-2">8</td>
+              <td className="border border-gray-200 py-2 px-2">5</td>
+              <td className="border border-gray-200 py-2 px-2">2</td>
+              <td className="border border-gray-200 py-2 px-2">3</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -184,3 +185,5 @@ const AdditionalInfo = (props) => {
 };
 
 export default AdditionalInfo;
+
+// Hydration Error Issue

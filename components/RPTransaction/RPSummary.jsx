@@ -230,6 +230,7 @@ const RPSummary = (props) => {
           user_id: JSON.parse(window.localStorage.getItem("userinfo")).user_id,
         };
       });
+      setButtonLoadingState(true);
       const respond = await axios
         .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
           headers: headers,
@@ -239,6 +240,14 @@ const RPSummary = (props) => {
           setApiMessage(res.data.message);
           submitHandle(status);
         });
+      const currentTime = moment();
+      // const disableLoading = moment().set({ hour: 18, minute: 0, second: 0 });
+      // if (currentTime.isAfter(disableLoading)) {
+      //   return;
+      // } else {
+      //   setButtonLoadingState(false);
+      // }
+      setButtonLoadingState(false);
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
       console.log("koi", errors);
@@ -307,6 +316,7 @@ const RPSummary = (props) => {
           user_id: JSON.parse(window.localStorage.getItem("userinfo")).user_id,
         };
       });
+      setButtonLoadingState(true);
       const respond = await axios
         .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
           headers: headers,
@@ -317,6 +327,14 @@ const RPSummary = (props) => {
           setApiMessage(res.data.message);
           submitHandle(status);
         });
+      const currentTime = moment();
+      const disableLoading = moment().set({ hour: 18, minute: 0, second: 0 });
+      // if (currentTime.isAfter(disableLoading)) {
+      //   return;
+      // } else {
+      //   setButtonLoadingState(false);
+      // }
+      setButtonLoadingState(false);
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
 
@@ -762,9 +780,19 @@ const RPSummary = (props) => {
     if (!router.query.filterState) return;
     setRecievedObject(JSON.parse(decodeURIComponent(router.query.filterState)));
   }, [router]);
-
+  const [buttonLoadingState, setButtonLoadingState] = useState(false);
   return (
-    <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
+    <section className="mt-1 mb-24 outer relative flex flex-col items-center justify-center w-full font-arial">
+      {buttonLoadingState && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 ">
+          <img
+            className="w-20 h-20 animate-spin "
+            src="https://www.svgrepo.com/show/448500/loading.svg"
+            alt="Loading icon"
+          />
+        </div>
+      )}
+
       <SubmitModal
         isOpen={isOpen}
         territoryId={receivedObject.tId}
@@ -861,10 +889,9 @@ const RPSummary = (props) => {
 
       {/* table layout */}
 
-      <div className="table mb-4 w-full">
+      <div className="table mb-4 w-full relative">
         {/* <h3>Table Layout</h3> */}
         <section className="bg-white p-2 flex flex-col gap-2">
-          {/* <div className="mx-auto max-w-screen-2xl px-4 lg:px-12"> */}
           <div className="mx-auto max-w-full px- ">
             {/* Start coding here */}
             <div className="flex  justify-between">
@@ -1214,7 +1241,7 @@ const RPSummary = (props) => {
             </div>
           </div>
 
-          <div className="mx-auto max-w-full px- ">
+          <div className="mx-auto max-w-full ">
             {/* Start coding here */}
             <h4 className="w-full flex align-center justify-left font-bold text-blue-600">
               Summary- Product Category wise
@@ -2552,6 +2579,7 @@ const RPSummary = (props) => {
               className={`text-center rounded-md hover:bg-green-500 ${
                 formActive ? "bg-green-400" : "bg-blue-500"
               }  text-white py-1 px-4 text-sm`}
+              disabled={buttonLoadingState}
             >
               Save as Draft
             </button>
@@ -2569,6 +2597,7 @@ const RPSummary = (props) => {
                     ? handleSaveRsp("Final Submitted")
                     : handleEditRsp("Final Submitted");
                 }}
+                disabled={buttonLoadingState}
               >
                 Final Submit
               </button>

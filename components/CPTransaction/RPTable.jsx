@@ -117,13 +117,13 @@ const RPTable = (props) => {
       JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
     ) {
       paramsData = {
-        t_year: router.query.yr,
-        m_year: router.query.mYr,
-        plan_id: router.query.planId,
-        tran_id: router.query.tranId,
-        t_id: Number(router.query.tId) ? Number(router.query.tId) : null,
-        r_id: Number(router.query.rId),
-        rp_status: status,
+        t_year:     router.query.yr,
+        m_year:     router.query.mYr,
+        plan_id:    router.query.planId,
+        tran_id:    router.query.tranId,
+        t_id:       Number(router.query.tId) ? Number(router.query.tId) : null,
+        r_id:       Number(router.query.rId),
+        rp_status:  status,
       };
     } else if (
       JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
@@ -181,7 +181,7 @@ const RPTable = (props) => {
         })
       );
     } else {
-      setResult(props.tableData);
+      setResult(props.tableData.map);
     }
   }, [props.tableData]);
 
@@ -192,7 +192,7 @@ const RPTable = (props) => {
     if (!result.length) return;
     function sumNumericValues(data) {
       const sumObject = {};
-      console.log("olp", data);
+
       data.forEach((item) => {
         Object.keys(item).forEach((key) => {
           if (typeof item[key] === "number") {
