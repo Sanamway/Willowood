@@ -240,7 +240,7 @@ const RPSummary = (props) => {
           setApiMessage(res.data.message);
           submitHandle(status);
         });
-      const currentTime = moment();
+      // const currentTime = moment();
       // const disableLoading = moment().set({ hour: 18, minute: 0, second: 0 });
       // if (currentTime.isAfter(disableLoading)) {
       //   return;
@@ -327,8 +327,8 @@ const RPSummary = (props) => {
           setApiMessage(res.data.message);
           submitHandle(status);
         });
-      const currentTime = moment();
-      const disableLoading = moment().set({ hour: 18, minute: 0, second: 0 });
+      // const currentTime = moment();
+      // const disableLoading = moment().set({ hour: 18, minute: 0, second: 0 });
       // if (currentTime.isAfter(disableLoading)) {
       //   return;
       // } else {
