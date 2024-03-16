@@ -10,7 +10,7 @@ import { MdLogout } from "react-icons/md";
 import WillLogo from "../public/NewLogo.png";
 import { Popover } from "@headlessui/react";
 import { useRouter } from "next/router";
-import menuItems from "@/constants/sidebarMenus";
+
 import axios from "axios";
 import { url } from "@/constants/url";
 import Link from "next/link";
@@ -401,11 +401,11 @@ Application End User
           {/* Main Content Area */}
           <div className="flex-grow bg-gray relative bg-white h-screen overflow-auto ">
             {children}
-            {/* <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
+            <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
               <div className=" cursor-pointer w-12 h-12 rounded-full  px-2 py-2 bg-green-600">
                 <Image src={WhatsAppChat} alt="whatsapp" />
               </div>
-            </div> */}
+            </div>
 
             <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 group">
               <div

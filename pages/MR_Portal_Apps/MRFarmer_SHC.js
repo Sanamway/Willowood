@@ -103,7 +103,7 @@ const AdditionalInfo = (props) => {
               type="text"
               id="inputField"
               placeholder="Farmer Mobile No"
-              // disabled={!formActive}
+              disabled={!formActive}
             />
             <AiOutlineFileAdd
               size={42}
