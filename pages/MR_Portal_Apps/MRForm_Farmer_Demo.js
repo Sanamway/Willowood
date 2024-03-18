@@ -167,11 +167,11 @@ const AdditionalInfo = (props) => {
         f_demo_code: 2132,
         demo_date: new Date(),
         demo_time: new Date(),
-        dealer_id: formData.dealer,
+        dealer_id: Number(formData.dealer),
         purpose_of_demo: formData.purposeDemo,
         d_id: formData.dealer,
         farmer_mob_no: formData.farmerMobile,
-        farmer_id: formData.farmerId,
+        farmer_id: Number(formData.farmerId),
         farmer_name: formData.farmerName,
         farmer_father_name: formData.farmerFatherName,
         village: formData.village,
@@ -401,7 +401,7 @@ const AdditionalInfo = (props) => {
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
+            type="number"
             id="inputField"
             placeholder="Farmer ID"
             value={formData.farmerId}
