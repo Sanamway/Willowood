@@ -1,10 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { BsCheck2Circle } from "react-icons/bs";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaUpload } from "react-icons/fa";
+import { FaCameraRetro } from "react-icons/fa";
 import { AiOutlineFileAdd } from "react-icons/ai";
+import { url } from "@/constants/url";
+import axios, { formToJSON } from "axios";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
+import { useRouter } from "next/router";
+import toast, { Toaster } from "react-hot-toast";
+import Navbar from "@/components/MR_Portal_Apps/Navbar";
+import { FaArrowAltCircleUp } from "react-icons/fa";
+
 const AdditionalInfo = (props) => {
+  const router = useRouter();
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+  };
   const [formActive, setFormActive] = useState(false);
   const [userImage, setUserImage] = useState("");
 
@@ -14,42 +30,236 @@ const AdditionalInfo = (props) => {
     (_, index) => currentYear + index
   );
 
-  const data = [
-    {
-      id: 1,
-      name: "Example A",
-      profit: "New",
-      relation: 10,
-      son_of: "$1,000,000",
-      pan: "Product Brand",
-      aadhar: "X MS Tree",
-    },
-    {
-      id: 2,
-      name: "Example B",
-      profit: "Commercial",
-      relation: 5,
-      son_of: "$500,000",
-      pan: "Product Brand",
-      aadhar: "X MS Tree",
-    },
-    {
-      id: 2,
-      name: "Example B",
-      profit: "Commercial",
-      relation: 5,
-      son_of: "$500,000",
-      pan: "New Product Brand",
-      aadhar: "X MS Tree",
-    },
-  ];
+  const [formData, setFormData] = useState({
+    purposeDemo: "",
+    dealer: "",
+    farmerMobile: "",
+    farmerId: "",
+    farmerName: "",
+    farmerFatherName: "",
+    village: "",
+    farmerType: "",
+    plotSize: "",
+    farmerNumber: "",
+    farmerObservation: "",
+    productRating: "",
+    remarks: "",
+    potentialFarmer: "",
+    nextVisitDate: "",
+    status: "Open",
+  });
+  const [productDemoState, setProductDemoState] = useState({
+    crop: "",
+    cropName: "",
+    stage: "",
+    acre: "",
+    segment: "",
+    productBrand: "",
+    water: "",
+    dose: "",
+  });
+
+  const [productDemoTableData, setProductDemoTableData] = useState([]);
+  const [followTableData, setFollowTableData] = useState([]);
+  const [dealerData, setDealerData] = useState([]);
+  const [productBrandData, setProductBrandData] = useState([]);
+  const [cropData, setCropData] = useState([]);
+  const [stageData, setStageData] = useState([]);
+
+  const getDelaerData = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_dealer`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      setDealerData(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getCompanyInfo = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_product_brand`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      console.log("lkl", apires);
+      setProductBrandData(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getCropInfo = async () => {
+    if (new Date())
+      try {
+        const respond = await axios.get(`${url}/api/get_crop_profile`, {
+          headers: headers,
+        });
+        const apires = await respond.data.data;
+        setCropData(apires);
+      } catch (error) {
+        console.log(error);
+      }
+  };
+
+  useEffect(() => {
+    getCompanyInfo();
+    getDelaerData();
+    getCropInfo();
+    getProductDemoTable();
+    getFollowDemoTable();
+  }, []);
+
+  const getProductDemoTable = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_mr_form_demo_crop`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      setProductDemoTableData(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getFollowDemoTable = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_farmer_demo_followup`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      setFollowTableData(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleAddProductDemo = async () => {
+    try {
+      const data = {
+        crop_profile_id: Number(productDemoState.crop),
+        crop: "Crop_1",
+        stage: productDemoState.stage,
+        acre_plot: productDemoState.acre,
+        segment: productDemoState.segment,
+        product_brand: productDemoState.productBrand,
+        dose_acre_tank: Number(productDemoState.dose),
+        water_val: Number(productDemoState.water),
+      };
+
+      const respond = await axios
+        .post(`${url}/api/add_mr_form_demo_crop`, JSON.stringify(data), {
+          headers: headers,
+        })
+        .then((res) => {
+          if (!res) return;
+          toast.success("Submitted");
+        });
+    } catch (errors) {
+      console.log(errors);
+    }
+  };
+
+  const getStageInfo = async (cropId) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_crop_segment`, {
+        headers: headers,
+        params: { crop_profile_id: cropId },
+      });
+      const apires = await respond.data.data;
+      setStageData(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getStageInfo(productDemoState.crop);
+  }, [productDemoState.crop]);
+
+  const handleAddDemo = async () => {
+    try {
+      const data = {
+        f_demo_field_no: 1212,
+        demo_field_date: new Date(),
+        demo_field_time: new Date(),
+        dealer_id: Number(formData.dealer),
+
+        d_id: Number(formData.dealer),
+        farmer_mob_no: Number(formData.farmerMobile),
+        farmer_id: Number(1212),
+        farmer_name: formData.farmerName,
+        farmer_father_name: formData.farmerFatherName,
+        village: formData.village,
+        farmer_type: formData.farmerType,
+
+        plot_size: formData.plotSize,
+        field_day_image_Url: "https://source.unsplash.com/user/c_v_r/1900x800",
+        farmer_available_in_field_day: formData.farmerNumber,
+        location_lat: 12,
+        location_long: 21,
+        potential_farmer: formData.potentialFarmer,
+        field_day_remarks: formData.remarks,
+
+        next_visit_date: formData.nextVisitDate,
+        status: formData.status,
+      };
+
+      const respond = await axios
+        .post(`${url}/api/add_farmer_demo_fields`, JSON.stringify(data), {
+          headers: headers,
+        })
+        .then((res) => {
+          if (!res) return;
+          toast.success("Submitted");
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth", // Smooth scrolling animation
+          });
+          setFormData({
+            purposeDemo: "",
+            dealer: "",
+            farmerMobile: "",
+            farmerId: "",
+            farmerName: "",
+            farmerFatherName: "",
+            village: "",
+            farmerType: "",
+            plotSize: "",
+            farmerObservation: "",
+            productRating: "",
+            remarks: "",
+            potentialFarmer: "",
+            nextVisitDate: "",
+            status: "Open",
+          });
+          setProductDemoTableData([]);
+          setFollowTableData([]);
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.message;
+
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   return (
     <form
       className=" bg-white rounded  p-4 w-full  overflow-auto"
       onSubmit={(e) => e.preventDefault()}
     >
-      <div className="flex my-2 flex-row gap-2">
+      <Navbar />
+      <Toaster position="bottom-center" reverseOrder={false} />
+      <div className="flex my-2 flex-row gap-1 mt-12">
         <div className="fle gap-4 w-full px-2">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
@@ -61,8 +271,9 @@ const AdditionalInfo = (props) => {
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
-            placeholder="F. Field Code"
+            placeholder="F Demo Code"
             disabled
+            // disabled={!formActive}
           />
         </div>
         <div className="fle gap-4 w-full px-2">
@@ -73,11 +284,15 @@ const AdditionalInfo = (props) => {
             <small className="text-red-600">*</small> Field Date
           </label>
 
-          <input
+          <DatePicker
             className="w-full px-3 py-1.5 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="date"
-            id="inputField"
-            placeholder="dd/mm/yyyy"
+            dateFormat="dd-MM-yyyy"
+            selected={new Date()}
+            peekNextMonth
+            showMonthDropdown
+            disabled
+            showYearDropdown
+            dropdownMode="select"
           />
         </div>
       </div>
@@ -94,18 +309,35 @@ const AdditionalInfo = (props) => {
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             disabled={formActive}
+            value={formData.purposeDemo}
+            onChange={(e) =>
+              setFormData({ ...formData, purposeDemo: e.target.value })
+            }
           >
             <option
               value=""
               className="focus:outline-none focus:border-b bg-white"
             >
-              Option
+              Select
             </option>
-            {nextYears.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
+            <option
+              value="New One"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              New One
+            </option>
+            <option
+              value="Odd One"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Odd One
+            </option>
+            <option
+              value="Old One"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Old One
+            </option>
           </select>
         </div>
         <div className="w-full px-2 mt-2">
@@ -119,17 +351,28 @@ const AdditionalInfo = (props) => {
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             disabled={formActive}
+            value={formData.dealer}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                dealer: e.target.value,
+              })
+            }
           >
             <option
               value=""
               className="focus:outline-none focus:border-b bg-white"
             >
-              Option
+              Select
             </option>
-            <option value="resident_individual">Residential Individual</option>
-            <option value="domestic_company">Domestic Company</option>
-            <option value="proprietary_concern">Proprietary Concern</option>
-            <option value="partner_firm">Partner Firm</option>
+            {dealerData?.map((item) => (
+              <option
+                value={item.d_id}
+                className="focus:outline-none focus:border-b bg-white"
+              >
+                {item.party_Name}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -146,10 +389,19 @@ const AdditionalInfo = (props) => {
             {" "}
             <input
               className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-              type="text"
+              type="number"
               id="inputField"
               placeholder="Farmer Mobile No"
-              // disabled={!formActive}
+              value={formData.farmerMobile}
+              onChange={(e) => {
+                const input = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+                if (input.length <= 10) {
+                  setFormData({
+                    ...formData,
+                    farmerMobile: input,
+                  });
+                }
+              }}
             />
             <AiOutlineFileAdd
               size={42}
@@ -157,7 +409,7 @@ const AdditionalInfo = (props) => {
             />
           </div>
         </div>
-        <div className="w-full px-2">
+        <div className="w-full px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -166,9 +418,16 @@ const AdditionalInfo = (props) => {
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
+            type="number"
             id="inputField"
             placeholder="Farmer ID"
+            value={formData.farmerId}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                farmerId: e.target.value,
+              })
+            }
           />
         </div>
       </div>
@@ -186,9 +445,16 @@ const AdditionalInfo = (props) => {
             type="text"
             id="inputField"
             placeholder="Farmer Name"
+            value={formData.farmerName}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                farmerName: e.target.value,
+              })
+            }
           />
         </div>
-        <div className="w-full px-2">
+        <div className="w-full px-2  mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -200,20 +466,34 @@ const AdditionalInfo = (props) => {
             type="text"
             id="inputField"
             placeholder="Farmer Father Name"
+            value={formData.farmerFatherName}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                farmerFatherName: e.target.value,
+              })
+            }
           />
         </div>
-        <div className="w-full px-2">
+        <div className="w-full px-2  mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small>Village
+            <small className="text-red-600">*</small> Village
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Village"
+            value={formData.village}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                village: e.target.value,
+              })
+            }
           />
         </div>
       </div>
@@ -223,13 +503,20 @@ const AdditionalInfo = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small>Farmer Type
+            <small className="text-red-600">*</small> Farmer Type
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Farmer Type"
+            value={formData.farmerType}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                farmerType: e.target.value,
+              })
+            }
           />
         </div>
         <div className="w-full px-2 mt-2">
@@ -237,17 +524,23 @@ const AdditionalInfo = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small>Plot Size
+            <small className="text-red-600">*</small> Plot Size
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
-            placeholder="Farmer Type"
+            placeholder="Plot Size"
+            value={formData.plotSize}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                plotSize: e.target.value,
+              })
+            }
           />
         </div>
       </div>
-
       <h1 className="flex justify-start font-bold m-4">Product Demo</h1>
       <div className="overflow-x-auto my-6 sm:overflow-hidden w-full  lg:w-full">
         <table className="min-w-full divide-y divide-gray-200 border-2">
@@ -298,28 +591,28 @@ const AdditionalInfo = (props) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 my-2 ">
-            {data?.map((item, index) => (
+            {productDemoTableData?.map((item, index) => (
               <tr className="border-2" key={item.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {item.name}
+                  {item.crop}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.profit}
+                  {item.stage}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.relation}
+                  {item.dose_acre_tank}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.son_of}
+                  {item.segment}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.pan}
+                  {item.product_brand}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.aadhar}
+                  {item.water_val}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.aadhar}
+                  {item.dose_acre_tank}
                 </td>
               </tr>
             ))}
@@ -370,25 +663,25 @@ const AdditionalInfo = (props) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 my-2 ">
-            {data?.map((item, index) => (
+            {followTableData?.map((item, index) => (
               <tr className="border-2" key={item.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {item.name}
+                  {index + 1}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.profit}
+                  {item.demo_followup_date}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.relation}
+                  {item.farmer_observation}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.son_of}
+                  {item.product_rating}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.pan}
+                  {item.follow_up_remarks}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.pan}
+                  {item.next_followup_date}
                 </td>
               </tr>
             ))}
@@ -401,17 +694,18 @@ const AdditionalInfo = (props) => {
           htmlFor="inputField"
         >
           <small className="text-red-600">*</small> How many Farmer available
-          {/* <button
-              onClick={() => {}}
-              className="flex justify-center items-center ml-2 "
-            >
-              +
-            </button> */}
         </label>
         <input
           className=" px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 w-12"
-          type="text"
+          type="number"
           id="inputField"
+          value={formData.farmerNumber}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              farmerNumber: e.target.value,
+            })
+          }
         />
       </div>
 
@@ -422,9 +716,14 @@ const AdditionalInfo = (props) => {
         >
           <small className="text-red-600">*</small>Remarks
         </label>
-        <textarea rows="4" className="w-full border border-black-100 border-2">
-          This is the default text inside the textarea.
-        </textarea>
+        <textarea
+          rows="4"
+          className="w-full border border-black-100 border-2"
+          value={formData.remarks}
+          onChange={(e) =>
+            setFormData({ ...formData, remarks: e.target.value })
+          }
+        ></textarea>
       </div>
       <h1 className="flex justify-start font-bold m-4">
         {" "}
@@ -475,6 +774,13 @@ const AdditionalInfo = (props) => {
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             disabled={formActive}
+            value={formData.potentialFarmer}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                potentialFarmer: e.target.value,
+              })
+            }
           >
             <option
               value=""
@@ -482,11 +788,19 @@ const AdditionalInfo = (props) => {
             >
               Option
             </option>
-            {nextYears.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
+
+            <option
+              value="Yes"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Yes
+            </option>
+            <option
+              value="No"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              No
+            </option>
           </select>
         </div>
       </div>
@@ -499,23 +813,23 @@ const AdditionalInfo = (props) => {
           >
             <small className="text-red-600">*</small> Next Visit Date
           </label>
-          <select
+          <DatePicker
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-            disabled={formActive}
-          >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
-              Option
-            </option>
-            {nextYears.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
+            dateFormat="dd-MM-yyyy"
+            selected={
+              formData.nextVisitDate ? new Date(formData.nextVisitDate) : ""
+            }
+            onChange={(date) =>
+              setFormData({
+                ...formData,
+                nextVisitDate: moment(date).format("LL"),
+              })
+            }
+            peekNextMonth
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
+          />
         </div>
         <div className="w-full px-2 mt-2">
           <label
@@ -528,19 +842,32 @@ const AdditionalInfo = (props) => {
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             disabled={formActive}
+            value={formData.status}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                status: e.target.value,
+              })
+            }
           >
-            2
             <option
               value=""
               className="focus:outline-none focus:border-b bg-white"
             >
               Option
             </option>
-            {nextYears.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
+            <option
+              value="Open"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Open
+            </option>
+            <option
+              value="Close"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Close
+            </option>
           </select>
         </div>
       </div>
@@ -548,18 +875,32 @@ const AdditionalInfo = (props) => {
       <div className="flex w-full justify-center gap-4 mt-4 ">
         <button
           onClick={() => {
-            handleSubmit();
+            handleAddDemo();
           }}
           className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
         >
           Submit
         </button>
         <button
-          onClick={() => {}}
+          onClick={() => {
+            router.push("/MR_Portal_Apps/MRHome");
+          }}
           className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
         >
           Close
         </button>
+      </div>
+      <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
+        <FaArrowAltCircleUp
+          size={42}
+          className="self-center size-120 text-black-400 text-blue-400 "
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth", // Smooth scrolling animation
+            })
+          }
+        />
       </div>
     </form>
   );

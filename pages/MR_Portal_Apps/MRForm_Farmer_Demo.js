@@ -103,6 +103,7 @@ const AdditionalInfo = (props) => {
     getCompanyInfo();
     getDelaerData();
     getCropInfo();
+    getProductDemoTable();
   }, []);
 
   const getProductDemoTable = async () => {
@@ -159,6 +160,22 @@ const AdditionalInfo = (props) => {
   useEffect(() => {
     getStageInfo(productDemoState.crop);
   }, [productDemoState.crop]);
+
+  const deleteProductDemoTable = async (id) => {
+    try {
+      const respond = await axios.get(`${url}/api/delete_mr_form_demo_crop`, {
+        headers: headers,
+        params: { f_demo_crop_id: Number(id) },
+      });
+      const apires = await respond.data.data;
+      getProductDemoTable();
+
+      toast.success("Deleted");
+    } catch (error) {
+      const errorMessage = error?.response?.data?.message;
+      if (errorMessage) toast.error(errorMessage);
+    }
+  };
 
   const handleAddDemo = async () => {
     try {
@@ -224,7 +241,6 @@ const AdditionalInfo = (props) => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
-
       toast.error(errorMessage);
     }
   };
@@ -1038,7 +1054,10 @@ const AdditionalInfo = (props) => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {item.dose_acre_tank}
                 </td>
-                <button className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
+                <button
+                  className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap"
+                  onClick={() => deleteProductDemoTable(item.f_demo_crop_id)}
+                >
                   {
                     <AiOutlineDelete className="hover:text-red-500"></AiOutlineDelete>
                   }
