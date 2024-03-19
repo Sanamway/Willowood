@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { TbFileDownload } from "react-icons/tb";
- import SubmitModal from "../modals/SubmitModal";
- import { url } from "@/constants/url";
- import axios from "axios";
- import { useRouter } from "next/router";
- import * as XLSX from "xlsx";
+import SubmitModal from "../modals/SubmitModal";
+import { url } from "@/constants/url";
+import axios from "axios";
+import { useRouter } from "next/router";
+import * as XLSX from "xlsx";
 const RPSummary = (props) => {
   const router = useRouter();
 
@@ -149,6 +149,7 @@ const RPSummary = (props) => {
       return;
     }
     try {
+      setButtonLoadingState(true);
       const respond = await axios
         .get(`${url}/api/rsp_update_status`, {
           headers: headers,
@@ -230,6 +231,7 @@ const RPSummary = (props) => {
           user_id: JSON.parse(window.localStorage.getItem("userinfo")).user_id,
         };
       });
+      setButtonLoadingState(true);
       const respond = await axios
         .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
           headers: headers,
@@ -307,6 +309,7 @@ const RPSummary = (props) => {
           user_id: JSON.parse(window.localStorage.getItem("userinfo")).user_id,
         };
       });
+      setButtonLoadingState(true);
       const respond = await axios
         .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
           headers: headers,
@@ -328,6 +331,7 @@ const RPSummary = (props) => {
 
   const handleSaveDraft = async () => {
     try {
+      setButtonLoadingState(true);
       const respond = await axios.get(`${url}/api/rsp_update_status`, {
         headers: headers,
         params: {
@@ -764,8 +768,18 @@ const RPSummary = (props) => {
     setRecievedObject(JSON.parse(decodeURIComponent(router.query.filterState)));
   }, [router]);
 
+  const [buttonLoadingState, setButtonLoadingState] = useState(false);
   return (
-    <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
+    <section className="mt-1 mb-24 outer relative flex flex-col items-center justify-center w-full font-arial">
+      {buttonLoadingState && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 ">
+          <img
+            className="w-20 h-20 animate-spin "
+            src="https://www.svgrepo.com/show/448500/loading.svg"
+            alt="Loading icon"
+          />
+        </div>
+      )}
       <SubmitModal
         isOpen={isOpen}
         territoryId={receivedObject.tId}
@@ -2553,6 +2567,7 @@ const RPSummary = (props) => {
               className={`text-center rounded-md hover:bg-green-500 ${
                 formActive ? "bg-green-400" : "bg-blue-500"
               }  text-white py-1 px-4 text-sm`}
+              disabled={buttonLoadingState}
             >
               Save as Draft
             </button>
@@ -2570,6 +2585,7 @@ const RPSummary = (props) => {
                     ? handleSaveRsp("Final Submitted")
                     : handleEditRsp("Final Submitted");
                 }}
+                disabled={buttonLoadingState}
               >
                 Final Submit
               </button>

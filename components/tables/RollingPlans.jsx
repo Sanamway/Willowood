@@ -36,8 +36,8 @@ import SubmitModal from "../modals/SubmitModal";
 import moment from "moment";
 
 import { AiOutlineSearch } from "react-icons/ai";
-const RollingPlans = () => {
-  const [successOpen, setSuccessOpen] = useState(false);
+const  RollingPlans = () => {
+   const [successOpen, setSuccessOpen] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
 
   const router = useRouter();
@@ -3708,7 +3708,6 @@ const RollingPlans = () => {
                                     ],
                                     item.rp_status,
                                     item.count || "",
-
                                     item.bg_id,
                                     item.bu_id,
                                     item.z_id,

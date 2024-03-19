@@ -641,7 +641,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download CP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download CP
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -710,7 +715,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download CP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download CP
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -808,7 +818,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download CP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download CP
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -1133,7 +1148,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download CP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download CP
             </li>
 
             <li
@@ -1222,7 +1242,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download CP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download CP
             </li>
 
             {(filterState.tId || filterState.tId === "All") &&
@@ -1282,7 +1307,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download CP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download CP
             </li>
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
@@ -1425,22 +1455,22 @@ const RollingPlans = () => {
                       query: {
                         planId: planId,
                         tranId: tranId,
-                        yr:   yr,
-                        mYr:  mYr,
+                        yr: yr,
+                        mYr: mYr,
                         depot: depot,
                         zrt: zrt,
                         status: status,
                         stage: stage,
                         bgId: bg,
                         buId: bu,
-                        zId:   z,
-                        rId:   r,
-                        tId:   t,
-                        cId:   c,
-                        wId:   w,
+                        zId: z,
+                        rId: r,
+                        tId: t,
+                        cId: c,
+                        wId: w,
                         formType: "Add",
                         filterState: encodeURIComponent(
-                            JSON.stringify(filterState)
+                          JSON.stringify(filterState)
                         ),
                       },
                     });
@@ -1496,7 +1526,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download CP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download CP
             </li>
 
             {(JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
@@ -1578,7 +1613,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download CP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download CP
             </li>
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
@@ -1687,7 +1727,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download CP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download CP
             </li>
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
@@ -1796,7 +1841,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download CP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download CP
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -1865,7 +1915,12 @@ const RollingPlans = () => {
                 )
               }
             >
-              <FaDownload className="text-slate-400" /> Download CP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload className="text-slate-400" />
+              )}{" "}
+              Download CP
             </li>
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
@@ -2055,7 +2110,7 @@ const RollingPlans = () => {
         );
     }
   };
-
+  const [downloadLoading, setDownloadingLoading] = useState(false);
   const handleDownloadExcelNew = async (
     m_year,
     planId,
@@ -2125,6 +2180,7 @@ const RollingPlans = () => {
       };
     }
     try {
+      setDownloadingLoading(true);
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/getsapCollectiondata`, {
         headers: headers,
@@ -2167,6 +2223,7 @@ const RollingPlans = () => {
         type: "Download",
         data: {},
       });
+      setDownloadingLoading(false);
     } catch (error) {
       console.log("mlo", error);
     }
@@ -2369,8 +2426,7 @@ const RollingPlans = () => {
     c,
     w,
     tDes,
-    rDes,
-    
+    rDes
   ) => {
     let paramsData;
 
