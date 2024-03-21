@@ -1,42 +1,30 @@
 import React, { useEffect, useState, Fragment } from "react";
 import Layout from "../Layout";
-import { AiTwotoneHome } from "react-icons/ai";
 import { FaDownload } from "react-icons/fa";
 import { FcApprovall } from "react-icons/io";
 import { FcApproval } from "react-icons/fc";
 import { FaUpload } from "react-icons/fa";
 import { VscPreview } from "react-icons/vsc";
 import { useRouter } from "next/router";
-
 import { url } from "@/constants/url";
 import axios from "axios";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlinePreview } from "react-icons/md";
 import { TbDeviceDesktopAnalytics } from "react-icons/tb";
 import { CgNotes } from "react-icons/cg";
-import { AiOutlineStop } from "react-icons/ai";
-
 import { FaSkullCrossbones } from "react-icons/fa6";
 import { FaWhatsapp } from "react-icons/fa";
 import { GrTask } from "react-icons/gr";
-import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
-import { FcBullish } from "react-icons/fc";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Popover } from "@headlessui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
 import { Dialog, Transition } from "@headlessui/react";
 import { MdDelete } from "react-icons/md";
-import SubmitModal from "../modals/SubmitModal";
-
 import moment from "moment";
-
-import { AiOutlineSearch } from "react-icons/ai";
-const RollingPlans = () => {
+const CollectionPlans = () => {
   const [successOpen, setSuccessOpen] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
 
@@ -76,7 +64,9 @@ const RollingPlans = () => {
       });
       const apires = await respond.data.data;
       setAllYearData([...new Set(apires.map((item) => item.t_year))]);
-    } catch (error) {}
+    } catch (error) {
+      setDownloadLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -91,7 +81,9 @@ const RollingPlans = () => {
       const apires = await respond.data.data;
 
       setAllMonthData([...new Set(apires.map((item) => item.m_year))]);
-    } catch (error) {}
+    } catch (error) {
+      setDownloadLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -135,7 +127,6 @@ const RollingPlans = () => {
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
-
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
@@ -257,6 +248,7 @@ const RollingPlans = () => {
         )
       );
     } catch (error) {
+      setDownloadLoading(false);
       console.log(error);
     }
   };
@@ -279,6 +271,7 @@ const RollingPlans = () => {
 
       setBuData(apires.filter((item, idx) => item.isDeleted === false));
     } catch (error) {
+      setDownloadLoading(false);
       console.log(error);
     }
   };
@@ -302,7 +295,9 @@ const RollingPlans = () => {
           .filter((item) => Number(item.bg_id) === Number(segmentId))
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
       );
-    } catch (error) {}
+    } catch (error) {
+      setDownloadLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -326,7 +321,9 @@ const RollingPlans = () => {
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
           .filter((item) => Number(item.z_id) === Number(zoneId))
       );
-    } catch (error) {}
+    } catch (error) {
+      setDownloadLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -356,7 +353,9 @@ const RollingPlans = () => {
           .filter((item) => Number(item.z_id) === Number(zoneId))
           .filter((item) => Number(item.r_id) === Number(regionId))
       );
-    } catch (error) {}
+    } catch (error) {
+      setDownloadLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -386,7 +385,9 @@ const RollingPlans = () => {
       const apires = await respond.data.data;
 
       setDepotData(apires.filter((item) => item.c_id === cId));
-    } catch (error) {}
+    } catch (error) {
+      setDownloadLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -450,16 +451,13 @@ const RollingPlans = () => {
       console.log("new data", apires);
       setAllTableData(apires);
     } catch (error) {
+      setDownloadLoading(false);
       if (!error) return;
       setAllTableData([]);
     }
   };
 
   useEffect(() => {
-    console.log(
-      "local item",
-      JSON.parse(window.localStorage.getItem("userinfo"))
-    );
     if (!JSON.parse(window.localStorage.getItem("userinfo")).role_id === 11)
       return;
 
@@ -501,6 +499,7 @@ const RollingPlans = () => {
       const apires = await respond.data.data;
       setAllTableData(apires);
     } catch (error) {
+      setDownloadLoading(false);
       if (!error) return;
       setAllTableData([]);
     }
@@ -582,10 +581,20 @@ const RollingPlans = () => {
         filterState.tId
       );
     } catch (error) {
+      setDownloadLoading(false);
       console.log(error);
     }
   };
 
+  const Loader = () => {
+    return (
+      <div class="flex space-x-1   justify-center items-center bg-white  ">
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce"></div>
+      </div>
+    );
+  };
   const getOptions = (
     upload,
     planId,
@@ -644,7 +653,10 @@ const RollingPlans = () => {
               {downloadLoading ? (
                 <Loader />
               ) : (
-                <FaDownload className="text-slate-400" />
+                <FaDownload
+                  className="text-slate-400"
+                  disabled={downloadLoading}
+                />
               )}{" "}
               Download CP
             </li>
@@ -674,7 +686,15 @@ const RollingPlans = () => {
                 );
               }}
             >
-              <MdOutlinePreview className="text-slate-400" /> View
+              {viewLoading ? (
+                <Loader />
+              ) : (
+                <MdOutlinePreview
+                  className="text-slate-400"
+                  disabled={viewLoading}
+                />
+              )}{" "}
+              View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
@@ -718,7 +738,10 @@ const RollingPlans = () => {
               {downloadLoading ? (
                 <Loader />
               ) : (
-                <FaDownload className="text-slate-400" />
+                <FaDownload
+                  className="text-slate-400"
+                  disabled={downloadLoading}
+                />
               )}{" "}
               Download CP
             </li>
@@ -749,7 +772,12 @@ const RollingPlans = () => {
                 });
               }}
             >
-              <CiEdit className="text-slate-400" /> Edit
+              {editLoading ? (
+                <Loader />
+              ) : (
+                <CiEdit className="text-slate-400" disabled={editLoading} />
+              )}{" "}
+              Edit
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -778,7 +806,15 @@ const RollingPlans = () => {
                 );
               }}
             >
-              <MdOutlinePreview className="text-slate-400" /> View
+              {viewLoading ? (
+                <Loader />
+              ) : (
+                <MdOutlinePreview
+                  className="text-slate-400"
+                  disabled={viewLoading}
+                />
+              )}{" "}
+              View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
@@ -821,7 +857,10 @@ const RollingPlans = () => {
               {downloadLoading ? (
                 <Loader />
               ) : (
-                <FaDownload className="text-slate-400" />
+                <FaDownload
+                  className="text-slate-400"
+                  disabled={downloadLoading}
+                />
               )}{" "}
               Download CP
             </li>
@@ -852,7 +891,12 @@ const RollingPlans = () => {
                 );
               }}
             >
-              <CiEdit className="text-slate-400" /> Edit
+              {editLoading ? (
+                <Loader />
+              ) : (
+                <CiEdit className="text-slate-400" disabled={editLoading} />
+              )}{" "}
+              Edit
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center"
@@ -865,7 +909,8 @@ const RollingPlans = () => {
                 });
               }}
             >
-              <MdDelete className="text-slate-400" /> Delete
+              <MdDelete className="text-slate-400" disabled={downloadLoading} />{" "}
+              Delete
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -894,7 +939,15 @@ const RollingPlans = () => {
                 );
               }}
             >
-              <MdOutlinePreview className="text-slate-400" /> View
+              {viewLoading ? (
+                <Loader />
+              ) : (
+                <MdOutlinePreview
+                  className="text-slate-400"
+                  disabled={viewLoading}
+                />
+              )}{" "}
+              View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
@@ -912,89 +965,6 @@ const RollingPlans = () => {
         if (
           JSON.parse(window.localStorage.getItem("userinfo")).role_id === 11
         ) {
-          return (
-            <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-              <li
-                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                onClick={() =>
-                  handleDownloadExcelDepot(
-                    mYr,
-                    planId,
-                    tranId,
-                    yr,
-                    w,
-                    wDes,
-                    "Single"
-                  )
-                }
-              >
-                <FaDownload className="text-slate-400" /> Download CP
-              </li>
-
-              <li
-                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                onClick={() => {
-                  handleDepotExcelView(
-                    mYr,
-                    planId,
-                    tranId,
-                    yr,
-                    depot,
-                    zrt,
-                    status,
-                    stage,
-                    filterState,
-                    w,
-                    wDes,
-                    "All"
-                  );
-                }}
-              >
-                <MdOutlinePreview className="text-slate-400" /> View All
-              </li>
-
-              <li
-                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                onClick={() =>
-                  handleDownloadExcelDepot(
-                    mYr,
-                    planId,
-                    tranId,
-                    yr,
-                    w,
-                    wDes,
-                    "All"
-                  )
-                }
-              >
-                <FaDownload className="text-slate-400" />
-                All Download CP
-              </li>
-
-              <li
-                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                onClick={() => {
-                  handleDepotExcelView(
-                    mYr,
-                    planId,
-                    tranId,
-                    yr,
-                    depot,
-                    zrt,
-                    status,
-                    stage,
-                    filterState,
-                    w,
-                    wDes,
-                    "Single"
-                  );
-                }}
-              >
-                <MdOutlinePreview className="text-slate-400" /> View
-              </li>
-            </ul>
-          );
-        } else {
           return (
             <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
               <li
@@ -1019,7 +989,138 @@ const RollingPlans = () => {
                   )
                 }
               >
-                <FaDownload className="text-slate-400" /> Download CP
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
+              </li>
+
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() => {
+                  handleDepotExcelView(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    depot,
+                    zrt,
+                    status,
+                    stage,
+                    filterState,
+                    w,
+                    wDes,
+                    "All"
+                  );
+                }}
+              >
+                {viewLoading ? (
+                  <Loader />
+                ) : (
+                  <MdOutlinePreview
+                    className="text-slate-400"
+                    disabled={viewLoading}
+                  />
+                )}{" "}
+                View All
+              </li>
+
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelDepot(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    w,
+                    wDes,
+                    "All"
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                All Download CP
+              </li>
+
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() => {
+                  handleDepotExcelView(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    depot,
+                    zrt,
+                    status,
+                    stage,
+                    filterState,
+                    w,
+                    wDes,
+                    "Single"
+                  );
+                }}
+              >
+                {viewLoading ? (
+                  <Loader />
+                ) : (
+                  <MdOutlinePreview
+                    className="text-slate-400"
+                    disabled={viewLoading}
+                  />
+                )}{" "}
+                View
+              </li>
+            </ul>
+          );
+        } else {
+          return (
+            <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    cId,
+                    filterState
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
               </li>
 
               {!(
@@ -1052,7 +1153,15 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <MdOutlinePreview className="text-slate-400" /> View
+                  {viewLoading ? (
+                    <Loader />
+                  ) : (
+                    <MdOutlinePreview
+                      className="text-slate-400"
+                      disabled={viewLoading}
+                    />
+                  )}{" "}
+                  View
                 </li>
               )}
 
@@ -1151,7 +1260,10 @@ const RollingPlans = () => {
               {downloadLoading ? (
                 <Loader />
               ) : (
-                <FaDownload className="text-slate-400" />
+                <FaDownload
+                  className="text-slate-400"
+                  disabled={downloadLoading}
+                />
               )}{" "}
               Download CP
             </li>
@@ -1183,7 +1295,15 @@ const RollingPlans = () => {
                 );
               }}
             >
-              <MdOutlinePreview className="text-slate-400" /> View
+              {viewLoading ? (
+                <Loader />
+              ) : (
+                <MdOutlinePreview
+                  className="text-slate-400"
+                  disabled={viewLoading}
+                />
+              )}{" "}
+              View
             </li>
 
             {(filterState.tId || filterState.tId === "All") &&
@@ -1245,7 +1365,10 @@ const RollingPlans = () => {
               {downloadLoading ? (
                 <Loader />
               ) : (
-                <FaDownload className="text-slate-400" />
+                <FaDownload
+                  className="text-slate-400"
+                  disabled={downloadLoading}
+                />
               )}{" "}
               Download CP
             </li>
@@ -1310,7 +1433,10 @@ const RollingPlans = () => {
               {downloadLoading ? (
                 <Loader />
               ) : (
-                <FaDownload className="text-slate-400" />
+                <FaDownload
+                  className="text-slate-400"
+                  disabled={downloadLoading}
+                />
               )}{" "}
               Download CP
             </li>
@@ -1347,7 +1473,15 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <MdOutlinePreview className="text-slate-400" /> View
+                  {viewLoading ? (
+                    <Loader />
+                  ) : (
+                    <MdOutlinePreview
+                      className="text-slate-400"
+                      disabled={viewLoading}
+                    />
+                  )}{" "}
+                  View
                 </li>
               )}
 
@@ -1440,7 +1574,15 @@ const RollingPlans = () => {
                 );
               }}
             >
-              <FaDownload className="text-slate-400" /> Download CP
+              {downloadLoading ? (
+                <Loader />
+              ) : (
+                <FaDownload
+                  className="text-slate-400"
+                  disabled={downloadLoading}
+                />
+              )}{" "}
+              Download CP
             </li>
             {upload &&
               !(
@@ -1476,7 +1618,11 @@ const RollingPlans = () => {
                     });
                   }}
                 >
-                  <FaUpload className="text-slate-400" /> Upload CP
+                  <FaUpload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />{" "}
+                  Upload CP
                 </li>
               )}
 
@@ -1529,7 +1675,10 @@ const RollingPlans = () => {
               {downloadLoading ? (
                 <Loader />
               ) : (
-                <FaDownload className="text-slate-400" />
+                <FaDownload
+                  className="text-slate-400"
+                  disabled={downloadLoading}
+                />
               )}{" "}
               Download CP
             </li>
@@ -1616,7 +1765,10 @@ const RollingPlans = () => {
               {downloadLoading ? (
                 <Loader />
               ) : (
-                <FaDownload className="text-slate-400" />
+                <FaDownload
+                  className="text-slate-400"
+                  disabled={downloadLoading}
+                />
               )}{" "}
               Download CP
             </li>
@@ -1685,7 +1837,15 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <MdOutlinePreview className="text-slate-400" /> View
+                  {viewLoading ? (
+                    <Loader />
+                  ) : (
+                    <MdOutlinePreview
+                      className="text-slate-400"
+                      disabled={viewLoading}
+                    />
+                  )}{" "}
+                  View
                 </li>
               ))}
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -1730,7 +1890,10 @@ const RollingPlans = () => {
               {downloadLoading ? (
                 <Loader />
               ) : (
-                <FaDownload className="text-slate-400" />
+                <FaDownload
+                  className="text-slate-400"
+                  disabled={downloadLoading}
+                />
               )}{" "}
               Download CP
             </li>
@@ -1799,7 +1962,15 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <MdOutlinePreview className="text-slate-400" /> View
+                  {viewLoading ? (
+                    <Loader />
+                  ) : (
+                    <MdOutlinePreview
+                      className="text-slate-400"
+                      disabled={viewLoading}
+                    />
+                  )}{" "}
+                  View
                 </li>
               ))}
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -1844,7 +2015,10 @@ const RollingPlans = () => {
               {downloadLoading ? (
                 <Loader />
               ) : (
-                <FaDownload className="text-slate-400" />
+                <FaDownload
+                  className="text-slate-400"
+                  disabled={downloadLoading}
+                />
               )}{" "}
               Download CP
             </li>
@@ -1874,7 +2048,15 @@ const RollingPlans = () => {
                 );
               }}
             >
-              <MdOutlinePreview className="text-slate-400" /> View
+              {viewLoading ? (
+                <Loader />
+              ) : (
+                <MdOutlinePreview
+                  className="text-slate-400"
+                  disabled={viewLoading}
+                />
+              )}{" "}
+              View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
@@ -1918,7 +2100,10 @@ const RollingPlans = () => {
               {downloadLoading ? (
                 <Loader />
               ) : (
-                <FaDownload className="text-slate-400" />
+                <FaDownload
+                  className="text-slate-400"
+                  disabled={downloadLoading}
+                />
               )}{" "}
               Download CP
             </li>
@@ -1987,7 +2172,15 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <MdOutlinePreview className="text-slate-400" /> View
+                  {viewLoading ? (
+                    <Loader />
+                  ) : (
+                    <MdOutlinePreview
+                      className="text-slate-400"
+                      disabled={viewLoading}
+                    />
+                  )}{" "}
+                  View
                 </li>
               )}
             {(filterState.zId || filterState.zId === "All") && isRole3 && (
@@ -2064,7 +2257,12 @@ const RollingPlans = () => {
                 });
               }}
             >
-              <CiEdit className="text-slate-400" /> Edit
+              {editLoading ? (
+                <Loader />
+              ) : (
+                <CiEdit className="text-slate-400" disabled={editLoading} />
+              )}{" "}
+              Edit
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -2092,7 +2290,15 @@ const RollingPlans = () => {
                 );
               }}
             >
-              <MdOutlinePreview className="text-slate-400" /> View
+              {viewLoading ? (
+                <Loader />
+              ) : (
+                <MdOutlinePreview
+                  className="text-slate-400"
+                  disabled={viewLoading}
+                />
+              )}{" "}
+              View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               Previous Period
@@ -2110,7 +2316,10 @@ const RollingPlans = () => {
         );
     }
   };
-  const [downloadLoading, setDownloadingLoading] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [viewLoading, setViewLoading] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+
   const handleDownloadExcelNew = async (
     m_year,
     planId,
@@ -2157,21 +2366,21 @@ const RollingPlans = () => {
         z_des: zDes,
         m_year: moment(m_year).format("YYYY-MM"),
       };
-    } else if (filterState.buId && !filterState?.zId) {
+    } else if (filterState?.buId && !filterState?.zId) {
       paramsData = {
         c_id: cId,
         bu_id: buId,
         bu_des: buDes,
         m_year: moment(m_year).format("YYYY-MM"),
       };
-    } else if (filterState.bgId && filterState?.buId) {
+    } else if (filterState?.bgId && filterState?.buId) {
       paramsData = {
         c_id: cId,
         bu_id: buId,
         bu_des: buDes,
         m_year: moment(m_year).format("YYYY-MM"),
       };
-    } else if (filterState.bgId && !filterState?.buId) {
+    } else if (filterState?.bgId && !filterState?.buId) {
       paramsData = {
         c_id: cId,
         bg_id: bgId,
@@ -2180,7 +2389,7 @@ const RollingPlans = () => {
       };
     }
     try {
-      setDownloadingLoading(true);
+      setDownloadLoading(true);
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/getsapCollectiondata`, {
         headers: headers,
@@ -2223,9 +2432,9 @@ const RollingPlans = () => {
         type: "Download",
         data: {},
       });
-      setDownloadingLoading(false);
+      setDownloadLoading(false);
     } catch (error) {
-      console.log("mlo", error);
+      setDownloadLoading(false);
     }
   };
 
@@ -2279,6 +2488,7 @@ const RollingPlans = () => {
     }
 
     try {
+      setDownloadLoading(true);
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/RSP_depot`, {
         headers: headers,
@@ -2301,7 +2511,7 @@ const RollingPlans = () => {
         data: {},
       });
     } catch (error) {
-      console.log("mlo", error);
+      setDownloadLoading(false);
     }
   };
 
@@ -2364,7 +2574,7 @@ const RollingPlans = () => {
         json: true,
       };
     }
-
+    setViewLoading(true);
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/RSP_depot`, {
@@ -2402,7 +2612,9 @@ const RollingPlans = () => {
           depotType: type,
         },
       });
+      setViewLoading(false);
     } catch (error) {
+      setViewLoading(false);
       console.log("mlo", error);
     }
   };
@@ -2478,6 +2690,7 @@ const RollingPlans = () => {
     }
 
     try {
+      setViewLoading(true);
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/getsapCollectiondata`, {
         headers: headers,
@@ -2517,7 +2730,9 @@ const RollingPlans = () => {
           filterState: encodeURIComponent(JSON.stringify(filterState)),
         },
       });
+      setViewLoading(false);
     } catch (error) {
+      setViewLoading(false);
       console.log("mlo", error);
     }
   };
@@ -2728,6 +2943,7 @@ const RollingPlans = () => {
         },
       });
     } catch (error) {
+      setDownloadLoading(false);
       console.log("mlo", error);
     }
   };
@@ -2837,6 +3053,7 @@ const RollingPlans = () => {
         },
       });
     } catch (error) {
+      setDownloadLoading(false);
       console.log("mlo", error);
     }
   };
@@ -2925,6 +3142,7 @@ const RollingPlans = () => {
       };
     }
     try {
+      setEditLoading(true);
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/getsapCollectiondata`, {
         headers: headers,
@@ -2965,6 +3183,7 @@ const RollingPlans = () => {
         },
       });
     } catch (error) {
+      setEditLoading(false);
       console.log("mlo", error);
     }
   };
@@ -3020,6 +3239,7 @@ const RollingPlans = () => {
         filterState.tId
       );
     } catch (error) {
+      setDownloadLoading(false);
       const errorMessage = error?.response?.data?.error;
       setModalData({
         message: errorMessage,
@@ -3106,6 +3326,7 @@ const RollingPlans = () => {
       const apires = await respond.data.data;
       console.log("MKL", apires);
     } catch (error) {
+      setDownloadLoading(false);
       if (!error) return;
     }
   };
@@ -3125,6 +3346,7 @@ const RollingPlans = () => {
       const apires = await respond.data.data;
       setAllRejectList(apires);
     } catch (error) {
+      setDownloadLoading(false);
       if (!error) return;
     }
   };
@@ -3181,8 +3403,8 @@ const RollingPlans = () => {
                 All
               </option>
               {allMonthData.map((item, idx) => (
-                <option value={item.m_year} key={idx}>
-                  {moment(item.m_year).format("MMM YYYY")}
+                <option value={item} key={idx}>
+                  {moment(item).format("MMM YYYY")}
                 </option>
               ))}
             </select>
@@ -3721,7 +3943,7 @@ const RollingPlans = () => {
                   >
                     {modalData.type === "Download"
                       ? "Collection Plan"
-                      : "Delete Rollng Plan"}
+                      : "Delete Collection Plan"}
                   </Dialog.Title>
                   <div className="mt-2">
                     {modalData.type === "Download" && (
@@ -3778,4 +4000,4 @@ const RollingPlans = () => {
   );
 };
 
-export default RollingPlans;
+export default CollectionPlans;

@@ -117,13 +117,13 @@ const RPTable = (props) => {
       JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
     ) {
       paramsData = {
-        t_year:     router.query.yr,
-        m_year:     router.query.mYr,
-        plan_id:    router.query.planId,
-        tran_id:    router.query.tranId,
-        t_id:       Number(router.query.tId) ? Number(router.query.tId) : null,
-        r_id:       Number(router.query.rId),
-        rp_status:  status,
+        t_year: router.query.yr,
+        m_year: router.query.mYr,
+        plan_id: router.query.planId,
+        tran_id: router.query.tranId,
+        t_id: Number(router.query.tId) ? Number(router.query.tId) : null,
+        r_id: Number(router.query.rId),
+        rp_status: status,
       };
     } else if (
       JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
@@ -360,7 +360,7 @@ const RPTable = (props) => {
           user_id: JSON.parse(window.localStorage.getItem("userinfo")).user_id,
         };
       });
-
+      setButtonLoadingState(true);
       console.log("new", data);
       const respond = await axios
         .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
@@ -370,6 +370,7 @@ const RPTable = (props) => {
           if (!res) return;
           setApiMessage(res.data.message);
           submitHandle(status);
+          setButtonLoadingState(false);
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
@@ -377,6 +378,7 @@ const RPTable = (props) => {
       if (!errorMessage) return;
       setisOpen(true);
       setApiMessage(errorMessage);
+      setButtonLoadingState(false);
     }
   };
   const receivedObject = router.query.filterState
@@ -445,6 +447,7 @@ const RPTable = (props) => {
           user_id: JSON.parse(window.localStorage.getItem("userinfo")).user_id,
         };
       });
+      setButtonLoadingState(true);
       const respond = await axios
         .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
           headers: headers,
@@ -454,6 +457,7 @@ const RPTable = (props) => {
           if (!res) return;
           setApiMessage(res.data.message);
           submitHandle(status);
+          setButtonLoadingState(false);
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
@@ -461,11 +465,21 @@ const RPTable = (props) => {
       if (!errorMessage) return;
       setisOpen(true);
       setApiMessage(errorMessage);
+      setButtonLoadingState(false);
     }
   };
-
+  const [buttonLoadingState, setButtonLoadingState] = useState(false);
   return (
-    <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
+    <section className="mt-1 mb-24 outer relative flex flex-col items-center justify-center w-full font-arial">
+      {buttonLoadingState && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 ">
+          <img
+            className="w-20 h-20 animate-spin "
+            src="https://www.svgrepo.com/show/448500/loading.svg"
+            alt="Loading icon"
+          />
+        </div>
+      )}
       <SubmitModal
         isOpen={isOpen}
         territoryId={receivedObject.tId}
@@ -1014,7 +1028,7 @@ const RPTable = (props) => {
                 ? handleSaveRsp("Draft Submit")
                 : handleEditRsp("Draft Submit");
             }}
-            className={`text-center rounded-md hover:bg-green-500 ${
+            className={`text-center whitespace-nowrap rounded-md hover:bg-green-500 mx-2 ${
               formActive ? "bg-green-400" : "bg-blue-500"
             }  text-white py-1 px-4 text-sm`}
           >
@@ -1027,7 +1041,7 @@ const RPTable = (props) => {
             JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
               6) && (
             <button
-              className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
+              className="text-center whitespace-nowrap rounded-md bg-orange-500 text-white py-1 px-4 text-sm mx-2"
               onClick={() => {
                 router.query.formType === "Add"
                   ? handleSaveRsp("Final Submitted")
