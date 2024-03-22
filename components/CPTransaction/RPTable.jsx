@@ -178,10 +178,10 @@ const RPTable = (props) => {
             obj[header] = row[index];
           });
           return obj;
-        })
+        })  || []
       );
     } else {
-      setResult(props.tableData.map);
+      setResult(props.tableData.map  || []);
     }
   }, [props.tableData]);
 
@@ -254,18 +254,7 @@ const RPTable = (props) => {
     setRecievedObject(JSON.parse(decodeURIComponent(router.query.filterState)));
   }, [router]);
 
-  const handleCopyFcst = () => {
-    const newArray = result.map((item) => {
-      return {
-        ...item,
-        [Object.keys(item)[19]]: item[Object.keys(item)[17]],
-        [Object.keys(item)[20]]: item[Object.keys(item)[18]],
-      };
-    });
-
-    setResult(newArray);
-  };
-
+ cp
   const handleColourBlock = (fcst, revised) => {
     const colorNum = (revised / fcst) * 100 - 100;
     const positiveColorNum = Math.abs(colorNum);
@@ -327,7 +316,7 @@ const RPTable = (props) => {
       } else {
         return;
       }
-      const data = result.map((item) => {
+      const data = result?.map((item) => {
         return {
           t_year: router.query.yr,
           m_year: router.query.mYr,
@@ -414,7 +403,7 @@ const RPTable = (props) => {
       } else {
         return;
       }
-      const data = result.map((item) => {
+      const data = result?.map((item) => {
         return {
           t_year: router.query.yr,
           m_year: router.query.mYr,
@@ -721,7 +710,7 @@ const RPTable = (props) => {
                   </thead>
 
                   <tbody>
-                    {result.map((item) => {
+                    {result?.map((item) => {
                       return (
                         <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
                           <th
@@ -775,7 +764,7 @@ const RPTable = (props) => {
                               className="px-auto outline-none border-b-2 w-16"
                               onChange={(e) =>
                                 setResult(
-                                  result.map((el) =>
+                                  result?.map((el) =>
                                     item[`${Object.keys(item)[0]}`] ===
                                     el[`${Object.keys(el)[0]}`]
                                       ? {
@@ -798,7 +787,7 @@ const RPTable = (props) => {
                               className="px-auto outline-none border-b-2 w-16"
                               onChange={(e) =>
                                 setResult(
-                                  result.map((el) =>
+                                  result?.map((el) =>
                                     item[`${Object.keys(item)[0]}`] ===
                                     el[`${Object.keys(el)[0]}`]
                                       ? {
@@ -821,7 +810,7 @@ const RPTable = (props) => {
                               className="px-auto outline-none border-b-2 w-16"
                               onChange={(e) =>
                                 setResult(
-                                  result.map((el) =>
+                                  result?.map((el) =>
                                     item[`${Object.keys(item)[0]}`] ===
                                     el[`${Object.keys(el)[0]}`]
                                       ? {
@@ -844,7 +833,7 @@ const RPTable = (props) => {
                               className="px-auto outline-none border-b-2 w-16"
                               onChange={(e) =>
                                 setResult(
-                                  result.map((el) =>
+                                  result?.map((el) =>
                                     item[`${Object.keys(item)[0]}`] ===
                                     el[`${Object.keys(el)[0]}`]
                                       ? {
@@ -867,7 +856,7 @@ const RPTable = (props) => {
                               className="px-auto outline-none border-b-2 w-16"
                               onChange={(e) =>
                                 setResult(
-                                  result.map((el) =>
+                                  result?.map((el) =>
                                     item[`${Object.keys(item)[0]}`] ===
                                     el[`${Object.keys(el)[0]}`]
                                       ? {

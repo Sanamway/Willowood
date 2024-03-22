@@ -341,6 +341,7 @@ const RPSummary = (props) => {
       if (!errorMessage) return;
       setisOpen(true);
       setApiMessage(errorMessage);
+      setButtonLoadingState(false);
     }
   };
 

@@ -36,8 +36,8 @@ import SubmitModal from "../modals/SubmitModal";
 import moment from "moment";
 
 import { AiOutlineSearch } from "react-icons/ai";
-const  RollingPlans = () => {
-   const [successOpen, setSuccessOpen] = useState(false);
+const RollingPlans = () => {
+  const [successOpen, setSuccessOpen] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
 
   const router = useRouter();
@@ -668,7 +668,12 @@ const  RollingPlans = () => {
                 );
               }}
             >
-              <MdOutlinePreview className="text-slate-400" /> View
+              {viewLoading ? (
+                <Loader />
+              ) : (
+                <MdOutlinePreview className="text-slate-400" />
+              )}{" "}
+              View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
@@ -743,7 +748,8 @@ const  RollingPlans = () => {
                 });
               }}
             >
-              <CiEdit className="text-slate-400" /> Edit
+              {editLoading ? <Loader /> : <CiEdit className="text-slate-400" />}{" "}
+              Edit
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -770,7 +776,12 @@ const  RollingPlans = () => {
                 );
               }}
             >
-              <MdOutlinePreview className="text-slate-400" /> View
+              {viewLoading ? (
+                <Loader />
+              ) : (
+                <MdOutlinePreview className="text-slate-400" />
+              )}{" "}
+              View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
@@ -843,7 +854,8 @@ const  RollingPlans = () => {
                 );
               }}
             >
-              <CiEdit className="text-slate-400" /> Edit
+              {editLoading ? <Loader /> : <CiEdit className="text-slate-400" />}{" "}
+              Edit
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center"
@@ -883,7 +895,12 @@ const  RollingPlans = () => {
                 );
               }}
             >
-              <MdOutlinePreview className="text-slate-400" /> View
+              {viewLoading ? (
+                <Loader />
+              ) : (
+                <MdOutlinePreview className="text-slate-400" />
+              )}{" "}
+              View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
@@ -984,7 +1001,12 @@ const  RollingPlans = () => {
                   );
                 }}
               >
-                <MdOutlinePreview className="text-slate-400" /> View
+                {viewLoading ? (
+                  <Loader />
+                ) : (
+                  <MdOutlinePreview className="text-slate-400" />
+                )}{" "}
+                View
               </li>
             </ul>
           );
@@ -1050,7 +1072,12 @@ const  RollingPlans = () => {
                     );
                   }}
                 >
-                  <MdOutlinePreview className="text-slate-400" /> View
+                  {viewLoading ? (
+                    <Loader />
+                  ) : (
+                    <MdOutlinePreview className="text-slate-400" />
+                  )}{" "}
+                  View
                 </li>
               )}
 
@@ -1083,7 +1110,12 @@ const  RollingPlans = () => {
                       );
                     }}
                   >
-                    <VscPreview className="text-green-400" /> Review Decision
+                    {reviewLoading ? (
+                      <Loader />
+                    ) : (
+                      <VscPreview className="text-green-400" />
+                    )}{" "}
+                    Review Decision
                   </li>
                 )}
               {(filterState.tId || filterState.tId === "All") &&
@@ -1179,7 +1211,13 @@ const  RollingPlans = () => {
                 );
               }}
             >
-              <MdOutlinePreview className="text-slate-400" /> View
+              {" "}
+              {viewLoading ? (
+                <Loader />
+              ) : (
+                <MdOutlinePreview className="text-slate-400" />
+              )}{" "}
+              View <MdOutlinePreview className="text-slate-400" /> View
             </li>
 
             {(filterState.tId || filterState.tId === "All") &&
@@ -1342,7 +1380,12 @@ const  RollingPlans = () => {
                     );
                   }}
                 >
-                  <MdOutlinePreview className="text-slate-400" /> View
+                  {viewLoading ? (
+                    <Loader />
+                  ) : (
+                    <MdOutlinePreview className="text-slate-400" />
+                  )}{" "}
+                  View
                 </li>
               )}
 
@@ -1393,7 +1436,12 @@ const  RollingPlans = () => {
                 );
               }}
             >
-              <VscPreview className="text-green-400" /> Review Decision
+              {reviewLoading ? (
+                <Loader />
+              ) : (
+                <VscPreview className="text-green-400" />
+              )}{" "}
+              Review Decision
             </li>
 
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -1681,7 +1729,12 @@ const  RollingPlans = () => {
                     );
                   }}
                 >
-                  <MdOutlinePreview className="text-slate-400" /> View
+                  {viewLoading ? (
+                    <Loader />
+                  ) : (
+                    <MdOutlinePreview className="text-slate-400" />
+                  )}{" "}
+                  View
                 </li>
               ))}
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -1793,7 +1846,12 @@ const  RollingPlans = () => {
                     );
                   }}
                 >
-                  <MdOutlinePreview className="text-slate-400" /> View
+                  {viewLoading ? (
+                    <Loader />
+                  ) : (
+                    <MdOutlinePreview className="text-slate-400" />
+                  )}{" "}
+                  View
                 </li>
               ))}
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -1867,7 +1925,12 @@ const  RollingPlans = () => {
                 );
               }}
             >
-              <MdOutlinePreview className="text-slate-400" /> View
+              {viewLoading ? (
+                <Loader />
+              ) : (
+                <MdOutlinePreview className="text-slate-400" />
+              )}{" "}
+              View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
@@ -1978,7 +2041,12 @@ const  RollingPlans = () => {
                     );
                   }}
                 >
-                  <MdOutlinePreview className="text-slate-400" /> View
+                  {viewLoading ? (
+                    <Loader />
+                  ) : (
+                    <MdOutlinePreview className="text-slate-400" />
+                  )}{" "}
+                  View
                 </li>
               )}
             {(filterState.zId || filterState.zId === "All") && isRole3 && (
@@ -2010,7 +2078,12 @@ const  RollingPlans = () => {
                   );
                 }}
               >
-                <VscPreview className="text-green-400" /> Review Decision
+                {reviewLoading ? (
+                  <Loader />
+                ) : (
+                  <VscPreview className="text-green-400" />
+                )}{" "}
+                Review Decision
               </li>
             )}
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
@@ -2055,7 +2128,10 @@ const  RollingPlans = () => {
                 });
               }}
             >
-              <CiEdit className="text-slate-400" /> Edit
+
+              
+              {editLoading ? <Loader /> : <CiEdit className="text-slate-400" />}{" "}
+              Edit
             </li>
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -2082,7 +2158,12 @@ const  RollingPlans = () => {
                 );
               }}
             >
-              <MdOutlinePreview className="text-slate-400" /> View
+              {viewLoading ? (
+                <Loader />
+              ) : (
+                <MdOutlinePreview className="text-slate-400" />
+              )}{" "}
+              View
             </li>
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               Previous Period
@@ -2101,6 +2182,9 @@ const  RollingPlans = () => {
     }
   };
   const [downloadLoading, setDownloadingLoading] = useState(false);
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [viewLoading, setViewLoading] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
   const handleDownloadExcelNew = async (
     m_year,
     planId,
@@ -2484,7 +2568,9 @@ const  RollingPlans = () => {
     tDes,
     rDes
   ) => {
+    if (viewLoading) return;
     let paramsData;
+
     if (filterState.tId || filterState.tId === "All") {
       paramsData = {
         year_1: yr - 2,
@@ -2605,6 +2691,7 @@ const  RollingPlans = () => {
     }
 
     try {
+      setViewLoading(true);
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/rsp_download`, {
         headers: headers,
@@ -2644,7 +2731,9 @@ const  RollingPlans = () => {
           filterState: encodeURIComponent(JSON.stringify(filterState)),
         },
       });
+      setViewLoading(false);
     } catch (error) {
+      setViewLoading(false);
       console.log("mlo", error);
     }
   };
@@ -2674,6 +2763,7 @@ const  RollingPlans = () => {
   ) => {
     let paramsData;
     console.log("mjj", filterState.buId);
+    if (reviewLoading === true) return;
     if (filterState.tId || filterState.tId === "All") {
       paramsData = {
         year_1: yr - 2,
@@ -2815,6 +2905,7 @@ const  RollingPlans = () => {
       };
     }
     try {
+      setReviewLoading(true);
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/rsp_download`, {
         headers: headers,
@@ -2856,6 +2947,7 @@ const  RollingPlans = () => {
       });
     } catch (error) {
       console.log("mlo", error);
+      setReviewLoading(false);
     }
   };
 
@@ -3135,6 +3227,7 @@ const  RollingPlans = () => {
       };
     }
     try {
+      setEditLoading(true);
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/rsp_download`, {
         headers: headers,
@@ -3174,7 +3267,9 @@ const  RollingPlans = () => {
           filterState: encodeURIComponent(JSON.stringify(filterState)),
         },
       });
+      setEditLoading(false);
     } catch (error) {
+      setEditLoading(false);
       console.log("mlo", error);
     }
   };
@@ -3273,14 +3368,14 @@ const  RollingPlans = () => {
   const isRole10 = localStorageItems.roleId === 10;
   const isRole2 = localStorageItems.roleId === 2;
 
-  const getMenuButton = () => {
+  const getMenuButton = (upload) => {
     if (localStorageItems.roleId === 11) {
       return true;
-    } else if (localStorageItems.roleId === 5) {
+    } else if (localStorageItems.roleId === 5 && upload) {
       return true;
-    } else if (localStorageItems.roleId === 4 && !filterState.tId) {
+    } else if (localStorageItems.roleId === 4 && !filterState.tId && upload) {
       return true;
-    } else if (localStorageItems.roleId === 3 && !filterState.rId) {
+    } else if (localStorageItems.roleId === 3 && !filterState.rId && upload) {
       return true;
     } else if (localStorageItems.roleId === 10 && !filterState.zId) {
       return true;
@@ -3666,7 +3761,7 @@ const  RollingPlans = () => {
                       </span>
 
                       <div className="popop">
-                        {getMenuButton() && (
+                        {getMenuButton(item.upload) && (
                           <Popover
                             as="div"
                             className="relative border-none outline-none "
