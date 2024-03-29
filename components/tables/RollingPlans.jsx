@@ -76,6 +76,12 @@ const RollingPlans = () => {
       });
       const apires = await respond.data.data;
       setAllYearData([...new Set(apires.map((item) => item.t_year))]);
+      // setFilterState({
+      //   ...filterState,
+      //   yr: [...new Set(apires.map((item) => item.t_year))][
+      //     [...new Set(apires.map((item) => item.t_year))].length - 1
+      //   ],
+      // });
     } catch (error) {}
   };
 
@@ -91,6 +97,13 @@ const RollingPlans = () => {
       const apires = await respond.data.data;
 
       setAllMonthData([...new Set(apires.map((item) => item.m_year))]);
+      // setFilterState({
+      //   ...filterState,
+      //   month: [...new Set(apires.map((item) => item.m_year))][
+      //     [...new Set(apires.map((item) => item.m_year))].length - 1
+      //   ],
+      // });
+      set;
 
       console.log("dolly", allMonthData);
     } catch (error) {}
@@ -377,22 +390,31 @@ const RollingPlans = () => {
 
   const [depotData, setDepotData] = useState([]);
 
-  const getAllDepotData = async (cId) => {
+  const getAllDepotData = async (bgId, buId, zId, rId) => {
     try {
-      const respond = await axios.get(`${url}/api/get_warehousedepot`, {
+      const respond = await axios.get(`${url}/api/get_dipot`, {
         headers: headers,
+        params: {
+          bg_id: bgId,
+          bu_id: buId,
+          z_id: zId,
+          r_id: rId,
+        },
       });
 
       const apires = await respond.data.data;
-
-      setDepotData(apires.filter((item) => item.c_id === cId));
+      setDepotData(apires);
     } catch (error) {}
   };
 
   useEffect(() => {
-    if (!JSON.parse(window.localStorage.getItem("userinfo")).c_id) return;
-    getAllDepotData(JSON.parse(window.localStorage.getItem("userinfo")).c_id);
-  }, []);
+    getAllDepotData(
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId
+    );
+  }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
 
   const [allTableData, setAllTableData] = useState([]);
   const getAllSalesPlanStatus = async (
@@ -446,7 +468,7 @@ const RollingPlans = () => {
   };
 
   useEffect(() => {
-    if (!JSON.parse(window.localStorage.getItem("userinfo")).role_id === 11)
+    if (JSON.parse(window.localStorage.getItem("userinfo")).role_id === 11)
       return;
 
     getAllSalesPlanStatus(
@@ -468,7 +490,7 @@ const RollingPlans = () => {
     filterState.tId,
   ]);
 
-  const getAllDepotSalesPlan = async (yr, month, wId) => {
+  const getAllDepotSalesPlan = async (yr, month, bgId, buId, zId, rId, wId) => {
     let endPoint;
     endPoint = "api/get_rollingdata_based_on_roll_r";
 
@@ -480,6 +502,10 @@ const RollingPlans = () => {
           t_year: yr || null,
           m_year:
             month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+          bg_id: bgId === "All" || !bgId ? null : bgId,
+          bu_id: buId === "All" || !buId ? null : buId,
+          z_id: zId === "All" || !zId ? null : zId,
+          r_id: rId === "All" || !rId ? null : rId,
           w_id: wId === "All" || !wId ? null : wId,
         },
       });
@@ -493,13 +519,27 @@ const RollingPlans = () => {
   };
 
   useEffect(() => {
-    if (!filterState.yr || !filterState.month || !filterState.wId) return;
+    if (JSON.parse(window.localStorage.getItem("userinfo")).role_id !== 11)
+      return;
+
     getAllDepotSalesPlan(
       filterState.yr || null,
       filterState.month || null,
+      filterState.bgId || null,
+      filterState.buId || null,
+      filterState.zId || null,
+      filterState.rId || null,
       filterState.wId || null
     );
-  }, [filterState.yr, filterState.month, filterState.wId]);
+  }, [
+    filterState.yr,
+    filterState.month,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.wId,
+  ]);
 
   const getStatus = (status) => {
     switch (status) {
@@ -961,7 +1001,12 @@ const RollingPlans = () => {
                   );
                 }}
               >
-                <MdOutlinePreview className="text-slate-400" /> View All
+                {viewAllLoading ? (
+                  <Loader />
+                ) : (
+                  <MdOutlinePreview className="text-slate-400" />
+                )}{" "}
+                View All
               </li>
 
               <li
@@ -978,7 +1023,11 @@ const RollingPlans = () => {
                   )
                 }
               >
-                <FaDownload className="text-slate-400" />
+                {downloadAllLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload className="text-slate-400" />
+                )}{" "}
                 All Download RP
               </li>
 
@@ -1586,39 +1635,43 @@ const RollingPlans = () => {
               JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
                 3 ||
               JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
-                10) &&
-              upload === true && (
-                <li
-                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                  onClick={() => {
-                    handleDownloadExcelEdit(
-                      mYr,
-                      planId,
-                      tranId,
-                      yr,
-                      depot,
-                      zrt,
-                      status,
-                      stage,
-                      filterState,
-                      bg,
-                      bu,
-                      z,
-                      r,
-                      t,
-                      c,
-                      w,
-                      tDes,
-                      rDes,
-                      zDes,
-                      buDes,
-                      bgDes
-                    );
-                  }}
-                >
-                  <FcApprovall className="text-green-400" /> Final Approve
-                </li>
-              )}
+                10) && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() => {
+                  handleDownloadExcelEdit(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    depot,
+                    zrt,
+                    status,
+                    stage,
+                    filterState,
+                    bg,
+                    bu,
+                    z,
+                    r,
+                    t,
+                    c,
+                    w,
+                    tDes,
+                    rDes,
+                    zDes,
+                    buDes,
+                    bgDes
+                  );
+                }}
+              >
+                {editLoading ? (
+                  <Loader />
+                ) : (
+                  <FcApproval className="text-green-400" />
+                )}{" "}
+                Final Approve
+              </li>
+            )}
 
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
@@ -1697,7 +1750,12 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <FcApprovall className="text-green-400" /> Final Approve
+                  {editLoading ? (
+                    <Loader />
+                  ) : (
+                    <FcApproval className="text-green-400" />
+                  )}{" "}
+                  Final Approve
                 </li>
               )}
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
@@ -1814,7 +1872,12 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <FcApprovall className="text-green-400" /> Final Approve
+                  {editLoading ? (
+                    <Loader />
+                  ) : (
+                    <FcApproval className="text-green-400" />
+                  )}{" "}
+                  Final Approve
                 </li>
               )}
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
@@ -2008,7 +2071,12 @@ const RollingPlans = () => {
                     );
                   }}
                 >
-                  <FcApprovall className="text-green-400" /> Final Approve
+                  {editLoading ? (
+                    <Loader />
+                  ) : (
+                    <FcApproval className="text-green-400" />
+                  )}{" "}
+                  Final Approve
                 </li>
               )}
 
@@ -2128,8 +2196,6 @@ const RollingPlans = () => {
                 });
               }}
             >
-
-              
               {editLoading ? <Loader /> : <CiEdit className="text-slate-400" />}{" "}
               Edit
             </li>
@@ -2181,9 +2247,11 @@ const RollingPlans = () => {
         );
     }
   };
-  const [downloadLoading, setDownloadingLoading] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [downloadAllLoading, setDownloadAllLoading] = useState(false);
   const [reviewLoading, setReviewLoading] = useState(false);
   const [viewLoading, setViewLoading] = useState(false);
+  const [viewAllLoading, setViewAllLoading] = useState(false);
   const [editLoading, setEditLoading] = useState(false);
   const handleDownloadExcelNew = async (
     m_year,
@@ -2326,7 +2394,7 @@ const RollingPlans = () => {
       };
     }
     try {
-      setDownloadingLoading(true);
+      setDownloadLoading(true);
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/rsp_download`, {
         headers: headers,
@@ -2370,7 +2438,7 @@ const RollingPlans = () => {
         type: "Download",
         data: {},
       });
-      setDownloadingLoading(false);
+      setDownloadLoading(false);
     } catch (error) {
       console.log("mlo", error);
     }
@@ -2386,6 +2454,7 @@ const RollingPlans = () => {
     type
   ) => {
     let paramsData;
+    if (downloadAllLoading || downloadLoading) return;
     if (type === "All") {
       paramsData = {
         year_1: yr - 2,
@@ -2404,6 +2473,7 @@ const RollingPlans = () => {
         m_year: m_year,
         json: true,
       };
+      setDownloadAllLoading(true);
     } else {
       paramsData = {
         year_1: yr - 2,
@@ -2423,6 +2493,7 @@ const RollingPlans = () => {
         m_year: m_year,
         json: true,
       };
+      setDownloadLoading(true);
     }
 
     try {
@@ -2447,8 +2518,11 @@ const RollingPlans = () => {
         type: "Download",
         data: {},
       });
+      setDownloadLoading(false);
+      setDownloadAllLoading(false);
     } catch (error) {
-      console.log("mlo", error);
+      setDownloadLoading(false);
+      setDownloadAllLoading(false);
     }
   };
 
@@ -2467,6 +2541,7 @@ const RollingPlans = () => {
     type
   ) => {
     let paramsData;
+    if (viewAllLoading || viewLoading) return;
     if (type === "All") {
       paramsData = {
         year_1: yr - 2,
@@ -2485,6 +2560,7 @@ const RollingPlans = () => {
         m_year: m_year,
         json: true,
       };
+      setViewAllLoading(true);
     } else {
       paramsData = {
         year_1: yr - 2,
@@ -2504,6 +2580,7 @@ const RollingPlans = () => {
         m_year: m_year,
         json: true,
       };
+      setViewLoading(true);
     }
 
     try {
@@ -2543,8 +2620,12 @@ const RollingPlans = () => {
           depotType: type,
         },
       });
+      setViewLoading(false);
+      setViewAllLoading(false);
     } catch (error) {
       console.log("mlo", error);
+      setViewLoading(false);
+      setViewAllLoading(false);
     }
   };
 
@@ -3368,8 +3449,11 @@ const RollingPlans = () => {
   const isRole10 = localStorageItems.roleId === 10;
   const isRole2 = localStorageItems.roleId === 2;
 
-  const getMenuButton = (upload) => {
-    if (localStorageItems.roleId === 11) {
+  const getMenuButton = (upload, status) => {
+    if (localStorageItems.roleId === 11 && status === "Final Submitted") {
+      return true;
+    }
+    if (localStorageItems.roleId === 11 && status === "Region Review Done") {
       return true;
     } else if (localStorageItems.roleId === 5 && upload) {
       return true;
@@ -3486,6 +3570,7 @@ const RollingPlans = () => {
                 All
               </option>
 
+              {console.log("adfnvo", allMonthData)}
               {allMonthData.map((item, idx) => (
                 <option value={item} key={idx}>
                   {moment(item).format("MMM YYYY")}
@@ -3500,14 +3585,13 @@ const RollingPlans = () => {
                 setFilterState({
                   ...filterState,
                   bgId: e.target.value,
-                  buId: null,
-                  zId: null,
-                  rId: null,
-                  tId: null,
+                  buId:"",
+                  zId: "",
+                  rId: "",
+                  tId: "",
                 })
               }
               disabled={
-                localStorageItems.roleId === 11 ||
                 localStorageItems.roleId === 6 ||
                 localStorageItems.roleId === 5 ||
                 localStorageItems.roleId === 4 ||
@@ -3540,7 +3624,6 @@ const RollingPlans = () => {
                 })
               }
               disabled={
-                localStorageItems.roleId === 11 ||
                 localStorageItems.roleId === 6 ||
                 localStorageItems.roleId === 5 ||
                 localStorageItems.roleId === 4 ||
@@ -3569,7 +3652,6 @@ const RollingPlans = () => {
                 })
               }
               disabled={
-                localStorageItems.roleId === 11 ||
                 localStorageItems.roleId === 6 ||
                 localStorageItems.roleId === 5 ||
                 localStorageItems.roleId === 4
@@ -3589,9 +3671,7 @@ const RollingPlans = () => {
               id="stateSelect"
               value={filterState.rId}
               disabled={
-                localStorageItems.roleId === 11 ||
-                localStorageItems.roleId === 6 ||
-                localStorageItems.roleId === 5
+                localStorageItems.roleId === 6 || localStorageItems.roleId === 5
               }
               onChange={(e) =>
                 setFilterState({
@@ -3761,7 +3841,7 @@ const RollingPlans = () => {
                       </span>
 
                       <div className="popop">
-                        {getMenuButton(item.upload) && (
+                        {getMenuButton(item.upload, item.rp_status) && (
                           <Popover
                             as="div"
                             className="relative border-none outline-none "
