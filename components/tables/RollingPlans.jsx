@@ -2,7 +2,6 @@ import React, { useEffect, useState, Fragment } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { FaDownload } from "react-icons/fa";
-import { FcApprovall } from "react-icons/io";
 import { FcApproval } from "react-icons/fc";
 import { FaUpload } from "react-icons/fa";
 import { VscPreview } from "react-icons/vsc";
@@ -115,7 +114,7 @@ const RollingPlans = () => {
   }, [filterState.yr]);
 
   useEffect(() => {
-    if (!allYearData.length) return;
+    if (!allYearData.length || new Date() >= new Date(2024, 3, 13)) return;
     const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
 
     switch (roleId) {
@@ -3585,7 +3584,7 @@ const RollingPlans = () => {
                 setFilterState({
                   ...filterState,
                   bgId: e.target.value,
-                  buId:"",
+                  buId: "",
                   zId: "",
                   rId: "",
                   tId: "",
@@ -3765,9 +3764,12 @@ const RollingPlans = () => {
                 {allTableData.map((item, idx) => (
                   <tr key={idx}>
                     <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
-                      <div className="flex items-center">
-                        <div className=""></div>
-                        <div className="ml-3">
+                      <div className="flex items-center gap-0">
+                        <div className="m-0">
+                          {" "}
+                          <FcBullish className="h-8 w-8 m-0 p-0" />
+                        </div>
+                        <div className="ml-1">
                           <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">
                             R S P-({item.tran_id})
                           </p>
