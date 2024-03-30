@@ -1237,11 +1237,11 @@ const RPTable = (props) => {
                     as="h3"
                     className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
                   >
-                    Message
+                    Collection Plan
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-center text-gray-500">
-                      Please Input Week 1 to Week 15 All figure in Lacs
+                      Please Input Week 1 to Week 5 All figure in Lacs
                     </p>
                   </div>
 

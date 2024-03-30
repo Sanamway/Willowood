@@ -7,7 +7,7 @@ export default function DragAndDrop(props) {
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef(null);
 
-  const router = useRouter();
+         const router = useRouter();
   const [jsonData, setJsonData] = useState("");
   function handleChange(e) {
     e.preventDefault();

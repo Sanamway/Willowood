@@ -1593,30 +1593,41 @@ const CollectionPlans = () => {
                 <li
                   className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
                   onClick={() => {
-                    router.push({
-                      pathname: "/cptransaction",
-                      query: {
-                        planId: planId,
-                        tranId: tranId,
-                        yr: yr,
-                        mYr: mYr,
-                        depot: depot,
-                        zrt: zrt,
-                        status: status,
-                        stage: stage,
-                        bgId: bg,
-                        buId: bu,
-                        zId: z,
-                        rId: r,
-                        tId: t,
-                        cId: c,
-                        wId: w,
-                        formType: "Add",
-                        filterState: encodeURIComponent(
-                          JSON.stringify(filterState)
-                        ),
-                      },
-                    });
+                    if (new Date(lastSubDate) > new Date()) {
+                      router.push({
+                        pathname: "/cptransaction",
+                        query: {
+                          planId: planId,
+                          tranId: tranId,
+                          yr: yr,
+                          mYr: mYr,
+                          depot: depot,
+                          zrt: zrt,
+                          status: status,
+                          stage: stage,
+                          bgId: bg,
+                          buId: bu,
+                          zId: z,
+                          rId: r,
+                          tId: t,
+                          cId: c,
+                          wId: w,
+                          formType: "Add",
+                          filterState: encodeURIComponent(
+                            JSON.stringify(filterState)
+                          ),
+                        },
+                      });
+                    } else {
+                      setIsOpen(true);
+                      setModalData({
+                        message: `Collection  Plan for the Month of Apr 24 and Closing Date ${
+                          lastSubDate.split("T")[0]
+                        } .  you can not upload after Closing Date , Please Contact your Business Unit Head for Extend the Closing Date for CP Submission .`,
+                        type: "Upload",
+                        data: {},
+                      });
+                    }
                   }}
                 >
                   <FaUpload
@@ -3953,7 +3964,8 @@ const CollectionPlans = () => {
                     as="h3"
                     className="text-[1.99rem] font-medium leading-6 text-center text-gray-900"
                   >
-                    {modalData.type === "Download"
+                    {modalData.type === "Download" ||
+                    modalData.type === "Upload"
                       ? "Collection Plan"
                       : "Delete Collection Plan"}
                   </Dialog.Title>
@@ -3969,6 +3981,11 @@ const CollectionPlans = () => {
                       </p>
                     )}
                     {modalData.type === "DeleteRes" && (
+                      <p className="text-md text-center text-gray-500">
+                        {modalData.message}
+                      </p>
+                    )}
+                    {modalData.type === "Upload" && (
                       <p className="text-md text-center text-gray-500">
                         {modalData.message}
                       </p>
