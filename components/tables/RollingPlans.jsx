@@ -1201,103 +1201,209 @@ const RollingPlans = () => {
         }
 
       case "Region Review Done":
-        return (
-          <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              disabled={downloadLoading}
-              onClick={() =>
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  filterState
-                )
-              }
-            >
-              {downloadLoading ? (
-                <Loader />
-              ) : (
-                <FaDownload className="text-slate-400" />
-              )}{" "}
-              Download RP{" "}
-            </li>
+        if (
+          JSON.parse(window.localStorage.getItem("userinfo")).role_id === 11
+        ) {
+          return (
+            <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelDepot(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    w,
+                    wDes,
+                    "Single"
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload className="text-slate-400" />
+                )}{" "}
+                Download RP{" "}
+              </li>
 
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() => {
-                handleDownloadExcelView(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  depot,
-                  zrt,
-                  status,
-                  stage,
-                  filterState,
-                  bg,
-                  bu,
-                  z,
-                  r,
-                  t,
-                  c,
-                  w,
-                  tDes,
-                  rDes
-                );
-              }}
-            >
-              {" "}
-              {viewLoading ? (
-                <Loader />
-              ) : (
-                <MdOutlinePreview className="text-slate-400" />
-              )}{" "}
-              View <MdOutlinePreview className="text-slate-400" /> View
-            </li>
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() => {
+                  handleDepotExcelView(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    depot,
+                    zrt,
+                    status,
+                    stage,
+                    filterState,
+                    w,
+                    wDes,
+                    "All"
+                  );
+                }}
+              >
+                {viewAllLoading ? (
+                  <Loader />
+                ) : (
+                  <MdOutlinePreview className="text-slate-400" />
+                )}{" "}
+                View All
+              </li>
 
-            {(filterState.tId || filterState.tId === "All") &&
-              localStorageItems.roleId === 5 && (
-                <li
-                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                  onClick={() => {
-                    setRejectDraftModal(true);
-                    setRejectModalData({
-                      ...rejectModalData,
-                      planId: planId,
-                      tranId: tranId,
-                      mYr: mYr,
-                      tId: t,
-                    });
-                  }}
-                >
-                  <GrTask className="text-orange-400" /> Reject as Draft
-                </li>
-              )}
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
-              <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
-              Vs. Actual
-            </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
-              <CgNotes className="text-blue-400" /> Meeting Note
-            </li>
-            <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
-              <GrTask className="text-orange-400" /> Task
-            </li>
-          </ul>
-        );
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelDepot(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    w,
+                    wDes,
+                    "All"
+                  )
+                }
+              >
+                {downloadAllLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload className="text-slate-400" />
+                )}{" "}
+                All Download RP
+              </li>
+
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() => {
+                  handleDepotExcelView(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    depot,
+                    zrt,
+                    status,
+                    stage,
+                    filterState,
+                    w,
+                    wDes,
+                    "Single"
+                  );
+                }}
+              >
+                {viewLoading ? (
+                  <Loader />
+                ) : (
+                  <MdOutlinePreview className="text-slate-400" />
+                )}{" "}
+                View
+              </li>
+            </ul>
+          );
+        } else {
+          return (
+            <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                disabled={downloadLoading}
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    filterState
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload className="text-slate-400" />
+                )}{" "}
+                Download RP{" "}
+              </li>
+
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() => {
+                  handleDownloadExcelView(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    depot,
+                    zrt,
+                    status,
+                    stage,
+                    filterState,
+                    bg,
+                    bu,
+                    z,
+                    r,
+                    t,
+                    c,
+                    w,
+                    tDes,
+                    rDes
+                  );
+                }}
+              >
+                {" "}
+                {viewLoading ? (
+                  <Loader />
+                ) : (
+                  <MdOutlinePreview className="text-slate-400" />
+                )}{" "}
+                View
+              </li>
+
+              {(filterState.tId || filterState.tId === "All") &&
+                localStorageItems.roleId === 5 && (
+                  <li
+                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                    onClick={() => {
+                      setRejectDraftModal(true);
+                      setRejectModalData({
+                        ...rejectModalData,
+                        planId: planId,
+                        tranId: tranId,
+                        mYr: mYr,
+                        tId: t,
+                      });
+                    }}
+                  >
+                    <GrTask className="text-orange-400" /> Reject as Draft
+                  </li>
+                )}
+              <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+                <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
+                Vs. Actual
+              </li>
+              <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+                <CgNotes className="text-blue-400" /> Meeting Note
+              </li>
+              <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
+                <GrTask className="text-orange-400" /> Task
+              </li>
+            </ul>
+          );
+        }
       case "B.U Review Done":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">

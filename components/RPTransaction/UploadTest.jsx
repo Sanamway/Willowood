@@ -156,7 +156,7 @@ export default function DragAndDrop(props) {
         <button
           onClick={() => {
             if (!props.files) {
-              window.alert("Please upload the rooling plan template xls file");
+              window.alert("Please upload the Rolling plan template xls file");
             } else {
               props.formType("RPTable");
             }

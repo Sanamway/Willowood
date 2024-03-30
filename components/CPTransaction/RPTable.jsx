@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { TbFileDownload } from "react-icons/tb";
 import { url } from "@/constants/url";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { Dialog, Transition } from "@headlessui/react";
 import * as XLSX from "xlsx";
 import SubmitModal from "../modals/SubmitModal";
-
+import toast, { Toaster } from "react-hot-toast";
 const RPTable = (props) => {
   const [isOpen, setisOpen] = useState(false);
   const [apiMessage, setApiMessage] = useState("");
@@ -178,10 +179,10 @@ const RPTable = (props) => {
             obj[header] = row[index];
           });
           return obj;
-        })  || []
+        }) || []
       );
     } else {
-      setResult(props.tableData.map  || []);
+      setResult(props.tableData.map || []);
     }
   }, [props.tableData]);
 
@@ -254,7 +255,6 @@ const RPTable = (props) => {
     setRecievedObject(JSON.parse(decodeURIComponent(router.query.filterState)));
   }, [router]);
 
- cp
   const handleColourBlock = (fcst, revised) => {
     const colorNum = (revised / fcst) * 100 - 100;
     const positiveColorNum = Math.abs(colorNum);
@@ -285,6 +285,17 @@ const RPTable = (props) => {
   };
 
   const handleSaveRsp = async (status) => {
+    if (
+      totalSumObject[Object.keys(totalSumObject)[13]] +
+        totalSumObject[Object.keys(totalSumObject)[14]] +
+        totalSumObject[Object.keys(totalSumObject)[15]] +
+        totalSumObject[Object.keys(totalSumObject)[16]] +
+        totalSumObject[Object.keys(totalSumObject)[17]] ===
+      0
+    ) {
+      toast.error("Total Collection value can not be 0");
+      return;
+    }
     try {
       let endPoint;
 
@@ -374,6 +385,17 @@ const RPTable = (props) => {
     ? JSON.parse(decodeURIComponent(router.query.filterState))
     : {};
   const handleEditRsp = async (status) => {
+    if (
+      totalSumObject[Object.keys(totalSumObject)[13]] +
+        totalSumObject[Object.keys(totalSumObject)[14]] +
+        totalSumObject[Object.keys(totalSumObject)[15]] +
+        totalSumObject[Object.keys(totalSumObject)[16]] +
+        totalSumObject[Object.keys(totalSumObject)[17]] ===
+      0
+    ) {
+      toast.error("Total Collection value can not be 0");
+      return;
+    }
     try {
       let endPoint;
       const receivedObject = router.query.filterState
@@ -458,8 +480,13 @@ const RPTable = (props) => {
     }
   };
   const [buttonLoadingState, setButtonLoadingState] = useState(false);
+
+  const [oneTimeMessage, setOneTimeMessage] = useState(
+    router.query.formType === "Add" ? true : false
+  );
   return (
     <section className="mt-1 mb-24 outer relative flex flex-col items-center justify-center w-full font-arial">
+      <Toaster position="bottom-center" reverseOrder={false} />
       {buttonLoadingState && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 ">
           <img
@@ -471,6 +498,7 @@ const RPTable = (props) => {
       )}
       <SubmitModal
         isOpen={isOpen}
+        isCp={true}
         territoryId={receivedObject.tId}
         onClose={() => {
           setisOpen(false);
@@ -604,68 +632,68 @@ const RPTable = (props) => {
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-blue-600 text-left "
+                        className="px-2 py-1 text-blue-600 text-left border-l-2"
                       >
                         {props.headerData[Object.keys(props.headerData)[2]]}
                       </th>
 
                       <th
                         scope="col"
-                        className="px-2 py-1 text-blue-600 text-left "
+                        className="px-2 py-1 text-blue-600 text-left border-l-2"
                       >
                         {props.headerData[Object.keys(props.headerData)[3]]}
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-blue-600 text-right"
+                        className="px-2 py-1 text-blue-600 text-right border-l-2"
                       >
                         {props.headerData[Object.keys(props.headerData)[4]]}
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1    text-blue-600 text-right"
+                        className="px-2 py-1    text-blue-600 text-right border-l-2"
                       >
                         {props.headerData[Object.keys(props.headerData)[5]]}
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-blue-600 text-right"
+                        className="px-2 py-1 text-blue-600 text-right border-l-2"
                       >
                         {props.headerData[Object.keys(props.headerData)[6]]}
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-blue-600 text-right"
+                        className="px-2 py-1 text-blue-600 text-right border-l-2"
                       >
                         {props.headerData[Object.keys(props.headerData)[7]]}
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-blue-600 text-right"
+                        className="px-2 py-1 text-blue-600 text-right border-l-2"
                       >
                         {props.headerData[Object.keys(props.headerData)[8]]}
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-blue-600 text-right"
+                        className="px-2 py-1 text-blue-600 text-right border-l-2"
                       >
                         {props.headerData[Object.keys(props.headerData)[9]]}
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-blue-600 text-right"
+                        className="px-2 py-1 text-blue-600 text-right border-l-2"
                       >
                         {props.headerData[Object.keys(props.headerData)[10]]}
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-blue-600 text-right"
+                        className="px-2 py-1 text-blue-600 text-right border-l-2"
                       >
                         {props.headerData[Object.keys(props.headerData)[11]]}
                       </th>
                       <th
                         scope="col"
-                        className="px-2 py-1 text-blue-600 text-right"
+                        className="px-2 py-1 text-blue-600 text-right border-l-2"
                       >
                         {props.headerData[Object.keys(props.headerData)[12]]}
                       </th>
@@ -712,52 +740,64 @@ const RPTable = (props) => {
                   <tbody>
                     {result?.map((item) => {
                       return (
-                        <tr className="border-b dark:border-gray-700 bg-white text-gray-600 text-xs">
+                        <tr
+                          className={`border-b dark:border-gray-700  text-gray-600 text-xs ${
+                            item[Object.keys(item)[4]] > 0
+                              ? "bg-white"
+                              : "bg-yellow-200"
+                          }`}
+                        >
                           <th
                             scope="row"
                             className="px-4  py-1 font-medium whitespace-nowrap"
                           >
                             {item[Object.keys(item)[1]]}
                           </th>
-                          <td className="px-4 py-1 text-left  whitespace-nowrap">
+                          <td className="px-4 py-1 text-left  whitespace-nowrap border-l-2">
                             {item[Object.keys(item)[2]]}
                           </td>
 
                           <th
                             scope="row"
-                            className="px-4  py-1 text-left  font-medium whitespace-nowrap"
+                            className="px-4  py-1 text-left  font-medium whitespace-nowrap border-l-2"
                           >
                             {item[Object.keys(item)[3]]}
                           </th>
-                          <td className="px-4 py-1 text-right ">
+                          <td className="px-4 py-1 text-right border-l-2">
                             {item[Object.keys(item)[4]]?.toFixed(2)}
                           </td>
-                          <td className="px-4 py-1 text-right ">
+                          <td className="px-4 py-1 text-right border-l-2">
                             {item[Object.keys(item)[5]]?.toFixed(2)}
                           </td>
 
-                          <td className="px-4 py-1 text-right ">
+                          <td className="px-4 py-1 text-right border-l-2">
                             {item[Object.keys(item)[6]]?.toFixed(2)}
                           </td>
-                          <td className="px-4 py-1 text-right">
+                          <td className="px-4 py-1 text-right border-l-2">
                             {item[Object.keys(item)[7]]?.toFixed(2)}
                           </td>
-                          <td className="px-4 py-1 text-right">
+                          <td className="px-4 py-1 text-right border-l-2">
                             {item[Object.keys(item)[8]]?.toFixed(2)}
                           </td>
-                          <td className="px-4 py-1 text-right">
+                          <td className="px-4 py-1 text-right border-l-2">
                             {item[Object.keys(item)[9]]?.toFixed(2)}
                           </td>
-                          <td className="px-4 py-1 text-right">
+                          <td className="px-4 py-1 text-right border-l-2">
                             {item[Object.keys(item)[10]]?.toFixed(2)}
                           </td>
-                          <td className="px-4 py-1 text-right">
+                          <td className="px-4 py-1 text-right border-l-2">
                             {item[Object.keys(item)[11]]?.toFixed(2)}
                           </td>
-                          <td className="px-4 py-1 text-right">
+                          <td className="px-4 py-1 text-right border-l-2">
                             {item[Object.keys(item)[12]]?.toFixed(2)}
                           </td>
-                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right">
+                          <td
+                            className={`px-2 py-1   text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right ${
+                              item[Object.keys(item)[4]] > 0
+                                ? "bg-[#BBF7D0]"
+                                : "bg-yellow-200"
+                            }`}
+                          >
                             <input
                               type="number"
                               value={item[Object.keys(item)[13]]}
@@ -780,7 +820,13 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right">
+                          <td
+                            className={`px-2 py-1   text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right ${
+                              item[Object.keys(item)[4]] > 0
+                                ? "bg-[#BBF7D0]"
+                                : "bg-yellow-200"
+                            }`}
+                          >
                             <input
                               type="number"
                               value={item[Object.keys(item)[14]]}
@@ -803,7 +849,13 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right">
+                          <td
+                            className={`px-2 py-1   text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right ${
+                              item[Object.keys(item)[4]] > 0
+                                ? "bg-[#BBF7D0]"
+                                : "bg-yellow-200"
+                            }`}
+                          >
                             <input
                               type="number"
                               value={item[Object.keys(item)[15]]}
@@ -826,7 +878,13 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right">
+                          <td
+                            className={`px-2 py-1   text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right ${
+                              item[Object.keys(item)[4]] > 0
+                                ? "bg-[#BBF7D0]"
+                                : "bg-yellow-200"
+                            }`}
+                          >
                             <input
                               type="number"
                               value={item[Object.keys(item)[16]]}
@@ -849,7 +907,13 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right">
+                          <td
+                            className={`px-2 py-1   text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right ${
+                              item[Object.keys(item)[4]] > 0
+                                ? "bg-[#BBF7D0]"
+                                : "bg-yellow-200"
+                            }`}
+                          >
                             <input
                               type="number"
                               value={item[Object.keys(item)[17]]}
@@ -872,7 +936,13 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-                          <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right">
+                          <td
+                            className={`px-2 py-1   text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right ${
+                              item[Object.keys(item)[4]] > 0
+                                ? "bg-[#BBF7D0]"
+                                : "bg-yellow-200"
+                            }`}
+                          >
                             {item[Object.keys(item)[13]] +
                               item[Object.keys(item)[14]] +
                               item[Object.keys(item)[15]] +
@@ -1132,6 +1202,64 @@ const RPTable = (props) => {
             Reject as Draft
           </button>
         )}
+
+      <Transition appear show={oneTimeMessage} as={Fragment}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          onClose={() => setOneTimeMessage(false)}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
+                  >
+                    Message
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <p className="text-sm text-center text-gray-500">
+                      Please Input Week 1 to Week 15 All figure in Lacs
+                    </p>
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-center">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={() => setOneTimeMessage(false)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </section>
   );
 };

@@ -24,6 +24,7 @@ import * as XLSX from "xlsx";
 import { Dialog, Transition } from "@headlessui/react";
 import { MdDelete } from "react-icons/md";
 import moment from "moment";
+import { FcBullish } from "react-icons/fc";
 const CollectionPlans = () => {
   const [successOpen, setSuccessOpen] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -2434,6 +2435,8 @@ const CollectionPlans = () => {
       });
       setDownloadLoading(false);
     } catch (error) {
+      const errorMessage = error?.response?.data?.message;
+      toast.error(errorMessage);
       setDownloadLoading(false);
     }
   };
@@ -2511,6 +2514,8 @@ const CollectionPlans = () => {
         data: {},
       });
     } catch (error) {
+      const errorMessage = error?.response?.data?.message;
+      toast.error(errorMessage);
       setDownloadLoading(false);
     }
   };
@@ -2614,8 +2619,9 @@ const CollectionPlans = () => {
       });
       setViewLoading(false);
     } catch (error) {
+      const errorMessage = error?.response?.data?.message;
+      toast.error(errorMessage);
       setViewLoading(false);
-      console.log("mlo", error);
     }
   };
 
@@ -2732,8 +2738,9 @@ const CollectionPlans = () => {
       });
       setViewLoading(false);
     } catch (error) {
+      const errorMessage = error?.response?.data?.message;
+      toast.error(errorMessage);
       setViewLoading(false);
-      console.log("mlo", error);
     }
   };
 
@@ -2944,7 +2951,8 @@ const CollectionPlans = () => {
       });
     } catch (error) {
       setDownloadLoading(false);
-      console.log("mlo", error);
+      const errorMessage = error?.response?.data?.message;
+      toast.error(errorMessage);
     }
   };
 
@@ -3054,7 +3062,8 @@ const CollectionPlans = () => {
       });
     } catch (error) {
       setDownloadLoading(false);
-      console.log("mlo", error);
+      const errorMessage = error?.response?.data?.message;
+      toast.error(errorMessage);
     }
   };
 
@@ -3240,7 +3249,7 @@ const CollectionPlans = () => {
       );
     } catch (error) {
       setDownloadLoading(false);
-      const errorMessage = error?.response?.data?.error;
+      const errorMessage = error?.response?.data?.message;
       setModalData({
         message: errorMessage,
         type: "DeleteRes",
@@ -3601,9 +3610,12 @@ const CollectionPlans = () => {
                 {allTableData.map((item, idx) => (
                   <tr key={idx}>
                     <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
-                      <div className="flex items-center">
-                        <div className=""></div>
-                        <div className="ml-3">
+                      <div className="flex items-center gap-0">
+                        <div className="m-0">
+                          {" "}
+                          <FcBullish className="h-8 w-8 m-0 p-0" />
+                        </div>
+                        <div className="ml-1">
                           <p className="text-gray-900 whitespace-no-wrap text-xs font-semibold">
                             C P-({item.tran_id})
                           </p>

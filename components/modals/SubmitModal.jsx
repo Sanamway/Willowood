@@ -14,48 +14,30 @@ function SubmitModal({
   endpoints,
   message,
   territoryId,
+  isCp,
 }) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   "Annual Budget Qty 23-24",
-  "Annual Budget Val 23-24",
-  "DECEMBER 22-23 Sale Qty",
-  "DECEMBER 23-24 Fcst Qty",
-  "DECEMBER 23-24 Fcst Val",
-  "DECEMBER 23-24 Revised Fcst Qty",
-  "DECEMBER 23-24 Revised Fcst Val",
-  "DECEMBER 23-24 Urgent Qty",
-  "DECEMBER Budget Qty 23-24",
-  "DECEMBER Budget Val 23-24",
-  "Expected Return Qty",
-  "FY Sales Qty 21-22",
-  "FY Sales Qty 22-23",
-  "FY Sales Val 21-22",
-  "FY Sales Val 22-23",
-  "JANUARY 22-23 Sale Qty",
-  "JANUARY 23-24 Fcst Qty",
-  "JANUARY 23-24 Fcst Val",
-  "JANUARY Budget Qty 23-24",
-  "JANUARY Budget Val 23-24",
-  "Ytd Net Sale Qty 23-24",
-  "Ytd Net Sale Value 23-24"
-
-
-
-
-
+    "Annual Budget Val 23-24",
+    "DECEMBER 22-23 Sale Qty",
+    "DECEMBER 23-24 Fcst Qty",
+    "DECEMBER 23-24 Fcst Val",
+    "DECEMBER 23-24 Revised Fcst Qty",
+    "DECEMBER 23-24 Revised Fcst Val",
+    "DECEMBER 23-24 Urgent Qty",
+    "DECEMBER Budget Qty 23-24",
+    "DECEMBER Budget Val 23-24",
+    "Expected Return Qty",
+    "FY Sales Qty 21-22",
+    "FY Sales Qty 22-23",
+    "FY Sales Val 21-22",
+    "FY Sales Val 22-23",
+    "JANUARY 22-23 Sale Qty",
+    "JANUARY 23-24 Fcst Qty",
+    "JANUARY 23-24 Fcst Val",
+    "JANUARY Budget Qty 23-24",
+    "JANUARY Budget Val 23-24",
+    "Ytd Net Sale Qty 23-24",
+    "Ytd Net Sale Value 23-24";
 
   const headers = {
     "Content-Type": "application/json",
@@ -127,7 +109,7 @@ function SubmitModal({
                     as="h3"
                     className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
                   >
-                    Rolling Plans
+                    {isCp ? "Collection Plans" : "Rolling Plans"}
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-center text-gray-500">
