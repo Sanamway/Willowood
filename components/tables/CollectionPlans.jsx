@@ -1593,7 +1593,12 @@ const CollectionPlans = () => {
                 <li
                   className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
                   onClick={() => {
-                    if (new Date(lastSubDate) > new Date()) {
+                    let last = new Date(lastSubDate);
+                    last.setHours(23);
+                    last.setMinutes(59);
+                    last.setSeconds(59);
+                    last.setMilliseconds(999);
+                    if (new Date(last) > new Date()) {
                       router.push({
                         pathname: "/cptransaction",
                         query: {

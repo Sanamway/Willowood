@@ -9,33 +9,64 @@ import WillLogo from "../../public/NewLogo.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { url } from "@/constants/url";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const Navbar = () => {
   const [isOpen, setOpen] = useState(false);
-  const [userImg, setUserImg] = useState(null)
-  const router = useRouter()
+  const [userImg, setUserImg] = useState(null);
+  const [uid, setUid] = useState("");
+
+  const router = useRouter();
   const toggleDrawer = () => {
     console.log("Hello");
     setOpen(!isOpen);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("uid");
-    localStorage.removeItem("user_name");
-    localStorage.removeItem("email_id");
-    router.push("/logoutsuccess");
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+  };
+
+  const handleLogout = async () => {
+    try {
+      const resp = await axios.get(`${url}/api/logout?user_id=${uid}`, {
+        headers: headers,
+      });
+      const respdata = await resp.data;
+      console.log("Logo", respdata);
+      if (!respdata) {
+        return;
+      }
+      if (respdata.status) {
+        localStorage.removeItem("uid");
+        localStorage.removeItem("user_name");
+        localStorage.removeItem("email_id");
+        localStorage.removeItem("userinfo");
+        localStorage.removeItem("phone_number");
+        localStorage.removeItem("mode");
+        toast.success(respdata.message);
+        setTimeout(() => router.push("/logoutsuccess"), 1000);
+      }
+    } catch (error) {
+      console.log("logoeee", error);
+    }
   };
 
   useEffect(() => {
     if (window.localStorage) {
-      const userImg = localStorage.getItem("ImageLink")
-      setUserImg(userImg)
+      const userImg = localStorage.getItem("ImageLink");
+      const uid = localStorage.getItem("uid");
+      setUid(uid);
+      setUserImg(userImg);
     }
-  }, [])
+  }, []);
 
   return (
     <>
-      <div className="nav-container bg-[#15283C] h-[60px] flex justify-between items-center pl-[15px] w-[1600px] max-w-full m-auto hidden">
+      <div className="nav-container bg-[#15283C] h-[60px] flex justify-between items-center pl-[15px] w-[1600px] max-w-full m-auto">
+        <Toaster position="bottom-center" reverseOrder={false} />
         <a href="/" className="logo w-[200px]">
           <Image
             alt="mr_app"
@@ -121,13 +152,24 @@ const Navbar = () => {
       <nav className="mobo-nav md:hidden  ">
         <header className="mobo-nav-bar h-[60px] z-30  shadow-md bg-[#15283C] flex justify-between items-center fixed top-0 left-0 right-0 px-[15px] ">
           <div className="mob-items flex items-center gap-3 ">
-            <span onClick={toggleDrawer} className="hamburger hover:text-blue-800">
+            <span
+              onClick={toggleDrawer}
+              className="hamburger hover:text-blue-800"
+            >
               {!isOpen ? (
                 // <FaRegUserCircle className="text-orange-500" size={30}></FaRegUserCircle>
-                <img src={userImg}  className="text-orange-500 h-8 w-8 rounded-full" size={30}></img>
+                <img
+                  src={userImg}
+                  className="text-orange-500 h-8 w-8 rounded-full"
+                  size={30}
+                ></img>
               ) : (
                 // <FaRegUserCircle className="text-orange-500" size={30}></FaRegUserCircle>
-                <img src={userImg}  className="text-orange-500 h-8 w-8 rounded-full" size={30}></img>
+                <img
+                  src={userImg}
+                  className="text-orange-500 h-8 w-8 rounded-full"
+                  size={30}
+                ></img>
               )}
             </span>
             <a href="/" className="logo h-[40px] w-[120px] ">
@@ -145,8 +187,14 @@ const Navbar = () => {
             </a>
           </div>
           <div className="flex items-center  py-0.5 gap-4 justify-center ">
-            <IoSearchOutline className="text-orange-500" size={26}></IoSearchOutline>
-            <TbMessageChatbot className="text-white" size={28}></TbMessageChatbot>
+            <IoSearchOutline
+              className="text-orange-500"
+              size={26}
+            ></IoSearchOutline>
+            <TbMessageChatbot
+              className="text-white"
+              size={28}
+            ></TbMessageChatbot>
           </div>
 
           <main
@@ -159,7 +207,10 @@ const Navbar = () => {
               <div className=" flex  items-center justify-between">
                 <div className="flex flex-col items-start justify-center w-full mt-4 gap-8">
                   <div className="flex items-center justify-between w-full">
-                    <Link href={"/profile"} className="flex items-center justify-between w-full">
+                    <Link
+                      href={"/profile"}
+                      className="flex items-center justify-between w-full"
+                    >
                       <h2 className="font-semibold font-arial">My Profile</h2>
                       <IoIosArrowForward className="text-gray-300"></IoIosArrowForward>
                     </Link>

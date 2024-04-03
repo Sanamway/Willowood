@@ -15,6 +15,7 @@ const Login = () => {
   const [phone, setPhone] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [isLoggedMode, setLoggedMode] = useState(null);
 
   const headers = {
     "Content-Type": "application/json",
@@ -24,10 +25,10 @@ const Login = () => {
   const loginHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
-         console.log("data", phone);
+    console.log("data", phone);
     if (phone.length < 10) {
       toast.error("Enter the valid Mobile number");
-      setLoading(false)
+      setLoading(false);
       return;
     }
     const payload = {
@@ -38,13 +39,26 @@ const Login = () => {
         headers: headers,
       });
       const respdata = await resp.data;
+      console.log("check", respdata);
+      // return
+      if (respdata.message == "OTP sent successfully!") {
+        toast.success(respdata.message);
+        const uuid = respdata.data;
+        setTimeout(() => {
+          router.push({
+            pathname: `/otp`,
+            query: { phone_number: phone, uid: uuid },
+          });
+        }, 1000);
+      }
       const phone_number = respdata?.data?.loginHistory?.phone_no;
       const uid = respdata?.data.uid || respdata?.data?.loginHistory.uid;
 
       const email_id = respdata?.data?.loginHistory?.email_id;
       const user_name = respdata?.data?.loginHistory?.user_name;
       const _id = respdata?.data?.loginHistory?._id;
-
+      const mode = respdata?.data?.loginHistory?.mode;
+      setLoggedMode(mode);
       // console.log("datas", respdata?.data?.loginHistory)
       // console.log("status", respdata?.status)
 
@@ -61,7 +75,7 @@ const Login = () => {
         setTimeout(() => {
           router.push({
             pathname: `/otp`,
-            query: { phone_number: phone_number, uid: uid }
+            query: { phone_number: phone_number, uid: uid },
           });
         }, 1000);
       } else {
@@ -71,14 +85,21 @@ const Login = () => {
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("id", _id);
         localStorage.setItem("userinfo", JSON.stringify(userinfo));
-
-        router.push("/");
+        if (mode == "mobile") {
+          router.push("/MR_Portal_Apps/MRHome");
+        } else {
+          router.push("/");
+        }
       }
     } catch (error) {
       console.log("re", error);
       console.log("err", error?.response?.data?.message);
+      if (error?.response?.data?.message) {
+        toast.error(error?.response?.data?.message);
+      }
       const errorMessage = error?.response?.data?.message;
       const status = error?.response?.data?.status;
+
       if (errorMessage && status == false) {
         console.log("loginms", errorMessage == "OTP is not verified");
 
@@ -100,7 +121,7 @@ const Login = () => {
         }
 
         if (errorMessage == "Invalid User Login mobile no") {
-          toast.error(errorMessage);
+          // toast.error(errorMessage);
           setLoading(false);
           return;
         }
@@ -108,7 +129,7 @@ const Login = () => {
         if (errorMessage == "OTP is not verified") {
           router.push({
             pathname: `/otp`,
-            query: { phone_number: phone }
+            query: { phone_number: phone, uid: uid },
           });
         }
       }
@@ -125,6 +146,9 @@ const Login = () => {
   useEffect(() => {
     if (isLoggedIn) {
       router.push("/");
+    } else if (isLoggedIn && isLoggedMode == "mobile") {
+      router.push("/mrhome");
+    } else {
     }
   }, [isLoggedIn]);
 
@@ -161,13 +185,17 @@ const Login = () => {
                 </label>
                 <input
                   className="bg-transparent text-black py-1.5 max-w-full text-start outline-none border-0 placeholder:text-black text-sm border-black border-b-2 border-white-200"
-                  type="tel"
+                  type="number"
                   placeholder="Type your Mobile Number"
-                  pattern="[6789][0-9]{9}"
-                  title="Enter Valid Number"
-                  minLength={10}
-                  maxLength={10}
+                  // pattern="[6789][0-9]{9}"
+                  // title="Enter Valid Number"
+                  // minLength={10}
+                  // maxLength={10}
+                  value={phone}
                   onChange={(e) => {
+                    if (e.target.value.length > 10) {
+                      return;
+                    }
                     setPhone(e.target.value);
                   }}
                 />

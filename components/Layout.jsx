@@ -10,7 +10,7 @@ import { MdLogout } from "react-icons/md";
 import WillLogo from "../public/NewLogo.png";
 import { Popover } from "@headlessui/react";
 import { useRouter } from "next/router";
-
+import menuItems from "@/constants/sidebarMenus";
 import axios from "axios";
 import { url } from "@/constants/url";
 import Link from "next/link";
@@ -18,6 +18,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import WhatsAppChat from "../public/whatsappchat.webp";
 import { FcVoicePresentation } from "react-icons/fc";
+import toast, { Toaster } from "react-hot-toast";
 
 const Layout = ({ children }) => {
   const router = useRouter();
@@ -35,13 +36,6 @@ const Layout = ({ children }) => {
 
   const collaps = () => {
     setOpen(!isOpen);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("uid");
-    localStorage.removeItem("user_name");
-    localStorage.removeItem("email_id");
-    router.push("/logoutsuccess");
   };
 
   const handleWindowSizeChange = () => {
@@ -63,6 +57,7 @@ const Layout = ({ children }) => {
   const [userinfo, setUserInfo] = useState("");
   const [menusItems, setMenus] = useState([]);
   const [phone_number, setPhoneNumber] = useState("");
+  const [mode, setMode] = useState("");
 
   useEffect(() => {
     if (window.localStorage) {
@@ -73,6 +68,8 @@ const Layout = ({ children }) => {
       const phone_number = localStorage.getItem("phone_number");
       const userinfoo = localStorage.getItem("userinfo");
       const sidemenus = localStorage.getItem("SideMenus");
+      const mode = localStorage.getItem("mode");
+      setMode(mode);
       setUser(isLoggedInInLocalStorage);
       setEmailId(email_id);
       setUsername(user_name);
@@ -84,8 +81,17 @@ const Layout = ({ children }) => {
 
     if (!localStorage.getItem("uid")) {
       router.push("/login");
+      return;
     }
+
+    // if (localStorage.getItem("mode") == "mobile") {
+    //   router.push("/mrhome");
+    // } else {
+    //   router.push("/");
+    // }
   }, []);
+
+
 
   const headers = {
     "Content-Type": "application/json",
@@ -106,6 +112,39 @@ const Layout = ({ children }) => {
     }
   };
 
+  const payload = {
+    user_id: uid
+  };
+  const handleLogout = async () => {
+    // localStorage.removeItem("uid");
+    // localStorage.removeItem("user_name");
+    // localStorage.removeItem("email_id");
+    // router.push("/logoutsuccess");
+    console.log("pay", payload);
+    try {
+      const resp = await axios.get(`${url}/api/logout?user_id=${uid}`, {
+        headers: headers
+      });
+      const respdata = await resp.data;
+      console.log("Logo", respdata);
+      if (!respdata) {
+        return;
+      }
+      if (respdata.status) {
+        localStorage.removeItem("uid");
+        localStorage.removeItem("user_name");
+        localStorage.removeItem("email_id");
+        localStorage.removeItem("userinfo");
+        localStorage.removeItem("phone_number");
+        localStorage.removeItem("mode");
+        toast.success(respdata.message);
+        setTimeout(() => router.push("/logoutsuccess"), 1000);
+      }
+    } catch (error) {
+      console.log("logoeee", error);
+    }
+  };
+
   useEffect(() => {
     if (uid) gettingMenuSidebar(uid);
   }, [uid]);
@@ -120,7 +159,7 @@ const Layout = ({ children }) => {
       const respData = await res.data;
       console.log("Image", respData?.data?.image_url);
       setUserImage(respData?.data?.image_url);
-      localStorage.setItem("ImageLink",respData?.data?.image_url)
+      localStorage.setItem("ImageLink", respData?.data?.image_url);
     } catch (error) {
       console.log("Error", error);
     }
@@ -150,7 +189,7 @@ const Layout = ({ children }) => {
     }
   };
 
-const messageContent = `
+  const messageContent = `
 *Willowood Support*
 
 Hello! It's really great to see you here. Tell us just a few details about you and we are ready to start.
@@ -334,15 +373,18 @@ Application End User
                 </div>
 
                 <div className="flex items-center justify-center  ">
-                  <div className="icons mx-4 lg:mx-8">
-                    <div className="flex items-center gap-4 ">
-                      <BsBell size={24}></BsBell>
-                      <BsQuestionSquare size={22}></BsQuestionSquare>
-                      <AiOutlineMail size={23}></AiOutlineMail>
-                    </div>
-                  </div>
-
                   {!isMobile && (
+                    <div className="icons mx-4 lg:mx-8">
+                      <div className="flex items-center gap-4 ">
+                        <BsBell size={24}></BsBell>
+                        <BsQuestionSquare size={22}></BsQuestionSquare>
+                        <AiOutlineMail size={23}></AiOutlineMail>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* just below removed the !isMobile to show  on mobile as well */}
+                  {
                     <div className="bg-[#ff5722] max-h-full mx-0 font-arial relative">
                       <div className="flex items-center px-4 py-[0.4rem] h-full gap-1">
                         <img
@@ -393,7 +435,7 @@ Application End User
                         </Popover>
                       </div>
                     </div>
-                  )}
+                  }
                 </div>
               </div>
             </nav>
@@ -401,13 +443,13 @@ Application End User
           {/* Main Content Area */}
           <div className="flex-grow bg-gray relative bg-white h-screen overflow-auto ">
             {children}
-            <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
+            {/* <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
               <div className=" cursor-pointer w-12 h-12 rounded-full  px-2 py-2 bg-green-600">
                 <Image src={WhatsAppChat} alt="whatsapp" />
               </div>
-            </div>
+            </div> */}
 
-            <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 group">
+            {/* <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 group">
               <div
                 onClick={sendWhatsApp}
                 className="cursor-pointer w-12 h-12 rounded-full px-2 py-2 bg-green-600 "
@@ -423,9 +465,10 @@ Application End User
                 <Image data-tooltip-target="tooltip-default" src={WhatsAppChat} alt="whatsapp" />
               </div>
               <contentMessage />
-            </div>
+            </div> */}
           </div>
         </div>
+        <Toaster position="bottom-center" reverseOrder={false} />
       </div>
     </>
   );

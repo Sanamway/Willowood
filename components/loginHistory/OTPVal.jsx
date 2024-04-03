@@ -15,6 +15,7 @@ const OTPVal = () => {
   const router = useRouter();
   const { phone_number, uid } = router.query;
   const [otp, setOtp] = useState("");
+  const [isVerifying, setVerifying] = useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -26,11 +27,12 @@ const OTPVal = () => {
   const handleVerify = async (e) => {
     e.preventDefault();
     console.log("otp", otp);
-
+    setVerifying(true);
     // return;
 
     if (otp.length < 6) {
       toast.error("Invalid OTP");
+      setVerifying(false);
       return;
     }
     const payload = {
@@ -47,9 +49,27 @@ const OTPVal = () => {
       const respdata = await resp.data;
 
       console.log("uid", respdata?.data?.uid);
-      const uid = respdata?.data?.uid;
-      const email = respdata?.data?.email_id;
-      const userName = respdata?.data?.user_name;
+      console.log("otpval", respdata);
+      // const uid = respdata?.data?.uid;
+      // const email = respdata?.data?.email_id;
+      // const userName = respdata?.data?.user_name;
+
+      const phone_number = respdata?.data?.loginHistory?.phone_no;
+      const uid = respdata?.data.uid || respdata?.data?.loginHistory.uid;
+
+      const email = respdata?.data?.loginHistory?.email_id;
+      const userName = respdata?.data?.loginHistory?.user_name;
+      const _id = respdata?.data?.loginHistory?._id;
+      const mode = respdata?.data?.loginHistory?.mode;
+      const userinfo = respdata?.data?.userBSTDetails;
+
+      localStorage.setItem("uid", uid);
+      localStorage.setItem("email_id", email);
+      localStorage.setItem("phone_number", phone_number);
+      localStorage.setItem("user_name", userName);
+      localStorage.setItem("id", _id);
+      localStorage.setItem("mode", mode);
+      localStorage.setItem("userinfo", JSON.stringify(userinfo));
 
       if (uid) {
         localStorage.setItem("uid", uid);
@@ -61,18 +81,23 @@ const OTPVal = () => {
         localStorage.setItem("userName", userName);
       }
 
-      toast.success(respdata?.message);
       if (respdata?.message) {
+        toast.success(respdata?.message, { autoClose: 500 });
         setTimeout(() => {
-          router.push("/");
-        }, 1000);
+          if (mode == "mobile") {
+            router.push("/MR_Portal_Apps/MRHome");
+          } else {
+            router.push("/");
+          }
+        }, 1500);
       }
     } catch (error) {
       console.log("dfd", error);
       console.log("err", error?.response?.data?.message);
       const errorMessage = error?.response?.data?.message;
       if (errorMessage) {
-        toast.error(errorMessage);
+        setVerifying(false);
+        toast.error(errorMessage, { autoClose: 1000 });
       }
     }
   };
@@ -125,17 +150,15 @@ const OTPVal = () => {
               </div>
               <div className="flex items-center justify-center mt-4">
                 <button
-                  // onClick={() => {
-                  //   router.push("/");
-                  // }}
+                  type="submit"
                   onClick={handleVerify}
-                  className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full uppercase text-sm text-white"
+                  className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full  text-sm text-white"
                 >
-                  Verify
+                  {isVerifying ? "Verifying..." : "Verify"}
                 </button>
               </div>
 
-              <div className="googleWrap flex items-center flex-col justify-center mt-10">
+              {/* <div className="googleWrap flex items-center flex-col justify-center mt-10">
                 <h2 className="text-gray-600">or sign up using</h2>
                 <div className="icons flex items-center justify-center gap-2 mt-2 mb-4">
                   <BsFacebook className="text-blue-600" size={26}></BsFacebook>
@@ -149,7 +172,7 @@ const OTPVal = () => {
                     size={29}
                   ></AiFillGoogleCircle>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

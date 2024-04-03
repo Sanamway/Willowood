@@ -19,7 +19,7 @@ const RPSummary = (props) => {
   const [isOpen, setisOpen] = useState(false);
   const [apiMessage, setApiMessage] = useState("");
   const submitHandle = (status) => {
-    updateRollingPlanStatus(status);
+    // updateRollingPlanStatus(status);
     setisOpen(true);
   };
   const updateRollingPlanStatus = async (status) => {
@@ -234,6 +234,9 @@ const RPSummary = (props) => {
       const respond = await axios
         .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
           headers: headers,
+          params: {
+            rp_status: status,
+          },
         })
         .then((res) => {
           if (!res) return;
@@ -320,6 +323,9 @@ const RPSummary = (props) => {
       const respond = await axios
         .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
           headers: headers,
+          params: {
+            rp_status: status,
+          },
         })
         .then((res) => {
           console.log("mkl", res);
