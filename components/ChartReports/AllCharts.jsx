@@ -1,22 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+
 import ChartOne from "./ChartOne";
 import ChartTwo from "./ChartTwo";
 import ChartThree from "./ChartThree";
-import TableChart from "./TableChart";
-import TableChartOne from "./TableChartOne";
+
 import TableChartTwo from "./TableChartTwo";
-import {
-  businessSegment,
-  chartData,
-  businessUnit,
-  zoneData,
-  regionData,
-} from "./sample";
-import { zonelabel, regionLable, territoryLable } from "./labels";
-import dummyData from "./TableData";
-import { url } from "@/constants/url";
-import axios from "axios";
 
 const AllCharts = (props) => {
   const [territoryGraphData, setTerritoryGraphData] = useState([]);
@@ -43,7 +31,7 @@ const AllCharts = (props) => {
       };
 
       props.territoryData.forEach((item) => {
-        if (item.zone_name) {
+        if (item.territory_name) {
           territoryLabel.push(item.territory_name);
         }
 
@@ -91,6 +79,10 @@ const AllCharts = (props) => {
       };
 
       props.regionData.forEach((item) => {
+        if (item.region_name) {
+          regionLabel.push(item.region_name);
+        }
+
         targetData.data.push(item.target ? item.target : 0);
 
         budgetData.data.push(item.budget ? item.budget : 0);
@@ -135,6 +127,9 @@ const AllCharts = (props) => {
       };
 
       props.zoneData.forEach((item) => {
+        if (item.zone_name) {
+          zoneLabel.push(item.zone_name);
+        }
         targetData.data.push(item.target ? item.target : 0);
         budgetData.data.push(item.budget ? item.budget : 0);
         actualData.data.push(item.actual ? item.actual : 0);
@@ -447,6 +442,16 @@ const AllCharts = (props) => {
         bu: false,
         bg: false,
       });
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 3
+    ) {
+      setShowChart({
+        t: true,
+        r: true,
+        z: true,
+        bu: false,
+        bg: false,
+      });
     } else {
       setShowChart({
         t: true,
@@ -457,11 +462,21 @@ const AllCharts = (props) => {
       });
     }
   }, []);
-  //************************************************************************************************//
+  //****  * ****  **** *** ** *  **** ***************//
 
   return (
     <>
-      <section className="wrapper w-full px-2 mt-2 font-arial  ">
+      <section className="wrapper w-full px-2 mt-2 font-arial  relative ">
+        {props.loading && (
+          <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+            <img
+              className="w-20 h-20 animate-spin"
+              src="https://www.svgrepo.com/show/448500/loading.svg"
+              alt="Loading icon"
+            />
+          </div>
+        )}
+
         {/* <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4">
           <TableChartOne
             heading={"Business Segments"}

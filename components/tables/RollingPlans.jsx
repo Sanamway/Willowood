@@ -31,7 +31,6 @@ import { saveAs } from "file-saver";
 import { Dialog, Transition } from "@headlessui/react";
 import { MdDelete } from "react-icons/md";
 import SubmitModal from "../modals/SubmitModal";
-
 import moment from "moment";
 
 import { AiOutlineSearch } from "react-icons/ai";
@@ -75,36 +74,21 @@ const RollingPlans = () => {
       });
       const apires = await respond.data.data;
       setAllYearData([...new Set(apires.map((item) => item.t_year))]);
-      // setFilterState({
-      //   ...filterState,
-      //   yr: [...new Set(apires.map((item) => item.t_year))][
-      //     [...new Set(apires.map((item) => item.t_year))].length - 1
-      //   ],
-      // });
     } catch (error) {}
   };
 
   useEffect(() => {
-    getAllTransactionPlan();
+     getAllTransactionPlan();
   }, []);
   const getAllTransactionYear = async (yr) => {
     try {
-      const respond = await axios.get(`${url}/api/get_rp`, {
+       const respond = await axios.get(`${url}/api/get_rp`, {
         headers: headers,
         params: { status: true, year: yr },
       });
       const apires = await respond.data.data;
 
       setAllMonthData([...new Set(apires.map((item) => item.m_year))]);
-      // setFilterState({
-      //   ...filterState,
-      //   month: [...new Set(apires.map((item) => item.m_year))][
-      //     [...new Set(apires.map((item) => item.m_year))].length - 1
-      //   ],
-      // });
-      set;
-
-      console.log("dolly", allMonthData);
     } catch (error) {}
   };
 
@@ -141,7 +125,7 @@ const RollingPlans = () => {
         break;
       case 5:
         setLocalStorageItems({
-          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          cId:  JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
@@ -451,8 +435,8 @@ const RollingPlans = () => {
             month === "All" || !month ? null : moment(month).format("YYYY-MM"),
           bg_id: bgId === "All" || !bgId ? null : bgId,
           bu_id: buId === "All" || !buId ? null : buId,
-          z_id: zId === "All" || !zId ? null : zId,
-          r_id: rId === "All" || !rId ? null : rId,
+          z_id: zId === "All" ||   !zId ? null : zId,
+          r_id: rId === "All" ||   !rId ? null : rId,
           t_id: tId === "All" || !tId ? null : tId,
         },
       });
@@ -3692,7 +3676,6 @@ const RollingPlans = () => {
                 All
               </option>
 
-              {console.log("adfnvo", allMonthData)}
               {allMonthData.map((item, idx) => (
                 <option value={item} key={idx}>
                   {moment(item).format("MMM YYYY")}

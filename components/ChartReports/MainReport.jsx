@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import Table from "./Table";
+
 import AllCharts from "./AllCharts";
 import { useRouter } from "next/router";
-import { MdBarChart } from "react-icons/md";
-import { FaTable } from "react-icons/fa";
+
 import moment from "moment";
 import axios from "axios";
 import { url } from "@/constants/url";
-import { businessSegment } from "./sample";
 
 const MainReport = () => {
   const router = useRouter();
@@ -107,17 +105,17 @@ const MainReport = () => {
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          tId:
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id || "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          tId: null,
+          tId: "All",
           yr: Math.max(...allYearData),
           month: null,
         });
@@ -127,19 +125,22 @@ const MainReport = () => {
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id || "All",
+          tId:
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id || "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          rId: null,
+          rId: "All",
 
-          tId: null,
+          tId: "All",
           yr: Math.max(...allYearData),
           month: null,
         });
@@ -148,19 +149,23 @@ const MainReport = () => {
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id || "All",
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id || "All",
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id || "All",
+          tId:
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id || "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          rId: null,
-          zId: null,
-          tId: null,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          rId: "All",
+          zId: "All",
+          tId: "All",
           yr: Math.max(...allYearData),
           month: null,
         });
@@ -322,7 +327,7 @@ const MainReport = () => {
       );
     } catch (error) {}
   };
-  console.log("lmjk", allTerritoryData);
+
   useEffect(() => {
     if (
       !filterState.bgId ||
@@ -339,79 +344,9 @@ const MainReport = () => {
     );
   }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
 
-  // const [allTableData, setAllTableData] = useState([]);
-  // const getAllSalesPlanStatus = async (
-  //   yr,
-  //   month,
-  //   bgId,
-  //   buId,
-  //   zId,
-  //   rId,
-  //   tId
-  // ) => {
-  //   let endPoint;
-
-  //   if (bgId && buId && zId && rId && tId) {
-  //     endPoint = "api/get_rollingdata_based_on_roll_t";
-  //   } else if (bgId && buId && zId && rId && !tId) {
-  //     endPoint = "api/get_rollingdata_based_on_roll_r";
-  //   } else if (bgId && buId && zId && !rId && !tId) {
-  //     endPoint = "api/get_rollingdata_based_on_roll_z";
-  //   } else if (bgId && buId && !zId && !rId && !tId) {
-  //     endPoint = "api/get_rollingdata_based_on_roll_bu";
-  //   } else if (bgId && !buId && !zId && !rId && !tId) {
-  //     endPoint = "api/get_rollingdata_based_on_roll_bg";
-  //   } else {
-  //     return;
-  //   }
-
-  //   try {
-  //     const respond = await axios.get(`${url}/${endPoint}`, {
-  //       headers: headers,
-
-  //       params: {
-  //         t_year: yr || null,
-  //         m_year:
-  //           month === "All" || !month ? null : moment(month).format("YYYY-MM"),
-  //         bg_id: bgId === "All" || !bgId ? null : bgId,
-  //         bu_id: buId === "All" || !buId ? null : buId,
-  //         z_id: zId === "All" || !zId ? null : zId,
-  //         r_id: rId === "All" || !rId ? null : rId,
-  //         t_id: tId === "All" || !tId ? null : tId,
-  //       },
-  //     });
-
-  //     const apires = await respond.data.data;
-
-  //     setAllTableData(apires);
-  //   } catch (error) {
-  //     if (!error) return;
-  //     setAllTableData([]);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getAllSalesPlanStatus(
-  //     filterState.yr || null,
-  //     filterState.month || null,
-  //     filterState.bgId || null,
-  //     filterState.buId || null,
-  //     filterState.zId || null,
-  //     filterState.rId || null,
-  //     filterState.tId
-  //   );
-  // }, [
-  //   filterState.yr,
-  //   filterState.month,
-  //   filterState.bgId,
-  //   filterState.buId,
-  //   filterState.zId,
-  //   filterState.rId,
-  //   filterState.tId,
-  // ]);
-
   const [busniessSegmentData, setBusinessSegmentData] = useState([]);
   const getAllBusinessSegmentData = async (yr, month, bgId) => {
+    if (!yr || !month || !bgId) return;
     let endPoint;
 
     endPoint = "api/get_rollingdata_based_on_roll_bg";
@@ -447,9 +382,18 @@ const MainReport = () => {
 
   const [businessUnitData, setBusinessUnitData] = useState([]);
   const getAllBusinessUnitData = async (yr, month, bgId, buId) => {
+    if (!yr || !month || !bgId || !buId) return;
     let endPoint;
 
     endPoint = "api/get_rollingdata_based_on_roll_bu";
+
+    let params = {
+      t_year: yr || null,
+      m_year:
+        month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+      bu_id: buId === "All" || !buId ? null : buId,
+      bg_id: bgId === "All" || !bgId ? null : bgId,
+    };
 
     try {
       const respond = await axios.get(`${url}/${endPoint}`, {
@@ -484,21 +428,37 @@ const MainReport = () => {
 
   const [zoneData, setZoneData] = useState([]);
   const getAllZonetData = async (yr, month, bgId, buId, zId) => {
+    if (!yr || !month || !bgId || !buId) return;
     let endPoint;
 
     endPoint = "api/get_rollingdata_based_on_roll_z";
+    let params = {
+      t_year: yr || null,
+      m_year:
+        month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+    };
+    if (zId && zId !== "All") {
+      params = {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        z_id: zId,
+      };
+    } else if (zId === "All" && buId !== "All") {
+      params = {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        bu_id: buId,
+      };
+    }
 
     try {
+      setZoneData([]);
       const respond = await axios.get(`${url}/${endPoint}`, {
         headers: headers,
 
-        params: {
-          t_year: yr || null,
-          m_year:
-            month === "All" || !month ? null : moment(month).format("YYYY-MM"),
-          z_id: zId === "All" || !zId ? null : zId,
-          bu_id: buId === "All" || !buId ? null : buId,
-        },
+        params: params,
       });
 
       const apires = await respond.data.data;
@@ -528,21 +488,51 @@ const MainReport = () => {
 
   const [regionData, setRegionData] = useState([]);
   const getRegionData = async (yr, month, bgId, buId, zId, rId) => {
+    if (!yr || !month || !bgId || !buId || !zId) return;
     let endPoint;
 
     endPoint = "api/get_rollingdata_based_on_roll_r";
+    let params = {
+      t_year: yr || null,
+      m_year:
+        month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+    };
+    if (rId && rId !== "All") {
+      params = {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        r_id: rId,
+      };
+    } else if (rId === "All" && zId !== "All") {
+      params = {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        z_id: zId,
+      };
+    } else if (zId && zId !== "All") {
+      params = {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        z_id: zId,
+      };
+    } else if (zId === "All" && buId !== "All") {
+      params = {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        bu_id: buId,
+      };
+    }
 
     try {
+      setRegionData([]);
       const respond = await axios.get(`${url}/${endPoint}`, {
         headers: headers,
 
-        params: {
-          t_year: yr || null,
-          m_year:
-            month === "All" || !month ? null : moment(month).format("YYYY-MM"),
-          r_id: rId === "All" || !rId ? null : rId,
-          z_id: rId === "All" || !zId ? null : zId,
-        },
+        params: params,
       });
 
       const apires = await respond.data.data;
@@ -574,21 +564,65 @@ const MainReport = () => {
 
   const [territoryData, setTerritoryData] = useState([]);
   const getTerritoryData = async (yr, month, bgId, buId, zId, rId, tId) => {
+    if (!yr || !month || !bgId || !buId || !zId) return;
     let endPoint;
 
     endPoint = "api/get_rollingdata_based_on_roll_t";
+    let params = {
+      t_year: yr || null,
+      m_year:
+        month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+    };
 
+    if (tId && tId !== "All") {
+      params = {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        t_id: tId,
+      };
+    } else if (tId === "All" && rId !== "All") {
+      params = {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        r_id: rId,
+      };
+    } else if (rId && rId !== "All") {
+      params = {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        r_id: rId,
+      };
+    } else if (rId === "All" && zId !== "All") {
+      params = {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        z_id: zId,
+      };
+    } else if (zId && zId !== "All") {
+      params = {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        z_id: zId,
+      };
+    } else if (zId === "All" && buId !== "All") {
+      params = {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        bu_id: buId,
+      };
+    }
     try {
+      setTerritoryData([]);
       const respond = await axios.get(`${url}/${endPoint}`, {
         headers: headers,
 
-        params: {
-          t_year: yr || null,
-          m_year:
-            month === "All" || !month ? null : moment(month).format("YYYY-MM"),
-          t_id: tId === "All" || !tId ? null : tId,
-          r_id: rId === "All" || !rId ? null : rId,
-        },
+        params: params,
       });
 
       const apires = await respond.data.data;
@@ -619,16 +653,10 @@ const MainReport = () => {
     filterState.rId,
     filterState.tId,
   ]);
-
+  const [chartsLoading, setChartsLoading] = useState(false);
   const [segmentData, setSegmentData] = useState([]);
   const getSegmentData = async (yr, month, bgId, buId, zId, rId, tId) => {
-    if (!yr || !month || !bgId || !buId || !zId || !rId || !tId) return;
-    console.log(
-      "jio",
-      allZoneData.filter(
-        (item) => Number(item.z_id) === Number(filterState.zId)
-      )
-    );
+    if (!yr || !month || !bgId || !buId || !zId) return;
     let paramsData = {
       year_1: yr - 2,
       year_2: yr - 1,
@@ -648,88 +676,8 @@ const MainReport = () => {
       json: true,
       analytical_key: "Product Segment",
     };
-    if (bgId && !buId) {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        bg_des: busniessSegmentData.filter(
-          (item) => Number(item.bg_id) === Number(filterState.bgId)
-        )[0]?.business_segment,
-        bg_id: filterState.bgId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Segment",
-      };
-    } else if (buId && !zId) {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        bu_des: businessUnitData.filter(
-          (item) => Number(item.bu_id) === Number(filterState.buId)
-        )[0]?.business_unit_name,
-        bu_id: filterState.buId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Segment",
-      };
-    } else if (zId && !rId) {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        z_des: allZoneData.filter(
-          (item) => Number(item.z_id) === Number(filterState.zId)
-        )[0]?.zone_name,
-        z_id: filterState.zId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Segment",
-      };
-    } else if (rId && !tId) {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        r_des: allRegionData.filter(
-          (item) => Number(item.r_id) === Number(filterState.rId)
-        )[0]?.region_name,
-        r_id: filterState.rId,
 
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Segment",
-      };
-    } else if (tId) {
+    if (tId && tId !== "All") {
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -750,6 +698,106 @@ const MainReport = () => {
         json: true,
         analytical_key: "Product Segment",
       };
+    } else if (tId === "All" && rId !== "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        r_des: allRegionData.filter(
+          (item) => Number(item.r_id) === Number(filterState.rId)
+        )[0]?.region_name,
+        r_id: filterState.rId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Product Segment",
+      };
+    } else if (rId && rId !== "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        r_des: allRegionData.filter(
+          (item) => Number(item.r_id) === Number(filterState.rId)
+        )[0]?.region_name,
+        r_id: filterState.rId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Product Segment",
+      };
+    } else if (rId === "All" && zId !== "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        z_des: allZoneData.filter(
+          (item) => Number(item.z_id) === Number(filterState.zId)
+        )[0]?.zone_name,
+        z_id: filterState.zId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Product Segment",
+      };
+    } else if (zId && zId !== "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        z_des: allZoneData.filter(
+          (item) => Number(item.z_id) === Number(filterState.zId)
+        )[0]?.zone_name,
+        z_id: filterState.zId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Product Segment",
+      };
+    } else if (zId === "All" && buId !== "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        bu_des: buData.filter(
+          (item) => Number(item.bu_id) === Number(filterState.buId)
+        )[0]?.business_unit_name,
+        bu_id: filterState.buId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Product Segment",
+      };
     }
 
     let endPoint;
@@ -757,18 +805,28 @@ const MainReport = () => {
     endPoint = "api/RSP_downloadAnalytical";
 
     try {
+      setSegmentData([]);
+      setChartsLoading(true);
       const respond = await axios.get(`${url}/${endPoint}`, {
         headers: headers,
 
         params: paramsData,
       });
-
       const apires = await respond.data.data;
-
       setSegmentData(apires);
+      getCategoryData(
+        filterState.yr || null,
+        filterState.month || null,
+        filterState.bgId || null,
+        filterState.buId || null,
+        filterState.zId || null,
+        filterState.rId || null,
+        filterState.tId || null
+      );
     } catch (error) {
       if (!error) return;
       setSegmentData([]);
+      setChartsLoading(false);
     }
   };
 
@@ -794,13 +852,7 @@ const MainReport = () => {
 
   const [categoryData, setCategoryData] = useState([]);
   const getCategoryData = async (yr, month, bgId, buId, zId, rId, tId) => {
-    console.log(
-      "jio",
-      allZoneData.filter(
-        (item) => Number(item.z_id) === Number(filterState.zId)
-      )
-    );
-    if (!yr || !month || !bgId || !buId || !zId || !rId || !tId) return;
+    if (!yr || !month || !bgId || !buId || !zId) return;
     let paramsData = {
       year_1: yr - 2,
       year_2: yr - 1,
@@ -820,88 +872,7 @@ const MainReport = () => {
       json: true,
       analytical_key: "Product Category",
     };
-    if (bgId && !buId) {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        bg_des: busniessSegmentData.filter(
-          (item) => Number(item.bg_id) === Number(filterState.bgId)
-        )[0]?.business_segment,
-        bg_id: filterState.bgId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Category",
-      };
-    } else if (buId && !zId) {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        bu_des: businessUnitData.filter(
-          (item) => Number(item.bu_id) === Number(filterState.buId)
-        )[0]?.business_unit_name,
-        bu_id: filterState.buId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Category",
-      };
-    } else if (zId && !rId) {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        z_des: allZoneData.filter(
-          (item) => Number(item.z_id) === Number(filterState.zId)
-        )[0]?.zone_name,
-        z_id: filterState.zId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Category",
-      };
-    } else if (rId && !tId) {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        r_des: allRegionData.filter(
-          (item) => Number(item.r_id) === Number(filterState.rId)
-        )[0]?.region_name,
-        r_id: filterState.rId,
-
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Category",
-      };
-    } else if (tId) {
+    if (tId && tId !== "All") {
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -922,6 +893,106 @@ const MainReport = () => {
         json: true,
         analytical_key: "Product Category",
       };
+    } else if (tId === "All" && rId !== "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        r_des: allRegionData.filter(
+          (item) => Number(item.r_id) === Number(filterState.rId)
+        )[0]?.region_name,
+        r_id: filterState.rId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Product Category",
+      };
+    } else if (rId && rId !== "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        r_des: allRegionData.filter(
+          (item) => Number(item.r_id) === Number(filterState.rId)
+        )[0]?.region_name,
+        r_id: filterState.rId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Product Category",
+      };
+    } else if (rId === "All" && zId !== "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        z_des: allZoneData.filter(
+          (item) => Number(item.z_id) === Number(filterState.zId)
+        )[0]?.zone_name,
+        z_id: filterState.zId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Product Category",
+      };
+    } else if (zId && zId !== "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        z_des: allZoneData.filter(
+          (item) => Number(item.z_id) === Number(filterState.zId)
+        )[0]?.zone_name,
+        z_id: filterState.zId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Product Category",
+      };
+    } else if (zId === "All" && buId !== "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        bu_des: buData.filter(
+          (item) => Number(item.bu_id) === Number(filterState.buId)
+        )[0]?.business_unit_name,
+        bu_id: filterState.buId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Product Category",
+      };
     }
 
     let endPoint;
@@ -929,6 +1000,7 @@ const MainReport = () => {
     endPoint = "api/RSP_downloadAnalytical";
 
     try {
+      setCategoryData([]);
       const respond = await axios.get(`${url}/${endPoint}`, {
         headers: headers,
 
@@ -938,35 +1010,45 @@ const MainReport = () => {
       const apires = await respond.data.data;
 
       setCategoryData(apires);
+      getBrandData(
+        filterState.yr || null,
+        filterState.month || null,
+        filterState.bgId || null,
+        filterState.buId || null,
+        filterState.zId || null,
+        filterState.rId || null,
+        filterState.tId || null
+      );
     } catch (error) {
       if (!error) return;
+      setChartsLoading(false);
       setCategoryData([]);
     }
   };
 
-  useEffect(() => {
-    getCategoryData(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null,
-      filterState.rId || null,
-      filterState.tId || null
-    );
-  }, [
-    filterState.yr,
-    filterState.month,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    filterState.tId,
-  ]);
+  // useEffect(() => {
+  //   getCategoryData(
+  //     filterState.yr || null,
+  //     filterState.month || null,
+  //     filterState.bgId || null,
+  //     filterState.buId || null,
+  //     filterState.zId || null,
+  //     filterState.rId || null,
+  //     filterState.tId || null
+  //   );
+  // }, [
+  //   filterState.yr,
+  //   filterState.month,
+  //   filterState.bgId,
+  //   filterState.buId,
+  //   filterState.zId,
+  //   filterState.rId,
+  //   filterState.tId,
+  // ]);
 
   const [brandData, setBrandData] = useState([]);
   const getBrandData = async (yr, month, bgId, buId, zId, rId, tId) => {
-    if (!yr || !month || !bgId || !buId || !zId || !rId || !tId) return;
+    if (!yr || !month || !bgId || !buId || !zId) return;
     console.log(
       "jio",
       allZoneData.filter(
@@ -992,7 +1074,7 @@ const MainReport = () => {
       json: true,
       analytical_key: "Brand Desc",
     };
-    if (bgId && !buId) {
+    if (tId && tId !== "All") {
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -1004,56 +1086,16 @@ const MainReport = () => {
         year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
         year_3_cm: moment(month).format("YYYY-MM"),
         year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        bg_des: busniessSegmentData.filter(
-          (item) => Number(item.bg_id) === Number(filterState.bgId)
-        )[0]?.business_segment,
-        bg_id: filterState.bgId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Brand Desc",
-      };
-    } else if (buId && !zId) {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        bu_des: businessUnitData.filter(
-          (item) => Number(item.bu_id) === Number(filterState.buId)
-        )[0]?.business_unit_name,
+        t_des: allTerritoryData.filter(
+          (item) => Number(item.t_id) === Number(filterState.tId)
+        )[0]?.territory_name,
+        t_id: filterState.tId,
 
-        bu_id: filterState.buId,
         m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Brand Desc",
       };
-    } else if (zId && !rId) {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        z_des: allZoneData.filter(
-          (item) => Number(item.z_id) === Number(filterState.zId)
-        )[0]?.zone_name,
-        z_id: filterState.zId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Brand Desc",
-      };
-    } else if (rId && !tId) {
+    } else if (tId === "All" && rId !== "All") {
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -1073,7 +1115,7 @@ const MainReport = () => {
         json: true,
         analytical_key: "Brand Desc",
       };
-    } else if (tId) {
+    } else if (rId && rId !== "All") {
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -1085,11 +1127,76 @@ const MainReport = () => {
         year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
         year_3_cm: moment(month).format("YYYY-MM"),
         year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        t_des: allTerritoryData.filter(
-          (item) => Number(item.t_id) === Number(filterState.tId)
-        )[0]?.territory_name,
-
-        t_id: filterState.tId,
+        r_des: allRegionData.filter(
+          (item) => Number(item.r_id) === Number(filterState.rId)
+        )[0]?.region_name,
+        r_id: filterState.rId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Brand Desc",
+      };
+    } else if (rId === "All" && zId !== "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        z_des: allZoneData.filter(
+          (item) => Number(item.z_id) === Number(filterState.zId)
+        )[0]?.zone_name,
+        z_id: filterState.zId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Brand Desc",
+      };
+    } else if (zId && zId !== "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        z_des: allZoneData.filter(
+          (item) => Number(item.z_id) === Number(filterState.zId)
+        )[0]?.zone_name,
+        z_id: filterState.zId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Brand Desc",
+      };
+    } else if (zId === "All" && buId !== "All") {
+      console.log(
+        "pol",
+        businessUnitData.filter(
+          (item) => Number(item.bu_id) === Number(filterState.buId)
+        )[0]?.business_unit_name
+      );
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        bu_des: buData.filter(
+          (item) => Number(item.bu_id) === Number(filterState.buId)
+        )[0]?.business_unit_name,
+        bu_id: filterState.buId,
         m_year: moment(month).format("YYYY-MM"),
         json: true,
         analytical_key: "Brand Desc",
@@ -1101,6 +1208,7 @@ const MainReport = () => {
     endPoint = "api/RSP_downloadAnalytical";
 
     try {
+      setBrandData([]);
       const respond = await axios.get(`${url}/${endPoint}`, {
         headers: headers,
 
@@ -1110,32 +1218,33 @@ const MainReport = () => {
       const apires = await respond.data.data;
 
       setBrandData(apires);
+      setChartsLoading(false);
     } catch (error) {
       if (!error) return;
       setBrandData([]);
+      setChartsLoading(false);
     }
   };
 
-  useEffect(() => {
-    getBrandData(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null,
-      filterState.rId || null,
-      filterState.tId || null
-    );
-  }, [
-    filterState.yr,
-    filterState.month,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    filterState.tId,
-  ]);
-  console.log("mln", filterState);
+  // useEffect(() => {
+  //   getBrandData(
+  //     filterState.yr || null,
+  //     filterState.month || null,
+  //     filterState.bgId || null,
+  //     filterState.buId || null,
+  //     filterState.zId || null,
+  //     filterState.rId || null,
+  //     filterState.tId || null
+  //   );
+  // }, [
+  //   filterState.yr,
+  //   filterState.month,
+  //   filterState.bgId,
+  //   filterState.buId,
+  //   filterState.zId,
+  //   filterState.rId,
+  //   filterState.tId,
+  // ]);
 
   return (
     <>
@@ -1194,8 +1303,8 @@ const MainReport = () => {
                 Select
               </option>
               {allMonthData.map((item, idx) => (
-                <option value={item.m_year} key={idx}>
-                  {moment(item.m_year).format("MMM YYYY")}
+                <option value={item} key={idx}>
+                  {moment(item).format("MMM YYYY")}
                 </option>
               ))}
             </select>
@@ -1221,7 +1330,7 @@ const MainReport = () => {
                 localStorageItems.roleId === 10
               }
             >
-              <option value={""} className="font-bold">
+              <option value={"All"} className="font-bold">
                 - All Business Segment -
               </option>
 
@@ -1252,7 +1361,7 @@ const MainReport = () => {
                 localStorageItems.roleId === 3
               }
             >
-              <option value={""}>- All Business Unit -</option>
+              <option value={"All"}>- All Business Unit -</option>
 
               {buData.map((item, idx) => (
                 <option value={item.bu_id} key={idx}>
@@ -1260,7 +1369,7 @@ const MainReport = () => {
                 </option>
               ))}
             </select>
-            {console.log("qkl", filterState)}
+
             <select
               className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
@@ -1279,7 +1388,7 @@ const MainReport = () => {
                 localStorageItems.roleId === 4
               }
             >
-              <option value={""}>- All Zone -</option>
+              <option value={"All"}>- All Zone -</option>
 
               {allZoneData.map((item, idx) => (
                 <option value={item.z_id} key={idx}>
@@ -1303,7 +1412,7 @@ const MainReport = () => {
                 })
               }
             >
-              <option value={""}>-All Region -</option>
+              <option value={"All"}>-All Region -</option>
 
               {allRegionData.map((item, idx) => (
                 <option value={item.r_id} key={idx}>
@@ -1324,7 +1433,7 @@ const MainReport = () => {
                 })
               }
             >
-              <option value={""}>- All Territory -</option>
+              <option value="All">- All Territory -</option>
 
               {allTerritoryData.map((item, idx) => (
                 <option value={item.t_id} key={idx}>
@@ -1336,14 +1445,15 @@ const MainReport = () => {
         </div>
         <div className="hey">
           <AllCharts
-                   businessSegmentData =   {busniessSegmentData}
-                   businessUnitData    =   {businessUnitData}
-                   zoneData            =   {zoneData}
-                   regionData          =   {regionData}
-                   territoryData       =   {territoryData}
-                   productSegmentData  =   {segmentData}
-                   productCategoryData =   {categoryData}
-                   productBrandData    =   {brandData}
+            businessSegmentData={busniessSegmentData}
+            businessUnitData={businessUnitData}
+            zoneData={zoneData}
+            regionData={regionData}
+            territoryData={territoryData}
+            productSegmentData={segmentData}
+            productCategoryData={categoryData}
+            productBrandData={brandData}
+            loading={chartsLoading}
           />
         </div>
       </section>

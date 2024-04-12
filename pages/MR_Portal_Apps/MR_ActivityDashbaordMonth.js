@@ -2,6 +2,7 @@ import React from "react";
 import { FaEye } from "react-icons/fa";
 import Image from "next/image";
 import Profile from "../../public/userimg.jpg";
+import Navbar from "@/components/MR_Portal_Apps/Navbar";
 const AdditionalInfo = (props) => {
   const monthlyData = [
     {
@@ -38,6 +39,7 @@ const AdditionalInfo = (props) => {
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
+      <Navbar/>
       {/* Second table */}
       <div className="overflow-x-auto  flex flex-col gap-2">
         <div className="bg-white h-40 p-2  sticky left-0">
@@ -90,7 +92,7 @@ const AdditionalInfo = (props) => {
           <thead>
             <tr className="bg-blue-400 text-white">
               <th className="border border-gray-200 py-2 px-2 whitespace-nowrap font-bold font-thin">
-                Day 
+                Day
               </th>
               <th className="border border-gray-200 py-2 px-2 font-thin">
                 Dmo

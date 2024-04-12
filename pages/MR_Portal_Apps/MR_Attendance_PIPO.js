@@ -9,7 +9,7 @@ import { IoMdCloudUpload } from "react-icons/io";
 import { MdOutlinePunchClock } from "react-icons/md";
 import { MdOutlineTimer } from "react-icons/md";
 import Profile from "../../public/userimg.jpg";
-
+import Navbar from "@/components/MR_Portal_Apps/Navbar";
 const AdditionalInfo = (props) => {
   const [formActive, setFormActive] = useState(false);
   const [userImage, setUserImage] = useState("");
@@ -116,10 +116,8 @@ const AdditionalInfo = (props) => {
 
   return (
     <div className="p-2">
+      <Navbar />
       <div className="flex flex-col gap-2 ">
-        <h1 className="text-xl font-bold  flex w-full justify-center border-t-4 border-blue-800 shadow-xl">
-          Punch-In/Out
-        </h1>
         <div className="">
           <h1 className="font-bold ">Employee Details:</h1>
           <div className="flex mb-4 mt-2">
@@ -161,8 +159,10 @@ const AdditionalInfo = (props) => {
             </div>
           </div>
         </div>
-
-        <h1 className=" font-bold flex w-full justify-center h-8 mt-4 border p-1  shadow-xl">
+        <h1 className="text-xl font-bold  flex w-full  mt-2 justify-center border-b-4 border-blue-800 shadow-xl ">
+          Punch-In/Out
+        </h1>
+        <h1 className=" font-bold flex w-full justify-center h-8 mt-2 border p-1  shadow-xl">
           Last Punch In : 19-Sep-2017 05:19 PM
         </h1>
         <div>
@@ -179,7 +179,7 @@ const AdditionalInfo = (props) => {
 
         <div className="flex w-full  border my-2  shadow-xl">
           <button className="text-sm font-bold py-1 rounded-md   flex  flex-row w-full justify-center h-8 ">
-            Take  Selfie
+            Take Selfie
           </button>
           <FaCameraRetro
             size={20}

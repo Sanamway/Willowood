@@ -84,11 +84,9 @@ const Layout = ({ children }) => {
       return;
     }
 
-    // if (localStorage.getItem("mode") == "mobile") {
-    //   router.push("/mrhome");
-    // } else {
-    //   router.push("/");
-    // }
+    if (localStorage.getItem("mode") == "mobile") {
+      router.push("/MR_Portal_Apps/MRHome");
+    }
   }, []);
 
 
@@ -137,6 +135,8 @@ const Layout = ({ children }) => {
         localStorage.removeItem("userinfo");
         localStorage.removeItem("phone_number");
         localStorage.removeItem("mode");
+        localStorage.removeItem("c_id");
+
         toast.success(respdata.message);
         setTimeout(() => router.push("/logoutsuccess"), 1000);
       }
@@ -413,7 +413,7 @@ Application End User
                                   open ? "block" : "hidden"
                                 } absolute right-2 mt-2 w-40 bg-white text-black borde rounded-md shadow-md`}
                               >
-                                <ul className="py-2 p text-text-black flex flex-col gap-2 px-4 font-Rale cursor-pointer">
+                                <ul className="text-black flex flex-col gap-2 px-4 font-Rale cursor-pointer">
                                   <li
                                     onClick={() => {
                                       router.push("/profile");

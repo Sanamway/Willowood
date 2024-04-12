@@ -69,6 +69,10 @@ const AdditionalInfo = (props) => {
     try {
       const respond = await axios.get(`${url}/api/get_dealer`, {
         headers: headers,
+        params: {
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+        },
       });
       const apires = await respond.data.data;
       setDealerData(apires);
@@ -221,7 +225,7 @@ const AdditionalInfo = (props) => {
             nextVisitDate: "",
             status: "Open",
           });
-      setProductDemoTableData([])
+          setProductDemoTableData([]);
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
@@ -244,7 +248,7 @@ const AdditionalInfo = (props) => {
     >
       <Navbar />
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div className="flex my-2 flex-row gap-1 mt-12">
+      <div className="flex my-2 flex-row gap-1 ">
         <div className="fle gap-4 w-full px-2">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"

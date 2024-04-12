@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaEye } from "react-icons/fa";
 import Image from "next/image";
 import Profile from "../../public/userimg.jpg";
+import Navbar from "@/components/MR_Portal_Apps/Navbar";
 const AdditionalInfo = (props) => {
   const monthlyData = [
     {
@@ -24,7 +25,8 @@ const AdditionalInfo = (props) => {
   ];
 
   return (
-    <div className="bg-white min-h-screen p-4">
+    <div className="bg-white min-h-screen p-4 md:p-0">
+      <Navbar/>
       <div className="overflow-x-auto">
         <div className="bg-white h-40 p-2  sticky left-0">
           <h1 className="font-bold ">Employee Details:</h1>

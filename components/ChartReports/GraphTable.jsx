@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const GraphTable = (props) => {
   const { data, datas } = props;
-
+ console.log("Uttam CHutiya", data)
   //function to get Keys
 
   const keys = Object?.keys(data[0] || []);

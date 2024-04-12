@@ -46,6 +46,8 @@ const Navbar = () => {
         localStorage.removeItem("userinfo");
         localStorage.removeItem("phone_number");
         localStorage.removeItem("mode");
+        localStorage.removeItem("c_id");
+
         toast.success(respdata.message);
         setTimeout(() => router.push("/logoutsuccess"), 1000);
       }
@@ -65,9 +67,9 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="nav-container bg-[#15283C] h-[60px] flex justify-between items-center pl-[15px] w-[1600px] max-w-full m-auto">
+      <div className="nav-container bg-[#15283C] h-[60px] flex justify-between invisible md:visible  items-center md:w-full pl-[15px] w-[1600px] max-w-full m-auto">
         <Toaster position="bottom-center" reverseOrder={false} />
-        <a href="/" className="logo w-[200px]">
+        <Link href="/MR_Portal_Apps/MRHome" className="logo w-[200px]">
           <Image
             alt="mr_app"
             // src="http://pwebassets.paytm.com/commonwebassets/paytmweb/header/images/logo.svg"
@@ -80,7 +82,7 @@ const Navbar = () => {
             loading="lazy"
             style={{ color: "transparent" }}
           />
-        </a>
+        </Link>
         <div className="right-nav flex items-center gap-[40px] h-full">
           <ul className="menu flex list-none h-full gap-[15px]">
             <li>
@@ -172,7 +174,7 @@ const Navbar = () => {
                 ></img>
               )}
             </span>
-            <a href="/" className="logo h-[40px] w-[120px] ">
+            <Link href="/MR_Portal_Apps/MRHome" className="logo h-[40px] w-[120px] ">
               <Image
                 alt="mr_app"
                 src={WillLogo}
@@ -184,7 +186,7 @@ const Navbar = () => {
                 loading="lazy"
                 // style={{ color: "transparent" }}
               />
-            </a>
+            </Link>
           </div>
           <div className="flex items-center  py-0.5 gap-4 justify-center ">
             <IoSearchOutline

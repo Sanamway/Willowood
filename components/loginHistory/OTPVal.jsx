@@ -15,7 +15,7 @@ const OTPVal = () => {
   const router = useRouter();
   const { phone_number, uid } = router.query;
   const [otp, setOtp] = useState("");
-  const [isVerifying, setVerifying] = useState(false);
+  const[isVerifying, setVerifying] = useState(false)
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -27,12 +27,12 @@ const OTPVal = () => {
   const handleVerify = async (e) => {
     e.preventDefault();
     console.log("otp", otp);
-    setVerifying(true);
+   setVerifying(true)
     // return;
 
     if (otp.length < 6) {
       toast.error("Invalid OTP");
-      setVerifying(false);
+      setVerifying(false)
       return;
     }
     const payload = {
@@ -40,6 +40,8 @@ const OTPVal = () => {
       uid: uid,
     };
 
+    // console.log( "Hellosws",phone_number, uid)
+ 
     try {
       const resp = await axios.post(
         `${url}/api/verify_otp`,
@@ -49,7 +51,7 @@ const OTPVal = () => {
       const respdata = await resp.data;
 
       console.log("uid", respdata?.data?.uid);
-      console.log("otpval", respdata);
+      console.log("otpval", respdata)
       // const uid = respdata?.data?.uid;
       // const email = respdata?.data?.email_id;
       // const userName = respdata?.data?.user_name;
@@ -61,6 +63,8 @@ const OTPVal = () => {
       const userName = respdata?.data?.loginHistory?.user_name;
       const _id = respdata?.data?.loginHistory?._id;
       const mode = respdata?.data?.loginHistory?.mode;
+      const c_id = respdata?.data?.loginHistory?.c_id;
+
       const userinfo = respdata?.data?.userBSTDetails;
 
       localStorage.setItem("uid", uid);
@@ -69,6 +73,7 @@ const OTPVal = () => {
       localStorage.setItem("user_name", userName);
       localStorage.setItem("id", _id);
       localStorage.setItem("mode", mode);
+      localStorage.setItem("c_id", JSON.stringify(c_id));
       localStorage.setItem("userinfo", JSON.stringify(userinfo));
 
       if (uid) {
@@ -82,11 +87,11 @@ const OTPVal = () => {
       }
 
       if (respdata?.message) {
-        toast.success(respdata?.message, { autoClose: 500 });
+        toast.success(respdata?.message, {autoClose:500});
         setTimeout(() => {
-          if (mode == "mobile") {
-            router.push("/MR_Portal_Apps/MRHome");
-          } else {
+          if(mode =="mobile"){
+            router.push('/mrhome')
+          }else{
             router.push("/");
           }
         }, 1500);
@@ -96,8 +101,8 @@ const OTPVal = () => {
       console.log("err", error?.response?.data?.message);
       const errorMessage = error?.response?.data?.message;
       if (errorMessage) {
-        setVerifying(false);
-        toast.error(errorMessage, { autoClose: 1000 });
+        setVerifying(false)
+        toast.error(errorMessage, {autoClose:1000});
       }
     }
   };
@@ -154,7 +159,7 @@ const OTPVal = () => {
                   onClick={handleVerify}
                   className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full  text-sm text-white"
                 >
-                  {isVerifying ? "Verifying..." : "Verify"}
+                  {isVerifying ? "Verifying...":"Verify"}
                 </button>
               </div>
 
