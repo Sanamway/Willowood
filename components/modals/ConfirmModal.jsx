@@ -17,8 +17,7 @@ function ConfirmModal({ onClose, isOpen, onOpen, userId, onDeletedData, method, 
       const resp = await axios[method](`${url}/api/${endpoints}/${userId}`, { headers });
       const respdata = await resp.data.data;
       const respData = await resp.data
-      console.log("neww", respData)
-      console.log("modres", respdata)
+      
       if (respdata) {
         onDeletedData();
         onClose();

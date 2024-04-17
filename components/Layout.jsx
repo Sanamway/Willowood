@@ -136,6 +136,8 @@ const Layout = ({ children }) => {
         localStorage.removeItem("phone_number");
         localStorage.removeItem("mode");
         localStorage.removeItem("c_id");
+        localStorage.removeItem("emp_code");
+
 
         toast.success(respdata.message);
         setTimeout(() => router.push("/logoutsuccess"), 1000);

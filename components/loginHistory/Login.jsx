@@ -78,12 +78,16 @@ const Login = () => {
         const _id = respdata?.data?.loginHistory?._id;
         const mode = respdata?.data?.loginHistory?.mode;
         const c_id = respdata?.data?.loginHistory?.c_id;
+        const emp_code = respdata?.data?.loginHistory?.emp_code;
+
 
         const userinfo = respdata?.data?.userBSTDetails;
         toast.success(respdata?.message);
         localStorage.setItem("uid", uid);
         localStorage.setItem("email_id", email_id);
         localStorage.setItem("mode", mode);
+        localStorage.setItem("emp_code", emp_code);
+
         localStorage.setItem("c_id", JSON.stringify(c_id));
 
         localStorage.setItem("userinfo", JSON.stringify(userinfo));

@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import Image from "next/image";
 import { BsCheck2Circle } from "react-icons/bs";
 import { AiOutlineDelete } from "react-icons/ai";
-import { FaUpload } from "react-icons/fa";
+import { FaArrowDown } from "react-icons/fa";
 import { FaCameraRetro } from "react-icons/fa";
 import { AiOutlineFileAdd } from "react-icons/ai";
 import { url } from "@/constants/url";
@@ -29,6 +29,7 @@ const AdditionalInfo = (props) => {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
+
   const [formActive, setFormActive] = useState(false);
   const [userImage, setUserImage] = useState("");
 
@@ -119,46 +120,6 @@ const AdditionalInfo = (props) => {
       setProductDemoTableData(apires);
     } catch (error) {
       console.log(error);
-    }
-  };
-  const handleAddProductDemo = async () => {
-    try {
-      const data = {
-        f_demo_code: 12,
-        cr_id: Number(productDemoState.crop),
-        crop: cropData.filter(
-          (item) => item.crop_profile_id === Number(productDemoState.crop)
-        )[0].crop_name,
-        stage: productDemoState.stage,
-        acre_plot: productDemoState.acre,
-        segment: productDemoState.segment,
-        product_brand: productDemoState.productBrand,
-        dose_acre_tank: Number(productDemoState.dose),
-        water_val: Number(productDemoState.water),
-      };
-
-      const respond = await axios
-        .post(`${url}/api/add_mr_form_demo_crop`, JSON.stringify(data), {
-          headers: headers,
-        })
-        .then((res) => {
-          if (!res) return;
-          toast.success("Submitted");
-          getProductDemoTable();
-          setProductDemoState({
-            crop: "",
-            cropName: "",
-            stage: "",
-            acre: "",
-            segment: "",
-            productBrand: "",
-            water: "",
-            dose: "",
-          });
-        });
-    } catch (errors) {
-      console.log(errors);
-      toast.error(errors.response?.data.message);
     }
   };
 
@@ -352,6 +313,7 @@ const AdditionalInfo = (props) => {
     }
     try {
       const data = {
+        f_demo_code: fDemoCode,
         c_id: Number(localStorageItems.cId),
         bu_id: Number(localStorageItems.buId),
         bg_id: Number(localStorageItems.bgId),
@@ -392,6 +354,7 @@ const AdditionalInfo = (props) => {
             village: "",
             pinCode: "",
           });
+          generateEmpCode();
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
@@ -417,7 +380,7 @@ const AdditionalInfo = (props) => {
       try {
         const respond = await axios.get(`${url}/api/get_farmer`, {
           headers: headers,
-          params: { mob_no: item },
+          params: { mob_no: Number(item) },
         });
 
         const apires = await respond.data.data[0];
@@ -446,6 +409,64 @@ const AdditionalInfo = (props) => {
         plotSize: "",
         village: "",
       });
+    }
+  };
+  const [fDemoCode, setFDemoCode] = useState("");
+  const generateEmpCode = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_demo_code`, {
+        headers: headers,
+        params: {
+          emp_code: window.localStorage.getItem("emp_code"),
+        },
+      });
+      const apires = await respond.data.data;
+      setFDemoCode(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    generateEmpCode();
+  }, []);
+  const handleAddProductDemo = async () => {
+    try {
+      const data = {
+        f_demo_code: fDemoCode,
+        cr_id: Number(productDemoState.crop),
+        crop: cropData.filter(
+          (item) => item.crop_profile_id === Number(productDemoState.crop)
+        )[0].crop_name,
+        stage: productDemoState.stage,
+        acre_plot: productDemoState.acre,
+        segment: productDemoState.segment,
+        product_brand: productDemoState.productBrand,
+        dose_acre_tank: Number(productDemoState.dose),
+        water_val: Number(productDemoState.water),
+      };
+
+      const respond = await axios
+        .post(`${url}/api/add_mr_form_demo_crop`, JSON.stringify(data), {
+          headers: headers,
+        })
+        .then((res) => {
+          if (!res) return;
+          toast.success("Submitted");
+          getProductDemoTable();
+          setProductDemoState({
+            crop: "",
+            cropName: "",
+            stage: "",
+            acre: "",
+            segment: "",
+            productBrand: "",
+            water: "",
+            dose: "",
+          });
+        });
+    } catch (errors) {
+      console.log(errors);
+      toast.error(errors.response?.data.message);
     }
   };
   return (
@@ -484,7 +505,14 @@ const AdditionalInfo = (props) => {
                   } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
                 >
                   <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
-                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center ">
+                    <li
+                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center "
+                      onClick={() =>
+                        router.push({
+                          pathname: "MR_Farmer_list_demo",
+                        })
+                      }
+                    >
                       <BsCalendar2Month
                         className="text-[#626364] cursor-pointer"
                         size={20}
@@ -550,7 +578,7 @@ const AdditionalInfo = (props) => {
             id="inputField"
             placeholder="F Demo Code"
             disabled
-            // disabled={!formActive}
+            value={fDemoCode}
           />
         </div>
         <div className="fle gap-4 w-full px-2">
@@ -1319,6 +1347,7 @@ const AdditionalInfo = (props) => {
           }
         />
       </div>
+
       <Transition appear show={addFarmerModal} as={Fragment}>
         <Dialog
           as="div"
@@ -1604,7 +1633,7 @@ const AdditionalInfo = (props) => {
                       </div>
                     </div>
                   </div>
-                  <div className="mt-100 lg:hidden">
+                  <div className="mt-100  flex flex-row gap-2 justify-center lg:hidden">
                     <button
                       type="button"
                       className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-4 py-2 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"

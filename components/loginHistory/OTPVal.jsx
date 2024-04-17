@@ -64,6 +64,8 @@ const OTPVal = () => {
       const _id = respdata?.data?.loginHistory?._id;
       const mode = respdata?.data?.loginHistory?.mode;
       const c_id = respdata?.data?.loginHistory?.c_id;
+      const emp_code = respdata?.data?.loginHistory?.emp_code;
+
 
       const userinfo = respdata?.data?.userBSTDetails;
 
@@ -73,6 +75,8 @@ const OTPVal = () => {
       localStorage.setItem("user_name", userName);
       localStorage.setItem("id", _id);
       localStorage.setItem("mode", mode);
+      localStorage.setItem("emp_code", emp_code);
+
       localStorage.setItem("c_id", JSON.stringify(c_id));
       localStorage.setItem("userinfo", JSON.stringify(userinfo));
 

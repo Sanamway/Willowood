@@ -6,16 +6,61 @@ import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 
 import { FaArrowLeftLong } from "react-icons/fa6";
-
+import { GiFarmer } from "react-icons/gi";
+import { GiIsland } from "react-icons/gi";
 import { Dialog, Transition } from "@headlessui/react";
 import ConfirmationModal from "@/components/modals/ConfirmationModal";
+import { FaMobileRetro } from "react-icons/fa6";
+import { FaArrowDown } from "react-icons/fa";
+import { FaArrowUp } from "react-icons/fa";
+import DatePicker from "react-datepicker";
+import { FaArrowAltCircleUp } from "react-icons/fa";
+// export async function getFarmerDetails() {
+//   try {
+//     const headers = {
+//       "Content-Type": "application/json",
+//       secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+//     };
 
-const AdditionalInfo = (props) => {
+//     const response = await axios.get(`${url}/api/get_farmer`, {
+//       headers: headers,
+//       params: {
+//         t_id: 1,
+//       },
+//     });
+
+//     return response.data.data;
+//   } catch (error) {
+//     console.error("Error fetching farmer details:", error);
+//     return []; // Return an empty array or handle error as needed
+//   }
+// }
+// export async function getServerSideProps() {
+//   try {
+//     const farmerListData = await getFarmerDetails();
+
+//     return {
+//       props: {
+//         farmerListData,
+//       },
+//     };
+//   } catch (error) {
+//     console.error("Error in getServerSideProps:", error);
+//     return {
+//       props: {
+//         farmerListData: [], // Return an empty array or handle error as needed
+//       },
+//     };
+//   }
+// }
+
+const AdditionalInfo = (data) => {
+  console.log("pop", data);
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-
+  const router = useRouter();
   const [addFarmerModal, setAddFarmerModal] = useState(false);
 
   const [localStorageItems, setLocalStorageItems] = useState({
@@ -134,7 +179,7 @@ const AdditionalInfo = (props) => {
       setFarmerListData(apires);
     } catch (error) {}
   };
-  console.log("farmer", farmerListData);
+
   useEffect(() => {
     getFarmerDetails();
   }, []);
@@ -148,8 +193,125 @@ const AdditionalInfo = (props) => {
   const [farmerId, setFarmerId] = useState(null);
 
   const resetData = () => {
-    getDistrict();
+    getFarmerDetails();
     setisOpen(false);
+  };
+
+  // const getFarmerDetailsByNumber = async (mobile) => {
+  //   if (mobile.length === 10) {
+  //     try {
+  //       const respond = await axios.get(`${url}/api/get_farmer`, {
+  //         headers: headers,
+  //         params: {
+  //           mob_no: mobile,
+  //         },
+  //       });
+
+  //       const apires = await respond.data.data;
+  //       setFarmerListData(apires);
+  //     } catch (error) {}
+  //   } else if (mobile.length === 0) {
+  //     try {
+  //       const respond = await axios.get(`${url}/api/get_farmer`, {
+  //         headers: headers,
+  //         params: {
+  //           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+  //         },
+  //       });
+
+  //       const apires = await respond.data.data;
+  //       setFarmerListData(apires);
+  //     } catch (error) {}
+  //   }
+  // };
+
+  const [allfilterState, setAllFilterState] = useState({
+    number: null,
+    from: null,
+    to: null,
+    dateShortDecend: "desc",
+    mobShortDecend: "",
+    nameShortDecend: "",
+    villShortDecend: "",
+  });
+
+  useEffect(() => {
+    getFarmerDetailsByNumber(
+      allfilterState.number,
+      allfilterState.from,
+      allfilterState.to,
+      allfilterState.dateShortDecend,
+      allfilterState.mobShortDecend,
+      allfilterState.nameShortDecend,
+      allfilterState.villShortDecend
+    );
+  }, [
+    allfilterState.number,
+    allfilterState.from,
+    allfilterState.to,
+    allfilterState.dateShortDecend,
+    allfilterState.mobShortDecend,
+    allfilterState.nameShortDecend,
+    allfilterState.villShortDecend,
+  ]);
+
+  const getFarmerDetailsByNumber = async (
+    mobile,
+    from,
+    to,
+    date,
+    mob,
+    name,
+    vill
+  ) => {
+    console.log("Awaj ", mobile, from, to, date, mob, name, vill);
+    let field = null;
+    let order = null;
+    if (date === "desc") {
+      field = "demo_date";
+      order = "desc";
+    } else if (date === "aesc") {
+      field = "demo_date";
+      order = "aesc";
+    } else if (mob === "desc") {
+      field = "farmer_mob_no";
+      order = "desc";
+    } else if (mob === "aesc") {
+      field = "farmer_mob_no";
+      order = "aesc";
+    } else if (name === "desc") {
+      field = "farmer_name";
+      order = "desc";
+    } else if (name === "aesc") {
+      field = "farmer_name";
+      order = "aesc";
+    } else if (vill === "desc") {
+      field = "village";
+      order = "desc";
+    } else if (vill === "aesc") {
+      field = "village";
+      order = "aesc";
+    }
+
+    try {
+      const respond = await axios.get(`${url}/api/get_farmer`, {
+        headers: headers,
+        params: {
+          mob_no: mobile,
+          from: from ? moment(from).format("YYYY-MM-DD[T00:00:00.000Z]") : null,
+          to: to ? moment(to).format("YYYY-MM-DD[T00:00:00.000Z]") : null,
+          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          emp_code: "WCSP1829",
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          sortField: field,
+          sortOrder: order,
+        },
+      });
+      const apires = await respond.data.data;
+      setFarmerListData(apires);
+    } catch (error) {
+      setFarmerListData([]);
+    }
   };
   return (
     <form
@@ -158,18 +320,17 @@ const AdditionalInfo = (props) => {
     >
       <Toaster position="bottom-center" reverseOrder={false} />
 
-      <div className="fixed top-0 w-full flex flex-col h-20 bg-[#fafafa] justify-between px-4  ">
-        <div className="flex justify-between w-full">
+      <div className="fixed top-0 w-full flex flex-col h-32 bg-white justify-between px-4  pb-2 shadow-lg  lg:flex-col   ">
+        <div className="flex flex-row gap-4 font-bold w-full items-center h-12">
           <FaArrowLeftLong
-            className="self-center mt-2"
+            className=""
             onClick={() =>
               router.push({
                 pathname: "MRForm_Farmer_Demo",
               })
             }
           />
-
-          <h2 className="font-bold self-center mt-2">List of Farmer</h2>
+          <h2 className="font-bold ">List of Farmer Demo</h2>
           <div></div>
         </div>
         <div className="relative">
@@ -191,61 +352,265 @@ const AdditionalInfo = (props) => {
           </span>
           <input
             className="bg-white border-2 border-blue-400 pl-10 py-1 pr-2 rounded-lg w-full lg:w-auto lg:self-center lg:place-self-center"
-            placeholder="Search Farmer"
+            placeholder="Enter Name or Mobile Number"
+            onChange={(e) => getFarmerDetailsByNumber(e.target.value)}
+            maxLength={10}
           />
+        </div>
+
+        <div className="flex  gap-20 w-full  justify-center  w-full">
+          <div className="flex flex-row gap-4">
+            <DatePicker
+              className="w-24 px-3 text-xs h-8  rounded-lg  border-2 border-blue-400 focus:outline-none focus:border-indigo-500 "
+              dateFormat="dd-MM-yyyy"
+              selected={allfilterState.from}
+              peekNextMonth
+              showMonthDropdown
+              showYearDropdown
+              onChange={(date) =>
+                setAllFilterState({
+                  ...allfilterState,
+                  from: date ? new Date(date) : "",
+                })
+              }
+              dropdownMode="select"
+            />
+
+            <span>To</span>
+            <DatePicker
+              className="w-24 px-3 text-xs h-8  rounded-lg border-2 border-blue-400 focus:outline-none focus:border-indigo-500"
+              dateFormat="dd-MM-yyyy"
+              selected={allfilterState.to}
+              peekNextMonth
+              showMonthDropdown
+              showYearDropdown
+              onChange={(date) =>
+                setAllFilterState({
+                  ...allfilterState,
+                  to: date ? new Date(date) : "",
+                })
+              }
+              dropdownMode="select"
+            />
+          </div>
         </div>
       </div>
 
-      <div className="mt-20 flex flex-col gap-2 items-center justify-center align-center w-full -z-90 lg:flex-row overflow-hidden ">
+      <div className="flex bg-gray-200 h-8 mt-36 justify-between items-center px-2">
+        <small className="font-bold">Sort By</small>
+        <small>{farmerListData.length} Demo Retrive</small>
+      </div>
+      {farmerListData.length > 1 && (
+        <div className="flex flex-row justify-around items-center h-10 border-2 border-gray-200   rounded-lg text-sm font-bold text-blue-400">
+          {allfilterState.dateShortDecend === "desc" ? (
+            <span
+              className="flex flex-row gap-2 items-center text-blue-400"
+              onClick={() =>
+                setAllFilterState({
+                  ...allfilterState,
+                  dateShortDecend: "aesc",
+                  mobShortDecend: "",
+                  nameShortDecend: "",
+                  villShortDecend: "",
+                })
+              }
+            >
+              Date {allfilterState.dateShortDecend !== "" && <FaArrowDown />}
+            </span>
+          ) : (
+            <span
+              className="flex flex-row gap-2 items-center"
+              onClick={() =>
+                setAllFilterState({
+                  ...allfilterState,
+                  dateShortDecend: "desc",
+                  mobShortDecend: "",
+                  nameShortDecend: "",
+                  villShortDecend: "",
+                })
+              }
+            >
+              Date {allfilterState.dateShortDecend !== "" && <FaArrowUp />}
+            </span>
+          )}
+          <div className="h-8 bg-gray-400 w-px"></div>
+          {allfilterState.mobShortDecend === "desc" ? (
+            <span
+              className="flex flex-row gap-2 items-center  text-blue-400"
+              onClick={() =>
+                setAllFilterState({
+                  ...allfilterState,
+                  mobShortDecend: "aesc",
+                  dateShortDecend: "",
+                  nameShortDecend: "",
+                  villShortDecend: "",
+                })
+              }
+            >
+              Mobile No{" "}
+              {allfilterState.mobShortDecend !== "" && <FaArrowDown />}
+            </span>
+          ) : (
+            <span
+              className="flex flex-row gap-2 items-center "
+              onClick={() =>
+                setAllFilterState({
+                  ...allfilterState,
+                  mobShortDecend: "desc",
+                  dateShortDecend: "",
+                  nameShortDecend: "",
+                  villShortDecend: "",
+                })
+              }
+            >
+              Mobile No
+              {allfilterState.mobShortDecend !== "" && <FaArrowUp />}
+            </span>
+          )}{" "}
+          <div className="h-8 bg-gray-400 w-px"></div>{" "}
+          {allfilterState.nameShortDecend === "desc" ? (
+            <span
+              className="flex flex-row gap-2 items-center  text-blue-400"
+              onClick={() =>
+                setAllFilterState({
+                  ...allfilterState,
+                  mobShortDecend: "",
+                  dateShortDecend: "",
+                  nameShortDecend: "aesc",
+                  villShortDecend: "",
+                })
+              }
+            >
+              Name {allfilterState.nameShortDecend !== "" && <FaArrowDown />}
+            </span>
+          ) : (
+            <span
+              className="flex flex-row gap-2 items-center "
+              onClick={() =>
+                setAllFilterState({
+                  ...allfilterState,
+                  mobShortDecend: "",
+                  dateShortDecend: "",
+                  nameShortDecend: "desc",
+                  villShortDecend: "",
+                })
+              }
+            >
+              Name {allfilterState.nameShortDecend !== "" && <FaArrowUp />}
+            </span>
+          )}{" "}
+          <div className="h-8 bg-gray-400 w-px"></div>
+          {allfilterState.villShortDecend === "desc" ? (
+            <span
+              className="flex flex-row gap-2 items-center  text-blue-400"
+              onClick={() =>
+                setAllFilterState({
+                  ...allfilterState,
+                  mobShortDecend: "",
+                  dateShortDecend: "",
+                  nameShortDecend: "",
+                  villShortDecend: "aesc",
+                })
+              }
+            >
+              Village
+              {allfilterState.villShortDecend !== "" && <FaArrowDown />}
+            </span>
+          ) : (
+            <span
+              className="flex flex-row gap-2 items-center"
+              onClick={() =>
+                setAllFilterState({
+                  ...allfilterState,
+                  mobShortDecend: "",
+                  dateShortDecend: "",
+                  nameShortDecend: "",
+                  villShortDecend: "desc",
+                })
+              }
+            >
+              Village
+              {allfilterState.villShortDecend !== "" && <FaArrowUp />}
+            </span>
+          )}
+        </div>
+      )}
+
+      <div className=" flex flex-col gap-2 items-center justify-center align-center w-full -z-90 lg:flex-row overflow-hidden ">
         <div className="overflow-y-auto w-full lg:w-auto p-2">
           {farmerListData?.map((item) => (
-            <div className="flex flex-row w-full p-2  text-sm justify-between   mt-2  rounded-lg lg:hidden">
-              <div className="flex flex-col gap-2">
-                <span className="font-bold">
-                  Farmer Name -{" "}
-                  <small className="font-normal text-sm">{item.f_name}</small>{" "}
-                  Land Info-{" "}
-                  <small className="font-normal text-sm">{item.f_lacre}</small>
-                </span>
-                <span>{item.f_mobile}</span>
-                <span>Farmer Type: {item.f_type}</span>
-                <span className="text-xsm">Farmer Cat: {item.f_cat}</span>
-                <div className="flex gap-4 w-full">
-                  <span>State: {item.st_id}</span>{" "}
-                  <span>District: {item.ds_id}</span>{" "}
-                  <span>Village: {item.v_id}</span>{" "}
+            <div className="flex w-full flex-col gap-1">
+              <div className="flex flex-row w-full p-2  text-sm justify-between   mt-2  rounded-lg lg:hidden">
+                <div className="flex flex-col gap-2">
+                  <span className="font-bold flex flex-row gap-4">
+                    <GiFarmer
+                      className="text-[#626364] cursor-pointer text-green-500"
+                      size={20}
+                    />
+                    <small className="text-[#4285F4] text-sm">
+                      {item.f_name}
+                    </small>
+                  </span>
+
+                  <span className="font-bold flex flex-row gap-4 font-normal text-xs">
+                    <GiIsland
+                      className="text-[#626364] cursor-pointer text-green-500"
+                      size={20}
+                    />{" "}
+                    Land Info: {item.f_lacre}
+                  </span>
+                  <span className="font-bold flex flex-row gap-4 font-normal text-xs">
+                    <FaMobileRetro
+                      className="text-black-400 cursor-pointer "
+                      size={20}
+                    />{" "}
+                    +91 -{item.f_mobile}
+                  </span>
+                  <div className="justify-between w-full">
+                    <span>Farmer Type</span>{" "}
+                    <small className="text-sm">: {item.f_type}</small>
+                  </div>
+                  <div className="justify-between">
+                    <span className="pr-2">Farmer Cat</span>{" "}
+                    <small className="text-sm">: {item.f_cat}</small>{" "}
+                  </div>
+                  <div className="flex gap-4 w-full">
+                    <span>State: {item.st_id}</span>{" "}
+                    <span>District: {item.ds_id}</span>{" "}
+                    <span>Village: {item.v_id}</span>{" "}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-4 self-center">
+                  <button
+                    className="bg-[#4285F4] p-2 rounded-full text-white font-bold"
+                    onClick={() => {
+                      setAddFarmerModal(true);
+                      setFarmerState({
+                        farmerName: item.f_name,
+                        fatherName: item.ff_name,
+                        farmerAddress: item.f_address,
+                        farmerTypes: item.f_type,
+                        farmerCategory: item.f_cat,
+                        landInfo: item.f_lacre,
+                        mobile: item.f_mobile,
+                        state: item.st_id,
+                        district: item.ds_id,
+                        village: item.v_id,
+                        pinCode: item.f_pin,
+                      });
+                    }}
+                  >
+                    Open{" "}
+                  </button>
+                  <button
+                    className="bg-red-400 p-2 rounded-full"
+                    onClick={() => handleDeleteFarmer(item?.f_id)}
+                  >
+                    Archive
+                  </button>
                 </div>
               </div>
-              <div className="flex flex-col gap-4 self-center">
-                <button
-                  className="bg-blue-400 p-2 rounded-full "
-                  onClick={() => {
-                    setAddFarmerModal(true);
-                    setFarmerState({
-                      farmerName: item.f_name,
-                      fatherName: item.ff_name,
-                      farmerAddress: item.f_address,
-                      farmerTypes: item.f_type,
-                      farmerCategory: item.f_cat,
-                      landInfo: item.f_lacre,
-                      mobile: item.f_mobile,
-                      state: item.st_id,
-                      district: item.ds_id,
-                      village: item.v_id,
-                      pinCode: item.f_pin,
-                    });
-                  }}
-                >
-                  Open{" "}
-                </button>
-                <button
-                  className="bg-red-400 p-2 rounded-full"
-                  onClick={() => handleDeleteFarmer(item?.f_demo_id)}
-                >
-                  Archive
-                </button>
-              </div>
-              <hr className="bg-gray-200 border-1" />
+              <hr className="bg-gray-200 border-1 w-full" />
             </div>
           ))}
         </div>
@@ -326,6 +691,7 @@ const AdditionalInfo = (props) => {
                         />
                       </div>
                     </div>
+
                     <div>
                       <div className="w-full px-2 ">
                         <input
@@ -544,15 +910,7 @@ const AdditionalInfo = (props) => {
                       </div>
                     </div>
                   </div>
-                  <div className="mt-100 lg:hidden">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-4 py-2 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={() => handleSaveFarmer()}
-                    >
-                      Submit
-                    </button>
-
+                  <div className="mt-100 lg:hidden flex gap-2">
                     <button
                       type="button"
                       className="inline-flex justify-center text-white rounded-md border border-transparent bg-green-400 px-4 py-2 text-sm font-medium  hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
@@ -567,6 +925,18 @@ const AdditionalInfo = (props) => {
           </div>
         </Dialog>
       </Transition>
+      <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
+        <FaArrowAltCircleUp
+          size={42}
+          className="self-center size-120 text-black-400 text-blue-400 "
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth", // Smooth scrolling animation
+            })
+          }
+        />
+      </div>
     </form>
   );
 };
