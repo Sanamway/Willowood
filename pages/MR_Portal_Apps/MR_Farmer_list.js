@@ -268,10 +268,10 @@ const AdditionalInfo = (data) => {
     let field = null;
     let order = null;
     if (date === "desc") {
-      field = "demo_date";
+      field = "createdAt";
       order = "desc";
     } else if (date === "aesc") {
-      field = "demo_date";
+      field = "createdAt";
       order = "aesc";
     } else if (mob === "desc") {
       field = "farmer_mob_no";
@@ -301,7 +301,7 @@ const AdditionalInfo = (data) => {
           from: from ? moment(from).format("YYYY-MM-DD[T00:00:00.000Z]") : null,
           to: to ? moment(to).format("YYYY-MM-DD[T00:00:00.000Z]") : null,
           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          emp_code: "WCSP1829",
+
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           sortField: field,
           sortOrder: order,
@@ -330,7 +330,7 @@ const AdditionalInfo = (data) => {
               })
             }
           />
-          <h2 className="font-bold ">List of Farmer Demo</h2>
+          <h2 className="font-bold ">List of Farmer </h2>
           <div></div>
         </div>
         <div className="relative">
@@ -351,6 +351,7 @@ const AdditionalInfo = (data) => {
             </svg>
           </span>
           <input
+            disabled
             className="bg-white border-2 border-blue-400 pl-10 py-1 pr-2 rounded-lg w-full lg:w-auto lg:self-center lg:place-self-center"
             placeholder="Enter Name or Mobile Number"
             onChange={(e) => getFarmerDetailsByNumber(e.target.value)}
@@ -398,7 +399,7 @@ const AdditionalInfo = (data) => {
 
       <div className="flex bg-gray-200 h-8 mt-36 justify-between items-center px-2">
         <small className="font-bold">Sort By</small>
-        <small>{farmerListData.length} Demo Retrive</small>
+        <small>{farmerListData.length} Farmers Retrive</small>
       </div>
       {farmerListData.length > 1 && (
         <div className="flex flex-row justify-around items-center h-10 border-2 border-gray-200   rounded-lg text-sm font-bold text-blue-400">
@@ -656,6 +657,7 @@ const AdditionalInfo = (data) => {
                 <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <div className="w-1/2 px-2 relative ">
                     <input
+                      disabled
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                       type="text"
                       id="inputField"
@@ -677,6 +679,7 @@ const AdditionalInfo = (data) => {
                     <div className="flex flex-row my-2 mb-2  ">
                       <div className="w-full px-2">
                         <input
+                          disabled
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
                           id="inputField"
@@ -695,6 +698,7 @@ const AdditionalInfo = (data) => {
                     <div>
                       <div className="w-full px-2 ">
                         <input
+                          disabled
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
                           id="inputField"
@@ -713,6 +717,7 @@ const AdditionalInfo = (data) => {
                     <div>
                       <div className="w-full px-2 ">
                         <textarea
+                          disabled
                           className="w-full px-2 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
                           id="textareaField"
                           placeholder="Farmer Address"
@@ -731,15 +736,10 @@ const AdditionalInfo = (data) => {
                     <div className="flex flex-row my-2 mb-2 ">
                       <div className="w-full px-2">
                         <select
+                          disabled
                           className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
                           id="userSelect"
                           value={farmerState.farmerTypes}
-                          onChange={(e) =>
-                            setFarmerState({
-                              ...farmerState,
-                              farmerTypes: e.target.value,
-                            })
-                          }
                         >
                           <option
                             value={""}
@@ -759,6 +759,7 @@ const AdditionalInfo = (data) => {
 
                       <div className="w-full px-2 ">
                         <select
+                          disabled
                           className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
                           id="userSelect"
                           value={farmerState.farmerCategory}
@@ -796,6 +797,7 @@ const AdditionalInfo = (data) => {
 
                     <div className="w-full px-2">
                       <input
+                        disabled
                         className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                         type="text"
                         id="inputField"
@@ -812,73 +814,32 @@ const AdditionalInfo = (data) => {
 
                     <div className="flex flex-row my-2 mb-2 ">
                       <div className="w-full px-2">
-                        <select
-                          className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                          id="stateSelect"
+                        <input
+                          disabled
+                          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="inputField"
+                          placeholder="State"
                           value={farmerState.state}
-                          onChange={(e) =>
-                            setFarmerState({
-                              ...farmerState,
-                              state: e.target.value,
-                            })
-                          }
-                        >
-                          <option
-                            value={""}
-                            className="focus:outline-none focus:border-b bg-white"
-                          >
-                            Select State
-                          </option>
-                          {/* {districtData.map((item, idx) => (
-                    <option
-                      value={item.ds_id}
-                      className="focus:outline-none focus:border-b bg-white"
-                      key={idx}
-                    >
-                      {item.district_name}
-                    </option>
-                  ))} */}
-
-                          <option
-                            value={"New"}
-                            className="focus:outline-none focus:border-b bg-white"
-                          >
-                            New
-                          </option>
-                        </select>
+                        />
                       </div>
 
                       <div className="w-full px-2 ">
-                        <select
-                          className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                          id="stateSelect"
+                        <input
+                          disabled
+                          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="inputField"
+                          placeholder="District"
                           value={farmerState.district}
-                          onChange={(e) =>
-                            setFarmerState({
-                              ...farmerState,
-                              district: e.target.value,
-                            })
-                          }
-                        >
-                          <option
-                            value={""}
-                            className="focus:outline-none focus:border-b bg-white"
-                          >
-                            Select District
-                          </option>
-                          <option
-                            value={"Dist"}
-                            className="focus:outline-none focus:border-b bg-white"
-                          >
-                            Dist
-                          </option>
-                        </select>
+                        />
                       </div>
                     </div>
 
                     <div className="flex flex-row my-2 mb-2 ">
                       <div className="w-full px-2">
                         <input
+                          disabled
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
                           id="inputField"
@@ -895,6 +856,7 @@ const AdditionalInfo = (data) => {
 
                       <div className="w-full px-2 ">
                         <input
+                          disabled
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="number"
                           id="inputField"

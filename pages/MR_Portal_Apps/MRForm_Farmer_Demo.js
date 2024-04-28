@@ -24,6 +24,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { BsCalendar2Month } from "react-icons/bs";
 import { IoTodayOutline } from "react-icons/io5";
 import { Dialog, Transition } from "@headlessui/react";
+import CameraComponent from "@/components/Camera";
 const AdditionalInfo = (props) => {
   const headers = {
     "Content-Type": "application/json",
@@ -108,20 +109,9 @@ const AdditionalInfo = (props) => {
   useEffect(() => {
     getDelaerData();
     getCropInfo();
-    getProductDemoTable();
-  }, []);
 
-  const getProductDemoTable = async () => {
-    try {
-      const respond = await axios.get(`${url}/api/get_mr_form_demo_crop`, {
-        headers: headers,
-      });
-      const apires = await respond.data.data;
-      setProductDemoTableData(apires);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    getAllState();
+  }, []);
 
   const getStageInfo = async (cropId, cropStage, cropSegment, productBrand) => {
     try {
@@ -187,7 +177,7 @@ const AdditionalInfo = (props) => {
         params: { f_demo_crop_id: Number(id) },
       });
       const apires = await respond.data.data;
-      getProductDemoTable();
+      getProductDemoTable(fDemoCode);
 
       toast.success("Deleted");
     } catch (error) {
@@ -200,9 +190,7 @@ const AdditionalInfo = (props) => {
     setSubmitFormLoading(true);
     try {
       const data = {
-        f_demo_id: 1212,
-        f_demo_code: 2132,
-        demo_date: new Date(),
+        demo_date: moment().format("YYYY-MM-DD"),
         demo_time: new Date(),
         dealer_id: Number(formData.dealer),
         purpose_of_demo: formData.purposeDemo,
@@ -221,6 +209,10 @@ const AdditionalInfo = (props) => {
         potential_farmer: formData.potentialFarmer,
         next_visit_date: formData.nextVisitDate,
         status: formData.status,
+        t_id: Number(localStorageItems.tId),
+        f_demo_code: fDemoCode,
+        c_id: Number(localStorageItems.cId),
+        emp_code: window.localStorage.getItem("emp_code"),
       };
 
       const respond = await axios
@@ -234,6 +226,8 @@ const AdditionalInfo = (props) => {
             top: 0,
             behavior: "smooth", // Smooth scrolling animation
           });
+          generateEmpCode();
+
           setSubmitFormLoading(false);
           setFormData({
             purposeDemo: "",
@@ -245,9 +239,9 @@ const AdditionalInfo = (props) => {
             village: "",
             farmerType: "",
             plotSize: "",
-            potentialFarmer: "",
-            nextVisitDate: "",
-            status: "",
+            potentialFarmer: "Yes",
+            nextVisitDate: new Date(),
+            status: "Open",
           });
           setProductDemoState({
             crop: "",
@@ -262,6 +256,7 @@ const AdditionalInfo = (props) => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
+      generateEmpCode();
       toast.error(errorMessage);
       setSubmitFormLoading(false);
     }
@@ -311,6 +306,7 @@ const AdditionalInfo = (props) => {
       toast.error("Please Enter 10 digit Mobile Number");
       return;
     }
+
     try {
       const data = {
         f_demo_code: fDemoCode,
@@ -422,6 +418,7 @@ const AdditionalInfo = (props) => {
       });
       const apires = await respond.data.data;
       setFDemoCode(apires);
+      getProductDemoTable(apires);
     } catch (error) {
       console.log(error);
     }
@@ -452,7 +449,7 @@ const AdditionalInfo = (props) => {
         .then((res) => {
           if (!res) return;
           toast.success("Submitted");
-          getProductDemoTable();
+          getProductDemoTable(fDemoCode);
           setProductDemoState({
             crop: "",
             cropName: "",
@@ -469,11 +466,110 @@ const AdditionalInfo = (props) => {
       toast.error(errors.response?.data.message);
     }
   };
+
+  const [allState, setAllState] = useState([]);
+  const [allStateCityData, setAllStateCityData] = useState([]);
+  const [img, setImg] = useState([]);
+  const [newImg, setNewImg] = useState([]);
+  const [imgType, setImgType] = useState("");
+
+  const getAllState = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_dist_state`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      setAllStateCityData(apires);
+      console.log(
+        "plk",
+        apires.map((item) => item.state)
+      );
+      setAllState([...new Set(apires.map((item) => item.state))]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const [allCityStateWise, setAllCityStateWise] = useState([]);
+  useEffect(() => {
+    if (!farmerState) return;
+
+    setAllCityStateWise(
+      allStateCityData
+        .filter((item) => item.state === farmerState.state)
+        .map((item) => item.district)
+    );
+  }, [farmerState.state]);
+
+  const getProductDemoTable = async (fdemo) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_mr_form_demo_crop`, {
+        headers: headers,
+        params: { f_demo_code: fDemoCode },
+      });
+      const apires = await respond.data.data;
+      setProductDemoTableData(apires);
+    } catch (error) {
+      console.log(error);
+      setProductDemoTableData([]);
+    }
+  };
+  useEffect(() => {
+    getProductDemoTable(fDemoCode);
+  }, [fDemoCode]);
+  const [showCamera, setShowCamera] = useState(false);
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
       onSubmit={(e) => e.preventDefault()}
     >
+      <Transition
+        appear
+        show={showCamera}
+        as={Fragment}
+        onClose={() => setShowCamera(false)}
+      >
+        <Dialog as="div" className="relative z-10 ">
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className=" w-full h-full flex justify-center items-center bg-green-400">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="font-arial h-full ">
+                  <CameraComponent
+                    setImg={setImg}
+                    setNewImg={setNewImg}
+                    type={imgType}
+                    handleClose={() => setShowCamera(false)}
+                  />
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+      {/* <div className="fixed top-0 left-0 w-full h-full bg-gray-900 flex justify-center items-center bg-green-400">
+        <div className="relative z-9999999 ">
+          <CameraComponent />
+        </div>
+      </div> */}
       <Toaster position="bottom-center" reverseOrder={false} />
       <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
         <span className="text-black flex flex-row gap-4 font-bold   ">
@@ -1154,11 +1250,15 @@ const AdditionalInfo = (props) => {
           <h1 className="flex justify-center font-bold ">Capture Demo Photo</h1>
           <div className=" w-full px-2 profpic relative group bo">
             <Image
-              src={""}
+              src={img}
               className=" rounded  bg-gray-200"
               alt="img"
               width={300}
               height={200}
+              onClick={() => {
+                setShowCamera(true);
+                setImgType("Old");
+              }}
             />
             <input
               type="file"
@@ -1166,15 +1266,18 @@ const AdditionalInfo = (props) => {
               style={{ display: "none" }}
               id="fileInput"
             />
-            <label
-              htmlFor="fileInput "
-              className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
-            >
-              <FaCameraRetro
-                size={50}
-                className="mr-2  self-center size-120 text-black-400"
-              />
-            </label>
+
+            {!img && (
+              <label
+                htmlFor="fileInput "
+                className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+              >
+                <FaCameraRetro
+                  size={50}
+                  className="mr-2  self-center size-120 text-black-400"
+                />
+              </label>
+            )}
           </div>
         </div>
         <div className="wrap ">
@@ -1183,11 +1286,15 @@ const AdditionalInfo = (props) => {
           </h1>
           <div className=" w-full px-2 profpic relative group">
             <Image
-              src={""}
+              src={newImg}
               className=" rounded bg-gray-200"
               alt="img"
               width={300}
               height={200}
+              onClick={() => {
+                setShowCamera(true);
+                setImgType("New");
+              }}
             />
             <input
               type="file"
@@ -1195,15 +1302,17 @@ const AdditionalInfo = (props) => {
               style={{ display: "none" }}
               id="fileInput"
             />
-            <label
-              htmlFor="fileInput "
-              className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
-            >
-              <FaCameraRetro
-                size={50}
-                className="mr-2  self-center size-120 text-black-400"
-              />
-            </label>
+            {!newImg && (
+              <label
+                htmlFor="fileInput "
+                className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+              >
+                <FaCameraRetro
+                  size={50}
+                  className="mr-2  self-center size-120 text-black-400"
+                />
+              </label>
+            )}
           </div>
         </div>
       </div>
@@ -1552,22 +1661,15 @@ const AdditionalInfo = (props) => {
                           >
                             Select State
                           </option>
-                          {/* {districtData.map((item, idx) => (
-                    <option
-                      value={item.ds_id}
-                      className="focus:outline-none focus:border-b bg-white"
-                      key={idx}
-                    >
-                      {item.district_name}
-                    </option>
-                  ))} */}
-
-                          <option
-                            value={"New"}
-                            className="focus:outline-none focus:border-b bg-white"
-                          >
-                            New
-                          </option>
+                          {allState?.map((item, idx) => (
+                            <option
+                              value={item}
+                              className="focus:outline-none focus:border-b bg-white"
+                              key={idx}
+                            >
+                              {item}
+                            </option>
+                          ))}
                         </select>
                       </div>
 
@@ -1589,12 +1691,14 @@ const AdditionalInfo = (props) => {
                           >
                             Select District
                           </option>
-                          <option
-                            value={"Dist"}
-                            className="focus:outline-none focus:border-b bg-white"
-                          >
-                            Dist
-                          </option>
+                          {allCityStateWise.map((item) => (
+                            <option
+                              value={item}
+                              className="focus:outline-none focus:border-b bg-white"
+                            >
+                              {item}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>

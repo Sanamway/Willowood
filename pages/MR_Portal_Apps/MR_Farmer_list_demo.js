@@ -60,7 +60,6 @@ const AdditionalInfo = () => {
     name,
     vill
   ) => {
-    console.log("Awaj ", mobile, from, to, date, mob, name, vill);
     let field = null;
     let order = null;
     if (date === "desc") {
@@ -97,10 +96,11 @@ const AdditionalInfo = () => {
           from: from ? moment(from).format("YYYY-MM-DD[T00:00:00.000Z]") : null,
           to: to ? moment(to).format("YYYY-MM-DD[T00:00:00.000Z]") : null,
           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          emp_code: "WCSP1829",
+
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           sortField: field,
           sortOrder: order,
+          emp_code: window.localStorage.getItem("emp_code"),
         },
       });
       const apires = await respond.data.data;
