@@ -79,11 +79,9 @@ const RPTable = (props) => {
   let header;
 
   useEffect(() => {
-    console.log("njkl", props.tableData);
-
     if (Array.isArray(props.tableData[0])) {
       header = props.tableData[0]?.map((item) => item.trim());
-
+      let po = 0;
       props.setHeaderData(props.tableData[0]?.map((item) => item.trim()));
 
       setResult(
@@ -95,6 +93,8 @@ const RPTable = (props) => {
               // Change the value at index 20 to the value at index 19 multiplied by the value at index 43
 
               obj[header] = row[19] * row[43];
+
+              po = po + row[19] * row[43];
             } else if (index === 26) {
               // Change the value at index 20 to the value at index 19 multiplied by the value at index 43
 
@@ -107,6 +107,7 @@ const RPTable = (props) => {
           return obj;
         })
       );
+      console.log("joye", po);
     } else {
       setResult(props.tableData);
     }

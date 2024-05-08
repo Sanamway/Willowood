@@ -602,7 +602,7 @@ const AdditionalInfo = (props) => {
                 >
                   <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
                     <li
-                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center "
+                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap"
                       onClick={() =>
                         router.push({
                           pathname: "MR_Farmer_list_demo",
@@ -613,7 +613,7 @@ const AdditionalInfo = (props) => {
                         className="text-[#626364] cursor-pointer"
                         size={20}
                       />{" "}
-                      Monthly Demo
+                      List of Farmer Demo
                     </li>
                     <li
                       className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "

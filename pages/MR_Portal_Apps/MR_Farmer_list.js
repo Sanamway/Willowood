@@ -15,44 +15,6 @@ import { FaArrowDown } from "react-icons/fa";
 import { FaArrowUp } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import { FaArrowAltCircleUp } from "react-icons/fa";
-// export async function getFarmerDetails() {
-//   try {
-//     const headers = {
-//       "Content-Type": "application/json",
-//       secret: "fsdhfgsfuiweifiowefjewcewcebjw",
-//     };
-
-//     const response = await axios.get(`${url}/api/get_farmer`, {
-//       headers: headers,
-//       params: {
-//         t_id: 1,
-//       },
-//     });
-
-//     return response.data.data;
-//   } catch (error) {
-//     console.error("Error fetching farmer details:", error);
-//     return []; // Return an empty array or handle error as needed
-//   }
-// }
-// export async function getServerSideProps() {
-//   try {
-//     const farmerListData = await getFarmerDetails();
-
-//     return {
-//       props: {
-//         farmerListData,
-//       },
-//     };
-//   } catch (error) {
-//     console.error("Error in getServerSideProps:", error);
-//     return {
-//       props: {
-//         farmerListData: [], // Return an empty array or handle error as needed
-//       },
-//     };
-//   }
-// }
 
 const AdditionalInfo = (data) => {
   console.log("pop", data);
@@ -196,34 +158,6 @@ const AdditionalInfo = (data) => {
     getFarmerDetails();
     setisOpen(false);
   };
-
-  // const getFarmerDetailsByNumber = async (mobile) => {
-  //   if (mobile.length === 10) {
-  //     try {
-  //       const respond = await axios.get(`${url}/api/get_farmer`, {
-  //         headers: headers,
-  //         params: {
-  //           mob_no: mobile,
-  //         },
-  //       });
-
-  //       const apires = await respond.data.data;
-  //       setFarmerListData(apires);
-  //     } catch (error) {}
-  //   } else if (mobile.length === 0) {
-  //     try {
-  //       const respond = await axios.get(`${url}/api/get_farmer`, {
-  //         headers: headers,
-  //         params: {
-  //           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-  //         },
-  //       });
-
-  //       const apires = await respond.data.data;
-  //       setFarmerListData(apires);
-  //     } catch (error) {}
-  //   }
-  // };
 
   const [allfilterState, setAllFilterState] = useState({
     number: null,

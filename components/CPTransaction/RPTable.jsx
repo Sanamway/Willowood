@@ -311,19 +311,19 @@ const RPTable = (props) => {
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5
       ) {
-        endPoint = `api/add_cp?rm=${true}`;
+        endPoint = `api/add_cp_entry?rm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
       ) {
-        endPoint = `api/add_cp?zm=${true}`;
+        endPoint = `api/add_cp_entry?zm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
       ) {
-        endPoint = `api/add_cp?bum=${true}`;
+        endPoint = `api/add_cp_entry?bum=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10
       ) {
-        endPoint = `api/add_cp?bgm=${true}`;
+        endPoint = `api/add_cp_entry?bgm=${true}`;
       } else {
         return;
       }

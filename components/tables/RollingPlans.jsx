@@ -78,11 +78,11 @@ const RollingPlans = () => {
   };
 
   useEffect(() => {
-     getAllTransactionPlan();
+    getAllTransactionPlan();
   }, []);
   const getAllTransactionYear = async (yr) => {
     try {
-       const respond = await axios.get(`${url}/api/get_rp`, {
+      const respond = await axios.get(`${url}/api/get_rp`, {
         headers: headers,
         params: { status: true, year: yr },
       });
@@ -98,7 +98,6 @@ const RollingPlans = () => {
   }, [filterState.yr]);
 
   useEffect(() => {
-    if (!allYearData.length || new Date() >= new Date(2024, 3, 13)) return;
     const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
 
     switch (roleId) {
@@ -125,7 +124,7 @@ const RollingPlans = () => {
         break;
       case 5:
         setLocalStorageItems({
-          cId:  JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
@@ -399,7 +398,13 @@ const RollingPlans = () => {
     );
   }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
 
+  const [summaryData, setSummaryData] = useState({
+    actual: 0,
+    budget: 0,
+    target: 0,
+  });
   const [allTableData, setAllTableData] = useState([]);
+
   const getAllSalesPlanStatus = async (
     yr,
     month,
@@ -435,8 +440,8 @@ const RollingPlans = () => {
             month === "All" || !month ? null : moment(month).format("YYYY-MM"),
           bg_id: bgId === "All" || !bgId ? null : bgId,
           bu_id: buId === "All" || !buId ? null : buId,
-          z_id: zId === "All" ||   !zId ? null : zId,
-          r_id: rId === "All" ||   !rId ? null : rId,
+          z_id: zId === "All" || !zId ? null : zId,
+          r_id: rId === "All" || !rId ? null : rId,
           t_id: tId === "All" || !tId ? null : tId,
         },
       });
@@ -444,6 +449,19 @@ const RollingPlans = () => {
       const apires = await respond.data.data;
 
       setAllTableData(apires);
+      let actualValue = 0;
+      let budgetValue = 0;
+      let targetValue = 0;
+      apires.forEach((element) => {
+        actualValue = Number(actualValue) + Number(element.actual);
+        budgetValue = Number(budgetValue) + Number(element.budget);
+        targetValue = Number(targetValue) + Number(element.target);
+        setSummaryData({
+          actual: actualValue,
+          budget: budgetValue,
+          target: targetValue,
+        });
+      });
     } catch (error) {
       if (!error) return;
       setAllTableData([]);
@@ -495,6 +513,19 @@ const RollingPlans = () => {
 
       const apires = await respond.data.data;
       setAllTableData(apires);
+      let actualValue = 0;
+      let budgetValue = 0;
+      let targetValue = 0;
+      apires.forEach((element) => {
+        actualValue = Number(actualValue) + Number(element.actual);
+        budgetValue = Number(budgetValue) + Number(element.budget);
+        targetValue = Number(targetValue) + Number(element.target);
+        setSummaryData({
+          actual: actualValue,
+          budget: budgetValue,
+          target: targetValue,
+        });
+      });
     } catch (error) {
       if (!error) return;
       setAllTableData([]);
@@ -3462,6 +3493,7 @@ const RollingPlans = () => {
   };
 
   const handleDeleteRps = async (data) => {
+    console.log("pkl", data);
     try {
       let paramsData;
       if (filterState.tId || filterState.tId === "All") {
@@ -3491,11 +3523,10 @@ const RollingPlans = () => {
       localStorage.setItem("RSP", JSON.stringify([]));
       const respond = axios.get(`${url}/api/delete_rolling_tm`, {
         headers: headers,
-
         params: paramsData,
       });
       const apires = await respond;
-      console.log("noye", apires.data.message);
+
       setIsOpen(true);
       setModalData({
         message: apires.data.message,
@@ -3633,11 +3664,56 @@ const RollingPlans = () => {
     <Layout>
       <div className="h-screen  w-full font-arial bg-white">
         <div className="grid justify-items-stretch grid-flow-col px-8 py-2">
-          <h2 className="flex font-arial  text-xl  py-2 font-bold  text-teal-400  justify-self-center underline">
+          <h2 className="flex font-arial  text-sm   font-bold  text-teal-400  justify-self-center underline">
             Rolling Sales Plan Status
           </h2>
         </div>
-        <div className="my-4 flex  flex-col w-full gap-4 px-12 ">
+
+        {/* <div class="bg-white rounded-lg shadow-lg p-6">
+          <h2 class="text-xl font-bold mb-4">
+            Total Summary - Rolling plan (In lac)
+          </h2>
+          <div class="grid grid-cols-5 gap-2">
+            <div class="border border-gray-300 p-2">YTD</div>
+            <div class="border border-gray-300 p-2">H1 - (April - Sept)</div>
+            <div class="border border-gray-300 p-2">H2 - (Oct - March)</div>
+            <div class="border border-gray-300 p-2">Current Month-MTD</div>
+
+            <div class="border border-gray-300 p-2">
+              <div>Budget</div>
+              <div>RSP</div>
+              <div>Sale</div>
+              <div>B.Ach %</div>
+              <div>R.Ach</div>
+            </div>
+
+            <div class="border border-gray-300 p-2">
+              <div>Budget</div>
+              <div>RSP</div>
+              <div>Sale</div>
+              <div>B.Ach %</div>
+              <div>R.Ach</div>
+            </div>
+
+            <div class="border border-gray-300 p-2">
+              <div>Budget</div>
+              <div>RSP</div>
+              <div>Sale</div>
+              <div>B.Ach %</div>
+              <div>R.Ach</div>
+            </div>
+
+            <div class="border border-gray-300 p-2">
+              <div>Budget</div>
+              <div>RSP</div>
+              <div>Sale</div>
+              <div>B.Ach %</div>
+              <div>R.Ach</div>
+            </div>
+          </div>
+        </div> */}
+
+        <div className="my-2 flex  flex-col w-full gap-4 px-12 text-sm  ">
           <div className="flex gap-4 w-full">
             <select
               className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -3841,7 +3917,166 @@ const RollingPlans = () => {
             </select>
           </div>
         </div>
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
+        <h2 className="flex justify-center items-center  w-full font-bold text-xs">
+          Total Summary Rolling Plan (in Lac)
+        </h2>
+        <div className="grid grid-cols-4  text-sm px-12">
+          <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-blue-200">
+            YTD
+          </div>
+          <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-blue-200">
+            H1 - (April - Sept)
+          </div>
+          <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-blue-200">
+            H2 - (Oct - March)
+          </div>
+          <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-blue-200">
+            Current Month-MTD
+          </div>
+        </div>
+
+        <div className="grid grid-cols-4  text-sm px-12 font-bold text-xs ">
+          <div className="border border-gray-300  flex justify-between items-center">
+            <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+              Budget
+            </span>
+            <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+              RSP
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              Sale
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              B ach
+            </span>
+            <span className=" flex items-center justify-center   border-gray-300 w-20">
+              R ach
+            </span>
+          </div>
+          <div className="border border-gray-300  flex justify-between items-center">
+            <span className=" flex items-center   justify-center border-r border-gray-300 w-20">
+              Budget
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              RSP
+            </span>
+            <span className=" flex items-center justify-center   border-r border-gray-300 w-20">
+              Sale
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              B ach
+            </span>
+            <span className=" flex items-center justify-center   border-gray-300 w-20">
+              R ach
+            </span>
+          </div>
+          <div className="border border-gray-300  flex justify-between items-center">
+            <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+              Budget
+            </span>
+            <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+              RSP
+            </span>
+            <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+              Sale
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              B ach
+            </span>
+            <span className=" flex items-center  justify-center  border-gray-300 w-20">
+              R ach
+            </span>
+          </div>
+          <div className="border border-gray-300  flex justify-between items-center">
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              Budget
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              RSP
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              Sale
+            </span>
+            <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+              B ach
+            </span>
+            <span className=" flex items-center  justify-center  border-gray-300 w-20">
+              R ach
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-4  text-sm px-12">
+          <div className="border border-gray-300  flex justify-between items-center">
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              {summaryData.budget.toFixed(2)}
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              {summaryData.target.toFixed(2)}
+            </span>
+            <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+              {summaryData.actual.toFixed(2)}
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              200
+            </span>
+            <span className=" flex items-center  justify-center  border-gray-300 w-20">
+              12
+            </span>
+          </div>
+          <div className="border border-gray-300  flex justify-between items-center">
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              121
+            </span>
+            <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+              211
+            </span>
+            <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+              26
+            </span>
+            <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+              67
+            </span>
+            <span className=" flex items-center  justify-center border-gray-300 w-20">
+              89
+            </span>
+          </div>
+          <div className="border border-gray-300  flex justify-between items-center">
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              11
+            </span>
+            <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+              12
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              11
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              89
+            </span>
+            <span className=" flex items-center  justify-center   border-gray-300 w-20">
+              90
+            </span>
+          </div>
+          <div className="border border-gray-300  flex justify-between items-center">
+            <span className=" flex items-center justify-center border-r border-gray-300 w-20">
+              12
+            </span>
+            <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+              1112
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              Sale
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              12
+            </span>
+            <span className=" flex items-center  justify-center  border-gray-300 w-20">
+              89
+            </span>
+          </div>
+        </div>
+        <div className="bg-white h-screen flex items-start justify-center max-w-full mt-4">
           <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full px-4 min-h-screen">
             <table className="min-w-full divide-y border- divide-gray-200  ">
               <thead className="">

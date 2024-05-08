@@ -341,19 +341,26 @@ const CollectionPlans = () => {
     regionId
   ) => {
     try {
-      const respond = await axios.get(`${url}/api/get_territory`, {
-        headers: headers,
-      });
+      const currentDate = new Date();
+      const endDate = new Date(2024, 4, 16);
 
-      const apires = await respond.data.data;
+      if (currentDate < endDate) {
+        const respond = await axios.get(`${url}/api/get_territory`, {
+          headers: headers,
+        });
 
-      setTerritoryData(
-        apires
-          .filter((item) => Number(item.bg_id) === Number(segmentId))
-          .filter((item) => Number(item.bu_id) === Number(businessUnitId))
-          .filter((item) => Number(item.z_id) === Number(zoneId))
-          .filter((item) => Number(item.r_id) === Number(regionId))
-      );
+        const apires = await respond.data.data;
+
+        setTerritoryData(
+          apires
+            .filter((item) => Number(item.bg_id) === Number(segmentId))
+            .filter((item) => Number(item.bu_id) === Number(businessUnitId))
+            .filter((item) => Number(item.z_id) === Number(zoneId))
+            .filter((item) => Number(item.r_id) === Number(regionId))
+        );
+      } else {
+        return;
+      }
     } catch (error) {
       setDownloadLoading(false);
     }
@@ -556,7 +563,7 @@ const CollectionPlans = () => {
 
   const handleSaveDraft = async () => {
     try {
-      const respond = await axios.get(`${url}/api/rsp_update_status`, {
+      const respond = await axios.get(`${url}/api/cp_update_status`, {
         headers: headers,
         params: {
           t_year: filterState.yr,
@@ -628,39 +635,41 @@ const CollectionPlans = () => {
       case "Close Period":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer ">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  cId,
-                  filterState
-                )
-              }
-            >
-              {downloadLoading ? (
-                <Loader />
-              ) : (
-                <FaDownload
-                  className="text-slate-400"
-                  disabled={downloadLoading}
-                />
-              )}{" "}
-              Download CP
-            </li>
+            {upload && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    cId,
+                    filterState
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
+              </li>
+            )}
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
@@ -713,39 +722,41 @@ const CollectionPlans = () => {
       case "Review Stage":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  cId,
-                  filterState
-                )
-              }
-            >
-              {downloadLoading ? (
-                <Loader />
-              ) : (
-                <FaDownload
-                  className="text-slate-400"
-                  disabled={downloadLoading}
-                />
-              )}{" "}
-              Download CP
-            </li>
+            {upload && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    cId,
+                    filterState
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
+              </li>
+            )}
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
@@ -832,39 +843,41 @@ const CollectionPlans = () => {
       case "Draft Submit":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  cId,
-                  filterState
-                )
-              }
-            >
-              {downloadLoading ? (
-                <Loader />
-              ) : (
-                <FaDownload
-                  className="text-slate-400"
-                  disabled={downloadLoading}
-                />
-              )}{" "}
-              Download CP
-            </li>
+            {upload && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    cId,
+                    filterState
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
+              </li>
+            )}
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
@@ -1235,39 +1248,41 @@ const CollectionPlans = () => {
       case "Region Review Done":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  cId,
-                  filterState
-                )
-              }
-            >
-              {downloadLoading ? (
-                <Loader />
-              ) : (
-                <FaDownload
-                  className="text-slate-400"
-                  disabled={downloadLoading}
-                />
-              )}{" "}
-              Download CP
-            </li>
+            {upload && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    cId,
+                    filterState
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
+              </li>
+            )}
 
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -1340,39 +1355,41 @@ const CollectionPlans = () => {
       case "B.U Review Done":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  cId,
-                  filterState
-                )
-              }
-            >
-              {downloadLoading ? (
-                <Loader />
-              ) : (
-                <FaDownload
-                  className="text-slate-400"
-                  disabled={downloadLoading}
-                />
-              )}{" "}
-              Download CP
-            </li>
+            {upload && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    cId,
+                    filterState
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
+              </li>
+            )}
 
             {(filterState.tId || filterState.tId === "All") &&
               localStorageItems.roleId === 5 && (
@@ -1408,39 +1425,41 @@ const CollectionPlans = () => {
       case "B.U Approved":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  cId,
-                  filterState
-                )
-              }
-            >
-              {downloadLoading ? (
-                <Loader />
-              ) : (
-                <FaDownload
-                  className="text-slate-400"
-                  disabled={downloadLoading}
-                />
-              )}{" "}
-              Download CP
-            </li>
+            {upload && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    cId,
+                    filterState
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
+              </li>
+            )}
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
               4 &&
@@ -1552,39 +1571,41 @@ const CollectionPlans = () => {
       case "Yet to Submit":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() => {
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  cId,
-                  filterState
-                );
-              }}
-            >
-              {downloadLoading ? (
-                <Loader />
-              ) : (
-                <FaDownload
-                  className="text-slate-400"
-                  disabled={downloadLoading}
-                />
-              )}{" "}
-              Download CP
-            </li>
+            {upload && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() => {
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    cId,
+                    filterState
+                  );
+                }}
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
+              </li>
+            )}
             {upload &&
               !(
                 JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
@@ -1666,39 +1687,41 @@ const CollectionPlans = () => {
       case "Yet to Approve":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  cId,
-                  filterState
-                )
-              }
-            >
-              {downloadLoading ? (
-                <Loader />
-              ) : (
-                <FaDownload
-                  className="text-slate-400"
-                  disabled={downloadLoading}
-                />
-              )}{" "}
-              Download CP
-            </li>
+            {upload && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    cId,
+                    filterState
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
+              </li>
+            )}
 
             {(JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
               4 ||
@@ -1756,39 +1779,41 @@ const CollectionPlans = () => {
       case "B.S Review Done":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  cId,
-                  filterState
-                )
-              }
-            >
-              {downloadLoading ? (
-                <Loader />
-              ) : (
-                <FaDownload
-                  className="text-slate-400"
-                  disabled={downloadLoading}
-                />
-              )}{" "}
-              Download CP
-            </li>
+            {upload && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    cId,
+                    filterState
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
+              </li>
+            )}
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
               2 &&
@@ -1881,39 +1906,41 @@ const CollectionPlans = () => {
       case "B.S Approved":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  cId,
-                  filterState
-                )
-              }
-            >
-              {downloadLoading ? (
-                <Loader />
-              ) : (
-                <FaDownload
-                  className="text-slate-400"
-                  disabled={downloadLoading}
-                />
-              )}{" "}
-              Download CP
-            </li>
+            {upload && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    cId,
+                    filterState
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
+              </li>
+            )}
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
               2 &&
@@ -2006,39 +2033,41 @@ const CollectionPlans = () => {
       case "Reject":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  cId,
-                  filterState
-                )
-              }
-            >
-              {downloadLoading ? (
-                <Loader />
-              ) : (
-                <FaDownload
-                  className="text-slate-400"
-                  disabled={downloadLoading}
-                />
-              )}{" "}
-              Download CP
-            </li>
+            {upload && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    cId,
+                    filterState
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
+              </li>
+            )}
             <li
               className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
               onClick={() => {
@@ -2091,39 +2120,41 @@ const CollectionPlans = () => {
       case "Zone Approved":
         return (
           <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
-            <li
-              className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-              onClick={() =>
-                handleDownloadExcelNew(
-                  mYr,
-                  planId,
-                  tranId,
-                  yr,
-                  t,
-                  tDes,
-                  r,
-                  rDes,
-                  z,
-                  zDes,
-                  bu,
-                  buDes,
-                  bg,
-                  bgDes,
-                  cId,
-                  filterState
-                )
-              }
-            >
-              {downloadLoading ? (
-                <Loader />
-              ) : (
-                <FaDownload
-                  className="text-slate-400"
-                  disabled={downloadLoading}
-                />
-              )}{" "}
-              Download CP
-            </li>
+            {upload && (
+              <li
+                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                onClick={() =>
+                  handleDownloadExcelNew(
+                    mYr,
+                    planId,
+                    tranId,
+                    yr,
+                    t,
+                    tDes,
+                    r,
+                    rDes,
+                    z,
+                    zDes,
+                    bu,
+                    buDes,
+                    bg,
+                    bgDes,
+                    cId,
+                    filterState
+                  )
+                }
+              >
+                {downloadLoading ? (
+                  <Loader />
+                ) : (
+                  <FaDownload
+                    className="text-slate-400"
+                    disabled={downloadLoading}
+                  />
+                )}{" "}
+                Download CP
+              </li>
+            )}
 
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
               4 &&
@@ -3363,7 +3394,7 @@ const CollectionPlans = () => {
       const respond = await axios.get(`${url}/${endPoint}`, {
         headers: headers,
         params: {
-          type_of_plan: "rp",
+          type_of_plan: "cp",
           c_id: c,
         },
       });
@@ -3375,7 +3406,7 @@ const CollectionPlans = () => {
       if (!error) return;
     }
   };
-  console.log("njk", allRejectList);
+
   useEffect(() => {
     if (!rejectModalData.cId) return;
     getReviewMsgDropDown(rejectModalData.cId);

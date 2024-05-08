@@ -103,7 +103,8 @@ const AdditionalInfo = () => {
           emp_code: window.localStorage.getItem("emp_code"),
         },
       });
-      const apires = await respond.data.data;
+      const apires = await respond.data.data.MR_demo;
+      console.log("moye", respond)
       setFarmerListData(apires);
     } catch (error) {
       setFarmerListData([]);
@@ -333,7 +334,7 @@ const AdditionalInfo = () => {
         </div>
       )}
 
-      {farmerListData.map((item) => (
+      {farmerListData?.map((item) => (
         <div className="flex w-full flex-col gap-1">
           <div className="flex flex-row w-full p-2  text-sm justify-between   mt-2  rounded-lg lg:hidden">
             <div className="flex flex-col h-full gap-4 items-center">
@@ -343,7 +344,7 @@ const AdditionalInfo = () => {
               </small>
             </div>
 
-            <div className="flex flex-col font-bold lg:none">
+            <div className="flex flex-col font-bold lg:none w-[50%]">
               <span className="text-[#4285F4] flex flex-row">
                 <FaMobileAlt className="" />
                 +91 {item.farmer_mob_no}
@@ -375,23 +376,49 @@ const AdditionalInfo = () => {
                 ))}
               </div>
               <div className="flex flex-row gap-2 font-bold text-gray-400">
-                <small className="text-black">
-                  Potential {item.potential_farmer}
+                <small className="text-black flex flex-col ">
+                  Potential:
+                  <span className="font-thin">{item.potential_farmer}</span>
                 </small>
-                <small className="text-black">
+                <small className="text-black flex flex-col ">
                   Next Visit Date:{" "}
-                  {moment(item.next_visit_date).format("DD-MMM-YYYY")}
+                  <span className="font-thin">
+                    {moment(item.next_visit_date).format("DD-MMM-YYYY")}
+                  </span>
                 </small>
-                <small className="text-black">Status: {item.status}</small>
+                <small className="text-black flex flex-col ">
+                  Status:
+                  <span className="font-thin">{item.status}</span>
+                </small>
               </div>
             </div>
             {new Date(item.next_visit_date) > new Date() && (
               <div className="flex flex-col gap-4 self-start">
                 <button
                   className="bg-[#4285F4] text-white-400 p-2 rounded-full whitespace-nowrap"
-                  onClick={() => handleDeleteFarmer(item?.f_id)}
+                  onClick={() => {
+                    router.push({
+                      pathname: "/MR_Portal_Apps/MRForm_Farmer_Demo_Followup",
+                      query: {
+                        f_demo_code: item.f_demo_code,
+                      },
+                    });
+                  }}
                 >
                   Follow up
+                </button>
+                <button
+                  className="bg-orange-400 text-white-400 p-2 rounded-full whitespace-nowrap"
+                  onClick={() => {
+                    router.push({
+                      pathname: "/MR_Portal_Apps/MRForm_Farmer_Fieldday",
+                      query: {
+                        f_demo_code: item.f_demo_code,
+                      },
+                    });
+                  }}
+                >
+                  Open Filed Day
                 </button>
               </div>
             )}

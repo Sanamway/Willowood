@@ -14,13 +14,40 @@ import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 import Navbar from "@/components/MR_Portal_Apps/Navbar";
 import { FaArrowAltCircleUp } from "react-icons/fa";
-
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { Popover } from "@headlessui/react";
+import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
+import { BsCalendar2Month } from "react-icons/bs";
+import { IoTodayOutline } from "react-icons/io5";
+import { GiFarmer } from "react-icons/gi";
+import { FaHandsHelping } from "react-icons/fa";
+import { IoSettingsOutline } from "react-icons/io5";
 const AdditionalInfo = (props) => {
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
+
+  const [fDemoCode, setFDemoCode] = useState("");
+  const generateEmpCode = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_demo_code`, {
+        headers: headers,
+        params: {
+          emp_code: window.localStorage.getItem("emp_code"),
+          type: "followup",
+        },
+      });
+      const apires = await respond.data.data;
+      setFDemoCode(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    generateEmpCode();
+  }, []);
   const [formActive, setFormActive] = useState(false);
   const [userImage, setUserImage] = useState("");
 
@@ -110,46 +137,56 @@ const AdditionalInfo = (props) => {
     getCompanyInfo();
     getDelaerData();
     getCropInfo();
-    getProductDemoTable();
   }, []);
 
-  const getProductDemoTable = async () => {
+  const getProductDemoTable = async (fdemo) => {
     try {
       const respond = await axios.get(`${url}/api/get_mr_form_demo_crop`, {
         headers: headers,
+        params: { f_demo_code: fdemo },
       });
       const apires = await respond.data.data;
       setProductDemoTableData(apires);
     } catch (error) {
       console.log(error);
+      setProductDemoTableData([]);
     }
   };
-  const handleAddProductDemo = async () => {
+
+  const getFarmerData = async (fdemo) => {
     try {
-      const data = {
-        crop_profile_id: Number(productDemoState.crop),
-        crop: "Crop_1",
-        stage: productDemoState.stage,
-        acre_plot: productDemoState.acre,
-        segment: productDemoState.segment,
-        product_brand: productDemoState.productBrand,
-        dose_acre_tank: Number(productDemoState.dose),
-        water_val: Number(productDemoState.water),
-      };
-
-      const respond = await axios
-        .post(`${url}/api/add_mr_form_demo_crop`, JSON.stringify(data), {
-          headers: headers,
-        })
-        .then((res) => {
-          if (!res) return;
-          toast.success("Submitted");
-        });
-    } catch (errors) {
-      console.log(errors);
+      const respond = await axios.get(`${url}/api/get_mr_form_demo`, {
+        headers: headers,
+        params: {
+          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          emp_code: window.localStorage.getItem("emp_code"),
+          f_demo_code: fdemo,
+        },
+      });
+      const apires = await respond.data.data[0];
+      console.log("pop", apires);
+      setFormData({
+        ...formData,
+        purposeDemo: apires.purpose_of_demo,
+        dealer: apires.d_id,
+        farmerMobile: apires.farmer_mob_no,
+        farmerId: apires.farmer_id,
+        farmerName: apires.farmer_name,
+        farmerFatherName: apires.farmer_father_name,
+        village: apires.village,
+        farmerType: apires.farmer_type,
+        plotSize: apires.plot_size,
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 
+  useEffect(() => {
+    getProductDemoTable(router.query.f_demo_code);
+    getFarmerData(router.query.f_demo_code);
+  }, [router.query.f_demo_code]);
   const getStageInfo = async (cropId) => {
     try {
       const respond = await axios.get(`${url}/api/get_crop_segment`, {
@@ -195,6 +232,11 @@ const AdditionalInfo = (props) => {
         video_testimonials_url: "Test",
         next_followup_date: formData.nextVisitDate,
         status: formData.status,
+        f_demo_code: router.query.f_demo_code,
+        f_demo_follow_no: fDemoCode,
+        t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+        emp_code: window.localStorage.getItem("emp_code"),
+        c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
       };
 
       const respond = await axios
@@ -226,6 +268,9 @@ const AdditionalInfo = (props) => {
             status: "Open",
           });
           setProductDemoTableData([]);
+          router.push({
+            pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+          });
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
@@ -243,10 +288,98 @@ const AdditionalInfo = (props) => {
   };
   return (
     <form
-      className=" bg-white rounded  p-4 w-full  overflow-auto"
+      className=" bg-white rounded  w-full  overflow-auto pb-4"
       onSubmit={(e) => e.preventDefault()}
     >
-      <Navbar />
+      <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
+        <span className="text-black flex flex-row gap-4 font-bold   ">
+          <FaArrowLeftLong
+            className="self-center "
+            onClick={() =>
+              router.push({
+                pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+              })
+            }
+          />
+          <span>Farmer Demo Followup</span>
+        </span>{" "}
+        <span className="text-white self-center">
+          <Popover as="div" className="relative border-none outline-none mt-2">
+            {({ open }) => (
+              <>
+                <Popover.Button className="focus:outline-none">
+                  <PiDotsThreeOutlineVerticalFill
+                    className="text-[#626364] cursor-pointer"
+                    size={20}
+                  />
+                </Popover.Button>
+
+                <Popover.Panel
+                  as="div"
+                  className={`${
+                    open ? "block" : "hidden"
+                  } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
+                >
+                  <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
+                    <li
+                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap "
+                      // onClick={() =>
+                      //   router.push({
+                      //     pathname: "MR_Farmer_list_demo",
+                      //   })
+                      // }
+                    >
+                      <BsCalendar2Month
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      Followup History
+                    </li>
+                    <li
+                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                      onClick={() =>
+                        router.push({
+                          pathname: "MR_Farmer_list",
+                        })
+                      }
+                    >
+                      <IoTodayOutline
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      List of Farmer
+                    </li>
+                    <li
+                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                      onClick={() => setAddFarmerModal(true)}
+                    >
+                      <GiFarmer
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      New Farmer
+                    </li>
+                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
+                      <FaHandsHelping
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      Help
+                    </li>
+                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:flex-col ">
+                      <IoSettingsOutline
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      Setting
+                    </li>
+                  </ul>
+                </Popover.Panel>
+              </>
+            )}
+          </Popover>
+        </span>
+      </div>
       <Toaster position="bottom-center" reverseOrder={false} />
       <div className="flex my-2 flex-row gap-1 ">
         <div className="fle gap-4 w-full px-2">
@@ -262,6 +395,7 @@ const AdditionalInfo = (props) => {
             id="inputField"
             placeholder="F Demo Code"
             disabled
+            value={fDemoCode}
             // disabled={!formActive}
           />
         </div>
@@ -285,7 +419,6 @@ const AdditionalInfo = (props) => {
           />
         </div>
       </div>
-
       <div className="flex flex-col my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
           <label
@@ -297,7 +430,6 @@ const AdditionalInfo = (props) => {
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
-            disabled={formActive}
             value={formData.purposeDemo}
             onChange={(e) =>
               setFormData({ ...formData, purposeDemo: e.target.value })
@@ -365,7 +497,6 @@ const AdditionalInfo = (props) => {
           </select>
         </div>
       </div>
-
       <div className="flex flex-col my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
           <label
@@ -382,6 +513,7 @@ const AdditionalInfo = (props) => {
               id="inputField"
               placeholder="Farmer Mobile No"
               value={formData.farmerMobile}
+              disabled
               onChange={(e) => {
                 const input = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
                 if (input.length <= 10) {
@@ -411,6 +543,7 @@ const AdditionalInfo = (props) => {
             id="inputField"
             placeholder="Farmer ID"
             value={formData.farmerId}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -420,7 +553,6 @@ const AdditionalInfo = (props) => {
           />
         </div>
       </div>
-
       <div className="flex flex-col my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
           <label
@@ -435,6 +567,7 @@ const AdditionalInfo = (props) => {
             id="inputField"
             placeholder="Farmer Name"
             value={formData.farmerName}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -456,6 +589,7 @@ const AdditionalInfo = (props) => {
             id="inputField"
             placeholder="Farmer Father Name"
             value={formData.farmerFatherName}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -477,6 +611,7 @@ const AdditionalInfo = (props) => {
             id="inputField"
             placeholder="Village"
             value={formData.village}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -500,6 +635,7 @@ const AdditionalInfo = (props) => {
             id="inputField"
             placeholder="Farmer Type"
             value={formData.farmerType}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -521,6 +657,7 @@ const AdditionalInfo = (props) => {
             id="inputField"
             placeholder="Plot Size"
             value={formData.plotSize}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -530,9 +667,7 @@ const AdditionalInfo = (props) => {
           />
         </div>
       </div>
-
       <h1 className="flex justify-start font-bold m-4">Product Demo</h1>
-
       <div className="overflow-x-auto my-6 sm:over<flow-hidden w-full  lg:w-full">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
@@ -622,7 +757,6 @@ const AdditionalInfo = (props) => {
           </tbody>
         </table>
       </div>
-
       <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
           <label
@@ -695,7 +829,6 @@ const AdditionalInfo = (props) => {
           </div>
         </div>
       </div>
-
       <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
           <label
@@ -756,7 +889,6 @@ const AdditionalInfo = (props) => {
           </div>
         </div>
       </div>
-
       <div className="w-full px-2">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
@@ -805,7 +937,6 @@ const AdditionalInfo = (props) => {
           </label>
         </div>
       </div>
-
       <div className="wrap ">
         <h1 className="flex justify-start font-bold m-4">
           <FaUpload className="mr-2 text-blue-400 self-center" /> Handwritten
@@ -839,7 +970,6 @@ const AdditionalInfo = (props) => {
           </label>
         </div>
       </div>
-
       <div className="flex my-2 mb-2 lg:flex-row flex-col">
         <div className="w-full px-2 mt-2">
           <label
@@ -882,7 +1012,6 @@ const AdditionalInfo = (props) => {
           </select>
         </div>
       </div>
-
       <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
           <label
@@ -943,13 +1072,17 @@ const AdditionalInfo = (props) => {
             <option
               value="Close"
               className="focus:outline-none focus:border-b bg-white"
+              onClick={() =>
+                router.push({
+                  pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+                })
+              }
             >
               Close
             </option>
           </select>
         </div>
       </div>
-
       <div className="flex w-full justify-center gap-4 mt-4 ">
         <button
           onClick={() => {
@@ -960,9 +1093,11 @@ const AdditionalInfo = (props) => {
           Submit
         </button>
         <button
-          onClick={() => {
-            router.push("/MR_Portal_Apps/MRHome");
-          }}
+          onClick={() =>
+            router.push({
+              pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+            })
+          }
           className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
         >
           Close
