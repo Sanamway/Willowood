@@ -409,19 +409,19 @@ const RPTable = (props) => {
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 5
       ) {
-        endPoint = `api/update_cp_tm?rm=${true}`;
+        endPoint = `api/update_cp?rm=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4
       ) {
-        endPoint = `api/update_cp_tm?z=${true}`;
+        endPoint = `api/update_cp?z=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3
       ) {
-        endPoint = `api/update_cp_tm?bu=${true}`;
+        endPoint = `api/update_cp?bu=${true}`;
       } else if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10
       ) {
-        endPoint = `api/update_cp_tm?bg=${true}`;
+        endPoint = `api/update_cp?bg=${true}`;
       } else {
         return;
       }

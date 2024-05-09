@@ -402,6 +402,18 @@ const RollingPlans = () => {
     actual: 0,
     budget: 0,
     target: 0,
+
+    actualH1: 0,
+    budgetH1: 0,
+    targetH1: 0,
+
+    actualH2: 0,
+    budgetH2: 0,
+    targetH2: 0,
+
+    actualCurrent: 0,
+    budgetCurrent: 0,
+    targetCurrent: 0,
   });
   const [allTableData, setAllTableData] = useState([]);
 
@@ -452,14 +464,93 @@ const RollingPlans = () => {
       let actualValue = 0;
       let budgetValue = 0;
       let targetValue = 0;
+      let actualValueH1 = 0;
+      let budgetValueH1 = 0;
+      let targetValueH1 = 0;
+      let actualValueH2 = 0;
+      let budgetValueH2 = 0;
+      let targetValueH2 = 0;
+      let actualValueCurrent = 0;
+      let budgetValueCurrent = 0;
+      let targetValueCurrent = 0;
       apires.forEach((element) => {
         actualValue = Number(actualValue) + Number(element.actual);
         budgetValue = Number(budgetValue) + Number(element.budget);
         targetValue = Number(targetValue) + Number(element.target);
+        if (Number(moment(element.m_year).format("M")) === 4) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 5) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 6) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 7) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 8) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 9) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 10) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 11) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 12) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 1) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 2) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 3) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        }
+
+        if (
+          moment(element.m_year).format("M") === moment(new Date()).format("M")
+        ) {
+          actualValueCurrent =
+            Number(actualValueCurrent) + Number(element.actual);
+          budgetValueCurrent =
+            Number(budgetValueCurrent) + Number(element.budget);
+          targetValueCurrent =
+            Number(targetValueCurrent) + Number(element.target);
+        }
+
         setSummaryData({
           actual: actualValue,
           budget: budgetValue,
           target: targetValue,
+          actualH1: actualValueH1,
+          budgetH1: budgetValueH1,
+          targetH1: targetValueH1,
+          actualH2: actualValueH2,
+          budgetH2: budgetValueH2,
+          targetH2: targetValueH2,
+          actualCurrent: actualValueCurrent,
+          budgetCurrent: budgetValueCurrent,
+          targetCurrent: targetValueCurrent,
         });
       });
     } catch (error) {
@@ -516,16 +607,17 @@ const RollingPlans = () => {
       let actualValue = 0;
       let budgetValue = 0;
       let targetValue = 0;
-      apires.forEach((element) => {
-        actualValue = Number(actualValue) + Number(element.actual);
-        budgetValue = Number(budgetValue) + Number(element.budget);
-        targetValue = Number(targetValue) + Number(element.target);
-        setSummaryData({
-          actual: actualValue,
-          budget: budgetValue,
-          target: targetValue,
-        });
-      });
+
+      // apires.forEach((element) => {
+      //   actualValue = Number(actualValue) + Number(element.actual);
+      //   budgetValue = Number(budgetValue) + Number(element.budget);
+      //   targetValue = Number(targetValue) + Number(element.target);
+      //   setSummaryData({
+      //     actual: actualValue,
+      //     budget: budgetValue,
+      //     target: targetValue,
+      //   });
+      // });
     } catch (error) {
       if (!error) return;
       setAllTableData([]);
@@ -3921,16 +4013,16 @@ const RollingPlans = () => {
           Total Summary Rolling Plan (in Lac)
         </h2>
         <div className="grid grid-cols-4  text-sm px-12">
-          <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-blue-200">
+          <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-[#4285F4] ">
             YTD
           </div>
-          <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-blue-200">
+          <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-[#4285F4]">
             H1 - (April - Sept)
           </div>
-          <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-blue-200">
+          <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-[#4285F4]">
             H2 - (Oct - March)
           </div>
-          <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-blue-200">
+          <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-[#4285F4]">
             Current Month-MTD
           </div>
         </div>
@@ -4018,61 +4110,148 @@ const RollingPlans = () => {
               {summaryData.actual.toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-              200
+              {((summaryData.actual / summaryData.budget) * 100).toFixed(2) ===
+                "NaN" ||
+              (
+                (summaryData.actual.toFixed(2) /
+                  summaryData.budget.toFixed(2)) *
+                100
+              ).toFixed(2) === "Infinity"
+                ? 0
+                : ((summaryData.actual / summaryData.budget) * 100).toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center  border-gray-300 w-20">
-              12
+              {((summaryData.actual / summaryData.target) * 100).toFixed(2) ===
+                "NaN" ||
+              (
+                (summaryData.actual.toFixed(2) /
+                  summaryData.target.toFixed(2)) *
+                100
+              ).toFixed(2) === "Infinity"
+                ? 0
+                : ((summaryData.actual / summaryData.target) * 100).toFixed(2)}
             </span>
           </div>
           <div className="border border-gray-300  flex justify-between items-center">
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-              121
+              {summaryData.budgetH1.toFixed(2)}
             </span>
             <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-              211
+              {summaryData.targetH1.toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-              26
+              {summaryData.actualH1.toFixed(2)}
             </span>
-            <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-              67
+
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              {((summaryData.actualH1 / summaryData.budgetH1) * 100).toFixed(
+                2
+              ) === "NaN" ||
+              (
+                (summaryData.actualH1.toFixed(2) /
+                  summaryData.budgetH1.toFixed(2)) *
+                100
+              ).toFixed(2) === "Infinity"
+                ? 0
+                : ((summaryData.actualH1 / summaryData.budgetH1) * 100).toFixed(
+                    2
+                  )}
             </span>
-            <span className=" flex items-center  justify-center border-gray-300 w-20">
-              89
+            <span className=" flex items-center  justify-center  border-gray-300 w-20">
+              {((summaryData.actualH1 / summaryData.targetH1) * 100).toFixed(
+                2
+              ) === "NaN" ||
+              (
+                (summaryData.actualH1.toFixed(2) /
+                  summaryData.targetH1.toFixed(2)) *
+                100
+              ).toFixed(2) === "Infinity"
+                ? 0
+                : ((summaryData.actualH1 / summaryData.targetH1) * 100).toFixed(
+                    2
+                  )}
             </span>
           </div>
           <div className="border border-gray-300  flex justify-between items-center">
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-              11
+              {summaryData.budgetH2.toFixed(2)}
             </span>
             <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-              12
+              {summaryData.targetH2.toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-              11
+              {summaryData.actualH2.toFixed(2)}
             </span>
+
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-              89
+              {((summaryData.actualH2 / summaryData.budgetH2) * 100).toFixed(
+                2
+              ) === "NaN" ||
+              (
+                (summaryData.actualH2.toFixed(2) /
+                  summaryData.budgetH2.toFixed(2)) *
+                100
+              ).toFixed(2) === "Infinity"
+                ? 0
+                : ((summaryData.actualH2 / summaryData.budgetH2) * 100).toFixed(
+                    2
+                  )}
             </span>
-            <span className=" flex items-center  justify-center   border-gray-300 w-20">
-              90
+            <span className=" flex items-center  justify-center  border-gray-300 w-20">
+              {((summaryData.actualH2 / summaryData.targetH2) * 100).toFixed(
+                2
+              ) === "NaN" ||
+              (
+                (summaryData.actualH2.toFixed(2) /
+                  summaryData.targetH2.toFixed(2)) *
+                100
+              ).toFixed(2) === "Infinity"
+                ? 0
+                : ((summaryData.actualH2 / summaryData.targetH2) * 100).toFixed(
+                    2
+                  )}
             </span>
           </div>
           <div className="border border-gray-300  flex justify-between items-center">
             <span className=" flex items-center justify-center border-r border-gray-300 w-20">
-              12
+              {summaryData.budgetCurrent.toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-              1112
+              {summaryData.targetCurrent.toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-              Sale
+              {summaryData.actualCurrent.toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-              12
+              {(
+                (summaryData.actualCurrent / summaryData.budgetCurrent) *
+                100
+              ).toFixed(2) === "NaN" ||
+              (
+                (summaryData.actualCurrent / summaryData.budgetCurrent) *
+                100
+              ).toFixed(2) === "Infinity"
+                ? 0
+                : (
+                    (summaryData.actualCurrent / summaryData.budgetCurrent) *
+                    100
+                  ).toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center  border-gray-300 w-20">
-              89
+              {(
+                (summaryData.actualCurrent / summaryData.targetCurrent) *
+                100
+              ).toFixed(2) === "NaN" ||
+              (
+                (summaryData.actualCurrent.toFixed(2) /
+                  summaryData.targetCurrent.toFixed(2)) *
+                100
+              ).toFixed(2) === "Infinity"
+                ? 0
+                : (
+                    (summaryData.actualCurrent / summaryData.targetCurrent) *
+                    100
+                  ).toFixed(2)}
             </span>
           </div>
         </div>

@@ -30,6 +30,7 @@ const CollectionPlans = () => {
   const [successMsg, setSuccessMsg] = useState("");
 
   const router = useRouter();
+  const endDate = new Date(2024, 4, 16);
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
@@ -342,7 +343,7 @@ const CollectionPlans = () => {
   ) => {
     try {
       const currentDate = new Date();
-      const endDate = new Date(2024, 4, 16);
+    
 
       if (currentDate < endDate) {
         const respond = await axios.get(`${url}/api/get_territory`, {
@@ -413,37 +414,26 @@ const CollectionPlans = () => {
     rId,
     tId
   ) => {
-    let endPoint;
-    console.log("salesplan", yr, month, bgId, buId, zId, rId, tId);
-    if (bgId && buId && zId && rId && tId) {
-      endPoint = "api/get_collectiondata_based_on_roll_t";
-    } else if (bgId && buId && zId && rId && !tId) {
-      endPoint = "api/get_collectiondata_based_on_roll_r";
-    } else if (bgId && buId && zId && !rId && !tId) {
-      endPoint = "api/get_collectiondata_based_on_roll_z";
-    } else if (bgId && buId && !zId && !rId && !tId) {
-      endPoint = "api/get_collectiondata_based_on_roll_bu";
-    } else if (bgId && !buId && !zId && !rId && !tId) {
-      endPoint = "api/get_collectiondata_based_on_roll_bg";
-    } else {
-      return;
-    }
+    const currentDate = new Date();
+    if (currentDate < endDate) {
+      let endPoint;
+      console.log("salesplan", yr, month, bgId, buId, zId, rId, tId);
+      if (bgId && buId && zId && rId && tId) {
+        endPoint = "api/get_collectiondata_based_on_roll_t";
+      } else if (bgId && buId && zId && rId && !tId) {
+        endPoint = "api/get_collectiondata_based_on_roll_r";
+      } else if (bgId && buId && zId && !rId && !tId) {
+        endPoint = "api/get_collectiondata_based_on_roll_z";
+      } else if (bgId && buId && !zId && !rId && !tId) {
+        endPoint = "api/get_collectiondata_based_on_roll_bu";
+      } else if (bgId && !buId && !zId && !rId && !tId) {
+        endPoint = "api/get_collectiondata_based_on_roll_bg";
+      } else {
+        return;
+      }
 
-    try {
-      console.log("dataBlog", {
-        t_year: yr || null,
-        m_year:
-          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
-        bg_id: bgId === "All" || !bgId ? null : bgId,
-        bu_id: buId === "All" || !buId ? null : buId,
-        z_id: zId === "All" || !zId ? null : zId,
-        r_id: rId === "All" || !rId ? null : rId,
-        t_id: tId === "All" || !tId ? null : tId,
-      });
-      const respond = await axios.get(`${url}/${endPoint}`, {
-        headers: headers,
-
-        params: {
+      try {
+        console.log("dataBlog", {
           t_year: yr || null,
           m_year:
             month === "All" || !month ? null : moment(month).format("YYYY-MM"),
@@ -452,16 +442,32 @@ const CollectionPlans = () => {
           z_id: zId === "All" || !zId ? null : zId,
           r_id: rId === "All" || !rId ? null : rId,
           t_id: tId === "All" || !tId ? null : tId,
-        },
-      });
+        });
+        const respond = await axios.get(`${url}/${endPoint}`, {
+          headers: headers,
 
-      const apires = await respond.data.data;
-      console.log("new data", apires);
-      setAllTableData(apires);
-    } catch (error) {
-      setDownloadLoading(false);
-      if (!error) return;
-      setAllTableData([]);
+          params: {
+            t_year: yr || null,
+            m_year:
+              month === "All" || !month
+                ? null
+                : moment(month).format("YYYY-MM"),
+            bg_id: bgId === "All" || !bgId ? null : bgId,
+            bu_id: buId === "All" || !buId ? null : buId,
+            z_id: zId === "All" || !zId ? null : zId,
+            r_id: rId === "All" || !rId ? null : rId,
+            t_id: tId === "All" || !tId ? null : tId,
+          },
+        });
+
+        const apires = await respond.data.data;
+        console.log("new data", apires);
+        setAllTableData(apires);
+      } catch (error) {
+        setDownloadLoading(false);
+        if (!error) return;
+        setAllTableData([]);
+      }
     }
   };
 
@@ -2421,7 +2427,7 @@ const CollectionPlans = () => {
         bu_des: buDes,
         m_year: moment(m_year).format("YYYY-MM"),
       };
-    } else if (filterState?.bgId && filterState?.buId) {
+    } else if (filterState?.bgId && !filterState?.buId) {
       paramsData = {
         c_id: cId,
         bu_id: buId,
@@ -2852,6 +2858,7 @@ const CollectionPlans = () => {
         year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
         plan_id: planId,
         tran_id: tranId,
+        c_id: c,
         r_id: r,
         r_des: rDes,
         m_year: moment(m_year).format("YYYY-MM"),
@@ -2871,6 +2878,7 @@ const CollectionPlans = () => {
         year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
         plan_id: planId,
         tran_id: tranId,
+        c_id: c,
         z_id: z,
         z_des: zDes,
         m_year: moment(m_year).format("YYYY-MM"),
@@ -2890,6 +2898,7 @@ const CollectionPlans = () => {
         year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
         plan_id: planId,
         tran_id: tranId,
+        c_id: c,
         z_id: z,
         z_des: zDes,
         m_year: moment(m_year).format("YYYY-MM"),
@@ -2909,6 +2918,7 @@ const CollectionPlans = () => {
         year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
         plan_id: planId,
         tran_id: tranId,
+        c_id: c,
         bu_id: bu,
         bu_des: buDes,
         m_year: moment(m_year).format("YYYY-MM"),
@@ -2931,6 +2941,7 @@ const CollectionPlans = () => {
         year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
         plan_id: planId,
         tran_id: tranId,
+        c_id: c,
         bu_id: bu,
         bu_des: buDes,
         m_year: moment(m_year).format("YYYY-MM"),
@@ -2950,6 +2961,7 @@ const CollectionPlans = () => {
         year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
         plan_id: planId,
         tran_id: tranId,
+        c_id: c,
         bu_id: bu,
         bu_des: buDes,
         m_year: moment(m_year).format("YYYY-MM"),
@@ -2958,7 +2970,7 @@ const CollectionPlans = () => {
     }
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
-      const respond = axios.get(`${url}/api/rsp_download`, {
+      const respond = axios.get(`${url}/api/getsapCollectiondata`, {
         headers: headers,
         params: paramsData,
       });
@@ -3070,7 +3082,7 @@ const CollectionPlans = () => {
     }
     try {
       localStorage.setItem("RSP", JSON.stringify([]));
-      const respond = axios.get(`${url}/api/rsp_download`, {
+      const respond = axios.get(`${url}/api/getsapCollectiondata`, {
         headers: headers,
         params: paramsData,
       });
