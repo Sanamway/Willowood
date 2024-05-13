@@ -3733,6 +3733,7 @@ const CollectionPlans = () => {
                           aria-hidden
                           style={{
                             backgroundColor: getStatus(item.rp_status),
+                            
                           }}
                           className="absolute inset-0 opacity-60 rounded-full"
                         ></span>

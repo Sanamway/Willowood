@@ -112,10 +112,6 @@ const Layout = ({ children }) => {
     user_id: uid,
   };
   const handleLogout = async () => {
-    // localStorage.removeItem("uid");
-    // localStorage.removeItem("user_name");
-    // localStorage.removeItem("email_id");
-    // router.push("/logoutsuccess");
     console.log("pay", payload);
     try {
       const resp = await axios.get(`${url}/api/logout?user_id=${uid}`, {

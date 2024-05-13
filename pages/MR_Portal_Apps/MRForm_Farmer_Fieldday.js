@@ -454,7 +454,7 @@ const AdditionalInfo = (props) => {
             emp_code: window.localStorage.getItem("emp_code"),
           },
         });
-        const apires = await respond.data.data[0];
+        const apires = await respond.data.data.MR_demo[0];
         setFormData({
           ...formData,
           purposeDemo: apires.purpose_of_demo,
