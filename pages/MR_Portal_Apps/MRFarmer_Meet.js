@@ -148,6 +148,7 @@ const AdditionalInfo = (props) => {
   });
 
   const handleAddFarmerMeet = async () => {
+    console.log("poye ", formData.farmerFatherName);
     try {
       const data = {
         f_meet_no: fMeetCode,
@@ -157,7 +158,7 @@ const AdditionalInfo = (props) => {
         farmer_mob_no: Number(farmerMobileNumber),
         farmer_id: Number(formData.farmerId),
         farmer_name: formData.farmerName,
-        farmer_father_name: formData.farmerFatherName,
+        farmer_father_name: String(formData.farmerFatherName),
         village: formData.village,
         farmer_type: formData.farmerType,
 
@@ -362,7 +363,8 @@ const AdditionalInfo = (props) => {
         const apires = await respond.data.data.MR_demo[0];
         setFormData({
           ...formData,
-
+          purposeMeet: formData.purposeMeet,
+          meetType: formData.meetType,
           fDemoCode: apires.f_demo_code,
           farmerId: apires.farmer_id,
           farmerName: apires.farmer_name,
@@ -1053,14 +1055,14 @@ const AdditionalInfo = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small>Tech the Techniques to
+            <small className="text-red-600">*</small>Teach the Techniques to
             Farmer
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
-            placeholder="Tech the Techniques to Farmer"
+            placeholder="Teach the Techniques to Farmer"
             value={formData.techFarmer}
             onChange={(e) =>
               setFormData({ ...formData, techFarmer: e.target.value })
@@ -1098,7 +1100,7 @@ const AdditionalInfo = (props) => {
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
-            placeholder="Tech the Techniques to Farmer"
+            placeholder="Teach the Techniques to Farmer"
             value={formData.farmerSuggestion}
             onChange={(e) =>
               setFormData({ ...formData, farmerSuggestion: e.target.value })
@@ -1117,7 +1119,7 @@ const AdditionalInfo = (props) => {
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
-            placeholder="Tech the Techniques to Farmer"
+            placeholder="Teach the Techniques to Farmer"
             value={formData.expense}
             onChange={(e) =>
               setFormData({ ...formData, expense: e.target.value })
@@ -1126,7 +1128,7 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      <h1 className="flex justify-start font-bold m-4"> Fermer Meet Image</h1>
+      <h1 className="flex justify-start font-bold m-4"> Farmer Meet Image</h1>
 
       <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
         <div className="wrap ">
