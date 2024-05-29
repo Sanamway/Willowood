@@ -1,123 +1,248 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import Image from "next/image";
-import { FaUpload } from "react-icons/fa";
+import { BsCheck2Circle } from "react-icons/bs";
 import { AiOutlineDelete } from "react-icons/ai";
-import { AiOutlineFileAdd } from "react-icons/ai";
-import Select from "react-select";
+import { FaUpload } from "react-icons/fa";
 import { FaCameraRetro } from "react-icons/fa";
-import { IoMdCloudUpload } from "react-icons/io";
-import { MdOutlinePunchClock } from "react-icons/md";
-import { MdOutlineTimer } from "react-icons/md";
-import Profile from "../../public/userimg.jpg";
+import { AiOutlineFileAdd } from "react-icons/ai";
+import { url } from "@/constants/url";
+import axios, { formToJSON } from "axios";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
+import { useRouter } from "next/router";
+import toast, { Toaster } from "react-hot-toast";
 import Navbar from "@/components/MR_Portal_Apps/Navbar";
+import { FaArrowAltCircleUp } from "react-icons/fa";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { Popover } from "@headlessui/react";
+import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
+import { BsCalendar2Month } from "react-icons/bs";
+import { IoTodayOutline } from "react-icons/io5";
+import { GiFarmer } from "react-icons/gi";
+import { FaHandsHelping } from "react-icons/fa";
+import { IoSettingsOutline } from "react-icons/io5";
+import { Dialog, Transition } from "@headlessui/react";
+import Select from "react-select";
+import Profile from "../../public/userimg.jpg";
+import { MdOutlineTimer } from "react-icons/md";
 const AdditionalInfo = (props) => {
-  const [formActive, setFormActive] = useState(false);
-  const [userImage, setUserImage] = useState("");
+  const router = useRouter();
 
-  const currentYear = new Date().getFullYear();
-  const nextYears = Array.from(
-    { length: 10 },
-    (_, index) => currentYear + index
-  );
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+  };
+  const [localStorageItems, setLocalStorageItems] = useState({
+    uId: "",
+    cId: "",
+    bgId: "",
+    buId: "",
+    rId: "",
+    zId: "",
+    tId: "",
+    roleId: "",
+    empCode: "",
+  });
+  useEffect(() => {
+    setLocalStorageItems({
+      uId: JSON.parse(window.localStorage.getItem("uid")),
+      cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
+      bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+      buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+      rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+      zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+      tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+      clName: window.localStorage.getItem("user_name"),
+      ulName: window.localStorage.getItem("phone_number"),
+      empCode: window.localStorage.getItem("emp_code"),
+      roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+    });
+  }, []);
 
-  //dummyData
+  const [userDetails, setUserDetails] = useState({
+    lastPunchIn: "",
+    attendanceType: "",
+    reason: "",
+    attendanceId: "",
+  });
+  const [attendenceStatus, setAttendenceStatus] = useState("Punch In");
+  const getAttandenceStatus = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_emp_attendance`, {
+        headers: headers,
+        params: {
+          emp_code: localStorageItems.empCode,
+          t_id: localStorageItems.tId,
+          c_id: Number(localStorageItems.cId),
+          date: moment(new Date()).format("YYYY-MM-DD"),
+        },
+      });
+      const apires = await respond.data.data;
+      if (apires) {
+        setAttendenceStatus("Punch Out");
+        setUserDetails({
+          ...userDetails,
+          lastPunchIn: apires.punch_in_time,
+          attendanceType: "Punch Out",
+          attendanceId: apires.attendance_id,
+        });
+      } else {
+        setAttendenceStatus("Punch In");
+        setUserDetails({
+          ...userDetails,
 
-  const data = [
-    {
-      id: 1,
-      name: "Example A",
-      profit: "New",
-      relation: 10,
-      son_of: "$1,000,000",
-      pan: "Product Brand",
-      aadhar: "X MS Tree",
-    },
-    {
-      id: 2,
-      name: "Example B",
-      profit: "Commercial",
-      relation: 5,
-      son_of: "$500,000",
-      pan: "Product Brand",
-      aadhar: "X MS Tree",
-    },
-    {
-      id: 2,
-      name: "Example B",
-      profit: "Commercial",
-      relation: 5,
-      son_of: "$500,000",
-      pan: "New Product Brand",
-      aadhar: "X MS Tree",
-    },
-  ];
+          attendanceType: "Punch In",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getAttandenceStatus();
+  }, [localStorageItems]);
 
-  const colourOptions = [
-    { value: "AL", label: "Alabama" },
-    { value: "AK", label: "Alaska" },
-    { value: "AS", label: "American Samoa" },
-    { value: "AZ", label: "Arizona" },
-    { value: "AR", label: "Arkansas" },
-    { value: "CA", label: "California" },
-    { value: "CO", label: "Colorado" },
-    { value: "CT", label: "Connecticut" },
-    { value: "DE", label: "Delaware" },
-    { value: "DC", label: "District Of Columbia" },
-    { value: "FM", label: "Federated States Of Micronesia" },
-    { value: "FL", label: "Florida" },
-    { value: "GA", label: "Georgia" },
-    { value: "GU", label: "Guam" },
-    { value: "HI", label: "Hawaii" },
-    { value: "ID", label: "Idaho" },
-    { value: "IL", label: "Illinois" },
-    { value: "IN", label: "Indiana" },
-    { value: "IA", label: "Iowa" },
-    { value: "KS", label: "Kansas" },
-    { value: "KY", label: "Kentucky" },
-    { value: "LA", label: "Louisiana" },
-    { value: "ME", label: "Maine" },
-    { value: "MH", label: "Marshall Islands" },
-    { value: "MD", label: "Maryland" },
-    { value: "MA", label: "Massachusetts" },
-    { value: "MI", label: "Michigan" },
-    { value: "MN", label: "Minnesota" },
-    { value: "MS", label: "Mississippi" },
-    { value: "MO", label: "Missouri" },
-    { value: "MT", label: "Montana" },
-    { value: "NE", label: "Nebraska" },
-    { value: "NV", label: "Nevada" },
-    { value: "NH", label: "New Hampshire" },
-    { value: "NJ", label: "New Jersey" },
-    { value: "NM", label: "New Mexico" },
-    { value: "NY", label: "New York" },
-    { value: "NC", label: "North Carolina" },
-    { value: "ND", label: "North Dakota" },
-    { value: "MP", label: "Northern Mariana Islands" },
-    { value: "OH", label: "Ohio" },
-    { value: "OK", label: "Oklahoma" },
-    { value: "OR", label: "Oregon" },
-    { value: "PW", label: "Palau" },
-    { value: "PA", label: "Pennsylvania" },
-    { value: "PR", label: "Puerto Rico" },
-    { value: "RI", label: "Rhode Island" },
-    { value: "SC", label: "South Carolina" },
-    { value: "SD", label: "South Dakota" },
-    { value: "TN", label: "Tennessee" },
-    { value: "TX", label: "Texas" },
-    { value: "UT", label: "Utah" },
-    { value: "VT", label: "Vermont" },
-    { value: "VI", label: "Virgin Islands" },
-    { value: "VA", label: "Virginia" },
-    { value: "WA", label: "Washington" },
-    { value: "WV", label: "West Virginia" },
-    { value: "WI", label: "Wisconsin" },
-    { value: "WY", label: "Wyoming" },
-  ];
+  const handlePunchIn = async (type) => {
+    try {
+      let data = {};
+      let header;
+      if (type === "PI") {
+        header = "punch_in";
+        data = {
+          user_id: localStorageItems.uId,
+          user_name: localStorageItems.clName,
+          t_id: localStorageItems.tId,
+          c_id: Number(localStorageItems.cId),
+          emp_code: localStorageItems.empCode,
+          branchCode: 1231,
+          date: moment(new Date()).format("YYYY-MM-DD"),
+          attendance_type: "Punch In",
+          punch_in_time: new Date(),
+          punch_in_image: "https://picsum.photos/200/300",
+          status: "PI",
+          reason: userDetails.attendanceType,
+        };
+      } else {
+        header = `punch_out/${userDetails.attendanceId}`;
+        data = {
+          user_id: localStorageItems.uId,
+          user_name: localStorageItems.clName,
+          t_id: localStorageItems.tId,
+          c_id: Number(localStorageItems.cId),
+          emp_code: localStorageItems.empCode,
+          branchCode: 1231,
+          date: moment(new Date()).format("YYYY-MM-DD"),
+          attendance_type: "Punch In",
+          punch_out_time: new Date(),
+          punch_out_image: "https://picsum.photos/200/300",
+          status: "PO",
+          reason: userDetails.attendanceType,
+        };
+      }
+      if (type === "PI") {
+        const respond = await axios
+          .post(`${url}/api/${header}`, JSON.stringify(data), {
+            headers: headers,
+          })
+          .then((res) => {
+            if (!res) return;
+            toast.success(res.data.message);
+
+            getAttandenceStatus();
+          });
+      } else {
+        const respond = await axios
+          .put(`${url}/api/${header}`, JSON.stringify(data), {
+            headers: headers,
+          })
+          .then((res) => {
+            if (!res) return;
+            toast.success(res.data.message);
+
+            getAttandenceStatus();
+          });
+      }
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.message;
+
+      toast.error(errorMessage);
+    }
+  };
 
   return (
-    <div className="p-2">
-      <Navbar />
-      <div className="flex flex-col gap-2 ">
+    <form
+      className=" bg-white rounded  w-full  overflow-auto pb-4"
+      onSubmit={(e) => e.preventDefault()}
+    >
+      <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
+        <span className="text-black flex flex-row gap-4 font-bold   ">
+          <FaArrowLeftLong
+            className="self-center "
+            onClick={() =>
+              router.push({
+                pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+              })
+            }
+          />
+          <span>Employee Attendence PunchIn-PunchOut</span>
+        </span>{" "}
+        <span className="text-white self-center">
+          <Popover as="div" className="relative border-none outline-none mt-2">
+            {({ open }) => (
+              <>
+                <Popover.Button className="focus:outline-none">
+                  <PiDotsThreeOutlineVerticalFill
+                    className="text-[#626364] cursor-pointer"
+                    size={20}
+                  />
+                </Popover.Button>
+
+                <Popover.Panel
+                  as="div"
+                  className={`${
+                    open ? "block" : "hidden"
+                  } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
+                >
+                  <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
+                    <li
+                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                      onClick={() => setAddFarmerModal(true)}
+                    >
+                      <GiFarmer
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                        onClick={() =>
+                          router.push({
+                            pathname: "/MR_Portal_Apps/MyTimesheet",
+                          })
+                        }
+                      />{" "}
+                      Timesheet
+                    </li>
+                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
+                      <FaHandsHelping
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      Help
+                    </li>
+                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:flex-col ">
+                      <IoSettingsOutline
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      Setting
+                    </li>
+                  </ul>
+                </Popover.Panel>
+              </>
+            )}
+          </Popover>
+        </span>
+      </div>
+      <Toaster position="bottom-center" reverseOrder={false} />
+      <div className="flex flex-col gap-2 p-1.5 ">
         <div className="">
           <h1 className="font-bold ">Employee Details:</h1>
           <div className="flex mb-4 mt-2">
@@ -137,14 +262,14 @@ const AdditionalInfo = (props) => {
                   </p>
                   <span>:</span>
                 </div>
-                <span>sefsf</span>
+                <span className="w-28">{localStorageItems.empCode}</span>
               </div>
-              <div className="flex  justify-between w-full  w-28">
+              <div className="flex  justify-between w-full  w-28 ">
                 <div className="flex">
                   <p className=" font-bold text-sm text-blue-800 w-28">Name</p>
                   <span>:</span>
                 </div>
-                <span>asfasdfa</span>
+                <span className="w-28"> {localStorageItems.clName}</span>
               </div>
 
               <div className="flex  justify-between w-full  w-28">
@@ -154,22 +279,43 @@ const AdditionalInfo = (props) => {
                   </p>
                   <span>:</span>
                 </div>
-                <span>asfasdfa</span>
+                <span className="w-28">asfasdfa</span>
               </div>
             </div>
           </div>
         </div>
-        <h1 className="text-xl font-bold  flex w-full  mt-2 justify-center border-b-4 border-blue-800 shadow-xl ">
-          Punch-In/Out
-        </h1>
+        {attendenceStatus === "Punch In" ? (
+          <h1 className="text-xl font-bold  flex w-full  mt-2 justify-center border-b-4 border-blue-800 shadow-xl ">
+            Punch-In
+          </h1>
+        ) : (
+          <h1 className="text-xl font-bold  flex w-full  mt-2 justify-center border-b-4 border-blue-800 shadow-xl ">
+            Punch-Out
+          </h1>
+        )}
+
         <h1 className=" font-bold flex w-full justify-center h-8 mt-2 border p-1  shadow-xl">
-          Last Punch In : 19-Sep-2017 05:19 PM
+          Last Punch In :{" "}
+          {attendenceStatus === "Punch In"
+            ? "Not Available"
+            : moment(userDetails.lastPunchIn).format("LLL")}
         </h1>
+
         <div>
           <label htmlFor="attendanceType" className="block font-bold mb-2">
             Attendance Type:
           </label>
-          <select id="attendanceType" className="w-full border p-2 rounded">
+          <select
+            id="attendanceType"
+            className="w-full border p-2 rounded"
+            value={userDetails.attendanceType}
+            onChange={(e) =>
+              setUserDetails({
+                ...userDetails,
+                attendanceType: e.target.value,
+              })
+            }
+          >
             <option value="">Select Attendance Type</option>
             <option value="Punch In">Punch In</option>
             <option value="Punch Out">Punch Out</option>
@@ -196,37 +342,62 @@ const AdditionalInfo = (props) => {
             id="reason"
             className="w-full border p-2 rounded"
             rows="1"
+            value={userDetails.reason}
+            onChange={(e) =>
+              setUserDetails({
+                ...userDetails,
+                reason: e.target.value,
+              })
+            }
           ></textarea>
         </div>
-        <div className="flex w-full justify-center">
-          <button className="text-xl py-1 rounded-md    flex  flex-row  w-1/2 justify-center  border my-2 shadow-xl">
-            <MdOutlineTimer
-              size={28}
-              className="mr-4 text-black  self-center  size-120 text-blue-800"
-            />
-            Punch Out
-          </button>
-        </div>
+        {attendenceStatus === "Punch In" ? (
+          <div className="flex w-full justify-center">
+            <button
+              className="text-xl py-1 rounded-md    flex  flex-row  w-1/2 justify-center  border my-2 shadow-xl"
+              onClick={() => handlePunchIn("PI")}
+            >
+              <MdOutlineTimer
+                size={28}
+                className="mr-4 text-black  self-center  size-120 text-blue-800"
+              />
+              Punch In
+            </button>
+          </div>
+        ) : (
+          <div className="flex w-full justify-center">
+            <button
+              className="text-xl py-1 rounded-md    flex  flex-row  w-1/2 justify-center  border my-2 shadow-xl"
+              onClick={() => handlePunchIn("PO")}
+            >
+              <MdOutlineTimer
+                size={28}
+                className="mr-4 text-black  self-center  size-120 text-blue-800"
+              />
+              Punch Out
+            </button>
+          </div>
+        )}
 
         <div className="flex  flex-col px-4 w-full">
           <div className="flex justify-between w-full gap-4">
             <p className="text-gray-800 font-bold text-sm">
               Branch Manger <span className="self-end">: </span>
             </p>
-            <p className="text-gray-800 text-sm">XXXX</p>
+            <p className="text-gray-800 text-sm"></p>
           </div>
           <div className="flex justify-between w-full gap-4 mt-2">
             <p className="text-gray-800 font-bold text-sm">
               Development Manager:
             </p>
-            <p className="text-gray-800 text-sm">John Doe</p>
+            <p className="text-gray-800 text-sm"></p>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
 export default AdditionalInfo;
 
-// Hydration Error Issue
+// Hydration  Issue

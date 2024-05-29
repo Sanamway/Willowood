@@ -14,6 +14,7 @@ const index = () => {
     <>
       <main className="w-full overflow-hidden h-screen ">
         <Navbar></Navbar>
+        
         <Hero></Hero>
       </main>
     </>

@@ -30,12 +30,12 @@ const CollectionPlans = () => {
   const [successMsg, setSuccessMsg] = useState("");
 
   const router = useRouter();
-  const endDate = new Date(2024, 4, 16);
+  // const endDate = new Date(2024, 4, 16);
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const [localStorageItems, setLocalStorageItems] = useState({
     cId: null,
     bgId: null,
@@ -343,25 +343,20 @@ const CollectionPlans = () => {
   ) => {
     try {
       const currentDate = new Date();
-    
 
-      if (currentDate < endDate) {
-        const respond = await axios.get(`${url}/api/get_territory`, {
-          headers: headers,
-        });
+      const respond = await axios.get(`${url}/api/get_territory`, {
+        headers: headers,
+      });
 
-        const apires = await respond.data.data;
+      const apires = await respond.data.data;
 
-        setTerritoryData(
-          apires
-            .filter((item) => Number(item.bg_id) === Number(segmentId))
-            .filter((item) => Number(item.bu_id) === Number(businessUnitId))
-            .filter((item) => Number(item.z_id) === Number(zoneId))
-            .filter((item) => Number(item.r_id) === Number(regionId))
-        );
-      } else {
-        return;
-      }
+      setTerritoryData(
+        apires
+          .filter((item) => Number(item.bg_id) === Number(segmentId))
+          .filter((item) => Number(item.bu_id) === Number(businessUnitId))
+          .filter((item) => Number(item.z_id) === Number(zoneId))
+          .filter((item) => Number(item.r_id) === Number(regionId))
+      );
     } catch (error) {
       setDownloadLoading(false);
     }
@@ -415,25 +410,38 @@ const CollectionPlans = () => {
     tId
   ) => {
     const currentDate = new Date();
-    if (currentDate < endDate) {
-      let endPoint;
-      console.log("salesplan", yr, month, bgId, buId, zId, rId, tId);
-      if (bgId && buId && zId && rId && tId) {
-        endPoint = "api/get_collectiondata_based_on_roll_t";
-      } else if (bgId && buId && zId && rId && !tId) {
-        endPoint = "api/get_collectiondata_based_on_roll_r";
-      } else if (bgId && buId && zId && !rId && !tId) {
-        endPoint = "api/get_collectiondata_based_on_roll_z";
-      } else if (bgId && buId && !zId && !rId && !tId) {
-        endPoint = "api/get_collectiondata_based_on_roll_bu";
-      } else if (bgId && !buId && !zId && !rId && !tId) {
-        endPoint = "api/get_collectiondata_based_on_roll_bg";
-      } else {
-        return;
-      }
 
-      try {
-        console.log("dataBlog", {
+    let endPoint;
+    console.log("salesplan", yr, month, bgId, buId, zId, rId, tId);
+    if (bgId && buId && zId && rId && tId) {
+      endPoint = "api/get_collectiondata_based_on_roll_t";
+    } else if (bgId && buId && zId && rId && !tId) {
+      endPoint = "api/get_collectiondata_based_on_roll_r";
+    } else if (bgId && buId && zId && !rId && !tId) {
+      endPoint = "api/get_collectiondata_based_on_roll_z";
+    } else if (bgId && buId && !zId && !rId && !tId) {
+      endPoint = "api/get_collectiondata_based_on_roll_bu";
+    } else if (bgId && !buId && !zId && !rId && !tId) {
+      endPoint = "api/get_collectiondata_based_on_roll_bg";
+    } else {
+      return;
+    }
+
+    try {
+      console.log("dataBlog", {
+        t_year: yr || null,
+        m_year:
+          month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+        bg_id: bgId === "All" || !bgId ? null : bgId,
+        bu_id: buId === "All" || !buId ? null : buId,
+        z_id: zId === "All" || !zId ? null : zId,
+        r_id: rId === "All" || !rId ? null : rId,
+        t_id: tId === "All" || !tId ? null : tId,
+      });
+      const respond = await axios.get(`${url}/${endPoint}`, {
+        headers: headers,
+
+        params: {
           t_year: yr || null,
           m_year:
             month === "All" || !month ? null : moment(month).format("YYYY-MM"),
@@ -442,32 +450,16 @@ const CollectionPlans = () => {
           z_id: zId === "All" || !zId ? null : zId,
           r_id: rId === "All" || !rId ? null : rId,
           t_id: tId === "All" || !tId ? null : tId,
-        });
-        const respond = await axios.get(`${url}/${endPoint}`, {
-          headers: headers,
+        },
+      });
 
-          params: {
-            t_year: yr || null,
-            m_year:
-              month === "All" || !month
-                ? null
-                : moment(month).format("YYYY-MM"),
-            bg_id: bgId === "All" || !bgId ? null : bgId,
-            bu_id: buId === "All" || !buId ? null : buId,
-            z_id: zId === "All" || !zId ? null : zId,
-            r_id: rId === "All" || !rId ? null : rId,
-            t_id: tId === "All" || !tId ? null : tId,
-          },
-        });
-
-        const apires = await respond.data.data;
-        console.log("new data", apires);
-        setAllTableData(apires);
-      } catch (error) {
-        setDownloadLoading(false);
-        if (!error) return;
-        setAllTableData([]);
-      }
+      const apires = await respond.data.data;
+      console.log("new data", apires);
+      setAllTableData(apires);
+    } catch (error) {
+      setDownloadLoading(false);
+      if (!error) return;
+      setAllTableData([]);
     }
   };
 
@@ -3733,7 +3725,6 @@ const CollectionPlans = () => {
                           aria-hidden
                           style={{
                             backgroundColor: getStatus(item.rp_status),
-                            
                           }}
                           className="absolute inset-0 opacity-60 rounded-full"
                         ></span>

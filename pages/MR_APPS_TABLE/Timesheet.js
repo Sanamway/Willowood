@@ -11,7 +11,7 @@ import Layout from "@/components/Layout1";
 import nmg from "./banner.jpg";
 import ReactPaginate from "react-paginate";
 import moment from "moment";
-const FarmerSHC = () => {
+const Timesheet = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
@@ -24,9 +24,9 @@ const FarmerSHC = () => {
   };
 
   const [pageCount, setPageCount] = useState(0);
-  const getFarmerDemo = async (currentPage) => {
+  const getTimesheet = async (currentPage) => {
     try {
-      const respond = await axios.get(`${url}/api/get_farmer_meet`, {
+      const respond = await axios.get(`${url}/api/get_emp_attendance`, {
         headers: headers,
         params: {
           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
@@ -37,7 +37,8 @@ const FarmerSHC = () => {
           size: 50,
         },
       });
-      const apires = await respond.data.data.MR_demo;
+      const apires = await respond.data.data.MR_attendance;
+      console.log("plo", respond.data.data.MR_attendance);
       const count = await respond.data.data.Total_count;
       setPageCount(Math.ceil(count / 50));
       setData(apires);
@@ -45,7 +46,7 @@ const FarmerSHC = () => {
   };
 
   useEffect(() => {
-    getFarmerDemo(currentPage.selected + 1);
+    getTimesheet(currentPage.selected + 1);
   }, [currentPage.selected]);
 
   const [showImageModal, setShowImageModal] = useState(false);
@@ -69,7 +70,7 @@ const FarmerSHC = () => {
 
     try {
       const respond = await axios.put(
-        `${url}/api/update_mr_shc/${modalData.id}`,
+        `${url}/api/update_att_status/${modalData.id}`,
         JSON.stringify(data),
         {
           headers: headers,
@@ -80,7 +81,7 @@ const FarmerSHC = () => {
 
       toast.success(apires);
 
-      getFarmerDemo(currentPage.selected + 1);
+      getTimesheet(currentPage.selected + 1);
     } catch (error) {}
   };
 
@@ -92,7 +93,7 @@ const FarmerSHC = () => {
     };
     try {
       const respond = await axios.put(
-        `${url}/api/update_mr_shc/${modalData.id}`,
+        `${url}/api/update_att_status/${modalData.id}`,
         JSON.stringify(data),
         {
           headers: headers,
@@ -102,17 +103,17 @@ const FarmerSHC = () => {
 
       handleCloseModal();
       toast.success(apires);
-      getFarmerDemo(currentPage.selected + 1);
+      getTimesheet(currentPage.selected + 1);
     } catch (error) {}
   };
 
   const handleDelete = async () => {
     const paramsData = {
-      f_shc_id: modalData.id,
+      attendance_id: modalData.id,
     };
     try {
       const respond = await axios.get(
-        `${url}/api/delete_mr_shc`,
+        `${url}/api/delete_emp_attendance`,
 
         {
           headers: headers,
@@ -122,7 +123,7 @@ const FarmerSHC = () => {
       const apires = await respond.data.message;
       toast.success(apires);
 
-      getFarmerDemo(currentPage.selected + 1);
+      getTimesheet(currentPage.selected + 1);
       handleCloseModal();
     } catch (error) {
       toast.error(error.message);
@@ -151,7 +152,7 @@ const FarmerSHC = () => {
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
-            Farmer Soil Health Card
+            MR Timesheet
           </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
@@ -190,71 +191,30 @@ const FarmerSHC = () => {
                     Action
                   </th>
                   <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    F. SHC No
+                    Emp Code
                   </th>
 
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    SHC Date
+                    Name
                   </th>
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Mobile No
+                    Attendence Type
                   </th>
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Id
+                    Date
                   </th>
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Name
+                    Punch In Time
                   </th>
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Father Name
-                  </th>
-
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Type
+                    Punch Out Time
                   </th>
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Plot Size
+                    Status
                   </th>
 
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Village
-                  </th>
-
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Nitrogen
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Phosphorus
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Potassium
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    PH
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    EC
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Organic Carbon
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Sulphur
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Zinc
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Boron
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Iron
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Magnese
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Copper
+                    Territory
                   </th>
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                     Deleted
@@ -262,7 +222,7 @@ const FarmerSHC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-                {data.map((item, idx) => (
+                {data?.map((item, idx) => (
                   <tr className="dark:border-2" key={idx}>
                     <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                       <button
@@ -271,7 +231,7 @@ const FarmerSHC = () => {
                           setModalData({
                             ...modalData,
                             type: "Verify",
-                            id: item.f_shc_id,
+                            id: item.attendance_id,
                           });
                         }}
                         disabled={item.verified === "Yes"}
@@ -285,7 +245,7 @@ const FarmerSHC = () => {
                           setModalData({
                             ...modalData,
                             type: "Approve",
-                            id: item.f_shc_id,
+                            id: item.attendance_id,
                           });
                         }}
                         disabled={item.approved === "Yes"}
@@ -300,7 +260,7 @@ const FarmerSHC = () => {
                           setModalData({
                             ...modalData,
 
-                            id: item.f_shc_id,
+                            id: item.attendance_id,
                           });
                         }}
                       >
@@ -308,77 +268,34 @@ const FarmerSHC = () => {
                       </button>
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.f_meet_no}
-                    </td>
-                    {/* <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {moment(item.next_followup_date).format("MM/DD/YYYY")}
-                    </td> */}
-
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.purpose_of_meeting}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_mob_no}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_id}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_name}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_father_name}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_type}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.plot_size}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.village}
+                      {item.emp_code}
                     </td>
 
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.nitrogen}
+                      {item.user_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.phosphorus}
+                      {item.attendance_type}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.potassium}
+                      {moment(item.date).format("DD MMM YYYY")}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.ph}
+                      {moment(item.punch_in_time).format("hh:mm A")}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.ec}
+                      {item.punch_out_time
+                        ? moment(item.punch_out_time).format("hh:mm A")
+                        : "-"}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.organic_carbon}
+                      {item.status}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.sulphur}
-                    </td>
-
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.zinc}
+                      {item.territory_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.boron}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.iron}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.manganese}
-                    </td>
-
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.copper}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.isDeleted ? "Yes" : "No"}
+                      {item.isDeleted ? "true" : "false"}
                     </td>
                   </tr>
                 ))}
@@ -664,4 +581,4 @@ const FarmerSHC = () => {
   );
 };
 
-export default FarmerSHC;
+export default Timesheet;
