@@ -116,7 +116,7 @@ const HolidayCalender = () => {
             holidayName: item.holiday_name,
             day: item.holiday_date,
             date: item.holiday_date,
-            type: item.type,
+            type: item.holiday_type,
             buId: item.bu_id,
             bgId: item.bg_id,
             cId: item.c_id,
@@ -148,7 +148,7 @@ const HolidayCalender = () => {
             holidayName: item.holiday_name,
             day: item.holiday_date,
             date: item.holiday_date,
-            type: item.type,
+            type: item.holiday_type,
             buId: item.bu_id,
             bgId: item.bg_id,
             cId: item.c_id,
@@ -159,6 +159,7 @@ const HolidayCalender = () => {
   };
 
   useEffect(() => {
+    if (!weekType) setWoData([]);
     if (
       !filterState.year ||
       !filterState.cId ||
@@ -187,31 +188,9 @@ const HolidayCalender = () => {
     weekType,
   ]);
 
-  const [tableData, setTableData] = useState([
-    {
-      id: null,
-      holidayName: "",
-      day: "",
-      date: "",
-      type: "",
-      buId: "",
-      bgId: "",
-      cId: "",
-    },
-  ]);
+  const [tableData, setTableData] = useState([]);
 
-  const [woData, setWoData] = useState([
-    {
-      id: null,
-      holidayName: "",
-      day: "",
-      date: "",
-      type: "",
-      buId: "",
-      bgId: "",
-      cId: "",
-    },
-  ]);
+  const [woData, setWoData] = useState([]);
 
   const handleInputChange = (index, event) => {
     const { name, value } = event.target;
@@ -235,7 +214,7 @@ const HolidayCalender = () => {
         holidayName: "",
         day: "",
         date: "",
-        type: "",
+        type: "Fixed Holiday",
         buId: Number(filterState.buId),
         bgId: Number(filterState.bgId),
         cId: Number(filterState.cId),
@@ -244,9 +223,15 @@ const HolidayCalender = () => {
   };
 
   const handleAdd = async () => {
+    if (!weekType || !tableData.length) {
+      if (!weekType) toast.error("Select Type on Weekly Off Tab");
+      else if (!tableData.length) toast.error("Add Data in Holiday Calender");
+      return;
+    }
     handleAddHoliday();
     handleAddWO();
   };
+
   const handleAddHoliday = async () => {
     try {
       const allData = tableData.map((item) => {
@@ -254,10 +239,11 @@ const HolidayCalender = () => {
           holiday_name: item.holidayName,
           holiday_date: item.date,
           day: moment(item.date).format("dddd"),
-          type: item.type,
+          holiday_type: item.type,
           bu_id: item.buId,
           bg_id: item.bgId,
           c_id: item.cId,
+          type: "Holiday",
           year: Number(filterState.year),
         };
       });
@@ -275,6 +261,7 @@ const HolidayCalender = () => {
           },
         })
         .then((res) => {
+          toast.success("Holiday Calender Saved");
           getAllHoliday(
             filterState.year,
             filterState.cId,
@@ -288,12 +275,6 @@ const HolidayCalender = () => {
       const errMsg = error?.response?.data.message;
       if (!errMsg) return;
       toast.error(errMsg);
-      getAllHoliday(
-        filterState.year,
-        filterState.cId,
-        filterState.bgId,
-        filterState.buId
-      );
     }
   };
 
@@ -324,7 +305,9 @@ const HolidayCalender = () => {
             update: true,
           },
         })
+
         .then((res) => {
+          toast.success("Weekly Off Saved");
           getWeeklyOff(
             filterState.year,
             filterState.cId,
@@ -337,15 +320,9 @@ const HolidayCalender = () => {
       const apires = await respond.data.data;
     } catch (error) {
       const errMsg = error?.response?.data.message;
+
       if (!errMsg) return;
       toast.error(errMsg);
-      getWeeklyOff(
-        filterState.year,
-        filterState.cId,
-        filterState.bgId,
-        filterState.buId,
-        weekType
-      );
     }
   };
   const handleDelete = () => {
@@ -478,8 +455,14 @@ const HolidayCalender = () => {
                   ))}
                 </select>
               </div>
+              <button
+                onClick={() => handleAdd()}
+                className="mt-2 px-4 py-1 bg-blue-500 text-white rounded h-8 mb-2"
+              >
+                Save Holiday Calender
+              </button>
 
-              <div className="flex w-full border-solid border-b-2 items-start gap-4 mt-6">
+              <div className="flex w-full border-solid border-b-2 items-start gap-4 mt-2">
                 <button
                   className={`${
                     calenderType === "Holiday"
@@ -573,14 +556,11 @@ const HolidayCalender = () => {
                               className="border rounded px-2 py-1 w-full"
                             >
                               <option value="">Select Type</option>
-                              <option value="Public">Public</option>
-                              <option value="Private">Private</option>
 
-                              <option value="Holiday">Holiday</option>
-                              <option value="Fixed Holiday ">
+                              <option value="Fixed Holiday">
                                 Fixed Holiday{" "}
                               </option>
-                              <option value="Restricted Holiday ">
+                              <option value="Restricted Holiday">
                                 Restricted Holiday{" "}
                               </option>
                               <option value="Managment Holiday">
@@ -666,7 +646,7 @@ const HolidayCalender = () => {
                             >
                               <option value="">Select Type</option>
 
-                              <option value="WO">WO</option>
+                              <option value="WO">Weekly Off</option>
                               <option value="Comp Off">Comp Off</option>
                             </select>
                           </td>
@@ -688,12 +668,6 @@ const HolidayCalender = () => {
                   </table>
                 </div>
               )}
-              <button
-                onClick={() => handleAdd()}
-                className="mt-2 px-4 py-1 bg-blue-500 text-white rounded h-8 mb-2"
-              >
-                Save
-              </button>
             </div>
           </div>
         </div>

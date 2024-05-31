@@ -24,7 +24,6 @@ import { FaHandsHelping } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Dialog, Transition } from "@headlessui/react";
 import Profile from "../../public/userimg.jpg";
-import { SlCalender } from "react-icons/sl";
 
 const AdditionalInfo = (props) => {
   const router = useRouter();
@@ -41,15 +40,7 @@ const AdditionalInfo = (props) => {
 
     return lastDate;
   };
-  const getStartDateOfCurrentMonth = () => {
-    // Get the current date
-    const now = moment();
 
-    // Get the last date of the current month
-    const lastDate = now.startOf("month").format("YYYY-MM-DD");
-
-    return lastDate;
-  };
   const [localStorageItems, setLocalStorageItems] = useState({
     uId: "",
     cId: "",
@@ -64,7 +55,7 @@ const AdditionalInfo = (props) => {
   useEffect(() => {
     setLocalStorageItems({
       uId: JSON.parse(window.localStorage.getItem("uid")),
-      cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
+      cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
       bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
       buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
       rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
@@ -77,70 +68,45 @@ const AdditionalInfo = (props) => {
     });
   }, []);
 
-  const [filterDate, setFilterDate] = useState({
-    startDate: new Date(getStartDateOfCurrentMonth()),
-    endDate: new Date(getLastDateOfCurrentMonth()),
-  });
-  const [listItems, setListItems] = useState([]);
-  const getAttandenceStatus = async () => {
+  const [filterYear, setFilterYear] = useState("2024");
+  const [tableData, setTableData] = useState([]);
+  const getAllHoliday = async (year) => {
     try {
-      const respond = await axios.get(`${url}/api/get_emp_attendance`, {
+      const respond = await axios.get(`${url}/api/holiday_list`, {
         headers: headers,
         params: {
-          emp_code: localStorageItems.empCode,
-          t_id: localStorageItems.tId,
-          c_id: Number(localStorageItems.cId),
-          attendance_date_start: moment(filterDate.startDate).format(
-            "YYYY-MM-DD"
-          ),
-          attendance_date_end: moment(filterDate.endDate).format("YYYY-MM-DD"),
+        //   bu_id: localStorageItems.buId,
+        //   c_id: localStorageItems.cId,
+        //   bg_id: localStorageItems.bgId,
+        //   year: year,
+        //   type: "Holiday",
         },
       });
       const apires = await respond.data.data;
-      setListItems(apires);
+
+      setTableData(
+        apires.map((item, idx) => {
+          return {
+            id: idx,
+            holidayName: item.holiday_name,
+            day: item.holiday_date,
+            date: item.holiday_date,
+            type: item.holiday_type,
+            buId: item.bu_id,
+            bgId: item.bg_id,
+            cId: item.c_id,
+          };
+        })
+      );
     } catch (error) {
-      console.log(error);
+      setTableData([]);
     }
   };
   useEffect(() => {
-    if (localStorageItems) getAttandenceStatus();
-  }, [localStorageItems]);
-  const getStatus = (status) => {
-    switch (status) {
-      case "PI":
-        <div className="flex w-12 h-12 bg-gray-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
-          {status}
-        </div>;
-        break;
-      case "P":
-        <div className="flex w-12 h-12 bg-green-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
-          {status}
-        </div>;
-        break;
-        
-      case "A":
-        <div className="flex w-12 h-12 bg-red-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
-          {status}
-        </div>;
-        break;
-      case "W":
-        <div className="flex w-12 h-12 bg-gray-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
-          {status}
-        </div>;
-        break;
-      case "L":
-        <div className="flex w-12 h-12 bg-yellow-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
-          {status}
-        </div>;
-        break;
+    if (!filterYear) setTableData([]);
+    getAllHoliday(filterYear);
+  }, [filterYear, localStorageItems]);
 
-      default:
-        <div className="flex w-12 h-12 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
-          {status}
-        </div>;
-        break;
-    }
-  };
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -152,11 +118,11 @@ const AdditionalInfo = (props) => {
             className="self-center "
             onClick={() =>
               router.push({
-                pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+                pathname: "/MR_Portal_Apps/MRHome",
               })
             }
           />
-          <span>Employee Timesheet</span>
+          <span>Holiday Calender</span>
         </span>{" "}
         <span className="text-white self-center">
           <Popover as="div" className="relative border-none outline-none mt-2">
@@ -248,90 +214,57 @@ const AdditionalInfo = (props) => {
       </div>
 
       <h1 className="text-xl font-bold  flex w-full justify-center border-t-4 border-blue-800 shadow-xl mb-4">
-        Employee Attendance Report
+        Holiday Calender{" "}
+        <select
+          name="type"
+          className="mx-4 text-sm h-6 flex  w-20 self-center"
+          value={filterYear}
+          onChange={(e) => setFilterYear(e.target.value)}
+        >
+          <option value="">Select Year</option>
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+        </select>
       </h1>
-      <div className="flex flex-row gap-2 w-full justify-between">
-        <span>
-          <DatePicker
-            className="w-full px-3 py-1.5 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            dateFormat="dd-MM-yyyy"
-            selected={filterDate.startDate}
-            onChange={(date) =>
-              setFilterDate({
-                ...filterDate,
-                startDate: date,
-              })
-            }
-            peekNextMonth
-            showMonthDropdown
-            showYearDropdown
-            dropdownMode="select"
-          />
-        </span>
-        <span>
-          <DatePicker
-            className="w-full px-3 py-1.5 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            dateFormat="dd-MM-yyyy"
-            peekNextMonth
-            showMonthDropdown
-            selected={filterDate.endDate}
-            onChange={(date) =>
-              setFilterDate({
-                ...filterDate,
-                endDate: date,
-              })
-            }
-            showYearDropdown
-            dropdownMode="select"
-          />
-        </span>
-        <span className="self-center p-2">
-          <button
-            className="bg-sky-900 text-white px-2 py-1"
-            onClick={() => getAttandenceStatus()}
-          >
-            View
-          </button>
-        </span>
-      </div>
+      <table className="min-w-full divide-y border divide-gray-200">
+        <thead className="border-b">
+          <tr className="bg-gray-50 font-arial">
+            <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
+              Holiday Name
+            </th>
 
-      {listItems.map((item) => (
-        <div className="text-xl   flex w-full justify-around h-22   shadow-xl flex">
-          <div className="flex gap-2 py-2 px-4 py-4  ">
-            <SlCalender className=" h-12 w-8 self-center" />
-            <div className="flex flex-col self-center ">
-              <span className="font-bold text-sm">
-                {moment(item.date).format("DD MMM YYYY")}
-              </span>
-              <span className="text-sm">
-                {moment(item.date).format("dddd")}
-              </span>
-            </div>
-          </div>
-          {getStatus(item.status)}
+            <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
+              Date
+            </th>
+            <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
+              Day
+            </th>
+            <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
+              Type
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200 text-xs">
+          {tableData.map((item, idx) => (
+            <tr key={idx} className="border-b">
+              <td className="px-2 py-2">{item.holidayName}</td>
 
-          <div className="flex flex-row p-2 gap-4 ">
-            <div className="flex flex-col self-center gap-2">
-              <span className="text-sm  ">Punch In : </span>
-              <span className="text-sm text-blue-400 font-bold">
-                Punch Out:
-              </span>
-            </div>
-            <div className="flex flex-col self-center gap-2 ">
-              <span className="font-bold text-sm h-6  border-2 border-black-500  text-black-400 whitespace-nowrap px-2">
-                {moment(item.punch_in_time).format("hh:mm A")}
-              </span>
-              <span className="font-bold text-sm h-6  border-2 border-black-500 bg-sky-900 text-white whitespace-nowrap px-2">
-                {item.punch_out_time
-                  ? moment(item.punch_out_time).format("hh:mm A")
-                  : "-"}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-col  text-sm gap-2"></div>
-        </div>
-      ))}
+              <td className="px-2 py-2">
+                <DatePicker
+                  disabled
+                  selected={item.date ? new Date(item.date) : ""}
+                  onChange={(date) => handleDateChange(idx, date)}
+                  className="border rounded px-2 py-1 w-24"
+                  dateFormat="dd/MM/yyyy"
+                />
+              </td>
+              <td className="px-2 py-2">{moment(item.day).format("dddd")}</td>
+              <td className="px-2 py-2">{item.type}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </form>
   );
 };
