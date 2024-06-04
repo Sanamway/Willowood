@@ -13,7 +13,7 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 import Navbar from "@/components/MR_Portal_Apps/Navbar";
-import { FaArrowAltCircleUp } from "react-icons/fa";
+
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { Popover, Switch } from "@headlessui/react";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
@@ -24,6 +24,7 @@ import { FaHandsHelping } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Dialog, Transition } from "@headlessui/react";
 import Profile from "../../public/userimg.jpg";
+import { FaArrowAltCircleUp } from "react-icons/fa";
 const AdditionalInfo = (props) => {
   const router = useRouter();
   const headers = {
@@ -177,27 +178,29 @@ const AdditionalInfo = (props) => {
         </div>
 
         <div className="flex  flex-col px-4 w-full mt-4">
-          <div className="flex  justify-between w-full  w-28">
+          <div className="flex   w-full  w-28">
             <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-28">Emp Code</p>
+              <p className=" font-bold text-sm text-blue-800 w-20 whitespace-nowrap">
+                Emp Code
+              </p>
               <span>:</span>
             </div>
-            <span className="w-28">{localStorageItems.empCode}</span>
+            <span className="text-wrap ml-4">{localStorageItems.empCode}</span>
           </div>
-          <div className="flex  justify-between w-full  w-28 ">
+          <div className="flex  w-full  w-28 ">
             <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-28">Name</p>
+              <p className=" font-bold text-sm text-blue-800  w-20">Name</p>
               <span>:</span>
             </div>
-            <span className="w-28"> {localStorageItems.clName}</span>
+            <span className="text-wrap ml-4"> {localStorageItems.clName}</span>
           </div>
 
-          <div className="flex  justify-between w-full  w-28">
+          <div className="flex   w-full  w-28">
             <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-28">Branch</p>
+              <p className=" font-bold text-sm text-blue-800 w-20">Branch</p>
               <span>:</span>
             </div>
-            <span className="w-28">asfasdfa</span>
+            <span className="text-wrap ml-4">asfasdfa</span>
           </div>
         </div>
       </div>
@@ -268,19 +271,44 @@ const AdditionalInfo = (props) => {
               <td className="border border-gray-200 py-2 px-2 whitespace-nowrap">
                 {item.date}
               </td>
-              <td className="border border-gray-200 py-2 px-2">{item.demo}</td>
-              <td className="border border-gray-200 py-2 px-2">{item.f_day}</td>
-              <td className="border border-gray-200 py-2 px-2">{item.o2o}</td>
-              <td className="border border-gray-200 py-2 px-2">{item.svn}</td>
-              <td className="border border-gray-200 py-2 px-2">{item.gvm}</td>
-              <td className="border border-gray-200 py-2 px-2">{item.cap}</td>
-              <td className="border border-gray-200 py-2 px-2">{item.shc}</td>
-              <td className="border border-gray-200 py-2 px-2">{item.att}</td>
+              <td className="border border-gray-200 py-2 px-2">
+                {item.demo ? item.demo : "-"}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {item.f_day ? item.f_day : "-"}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {item.o2o ? item.o2o : "-"}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {item.svn ? item.svn : "-"}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {item.gvm ? item.gvm : "-"}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {item.cap ? item.cap : "-"}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {item.shc ? item.shc : "-"}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {item.att ? item.att : "-"}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-
+      <FaArrowAltCircleUp
+        size={42}
+        className="self-center size-120 text-black-400 text-blue-400 "
+        onClick={() =>
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth", // Smooth scrolling animation
+          })
+        }
+      />
       {/* Example row */}
 
       {/* {tableData.map((item) => 

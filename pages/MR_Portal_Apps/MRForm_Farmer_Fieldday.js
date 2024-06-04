@@ -141,16 +141,15 @@ const AdditionalInfo = (props) => {
     }
   };
   const getCropInfo = async () => {
-    if (new Date())
-      try {
-        const respond = await axios.get(`${url}/api/get_crop_profile`, {
-          headers: headers,
-        });
-        const apires = await respond.data.data;
-        setCropData(apires);
-      } catch (error) {
-        console.log(error);
-      }
+    try {
+      const respond = await axios.get(`${url}/api/get_crop_profile`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      setCropData(apires);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {

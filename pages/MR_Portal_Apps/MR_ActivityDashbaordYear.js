@@ -83,8 +83,8 @@ const AdditionalInfo = (props) => {
   }, [localStorageItems]);
 
   return (
-    <form
-      className=" bg-white rounded  w-full   pb-4 "
+    <form  
+      className=" bg-white rounded  w-full   pb-4  fixed"
       onSubmit={(e) => e.preventDefault()}
     >
       <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
@@ -163,27 +163,27 @@ const AdditionalInfo = (props) => {
         </div>
 
         <div className="flex  flex-col px-4 w-full mt-4">
-          <div className="flex  justify-between w-full  w-28">
+          <div className="flex   w-full  w-28">
             <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-28">Emp Code</p>
+              <p className=" font-bold text-sm text-blue-800 w-20 whitespace-nowrap">Emp Code</p>
               <span>:</span>
             </div>
-            <span className="w-28">{localStorageItems.empCode}</span>
+            <span className="text-wrap ml-4">{localStorageItems.empCode}</span>
           </div>
-          <div className="flex  justify-between w-full  w-28 ">
+          <div className="flex  w-full  w-28 ">
             <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-28">Name</p>
+              <p className=" font-bold text-sm text-blue-800  w-20">Name</p>
               <span>:</span>
             </div>
-            <span className="w-28"> {localStorageItems.clName}</span>
+            <span className="text-wrap ml-4"> {localStorageItems.clName}</span>
           </div>
 
-          <div className="flex  justify-between w-full  w-28">
+          <div className="flex   w-full  w-28">
             <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-28">Branch</p>
+              <p className=" font-bold text-sm text-blue-800 w-20">Branch</p>
               <span>:</span>
             </div>
-            <span className="w-28">asfasdfa</span>
+            <span className="text-wrap ml-4">asfasdfa</span>
           </div>
         </div>
       </div>
@@ -245,48 +245,58 @@ const AdditionalInfo = (props) => {
                     });
                   }}
                 >
-                  {item.month_year}{" "}
+                  {item.month_year ? item.month_year : "-"}{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">- </td>
                 <td className="border border-gray-200 py-2 px-2">
-                  {item.tot}{" "}
+                  {item.tot ? item.tot : "-"}{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">- </td>
                 <td className="border border-gray-200 py-2 px-2">
-                  {item.scr}{" "}
+                  {item.scr ? item.scr : "-"}{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">
-                  {item.demo}{" "}
+                  {item.demo ? item.demo : "-"}{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">
-                  {item.f_day}{" "}
+                  {item.f_day ? item.f_day : "-"}{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">
-                  {item.o2o}{" "}
+                  {item.o2o ? item.o2o : "-"}{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">
-                  {item.gmt}{" "}
+                  {item.gmt ? item.gmt : "-"}{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">
-                  {item.svn}{" "}
+                  {item.svn ? item.svn : "-"}{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">
-                  {item.gvm}{" "}
+                  {item.gvm ? item.gvm : "-"}{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">
-                  {item.cap}{" "}
+                  {item.cap ? item.cap : "-"}{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">
-                  {item.shc}{" "}
+                  {item.shc ? item.shc : "-"}{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">
-                  {item.att}{" "}
+                  {item.att ? item.att : "-"}{" "}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <FaArrowAltCircleUp
+        size={42}
+        className="self-center size-120 text-black-400 text-blue-400 "
+        onClick={() =>
+         window.scrollTo({
+            top: 0,
+            behavior: "smooth", // Smooth scrolling animation
+          })
+        }
+      />
     </form>
   );
 };
