@@ -83,7 +83,7 @@ const AdditionalInfo = (props) => {
   }, [localStorageItems]);
 
   return (
-    <form  
+    <form
       className=" bg-white rounded  w-full   pb-4  fixed"
       onSubmit={(e) => e.preventDefault()}
     >
@@ -165,7 +165,9 @@ const AdditionalInfo = (props) => {
         <div className="flex  flex-col px-4 w-full mt-4">
           <div className="flex   w-full  w-28">
             <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-20 whitespace-nowrap">Emp Code</p>
+              <p className=" font-bold text-sm text-blue-800 w-20 whitespace-nowrap">
+                Emp Code
+              </p>
               <span>:</span>
             </div>
             <span className="text-wrap ml-4">{localStorageItems.empCode}</span>
@@ -284,14 +286,86 @@ const AdditionalInfo = (props) => {
                 </td>
               </tr>
             ))}
+            <tr className="bg-white whitespace-nowrap">
+              <td className="border border-gray-200 py-2 px-2 ">Total</td>
+              <td className="border border-gray-200 py-2 px-2">- </td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">- </td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">
+                {tableData
+                  .map((item) => item.o2o)
+                  .reduce((acc, current) => {
+                    // Check if the current element is a number
+
+                    return Number(acc) + Number(current);
+                  }, 0)}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {tableData
+                  .map((item) => item.gmt)
+                  .reduce((acc, current) => {
+                    // Check if the current element is a number
+
+                    return Number(acc) + Number(current);
+                  }, 0)}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {tableData
+                  .map((item) => item.svn)
+                  .reduce((acc, current) => {
+                    // Check if the current element is a number
+
+                    return Number(acc) + Number(current);
+                  }, 0)}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {tableData
+                  .map((item) => item.gvm)
+                  .reduce((acc, current) => {
+                    // Check if the current element is a number
+
+                    return Number(acc) + Number(current);
+                  }, 0)}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {tableData
+                  .map((item) => item.cap)
+                  .reduce((acc, current) => {
+                    // Check if the current element is a number
+
+                    return Number(acc) + Number(current);
+                  }, 0)}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {tableData
+                  .map((item) => item.shc)
+                  .reduce((acc, current) => {
+                    // Check if the current element is a number
+
+                    return Number(acc) + Number(current);
+                  }, 0)}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {tableData
+                  .map((item) => item.att)
+                  .reduce((acc, current) => {
+                    // Check if the current element is a number
+
+                    return Number(acc) + Number(current);
+                  }, 0)}
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
       <FaArrowAltCircleUp
         size={42}
-        className="self-center size-120 text-black-400 text-blue-400 "
+        className="self-center size-120 text-black-400 text-blue-400  "
         onClick={() =>
-         window.scrollTo({
+          window.scrollTo({
             top: 0,
             behavior: "smooth", // Smooth scrolling animation
           })

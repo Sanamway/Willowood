@@ -297,6 +297,67 @@ const AdditionalInfo = (props) => {
               </td>
             </tr>
           ))}
+          <tr className="bg-white">
+            <td className="border border-gray-200 py-2 px-2 whitespace-nowrap">
+              Total
+            </td>
+            <td className="border border-gray-200 py-2 px-2">-</td>
+            <td className="border border-gray-200 py-2 px-2">-</td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.o2o)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.svn)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.gvm)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.cap)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.shc)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.att)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+          </tr>
         </tbody>
       </table>
       <FaArrowAltCircleUp

@@ -1,32 +1,136 @@
 import React, { useState, useEffect, Fragment } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Dialog, Transition } from "@headlessui/react";
-import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
-import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
-import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
-import Layout from "@/components/Layout1";
-import nmg from "./banner.jpg";
-import ReactPaginate from "react-paginate";
-import moment from "moment";
-import { output } from "@/next.config";
-
+import * as Yup from "yup";
 const AdditionalInfo = (props) => {
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
+  const [allBrand, setAllBrand] = useState([]);
+  const getAllBrand = async () => {
+    try {
+      const resp = await axios.get(`${url}/api/get_product_brand`, {
+        headers: headers,
+        params: {
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        },
+      });
+      const respData = await resp.data.data;
+      setAllBrand(respData);
+    } catch (error) {
+      console.log("err", error);
+    }
+  };
+
+  const [allSegement, setAllSegment] = useState([]);
+  const getAllProductSegment = async () => {
+    try {
+      const resp = await axios.get(`${url}/api/get_product_segment`, {
+        headers: headers,
+        params: {
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        },
+      });
+      const respData = await resp.data.data;
+      setAllSegment(respData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllProductSegment();
+    getAllBrand();
+  }, []);
 
   const [allFilters, setAllFilters] = useState({
     companyId: "",
     crop: "",
     season: "",
   });
+
+  const getCropInfo = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_crop_info`, {
+        headers: headers,
+        params: {
+          cr_id: router.query.crId,
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        },
+      });
+      const apires = await respond.data.data;
+      setCropDetails(
+        apires.cropinfoData.map((item, index) => {
+          return {
+            idx: index,
+            district: item.district,
+            cultivatedArea: item.total_cultivated_area_in_acre,
+            area: item.area_in_acre,
+            share: item.share_percent,
+            avYield: item.average_yield_acre,
+            currentPrice: item.current_price_qtl,
+            inputCost: item.input_cost,
+            outputCost: item.output_cost,
+            roi: item.roi,
+          };
+        })
+      );
+
+      setSegmentDetails(
+        apires.crop_seg.map((item, index) => {
+          return {
+            idx: index,
+            avCost: item.average_cost_acre,
+            cost: item.cost_kg_ltr,
+            segment: item.crop_segment,
+            stage: item.crop_stage,
+            share: item.share_percent,
+            dose: item.dose_acre,
+            endDate: new Date(item.end_date),
+            productBrand: item.product_brand,
+            newStage: item.stage,
+            startDate: new Date(item.start_date),
+            totalDay: item.total_days,
+          };
+        })
+      );
+
+      setMarketShare(
+        apires.crop_mark.map((item, index) => {
+          return {
+            idx: index,
+            marketName: item.market_mandi_name,
+            marketPotential: item.market_potential,
+            business: item.business,
+            share: item.share,
+          };
+        })
+      );
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (router.query.type === "Add") {
+      setAllFilters({
+        ...allFilters,
+        companyId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+      });
+    } else {
+      getCropInfo();
+      setAllFilters({
+        companyId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        crop: router.query.crId,
+        season: router.query.season,
+      });
+    }
+  }, []);
+
   const [allDistrictData, setAllDistrict] = useState([]);
   const getDistrict = async () => {
     try {
@@ -67,22 +171,24 @@ const AdditionalInfo = (props) => {
       const apires = await respond.data.data;
       setAllCropData(apires);
     } catch (error) {
+      setAllCropData([]);
       console.log(error);
     }
   };
 
   useEffect(() => {
-    if (allFilters.crop)
-      setAllFilters({
-        ...allFilters,
-        season: allCropData.filter(
-          (item) => Number(item.cr_id) === Number(allFilters.crop)
-        )[0].season_name
-          ? allCropData.filter(
-              (item) => Number(item.cr_id) === Number(allFilters.crop)
-            )[0].season_name
-          : "",
-      });
+    if (router.query.type !== "Add") return;
+    if (!allFilters.crop) return;
+    setAllFilters({
+      ...allFilters,
+      season: allCropData.filter(
+        (item) => Number(item.cr_id) === Number(allFilters.crop)
+      )[0].season_name
+        ? allCropData.filter(
+            (item) => Number(item.cr_id) === Number(allFilters.crop)
+          )[0].season_name
+        : "",
+    });
   }, [allFilters.crop]);
 
   useEffect(() => {
@@ -106,34 +212,68 @@ const AdditionalInfo = (props) => {
     },
   ]);
 
-  const handleAddCropDetails = (idx) => {
-    const newCropDetail = {
-      idx: idx + 1,
-      district: "",
-      cultivatedArea: "",
-      area: "",
-      share: "",
-      avYield: "",
-      currentPrice: "",
-      inputCost: "",
-      outputCost: "",
-      roi: "",
-    };
+  const validationSchemaCropDetails = Yup.object().shape({
+    district: Yup.string()
+      .typeError("Add District to add new row")
+      .test("unique-district", "District must be unique", function (value) {
+        const { path, parent, options } = this;
+        const idx = parent.idx; // Get the index of the current row
+        const isDuplicate = cropDetails.some(
+          (detail, i) => detail.district === value && i !== idx
+        );
+        return !isDuplicate;
+      }),
+    cultivatedArea: Yup.number().typeError(
+      "Add Cultivated area to add new row"
+    ),
+    area: Yup.number().typeError("Add area to add new row"),
+    share: Yup.number().typeError("Add  share to add new row"),
+    avYield: Yup.number().typeError("Add avYield to add new row"),
+    currentPrice: Yup.number().typeError("Add Current price to add new row"),
+    inputCost: Yup.number().typeError("Add Input Cost to add new row"),
+    outputCost: Yup.number().typeError("Add Output Cost to add new row"),
+    roi: Yup.number().typeError("Add ROI to add new row"),
+  });
 
-    // Create a copy of the current array
-    const newArray = [...cropDetails];
+  const handleAddCropDetails = async (idx) => {
+    try {
+      // Create a copy of the current array
+      const newArray = [...cropDetails];
+      await validationSchemaCropDetails.validate(newArray[idx], {
+        abortEarly: false,
+      });
+      const newCropDetail = {
+        idx: idx + 1,
+        district: "",
+        cultivatedArea: "",
+        area: "",
+        share: "",
+        avYield: "",
+        currentPrice: "",
+        inputCost: "",
+        outputCost: "",
+        roi: "",
+      };
 
-    // Use splice to insert the new object at the specified index
-    newArray.splice(idx + 1, 0, newCropDetail);
+      // Use splice to insert the new object at the specified index
+      newArray.splice(idx + 1, 0, newCropDetail);
 
-    // Update the idx values to keep them sequential
-    const updatedCropDetails = newArray.map((crop, index) => ({
-      ...crop,
-      idx: index,
-    }));
+      // Update the idx values to keep them sequential
+      const updatedCropDetails = newArray.map((crop, index) => ({
+        ...crop,
+        idx: index,
+      }));
 
-    // Update the state with the new array
-    setCropDetails(updatedCropDetails);
+      // Update the state with the new array
+      setCropDetails(updatedCropDetails);
+    } catch (error) {
+      const newErrors = {};
+      error?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+      const err = Object.values(newErrors);
+      toast.error(err[0]);
+    }
   };
 
   const [segmentDetails, setSegmentDetails] = useState([
@@ -152,37 +292,61 @@ const AdditionalInfo = (props) => {
       newStage: "",
     },
   ]);
+  const validationSchemaSegmentDetails = Yup.object().shape({
+    stage: Yup.string().typeError("Add Stage to add new row"),
+    segment: Yup.string().typeError("Add Segment to add new row"),
+    productBrand: Yup.string().typeError("Add Product Brand to add new row"),
+    share: Yup.string().typeError("Add Cost Kg/Ltr  to add new row"),
+    dose: Yup.number().typeError("Add dose to add new row"),
+    cost: Yup.number().typeError("Add cost to add new row"),
+    avCost: Yup.number().typeError("Add av cost to add new row"),
+    startDate: Yup.string().typeError("Add Start date to add new row"),
+    endDate: Yup.string().typeError("Add End date to add new row"),
+    totalDay: Yup.number().typeError("Add total days to add new row"),
+    newStage: Yup.number().typeError("Add Stage to add new row"),
+  });
 
-  const handleAddCropSegmentDetails = (idx) => {
-    const newSegmentDetail = {
-      idx: idx + 1,
-      stage: "",
-      segment: "",
-      productBrand: "",
-      share: "",
-      dose: "",
-      cost: "",
-      avCost: "",
-      startDate: "",
-      endDate: "",
-      totalDay: "",
-      newStage: "",
-    };
+  const handleAddCropSegmentDetails = async (idx) => {
+    try {
+      const newArray = [...segmentDetails];
+      await validationSchemaSegmentDetails.validate(newArray[idx], {
+        abortEarly: false,
+      });
+      // Create a copy of the current array
+      const newSegmentDetail = {
+        idx: idx + 1,
+        stage: "",
+        segment: "",
+        productBrand: "",
+        share: "",
+        dose: "",
+        cost: "",
+        avCost: "",
+        startDate: "",
+        endDate: "",
+        totalDay: "",
+        newStage: "",
+      };
 
-    // Create a copy of the current array
-    const newArray = [...segmentDetails];
+      // Use splice to insert the new object at the specified index
+      newArray.splice(idx + 1, 0, newSegmentDetail);
 
-    // Use splice to insert the new object at the specified index
-    newArray.splice(idx + 1, 0, newSegmentDetail);
+      // Update the idx values to keep them sequential
+      const updatedSegmentDetails = newArray.map((segment, index) => ({
+        ...segment,
+        idx: index,
+      }));
 
-    // Update the idx values to keep them sequential
-    const updatedSegmentDetails = newArray.map((segment, index) => ({
-      ...segment,
-      idx: index,
-    }));
-
-    // Update the state with the new array
-    setSegmentDetails(updatedSegmentDetails);
+      // Update the state with the new array
+      setSegmentDetails(updatedSegmentDetails);
+    } catch (error) {
+      const newErrors = {};
+      error?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+      const err = Object.values(newErrors);
+      toast.error(err[0]);
+    }
   };
 
   const [marketShare, setMarketShare] = useState([
@@ -220,7 +384,7 @@ const AdditionalInfo = (props) => {
     setMarketShare(updatedMarketDetails);
   };
 
-  const handleSubmit = async (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
     try {
       const data = {
@@ -245,6 +409,7 @@ const AdditionalInfo = (props) => {
             c_id: allFilters.companyId,
             crop_stage: item.stage,
             crop_segment: item.segment,
+            share_percent: item.share,
             product_brand: item.productBrand,
             dose_acre: item.dose,
             cost_kg_ltr: item.cost,
@@ -267,20 +432,107 @@ const AdditionalInfo = (props) => {
         }),
       };
 
-      const respond = await axios.post(
-        `${url}/api/add_crop_info`,
-        JSON.stringify(data),
-        {
+      const respond = await axios
+        .post(`${url}/api/add_crop_info`, JSON.stringify(data), {
           headers: headers,
-        }
-      );
+          params: {
+            cr_id: allFilters.crop,
+          },
+        })
+        .then((res) => {
+          toast.success(res.data.message);
+          router.push({
+            pathname: "/MR_Portal_Web/Crop_info_table",
+          });
+        });
     } catch (errors) {
-      // const errorMessage = errors?.response?.data?.message;
-      // toast.error(errorMessage);
-      // const newErrors = {};
-      // errors?.inner?.forEach((error) => {
-      //   newErrors[error?.path] = error?.message;
-      // });
+      const errorMessage = errors?.response?.data?.message;
+      toast.error(errorMessage);
+      const newErrors = {};
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+    }
+  };
+
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = {
+        crop_info: cropDetails.map((item) => {
+          return {
+            cr_id: allFilters.crop,
+            c_id: allFilters.companyId,
+            district: item.district,
+            total_cultivated_area_in_acre: item.cultivatedArea,
+            area_in_acre: item.area,
+            share_percent: item.share,
+            average_yield_acre: item.avYield,
+            current_price_qtl: item.currentPrice,
+            input_cost: item.inputCost,
+            output_cost: item.outputCost,
+            roi: item.roi,
+          };
+        }),
+        crop_seg: segmentDetails.map((item) => {
+          return {
+            cr_id: allFilters.crop,
+            c_id: allFilters.companyId,
+            share: item.share,
+            crop_stage: item.stage,
+            crop_segment: item.segment,
+            product_brand: item.productBrand,
+            dose_acre: item.dose,
+            cost_kg_ltr: item.cost,
+            average_cost_acre: item.avCost,
+            start_date: item.startDate,
+            end_date: item.endDate,
+            total_days: item.totalDay,
+            stage: item.newStage,
+          };
+        }),
+        crop_mark: marketShare.map((item) => {
+          return {
+            cr_id: allFilters.crop,
+            c_id: allFilters.companyId,
+            market_mandi_name: item.marketName,
+            market_potential: item.marketPotential,
+            business: item.business,
+            share: item.share,
+          };
+        }),
+      };
+
+      const respond = await axios
+        .put(
+          `${url}/api/update_crop_info/${allFilters.crop}`,
+          JSON.stringify(data),
+          {
+            headers: headers,
+          }
+        )
+        .then((res) => {
+          toast.success(res.data.message);
+          router.push({
+            pathname: "/MR_Portal_Web/Crop_info_table",
+          });
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.message;
+      toast.error(errorMessage);
+      const newErrors = {};
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (router.query.type === "Add") {
+      handleAdd(e);
+    } else {
+      handleEdit(e);
     }
   };
 
@@ -301,6 +553,7 @@ const AdditionalInfo = (props) => {
                   companyId: e.target.value,
                 })
               }
+              disabled
             >
               <option value="" disabled>
                 - Select -
@@ -321,15 +574,12 @@ const AdditionalInfo = (props) => {
                 setAllFilters({
                   ...allFilters,
                   crop: e.target.value,
-                  season: e.target.name,
                 });
               }}
             >
-              <option value="" disabled>
-                - Select -
-              </option>
+              <option value="">- Select -</option>
               {allCropData.map((item, idx) => (
-                <option value={item.cr_id} key={idx} name={item.season_name}>
+                <option value={item.cr_id} key={idx}>
                   {item.crop_name}
                 </option>
               ))}
@@ -389,7 +639,9 @@ const AdditionalInfo = (props) => {
                     Output Cost (INR)
                   </th>
                   <th className="border border-gray-400 px-4 py-2">ROI</th>
-                  <th className="border border-gray-400 px-4 py-2">Action</th>
+                  {router.query.type !== "View" && (
+                    <th className="border border-gray-400 px-4 py-2">Action</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -590,31 +842,33 @@ const AdditionalInfo = (props) => {
                         }
                       />
                     </td>
-                    <td className="border border-gray-400 px-4 py-2 flex flex-row gap-2">
-                      <button
-                        type="button"
-                        className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        onClick={() => handleAddCropDetails(index)}
-                      >
-                        Add
-                      </button>
-                      <button
-                        type="button"
-                        className="inline-flex justify-center  text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        onClick={() => {
-                          setCropDetails(
-                            cropDetails
-                              .filter((item) => item.idx !== index)
-                              .map((crop, index) => ({
-                                ...crop,
-                                idx: index,
-                              }))
-                          );
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </td>
+                    {router.query.type !== "View" && (
+                      <td className="border border-gray-400 px-4 py-2 flex flex-row gap-2">
+                        <button
+                          type="button"
+                          className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap"
+                          onClick={() => handleAddCropDetails(index)}
+                        >
+                          Add Row
+                        </button>
+                        <button
+                          type="button"
+                          className="inline-flex justify-center  text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap"
+                          onClick={() => {
+                            setCropDetails(
+                              cropDetails
+                                .filter((item) => item.idx !== index)
+                                .map((crop, index) => ({
+                                  ...crop,
+                                  idx: index,
+                                }))
+                            );
+                          }}
+                        >
+                          Delete Row
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
 
@@ -730,9 +984,12 @@ const AdditionalInfo = (props) => {
                   <th className="border border-gray-400 px-4 py-2">
                     Product / Brand
                   </th>
-                  <th className="border border-gray-400 px-4 py-2">Share %</th>
+
                   <th className="border border-gray-400 px-4 py-2">
                     Dose/Acre (kg/ltr)
+                  </th>
+                  <th className="border border-gray-400 px-4 py-2">
+                    Cost kg/Ltr
                   </th>
                   <th className="border border-gray-400 px-4 py-2">
                     Cost/Acre (INR)
@@ -748,7 +1005,9 @@ const AdditionalInfo = (props) => {
                     Total Days
                   </th>
                   <th className="border border-gray-400 px-4 py-2">Stage</th>
-                  <th className="border border-gray-400 px-4 py-2">Action</th>
+                  {router.query.type !== "View" && (
+                    <th className="border border-gray-400 px-4 py-2">Action</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -776,8 +1035,7 @@ const AdditionalInfo = (props) => {
                       />
                     </td>
                     <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="text"
+                      <select
                         className="w-full px-2 py-1 border border-gray-300 rounded "
                         value={item.segment}
                         onChange={(e) =>
@@ -794,11 +1052,17 @@ const AdditionalInfo = (props) => {
                             })
                           )
                         }
-                      />
+                      >
+                        <option value="">--Select--</option>
+                        {allSegement.map((item, idx) => (
+                          <option value={item.pseg_name} key={idx}>
+                            {item.pseg_name}
+                          </option>
+                        ))}
+                      </select>
                     </td>
                     <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="text"
+                      <select
                         className="w-full px-2 py-1 border border-gray-300 rounded "
                         value={item.productBrand}
                         onChange={(e) =>
@@ -808,6 +1072,35 @@ const AdditionalInfo = (props) => {
                                 return {
                                   ...el,
                                   productBrand: e.target.value,
+                                };
+                              } else {
+                                return el;
+                              }
+                            })
+                          )
+                        }
+                      >
+                        <option value="">--Select--</option>
+                        {allBrand.map((item, idx) => (
+                          <option value={item.brand_name} key={idx}>
+                            {item.brand_name}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+
+                    <td className="border border-gray-400 px-4 py-2">
+                      <input
+                        type="number"
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                        value={item.dose}
+                        onChange={(e) =>
+                          setSegmentDetails(
+                            segmentDetails.map((el) => {
+                              if (el.idx === index) {
+                                return {
+                                  ...el,
+                                  dose: e.target.value,
                                 };
                               } else {
                                 return el;
@@ -829,27 +1122,6 @@ const AdditionalInfo = (props) => {
                                 return {
                                   ...el,
                                   share: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        value={item.dose}
-                        onChange={(e) =>
-                          setSegmentDetails(
-                            segmentDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  dose: e.target.value,
                                 };
                               } else {
                                 return el;
@@ -935,14 +1207,14 @@ const AdditionalInfo = (props) => {
                         showYearDropdown
                         dropdownMode="select"
                         minDate={item.startDate}
-                        selected={item.endDay}
+                        selected={item.endDate}
                         onChange={(date) =>
                           setSegmentDetails(
                             segmentDetails.map((el) => {
                               if (el.idx === index) {
                                 return {
                                   ...el,
-                                  endDay: date,
+                                  endDate: date,
                                   totalDay:
                                     (date - item.startDate) /
                                     (1000 * 60 * 60 * 24),
@@ -984,31 +1256,34 @@ const AdditionalInfo = (props) => {
                         }
                       />
                     </td>
-                    <td className="border border-gray-400 px-4 py-2 flex flex-row gap-2">
-                      <button
-                        type="button"
-                        className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        onClick={() => handleAddCropSegmentDetails(index)}
-                      >
-                        Add
-                      </button>
-                      <button
-                        type="button"
-                        className="inline-flex justify-center  text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        onClick={() => {
-                          setSegmentDetails(
-                            segmentDetails
-                              .filter((item) => item.idx !== index)
-                              .map((crop, index) => ({
-                                ...crop,
-                                idx: index,
-                              }))
-                          );
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </td>
+
+                    {router.query.type !== "View" && (
+                      <td className="border border-gray-400 px-4 py-2 flex flex-row gap-2">
+                        <button
+                          type="button"
+                          className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap"
+                          onClick={() => handleAddCropSegmentDetails(index)}
+                        >
+                          Add Row
+                        </button>
+                        <button
+                          type="button"
+                          className="inline-flex justify-center  text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap"
+                          onClick={() => {
+                            setSegmentDetails(
+                              segmentDetails
+                                .filter((item) => item.idx !== index)
+                                .map((crop, index) => ({
+                                  ...crop,
+                                  idx: index,
+                                }))
+                            );
+                          }}
+                        >
+                          Delete Row
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
 
@@ -1017,9 +1292,11 @@ const AdditionalInfo = (props) => {
                   <td className="border border-gray-400 px-4 py-2">Total</td>
                   <td className="border border-gray-400 px-4 py-2">-</td>
                   <td className="border border-gray-400 px-4 py-2">-</td>
+
                   <td className="border border-gray-400 px-4 py-2">
+                    {" "}
                     {segmentDetails
-                      .map((item) => item.share)
+                      .map((item) => item.dose)
                       .reduce((acc, current) => {
                         // Check if the current element is a number
 
@@ -1027,9 +1304,8 @@ const AdditionalInfo = (props) => {
                       }, 0)}
                   </td>
                   <td className="border border-gray-400 px-4 py-2">
-                    {" "}
                     {segmentDetails
-                      .map((item) => item.dose)
+                      .map((item) => item.share)
                       .reduce((acc, current) => {
                         // Check if the current element is a number
 
@@ -1111,7 +1387,9 @@ const AdditionalInfo = (props) => {
                   <th className="border border-gray-400 px-4 py-2">
                     Our Share
                   </th>
-                  <th className="border border-gray-400 px-4 py-2">Action</th>
+                  {router.query.type !== "View" && (
+                    <th className="border border-gray-400 px-4 py-2">Action</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -1200,31 +1478,33 @@ const AdditionalInfo = (props) => {
                         }
                       />
                     </td>
-                    <td className="border border-gray-400 px-4 py-2 flex flex-row gap-2">
-                      <button
-                        type="button"
-                        className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        onClick={() => handleAddMarketDetails(index)}
-                      >
-                        Add
-                      </button>
-                      <button
-                        type="button"
-                        className="inline-flex justify-center  text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                        onClick={() => {
-                          setMarketShare(
-                            marketShare
-                              .filter((item) => item.idx !== index)
-                              .map((crop, index) => ({
-                                ...crop,
-                                idx: index,
-                              }))
-                          );
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </td>
+                    {router.query.type !== "View" && (
+                      <td className="border border-gray-400 px-4 py-2 flex flex-row gap-2">
+                        <button
+                          type="button"
+                          className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap"
+                          onClick={() => handleAddMarketDetails(index)}
+                        >
+                          Add Row
+                        </button>
+                        <button
+                          type="button"
+                          className="inline-flex justify-center  text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap"
+                          onClick={() => {
+                            setMarketShare(
+                              marketShare
+                                .filter((item) => item.idx !== index)
+                                .map((crop, index) => ({
+                                  ...crop,
+                                  idx: index,
+                                }))
+                            );
+                          }}
+                        >
+                          Delete Row
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
 
@@ -1264,22 +1544,28 @@ const AdditionalInfo = (props) => {
               </tbody>
             </table>
           </div>
-
-          <div className="w-full flex mt-12 gap-12">
-            <button
-              className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-lg"
-              type="submit"
-              onClick={(e) => handleSubmit(e)}
-            >
-              Submit
-            </button>
-            <button
-              className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-lg"
-              type="submit"
-            >
-              Close
-            </button>
-          </div>
+          {router.query.type !== "View" && (
+            <div className="w-full flex mt-12 gap-12">
+              <button
+                className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-lg"
+                type="submit"
+                onClick={(e) => handleSubmit(e)}
+              >
+                Submit
+              </button>
+              <button
+                className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-lg"
+                type="submit"
+                onClick={() =>
+                  router.push({
+                    pathname: "/MR_Portal_Web/Crop_info_table",
+                  })
+                }
+              >
+                Close
+              </button>
+            </div>
+          )}
         </div>
         {/* Additional Sections */}
       </form>
