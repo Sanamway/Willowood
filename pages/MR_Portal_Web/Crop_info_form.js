@@ -6,6 +6,7 @@ import { url } from "@/constants/url";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import * as Yup from "yup";
+import Layout from "@/components/Layout1";
 const AdditionalInfo = (props) => {
   const router = useRouter();
   const headers = {
@@ -154,7 +155,7 @@ const AdditionalInfo = (props) => {
       });
       const apires = await respond.data.data;
 
-      setAllCompanyData(apires.filter((item, idx) => item.isDeleted === false));
+      setAllCompanyData(apires.filter((item) => item.isDeleted === false));
     } catch (error) {
       console.log(error);
     }
@@ -274,6 +275,7 @@ const AdditionalInfo = (props) => {
       newArray.splice(idx + 1, 0, newCropDetail);
 
       // Update the idx values to keep them sequential
+
       const updatedCropDetails = newArray.map((crop, index) => ({
         ...crop,
         idx: index,
@@ -607,1059 +609,1085 @@ const AdditionalInfo = (props) => {
   };
 
   return (
-    <div className="bg-white rounded p-4 w-full overflow-auto">
-      <Toaster position="bottom-center" reverseOrder={false} />
-      {/* Filters */}
-      <div className="mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="text-black">Company</label>
-            <select
-              className="block w-full text-black border border-gray-400 rounded py-2 px-4"
-              value={allFilters.companyId}
-              onChange={(e) =>
-                setAllFilters({
-                  ...allFilters,
-                  companyId: e.target.value,
-                })
-              }
-              disabled
-            >
-              <option value="" disabled>
-                - Select -
-              </option>
-              {allCompanyData.map((item, idx) => (
-                <option value={item.c_id} key={idx}>
-                  {item.cmpny_name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="text-black">Crop Name</label>
-            <select
-              className="block w-full text-black border border-gray-400 rounded py-2 px-4"
-              value={allFilters.crop}
-              disabled={router.query.type === "View"}
-              onChange={(e) => {
-                setAllFilters({
-                  ...allFilters,
-                  crop: e.target.value,
-                });
-              }}
-            >
-              <option value="">- Select -</option>
-              {allCropData.map((item, idx) => (
-                <option value={item.cr_id} key={idx}>
-                  {item.crop_name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="text-black">Season</label>
-            <input
-              className="block w-full text-black border border-gray-400 rounded py-2 px-4"
-              type="text"
-              value={allFilters.season}
-              disabled
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Form */}
-      <form>
+    <Layout>
+      <div className="bg-white rounded p-4 w-full overflow-auto">
+        <Toaster position="bottom-center" reverseOrder={false} />
+        {/* Filters */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">
-            Crop Details (District Level)
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="border-collapse border border-gray-400 w-full">
-              <colgroup>
-                <col style={{ width: "15%" }} />
-                <col style={{ width: "14%" }} />
-                <col style={{ width: "11%" }} />
-                <col style={{ width: "10%" }} />
-                <col style={{ width: "10%" }} />
-                <col style={{ width: "10%" }} />
-                <col style={{ width: "10%" }} />
-                <col style={{ width: "10%" }} />
-                <col style={{ width: "20%" }} />
-              </colgroup>
-              <thead>
-                <tr className="bg-orange-500 text-white">
-                  <th className="border border-gray-400 px-4 py-2">District</th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Total Cultivated Area (In acre)
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Area (In acre)
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">Share %</th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Average Yield/acre (Qtl.)
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Current Price/Qtl.
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Input Cost (INR)
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Output Cost (INR)
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">ROI</th>
-                  {router.query.type !== "View" && (
-                    <th className="border border-gray-400 px-4 py-2">Action</th>
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {cropDetails.map((item, index) => (
-                  <tr>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <select
-                        className="w-full px-2 py-1 border border-gray-300 rounded "
-                        value={item.district}
-                        disabled={router.query.type === "View"}
-                        onChange={(e) =>
-                          setCropDetails(
-                            cropDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  district: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      >
-                        <option value="">--Select--</option>
-                        {allDistrictData.map((item, idx) => (
-                          <option value={item.district} key={idx}>
-                            {item.district}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.cultivatedArea}
-                        onChange={(e) =>
-                          setCropDetails(
-                            cropDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  cultivatedArea: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.area}
-                        onChange={(e) =>
-                          setCropDetails(
-                            cropDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  area: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.share}
-                        onChange={(e) =>
-                          setCropDetails(
-                            cropDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  share: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.avYield}
-                        onChange={(e) =>
-                          setCropDetails(
-                            cropDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  avYield: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.currentPrice}
-                        onChange={(e) =>
-                          setCropDetails(
-                            cropDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  currentPrice: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.inputCost}
-                        onChange={(e) =>
-                          setCropDetails(
-                            cropDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  inputCost: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.outputCost}
-                        onChange={(e) =>
-                          setCropDetails(
-                            cropDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  outputCost: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right "
-                        value={item.roi}
-                        disabled={router.query.type === "View"}
-                        onChange={(e) =>
-                          setCropDetails(
-                            cropDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  roi: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    {router.query.type !== "View" && (
-                      <td className="border border-gray-400 px-4 py-2 flex flex-row gap-2">
-                        <button
-                          type="button"
-                          className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
-                          onClick={() => handleAddCropDetails(index)}
-                        >
-                          Add Row
-                        </button>
-                        <button
-                          type="button"
-                          className="inline-flex justify-center  text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
-                          onClick={() => {
-                            setCropDetails(
-                              cropDetails
-                                .filter((item) => item.idx !== index)
-                                .map((crop, index) => ({
-                                  ...crop,
-                                  idx: index,
-                                }))
-                            );
-                          }}
-                        >
-                          Delete Row
-                        </button>
-                      </td>
-                    )}
-                  </tr>
-                ))}
-
-                {/* Add more rows as needed */}
-                <tr className="bg-gray-900 text-white">
-                  <td className="border border-gray-400 px-4 py-2">Total</td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {cropDetails
-                      .map((item) => item.cultivatedArea)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {cropDetails
-                      .map((item) => item.area)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {" "}
-                    {cropDetails
-                      .map((item) => item.share)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {" "}
-                    {cropDetails
-                      .map((item) => item.avYield)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {cropDetails
-                      .map((item) => item.currentPrice)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {cropDetails
-                      .map((item) => item.inputCost)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {cropDetails
-                      .map((item) => item.outputCost)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {" "}
-                    {cropDetails
-                      .map((item) => item.roi)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">
-            Crop Segmentation (District Level)
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="border-collapse border border-gray-400 w-full">
-              <colgroup>
-                <col style={{ width: "10%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-              </colgroup>
-              <thead>
-                <tr className="bg-orange-500 text-white">
-                  <th className="border border-gray-400 px-4 py-2">
-                    Crop Stage
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">Segment</th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Product / Brand
-                  </th>
-
-                  <th className="border border-gray-400 px-4 py-2">
-                    Dose/Acre (kg/ltr)
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Cost kg/Ltr
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Cost/Acre (INR)
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Average Cost/Acre (INR)
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Start Date
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">End Date</th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Total Days
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">Stage</th>
-                  {router.query.type !== "View" && (
-                    <th className="border border-gray-400 px-4 py-2">Action</th>
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {segmentDetails.map((item, index) => (
-                  <tr key={index}>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="text"
-                        className="w-full px-2 py-1 border border-gray-300 rounded "
-                        value={item.stage}
-                        disabled={router.query.type === "View"}
-                        onChange={(e) =>
-                          setSegmentDetails(
-                            segmentDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  stage: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <select
-                        className="w-full px-2 py-1 border border-gray-300 rounded "
-                        value={item.segment}
-                        disabled={router.query.type === "View"}
-                        onChange={(e) =>
-                          setSegmentDetails(
-                            segmentDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  segment: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      >
-                        <option value="">--Select--</option>
-                        {allSegement.map((item, idx) => (
-                          <option value={item.pseg_name} key={idx}>
-                            {item.pseg_name}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <select
-                        className="w-full px-2 py-1 border border-gray-300 rounded "
-                        value={item.productBrand}
-                        disabled={router.query.type === "View"}
-                        onChange={(e) =>
-                          setSegmentDetails(
-                            segmentDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  productBrand: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      >
-                        <option value="">--Select--</option>
-                        {allBrand.map((item, idx) => (
-                          <option value={item.brand_name} key={idx}>
-                            {item.brand_name}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.dose}
-                        onChange={(e) =>
-                          setSegmentDetails(
-                            segmentDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  dose: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.share}
-                        onChange={(e) =>
-                          setSegmentDetails(
-                            segmentDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  share: e.target.value,
-                                  cost: e.target.value * item.dose,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.cost}
-                        onChange={(e) =>
-                          setSegmentDetails(
-                            segmentDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  cost: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.avCost}
-                        onChange={(e) =>
-                          setSegmentDetails(
-                            segmentDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  avCost: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <DatePicker
-                        className="w-full px-3 py-2 border rounded-lg  text-sm border-gray-300 focus:outline-none focus:border-indigo-500"
-                        dateFormat="dd/MM/yyyy"
-                        disabled={router.query.type === "View"}
-                        peekNextMonth
-                        showMonthDropdown
-                        showYearDropdown
-                        dropdownMode="select"
-                        selected={item.startDate}
-                        onChange={(date) =>
-                          setSegmentDetails(
-                            segmentDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  startDate: date,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <DatePicker
-                        className="w-full px-3 py-2 border text-sm rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                        dateFormat="dd/MM/yyyy"
-                        disabled={router.query.type === "View"}
-                        peekNextMonth
-                        showMonthDropdown
-                        showYearDropdown
-                        dropdownMode="select"
-                        minDate={item.startDate}
-                        selected={item.endDate}
-                        onChange={(date) =>
-                          setSegmentDetails(
-                            segmentDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  endDate: date,
-                                  totalDay:
-                                    (date - item.startDate) /
-                                    (1000 * 60 * 60 * 24),
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        value={item.totalDay}
-                        disabled
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        className="w-full px-2 py-1 border border-gray-300 rounded "
-                        value={item.newStage}
-                        disabled={router.query.type === "View"}
-                        onChange={(e) =>
-                          setSegmentDetails(
-                            segmentDetails.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  newStage: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-
-                    {router.query.type !== "View" && (
-                      <td className="border border-gray-400 px-4 py-2 flex flex-row gap-2">
-                        <button
-                          type="button"
-                          className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
-                          onClick={() => handleAddCropSegmentDetails(index)}
-                        >
-                          Add Row
-                        </button>
-                        <button
-                          type="button"
-                          className="inline-flex justify-center  text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
-                          onClick={() => {
-                            setSegmentDetails(
-                              segmentDetails
-                                .filter((item) => item.idx !== index)
-                                .map((crop, index) => ({
-                                  ...crop,
-                                  idx: index,
-                                }))
-                            );
-                          }}
-                        >
-                          Delete Row
-                        </button>
-                      </td>
-                    )}
-                  </tr>
-                ))}
-
-                {/* Add more rows as needed */}
-                <tr className="bg-gray-900 text-white">
-                  <td className="border border-gray-400 px-4 py-2">Total</td>
-                  <td className="border border-gray-400 px-4 py-2">-</td>
-                  <td className="border border-gray-400 px-4 py-2">-</td>
-
-                  <td className="border border-gray-400 px-4 py-2">
-                    {" "}
-                    {segmentDetails
-                      .map((item) => item.dose)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {segmentDetails
-                      .map((item) => item.share)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {" "}
-                    {segmentDetails
-                      .map((item) => item.cost)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {" "}
-                    {segmentDetails
-                      .map((item) => item.avCost)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">-</td>
-                  <td className="border border-gray-400 px-4 py-2">-</td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {" "}
-                    {segmentDetails
-                      .map((item) => item.totalDay)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">-</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">
-            Crop Market Share (District Level)
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="border-collapse border border-gray-400 w-full">
-              <colgroup>
-                <col style={{ width: "10%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                {router.query.type !== "View" && (
-                  <col style={{ width: "1%" }} />
-                )}
-              </colgroup>
-              <thead>
-                <tr className="bg-orange-500 text-white">
-                  <th className="border border-gray-400 px-4 py-2">
-                    Market/Mandi Name
-                  </th>
-
-                  <th className="border border-gray-400 px-4 py-2">
-                    Market Potential (Lakh)
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Our Business(Lakh)
-                  </th>
-                  <th className="border border-gray-400 px-4 py-2">
-                    Our Share
-                  </th>
-                  {router.query.type !== "View" && (
-                    <th className="border border-gray-400 px-4 py-2">Action</th>
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {marketShare.map((item, index) => (
-                  <tr key={index}>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        className="w-full px-2 py-1 border border-gray-300 rounded "
-                        value={item.marketName}
-                        disabled={router.query.type === "View"}
-                        onChange={(e) =>
-                          setMarketShare(
-                            marketShare.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  marketName: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.marketPotential}
-                        onChange={(e) =>
-                          setMarketShare(
-                            marketShare.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  marketPotential: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.business}
-                        onChange={(e) =>
-                          setMarketShare(
-                            marketShare.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  business: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      <input
-                        type="number"
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                        disabled={router.query.type === "View"}
-                        value={item.share}
-                        onChange={(e) =>
-                          setMarketShare(
-                            marketShare.map((el) => {
-                              if (el.idx === index) {
-                                return {
-                                  ...el,
-                                  share: e.target.value,
-                                };
-                              } else {
-                                return el;
-                              }
-                            })
-                          )
-                        }
-                      />
-                    </td>
-                    {router.query.type !== "View" && (
-                      <td className="border border-gray-400 px-4 py-2 flex flex-row gap-2">
-                        <button
-                          type="button"
-                          className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
-                          onClick={() => handleAddMarketDetails(index)}
-                        >
-                          Add Row
-                        </button>
-                        <button
-                          type="button"
-                          className="inline-flex justify-center  text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
-                          onClick={() => {
-                            setMarketShare(
-                              marketShare
-                                .filter((item) => item.idx !== index)
-                                .map((crop, index) => ({
-                                  ...crop,
-                                  idx: index,
-                                }))
-                            );
-                          }}
-                        >
-                          Delete Row
-                        </button>
-                      </td>
-                    )}
-                  </tr>
-                ))}
-
-                {/* Add more rows as needed */}
-                <tr className="bg-gray-900 text-white">
-                  <td className="border border-gray-400 px-4 py-2">Total</td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {" "}
-                    {marketShare
-                      .map((item) => item.marketPotential)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {marketShare
-                      .map((item) => item.business)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {" "}
-                    {marketShare
-                      .map((item) => item.share)
-                      .reduce((acc, current) => {
-                        // Check if the current element is a number
-
-                        return Number(acc) + Number(current);
-                      }, 0)}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="w-full flex mt-12 gap-4">
-            {router.query.type !== "View" && (
-              <button
-                className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-lg w-24"
-                type="submit"
-                onClick={(e) => handleSubmit(e)}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="text-black">Company</label>
+              <select
+                className="block w-full text-black border border-gray-400 rounded py-2 px-4"
+                value={allFilters.companyId}
+                onChange={(e) =>
+                  setAllFilters({
+                    ...allFilters,
+                    companyId: e.target.value,
+                  })
+                }
+                disabled
               >
-                Submit
-              </button>
-            )}
-            <button
-              className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-lg  w-24"
-              type="submit"
-              onClick={(e) => {
-                e.preventDefault();
-                router.push({
-                  pathname: "/MR_Portal_Web/Crop_info_table",
-                });
-              }}
-            >
-              Close
-            </button>
+                <option value="" disabled>
+                  - Select -
+                </option>
+                {allCompanyData.map((item, idx) => (
+                  <option value={item.c_id} key={idx}>
+                    {item.cmpny_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="text-black">Crop Name</label>
+              <select
+                className="block w-full text-black border border-gray-400 rounded py-2 px-4"
+                value={allFilters.crop}
+                disabled={router.query.type !== ""}
+                onChange={(e) => {
+                  setAllFilters({
+                    ...allFilters,
+                    crop: e.target.value,
+                  });
+                }}
+              >
+                <option value="">- Select -</option>
+                {allCropData.map((item, idx) => (
+                  <option value={item.cr_id} key={idx}>
+                    {item.crop_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="text-black">Season</label>
+              <input
+                className="block w-full text-black border border-gray-400 rounded py-2 px-4"
+                type="text"
+                value={allFilters.season}
+                disabled
+              />
+            </div>
           </div>
         </div>
-        {/* Additional Sections */}
-      </form>
-    </div>
+
+        {/* Form */}
+        <form>
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-4">
+              Crop Details (District Level)
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="border-collapse border border-gray-400 w-full">
+                <colgroup>
+                  <col style={{ width: "15%" }} />
+                  <col style={{ width: "14%" }} />
+                  <col style={{ width: "11%" }} />
+                  <col style={{ width: "10%" }} />
+                  <col style={{ width: "10%" }} />
+                  <col style={{ width: "10%" }} />
+                  <col style={{ width: "10%" }} />
+                  <col style={{ width: "10%" }} />
+                  <col style={{ width: "20%" }} />
+                </colgroup>
+                <thead>
+                  <tr className="bg-orange-500 text-white">
+                    <th className="border border-gray-400 px-4 py-2">
+                      District
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Total Cultivated Area (In acre)
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Area (In acre)
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Share %
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Average Yield/acre (Qtl.)
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Current Price/Qtl.
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Input Cost (INR)
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Output Cost (INR)
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">ROI</th>
+                    {router.query.type !== "View" && (
+                      <th className="border border-gray-400 px-4 py-2">
+                        Action
+                      </th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {cropDetails.map((item, index) => (
+                    <tr>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <select
+                          className="w-full px-2 py-1 border border-gray-300 rounded "
+                          value={item.district}
+                          disabled={router.query.type === "View"}
+                          onChange={(e) =>
+                            setCropDetails(
+                              cropDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    district: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        >
+                          <option value="">--Select--</option>
+                          {allDistrictData.map((item, idx) => (
+                            <option value={item.district} key={idx}>
+                              {item.district}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={item.cultivatedArea}
+                          onChange={(e) =>
+                            setCropDetails(
+                              cropDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    cultivatedArea: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={item.area}
+                          onChange={(e) =>
+                            setCropDetails(
+                              cropDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    area: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={item.share}
+                          onChange={(e) =>
+                            setCropDetails(
+                              cropDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    share: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={item.avYield}
+                          onChange={(e) =>
+                            setCropDetails(
+                              cropDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    avYield: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={item.currentPrice}
+                          onChange={(e) =>
+                            setCropDetails(
+                              cropDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    currentPrice: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={item.inputCost}
+                          onChange={(e) =>
+                            setCropDetails(
+                              cropDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    inputCost: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={item.outputCost}
+                          onChange={(e) =>
+                            setCropDetails(
+                              cropDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    outputCost: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right "
+                          value={item.roi}
+                          disabled={router.query.type === "View"}
+                          onChange={(e) =>
+                            setCropDetails(
+                              cropDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    roi: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      {router.query.type !== "View" && (
+                        <td className="border border-gray-400 px-4 py-2 flex flex-row gap-2">
+                          <button
+                            type="button"
+                            className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
+                            onClick={() => handleAddCropDetails(index)}
+                          >
+                            Add Row
+                          </button>
+                          <button
+                            type="button"
+                            className="inline-flex justify-center  text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
+                            onClick={() => {
+                              setCropDetails(
+                                cropDetails
+                                  .filter((item) => item.idx !== index)
+                                  .map((crop, index) => ({
+                                    ...crop,
+                                    idx: index,
+                                  }))
+                              );
+                            }}
+                            disabled={index === 0}
+                          >
+                            Delete Row
+                          </button>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+
+                  {/* Add more rows as needed */}
+                  <tr className="bg-gray-900 text-white">
+                    <td className="border border-gray-400 px-4 py-2">Total</td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {cropDetails
+                        .map((item) => item.cultivatedArea)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {cropDetails
+                        .map((item) => item.area)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {" "}
+                      {cropDetails
+                        .map((item) => item.share)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {" "}
+                      {cropDetails
+                        .map((item) => item.avYield)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {cropDetails
+                        .map((item) => item.currentPrice)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {cropDetails
+                        .map((item) => item.inputCost)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {cropDetails
+                        .map((item) => item.outputCost)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {" "}
+                      {cropDetails
+                        .map((item) => item.roi)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-4">
+              Crop Segmentation (District Level)
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="border-collapse border border-gray-400 w-full">
+                <colgroup>
+                  <col style={{ width: "10%" }} />{" "}
+                  {/* Adjust width as needed */}
+                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
+                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
+                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
+                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
+                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
+                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
+                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
+                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
+                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
+                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
+                </colgroup>
+                <thead>
+                  <tr className="bg-orange-500 text-white">
+                    <th className="border border-gray-400 px-4 py-2">
+                      Crop Stage
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Segment
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Product / Brand
+                    </th>
+
+                    <th className="border border-gray-400 px-4 py-2">
+                      Dose/Acre (kg/ltr)
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Cost kg/Ltr
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Cost/Acre (INR)
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Average Cost/Acre (INR)
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Start Date
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      End Date
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Total Days
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">Stage</th>
+                    {router.query.type !== "View" && (
+                      <th className="border border-gray-400 px-4 py-2">
+                        Action
+                      </th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {segmentDetails.map((item, index) => (
+                    <tr key={index}>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="text"
+                          className="w-full px-2 py-1 border border-gray-300 rounded "
+                          value={item.stage}
+                          disabled={router.query.type === "View"}
+                          onChange={(e) =>
+                            setSegmentDetails(
+                              segmentDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    stage: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <select
+                          className="w-full px-2 py-1 border border-gray-300 rounded "
+                          value={item.segment}
+                          disabled={router.query.type === "View"}
+                          onChange={(e) =>
+                            setSegmentDetails(
+                              segmentDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    segment: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        >
+                          <option value="">--Select--</option>
+                          {allSegement.map((item, idx) => (
+                            <option value={item.pseg_name} key={idx}>
+                              {item.pseg_name}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <select
+                          className="w-full px-2 py-1 border border-gray-300 rounded "
+                          value={item.productBrand}
+                          disabled={router.query.type === "View"}
+                          onChange={(e) =>
+                            setSegmentDetails(
+                              segmentDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    productBrand: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        >
+                          <option value="">--Select--</option>
+                          {allBrand.map((item, idx) => (
+                            <option value={item.brand_name} key={idx}>
+                              {item.brand_name}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={item.dose}
+                          onChange={(e) =>
+                            setSegmentDetails(
+                              segmentDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    dose: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={item.share}
+                          onChange={(e) =>
+                            setSegmentDetails(
+                              segmentDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    share: e.target.value,
+                                    cost: (e.target.value * item.dose).toFixed(
+                                      2
+                                    ),
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled
+                          value={item.cost}
+                          onChange={(e) =>
+                            setSegmentDetails(
+                              segmentDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    cost: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={item.avCost}
+                          onChange={(e) =>
+                            setSegmentDetails(
+                              segmentDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    avCost: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <DatePicker
+                          className="w-full px-3 py-2 border rounded-lg  text-sm border-gray-300 focus:outline-none focus:border-indigo-500"
+                          dateFormat="dd/MM/yyyy"
+                          disabled={router.query.type === "View"}
+                          peekNextMonth
+                          showMonthDropdown
+                          showYearDropdown
+                          dropdownMode="select"
+                          selected={item.startDate}
+                          onChange={(date) =>
+                            setSegmentDetails(
+                              segmentDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    startDate: date,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <DatePicker
+                          className="w-full px-3 py-2 border text-sm rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          dateFormat="dd/MM/yyyy"
+                          disabled={router.query.type === "View"}
+                          peekNextMonth
+                          showMonthDropdown
+                          showYearDropdown
+                          dropdownMode="select"
+                          minDate={item.startDate}
+                          selected={item.endDate}
+                          onChange={(date) =>
+                            setSegmentDetails(
+                              segmentDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    endDate: date,
+                                    totalDay:
+                                      (date - item.startDate) /
+                                      (1000 * 60 * 60 * 24),
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          value={item.totalDay}
+                          disabled
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          className="w-full px-2 py-1 border border-gray-300 rounded "
+                          value={item.newStage}
+                          disabled={router.query.type === "View"}
+                          onChange={(e) =>
+                            setSegmentDetails(
+                              segmentDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    newStage: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+
+                      {router.query.type !== "View" && (
+                        <td className="border border-gray-400 px-4 py-2 flex flex-row gap-2">
+                          <button
+                            type="button"
+                            className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
+                            onClick={() => handleAddCropSegmentDetails(index)}
+                          >
+                            Add Row
+                          </button>
+                          <button
+                            type="button"
+                            className="inline-flex justify-center  text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
+                            onClick={() => {
+                              setSegmentDetails(
+                                segmentDetails
+                                  .filter((item) => item.idx !== index)
+                                  .map((crop, index) => ({
+                                    ...crop,
+                                    idx: index,
+                                  }))
+                              );
+                            }}
+                            disabled={index === 0}
+                          >
+                            Delete Row
+                          </button>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+
+                  {/* Add more rows as needed */}
+                  <tr className="bg-gray-900 text-white">
+                    <td className="border border-gray-400 px-4 py-2">Total</td>
+                    <td className="border border-gray-400 px-4 py-2">-</td>
+                    <td className="border border-gray-400 px-4 py-2">-</td>
+
+                    <td className="border border-gray-400 px-4 py-2">
+                      {" "}
+                      {segmentDetails
+                        .map((item) => item.dose)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {segmentDetails
+                        .map((item) => item.share)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {" "}
+                      {segmentDetails
+                        .map((item) => item.cost)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {" "}
+                      {segmentDetails
+                        .map((item) => item.avCost)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">-</td>
+                    <td className="border border-gray-400 px-4 py-2">-</td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {" "}
+                      {segmentDetails
+                        .map((item) => item.totalDay)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">-</td>
+                    <td className="border border-gray-400 px-4 py-2">-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-4">
+              Crop Market Share (District Level)
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="border-collapse border border-gray-400 w-full">
+                <colgroup>
+                  <col style={{ width: "10%" }} />{" "}
+                  {/* Adjust width as needed */}
+                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
+                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
+                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
+                  {router.query.type !== "View" && (
+                    <col style={{ width: "1%" }} />
+                  )}
+                </colgroup>
+                <thead>
+                  <tr className="bg-orange-500 text-white">
+                    <th className="border border-gray-400 px-4 py-2">
+                      Market/Mandi Name
+                    </th>
+
+                    <th className="border border-gray-400 px-4 py-2">
+                      Market Potential (Lakh)
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Our Business(Lakh)
+                    </th>
+                    <th className="border border-gray-400 px-4 py-2">
+                      Our Share
+                    </th>
+                    {router.query.type !== "View" && (
+                      <th className="border border-gray-400 px-4 py-2">
+                        Action
+                      </th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {marketShare.map((item, index) => (
+                    <tr key={index}>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          className="w-full px-2 py-1 border border-gray-300 rounded "
+                          value={item.marketName}
+                          disabled={router.query.type === "View"}
+                          onChange={(e) =>
+                            setMarketShare(
+                              marketShare.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    marketName: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={item.marketPotential}
+                          onChange={(e) =>
+                            setMarketShare(
+                              marketShare.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    marketPotential: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={item.business}
+                          onChange={(e) =>
+                            setMarketShare(
+                              marketShare.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    business: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={item.share}
+                          onChange={(e) =>
+                            setMarketShare(
+                              marketShare.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    share: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      {router.query.type !== "View" && (
+                        <td className="border border-gray-400 px-4 py-2 flex flex-row gap-2">
+                          <button
+                            type="button"
+                            className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
+                            onClick={() => handleAddMarketDetails(index)}
+                          >
+                            Add Row
+                          </button>
+                          <button
+                            type="button"
+                            className="inline-flex justify-center  text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
+                            onClick={() => {
+                              setMarketShare(
+                                marketShare
+                                  .filter((item) => item.idx !== index)
+                                  .map((crop, index) => ({
+                                    ...crop,
+                                    idx: index,
+                                  }))
+                              );
+                            }}
+                            disabled={index === 0}
+                          >
+                            Delete Row
+                          </button>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+
+                  {/* Add more rows as needed */}
+                  <tr className="bg-gray-900 text-white">
+                    <td className="border border-gray-400 px-4 py-2">Total</td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {" "}
+                      {marketShare
+                        .map((item) => item.marketPotential)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {marketShare
+                        .map((item) => item.business)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {" "}
+                      {marketShare
+                        .map((item) => item.share)
+                        .reduce((acc, current) => {
+                          // Check if the current element is a number
+
+                          return Number(acc) + Number(current);
+                        }, 0)}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="w-full flex mt-12 gap-4">
+              {router.query.type !== "View" && (
+                <button
+                  className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-lg w-24"
+                  type="submit"
+                  onClick={(e) => handleSubmit(e)}
+                >
+                  Submit
+                </button>
+              )}
+              <button
+                className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-lg  w-24"
+                type="submit"
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push({
+                    pathname: "/MR_Portal_Web/Crop_info_table",
+                  });
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+          {/* Additional Sections */}
+        </form>
+      </div>
+    </Layout>
   );
 };
 

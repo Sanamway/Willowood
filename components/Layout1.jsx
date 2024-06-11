@@ -219,296 +219,110 @@ Application End User
   };
 
   return (
-    <>
-      <div className="flex fixed w-full h-screen  font-arial bg-[#15283c]   ">
-        {/* Sidebar */}
-        {/* <div
-          className={`flex-shrink-0   ${
-            isOpen
-              ? isMobile
-                ? " "
-                : "w-[6rem]  "
-              : isMobile
-              ? "hidden "
-              : "w-[14rem] "
-          } bg-[#15283c] text-white custom-scrollbar min-h-screen overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-500`}
-        >
-          <div
-            className={`flex flex-col ${
-              isOpen ? "items-center" : "items-start"
-            } w-full  `}
-          >
-            <div className="flex items-center justify-between relative">
-              <div className="flex items-center pl-1 gap-4">
-                <div className="userImg flex items-center py-4 mx justify-center">
-                  {isOpen ? (
-                    <img
-                      className="rounded-full h-8 w-8"
-                      src={profileImg}
-                      alt=""
-                    />
-                  ) : (
-                    <div className="flex  items-center justify-center gap-4 ">
+    <div className="flex fixed w-full h-screen  font-arial bg-[#15283c]  ">
+      <div className="flex-grow flex flex-col ">
+        {/* Top Bar */}
+        <div className="bg-blue-500   text-white  ">
+          {/* mod w added */}
+          <nav className="nav font-playfair  ">
+            <div className="navContainer h-[52px] bg-text flex items-center  justify-between lg:max-w-full">
+              <div className="flex items-center">
+                <div
+                  className=" bg-black p-[0.9rem] lg:p-[0.8rem] h-full cursor-pointer"
+                  onClick={collaps}
+                >
+                  <GiHamburgerMenu
+                    className="mx-2 my-2 "
+                    size={20}
+                  ></GiHamburgerMenu>
+                </div>
+                <div className="lg:max-w-full lg:max-h-full">
+                  <Image
+                    src={WillLogo}
+                    alt="logo"
+                    className="lg:h-[3.4rem] w-2/3 lg:w-full object-cover"
+                  ></Image>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center  ">
+                {!isMobile && (
+                  <div className="icons mx-4 lg:mx-8">
+                    <div className="flex items-center gap-4 ">
+                      <BsBell size={24}></BsBell>
+                      <BsQuestionSquare size={22}></BsQuestionSquare>
+                      <AiOutlineMail size={23}></AiOutlineMail>
+                    </div>
+                  </div>
+                )}
+
+                {/* just below removed the !isMobile to show  on mobile as well */}
+                {
+                  <div className="bg-black max-h-full mx-0 font-arial relative">
+                    <div className="flex items-center px-4 py-[0.4rem] h-full gap-1">
                       <img
-                        onClick={(e) => {
-                          router.push("/");
-                        }}
-                        className=" h-[4.1rem] w-[4.1rem] rounded-full cursor-pointer"
                         src={profileImg}
                         alt=""
+                        className="h-10 w-10  border-2 border-yellow-500 rounded-full"
                       />
-                      <div className="flex flex-col items-start font-sans">
-                        <h2 className="font-sm text-white whitespace-nowrap">
-                          {user_name}
-                        </h2>
-                        <div className="flex items-center gap-2">
-                          <h2
-                            className={`bg-[#00FF00] h-2 w-2 rounded-full ${
-                              uid == 1
-                                ? "animate-ping"
-                                : "bg-gray-200 h-2 w-2 rounded-full"
-                            }`}
-                          ></h2>
-                          <h2 className="text-sm text-text-green font-arial">
-                            {"Online"}
-                          </h2>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-            {!isOpen && (
-              <div className="text-white font-Rale text-[1.1rem] w-full  my- mb-4 py-  font-semibold bottom-1 border-b-2 border-[#ff5722]">
-                <h2 className=" px-6">{userinfo?.U_profile_name}</h2>
-              </div>
-            )}
-            <div className="flex flex-col items-center w-full text-white font-Arial ">
-              {menusItems?.map(({ _id, icon: Icon, ...menu }) => (
-                <>
-                  <div
-                    key={_id}
-                    className={`flex ${
-                      isOpen
-                        ? "flex-col text-[0.7rem] items-center"
-                        : "flex-row gap-2 text-[0.8rem] "
-                    }  cursor-pointer text-left border-1 rounded-md border-black w-full hover:bg-orange-500  px-2 py-1 `}
-                  >
-                    <div
-                      className=""
-                      // onClick={(e) => {
-                      //       e.preventDefault();
-                      //       // router.push(`/${item.page_call}`);
-                      //       router.push({
-                      //         pathname: `/${menu.page_call}`,
-                      //         query: { name: `${menu.label}` },
-                      //       });
-                      //     }}
-                    >
-                      <FcVoicePresentation size={20}></FcVoicePresentation>
-                    </div>
-                    <div
-                      // onClick={() => {
-                      //   setSubmenu((prev) =>
-                      //     prev == menu.label ? null : menu.label
-                      //   );
-                      // }}
-
-                      onClick={(e) => {
-                        e.preventDefault();
-                        // router.push(`/${item.page_call}`);
-                        if (!menu.page_call.startsWith("/")) {
-                          router.push({
-                            pathname: `/${menu.page_call}`,
-                            query: { name: `${menu.label}` },
-                          });
-                        }
-                      }}
-                      className={`select-none whitespace-nowrap  flex items-center justify-between w-full`}
-                    >
-                      {menu.label}
-                    </div>
-                    <div>
-                      <h2
-                        onClick={() => {
-                          setSubmenu((prev) =>
-                            prev == menu.label ? null : menu.label
-                          );
-                        }}
+                      <Popover
+                        as="div"
+                        className="relative border-none outline-none z-10"
                       >
-                        {showSubmenu == menu.label ? (
-                          <MdKeyboardArrowDown size={20} />
-                        ) : (
-                          <MdKeyboardArrowRight size={20} />
-                        )}
-                      </h2>
-                    </div>
-                  </div>
-
-                  {showSubmenu == menu.label && (
-                    <div className="flex items-start justify-center  ">
-                      <>
-                        <ul className="gap-2 flex flex-col w-full items-start ">
-                          {menu.submenu?.map((item, index) => (
-                            <>
-                              <li
-                                key={index}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  // router.push(`/${item.page_call}`);
-                                  router.push({
-                                    pathname: `/${item.page_call}`,
-                                    query: { name: `${item.umenu_Name}` },
-                                  });
-                                }}
-                                className={`text-[0.7rem] flex items-center gap-1.5 py-1 cursor-pointer hover:bg-orange-500 px-2 rounded-md `}
+                        {({ open }) => (
+                          <>
+                            <Popover.Button className="focus:outline-none">
+                              <div
+                                className="details flex items-start justify-between gap-2 cursor-pointer"
+                                onClick={toggleDropdown}
                               >
-                                <div className="">
-                                  <FcVoicePresentation
-                                    size={15}
-                                  ></FcVoicePresentation>
-                                </div>
-                                {item.umenu_Name}
-                              </li>
-                            </>
-                          ))}
-                        </ul>
-                      </>
-                    </div>
-                  )}
-                </>
-              ))}
-            </div>
-          </div>
-        </div> */}
-        <div className="flex-grow flex flex-col ">
-          {/* Top Bar */}
-          <div className="bg-[#15283c] lg:w-full  text-white ">
-            {/* mod w added */}
-            <nav className="nav font-playfair  ">
-              <div className="navContainer h-[52px] bg-text flex items-center  justify-between lg:max-w-full">
-                <div className="flex items-center">
-                  <div
-                    className=" bg-[#ff5722] p-[0.9rem] lg:p-[0.8rem] h-full cursor-pointer"
-                    onClick={collaps}
-                  >
-                    <GiHamburgerMenu
-                      className="mx-2 my-2 "
-                      size={20}
-                    ></GiHamburgerMenu>
-                  </div>
-                  <div className="lg:max-w-full lg:max-h-full">
-                    <Image
-                      src={WillLogo}
-                      alt="logo"
-                      className="lg:h-[3.4rem] w-2/3 lg:w-full object-cover"
-                    ></Image>
-                  </div>
-                </div>
+                                <h2 className="font-normal font-arial text-sm whitespace-nowrap">
+                                  {user_name}
+                                </h2>
+                                <IoIosArrowDown className="button"></IoIosArrowDown>
+                              </div>
+                            </Popover.Button>
 
-                <div className="flex items-center justify-center  ">
-                  {!isMobile && (
-                    <div className="icons mx-4 lg:mx-8">
-                      <div className="flex items-center gap-4 ">
-                        <BsBell size={24}></BsBell>
-                        <BsQuestionSquare size={22}></BsQuestionSquare>
-                        <AiOutlineMail size={23}></AiOutlineMail>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* just below removed the !isMobile to show  on mobile as well */}
-                  {
-                    <div className="bg-[#ff5722] max-h-full mx-0 font-arial relative">
-                      <div className="flex items-center px-4 py-[0.4rem] h-full gap-1">
-                        <img
-                          src={profileImg}
-                          alt=""
-                          className="h-10 w-10  border-2 border-yellow-500 rounded-full"
-                        />
-                        <Popover
-                          as="div"
-                          className="relative border-none outline-none z-10"
-                        >
-                          {({ open }) => (
-                            <>
-                              <Popover.Button className="focus:outline-none">
-                                <div
-                                  className="details flex items-start justify-between gap-2 cursor-pointer"
-                                  onClick={toggleDropdown}
+                            <Popover.Panel
+                              as="div"
+                              className={`${
+                                open ? "block" : "hidden"
+                              } absolute right-2 mt-2 w-40 bg-white text-black borde rounded-md shadow-md`}
+                            >
+                              <ul className="text-black flex flex-col gap-2 px-4 font-Rale cursor-pointer">
+                                <li
+                                  onClick={() => {
+                                    router.push("/profile");
+                                  }}
                                 >
-                                  <h2 className="font-normal font-arial text-sm whitespace-nowrap">
-                                    {user_name}
-                                  </h2>
-                                  <IoIosArrowDown className="button"></IoIosArrowDown>
-                                </div>
-                              </Popover.Button>
-
-                              <Popover.Panel
-                                as="div"
-                                className={`${
-                                  open ? "block" : "hidden"
-                                } absolute right-2 mt-2 w-40 bg-white text-black borde rounded-md shadow-md`}
-                              >
-                                <ul className="text-black flex flex-col gap-2 px-4 font-Rale cursor-pointer">
-                                  <li
-                                    onClick={() => {
-                                      router.push("/profile");
-                                    }}
-                                  >
-                                    My Profile
-                                  </li>
-                                  <li>Settings</li>
-                                  <li>Help</li>
-                                  <li onClick={handleLogout}>
-                                    <div className="flex gap-1 items-center">
-                                      Log out <MdLogout size={16}></MdLogout>
-                                    </div>
-                                  </li>
-                                </ul>
-                              </Popover.Panel>
-                            </>
-                          )}
-                        </Popover>
-                      </div>
+                                  My Profile
+                                </li>
+                                <li>Settings</li>
+                                <li>Help</li>
+                                <li onClick={handleLogout}>
+                                  <div className="flex gap-1 items-center">
+                                    Log out <MdLogout size={16}></MdLogout>
+                                  </div>
+                                </li>
+                              </ul>
+                            </Popover.Panel>
+                          </>
+                        )}
+                      </Popover>
                     </div>
-                  }
-                </div>
+                  </div>
+                }
               </div>
-            </nav>
-          </div>
-          {/* Main Content Area */}
-          <div className="flex-grow bg-gray relative bg-white h-screen overflow-auto ">
-            {children}
-            {/* <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
-              <div className=" cursor-pointer w-12 h-12 rounded-full  px-2 py-2 bg-green-600">
-                <Image src={WhatsAppChat} alt="whatsapp" />
-              </div>
-            </div> */}
-
-            {/* <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 group">
-              <div
-                onClick={sendWhatsApp}
-                className="cursor-pointer w-12 h-12 rounded-full px-2 py-2 bg-green-600 "
-              >
-                <div
-                  id="tooltip-default"
-                  role="tooltip"
-                  className="absolute whitespace-nowrap z-800 bottom-14 -left-32 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 group-hover:opacity-100"
-                >
-                  Willowood Helpdesk Support
-                  <div className="tooltip-arrow" data-popper-arrow></div>
-                </div>
-                <Image data-tooltip-target="tooltip-default" src={WhatsAppChat} alt="whatsapp" />
-              </div>
-              <contentMessage />
-            </div> */}
-          </div>
+            </div>
+          </nav>
         </div>
-        <Toaster position="bottom-center" reverseOrder={false} />
+        {/* Main Content Area */}
+        <div className="flex-grow bg-gray relative bg-white h-screen  ">
+          {children}
+        </div>
       </div>
-    </>
+      <Toaster position="bottom-center" reverseOrder={false} />
+    </div>
   );
 };
 

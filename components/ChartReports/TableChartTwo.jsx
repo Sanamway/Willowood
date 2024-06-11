@@ -20,7 +20,6 @@ const TableChartTwo = (props) => {
   const handledownloadExcel = () => {
     let excelData;
     if (heading === "Product Segment") {
-      
       excelData = datas.map((item, idx) => ({
         "Product Segment": item[Object.keys(item)[0]],
         "FY Sales Val 21-22": item[Object.keys(item)[2]],
@@ -206,11 +205,11 @@ const TableChartTwo = (props) => {
     <>
       <div
         className={`wrapper mt-2 lg:mt-0 flex-1 ${
-          !height ? "h-72 " : "h-auto"
+          !height ? "h-full " : "h-full"
         } lg:w-[55%] bg-white  rounded-lg border border-gray-200 flex flex-col ${
           fullScreen
-            ? "fixed min-w-[100%]  h-auto lg:min-h-[84%]  top-8 mx-auto"
-            : " h-auto"
+            ? "fixed min-w-[100%]  h-auto lg:h-full  top-8 mx-auto"
+            : " h-full"
         } `}
       >
         <div

@@ -177,141 +177,144 @@ const Timesheet = () => {
             </div>
 
             <h2>
-              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome
+                className="text-black-500"
+                size={34}
+              ></AiTwotoneHome>
             </h2>
           </div>
         </div>
 
-        <div className="bg-white h-screen flex select-none items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto tableInfo p-2 ">
-            <table className="min-w-full divide-y border- divide-gray-200 ">
-              <thead className="border-b w-max">
-                <tr className="bg-gray-50 font-arial w-max">
-                  <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    Action
-                  </th>
-                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    Emp Code
-                  </th>
+        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto  ">
+          <table className="min-w-full divide-y border- divide-gray-200 ">
+            <thead className="border-b w-max">
+              <tr className="bg-gray-50 font-arial w-max">
+                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  Action
+                </th>
+                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  Emp Code
+                </th>
 
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Attendence Type
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Punch In Time
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Punch Out Time
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Status
-                  </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Name
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Attendence Type
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Date
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Punch In Time
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Punch Out Time
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Status
+                </th>
 
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Territory
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Deleted
-                  </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Territory
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Deleted
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              {data?.map((item, idx) => (
+                <tr className="dark:border-2" key={idx}>
+                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                    <button
+                      onClick={() => {
+                        setShowVerifyModal(true);
+                        setModalData({
+                          ...modalData,
+                          type: "Verify",
+                          id: item.attendance_id,
+                        });
+                      }}
+                      disabled={item.verified === "Yes"}
+                      className="b text-black hover:text-blue-500  "
+                    >
+                      Verify
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowVerifyModal(true);
+                        setModalData({
+                          ...modalData,
+                          type: "Approve",
+                          id: item.attendance_id,
+                        });
+                      }}
+                      disabled={item.approved === "Yes"}
+                      className="b text-black hover:text-yellow-400 ml-2"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      className="b text-black hover:text-red-500 ml-2"
+                      onClick={() => {
+                        setShowDeleteModal(true);
+                        setModalData({
+                          ...modalData,
+
+                          id: item.attendance_id,
+                        });
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.emp_code}
+                  </td>
+
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.user_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.attendance_type}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {moment(item.date).format("DD MMM YYYY")}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {moment(item.punch_in_time).format("hh:mm A")}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.punch_out_time
+                      ? moment(item.punch_out_time).format("hh:mm A")
+                      : "-"}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.status}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.territory_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.isDeleted ? "Enable" : "Disable"}
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-                {data?.map((item, idx) => (
-                  <tr className="dark:border-2" key={idx}>
-                    <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                      <button
-                        onClick={() => {
-                          setShowVerifyModal(true);
-                          setModalData({
-                            ...modalData,
-                            type: "Verify",
-                            id: item.attendance_id,
-                          });
-                        }}
-                        disabled={item.verified === "Yes"}
-                        className="b text-black hover:text-blue-500  "
-                      >
-                        Verify
-                      </button>
-                      <button
-                        onClick={() => {
-                          setShowVerifyModal(true);
-                          setModalData({
-                            ...modalData,
-                            type: "Approve",
-                            id: item.attendance_id,
-                          });
-                        }}
-                        disabled={item.approved === "Yes"}
-                        className="b text-black hover:text-yellow-400 ml-2"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        className="b text-black hover:text-red-500 ml-2"
-                        onClick={() => {
-                          setShowDeleteModal(true);
-                          setModalData({
-                            ...modalData,
-
-                            id: item.attendance_id,
-                          });
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.emp_code}
-                    </td>
-
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.user_name}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.attendance_type}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {moment(item.date).format("DD MMM YYYY")}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {moment(item.punch_in_time).format("hh:mm A")}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.punch_out_time
-                        ? moment(item.punch_out_time).format("hh:mm A")
-                        : "-"}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.status}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.territory_name}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.isDeleted ? "true" : "false"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <ReactPaginate
-              previousLabel={"< Previous"}
-              nextLabel={"Next >"}
-              breakLabel={"..."}
-              pageCount={pageCount}
-              onPageChange={handlePageChange}
-              containerClassName={"pagination"}
-              activeClassName={"active"}
-              className="flex flex-row gap-2 mt-4"
-            />
-          </div>
+              ))}
+            </tbody>
+            <div className="">
+              <ReactPaginate
+                previousLabel={"< Previous"}
+                nextLabel={"Next >"}
+                breakLabel={"..."}
+                pageCount={pageCount}
+                onPageChange={handlePageChange}
+                containerClassName={"pagination"}
+                activeClassName={"active"}
+                className="flex flex-row gap-2 mt-4  "
+              />
+            </div>
+          </table>
         </div>
       </div>
 

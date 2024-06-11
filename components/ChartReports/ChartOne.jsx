@@ -18,7 +18,7 @@ const ChartOne = (props) => {
   const chartRef = useRef(null);
   const chartContainerRef = useRef(null);
   const { lab, datasets } = props;
-  console.log("mkl", props)
+  console.log("mkl", props);
   const [height, setHeight] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -131,7 +131,7 @@ const ChartOne = (props) => {
         ref={chartContainerRef}
         className={`wrapper  ${
           !height ? "h-72 " : ""
-        } lg:w-2/5 flex-col bg-white rounded-lg ${
+        } lg:w-full flex-col bg-white rounded-lg ${
           // fullScreen ? "fixed min-w-[84%] h-auto  top-8 mx-auto" : "h-auto "
           // fullScreen ? "absolute min-w-[90%] h-auto  top-12 mx-auto" : "h-auto"
           fullScreen

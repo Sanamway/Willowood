@@ -195,10 +195,6 @@ const AllCharts = (props) => {
     setBsUnitLabelData(BusUnitlabelData);
   }, [props.businessUnitData]);
 
-  console.log("klop", bsUnitGraphData, bsUnitLabelData);
-
-  //creating business segment graph
-
   const [bsGraphData, setBsGraphData] = useState([]);
   const [bsLabelData, setBsLabelData] = useState([]);
 
@@ -404,8 +400,6 @@ const AllCharts = (props) => {
     }
   }, [props.productBrandData]);
 
-  console.log("hgf", pbGraphData, pbLabelData);
-
   const [showChart, setShowChart] = useState({
     t: false,
     r: false,
@@ -463,225 +457,1148 @@ const AllCharts = (props) => {
     }
   }, []);
   //****  * ****  **** *** ** *  **** ***************//
+  const handleDownloadRSP = () => {};
 
   return (
     <>
       <section className="wrapper w-full px-2 mt-2 font-arial  relative ">
-        {props.loading && (
-          <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-            <img
-              className="w-20 h-20 animate-spin"
-              src="https://www.svgrepo.com/show/448500/loading.svg"
-              alt="Loading icon"
-            />
-          </div>
-        )}
-
-        {/* <div className="mt-2 lg:mt-2 md:flex items-start justify-center gap-4">
-          <TableChartOne
-            heading={"Business Segments"}
-            title={
-              "Business Segments ( Target vs Achievement )  - Annual , YTD , MTD"
-            }
-            color={"bg-white"}
-            lab={labelNameTwo}
-            datas={dummyData || []}
-          />
-
-          <TableChartTwo
-            heading={"Business Units"}
-            title={
-              "Business Units ( Target vs Achievement )  - Annual , YTD , MTD"
-            }
-            color={"bg-white"}
-            lab={labelNameTwo}
-            datas={dummyData || []}
-          ></TableChartTwo>
-        </div> */}
-
-        {showChart.bg && (
-          <div className="mt-2 lg:mt- md:flex items-start justify-center gap-4 ">
-            <ChartOne
-              title={"Business Segments"}
-              color={"bg-blue-500"}
-              lab={bsLabelData}
-              datasets={bsGraphData || []}
-            />
-          </div>
-        )}
-        {showChart.bu && (
-          <div className="mt-2 lg:mt- md:flex items-start justify-center gap-4 ">
-            <ChartTwo
-              title={"Business Units"}
-              color={"bg-violet-500"}
-              lab={bsUnitLabelData}
-              datasets={bsUnitGraphData || []}
-            />
-          </div>
-        )}
-
-        {/* <div className=" mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
-          <TableChart
-            heading={"Zone"}
-            title={"Zone ( Target vs Achievement )  - Annual , YTD , MTD"}
-            color={"bg-white"}
-            lab={labelNameTwo}
-            datas={dummyData || []}
-          ></TableChart>
-        </div> */}
-
-        {showChart.z && (
-          <div className="mt-2 lg:mt- md:flex items-start justify-center gap-4  ">
-            <ChartTwo
-              title={"Business Zone"}
-              color={"bg-pink-500"}
-              lab={zonetLabelData}
-              datasets={zoneGraphData || []}
-            ></ChartTwo>
-          </div>
-        )}
-
-        {/* <div className=" mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
-          <TableChart
-            heading={"Region"}
-            title={"Region ( Target vs Achievement )  - Annual , YTD , MTD"}
-            color={"bg-white"}
-            lab={labelNameTwo}
-            datas={dummyData || []}
-          ></TableChart>
-        </div> */}
-
-        {showChart.r && (
-          <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
-            <ChartThree
-              title={"Business Region"}
-              color={"bg-teal-400"}
-              lab={regiontLabelData}
-              datasets={regionGraphData || []}
-            ></ChartThree>
-          </div>
-        )}
-
-        {/* <div className=" mt-2 lg:mt-2 md:flex items-start justify-center gap-4 ">
-          <TableChart
-            heading={"Territory"}
-            title={"Territory ( Target vs Achievement )  - Annual , YTD , MTD"}
-            color={"bg-white"}
-            lab={labelNameTwo}
-            datas={dummyData || []}
-          ></TableChart>
-        </div> */}
-
-        {/* territory label  */}
-
-        {showChart.t && (
-          <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
-            <ChartThree
-              title={"Territory"}
-              color={"bg-rose-500"}
-              lab={territorytLabelData}
-              datasets={territoryGraphData || []}
-            ></ChartThree>
-          </div>
-        )}
-
-        {/* <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
-          <ChartOne
-            title={"Customer Wise"}
-            color={"bg-sky-500"}
-            lab={labelNameTwo}
-            datasets={chartData || []}
-          ></ChartOne>
-          <ChartTwo
-            title={"Customer Wise Data View"}
-            color={"bg-sky-500"}
-            lab={labelNameTwo}
-            datasets={businessUnit || []}
-          ></ChartTwo>
-        </div> */}
-
-        <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
-          <ChartOne
-            title={"Product Segment"}
-            color={"bg-orange-500"}
-            lab={psLabelData}
-            datasets={psGraphData || []}
-          ></ChartOne>
-
-          {/* Product Segment Table  */}
-
-          <TableChartTwo
-            heading={"Product Segment"}
-            title={
-              "Product Segment ( Target vs Achievement )  - Annual , YTD , MTD"
-            }
-            color={"bg-white"}
-            datas={props.productSegmentData || []}
-          ></TableChartTwo>
-        </div>
-
-        <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
-          <ChartOne
-            title={"Product Category"}
-            color={"bg-[#15283c]"}
-            lab={pcLabelData}
-            datasets={pcGraphData || []}
-          ></ChartOne>
-
-          {/* Product Category Table  */}
-
-          <TableChartTwo
-            heading={"Product Category"}
-            title={
-              "Product Category ( Target vs Achievement )  - Annual , YTD , MTD"
-            }
-            color={"bg-white"}
-            datas={props.productCategoryData || []}
-          ></TableChartTwo>
-        </div>
-
-        <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
-          <ChartOne
-            title={"Product Brand"}
-            color={"bg-indigo-500"}
-            lab={pbLabelData}
-            datasets={pbGraphData || []}
-          ></ChartOne>
-
-          {/* Product Brand Table  */}
-
-          <TableChartTwo
-            heading={"Product Brand"}
-            title={
-              "Product Brand ( Target vs Achievement )  - Annual , YTD , MTD"
-            }
-            color={"bg-white"}
-            datas={props.productBrandData || []}
-          ></TableChartTwo>
-
-          {/* <ChartTwo title={"Product Brand Data View"} color={"bg-indigo-500"}lab={labelNameTwo} datasets={businessUnit || []} ></ChartTwo> */}
-        </div>
-
-        {/* buttons */}
-
-        <div className="mt-12 flex items-center justify-end mx-8 gap-4 pb-4">
-          {/* <button
-            onClick={() => {
-              router.push("/chartreports");
-            }}
-            className="text-center  rounded-md bg-blue-500 text-white py-1 px-4 text-sm"
-          >
-            Back
-          </button>
+        <div className="flex w-full border-black border-b-2 items-start gap-8 mt-2">
           <button
-            onClick={() => {
-              props.formType("Table");
-            }}
-            className="text-center rounded-md bg-orange-500 text-white py-1 px-4 text-sm"
+            className={`${
+              props.tabType === "Table"
+                ? " flex  gap-2 inline-block  rounded-t py-2 px-4 font-semibold  border-b-2 border-orange-500 text-black text-sm bg-black/5"
+                : " flex  gap-2  inline-block  text-black rounded-t py-2 px-4 font-semibold  text-sm bg-black/8"
+            }`}
+            onClick={() => props.setTabType("Table")}
           >
-            Next
-          </button> */}
+            Table
+          </button>{" "}
+          <button
+            className={`${
+              props.tabType === "Chart"
+                ? " flex  gap-2 inline-block rounded-t py-2 px-4 font-semibold  border-b-2 border-orange-500 text-black text-sm bg-black/5"
+                : " flex  gap-2   inline-block  text-black rounded-t py-2 px-4 font-semibold  text-sm bg-black/8"
+            }`}
+            onClick={() => props.setTabType("Chart")}
+          >
+            Chart
+          </button>
         </div>
+        <div className="flex w-full justify-end">
+          <button
+            className="text-blue-500 underline hover:text-blue-700"
+            onClick={() => handleDownloadRSP()}
+          >
+            Download XLS
+          </button>{" "}
+        </div>
+        {props.tabType === "Chart" ? (
+          <div className="w-full flex flex-col gap-2">
+            {props.loading && (
+              <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+                <img
+                  className="w-20 h-20 animate-spin"
+                  src="https://www.svgrepo.com/show/448500/loading.svg"
+                  alt="Loading icon"
+                />
+              </div>
+            )}
+            {showChart.bg && (
+              <div className="mt-2 lg:mt- md:flex items-start justify-center gap-4 ">
+                <ChartOne
+                  title={"Business Segments"}
+                  color={"bg-blue-500"}
+                  lab={bsLabelData}
+                  datasets={bsGraphData || []}
+                />
+              </div>
+            )}
+            {showChart.bu && (
+              <div className="mt-2 lg:mt- md:flex items-start justify-center gap-4 ">
+                <ChartTwo
+                  title={"Business Units"}
+                  color={"bg-violet-500"}
+                  lab={bsUnitLabelData}
+                  datasets={bsUnitGraphData || []}
+                />
+              </div>
+            )}
+
+            {showChart.z && (
+              <div className="mt-2 lg:mt- md:flex items-start justify-center gap-4  ">
+                <ChartTwo
+                  title={"Business Zone"}
+                  color={"bg-pink-500"}
+                  lab={zonetLabelData}
+                  datasets={zoneGraphData || []}
+                ></ChartTwo>
+              </div>
+            )}
+
+            {showChart.r && (
+              <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
+                <ChartThree
+                  title={"Business Region"}
+                  color={"bg-teal-400"}
+                  lab={regiontLabelData}
+                  datasets={regionGraphData || []}
+                ></ChartThree>
+              </div>
+            )}
+
+            {showChart.t && (
+              <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
+                <ChartThree
+                  title={"Territory"}
+                  color={"bg-rose-500"}
+                  lab={territorytLabelData}
+                  datasets={territoryGraphData || []}
+                ></ChartThree>
+              </div>
+            )}
+            <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
+              <ChartOne
+                title={"Product Segment"}
+                color={"bg-orange-500"}
+                lab={psLabelData}
+                datasets={psGraphData || []}
+              ></ChartOne>
+            </div>
+            <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
+              <ChartOne
+                title={"Product Category"}
+                color={"bg-[#15283c]"}
+                lab={pcLabelData}
+                datasets={pcGraphData || []}
+              ></ChartOne>
+            </div>
+            <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4">
+              <ChartOne
+                title={"Product Brand"}
+                color={"bg-indigo-500"}
+                lab={pbLabelData}
+                datasets={pbGraphData || []}
+              ></ChartOne>
+            </div>
+          </div>
+        ) : (
+          <div className="w-full flex flex-col ">
+            {props.loading && (
+              <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+                <img
+                  className="w-20 h-20 animate-spin"
+                  src="https://www.svgrepo.com/show/448500/loading.svg"
+                  alt="Loading icon"
+                />
+              </div>
+            )}
+            <h2 className="font-bold self-center text-sm mt-2">
+              {" "}
+              Rolling Sales Plan
+            </h2>
+            <div className="flex flex-col overflow-auto text-xs lg:hidden">
+              <div className="grid grid-rows-4  text-sm ">
+                <div className="border border-gray-300 py-1 flex px-2 items-center font-bold text-xs bg-gray-200 ">
+                  YTD
+                </div>
+                <div className="border border-gray-300 text-xs flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Budget
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    RSP
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Sale
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    B ach
+                  </span>
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    R ach
+                  </span>
+                </div>
+                <div className="border border-gray-300   text-xs flex justify-between items-center">
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.budget.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.target.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    {props.summaryData.actual.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actual / props.summaryData.budget) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actual.toFixed(2) /
+                        props.summaryData.budget.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actual /
+                            props.summaryData.budget) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actual / props.summaryData.target) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actual.toFixed(2) /
+                        props.summaryData.target.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actual /
+                            props.summaryData.target) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+
+                {/* <div className="border border-gray-300 py-1 px-2  text-xs flex  items-center font-bold text-xs bg-gray-200">
+                  H1 - (April - Sept)
+                </div>
+                <div className="border border-gray-300 text-xs flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Budget
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    RSP
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Sale
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    B ach
+                  </span>
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    R ach
+                  </span>
+                </div>
+                <div className="border border-gray-300  text-xs flex justify-between items-center ">
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.budgetH1.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    {props.summaryData.targetH1.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    {props.summaryData.actualH1.toFixed(2)}
+                  </span>
+
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actualH1 /
+                        props.summaryData.budgetH1) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actualH1.toFixed(2) /
+                        props.summaryData.budgetH1.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actualH1 /
+                            props.summaryData.budgetH1) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actualH1 /
+                        props.summaryData.targetH1) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actualH1.toFixed(2) /
+                        props.summaryData.targetH1.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actualH1 /
+                            props.summaryData.targetH1) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+
+                <div className="border border-gray-300 py-1 text-xs flex px-2 items-center font-bold text-xs bg-gray-200">
+                  H2 - (Oct - March)
+                </div>
+                <div className="border border-gray-300 text-xs flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Budget
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    RSP
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Sale
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    B ach
+                  </span>
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    R ach
+                  </span>
+                </div>
+                <div className="border border-gray-300 text-xs flex justify-between items-center">
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.budgetH2.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    {props.summaryData.targetH2.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.actualH2.toFixed(2)}
+                  </span>
+
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actualH2 /
+                        props.summaryData.budgetH2) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actualH2.toFixed(2) /
+                        props.summaryData.budgetH2.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actualH2 /
+                            props.summaryData.budgetH2) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actualH2 /
+                        props.summaryData.targetH2) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actualH2.toFixed(2) /
+                        props.summaryData.targetH2.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actualH2 /
+                            props.summaryData.targetH2) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div> */}
+                <div className="border border-gray-300 py-1 text-xs flex  items-center font-bold px-2 text-xs bg-gray-200">
+                  Current Month-MTD
+                </div>
+                <div className="border border-gray-300 text-xs flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Budget
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    RSP
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Sale
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    B ach
+                  </span>
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    R ach
+                  </span>
+                </div>
+                <div className="border border-gray-300 text-xs flex justify-between items-center">
+                  <span className=" flex items-center justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.budgetCurrent.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    {props.summaryData.targetCurrent.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.actualCurrent.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actualCurrent /
+                        props.summaryData.budgetCurrent) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actualCurrent /
+                        props.summaryData.budgetCurrent) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actualCurrent /
+                            props.summaryData.budgetCurrent) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actualCurrent /
+                        props.summaryData.targetCurrent) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actualCurrent.toFixed(2) /
+                        props.summaryData.targetCurrent.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actualCurrent /
+                            props.summaryData.targetCurrent) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="hidden lg:flex flex-col mt-2 text-sm">
+              <div className="grid grid-cols-4  text-sm ">
+                <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200 ">
+                  YTD
+                </div>
+                <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200">
+                  H1 - (April - Sept)
+                </div>
+                <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200">
+                  H2 - (Oct - March)
+                </div>
+                <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200">
+                  Current Month-MTD
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4  text-sm  font-bold text-xs ">
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Budget
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    RSP
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Sale
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    B ach
+                  </span>
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    R ach
+                  </span>
+                </div>
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center   justify-center border-r border-gray-300 w-20">
+                    Budget
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    RSP
+                  </span>
+                  <span className=" flex items-center justify-center   border-r border-gray-300 w-20">
+                    Sale
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    B ach
+                  </span>
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    R ach
+                  </span>
+                </div>
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    Budget
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    RSP
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Sale
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    B ach
+                  </span>
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    R ach
+                  </span>
+                </div>
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Budget
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    RSP
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Sale
+                  </span>
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    B ach
+                  </span>
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    R ach
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4  text-sm bg-white">
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.budget.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.target.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    {props.summaryData.actual.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actual / props.summaryData.budget) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actual.toFixed(2) /
+                        props.summaryData.budget.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actual /
+                            props.summaryData.budget) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actual / props.summaryData.target) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actual.toFixed(2) /
+                        props.summaryData.target.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actual /
+                            props.summaryData.target) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+                <div className="border border-gray-300  flex justify-between items-center ">
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.budgetH1.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    {props.summaryData.targetH1.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    {props.summaryData.actualH1.toFixed(2)}
+                  </span>
+
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actualH1 /
+                        props.summaryData.budgetH1) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actualH1.toFixed(2) /
+                        props.summaryData.budgetH1.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actualH1 /
+                            props.summaryData.budgetH1) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actualH1 /
+                        props.summaryData.targetH1) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actualH1.toFixed(2) /
+                        props.summaryData.targetH1.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actualH1 /
+                            props.summaryData.targetH1) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.budgetH2.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    {props.summaryData.targetH2.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.actualH2.toFixed(2)}
+                  </span>
+
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actualH2 /
+                        props.summaryData.budgetH2) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actualH2.toFixed(2) /
+                        props.summaryData.budgetH2.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actualH2 /
+                            props.summaryData.budgetH2) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actualH2 /
+                        props.summaryData.targetH2) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actualH2.toFixed(2) /
+                        props.summaryData.targetH2.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actualH2 /
+                            props.summaryData.targetH2) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.budgetCurrent.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    {props.summaryData.targetCurrent.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.summaryData.actualCurrent.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actualCurrent /
+                        props.summaryData.budgetCurrent) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actualCurrent /
+                        props.summaryData.budgetCurrent) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actualCurrent /
+                            props.summaryData.budgetCurrent) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.summaryData.actualCurrent /
+                        props.summaryData.targetCurrent) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.summaryData.actualCurrent.toFixed(2) /
+                        props.summaryData.targetCurrent.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.summaryData.actualCurrent /
+                            props.summaryData.targetCurrent) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <h2 className="font-bold self-center text-sm mt-2">
+              {" "}
+              Collection Plan
+            </h2>
+            <div className="flex flex-col overflow-auto text-xs lg:hidden">
+              <div className="grid grid-rows-4  text-sm ">
+                <div className="border border-gray-300 py-1 flex px-2 items-center font-bold text-xs bg-gray-200 ">
+                  YTD
+                </div>
+                <div className="border border-gray-300 text-xs flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Target
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Actual
+                  </span>
+
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    Ach%
+                  </span>
+                </div>
+                <div className="border border-gray-300   text-xs flex justify-between items-center">
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.cSummaryData.target.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    {props.cSummaryData.actual.toFixed(2)}
+                  </span>
+
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.cSummaryData.actual / props.cSummaryData.target) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.cSummaryData.actual.toFixed(2) /
+                        props.cSummaryData.target.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.cSummaryData.actual /
+                            props.cSummaryData.target) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+
+                {/* <div className="border border-gray-300 py-1 px-2  text-xs flex  items-center font-bold text-xs bg-gray-200">
+                  H1 - (April - Sept)
+                </div>
+                <div className="border border-gray-300 text-xs flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Budget
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    RSP
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Sale
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    B ach
+                  </span>
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    R ach
+                  </span>
+                </div>
+                <div className="border border-gray-300  text-xs flex justify-between items-center ">
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.cSummaryData.budgetH1.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    {props.cSummaryData.targetH1.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    {props.cSummaryData.actualH1.toFixed(2)}
+                  </span>
+
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {(
+                      (props.cSummaryData.actualH1 /
+                        props.cSummaryData.budgetH1) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.cSummaryData.actualH1.toFixed(2) /
+                        props.cSummaryData.budgetH1.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.cSummaryData.actualH1 /
+                            props.cSummaryData.budgetH1) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.cSummaryData.actualH1 /
+                        props.cSummaryData.targetH1) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.cSummaryData.actualH1.toFixed(2) /
+                        props.cSummaryData.targetH1.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.cSummaryData.actualH1 /
+                            props.cSummaryData.targetH1) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+
+                <div className="border border-gray-300 py-1 text-xs flex px-2 items-center font-bold text-xs bg-gray-200">
+                  H2 - (Oct - March)
+                </div>
+                <div className="border border-gray-300 text-xs flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Budget
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    RSP
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Sale
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    B ach
+                  </span>
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    R ach
+                  </span>
+                </div>
+                <div className="border border-gray-300 text-xs flex justify-between items-center">
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.cSummaryData.budgetH2.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    {props.cSummaryData.targetH2.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.cSummaryData.actualH2.toFixed(2)}
+                  </span>
+
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {(
+                      (props.cSummaryData.actualH2 /
+                        props.cSummaryData.budgetH2) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.cSummaryData.actualH2.toFixed(2) /
+                        props.cSummaryData.budgetH2.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.cSummaryData.actualH2 /
+                            props.cSummaryData.budgetH2) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.cSummaryData.actualH2 /
+                        props.cSummaryData.targetH2) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.cSummaryData.actualH2.toFixed(2) /
+                        props.cSummaryData.targetH2.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.cSummaryData.actualH2 /
+                            props.cSummaryData.targetH2) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div> */}
+                <div className="border border-gray-300 py-1 text-xs flex  items-center font-bold px-2 text-xs bg-gray-200">
+                  Current Month-MTD
+                </div>
+
+                <div className="border border-gray-300 text-xs flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Target
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Actual
+                  </span>
+
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    Ach%
+                  </span>
+                </div>
+                <div className="border border-gray-300 text-xs flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    {props.cSummaryData.targetCurrent.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.cSummaryData.actualCurrent.toFixed(2)}
+                  </span>
+
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.cSummaryData.actualCurrent /
+                        props.cSummaryData.targetCurrent) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.cSummaryData.actualCurrent.toFixed(2) /
+                        props.cSummaryData.targetCurrent.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.cSummaryData.actualCurrent /
+                            props.cSummaryData.targetCurrent) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="hidden lg:flex flex-col mt-2 text-sm">
+              <div className="grid grid-cols-4  text-sm ">
+                <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200 ">
+                  YTD
+                </div>
+                <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200">
+                  H1 - (April - Sept)
+                </div>
+                <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200">
+                  H2 - (Oct - March)
+                </div>
+                <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200">
+                  Current Month-MTD
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4  text-sm  font-bold text-xs ">
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Target
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Actual
+                  </span>
+
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    Ach%
+                  </span>
+                </div>
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Target
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Actual
+                  </span>
+
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    Ach%
+                  </span>
+                </div>
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Target
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Actual
+                  </span>
+
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    Ach%
+                  </span>
+                </div>
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    Target
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    Actual
+                  </span>
+
+                  <span className=" flex items-center justify-center   border-gray-300 w-20">
+                    Ach%
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4  text-sm bg-white ">
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.cSummaryData.target.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    {props.cSummaryData.actual.toFixed(2)}
+                  </span>
+
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.cSummaryData.actual / props.cSummaryData.target) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.cSummaryData.actual.toFixed(2) /
+                        props.cSummaryData.target.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.cSummaryData.actual /
+                            props.cSummaryData.target) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    {props.cSummaryData.targetH1.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    {props.cSummaryData.actualH1.toFixed(2)}
+                  </span>
+
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.cSummaryData.actualH1 /
+                        props.cSummaryData.targetH1) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.cSummaryData.actualH1.toFixed(2) /
+                        props.cSummaryData.targetH1.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.cSummaryData.actualH1 /
+                            props.cSummaryData.targetH1) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                    {props.cSummaryData.targetH2.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.cSummaryData.actualH2.toFixed(2)}
+                  </span>
+
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.cSummaryData.actualH2 /
+                        props.cSummaryData.targetH2) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.cSummaryData.actualH2.toFixed(2) /
+                        props.cSummaryData.targetH2.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.cSummaryData.actualH2 /
+                            props.cSummaryData.targetH2) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+                <div className="border border-gray-300  flex justify-between items-center">
+                  <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                    {props.cSummaryData.targetCurrent.toFixed(2)}
+                  </span>
+                  <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                    {props.cSummaryData.actualCurrent.toFixed(2)}
+                  </span>
+
+                  <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                    {(
+                      (props.cSummaryData.actualCurrent /
+                        props.cSummaryData.targetCurrent) *
+                      100
+                    ).toFixed(2) === "NaN" ||
+                    (
+                      (props.cSummaryData.actualCurrent.toFixed(2) /
+                        props.cSummaryData.targetCurrent.toFixed(2)) *
+                      100
+                    ).toFixed(2) === "Infinity"
+                      ? 0
+                      : (
+                          (props.cSummaryData.actualCurrent /
+                            props.cSummaryData.targetCurrent) *
+                          100
+                        ).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
+              {/* Product Segment Table  */}
+
+              <TableChartTwo
+                heading={"Product Segment"}
+                title={
+                  "Product Segment ( Target vs Achievement )  - Annual , YTD , MTD"
+                }
+                color={"bg-white"}
+                datas={props.productSegmentData || []}
+              ></TableChartTwo>
+            </div>
+
+            <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
+              {/* Product Category Table  */}
+
+              <TableChartTwo
+                heading={"Product Category"}
+                title={
+                  "Product Category ( Target vs Achievement )  - Annual , YTD , MTD"
+                }
+                color={"bg-white"}
+                datas={props.productCategoryData || []}
+              ></TableChartTwo>
+            </div>
+
+            <div className="mt-2 lg:mt-6  h-[500px] md:flex items-start justify-center gap-4  ">
+              {/* Product Brand Table  */}
+
+              <TableChartTwo
+                heading={"Product Brand"}
+                title={
+                  "Product Brand ( Target vs Achievement )  - Annual , YTD , MTD"
+                }
+                color={"bg-white"}
+                datas={props.productBrandData || []}
+              ></TableChartTwo>
+            </div>
+          </div>
+        )}
       </section>
     </>
   );

@@ -184,7 +184,10 @@ const FieldDay = () => {
             </h2>
 
             <h2>
-              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome
+                className="text-black-500"
+                size={34}
+              ></AiTwotoneHome>
             </h2>
             {/* <button
       onClick={() => {
@@ -200,204 +203,204 @@ const FieldDay = () => {
           </div>
         </div>
 
-        <div className="bg-white h-screen flex select-none items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto tableInfo p-2 ">
-            <table className="min-w-full divide-y border- divide-gray-200 ">
-              <thead className="border-b w-max">
-                <tr className="bg-gray-50 font-arial w-max">
-                  <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    Action
-                  </th>
-                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    F Follow Code
-                  </th>
+        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto  ">
+          <table className="min-w-full divide-y border- divide-gray-200 ">
+            <thead className="border-b w-max">
+              <tr className="bg-gray-50 font-arial w-max">
+                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  Action
+                </th>
+                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  F Follow Code
+                </th>
 
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Dealer
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Mobile No
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Id
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Name
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Father Name
-                  </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Dealer
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Farmer Mobile No
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Farmer Id
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Farmer Name
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Farmer Father Name
+                </th>
 
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Type
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Plot Size
-                  </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Farmer Type
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Plot Size
+                </th>
 
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Village
-                  </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Village
+                </th>
 
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Available
-                  </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Farmer Available
+                </th>
 
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Remarks
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Filed Day Image
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Handwritten Testimonials
-                  </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Remarks
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Filed Day Image
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Handwritten Testimonials
+                </th>
 
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Next Visit Date
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Territory
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    User
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Deleted
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-                {data.map((item, idx) => (
-                  <tr className="dark:border-2" key={idx}>
-                    <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                      <button
-                        onClick={() => {
-                          setShowVerifyModal(true);
-                          setModalData({
-                            ...modalData,
-                            type: "Verify",
-                            id: item.f_demo_fields_id,
-                          });
-                        }}
-                        disabled={item.verified === "Yes"}
-                        className="b text-black hover:text-blue-500  "
-                      >
-                        Verify
-                      </button>
-                      <button
-                        onClick={() => {
-                          setShowVerifyModal(true);
-                          setModalData({
-                            ...modalData,
-                            type: "Approve",
-                            id: item.f_demo_fields_id,
-                          });
-                        }}
-                        disabled={item.approved === "Yes"}
-                        className="b text-black hover:text-yellow-400 ml-2"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        className="b text-black hover:text-red-500 ml-2"
-                        onClick={() => {
-                          setShowDeleteModal(true);
-                          setModalData({
-                            ...modalData,
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Next Visit Date
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Territory
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  User
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Deleted
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              {data.map((item, idx) => (
+                <tr className="dark:border-2" key={idx}>
+                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                    <button
+                      onClick={() => {
+                        setShowVerifyModal(true);
+                        setModalData({
+                          ...modalData,
+                          type: "Verify",
+                          id: item.f_demo_fields_id,
+                        });
+                      }}
+                      disabled={item.verified === "Yes"}
+                      className="b text-black hover:text-blue-500  "
+                    >
+                      Verify
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowVerifyModal(true);
+                        setModalData({
+                          ...modalData,
+                          type: "Approve",
+                          id: item.f_demo_fields_id,
+                        });
+                      }}
+                      disabled={item.approved === "Yes"}
+                      className="b text-black hover:text-yellow-400 ml-2"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      className="b text-black hover:text-red-500 ml-2"
+                      onClick={() => {
+                        setShowDeleteModal(true);
+                        setModalData({
+                          ...modalData,
 
-                            id: item.f_demo_fields_id,
-                          });
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.f_demo_code}
-                    </td>
-                    {/* <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                          id: item.f_demo_fields_id,
+                        });
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.f_demo_code}
+                  </td>
+                  {/* <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {moment(item.next_followup_date).format("MM/DD/YYYY")}
                     </td> */}
 
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.dealer_des}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_mob_no}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_id}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_name}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_father_name}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_type}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.plot_size}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.village}
-                    </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.dealer_des}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.farmer_mob_no}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.farmer_id}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.farmer_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.farmer_father_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.farmer_type}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.plot_size}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.village}
+                  </td>
 
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_available_in_field_day}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.field_day_remarks}
-                    </td>
-                    <td
-                      className="px-4 py-2 dark:border-2 whitespace-nowrap"
-                      onClick={() => setShowImageModal(true)}
-                    >
-                      View
-                    </td>
-                    <td
-                      className="px-4 py-2 dark:border-2 whitespace-nowrap"
-                      onClick={() => setShowImageModal(true)}
-                    >
-                      View
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {moment(item.next_visit_date).format("MM/DD/YYYY")}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.territory_name}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.user_name}
-                    </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.farmer_available_in_field_day}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.field_day_remarks}
+                  </td>
+                  <td
+                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
+                    onClick={() => setShowImageModal(true)}
+                  >
+                    View
+                  </td>
+                  <td
+                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
+                    onClick={() => setShowImageModal(true)}
+                  >
+                    View
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {moment(item.next_visit_date).format("MM/DD/YYYY")}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.territory_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.user_name}
+                  </td>
 
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.isDeleted ? "Yes" : "No"}
-                    </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.isDeleted ? "Yes" : "No"}
+                  </td>
 
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.status}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <ReactPaginate
-              previousLabel={"< Previous"}
-              nextLabel={"Next >"}
-              breakLabel={"..."}
-              pageCount={pageCount}
-              onPageChange={handlePageChange}
-              containerClassName={"pagination"}
-              activeClassName={"active"}
-              className="flex flex-row gap-2 mt-4"
-            />
-          </div>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.status}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            <div className="">
+              <ReactPaginate
+                previousLabel={"< Previous"}
+                nextLabel={"Next >"}
+                breakLabel={"..."}
+                pageCount={pageCount}
+                onPageChange={handlePageChange}
+                containerClassName={"pagination"}
+                activeClassName={"active"}
+                className="flex flex-row gap-2 mt-4  "
+              />
+            </div>
+          </table>
         </div>
       </div>
 

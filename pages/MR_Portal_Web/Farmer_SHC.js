@@ -176,225 +176,228 @@ const FarmerSHC = () => {
             </div>
 
             <h2>
-              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome
+                className="text-black-500"
+                size={34}
+              ></AiTwotoneHome>
             </h2>
           </div>
         </div>
 
-        <div className="bg-white h-screen flex select-none items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto tableInfo p-2 ">
-            <table className="min-w-full divide-y border- divide-gray-200 ">
-              <thead className="border-b w-max">
-                <tr className="bg-gray-50 font-arial w-max">
-                  <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    Action
-                  </th>
-                  <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    F. SHC No
-                  </th>
+        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto  ">
+          <table className="min-w-full divide-y border- divide-gray-200 ">
+            <thead className="border-b w-max">
+              <tr className="bg-gray-50 font-arial w-max">
+                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  Action
+                </th>
+                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  F. SHC No
+                </th>
 
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    SHC Date
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Mobile No
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Id
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Name
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Father Name
-                  </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  SHC Date
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Farmer Mobile No
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Farmer Id
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Farmer Name
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Farmer Father Name
+                </th>
 
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Farmer Type
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Plot Size
-                  </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Farmer Type
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Plot Size
+                </th>
 
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Village
-                  </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Village
+                </th>
 
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Nitrogen
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Phosphorus
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Potassium
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    PH
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    EC
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Organic Carbon
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Sulphur
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Zinc
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Boron
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Iron
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Magnese
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Copper
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Deleted
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-                {data.map((item, idx) => (
-                  <tr className="dark:border-2" key={idx}>
-                    <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                      <button
-                        onClick={() => {
-                          setShowVerifyModal(true);
-                          setModalData({
-                            ...modalData,
-                            type: "Verify",
-                            id: item.f_shc_id,
-                          });
-                        }}
-                        disabled={item.verified === "Yes"}
-                        className="b text-black hover:text-blue-500  "
-                      >
-                        Verify
-                      </button>
-                      <button
-                        onClick={() => {
-                          setShowVerifyModal(true);
-                          setModalData({
-                            ...modalData,
-                            type: "Approve",
-                            id: item.f_shc_id,
-                          });
-                        }}
-                        disabled={item.approved === "Yes"}
-                        className="b text-black hover:text-yellow-400 ml-2"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        className="b text-black hover:text-red-500 ml-2"
-                        onClick={() => {
-                          setShowDeleteModal(true);
-                          setModalData({
-                            ...modalData,
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Nitrogen
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Phosphorus
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Potassium
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  PH
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  EC
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Organic Carbon
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Sulphur
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Zinc
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Boron
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Iron
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Magnese
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Copper
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Deleted
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              {data.map((item, idx) => (
+                <tr className="dark:border-2" key={idx}>
+                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                    <button
+                      onClick={() => {
+                        setShowVerifyModal(true);
+                        setModalData({
+                          ...modalData,
+                          type: "Verify",
+                          id: item.f_shc_id,
+                        });
+                      }}
+                      disabled={item.verified === "Yes"}
+                      className="b text-black hover:text-blue-500  "
+                    >
+                      Verify
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowVerifyModal(true);
+                        setModalData({
+                          ...modalData,
+                          type: "Approve",
+                          id: item.f_shc_id,
+                        });
+                      }}
+                      disabled={item.approved === "Yes"}
+                      className="b text-black hover:text-yellow-400 ml-2"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      className="b text-black hover:text-red-500 ml-2"
+                      onClick={() => {
+                        setShowDeleteModal(true);
+                        setModalData({
+                          ...modalData,
 
-                            id: item.f_shc_id,
-                          });
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.f_meet_no}
-                    </td>
-                    {/* <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                          id: item.f_shc_id,
+                        });
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.f_meet_no}
+                  </td>
+                  {/* <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {moment(item.next_followup_date).format("MM/DD/YYYY")}
                     </td> */}
 
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.purpose_of_meeting}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_mob_no}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_id}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_name}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_father_name}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.farmer_type}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.plot_size}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.village}
-                    </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.purpose_of_meeting}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.farmer_mob_no}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.farmer_id}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.farmer_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.farmer_father_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.farmer_type}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.plot_size}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.village}
+                  </td>
 
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.nitrogen}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.phosphorus}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.potassium}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.ph}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.ec}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.organic_carbon}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.sulphur}
-                    </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.nitrogen}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.phosphorus}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.potassium}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.ph}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.ec}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.organic_carbon}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.sulphur}
+                  </td>
 
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.zinc}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.boron}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.iron}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.manganese}
-                    </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.zinc}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.boron}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.iron}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.manganese}
+                  </td>
 
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.copper}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.isDeleted ? "Yes" : "No"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <ReactPaginate
-              previousLabel={"< Previous"}
-              nextLabel={"Next >"}
-              breakLabel={"..."}
-              pageCount={pageCount}
-              onPageChange={handlePageChange}
-              containerClassName={"pagination"}
-              activeClassName={"active"}
-              className="flex flex-row gap-2 mt-4"
-            />
-          </div>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.copper}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.isDeleted ? "Yes" : "No"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            <div className="">
+              <ReactPaginate
+                previousLabel={"< Previous"}
+                nextLabel={"Next >"}
+                breakLabel={"..."}
+                pageCount={pageCount}
+                onPageChange={handlePageChange}
+                containerClassName={"pagination"}
+                activeClassName={"active"}
+                className="flex flex-row gap-2 mt-4  "
+              />
+            </div>
+          </table>
         </div>
       </div>
 

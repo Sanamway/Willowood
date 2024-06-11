@@ -376,7 +376,7 @@ const HolidayCalender = () => {
             </h2>
 
             <h2>
-              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome className="text-black-500" size={34}></AiTwotoneHome>
             </h2>
             {/* <button
          onClick={() => {
@@ -392,284 +392,278 @@ const HolidayCalender = () => {
           </div>
         </div>
 
-        <div className="bg-white h-screen flex select-none items-start justify-center max-w-full">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto tableInfo p-2 ">
-            <div className="container mx-auto p-4">
-              <div className="flex items-center gap-4 w-full mb-1">
-                <select
-                  name="type"
-                  className="border rounded px-2 py-1 w-full h-8"
-                  value={filterState.year}
-                  onChange={(e) =>
-                    setFilterState({ ...filterState, year: e.target.value })
-                  }
-                >
-                  <option value="">Select Year</option>
-                  <option value="2023">2023</option>
-                  <option value="2024">2024</option>
-                  <option value="2025">2025</option>
-                </select>
-                <select
-                  name="type"
-                  className="border rounded px-2 py-1 w-full h-8 "
-                  onChange={(e) =>
-                    setFilterState({ ...filterState, cId: e.target.value })
-                  }
-                >
-                  <option value="">Company</option>
+        <div className="bg-white h-screen flex flex-col select-none items-start mx-4 max-w-full">
+          <div className="flex items-center gap-4 w-full mb-1">
+            <select
+              name="type"
+              className="border rounded px-2 py-1 w-full h-8"
+              value={filterState.year}
+              onChange={(e) =>
+                setFilterState({ ...filterState, year: e.target.value })
+              }
+            >
+              <option value="">Select Year</option>
+              <option value="2023">2023</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+            </select>
+            <select
+              name="type"
+              className="border rounded px-2 py-1 w-full h-8 "
+              onChange={(e) =>
+                setFilterState({ ...filterState, cId: e.target.value })
+              }
+            >
+              <option value="">Company</option>
 
-                  {allCompanyInfo.map((item, idx) => (
-                    <option value={item.c_id} key={idx}>
-                      {item.cmpny_name}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  name="type"
-                  className="border rounded px-2 py-1 w-full h-8"
-                  value={filterState.bgId}
-                  onChange={(e) =>
-                    setFilterState({ ...filterState, bgId: e.target.value })
-                  }
-                >
-                  <option value="">Business Segment</option>
-                  {bgData.map((item, idx) => (
-                    <option value={item.bg_id} key={idx}>
-                      {item.business_segment}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  name="type"
-                  className="border rounded px-2 py-1 w-full h-8"
-                  value={filterState.buId}
-                  onChange={(e) =>
-                    setFilterState({ ...filterState, buId: e.target.value })
-                  }
-                >
-                  <option value="">Business Unit</option>
-                  {buData.map((item, idx) => (
-                    <option value={item.bu_id} key={idx}>
-                      {item.business_unit_name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <button
-                onClick={() => handleAdd()}
-                className="mt-2 px-4 py-1 bg-blue-500 text-white rounded h-8 mb-2"
-              >
-                Save Holiday Calender
-              </button>
+              {allCompanyInfo.map((item, idx) => (
+                <option value={item.c_id} key={idx}>
+                  {item.cmpny_name}
+                </option>
+              ))}
+            </select>
+            <select
+              name="type"
+              className="border rounded px-2 py-1 w-full h-8"
+              value={filterState.bgId}
+              onChange={(e) =>
+                setFilterState({ ...filterState, bgId: e.target.value })
+              }
+            >
+              <option value="">Business Segment</option>
+              {bgData.map((item, idx) => (
+                <option value={item.bg_id} key={idx}>
+                  {item.business_segment}
+                </option>
+              ))}
+            </select>
+            <select
+              name="type"
+              className="border rounded px-2 py-1 w-full h-8"
+              value={filterState.buId}
+              onChange={(e) =>
+                setFilterState({ ...filterState, buId: e.target.value })
+              }
+            >
+              <option value="">Business Unit</option>
+              {buData.map((item, idx) => (
+                <option value={item.bu_id} key={idx}>
+                  {item.business_unit_name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            onClick={() => handleAdd()}
+            className="mt-2 px-4 py-1 bg-blue-500 text-white rounded h-8 mb-2"
+          >
+            Save Holiday Calender
+          </button>
 
-              <div className="flex w-full border-solid border-b-2 items-start gap-4 mt-2">
+          <div className="flex w-full border-solid border-b-2 items-start gap-4 mt-2">
+            <button
+              className={`${
+                calenderType === "Holiday"
+                  ? " flex  gap-2 inline-block  rounded-t py-2 px-4 font-semibold  border-b-2 border-orange-500 text-black text-sm"
+                  : " flex  gap-2  bg-white inline-block  text-black rounded-t py-2 px-4 font-semibold  text-sm"
+              }`}
+              onClick={() => setCalenderType("Holiday")}
+            >
+              Holiday Calender ({tableData.length})
+            </button>{" "}
+            <button
+              className={`${
+                calenderType === "Weekly"
+                  ? " flex  gap-2 inline-block rounded-t py-2 px-4 font-semibold  border-b-2 border-orange-500 text-black text-sm"
+                  : " flex  gap-2  bg-white inline-block  text-black rounded-t py-2 px-4 font-semibold  text-sm"
+              }`}
+              onClick={() => setCalenderType("Weekly")}
+            >
+              Weekly Off
+            </button>
+          </div>
+
+          {calenderType === "Holiday" ? (
+            <div className="w-full">
+              <div className="flex w-full justify-end">
+                {" "}
                 <button
-                  className={`${
-                    calenderType === "Holiday"
-                      ? " flex  gap-2 inline-block  rounded-t py-2 px-4 font-semibold  border-b-2 border-orange-500 text-black text-sm"
-                      : " flex  gap-2  bg-white inline-block  text-black rounded-t py-2 px-4 font-semibold  text-sm"
-                  }`}
-                  onClick={() => setCalenderType("Holiday")}
+                  onClick={handleAddRow}
+                  className="mt-2 px-4 py-1 bg-blue-500 text-white rounded h-8 mb-2"
                 >
-                  Holiday Calender ({tableData.length})
-                </button>{" "}
-                <button
-                  className={`${
-                    calenderType === "Weekly"
-                      ? " flex  gap-2 inline-block rounded-t py-2 px-4 font-semibold  border-b-2 border-orange-500 text-black text-sm"
-                      : " flex  gap-2  bg-white inline-block  text-black rounded-t py-2 px-4 font-semibold  text-sm"
-                  }`}
-                  onClick={() => setCalenderType("Weekly")}
-                >
-                  Weekly Off
+                  Add Row
                 </button>
               </div>
 
-              {calenderType === "Holiday" ? (
-                <div>
-                  <div className="flex w-full justify-end">
-                    {" "}
-                    <button
-                      onClick={handleAddRow}
-                      className="mt-2 px-4 py-1 bg-blue-500 text-white rounded h-8 mb-2"
-                    >
-                      Add Row
-                    </button>
-                  </div>
+              <table className="min-w-full divide-y border divide-gray-200">
+                <thead className="border-b">
+                  <tr className="bg-gray-50 font-arial">
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
+                      Holiday Name
+                    </th>
 
-                  <table className="min-w-full divide-y border divide-gray-200">
-                    <thead className="border-b">
-                      <tr className="bg-gray-50 font-arial">
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
-                          Holiday Name
-                        </th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
+                      Day
+                    </th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
+                      Type
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200 text-xs">
+                  {tableData.map((item, idx) => (
+                    <tr key={idx} className="border-b">
+                      <td className="px-4 py-2">
+                        <input
+                          type="text"
+                          name="holidayName"
+                          value={item.holidayName}
+                          onChange={(e) => handleInputChange(idx, e)}
+                          className="border rounded px-2 py-1 w-full"
+                        />
+                      </td>
 
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
-                          Date
-                        </th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
-                          Day
-                        </th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
-                          Type
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                      {tableData.map((item, idx) => (
-                        <tr key={idx} className="border-b">
-                          <td className="px-4 py-2">
-                            <input
-                              type="text"
-                              name="holidayName"
-                              value={item.holidayName}
-                              onChange={(e) => handleInputChange(idx, e)}
-                              className="border rounded px-2 py-1 w-full"
-                            />
-                          </td>
+                      <td className="px-4 py-2">
+                        <DatePicker
+                          selected={item.date ? new Date(item.date) : ""}
+                          onChange={(date) => handleDateChange(idx, date)}
+                          className="border rounded px-2 py-1 w-full"
+                          dateFormat="dd/MM/yyyy"
+                        />
+                      </td>
+                      <td className="px-4 py-2">
+                        <input
+                          type="text"
+                          name="day"
+                          value={
+                            item.day ? moment(item.day).format("dddd") : ""
+                          }
+                          disabled
+                          onChange={(e) => handleInputChange(idx, e)}
+                          className="border rounded px-2 py-1 w-full"
+                        />
+                      </td>
+                      <td className="px-4 py-2">
+                        <select
+                          name="type"
+                          value={item.type}
+                          onChange={(e) => handleInputChange(idx, e)}
+                          className="border rounded px-2 py-1 w-full"
+                        >
+                          <option value="">Select Type</option>
 
-                          <td className="px-4 py-2">
-                            <DatePicker
-                              selected={item.date ? new Date(item.date) : ""}
-                              onChange={(date) => handleDateChange(idx, date)}
-                              className="border rounded px-2 py-1 w-full"
-                              dateFormat="dd/MM/yyyy"
-                            />
-                          </td>
-                          <td className="px-4 py-2">
-                            <input
-                              type="text"
-                              name="day"
-                              value={
-                                item.day ? moment(item.day).format("dddd") : ""
-                              }
-                              disabled
-                              onChange={(e) => handleInputChange(idx, e)}
-                              className="border rounded px-2 py-1 w-full"
-                            />
-                          </td>
-                          <td className="px-4 py-2">
-                            <select
-                              name="type"
-                              value={item.type}
-                              onChange={(e) => handleInputChange(idx, e)}
-                              className="border rounded px-2 py-1 w-full"
-                            >
-                              <option value="">Select Type</option>
-
-                              <option value="Fixed Holiday">
-                                Fixed Holiday{" "}
-                              </option>
-                              <option value="Restricted Holiday">
-                                Restricted Holiday{" "}
-                              </option>
-                              <option value="Managment Holiday">
-                                Managment Holiday
-                              </option>
-                            </select>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className="mt-4">
-                  <div className="flex w-full justify-start ">
-                    {" "}
-                    <select
-                      name="type"
-                      className="border rounded px-2 py-1  h-8 w-80"
-                      value={weekType}
-                      onChange={(e) => setWeekType(e.target.value)}
-                    >
-                      <option value="">Type</option>
-                      <option value="saturdayAndSunday">
-                        Every Week in SAT , SUN Off
-                      </option>
-                      <option value="onlySunday">Every Week in SUN off</option>
-                      <option value="secondAndFourthSaturdayAndSunday">
-                        Every Month 2nd and Fourth SAT Off
-                      </option>
-                      <option value="allSundayAndLastSaturday">
-                        All Sunday And Last Saturday
-                      </option>
-                    </select>
-                  </div>
-
-                  <table className="min-w-full divide-y border divide-gray-200 mt-4">
-                    <thead className="border-b">
-                      <tr className="bg-gray-50 font-arial">
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
-                          Date
-                        </th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
-                          Day
-                        </th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
-                          Type
-                        </th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
-                          Action
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                      {woData.map((item, idx) => (
-                        <tr key={idx} className="border-b">
-                          <td className="px-4 py-2">
-                            <DatePicker
-                              selected={item.date ? new Date(item.date) : ""}
-                              onChange={(date) => handleDateChange(idx, date)}
-                              className="border rounded px-2 py-1 w-full"
-                              dateFormat="dd/MM/yyyy"
-                            />
-                          </td>
-                          <td className="px-4 py-2">
-                            <input
-                              type="text"
-                              name="day"
-                              value={
-                                item.day ? moment(item.day).format("dddd") : ""
-                              }
-                              disabled
-                              onChange={(e) => handleInputChange(idx, e)}
-                              className="border rounded px-2 py-1 w-full"
-                            />
-                          </td>
-                          <td className="px-4 py-2">
-                            <select
-                              name="type"
-                              value={item.type}
-                              onChange={(e) => handleInputChange(idx, e)}
-                              className="border rounded px-2 py-1 w-full"
-                            >
-                              <option value="">Select Type</option>
-
-                              <option value="WO">Weekly Off</option>
-                              <option value="Comp Off">Comp Off</option>
-                            </select>
-                          </td>
-                          <td className="px-4 py-2 flex justify-center">
-                            <button
-                              onClick={() =>
-                                setConfirmationModal({
-                                  show: true,
-                                  id: item.id,
-                                })
-                              }
-                            >
-                              <MdDelete className="text-red-400 text-lg" />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+                          <option value="Fixed Holiday">Fixed Holiday </option>
+                          <option value="Restricted Holiday">
+                            Restricted Holiday{" "}
+                          </option>
+                          <option value="Managment Holiday">
+                            Managment Holiday
+                          </option>
+                        </select>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          </div>
+          ) : (
+            <div className="mt-4 w-full">
+              <div className="flex w-full justify-start ">
+                {" "}
+                <select
+                  name="type"
+                  className="border rounded px-2 py-1  h-8 w-80"
+                  value={weekType}
+                  onChange={(e) => setWeekType(e.target.value)}
+                >
+                  <option value="">Type</option>
+                  <option value="saturdayAndSunday">
+                    Every Week in SAT , SUN Off
+                  </option>
+                  <option value="onlySunday">Every Week in SUN off</option>
+                  <option value="secondAndFourthSaturdayAndSunday">
+                    Every Month 2nd and Fourth SAT Off
+                  </option>
+                  <option value="allSundayAndLastSaturday">
+                    All Sunday And Last Saturday
+                  </option>
+                </select>
+              </div>
+
+              <table className="min-w-full divide-y border divide-gray-200 mt-4">
+                <thead className="border-b">
+                  <tr className="bg-gray-50 font-arial">
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
+                      Day
+                    </th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
+                      Type
+                    </th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200 text-xs">
+                  {woData.map((item, idx) => (
+                    <tr key={idx} className="border-b">
+                      <td className="px-4 py-2">
+                        <DatePicker
+                          selected={item.date ? new Date(item.date) : ""}
+                          onChange={(date) => handleDateChange(idx, date)}
+                          className="border rounded px-2 py-1 w-full"
+                          dateFormat="dd/MM/yyyy"
+                        />
+                      </td>
+                      <td className="px-4 py-2">
+                        <input
+                          type="text"
+                          name="day"
+                          value={
+                            item.day ? moment(item.day).format("dddd") : ""
+                          }
+                          disabled
+                          onChange={(e) => handleInputChange(idx, e)}
+                          className="border rounded px-2 py-1 w-full"
+                        />
+                      </td>
+                      <td className="px-4 py-2">
+                        <select
+                          name="type"
+                          value={item.type}
+                          onChange={(e) => handleInputChange(idx, e)}
+                          className="border rounded px-2 py-1 w-full"
+                        >
+                          <option value="">Select Type</option>
+
+                          <option value="WO">Weekly Off</option>
+                          <option value="Comp Off">Comp Off</option>
+                        </select>
+                      </td>
+                      <td className="px-4 py-2 flex justify-center">
+                        <button
+                          onClick={() =>
+                            setConfirmationModal({
+                              show: true,
+                              id: item.id,
+                            })
+                          }
+                        >
+                          <MdDelete className="text-red-400 text-lg" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
 

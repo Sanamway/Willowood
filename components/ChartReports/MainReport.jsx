@@ -13,7 +13,7 @@ const MainReport = () => {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-
+  const [tabType, setTabType] = useState("Table");
   const [localStorageItems, setLocalStorageItems] = useState({
     cId: null,
     bgId: null,
@@ -36,9 +36,10 @@ const MainReport = () => {
     buDes: null,
     bgDes: null,
     yr: moment().year(),
-    month: null,
+    month: [],
   });
   const [allMonthData, setAllMonthData] = useState([]);
+
   const [allYearData, setAllYearData] = useState([]);
   const getAllTransactionPlan = async () => {
     try {
@@ -62,6 +63,7 @@ const MainReport = () => {
         params: { status: true, year: yr },
       });
       const apires = await respond.data.data;
+      let newData = [...new Set(apires.map((item) => item.m_year))];
 
       setAllMonthData([...new Set(apires.map((item) => item.m_year))]);
     } catch (error) {}
@@ -95,7 +97,7 @@ const MainReport = () => {
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           yr: Math.max(...allYearData),
-          month: null,
+          month: allMonthData[allMonthData.length - 1],
         });
         break;
       case 5:
@@ -117,7 +119,7 @@ const MainReport = () => {
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           tId: "All",
           yr: Math.max(...allYearData),
-          month: null,
+          month: allMonthData[allMonthData.length - 1],
         });
         break;
       case 4:
@@ -142,7 +144,7 @@ const MainReport = () => {
 
           tId: "All",
           yr: Math.max(...allYearData),
-          month: null,
+          month: allMonthData[allMonthData.length - 1],
         });
         break;
       case 3:
@@ -167,7 +169,7 @@ const MainReport = () => {
           zId: "All",
           tId: "All",
           yr: Math.max(...allYearData),
-          month: null,
+          month: allMonthData[allMonthData.length - 1],
         });
         break;
       case 10:
@@ -188,7 +190,7 @@ const MainReport = () => {
           zId: null,
           tId: null,
           yr: Math.max(...allYearData),
-          month: null,
+          month: allMonthData[allMonthData.length - 1],
         });
         break;
       default:
@@ -209,11 +211,11 @@ const MainReport = () => {
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           yr: Math.max(...allYearData),
-          month: null,
+          month: allMonthData[allMonthData.length - 1],
         });
         break;
     }
-  }, [allYearData]);
+  }, [allYearData, allMonthData]);
 
   const [bgData, setBgData] = useState([]);
 
@@ -372,14 +374,6 @@ const MainReport = () => {
     }
   };
 
-  useEffect(() => {
-    getAllBusinessSegmentData(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null
-    );
-  }, [filterState.yr, filterState.month, filterState.bgId]);
-
   const [businessUnitData, setBusinessUnitData] = useState([]);
   const getAllBusinessUnitData = async (yr, month, bgId, buId) => {
     if (!yr || !month || !bgId || !buId) return;
@@ -416,15 +410,6 @@ const MainReport = () => {
       setBusinessUnitData([]);
     }
   };
-
-  useEffect(() => {
-    getAllBusinessUnitData(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null
-    );
-  }, [filterState.yr, filterState.month, filterState.bgId, filterState.buId]);
 
   const [zoneData, setZoneData] = useState([]);
   const getAllZonetData = async (yr, month, bgId, buId, zId) => {
@@ -469,22 +454,6 @@ const MainReport = () => {
       setZoneData([]);
     }
   };
-
-  useEffect(() => {
-    getAllZonetData(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null
-    );
-  }, [
-    filterState.yr,
-    filterState.month,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-  ]);
 
   const [regionData, setRegionData] = useState([]);
   const getRegionData = async (yr, month, bgId, buId, zId, rId) => {
@@ -544,25 +513,8 @@ const MainReport = () => {
     }
   };
 
-  useEffect(() => {
-    getRegionData(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null,
-      filterState.rId || null
-    );
-  }, [
-    filterState.yr,
-    filterState.month,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-  ]);
-
   const [territoryData, setTerritoryData] = useState([]);
+
   const getTerritoryData = async (yr, month, bgId, buId, zId, rId, tId) => {
     if (!yr || !month || !bgId || !buId || !zId) return;
     let endPoint;
@@ -633,8 +585,41 @@ const MainReport = () => {
       setTerritoryData([]);
     }
   };
+  const [chartLoading, setChartLoading] = useState(false);
 
   useEffect(() => {
+    if (tabType === "Table") return;
+
+    getAllBusinessSegmentData(
+      filterState.yr || null,
+      filterState.month || null,
+      filterState.bgId || null
+    );
+
+    getAllBusinessUnitData(
+      filterState.yr || null,
+      filterState.month || null,
+      filterState.bgId || null,
+      filterState.buId || null
+    );
+
+    getAllZonetData(
+      filterState.yr || null,
+      filterState.month || null,
+      filterState.bgId || null,
+      filterState.buId || null,
+      filterState.zId || null
+    );
+
+    getRegionData(
+      filterState.yr || null,
+      filterState.month || null,
+      filterState.bgId || null,
+      filterState.buId || null,
+      filterState.zId || null,
+      filterState.rId || null
+    );
+
     getTerritoryData(
       filterState.yr || null,
       filterState.month || null,
@@ -652,11 +637,15 @@ const MainReport = () => {
     filterState.zId,
     filterState.rId,
     filterState.tId,
+    tabType,
   ]);
-  const [chartsLoading, setChartsLoading] = useState(false);
+  const [tableLoading, setTableLoading] = useState(false);
   const [segmentData, setSegmentData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+
   const getSegmentData = async (yr, month, bgId, buId, zId, rId, tId) => {
     if (!yr || !month || !bgId || !buId || !zId) return;
+    console.log("kli", yr, month, bgId, buId, zId, rId, tId);
     let paramsData = {
       year_1: yr - 2,
       year_2: yr - 1,
@@ -806,27 +795,23 @@ const MainReport = () => {
 
     try {
       setSegmentData([]);
-      setChartsLoading(true);
+      setBrandData([]);
+      setCategoryData([]);
+      setTableLoading(true);
       const respond = await axios.get(`${url}/${endPoint}`, {
         headers: headers,
 
         params: paramsData,
       });
       const apires = await respond.data.data;
-      setSegmentData(apires);
-      getCategoryData(
-        filterState.yr || null,
-        filterState.month || null,
-        filterState.bgId || null,
-        filterState.buId || null,
-        filterState.zId || null,
-        filterState.rId || null,
-        filterState.tId || null
-      );
+      setSegmentData(apires.data_to_exports_excel_seg);
+      setCategoryData(apires.data_to_exports_excel_cat);
+      setBrandData(apires.data_to_exports_excel_brand);
+      setTableLoading(false);
     } catch (error) {
       if (!error) return;
       setSegmentData([]);
-      setChartsLoading(false);
+      setTableLoading(false);
     }
   };
 
@@ -848,616 +833,601 @@ const MainReport = () => {
     filterState.zId,
     filterState.rId,
     filterState.tId,
+    allTerritoryData,
+  ]);
+  const [brandData, setBrandData] = useState([]);
+
+  const [summaryData, setSummaryData] = useState({
+    actual: 0,
+    budget: 0,
+    target: 0,
+
+    actualH1: 0,
+    budgetH1: 0,
+    targetH1: 0,
+
+    actualH2: 0,
+    budgetH2: 0,
+    targetH2: 0,
+
+    actualCurrent: 0,
+    budgetCurrent: 0,
+    targetCurrent: 0,
+  });
+
+  const getAllSalesPlanStatus = async (
+    yr,
+    month,
+    bgId,
+    buId,
+    zId,
+    rId,
+    tId
+  ) => {
+    let endPoint;
+
+    if (bgId && buId && zId && rId && tId) {
+      endPoint = "api/get_rollingdata_based_on_roll_t";
+    } else if (bgId && buId && zId && rId && !tId) {
+      endPoint = "api/get_rollingdata_based_on_roll_r";
+    } else if (bgId && buId && zId && !rId && !tId) {
+      endPoint = "api/get_rollingdata_based_on_roll_z";
+    } else if (bgId && buId && !zId && !rId && !tId) {
+      endPoint = "api/get_rollingdata_based_on_roll_bu";
+    } else if (bgId && !buId && !zId && !rId && !tId) {
+      endPoint = "api/get_rollingdata_based_on_roll_bg";
+    } else {
+      return;
+    }
+
+    try {
+      setSummaryData({
+        actual: 0,
+        budget: 0,
+        target: 0,
+        actualH1: 0,
+        budgetH1: 0,
+        targetH1: 0,
+        actualH2: 0,
+        budgetH2: 0,
+        targetH2: 0,
+        actualCurrent: 0,
+        budgetCurrent: 0,
+        targetCurrent: 0,
+      });
+      const respond = await axios.get(`${url}/${endPoint}`, {
+        headers: headers,
+
+        params: {
+          t_year: yr || null,
+          m_year:
+            month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+          bg_id: bgId === "All" || !bgId ? null : bgId,
+          bu_id: buId === "All" || !buId ? null : buId,
+          z_id: zId === "All" || !zId ? null : zId,
+          r_id: rId === "All" || !rId ? null : rId,
+          t_id: tId === "All" || !tId ? null : tId,
+        },
+      });
+
+      const apires = await respond.data.data;
+
+      let actualValue = 0;
+      let budgetValue = 0;
+      let targetValue = 0;
+      let actualValueH1 = 0;
+      let budgetValueH1 = 0;
+      let targetValueH1 = 0;
+      let actualValueH2 = 0;
+      let budgetValueH2 = 0;
+      let targetValueH2 = 0;
+      let actualValueCurrent = 0;
+      let budgetValueCurrent = 0;
+      let targetValueCurrent = 0;
+      apires.forEach((element) => {
+        actualValue = Number(actualValue) + Number(element.actual);
+        budgetValue = Number(budgetValue) + Number(element.budget);
+        targetValue = Number(targetValue) + Number(element.target);
+        if (Number(moment(element.m_year).format("M")) === 4) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 5) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 6) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 7) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 8) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 9) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 10) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 11) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 12) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 1) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 2) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 3) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        }
+
+        if (
+          moment(element.m_year).format("M") === moment(new Date()).format("M")
+        ) {
+          actualValueCurrent =
+            Number(actualValueCurrent) + Number(element.actual);
+          budgetValueCurrent =
+            Number(budgetValueCurrent) + Number(element.budget);
+          targetValueCurrent =
+            Number(targetValueCurrent) + Number(element.target);
+        }
+
+        setSummaryData({
+          actual: actualValue,
+          budget: budgetValue,
+          target: targetValue,
+          actualH1: actualValueH1,
+          budgetH1: budgetValueH1,
+          targetH1: targetValueH1,
+          actualH2: actualValueH2,
+          budgetH2: budgetValueH2,
+          targetH2: targetValueH2,
+          actualCurrent: actualValueCurrent,
+          budgetCurrent: budgetValueCurrent,
+          targetCurrent: targetValueCurrent,
+        });
+      });
+    } catch (error) {
+      if (!error) return;
+    }
+  };
+
+  useEffect(() => {
+    getAllSalesPlanStatus(
+      filterState.yr || null,
+      filterState.month || null,
+      filterState.bgId || null,
+      filterState.buId || null,
+      filterState.zId || null,
+      filterState.rId || null,
+      filterState.tId
+    );
+  }, [
+    filterState.yr,
+    filterState.month,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
   ]);
 
-  const [categoryData, setCategoryData] = useState([]);
-  const getCategoryData = async (yr, month, bgId, buId, zId, rId, tId) => {
-    if (!yr || !month || !bgId || !buId || !zId) return;
-    let paramsData = {
-      year_1: yr - 2,
-      year_2: yr - 1,
-      year_3: yr,
-      year_2_nm: moment(month)
-        .subtract(1, "years")
-        .add(1, "months")
-        .format("YYYY-MM"),
-      year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-      year_3_cm: moment(month).format("YYYY-MM"),
-      year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-      t_des: "Moga",
-      t_id: filterState.tId,
-      plan_id: 1,
-      tran_id: "RP-122023",
-      m_year: moment(month).format("YYYY-MM"),
-      json: true,
-      analytical_key: "Product Category",
-    };
-    if (tId && tId !== "All") {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        t_des: allTerritoryData.filter(
-          (item) => Number(item.t_id) === Number(filterState.tId)
-        )[0]?.territory_name,
-        t_id: filterState.tId,
+  const [cSummaryData, setcSummaryData] = useState({
+    actual: 0,
+    budget: 0,
+    target: 0,
 
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Category",
-      };
-    } else if (tId === "All" && rId !== "All") {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        r_des: allRegionData.filter(
-          (item) => Number(item.r_id) === Number(filterState.rId)
-        )[0]?.region_name,
-        r_id: filterState.rId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Category",
-      };
-    } else if (rId && rId !== "All") {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        r_des: allRegionData.filter(
-          (item) => Number(item.r_id) === Number(filterState.rId)
-        )[0]?.region_name,
-        r_id: filterState.rId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Category",
-      };
-    } else if (rId === "All" && zId !== "All") {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        z_des: allZoneData.filter(
-          (item) => Number(item.z_id) === Number(filterState.zId)
-        )[0]?.zone_name,
-        z_id: filterState.zId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Category",
-      };
-    } else if (zId && zId !== "All") {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        z_des: allZoneData.filter(
-          (item) => Number(item.z_id) === Number(filterState.zId)
-        )[0]?.zone_name,
-        z_id: filterState.zId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Category",
-      };
-    } else if (zId === "All" && buId !== "All") {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        bu_des: buData.filter(
-          (item) => Number(item.bu_id) === Number(filterState.buId)
-        )[0]?.business_unit_name,
-        bu_id: filterState.buId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Category",
-      };
-    }
+    actualH1: 0,
+    budgetH1: 0,
+    targetH1: 0,
 
+    actualH2: 0,
+    budgetH2: 0,
+    targetH2: 0,
+
+    actualCurrent: 0,
+    budgetCurrent: 0,
+    targetCurrent: 0,
+  });
+
+  const getAllCollectionSalesPlanStatus = async (
+    yr,
+    month,
+    bgId,
+    buId,
+    zId,
+    rId,
+    tId
+  ) => {
     let endPoint;
 
-    endPoint = "api/RSP_downloadAnalytical";
+    if (bgId && buId && zId && rId && tId) {
+      endPoint = "api/get_collectiondata_based_on_roll_t";
+    } else if (bgId && buId && zId && rId && !tId) {
+      endPoint = "api/get_collectiondata_based_on_roll_r";
+    } else if (bgId && buId && zId && !rId && !tId) {
+      endPoint = "api/get_collectiondata_based_on_roll_z";
+    } else if (bgId && buId && !zId && !rId && !tId) {
+      endPoint = "api/get_collectiondata_based_on_roll_bu";
+    } else if (bgId && !buId && !zId && !rId && !tId) {
+      endPoint = "api/get_collectiondata_based_on_roll_bg";
+    } else {
+      return;
+    }
 
     try {
-      setCategoryData([]);
+      setcSummaryData({
+        actual: 0,
+        budget: 0,
+        target: 0,
+        actualH1: 0,
+        budgetH1: 0,
+        targetH1: 0,
+        actualH2: 0,
+        budgetH2: 0,
+        targetH2: 0,
+        actualCurrent: 0,
+        budgetCurrent: 0,
+        targetCurrent: 0,
+      });
       const respond = await axios.get(`${url}/${endPoint}`, {
         headers: headers,
 
-        params: paramsData,
+        params: {
+          t_year: yr || null,
+          m_year:
+            month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+          bg_id: bgId === "All" || !bgId ? null : bgId,
+          bu_id: buId === "All" || !buId ? null : buId,
+          z_id: zId === "All" || !zId ? null : zId,
+          r_id: rId === "All" || !rId ? null : rId,
+          t_id: tId === "All" || !tId ? null : tId,
+        },
       });
 
       const apires = await respond.data.data;
 
-      setCategoryData(apires);
-      getBrandData(
-        filterState.yr || null,
-        filterState.month || null,
-        filterState.bgId || null,
-        filterState.buId || null,
-        filterState.zId || null,
-        filterState.rId || null,
-        filterState.tId || null
-      );
+      let actualValue = 0;
+      let budgetValue = 0;
+      let targetValue = 0;
+      let actualValueH1 = 0;
+      let budgetValueH1 = 0;
+      let targetValueH1 = 0;
+      let actualValueH2 = 0;
+      let budgetValueH2 = 0;
+      let targetValueH2 = 0;
+      let actualValueCurrent = 0;
+      let budgetValueCurrent = 0;
+      let targetValueCurrent = 0;
+      apires.forEach((element) => {
+        actualValue = Number(actualValue) + Number(element.actual);
+        budgetValue = Number(budgetValue) + Number(element.budget);
+        targetValue = Number(targetValue) + Number(element.target);
+        if (Number(moment(element.m_year).format("M")) === 4) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 5) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 6) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 7) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 8) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 9) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 10) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 11) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 12) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 1) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 2) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        } else if (Number(moment(element.m_year).format("M")) === 3) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+        }
+
+        if (
+          moment(element.m_year).format("M") === moment(new Date()).format("M")
+        ) {
+          actualValueCurrent =
+            Number(actualValueCurrent) + Number(element.actual);
+          budgetValueCurrent =
+            Number(budgetValueCurrent) + Number(element.budget);
+          targetValueCurrent =
+            Number(targetValueCurrent) + Number(element.target);
+        }
+
+        setcSummaryData({
+          actual: actualValue,
+          budget: budgetValue,
+          target: targetValue,
+          actualH1: actualValueH1,
+          budgetH1: budgetValueH1,
+          targetH1: targetValueH1,
+          actualH2: actualValueH2,
+          budgetH2: budgetValueH2,
+          targetH2: targetValueH2,
+          actualCurrent: actualValueCurrent,
+          budgetCurrent: budgetValueCurrent,
+          targetCurrent: targetValueCurrent,
+        });
+      });
     } catch (error) {
       if (!error) return;
-      setChartsLoading(false);
-      setCategoryData([]);
     }
   };
 
-  // useEffect(() => {
-  //   getCategoryData(
-  //     filterState.yr || null,
-  //     filterState.month || null,
-  //     filterState.bgId || null,
-  //     filterState.buId || null,
-  //     filterState.zId || null,
-  //     filterState.rId || null,
-  //     filterState.tId || null
-  //   );
-  // }, [
-  //   filterState.yr,
-  //   filterState.month,
-  //   filterState.bgId,
-  //   filterState.buId,
-  //   filterState.zId,
-  //   filterState.rId,
-  //   filterState.tId,
-  // ]);
-
-  const [brandData, setBrandData] = useState([]);
-  const getBrandData = async (yr, month, bgId, buId, zId, rId, tId) => {
-    if (!yr || !month || !bgId || !buId || !zId) return;
-    console.log(
-      "jio",
-      allZoneData.filter(
-        (item) => Number(item.z_id) === Number(filterState.zId)
-      )
+  useEffect(() => {
+    if (tabType !== "Table") return;
+    getAllCollectionSalesPlanStatus(
+      filterState.yr || null,
+      filterState.month || null,
+      filterState.bgId || null,
+      filterState.buId || null,
+      filterState.zId || null,
+      filterState.rId || null,
+      filterState.tId
     );
-    let paramsData = {
-      year_1: yr - 2,
-      year_2: yr - 1,
-      year_3: yr,
-      year_2_nm: moment(month)
-        .subtract(1, "years")
-        .add(1, "months")
-        .format("YYYY-MM"),
-      year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-      year_3_cm: moment(month).format("YYYY-MM"),
-      year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-      t_des: "Moga",
-      t_id: filterState.tId,
-      plan_id: 1,
-      tran_id: "RP-122023",
-      m_year: moment(month).format("YYYY-MM"),
-      json: true,
-      analytical_key: "Brand Desc",
-    };
-    if (tId && tId !== "All") {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        t_des: allTerritoryData.filter(
-          (item) => Number(item.t_id) === Number(filterState.tId)
-        )[0]?.territory_name,
-        t_id: filterState.tId,
-
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Brand Desc",
-      };
-    } else if (tId === "All" && rId !== "All") {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        r_des: allRegionData.filter(
-          (item) => Number(item.r_id) === Number(filterState.rId)
-        )[0]?.region_name,
-        r_id: filterState.rId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Brand Desc",
-      };
-    } else if (rId && rId !== "All") {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        r_des: allRegionData.filter(
-          (item) => Number(item.r_id) === Number(filterState.rId)
-        )[0]?.region_name,
-        r_id: filterState.rId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Brand Desc",
-      };
-    } else if (rId === "All" && zId !== "All") {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        z_des: allZoneData.filter(
-          (item) => Number(item.z_id) === Number(filterState.zId)
-        )[0]?.zone_name,
-        z_id: filterState.zId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Brand Desc",
-      };
-    } else if (zId && zId !== "All") {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        z_des: allZoneData.filter(
-          (item) => Number(item.z_id) === Number(filterState.zId)
-        )[0]?.zone_name,
-        z_id: filterState.zId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Brand Desc",
-      };
-    } else if (zId === "All" && buId !== "All") {
-      console.log(
-        "pol",
-        businessUnitData.filter(
-          (item) => Number(item.bu_id) === Number(filterState.buId)
-        )[0]?.business_unit_name
-      );
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        bu_des: buData.filter(
-          (item) => Number(item.bu_id) === Number(filterState.buId)
-        )[0]?.business_unit_name,
-        bu_id: filterState.buId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Brand Desc",
-      };
-    }
-
-    let endPoint;
-
-    endPoint = "api/RSP_downloadAnalytical";
-
-    try {
-      setBrandData([]);
-      const respond = await axios.get(`${url}/${endPoint}`, {
-        headers: headers,
-
-        params: paramsData,
-      });
-
-      const apires = await respond.data.data;
-
-      setBrandData(apires);
-      setChartsLoading(false);
-    } catch (error) {
-      if (!error) return;
-      setBrandData([]);
-      setChartsLoading(false);
-    }
-  };
-
-  // useEffect(() => {
-  //   getBrandData(
-  //     filterState.yr || null,
-  //     filterState.month || null,
-  //     filterState.bgId || null,
-  //     filterState.buId || null,
-  //     filterState.zId || null,
-  //     filterState.rId || null,
-  //     filterState.tId || null
-  //   );
-  // }, [
-  //   filterState.yr,
-  //   filterState.month,
-  //   filterState.bgId,
-  //   filterState.buId,
-  //   filterState.zId,
-  //   filterState.rId,
-  //   filterState.tId,
-  // ]);
+  }, [
+    filterState.yr,
+    filterState.month,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+  ]);
 
   return (
-    <>
-      <section className="outer  w-full px-2  bg-black/5   min-h-screen">
-        <div className="flex items-center justify-center w-full">
-          <h2 className="font-arial text-sm font-bold text-teal-500 mt-2">
-            Target Vs Achievement - {filterState.month && filterState.month}
-          </h2>
-        </div>
-        <div className="flex w-full justify-end">
-          <button
-            onClick={() => {
-              router.push("/rollingplans");
-            }}
-            className="text-center rounded-md bg-blue-500 text-white py-1 px-6 h-12 text-sm"
+    <section className="outer  w-full px-2  bg-black/5   min-h-screen">
+      <div className="flex flex-col gap-2 py-4 lg:flex-row py-4">
+        <div className="flex flex-row gap-4 ">
+          <select
+            className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 "
+            id="stateSelect"
+            value={filterState.yr}
+            onChange={(e) =>
+              setFilterState({
+                ...filterState,
+                yr: e.target.value,
+              })
+            }
+            disabled={!filterState.yr}
           >
-            Back to Rolling Page
-          </button>
-        </div>
-        <div className="my-4 flex  flex-col w-full gap-4 px-12 ">
-          <div className="flex gap-4 w-full">
-            <select
-              className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-              id="stateSelect"
-              value={filterState.yr}
-              onChange={(e) =>
-                setFilterState({
-                  ...filterState,
-                  yr: e.target.value,
-                })
-              }
-              disabled={!filterState.yr}
-            >
-              <option value="All" className="font-bold" disabled={true}>
-                -- Select --
+            <option value="All" className="font-bold" disabled={true}>
+              -- Select --
+            </option>
+            {allYearData.map((item, idx) => (
+              <option value={item} key={idx}>
+                {item}
               </option>
-              {allYearData.map((item, idx) => (
-                <option value={item} key={idx}>
-                  {item}
-                </option>
-              ))}
-            </select>
-            <select
-              className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-              id="stateSelect"
-              value={filterState.month}
-              onChange={(e) =>
-                setFilterState({
-                  ...filterState,
-                  month: e.target.value,
-                })
-              }
-              disabled={!filterState.yr}
-            >
-              <option value="All" className="font-bold">
-                Select
-              </option>
-              {allMonthData.map((item, idx) => (
+            ))}
+          </select>
+          <select
+            className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            value={filterState.month}
+            onChange={(e) =>
+              setFilterState({
+                ...filterState,
+                month: e.target.value,
+              })
+            }
+            disabled={!filterState.yr}
+          >
+            <option value="All" className="font-bold">
+              Select
+            </option>
+            {allMonthData.map((item, idx) => {
+              return (
                 <option value={item} key={idx}>
                   {moment(item).format("MMM YYYY")}
                 </option>
-              ))}
-            </select>
-            <select
-              className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-              id="stateSelect"
-              value={filterState.bgId}
-              onChange={(e) =>
-                setFilterState({
-                  ...filterState,
-                  bgId: e.target.value,
-                  buId: null,
-                  zId: null,
-                  rId: null,
-                  tId: null,
-                })
-              }
-              disabled={
-                localStorageItems.roleId === 6 ||
-                localStorageItems.roleId === 5 ||
-                localStorageItems.roleId === 4 ||
-                localStorageItems.roleId === 3 ||
-                localStorageItems.roleId === 10
-              }
-            >
-              <option value={"All"} className="font-bold">
-                - All Business Segment -
+              );
+            })}
+          </select>
+          <select
+            className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            value={filterState.bgId}
+            onChange={(e) =>
+              setFilterState({
+                ...filterState,
+                bgId: e.target.value,
+                buId: null,
+                zId: null,
+                rId: null,
+                tId: null,
+              })
+            }
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              localStorageItems.roleId === 4 ||
+              localStorageItems.roleId === 3 ||
+              localStorageItems.roleId === 10
+            }
+          >
+            <option value={"All"} className="font-bold">
+              - All Business Segment -
+            </option>
+
+            {bgData.map((item, idx) => (
+              <option value={item.bg_id} key={idx}>
+                {item.business_segment}
               </option>
-
-              {bgData.map((item, idx) => (
-                <option value={item.bg_id} key={idx}>
-                  {item.business_segment}
-                </option>
-              ))}
-            </select>
-            <select
-              className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-              id="stateSelect"
-              value={filterState.buId}
-              onChange={(e) =>
-                setFilterState({
-                  ...filterState,
-                  buId: e.target.value,
-
-                  zId: "",
-                  rId: "",
-                  tId: "",
-                })
-              }
-              disabled={
-                localStorageItems.roleId === 6 ||
-                localStorageItems.roleId === 5 ||
-                localStorageItems.roleId === 4 ||
-                localStorageItems.roleId === 3
-              }
-            >
-              <option value={"All"}>- All Business Unit -</option>
-
-              {buData.map((item, idx) => (
-                <option value={item.bu_id} key={idx}>
-                  {item.business_unit_name}
-                </option>
-              ))}
-            </select>
-
-            <select
-              className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-              id="stateSelect"
-              value={filterState.zId}
-              onChange={(e) =>
-                setFilterState({
-                  ...filterState,
-                  zId: e.target.value,
-                  rId: "",
-                  tId: "",
-                })
-              }
-              disabled={
-                localStorageItems.roleId === 6 ||
-                localStorageItems.roleId === 5 ||
-                localStorageItems.roleId === 4
-              }
-            >
-              <option value={"All"}>- All Zone -</option>
-
-              {allZoneData.map((item, idx) => (
-                <option value={item.z_id} key={idx}>
-                  {item.zone_name}
-                </option>
-              ))}
-            </select>
-
-            <select
-              className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-              id="stateSelect"
-              value={filterState.rId}
-              disabled={
-                localStorageItems.roleId === 6 || localStorageItems.roleId === 5
-              }
-              onChange={(e) =>
-                setFilterState({
-                  ...filterState,
-                  rId: e.target.value,
-                  tId: "",
-                })
-              }
-            >
-              <option value={"All"}>-All Region -</option>
-
-              {allRegionData.map((item, idx) => (
-                <option value={item.r_id} key={idx}>
-                  {item.region_name}
-                </option>
-              ))}
-            </select>
-
-            <select
-              className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-              id="stateSelect"
-              value={filterState.tId}
-              disabled={localStorageItems.roleId === 6}
-              onChange={(e) =>
-                setFilterState({
-                  ...filterState,
-                  tId: e.target.value,
-                })
-              }
-            >
-              <option value="All">- All Territory -</option>
-
-              {allTerritoryData.map((item, idx) => (
-                <option value={item.t_id} key={idx}>
-                  {item.territory_name}
-                </option>
-              ))}
-            </select>
-          </div>
+            ))}
+          </select>
         </div>
-        <div className="hey">
-          <AllCharts
-            businessSegmentData={busniessSegmentData}
-            businessUnitData={businessUnitData}
-            zoneData={zoneData}
-            regionData={regionData}
-            territoryData={territoryData}
-            productSegmentData={segmentData}
-            productCategoryData={categoryData}
-            productBrandData={brandData}
-            loading={chartsLoading}
-          />
+
+        <div className="flex flex-row gap-4">
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            value={filterState.buId}
+            onChange={(e) =>
+              setFilterState({
+                ...filterState,
+                buId: e.target.value,
+
+                zId: "",
+                rId: "",
+                tId: "",
+              })
+            }
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              localStorageItems.roleId === 4 ||
+              localStorageItems.roleId === 3
+            }
+          >
+            <option value={"All"}>- All Business Unit -</option>
+
+            {buData.map((item, idx) => (
+              <option value={item.bu_id} key={idx}>
+                {item.business_unit_name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            value={filterState.zId}
+            onChange={(e) =>
+              setFilterState({
+                ...filterState,
+                zId: e.target.value,
+                rId: "",
+                tId: "",
+              })
+            }
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              localStorageItems.roleId === 4
+            }
+          >
+            <option value={"All"}>- All Zone -</option>
+
+            {allZoneData.map((item, idx) => (
+              <option value={item.z_id} key={idx}>
+                {item.zone_name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            value={filterState.rId}
+            disabled={
+              localStorageItems.roleId === 6 || localStorageItems.roleId === 5
+            }
+            onChange={(e) =>
+              setFilterState({
+                ...filterState,
+                rId: e.target.value,
+                tId: "",
+              })
+            }
+          >
+            <option value={"All"}>-All Region -</option>
+
+            {allRegionData.map((item, idx) => (
+              <option value={item.r_id} key={idx}>
+                {item.region_name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            value={filterState.tId}
+            disabled={localStorageItems.roleId === 6}
+            onChange={(e) =>
+              setFilterState({
+                ...filterState,
+                tId: e.target.value,
+              })
+            }
+          >
+            <option value="All">- All Territory -</option>
+
+            {allTerritoryData.map((item, idx) => (
+              <option value={item.t_id} key={idx}>
+                {item.territory_name}
+              </option>
+            ))}
+          </select>
         </div>
-      </section>
-    </>
+      </div>
+
+      <div className="hey">
+        <AllCharts
+          cSummaryData={cSummaryData}
+          summaryData={summaryData}
+          businessSegmentData={busniessSegmentData}
+          businessUnitData={businessUnitData}
+          zoneData={zoneData}
+          regionData={regionData}
+          territoryData={territoryData}
+          productSegmentData={segmentData}
+          productCategoryData={categoryData}
+          productBrandData={brandData}
+          loading={tableLoading}
+          chartLoading={chartLoading}
+          tabType={tabType}
+          setTabType={setTabType}
+        />
+      </div>
+    </section>
   );
 };
 
