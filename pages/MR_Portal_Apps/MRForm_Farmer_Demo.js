@@ -809,7 +809,7 @@ const AdditionalInfo = (props) => {
             />
           </div>
         </div>
-        <div className="w-full px-2 mt-2">
+        <div className="w-full px-2 mt-2 md:w-1/2 lg:w-1/2 ">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -833,7 +833,7 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      <div className="flex flex-row my-2 mb-2 ">
+      <div className="flex flex-row my-2 mb-2 md:flex-col lg:flex-col ">
         <div className="w-full px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"

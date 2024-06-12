@@ -457,7 +457,6 @@ const AllCharts = (props) => {
     }
   }, []);
   //****  * ****  **** *** ** *  **** ***************//
-  const handleDownloadRSP = () => {};
 
   return (
     <>
@@ -487,7 +486,7 @@ const AllCharts = (props) => {
         <div className="flex w-full justify-end">
           <button
             className="text-blue-500 underline hover:text-blue-700"
-            onClick={() => handleDownloadRSP()}
+            onClick={() => props.handleDownloadExcelNew()}
           >
             Download XLS
           </button>{" "}

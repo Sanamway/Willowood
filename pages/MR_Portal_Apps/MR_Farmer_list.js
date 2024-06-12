@@ -589,7 +589,7 @@ const AdditionalInfo = (data) => {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <div className="w-1/2 px-2 relative ">
+                  <div className="w-1/2 px-2 relative  md:flex lg:flex">
                     <input
                       disabled
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -610,7 +610,7 @@ const AdditionalInfo = (data) => {
                   </div>
 
                   <div>
-                    <div className="flex flex-row my-2 mb-2  ">
+                    <div className="flex flex-row my-2 mb-2 md:flex-col lg:flex-col  ">
                       <div className="w-full px-2">
                         <input
                           disabled

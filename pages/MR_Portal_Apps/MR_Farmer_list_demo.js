@@ -132,7 +132,7 @@ const AdditionalInfo = () => {
           <div></div>
         </div>
         <div className="relative">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center md:relative flex-col lg:hidden ">
             {/* Your icon component goes here */}
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -472,7 +472,7 @@ const AdditionalInfo = (props) => {
       onSubmit={(e) => e.preventDefault()}
     >
       <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
-        <span className="text-black flex flex-row gap-4 font-bold   ">
+        <span className="text-black flex flex-row gap-4 font-bold  md:flex-col lg:flex-col ">
           <FaArrowLeftLong
             className="self-center "
             onClick={() =>

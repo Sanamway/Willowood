@@ -92,7 +92,7 @@ const BusinessSegment = () => {
       <Navbar />
       <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-1">
-          <div className="flex flex-row">
+          <div className="flex flex-row  md:flex-col">
             <label
               htmlFor="attendanceType"
               className="block font-bold mb-2 self-center w-32"

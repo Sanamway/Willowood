@@ -116,7 +116,7 @@ const AdditionalInfo = (props) => {
       onSubmit={(e) => e.preventDefault()}
     >
       <div className="flex my-2 flex-col gap-2">
-        <div className="fle gap-4 w-full px-2">
+        <div className="fle gap-4 w-full px-2 md: gap-40">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"
@@ -130,7 +130,7 @@ const AdditionalInfo = (props) => {
             placeholder="D.PL.Visit No"
           />
         </div>
-        <div className="fle gap-4 w-full px-2">
+        <div className="fle gap-4 w-full px-2 md:hidden">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"

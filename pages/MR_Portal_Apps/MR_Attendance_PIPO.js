@@ -254,7 +254,7 @@ const AdditionalInfo = (props) => {
               />
             </div>
 
-            <div className="flex  flex-col px-4 w-full mt-4">
+            <div className="flex  flex-col px-4 w-full mt-4 md:hidden">
               <div className="flex  justify-between w-full  w-28">
                 <div className="flex">
                   <p className=" font-bold text-sm text-blue-800 w-28">
@@ -334,7 +334,7 @@ const AdditionalInfo = (props) => {
         </div>
         <div className="w-60 h-60 bg-gray-200 self-center "></div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2  md:hidden">
           <label htmlFor="reason" className="block font-bold ">
             Reason for different Punch in/out date required:
           </label>
@@ -372,14 +372,14 @@ const AdditionalInfo = (props) => {
             >
               <MdOutlineTimer
                 size={28}
-                className="mr-4 text-black  self-center  size-120 text-blue-800"
+                className="mr-4 text-black  self-center  size-120 text-blue-800  md:hidden"
               />
               Punch Out
             </button>
           </div>
         )}
 
-        <div className="flex  flex-col px-4 w-full">
+        <div className="flex  flex-col px-4 w-full  md:hidden">
           <div className="flex justify-between w-full gap-4">
             <p className="text-gray-800 font-bold text-sm">
               Branch Manger <span className="self-end">: </span>

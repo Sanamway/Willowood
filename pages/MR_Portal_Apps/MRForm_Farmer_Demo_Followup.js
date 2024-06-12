@@ -500,7 +500,7 @@ const AdditionalInfo = (props) => {
       <div className="flex flex-col my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2 flex flex-row"
+            className="block text-gray-700 text-sm font-bold mb-2 flex flex-row md:flex-col lg:flex-col "
             htmlFor="inputField"
           >
             <small className="text-red-600">*</small> Farmer Mobile No

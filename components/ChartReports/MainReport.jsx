@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import moment from "moment";
 import axios from "axios";
 import { url } from "@/constants/url";
+import * as XLSX from "xlsx";
 
 const MainReport = () => {
   const router = useRouter();
@@ -99,6 +100,7 @@ const MainReport = () => {
           yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
         });
+
         break;
       case 5:
         setLocalStorageItems({
@@ -810,10 +812,201 @@ const MainReport = () => {
       setTableLoading(false);
     } catch (error) {
       if (!error) return;
-      setSegmentData([]);
+
       setTableLoading(false);
     }
   };
+
+  useEffect(() => {
+    getSegmentData(
+      filterState.yr || null,
+      filterState.month || null,
+      filterState.bgId || null,
+      filterState.buId || null,
+      filterState.zId || null,
+      filterState.rId || null,
+      filterState.tId || null
+    );
+  }, [
+    filterState.yr,
+    filterState.month,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+    allTerritoryData,
+  ]);
+  const [downloadExcelLoading, setDownloadExcelLoading] = useState(false);
+  const handleDownloadExcelNew = async (m_year, planId, tranId, yr) => {
+    setDownloadExcelLoading(true);
+    let paramsData;
+    if (JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 6) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        t_id: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+        t_des: JSON.parse(window.localStorage.getItem("userinfo"))
+          ?.territory_name,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 5
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        r_id: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
+        r_des: JSON.parse(window.localStorage.getItem("userinfo"))?.region_name,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 4
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        z_id: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
+        z_des: JSON.parse(window.localStorage.getItem("userinfo"))?.zone_name,
+        m_year: m_year,
+        json: true,
+      };
+    } else if (
+      JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 3
+    ) {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        bu_id: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
+        bu_des: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_name,
+        m_year: m_year,
+        json: true,
+      };
+    } else {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(m_year)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(m_year).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(m_year).format("YYYY-MM"),
+        year_3_nm: moment(m_year).add(1, "months").format("YYYY-MM"),
+        plan_id: planId,
+        tran_id: tranId,
+        bu_id: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
+        bu_des: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_name,
+        m_year: m_year,
+        json: true,
+      };
+    }
+
+    try {
+      setDownloadExcelLoading(true);
+      localStorage.setItem("RSP", JSON.stringify([]));
+      const respond = axios.get(`${url}/api/rsp_download`, {
+        headers: headers,
+        params: paramsData,
+      });
+      const apires = await respond;
+      const ws = XLSX.utils.json_to_sheet(apires.data.data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+      if (JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 6) {
+        XLSX.writeFile(
+          wb,
+          `RSP_${moment(m_year).format("YYYY-MM")}_${
+            JSON.parse(window.localStorage.getItem("userinfo"))?.territory_name
+          }.xlsx`
+        );
+      } else if (
+        JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 5
+      ) {
+        XLSX.writeFile(
+          wb,
+          `RSP_${moment(m_year).format("YYYY-MM")}_${
+            JSON.parse(window.localStorage.getItem("userinfo"))?.region_name
+          }.xlsx`
+        );
+      } else if (
+        JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 4
+      ) {
+        XLSX.writeFile(
+          wb,
+          `RSP_${moment(m_year).format("YYYY-MM")}_${
+            JSON.parse(window.localStorage.getItem("userinfo"))?.zone_name
+          }.xlsx`
+        );
+      } else if (
+        JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 3
+      ) {
+        XLSX.writeFile(
+          wb,
+          `RSP_${moment(m_year).format("YYYY-MM")}_${
+            JSON.parse(window.localStorage.getItem("userinfo"))?.bu_name
+          }.xlsx`
+        );
+      } else {
+        return;
+      }
+
+      setDownloadExcelLoading(false);
+    } catch (error) {
+      console.log("mlo", error);
+      setDownloadExcelLoading(false);
+    }
+  };
+  const [downloadExcelData, setDownloadExcelData] = useState({
+    yr: null,
+    mYr: null,
+    tranId: null,
+    planId: null,
+  });
 
   useEffect(() => {
     getSegmentData(
@@ -924,6 +1117,12 @@ const MainReport = () => {
       let actualValueCurrent = 0;
       let budgetValueCurrent = 0;
       let targetValueCurrent = 0;
+      setDownloadExcelData({
+        planId: apires[0].plan_id,
+        mYr: apires[0].m_year,
+        tranId: apires[0].tran_id,
+        yr: apires[0].t_year,
+      });
       apires.forEach((element) => {
         actualValue = Number(actualValue) + Number(element.actual);
         budgetValue = Number(budgetValue) + Number(element.budget);
@@ -1425,6 +1624,15 @@ const MainReport = () => {
           chartLoading={chartLoading}
           tabType={tabType}
           setTabType={setTabType}
+          downloadExcelLoading={downloadExcelLoading}
+          handleDownloadExcelNew={() =>
+            handleDownloadExcelNew(
+              downloadExcelData.mYr,
+              downloadExcelData.planId,
+              downloadExcelData.tranId,
+              downloadExcelData.yr
+            )
+          }
         />
       </div>
     </section>
