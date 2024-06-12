@@ -839,9 +839,12 @@ const MainReport = () => {
   ]);
   const [downloadExcelLoading, setDownloadExcelLoading] = useState(false);
   const handleDownloadExcelNew = async (m_year, planId, tranId, yr) => {
+    if (downloadExcelLoading) return;
     setDownloadExcelLoading(true);
     let paramsData;
+    let endPoint = "api/rsp_download";
     if (JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 6) {
+      endPoint = "api/rsp_download";
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -864,6 +867,7 @@ const MainReport = () => {
     } else if (
       JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 5
     ) {
+      endPoint = "api/rsp_download_all_region";
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -885,6 +889,7 @@ const MainReport = () => {
     } else if (
       JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 4
     ) {
+      endPoint = "api/rsp_download_all";
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -906,6 +911,7 @@ const MainReport = () => {
     } else if (
       JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 3
     ) {
+      endPoint = "api/rsp_download_all";
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -920,7 +926,8 @@ const MainReport = () => {
         plan_id: planId,
         tran_id: tranId,
         bu_id: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
-        bu_des: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_name,
+        bu_des: JSON.parse(window.localStorage.getItem("userinfo"))
+          ?.business_unit_name,
         m_year: m_year,
         json: true,
       };
@@ -948,7 +955,7 @@ const MainReport = () => {
     try {
       setDownloadExcelLoading(true);
       localStorage.setItem("RSP", JSON.stringify([]));
-      const respond = axios.get(`${url}/api/rsp_download`, {
+      const respond = axios.get(`${url}/${endPoint}`, {
         headers: headers,
         params: paramsData,
       });
@@ -1059,15 +1066,36 @@ const MainReport = () => {
   ) => {
     let endPoint;
 
-    if (bgId && buId && zId && rId && tId) {
+    console.log("iop", yr, month, bgId, buId, zId, rId, tId);
+    if (bgId && buId && zId && rId && tId && tId !== "All") {
       endPoint = "api/get_rollingdata_based_on_roll_t";
-    } else if (bgId && buId && zId && rId && !tId) {
+    } else if (bgId && buId && zId && rId && rId !== "All" && tId === "All") {
       endPoint = "api/get_rollingdata_based_on_roll_r";
-    } else if (bgId && buId && zId && !rId && !tId) {
+    } else if (
+      bgId &&
+      buId &&
+      zId &&
+      zId !== "All" &&
+      rId === "All" &&
+      tId === "All"
+    ) {
       endPoint = "api/get_rollingdata_based_on_roll_z";
-    } else if (bgId && buId && !zId && !rId && !tId) {
+    } else if (
+      bgId &&
+      buId &&
+      buId !== "All" &&
+      zId === "All" &&
+      rId === "All" &&
+      tId === "All"
+    ) {
       endPoint = "api/get_rollingdata_based_on_roll_bu";
-    } else if (bgId && !buId && !zId && !rId && !tId) {
+    } else if (
+      bgId &&
+      buId === "All" &&
+      zId === "All" &&
+      rId === "All" &&
+      tId === "All"
+    ) {
       endPoint = "api/get_rollingdata_based_on_roll_bg";
     } else {
       return;
@@ -1257,15 +1285,35 @@ const MainReport = () => {
   ) => {
     let endPoint;
 
-    if (bgId && buId && zId && rId && tId) {
+    if (bgId && buId && zId && rId && tId && tId !== "All") {
       endPoint = "api/get_collectiondata_based_on_roll_t";
-    } else if (bgId && buId && zId && rId && !tId) {
+    } else if (bgId && buId && zId && rId && rId !== "All" && tId === "All") {
       endPoint = "api/get_collectiondata_based_on_roll_r";
-    } else if (bgId && buId && zId && !rId && !tId) {
+    } else if (
+      bgId &&
+      buId &&
+      zId &&
+      zId !== "All" &&
+      rId === "All" &&
+      tId === "All"
+    ) {
       endPoint = "api/get_collectiondata_based_on_roll_z";
-    } else if (bgId && buId && !zId && !rId && !tId) {
+    } else if (
+      bgId &&
+      buId &&
+      buId !== "All" &&
+      zId === "All" &&
+      rId === "All" &&
+      tId === "All"
+    ) {
       endPoint = "api/get_collectiondata_based_on_roll_bu";
-    } else if (bgId && !buId && !zId && !rId && !tId) {
+    } else if (
+      bgId &&
+      buId === "All" &&
+      zId === "All" &&
+      rId === "All" &&
+      tId === "All"
+    ) {
       endPoint = "api/get_collectiondata_based_on_roll_bg";
     } else {
       return;

@@ -228,9 +228,7 @@ const CollectionPlans = () => {
     }
   }, [allYearData]);
 
-  // const toggleDropdown = () => {
-  //   setIsDropdownOpen(!isDropdownOpen);
-  // };
+ 
 
   const [bgData, setBgData] = useState([]);
 

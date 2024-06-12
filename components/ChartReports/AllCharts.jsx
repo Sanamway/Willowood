@@ -457,7 +457,15 @@ const AllCharts = (props) => {
     }
   }, []);
   //****  * ****  **** *** ** *  **** ***************//
-
+  const Loader = () => {
+    return (
+      <div class="flex space-x-1   justify-center items-center bg-white self-center  ">
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce"></div>
+      </div>
+    );
+  };
   return (
     <>
       <section className="wrapper w-full px-2 mt-2 font-arial  relative ">
@@ -483,14 +491,7 @@ const AllCharts = (props) => {
             Chart
           </button>
         </div>
-        <div className="flex w-full justify-end">
-          <button
-            className="text-blue-500 underline hover:text-blue-700"
-            onClick={() => props.handleDownloadExcelNew()}
-          >
-            Download XLS
-          </button>{" "}
-        </div>
+
         {props.tabType === "Chart" ? (
           <div className="w-full flex flex-col gap-2">
             {props.loading && (
@@ -581,7 +582,7 @@ const AllCharts = (props) => {
             </div>
           </div>
         ) : (
-          <div className="w-full flex flex-col ">
+          <div className="w-full flex flex-col  md:flex w-1/2 flex-row lg:w-full flex flex-col ">
             {props.loading && (
               <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
                 <img
@@ -591,11 +592,22 @@ const AllCharts = (props) => {
                 />
               </div>
             )}
-            <h2 className="font-bold self-center text-sm mt-2">
+            <div className="flex flex-row justify-between  items-center mt-2 w-full  ">
               {" "}
-              Rolling Sales Plan
-            </h2>
-            <div className="flex flex-col overflow-auto text-xs lg:hidden">
+              <h2 className="font-bold  text-sm  flex ">
+                {" "}
+                Rolling Sales Plan{" "}
+              </h2>
+              <div className="jusself-end">
+                <button
+                  className="text-blue-500 underline hover:text-blue-700 flex flex-row gap-2 text-sm"
+                  onClick={() => props.handleDownloadExcelNew()}
+                >
+                  {props.downloadExcelLoading && <Loader />} Download RSP XLS
+                </button>{" "}
+              </div>
+            </div>
+            <div className="flex flex-col overflow-auto text-xs lg:hidden md:hidden">
               <div className="grid grid-rows-4  text-sm ">
                 <div className="border border-gray-300 py-1 flex px-2 items-center font-bold text-xs bg-gray-200 ">
                   YTD
@@ -1153,7 +1165,7 @@ const AllCharts = (props) => {
               {" "}
               Collection Plan
             </h2>
-            <div className="flex flex-col overflow-auto text-xs lg:hidden">
+            <div className="flex flex-col overflow-auto text-xs lg:hidden md:hidden">
               <div className="grid grid-rows-4  text-sm ">
                 <div className="border border-gray-300 py-1 flex px-2 items-center font-bold text-xs bg-gray-200 ">
                   YTD
