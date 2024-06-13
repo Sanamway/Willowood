@@ -7,6 +7,8 @@ import moment from "moment";
 import axios from "axios";
 import { url } from "@/constants/url";
 import * as XLSX from "xlsx";
+import CollectionChartPopup from "./CollectionChartPopup";
+import SaleChartPopup from "./SaleChartPopup";
 
 const MainReport = () => {
   const router = useRouter();
@@ -1468,7 +1470,8 @@ const MainReport = () => {
     filterState.rId,
     filterState.tId,
   ]);
-
+  const [showSalesModal, setShowSalesModal] = useState(false);
+  const [showCollectionModal, setShowCollectionModal] = useState(false);
   return (
     <section className="outer  w-full px-2  bg-black/5   min-h-screen">
       <div className="flex flex-col gap-2 py-4 lg:flex-row py-4">
@@ -1673,6 +1676,8 @@ const MainReport = () => {
           tabType={tabType}
           setTabType={setTabType}
           downloadExcelLoading={downloadExcelLoading}
+          setShowSalesModal={setShowSalesModal}
+          setShowCollectionModal={setShowCollectionModal}
           handleDownloadExcelNew={() =>
             handleDownloadExcelNew(
               downloadExcelData.mYr,
@@ -1683,6 +1688,28 @@ const MainReport = () => {
           }
         />
       </div>
+      {showSalesModal && (
+        <SaleChartPopup
+          handleClose={() => setShowSalesModal(false)}
+          backgorundFilters={filterState}
+          bgData={bgData}
+          buData={buData}
+          zoneData={allZoneData}
+          regionData={allRegionData}
+          tData={allTerritoryData}
+        />
+      )}
+      {showCollectionModal && (
+        <CollectionChartPopup
+          handleClose={() => setShowCollectionModal(false)}
+          backgorundFilters={filterState}
+          bgData={bgData}
+          buData={buData}
+          zoneData={allZoneData}
+          regionData={allRegionData}
+          tData={allTerritoryData}
+        />
+      )}
     </section>
   );
 };
