@@ -28,7 +28,7 @@ const TotalCards = () => {
   return (
     <>
       <div className="totalwrapper mt-2">
-        <div className="w-full px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md">
+         <div className="w-full px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md">
           <div className="bg-white p-2 flex-1 md:flex items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
             <div className="flex items-center justify-between w-full text-gray-600">
               <div className="flex items-center justify-center gap-1 ">

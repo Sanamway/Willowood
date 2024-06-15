@@ -14,7 +14,7 @@ export default function App({ Component, pageProps }) {
             property="og:site_name"
             content="willowood.com"
           />
-          
+
           <meta property="og:type" content="website" />
         </Head>
         <Component {...pageProps} />

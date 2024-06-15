@@ -38,12 +38,43 @@ const GraphTable = (props) => {
     setMounted(true);
   }, []);
 
+  // let arr = [1, 2, 3, 4];
+  // Array.prototype.sanam = function (cb) {
+  //   let newArray = [];
+  //   for (let i = 0; i < this.length; i++) {
+  //     let item = this[i];
+  //     newArray.push(cb(item));
+  //   }
+  //   return newArray;
+  // };
+
+  // const arrres = arr.sanam((it) => it * 2);
+  // console.log("Yahoooo", arrres);
+
+  // function getThis() {
+  //   return this;
+  // }
+
+  // const obj1 = {
+  //   name: "obj1",
+  //   ex: () => {
+  //     return this;
+  //   },
+  // };
+  // const obj2 = { name: "obj2" };
+
+  // obj1.w = obj1.ex;
+  // obj2.getThis = getThis;
+
+  // console.log(obj1.w); // { name: 'obj1', getThis: [Function: getThis] }
+  // console.log(obj2.getThis()); // { name: 'obj2', getThis: [Function: getThis] }
+
   return (
     <>
       {mounted && (
         <div
           className={`overflow-x-auto chat-scrollbar select-none ${
-            data.length > 15 ? "h-full" : "h-[16rem]"
+            data.length > 10 ? "h-full" : "h-[16rem]"
           }`}
         >
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 h-full">
