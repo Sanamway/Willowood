@@ -276,14 +276,67 @@ const CollectionChartPopup = ({
                         {tableData.map((item, rowIndex) => (
                           <tr key={rowIndex}>
                             {Object.keys(tableData[0]).map(
-                              (header, cellIndex) => (
-                                <td
-                                  key={cellIndex}
-                                  className="px-4 font-semibold text-left whitespace-nowrap py-1 text-[0.74rem] text-gray-500 border"
-                                >
-                                  {item[header]}
-                                </td>
-                              )
+                              (header, cellIndex) => {
+                                if (cellIndex === 5) {
+                                  return (
+                                    <td
+                                      key={cellIndex}
+                                      className={`px-4 font-semibold ${"text-right"} whitespace-nowrap py-1 text-[0.74rem] text-gray-500 border`}
+                                    >
+                                      {item[header]}
+                                    </td>
+                                  );
+                                } else {
+                                  return (
+                                    <td
+                                      key={cellIndex}
+                                      className={`px-4 font-semibold ${"text-left"} whitespace-nowrap py-1 text-[0.74rem] text-gray-500 border`}
+                                    >
+                                      {item[header]}
+                                    </td>
+                                  );
+                                }
+                              }
+                            )}
+                          </tr>
+                        ))}
+                        {[tableData[0]].map((item, rowIndex) => (
+                          <tr key={rowIndex}>
+                            {Object.keys(tableData[0]).map(
+                              (header, cellIndex) => {
+                                if (cellIndex === 5) {
+                                  return (
+                                    <td
+                                      key={cellIndex}
+                                      className={`px-4 font-semibold ${"text-right"} whitespace-nowrap py-1 text-[0.74rem] text-gray-500 border`}
+                                    >
+                                      {tableData.reduce((acc, curr) => {
+                                        console.log("jki", acc, curr);
+                                        acc += curr.Amounr;
+                                        return acc;
+                                      }, 0)}
+                                    </td>
+                                  );
+                                } else if (cellIndex === 0) {
+                                  return (
+                                    <td
+                                      key={cellIndex}
+                                      className={`px-4 font-semibold ${"text-center"} whitespace-nowrap py-1 text-[0.74rem] text-gray-500 border`}
+                                    >
+                                      Total
+                                    </td>
+                                  );
+                                } else {
+                                  return (
+                                    <td
+                                      key={cellIndex}
+                                      className={`px-4 font-semibold ${"text-right"} whitespace-nowrap py-1 text-[0.74rem] text-gray-500 border`}
+                                    >
+                                      -
+                                    </td>
+                                  );
+                                }
+                              }
                             )}
                           </tr>
                         ))}

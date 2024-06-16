@@ -296,11 +296,63 @@ const SaleChartPopup = ({
                               )}
                             </tr>
                           ))}
+                          {[tableData[0]].map((item, rowIndex) => (
+                            <tr key={rowIndex}>
+                              {Object.keys(tableData[0]).map(
+                                (header, cellIndex) => {
+                                  if (cellIndex === 13) {
+                                    return (
+                                      <td
+                                        key={cellIndex}
+                                        className={`px-4 font-semibold ${"text-right"} whitespace-nowrap py-1 text-[0.74rem] text-gray-500 border`}
+                                      >
+                                        {tableData.reduce((acc, curr) => {
+                                          console.log("jki", acc, curr);
+                                          acc += curr.Qty;
+                                          return acc;
+                                        }, 0)}
+                                      </td>
+                                    );
+                                  } else if (cellIndex === 16) {
+                                    return (
+                                      <td
+                                        key={cellIndex}
+                                        className={`px-4 font-semibold ${"text-right"} whitespace-nowrap py-1 text-[0.74rem] text-gray-500 border`}
+                                      >
+                                        {tableData.reduce((acc, curr) => {
+                                          console.log("jki", acc, curr);
+                                          acc += curr.Price;
+                                          return acc;
+                                        }, 0)}
+                                      </td>
+                                    );
+                                  } else if (cellIndex === 0) {
+                                    return (
+                                      <td
+                                        key={cellIndex}
+                                        className={`px-4 font-semibold ${"text-center"} whitespace-nowrap py-1 text-[0.74rem] text-gray-500 border`}
+                                      >
+                                        Total
+                                      </td>
+                                    );
+                                  } else {
+                                    return (
+                                      <td
+                                        key={cellIndex}
+                                        className={`px-4 font-semibold ${"text-right"} whitespace-nowrap py-1 text-[0.74rem] text-gray-500 border`}
+                                      >
+                                        -
+                                      </td>
+                                    );
+                                  }
+                                }
+                              )}
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
                     )
                   )}
-                  <div className="flex flex-row gap-2 mx-2"></div>
                 </div>
               </div>
             </div>
