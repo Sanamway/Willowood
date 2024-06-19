@@ -23,12 +23,12 @@ const District = () => {
     { label: "Company", key: "cmpny_name" },
     { label: "Status", key: "isDeleted" },
   ];
-  const router = useRouter();
 
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
+  const router = useRouter();
 
   const [data, setData] = useState([]);
   const getDistrict = async (currentPage) => {
@@ -61,20 +61,10 @@ const District = () => {
     setisOpen(true);
   };
 
-  const { name } = router.query;
-  const arr = [1, 1, 1, 2, 2, 3];
-  function ab(item) {
-    let ab = {};
-    item.forEach((el) => {
-      if (ab[el]) {
-        ab[el] += ab[el];
-      } else {
-        ab[el] = el;
-      }
-    });
-    console.log(ab);
-  }
-  ab(arr);
+  const handleDeteleRow = () => {
+    console.log("Delete");
+    //
+  };
 
   // use
 
@@ -139,7 +129,7 @@ const District = () => {
         <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto  ">
           <table className="min-w-full divide-y border- divide-gray-200 ">
             <thead className="border-b">
-              <tr className="bg-gray-50 font-arial w-max">
+              <tr className="bg-gray-50 font-arial w-max md:hidden">
                 <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Action
                 </th>
@@ -226,43 +216,48 @@ const District = () => {
                 <tr className="dark:border-2" key={idx}>
                   <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                     <button
-                      // onClick={() => {
-                      //   setShowVerifyModal(true);
-                      //   setModalData({
-                      //     ...modalData,
-                      //     type: "Verify",
-                      //     id: item.f_demo_id,
-                      //   });
-                      // }}
-                      // disabled={item.verified === "Yes"}
-                      className="b text-black hover:text-blue-500  "
-                    >
-                      Verify
-                    </button>
-                    <button
-                      // onClick={() => {
-                      //   setShowVerifyModal(true);
-                      //   setModalData({
-                      //     ...modalData,
-                      //     type: "Approve",
-                      //     id: item.f_demo_id,
-                      //   });
-                      // }}
-                      // disabled={item.approved === "Yes"}
+                      onClick={() => {
+                        router.push({
+                          pathname: "/MR_Portal_Web/MR_ActivityTarget",
+                          query: {
+                            mrcId: item.mrc_id,
+                            mraId: item.mra_id,
+                            cId: item.c_id,
+                            bgId: item.bg_id,
+                            buId: item.bu_id,
+                            yr: item.year,
+                            type: "View",
+                          },
+                        });
+                      }}
                       className="b text-black hover:text-yellow-400 ml-2"
                     >
-                      Approve
+                      View
+                    </button>
+                    <button
+                      onClick={() => {
+                        router.push({
+                          pathname: "/MR_Portal_Web/MR_ActivityTarget",
+                          query: {
+                            mrcId: item.mrc_id,
+                            mraId: item.mra_id,
+                            cId: item.c_id,
+                            bgId: item.bg_id,
+                            buId: item.bu_id,
+                            yr: item.year,
+                            type: "Edit",
+                          },
+                        });
+                      }}
+                      className="b text-black hover:text-yellow-400 ml-2"
+                    >
+                      Edit
                     </button>
                     <button
                       className="b text-black hover:text-red-500 ml-2"
-                      // onClick={() => {
-                      //   setShowDeleteModal(true);
-                      //   setModalData({
-                      //     ...modalData,
-
-                      //     id: item.f_demo_id,
-                      //   });
-                      // }}
+                      onClick={() => {
+                        handleDeteleRow();
+                      }}
                     >
                       Delete
                     </button>

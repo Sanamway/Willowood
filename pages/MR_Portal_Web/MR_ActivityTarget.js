@@ -13,6 +13,7 @@ import { TbFileDownload } from "react-icons/tb";
 import toast, { Toaster } from "react-hot-toast";
 import Layout from "@/components/Layout1";
 import Navbar from "@/components/MR_Portal_Apps/Navbar";
+import moment from "moment";
 
 const BusinessSegment = () => {
   const csvHeaders = [
@@ -38,6 +39,24 @@ const BusinessSegment = () => {
     yr: "",
     mrCat: "",
   });
+
+  useEffect(() => {
+    setFilter({
+      cId: router.query.cId,
+      bgId: router.query.bgId,
+      buId: router.query.buId,
+      yr: router.query.yr,
+      mrCat: router.query.mrcId,
+      yr: new Date(router.query.yr),
+    });
+  }, [
+    router.query.mraId,
+    router.query.mrcId,
+    router.query.cId,
+    router.query.bgId,
+    router.query.buId,
+  ]);
+
   const [companyInfo, setCompanyInfo] = useState([]);
   const getCompanyInfo = async () => {
     try {
@@ -107,7 +126,7 @@ const BusinessSegment = () => {
     }
   };
 
-  const generateMonthList = (year) => {
+  const generateMonthList = (year, data) => {
     const months = [
       "April",
       "May",
@@ -122,58 +141,148 @@ const BusinessSegment = () => {
       "February",
       "March",
     ];
-    const monthList = months.map((month) => {
-      return {
-        month: month,
-        year: year,
+    let monthList;
+    if (router.query.type === "Add") {
+      monthList = months.map((month) => {
+        return {
+          month: month,
+          year: year,
 
-        t_demo: 12,
-        t_f_day: 12,
-        t_o2o: 12,
-        t_gmt: 12,
-        t_svn: 12,
-        t_gvm: 12,
-        t_cap: 12,
-        t_shc: 12,
-        m_demo: 21,
-        m_f_day: 21,
-        m_o2o: 32,
-        m_gmt: 32,
-        m_svn: 32,
-        m_gvm: 32,
-        m_cap: 32,
-        m_shc: 32,
-        w_demo: 22,
-        w_f_day: 22,
-        w_o2o: 11,
-        w_gmt: 11,
-        w_svn: 11,
-        w_gvm: 11,
-        w_cap: 11,
-        w_shc: 11,
-        score: 11,
-      };
-    });
+          t_demo: "",
+          t_f_day: "",
+          t_o2o: "",
+          t_gmt: "",
+          t_svn: "",
+          t_gvm: "",
+          t_cap: "",
+          t_shc: "",
+          m_demo: "",
+          m_f_day: "",
+          m_o2o: "",
+          m_gmt: "",
+          m_svn: "",
+          m_gvm: "",
+          m_cap: "",
+          m_shc: "",
+          w_demo: "",
+          w_f_day: "",
+          w_o2o: "",
+          w_gmt: "",
+          w_svn: "",
+          w_gvm: "",
+          w_cap: "",
+          w_shc: "",
+          score: "",
+        };
+      });
+    } else {
+      monthList = months.map((month) => {
+        let newData = data.filter((item) => item.month === month)[0];
+        return {
+          month: month,
+          year: year,
+
+          t_demo: newData.t_demo,
+          t_f_day: newData.t_f_day,
+          t_o2o: newData.t_o2o,
+          t_gmt: newData.t_gmt,
+          t_svn: newData.t_svn,
+          t_gvm: newData.t_gvm,
+          t_cap: newData.t_cap,
+          t_shc: newData.t_shc,
+          m_demo: newData.m_demo,
+          m_f_day: newData.m_f_day,
+          m_o2o: newData.m_o2o,
+          m_gmt: newData.m_gmt,
+          m_svn: newData.m_svn,
+          m_gvm: newData.m_gvm,
+          m_cap: newData.m_cap,
+          m_shc: newData.m_shc,
+          w_demo: newData.w_demo,
+          w_f_day: newData.w_f_day,
+          w_o2o: newData.w_o2o,
+          w_gmt: newData.w_gmt,
+          w_svn: newData.w_svn,
+          w_gvm: newData.w_gvm,
+          w_cap: newData.w_cap,
+          w_shc: newData.w_shc,
+          score: newData.score,
+        };
+      });
+    }
+
     setMonthList(monthList);
   };
 
   const [allMrData, setAllMrData] = useState([]);
-  // const getMrCatData = async (cId) => {
-  //   try {
-  //     const respond = await axios.get(`${url}/api/get_mr_category`, {
-  //       params: {
-  //         c_id: cId,
-  //       },
-  //       headers: headers,
-  //     });
-  //     const apires = await respond.data.data;
-  //     setAllMrData(apires);
-  //   } catch (error) {}
-  // };
-  // useEffect(() => {
-  //   getMrCatData(filter.cId);
-  // }, [filter.cId]);
 
+  const getMrCatData = async (cId) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_mr_category`, {
+        params: {
+          c_id: cId,
+        },
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      setAllMrData(apires);
+    } catch (error) {}
+  };
+  useEffect(() => {
+    getMrCatData(filter.cId);
+  }, [filter.cId]);
+
+  const handleSave = () => {
+    if (router.query.type === "Add") {
+      handleAdd();
+    } else {
+      handleEdit();
+    }
+  };
+  const handleEdit = async () => {
+    try {
+      const data = {
+        data: monthList.map((item) => {
+          return {
+            ...item,
+            bg_id: Number(filter.bgId),
+            bu_id: Number(filter.buId),
+            c_id: Number(filter.cId),
+            mrc_id: filter.mrCat,
+            mr_Category_name: allMrData.filter(
+              (item) => Number(item.mrc_id) === Number(filter.mrCat)
+            )[0].mr_Category_name,
+          };
+        }),
+      };
+
+      const respond = await axios
+        .post(`${url}/api/update_mr_activity`, JSON.stringify(data), {
+          headers: headers,
+          params: {
+            c_id: router.query.cId,
+            bg_id: router.query.bgId,
+            bu_id: router.query.buId,
+            mrc_id: router.query.mrcId,
+            mra_id: router.query.mraId,
+            year: router.query.yr,
+          },
+        })
+        .then((res) => {
+          toast.success(res.data.message);
+          router.push({
+            pathname: "/MR_Portal_Web/Table_MR_ActivityTarget",
+          });
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.message;
+      toast.error(errorMessage);
+      const newErrors = {};
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+    }
+  };
   const handleAdd = async () => {
     try {
       const data = {
@@ -212,99 +321,90 @@ const BusinessSegment = () => {
     }
   };
 
-  const getEx = async (cId) => {
+  const getDataById = async () => {
     try {
       const respond = await axios.get(`${url}/api/get_mr_activity`, {
-        params: {
-          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_idd,
-        },
         headers: headers,
+        params: {
+          c_id: router.query.cId,
+          bg_id: router.query.bgId,
+          bu_id: router.query.buId,
+          mrc_id: router.query.mrcId,
+          mra_id: router.query.mraId,
+          year: router.query.yr,
+        },
       });
       const apires = await respond.data.data;
-    } catch (error) {}
+      generateMonthList(router.query.yr, apires);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   useEffect(() => {
-    getEx(filter.cId);
-  }, [filter.cId]);
+    if (router.query.type === "Add") return;
+    getDataById();
+  }, [
+    router.query.mraId,
+    router.query.mrcId,
+    router.query.cId,
+    router.query.bgId,
+    router.query.buId,
+  ]);
 
   return (
     <Layout>
       <div className="w-full font-arial bg-white">
         <Toaster position="bottom-center" reverseOrder={false} />
 
-        <div className="flex flex-row m-4  w-full gap-12">
-          <div>
-            <label
-              htmlFor="attendanceType"
-              className="font-bold mb-2  self-end "
-            >
-              Company:
-            </label>
-            <select
-              id="attendanceType"
-              className="w-72  border p-1 rounded ml-4"
-              value={filter.cId}
-              onChange={(e) => setFilter({ ...filter, cId: e.target.value })}
-            >
-              <option value={""}>Company</option>
-              {companyInfo.map((item) => (
-                <option value={item.c_id}>{item.cmpny_name}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label
-              htmlFor="attendanceType"
-              className="font-bold mb-2  self-end "
-            >
-              Business Segment:
-            </label>
-            <select
-              id="attendanceType"
-              className="w-72  border p-1 rounded ml-4"
-              value={filter.bgId}
-              onChange={(e) => setFilter({ ...filter, bgId: e.target.value })}
-            >
-              <option value={""}>Segment</option>
-              {bgData.map((item) => (
-                <option value={item.bg_id}>{item.business_segment}</option>
-              ))}
-            </select>
-          </div>
+        <div className="flex flex-row m-4 w-full gap-2">
+          <select
+            id="attendanceType"
+            className="  border p-1 rounded ml-2 w-72"
+            value={filter.cId}
+            onChange={(e) => setFilter({ ...filter, cId: e.target.value })}
+            disabled={router.query.type !== "Add"}
+          >
+            <option value={""}>Company Info</option>
+            {companyInfo.map((item) => (
+              <option value={item.c_id}>{item.cmpny_name}</option>
+            ))}
+          </select>
 
-          <div>
-            <label
-              htmlFor="attendanceType"
-              className="font-bold mb-2  self-end "
-            >
-              Business Unit:
-            </label>
-            <select
-              id="attendanceType"
-              className="w-72  border p-1 rounded ml-4"
-              value={filter.buId}
-              onChange={(e) => setFilter({ ...filter, buId: e.target.value })}
-            >
-              <option value={""}>Unit</option>
-              {buData.map((item) => (
-                <option value={item.bu_id}>{item.business_unit_name}</option>
-              ))}
-            </select>
-          </div>
+          <select
+            id="attendanceType"
+            className="border p-1 rounded ml-2 w-72"
+            value={filter.bgId}
+            onChange={(e) => setFilter({ ...filter, bgId: e.target.value })}
+            disabled={router.query.type !== "Add"}
+          >
+            <option value={""}>Business Segment</option>
+            {bgData.map((item) => (
+              <option value={item.bg_id}>{item.business_segment}</option>
+            ))}
+          </select>
+
+          <select
+            id="attendanceType"
+            className="  border p-1 rounded ml-2 w-72"
+            value={filter.buId}
+            onChange={(e) => setFilter({ ...filter, buId: e.target.value })}
+            disabled={router.query.type !== "Add"}
+          >
+            <option value={""}>Business Unit</option>
+            {buData.map((item) => (
+              <option value={item.bu_id}>{item.business_unit_name}</option>
+            ))}
+          </select>
         </div>
 
-        <div className="flex flex-row m-4  w-full gap-12">
-          <div>
-            <label
-              htmlFor="attendanceType"
-              className="font-bold mb-2  self-end "
-            >
-              Year:
-            </label>
+        <div className="flex flex-row m-4 w-full gap-2">
+          {router.query.type === "Add" ? (
             <DatePicker
-              className="w-68  border p-1 rounded ml-4"
+              className="border p-1 rounded ml-2 w-72"
               showYearDropdown
               dateFormat="yyyy"
+              placeholderText="Enter Year"
               yearDropdownItemNumber={15}
               selected={selectedYear}
               scrollableYearDropdown
@@ -312,26 +412,25 @@ const BusinessSegment = () => {
               hand
               showYearPicker
             />
-          </div>
-          <div>
-            <label
-              htmlFor="attendanceType"
-              className="font-bold mb-2  self-end "
-            >
-              MR Category:
-            </label>
-            <select
-              id="attendanceType"
-              className="w-72  border p-1 rounded ml-4"
-              value={filter.mrCat}
-              onChange={(e) => setFilter({ ...filter, mrCat: e.target.value })}
-            >
-              <option value={""}>MR Cat.</option>
-              {allMrData.map((item) => (
-                <option value={item.mrc_id}>{item.mr_Category_name}</option>
-              ))}
-            </select>
-          </div>
+          ) : (
+            <input
+              value={moment(filter.yr).format("YYYY")}
+              disabled
+              className="border p-1 rounded ml-2 w-72"
+            />
+          )}
+          <select
+            id="attendanceType"
+            className="w-72  border p-1 rounded ml-2  w-72"
+            value={filter.mrCat}
+            onChange={(e) => setFilter({ ...filter, mrCat: e.target.value })}
+            disabled={router.query.type !== "Add"}
+          >
+            <option value={""}>MR Category</option>
+            {allMrData.map((item) => (
+              <option value={item.mrc_id}>{item.mr_Category_name}</option>
+            ))}
+          </select>
         </div>
 
         <div className="bg-white  max-w-full pb-12 ">
@@ -935,20 +1034,28 @@ const BusinessSegment = () => {
             </table>
           </div>
 
-          <div className="flex w-full  gap-4 m-2 ">
-            <button
-              className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
-              onClick={() => handleAdd()}
-            >
-              Submit
-            </button>
-            <button
-              onClick={() => {}}
-              className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
-            >
-              Close
-            </button>
-          </div>
+          {router.query.type === "Add" || router.query.type === "Edit" ? (
+            <div className="flex w-full  gap-4 m-2 ">
+              <button
+                className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
+                onClick={() => handleSave()}
+              >
+                Submit
+              </button>
+              <button
+                onClick={() => {
+                  router.push({
+                    pathname: "/MR_Portal_Web/Table_MR_ActivityTarget",
+                  });
+                }}
+                className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
+              >
+                Close
+              </button>
+            </div>
+          ) : (
+            <div className="flex w-full  gap-4 m-2 "></div>
+          )}
         </div>
       </div>
     </Layout>
