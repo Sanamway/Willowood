@@ -143,7 +143,7 @@ const BusinessSegment = () => {
     ];
     let monthList;
     if (router.query.type === "Add") {
-      monthList = months.map((month) => {
+      monthList = months.map((month, index) => {
         return {
           month: month,
           year: year,
@@ -269,6 +269,7 @@ const BusinessSegment = () => {
           },
         })
         .then((res) => {
+          console.log("res", res.data);
           toast.success(res.data.message);
           router.push({
             pathname: "/MR_Portal_Web/Table_MR_ActivityTarget",
@@ -276,11 +277,11 @@ const BusinessSegment = () => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
-      toast.error(errorMessage);
-      const newErrors = {};
-      errors?.inner?.forEach((error) => {
-        newErrors[error?.path] = error?.message;
-      });
+      if (errorMessage) {
+        toast.error(errorMessage);
+      } else {
+        toast.error("All Filters are mandatory");
+      }
     }
   };
   const handleAdd = async () => {
@@ -289,13 +290,14 @@ const BusinessSegment = () => {
         data: monthList.map((item) => {
           return {
             ...item,
-            bg_id: Number(filter.bgId),
-            bu_id: Number(filter.buId),
-            c_id: Number(filter.cId),
-            mrc_id: filter.mrCat,
-            mr_Category_name: allMrData.filter(
-              (item) => Number(item.mrc_id) === Number(filter.mrCat)
-            )[0].mr_Category_name,
+            bg_id: Number(filter.bgId) || null,
+            bu_id: Number(filter.buId) || null,
+            c_id: Number(filter.cId) || null,
+            mrc_id: filter.mrCat || null,
+            mr_Category_name:
+              allMrData.filter(
+                (item) => Number(item.mrc_id) === Number(filter.mrCat)
+              )[0].mr_Category_name || null,
           };
         }),
       };
@@ -311,13 +313,12 @@ const BusinessSegment = () => {
           });
         });
     } catch (errors) {
-      console.log("pol", errors);
       const errorMessage = errors?.response?.data?.message;
-      toast.error(errorMessage);
-      const newErrors = {};
-      errors?.inner?.forEach((error) => {
-        newErrors[error?.path] = error?.message;
-      });
+      if (errorMessage) {
+        toast.error(errorMessage);
+      } else {
+        toast.error("All Filters are mandatory");
+      }
     }
   };
 
@@ -396,9 +397,7 @@ const BusinessSegment = () => {
               <option value={item.bu_id}>{item.business_unit_name}</option>
             ))}
           </select>
-        </div>
 
-        <div className="flex flex-row m-4 w-full gap-2">
           {router.query.type === "Add" ? (
             <DatePicker
               className="border p-1 rounded ml-2 w-72"
@@ -434,7 +433,7 @@ const BusinessSegment = () => {
         </div>
 
         <div className="bg-white  max-w-full pb-12 ">
-          <div className=" text-black font-arial  w-full p-1 h-[700px] overflow-y-auto scrollbar-">
+          <div className=" text-black font-arial  w-full p-1 h-[780px] overflow-y-auto scrollbar-">
             <table className="min-w-full divide-y border- divide-gray-200">
               <thead className="border-b w-max">
                 <tr className="bg-sky-800 font-arial w-max ">
@@ -1037,7 +1036,7 @@ const BusinessSegment = () => {
           {router.query.type === "Add" || router.query.type === "Edit" ? (
             <div className="flex w-full  gap-4 m-2 ">
               <button
-                className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
+                className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-12"
                 onClick={() => handleSave()}
               >
                 Submit
@@ -1048,7 +1047,7 @@ const BusinessSegment = () => {
                     pathname: "/MR_Portal_Web/Table_MR_ActivityTarget",
                   });
                 }}
-                className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
+                className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-12"
               >
                 Close
               </button>

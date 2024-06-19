@@ -51,7 +51,7 @@ const District = () => {
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    setCurrentPage(pageNumber + 1);
   };
   useEffect(() => {
     getDistrict(currentPage.selected);
@@ -61,9 +61,24 @@ const District = () => {
     setisOpen(true);
   };
 
-  const handleDeteleRow = () => {
-    console.log("Delete");
-    //
+  const handleDeteleRow = async (mrcId, mraId, bgId, buId, cId, yr) => {
+    try {
+      const respond = await axios.get(`${url}/api/delete_mr_activity`, {
+        headers: headers,
+        params: {
+          c_id: cId,
+          bg_id: bgId,
+          bu_id: buId,
+          mrc_id: mrcId,
+          mra_id: mraId,
+          year: yr,
+        },
+      });
+      const apires = await respond.data.data;
+      toast(apires);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // use
@@ -129,7 +144,7 @@ const District = () => {
         <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto  ">
           <table className="min-w-full divide-y border- divide-gray-200 ">
             <thead className="border-b">
-              <tr className="bg-gray-50 font-arial w-max md:hidden">
+              <tr className="bg-gray-50 font-arial w-max ">
                 <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Action
                 </th>
@@ -256,7 +271,14 @@ const District = () => {
                     <button
                       className="b text-black hover:text-red-500 ml-2"
                       onClick={() => {
-                        handleDeteleRow();
+                        handleDeteleRow(
+                          item.mrc_id,
+                          item.mra_id,
+                          item.c_id,
+                          item.bg_id,
+                          item.bu_id,
+                          item.year
+                        );
                       }}
                     >
                       Delete
