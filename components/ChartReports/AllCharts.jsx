@@ -10,6 +10,7 @@ import TableChartTwo from "./TableChartTwo";
 const AllCharts = (props) => {
   const [territoryGraphData, setTerritoryGraphData] = useState([]);
   const [territorytLabelData, setTerritoryLabelData] = useState([]);
+  console.log("nop", props);
   useEffect(() => {
     let territoryData = [];
     let territoryLabel = [];
@@ -736,7 +737,7 @@ const AllCharts = (props) => {
                 </button>{" "}
               </div>
             </div>
-            <div className="flex flex-col overflow-auto text-xs lg:hidden md:hidden">
+            <div className="flex flex-col overflow-auto text-xs lg:hidden ">
               <div className="grid grid-rows-4  text-sm ">
                 <div className="border border-gray-300 py-1 flex px-2 items-center font-bold text-xs bg-gray-200 ">
                   YTD
@@ -1294,7 +1295,7 @@ const AllCharts = (props) => {
               {" "}
               Collection Plan
             </h2>
-            <div className="flex flex-col overflow-auto text-xs lg:hidden md:hidden">
+            <div className="flex flex-col overflow-auto text-xs lg:hidden ">
               <div className="grid grid-rows-4  text-sm ">
                 <div className="border border-gray-300 py-1 flex px-2 items-center font-bold text-xs bg-gray-200 ">
                   YTD

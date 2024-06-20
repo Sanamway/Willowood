@@ -139,9 +139,7 @@ const GraphTable = (props) => {
                 <th className="px-2 py-1 text-center text-[0.6rem] bg-green-200 border font-medium text-gray-800   ">
                   YTD RSP Achivement %
                 </th>
-                <th className="px-2 py-1 text-center text-[0.6rem]  bg-orange-100 border font-medium text-gray-800   ">
-                  Anual Qty Achivement %
-                </th>
+
                 <th className="px-2 py-1 text-center text-[0.6rem] bg-orange-100 border font-medium text-gray-800   ">
                   Anual Value Achivement %
                 </th>
@@ -299,18 +297,7 @@ const GraphTable = (props) => {
                       {"0%"}
                       {/* {item[Object.keys(item)["%"]]} */}
                     </td>
-                    <td
-                      className={`px-2 text-center whitespace-nowrap 
-                   py-1 text-[0.6rem] text-gray-900 border `}
-                    >
-                      {item[Object.keys(item)[5]] !== 0
-                        ? (
-                            (item[Object.keys(item)[7]] /
-                              item[Object.keys(item)[5]]) *
-                            100
-                          ).toFixed(2) + " %"
-                        : "0 %"}
-                    </td>
+
                     <td
                       className={`px-2 text-center whitespace-nowrap 
                    py-1 text-[0.6rem] text-gray-900 border `}

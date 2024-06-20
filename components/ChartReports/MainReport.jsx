@@ -9,8 +9,11 @@ import { url } from "@/constants/url";
 import * as XLSX from "xlsx";
 import CollectionChartPopup from "./CollectionChartPopup";
 import SaleChartPopup from "./SaleChartPopup";
+import { useSelector } from "react-redux";
 
 const MainReport = () => {
+  const allData = useSelector((store) => store);
+
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
@@ -26,12 +29,13 @@ const MainReport = () => {
     tId: null,
     roleId: null,
   });
+
+  // All Filters
   const [filterState, setFilterState] = useState({
     bgId: null,
     buId: null,
     zId: null,
     rId: null,
-
     tId: null,
     tDes: null,
     rDes: null,
@@ -41,8 +45,9 @@ const MainReport = () => {
     yr: moment().year(),
     month: [],
   });
-  const [allMonthData, setAllMonthData] = useState([]);
 
+  // All Year Month Data
+  const [allMonthData, setAllMonthData] = useState([]);
   const [allYearData, setAllYearData] = useState([]);
   const getAllTransactionPlan = async () => {
     try {
@@ -66,7 +71,6 @@ const MainReport = () => {
         params: { status: true, year: yr },
       });
       const apires = await respond.data.data;
-      let newData = [...new Set(apires.map((item) => item.m_year))];
 
       setAllMonthData([...new Set(apires.map((item) => item.m_year))]);
     } catch (error) {}
@@ -79,10 +83,28 @@ const MainReport = () => {
 
   useEffect(() => {
     if (!allYearData.length) return;
-    const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
-
+    // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
+    const roleId = 6;
+    let filterState = {
+      bgId: "All",
+      buId: "All",
+      zId: "All",
+      rId: "All",
+      tId: "All",
+      yr: "",
+      month: "",
+    };
     switch (roleId) {
       case 6:
+        filterState = {
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          yr: Math.max(...allYearData),
+          month: allMonthData[allMonthData.length - 1],
+        };
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
@@ -93,18 +115,19 @@ const MainReport = () => {
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
-        setFilterState({
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: Math.max(...allYearData),
-          month: allMonthData[allMonthData.length - 1],
-        });
+        setFilterState(filterState);
 
         break;
       case 5:
+        filterState = {
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          tId: "All",
+          yr: Math.max(...allYearData),
+          month: allMonthData[allMonthData.length - 1],
+        };
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
@@ -116,17 +139,19 @@ const MainReport = () => {
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
-        setFilterState({
+        setFilterState(filterState);
+
+        break;
+      case 4:
+        filterState = {
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          rId: "All",
           tId: "All",
           yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
-        });
-        break;
-      case 4:
+        };
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
@@ -140,18 +165,19 @@ const MainReport = () => {
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
-        setFilterState({
+        setFilterState(filterState);
+
+        break;
+      case 3:
+        filterState = {
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: "All",
-
           tId: "All",
           yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
-        });
-        break;
-      case 3:
+        };
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
@@ -166,36 +192,35 @@ const MainReport = () => {
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
-        setFilterState({
+        setFilterState(filterState);
+
+        break;
+      case 10:
+        filterState = {
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: "All",
-          zId: "All",
           tId: "All",
           yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
-        });
-        break;
-      case 10:
+        };
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id || "All",
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id || "All",
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id || "All",
+          tId:
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id || "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
-        setFilterState({
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: null,
-          rId: null,
-          zId: null,
-          tId: null,
-          yr: Math.max(...allYearData),
-          month: allMonthData[allMonthData.length - 1],
-        });
+        setFilterState(filterState);
+
         break;
       default:
         setLocalStorageItems({
@@ -351,7 +376,9 @@ const MainReport = () => {
   }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
 
   const [busniessSegmentData, setBusinessSegmentData] = useState([]);
-  const getAllBusinessSegmentData = async (yr, month, bgId) => {
+  const getAllBusinessSegmentData = async (filterState) => {
+    const { yr, month, bgId } = filterState;
+
     if (!yr || !month || !bgId) return;
     let endPoint;
 
@@ -370,7 +397,6 @@ const MainReport = () => {
       });
 
       const apires = await respond.data.data;
-
       setBusinessSegmentData(apires);
     } catch (error) {
       if (!error) return;
@@ -379,7 +405,8 @@ const MainReport = () => {
   };
 
   const [businessUnitData, setBusinessUnitData] = useState([]);
-  const getAllBusinessUnitData = async (yr, month, bgId, buId) => {
+  const getAllBusinessUnitData = async (filterState) => {
+    const { yr, month, bgId, buId } = filterState;
     if (!yr || !month || !bgId || !buId) return;
     let endPoint;
 
@@ -416,7 +443,8 @@ const MainReport = () => {
   };
 
   const [zoneData, setZoneData] = useState([]);
-  const getAllZonetData = async (yr, month, bgId, buId, zId) => {
+  const getAllZonetData = async (filterState) => {
+    const { yr, month, bgId, buId, zId } = filterState;
     if (!yr || !month || !bgId || !buId) return;
     let endPoint;
 
@@ -460,7 +488,8 @@ const MainReport = () => {
   };
 
   const [regionData, setRegionData] = useState([]);
-  const getRegionData = async (yr, month, bgId, buId, zId, rId) => {
+  const getRegionData = async (filterState) => {
+    const { yr, month, bgId, buId, zId, rId } = filterState;
     if (!yr || !month || !bgId || !buId || !zId) return;
     let endPoint;
 
@@ -519,7 +548,8 @@ const MainReport = () => {
 
   const [territoryData, setTerritoryData] = useState([]);
 
-  const getTerritoryData = async (yr, month, bgId, buId, zId, rId, tId) => {
+  const getTerritoryData = async (filterState) => {
+    const { yr, month, bgId, buId, zId, rId, tId } = filterState;
     if (!yr || !month || !bgId || !buId || !zId) return;
     let endPoint;
 
@@ -589,67 +619,13 @@ const MainReport = () => {
       setTerritoryData([]);
     }
   };
-  const [chartLoading, setChartLoading] = useState(false);
 
-  useEffect(() => {
-    if (tabType === "Table") return;
-
-    getAllBusinessSegmentData(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null
-    );
-
-    getAllBusinessUnitData(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null
-    );
-
-    getAllZonetData(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null
-    );
-
-    getRegionData(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null,
-      filterState.rId || null
-    );
-
-    getTerritoryData(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null,
-      filterState.rId || null,
-      filterState.tId || null
-    );
-  }, [
-    filterState.yr,
-    filterState.month,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    filterState.tId,
-    tabType,
-  ]);
   const [tableLoading, setTableLoading] = useState(false);
   const [segmentData, setSegmentData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
 
-  const getSegmentData = async (yr, month, bgId, buId, zId, rId, tId) => {
-    if (!yr || !month || !bgId || !buId || !zId) return;
-    console.log("kli", yr, month, bgId, buId, zId, rId, tId);
+  const getSegmentData = async (filterState) => {
+    const { bgId, buId, zId, rId, tId, month, yr } = filterState;
     let paramsData = {
       year_1: yr - 2,
       year_2: yr - 1,
@@ -669,8 +645,7 @@ const MainReport = () => {
       json: true,
       analytical_key: "Product Segment",
     };
-
-    if (tId && tId !== "All") {
+    if (bgId && buId && zId && rId && tId && tId !== "All") {
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -691,7 +666,7 @@ const MainReport = () => {
         json: true,
         analytical_key: "Product Segment",
       };
-    } else if (tId === "All" && rId !== "All") {
+    } else if (bgId && buId && zId && rId && rId !== "All") {
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -711,27 +686,7 @@ const MainReport = () => {
         json: true,
         analytical_key: "Product Segment",
       };
-    } else if (rId && rId !== "All") {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        r_des: allRegionData.filter(
-          (item) => Number(item.r_id) === Number(filterState.rId)
-        )[0]?.region_name,
-        r_id: filterState.rId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Segment",
-      };
-    } else if (rId === "All" && zId !== "All") {
+    } else if (bgId && buId && zId && zId !== "All") {
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -751,27 +706,7 @@ const MainReport = () => {
         json: true,
         analytical_key: "Product Segment",
       };
-    } else if (zId && zId !== "All") {
-      paramsData = {
-        year_1: yr - 2,
-        year_2: yr - 1,
-        year_3: yr,
-        year_2_nm: moment(month)
-          .subtract(1, "years")
-          .add(1, "months")
-          .format("YYYY-MM"),
-        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
-        year_3_cm: moment(month).format("YYYY-MM"),
-        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
-        z_des: allZoneData.filter(
-          (item) => Number(item.z_id) === Number(filterState.zId)
-        )[0]?.zone_name,
-        z_id: filterState.zId,
-        m_year: moment(month).format("YYYY-MM"),
-        json: true,
-        analytical_key: "Product Segment",
-      };
-    } else if (zId === "All" && buId !== "All") {
+    } else if (bgId && buId && buId !== "All") {
       paramsData = {
         year_1: yr - 2,
         year_2: yr - 1,
@@ -791,12 +726,30 @@ const MainReport = () => {
         json: true,
         analytical_key: "Product Segment",
       };
+    } else if (bgId && bgId !== "All") {
+      paramsData = {
+        year_1: yr - 2,
+        year_2: yr - 1,
+        year_3: yr,
+        year_2_nm: moment(month)
+          .subtract(1, "years")
+          .add(1, "months")
+          .format("YYYY-MM"),
+        year_2_cm: moment(month).subtract(1, "years").format("YYYY-MM"),
+        year_3_cm: moment(month).format("YYYY-MM"),
+        year_3_nm: moment(month).add(1, "months").format("YYYY-MM"),
+        bg_des: bgData.filter(
+          (item) => Number(item.bg_id) === Number(filterState.bgId)
+        )[0]?.business_segment,
+        bg_id: filterState.bgId,
+        m_year: moment(month).format("YYYY-MM"),
+        json: true,
+        analytical_key: "Product Segment",
+      };
+    } else {
+      return;
     }
-
-    let endPoint;
-
-    endPoint = "api/RSP_downloadAnalytical";
-
+    let endPoint = "api/RSP_downloadAnalytical";
     try {
       setSegmentData([]);
       setBrandData([]);
@@ -804,7 +757,6 @@ const MainReport = () => {
       setTableLoading(true);
       const respond = await axios.get(`${url}/${endPoint}`, {
         headers: headers,
-
         params: paramsData,
       });
       const apires = await respond.data.data;
@@ -813,32 +765,13 @@ const MainReport = () => {
       setBrandData(apires.data_to_exports_excel_brand);
       setTableLoading(false);
     } catch (error) {
+      console.log("pop", error);
       if (!error) return;
 
       setTableLoading(false);
     }
   };
 
-  useEffect(() => {
-    getSegmentData(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null,
-      filterState.rId || null,
-      filterState.tId || null
-    );
-  }, [
-    filterState.yr,
-    filterState.month,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    filterState.tId,
-    allTerritoryData,
-  ]);
   const [downloadExcelLoading, setDownloadExcelLoading] = useState(false);
   const handleDownloadExcelNew = async (m_year, planId, tranId, yr) => {
     if (downloadExcelLoading) return;
@@ -1017,26 +950,6 @@ const MainReport = () => {
     planId: null,
   });
 
-  useEffect(() => {
-    getSegmentData(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null,
-      filterState.rId || null,
-      filterState.tId || null
-    );
-  }, [
-    filterState.yr,
-    filterState.month,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    filterState.tId,
-    allTerritoryData,
-  ]);
   const [brandData, setBrandData] = useState([]);
 
   const [summaryData, setSummaryData] = useState({
@@ -1057,47 +970,19 @@ const MainReport = () => {
     targetCurrent: 0,
   });
 
-  const getAllSalesPlanStatus = async (
-    yr,
-    month,
-    bgId,
-    buId,
-    zId,
-    rId,
-    tId
-  ) => {
+  const getAllSalesPlanStatus = async (filterState) => {
     let endPoint;
-
-    console.log("iop", yr, month, bgId, buId, zId, rId, tId);
-    if (bgId && buId && zId && rId && tId && tId !== "All") {
+    const { bgId, buId, zId, rId, tId, month, yr } = filterState;
+    console.log("lop", filterState);
+    if (bgId && buId && zId && rId && tId) {
       endPoint = "api/get_rollingdata_based_on_roll_t";
-    } else if (bgId && buId && zId && rId && rId !== "All" && tId === "All") {
+    } else if (bgId && buId && zId && rId && !tId) {
       endPoint = "api/get_rollingdata_based_on_roll_r";
-    } else if (
-      bgId &&
-      buId &&
-      zId &&
-      zId !== "All" &&
-      rId === "All" &&
-      tId === "All"
-    ) {
+    } else if (bgId && buId && zId && !rId && !tId) {
       endPoint = "api/get_rollingdata_based_on_roll_z";
-    } else if (
-      bgId &&
-      buId &&
-      buId !== "All" &&
-      zId === "All" &&
-      rId === "All" &&
-      tId === "All"
-    ) {
+    } else if (bgId && buId && !zId && !rId && !tId) {
       endPoint = "api/get_rollingdata_based_on_roll_bu";
-    } else if (
-      bgId &&
-      buId === "All" &&
-      zId === "All" &&
-      rId === "All" &&
-      tId === "All"
-    ) {
+    } else if (bgId && !buId && !zId && !rId && !tId) {
       endPoint = "api/get_rollingdata_based_on_roll_bg";
     } else {
       return;
@@ -1238,27 +1123,7 @@ const MainReport = () => {
     }
   };
 
-  useEffect(() => {
-    getAllSalesPlanStatus(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null,
-      filterState.rId || null,
-      filterState.tId
-    );
-  }, [
-    filterState.yr,
-    filterState.month,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    filterState.tId,
-  ]);
-
-  const [cSummaryData, setcSummaryData] = useState({
+  const [collectionSummaryData, setCollectionSummaryData] = useState({
     actual: 0,
     budget: 0,
     target: 0,
@@ -1276,53 +1141,25 @@ const MainReport = () => {
     targetCurrent: 0,
   });
 
-  const getAllCollectionSalesPlanStatus = async (
-    yr,
-    month,
-    bgId,
-    buId,
-    zId,
-    rId,
-    tId
-  ) => {
+  const getAllCollectionSalesPlanStatus = async (filterState) => {
     let endPoint;
-
-    if (bgId && buId && zId && rId && tId && tId !== "All") {
+    const { bgId, buId, zId, rId, tId, month, yr } = filterState;
+    if (bgId && buId && zId && rId && tId) {
       endPoint = "api/get_collectiondata_based_on_roll_t";
-    } else if (bgId && buId && zId && rId && rId !== "All" && tId === "All") {
+    } else if (bgId && buId && zId && rId && !tId) {
       endPoint = "api/get_collectiondata_based_on_roll_r";
-    } else if (
-      bgId &&
-      buId &&
-      zId &&
-      zId !== "All" &&
-      rId === "All" &&
-      tId === "All"
-    ) {
+    } else if (bgId && buId && zId && !rId && !tId) {
       endPoint = "api/get_collectiondata_based_on_roll_z";
-    } else if (
-      bgId &&
-      buId &&
-      buId !== "All" &&
-      zId === "All" &&
-      rId === "All" &&
-      tId === "All"
-    ) {
+    } else if (bgId && buId && !zId && !rId && !tId) {
       endPoint = "api/get_collectiondata_based_on_roll_bu";
-    } else if (
-      bgId &&
-      buId === "All" &&
-      zId === "All" &&
-      rId === "All" &&
-      tId === "All"
-    ) {
+    } else if (bgId && !buId && !zId && !rId && !tId) {
       endPoint = "api/get_collectiondata_based_on_roll_bg";
     } else {
       return;
     }
 
     try {
-      setcSummaryData({
+      setCollectionSummaryData({
         actual: 0,
         budget: 0,
         target: 0,
@@ -1429,8 +1266,7 @@ const MainReport = () => {
           targetValueCurrent =
             Number(targetValueCurrent) + Number(element.target);
         }
-
-        setcSummaryData({
+        setCollectionSummaryData({
           actual: actualValue,
           budget: budgetValue,
           target: targetValue,
@@ -1447,29 +1283,10 @@ const MainReport = () => {
       });
     } catch (error) {
       if (!error) return;
+      console.log("collection", error);
     }
   };
 
-  useEffect(() => {
-    if (tabType !== "Table") return;
-    getAllCollectionSalesPlanStatus(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null,
-      filterState.rId || null,
-      filterState.tId
-    );
-  }, [
-    filterState.yr,
-    filterState.month,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    filterState.tId,
-  ]);
   const [showSalesModal, setShowSalesModal] = useState(false);
   const [showCollectionModal, setShowCollectionModal] = useState(false);
   return (
@@ -1524,16 +1341,23 @@ const MainReport = () => {
             className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             value={filterState.bgId}
-            onChange={(e) =>
-              setFilterState({
-                ...filterState,
-                bgId: e.target.value,
-                buId: null,
-                zId: null,
-                rId: null,
-                tId: null,
-              })
-            }
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  bgId: e.target.value,
+                  buId: "",
+                  zId: "",
+                  rId: "",
+                  tId: "",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  bgId: e.target.value,
+                });
+              }
+            }}
             disabled={
               localStorageItems.roleId === 6 ||
               localStorageItems.roleId === 5 ||
@@ -1559,16 +1383,23 @@ const MainReport = () => {
             className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             value={filterState.buId}
-            onChange={(e) =>
-              setFilterState({
-                ...filterState,
-                buId: e.target.value,
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  buId: e.target.value,
 
-                zId: "",
-                rId: "",
-                tId: "",
-              })
-            }
+                  zId: "",
+                  rId: "",
+                  tId: "",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  buId: e.target.value,
+                });
+              }
+            }}
             disabled={
               localStorageItems.roleId === 6 ||
               localStorageItems.roleId === 5 ||
@@ -1589,14 +1420,21 @@ const MainReport = () => {
             className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             value={filterState.zId}
-            onChange={(e) =>
-              setFilterState({
-                ...filterState,
-                zId: e.target.value,
-                rId: "",
-                tId: "",
-              })
-            }
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  zId: e.target.value,
+                  rId: "",
+                  tId: "",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  zId: e.target.value,
+                });
+              }
+            }}
             disabled={
               localStorageItems.roleId === 6 ||
               localStorageItems.roleId === 5 ||
@@ -1619,13 +1457,20 @@ const MainReport = () => {
             disabled={
               localStorageItems.roleId === 6 || localStorageItems.roleId === 5
             }
-            onChange={(e) =>
-              setFilterState({
-                ...filterState,
-                rId: e.target.value,
-                tId: "",
-              })
-            }
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  rId: e.target.value,
+                  tId: "",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  rId: e.target.value,
+                });
+              }
+            }}
           >
             <option value={"All"}>-All Region -</option>
 
@@ -1658,10 +1503,29 @@ const MainReport = () => {
           </select>
         </div>
       </div>
+      <button
+        className="bg-blue-500 px-4 py-1 text-white cursor-pointer"
+        onClick={() => {
+          getAllCollectionSalesPlanStatus(filterState);
+          getAllSalesPlanStatus(filterState);
+          getSegmentData(filterState);
 
+          getAllBusinessSegmentData(filterState);
+
+          getAllBusinessUnitData(filterState);
+
+          getAllZonetData(filterState);
+
+          getRegionData(filterState);
+
+          getTerritoryData(filterState);
+        }}
+      >
+        View Data
+      </button>
       <div className="hey">
         <AllCharts
-          cSummaryData={cSummaryData}
+          cSummaryData={collectionSummaryData}
           summaryData={summaryData}
           businessSegmentData={busniessSegmentData}
           businessUnitData={businessUnitData}
@@ -1672,7 +1536,6 @@ const MainReport = () => {
           productCategoryData={categoryData}
           productBrandData={brandData}
           loading={tableLoading}
-          chartLoading={chartLoading}
           tabType={tabType}
           setTabType={setTabType}
           downloadExcelLoading={downloadExcelLoading}
