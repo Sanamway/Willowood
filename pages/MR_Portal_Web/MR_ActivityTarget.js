@@ -181,7 +181,6 @@ const BusinessSegment = () => {
         return {
           month: month,
           year: year,
-
           t_demo: newData.t_demo,
           t_f_day: newData.t_f_day,
           t_o2o: newData.t_o2o,

@@ -46,7 +46,9 @@ const District = () => {
       setData(apires);
       const count = await respond.data.data.length;
       setPageCount(Math.ceil(count / 50));
-    } catch (error) {}
+    } catch (error) {
+      setData([]);
+    }
   };
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
@@ -74,10 +76,13 @@ const District = () => {
           year: yr,
         },
       });
-      const apires = await respond.data.data;
-      toast(apires);
+      const apires = await respond;
+      console.log("pop", apires);
+      toast.success(apires.data.message);
+      getDistrict(1);
     } catch (error) {
       console.log(error);
+      toast.error(error);
     }
   };
 
