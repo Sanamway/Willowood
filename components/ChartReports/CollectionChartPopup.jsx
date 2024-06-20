@@ -92,19 +92,20 @@ const CollectionChartPopup = ({
           end_date: new Date(to),
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           customer_code: cust.label,
-          t_des: tData.filter((item) => item.t_id === backgorundFilters.tId)[0]
-            .territory_name,
+          t_des: tData.filter(
+            (item) => Number(item.t_id) === Number(backgorundFilters.tId)
+          )[0].territory_name,
           r_des: regionData.filter(
-            (item) => item.r_id === backgorundFilters.rId
+            (item) => Number(item.r_id) === Number(backgorundFilters.rId)
           )[0].region_name,
           z_des: zoneData.filter(
-            (item) => item.z_id === backgorundFilters.zId
+            (item) => Number(item.z_id) === Number(backgorundFilters.zId)
           )[0].zone_name,
           bu_des: buData.filter(
-            (item) => item.bu_id === backgorundFilters.buId
+            (item) => Number(item.bu_id) === Number(backgorundFilters.buId)
           )[0].business_unit_name,
           bg_des: bgData.filter(
-            (item) => item.bg_id === backgorundFilters.bgId
+            (item) => Number(item.bg_id) === Number(backgorundFilters.bgId)
           )[0].business_segment,
         },
         headers: headers,
@@ -144,24 +145,35 @@ const CollectionChartPopup = ({
               {" "}
               Collection Register (
               {[
-                bgData.filter(
-                  (item) => item.bg_id === backgorundFilters.bgId
-                )[0].business_segment,
+                backgorundFilters.bgId !== "All" &&
+                  bgData.filter(
+                    (item) =>
+                      Number(item.bg_id) === Number(backgorundFilters.bgId)
+                  )[0].business_segment,
 
-                buData.filter(
-                  (item) => item.bu_id === backgorundFilters.buId
-                )[0].business_unit_name,
+                backgorundFilters.buId !== "All" &&
+                  buData.filter(
+                    (item) =>
+                      Number(item.bu_id) === Number(backgorundFilters.buId)
+                  )[0].business_unit_name,
 
-                zoneData.filter(
-                  (item) => item.z_id === backgorundFilters.zId
-                )[0].zone_name,
+                backgorundFilters.zId !== "All" &&
+                  zoneData.filter(
+                    (item) =>
+                      Number(item.z_id) === Number(backgorundFilters.zId)
+                  )[0].zone_name,
 
-                regionData.filter(
-                  (item) => item.r_id === backgorundFilters.rId
-                )[0].region_name,
+                backgorundFilters.rId !== "All" &&
+                  regionData.filter(
+                    (item) =>
+                      Number(item.r_id) === Number(backgorundFilters.rId)
+                  )[0].region_name,
 
-                tData.filter((item) => item.t_id === backgorundFilters.tId)[0]
-                  .territory_name,
+                backgorundFilters.tId !== "All" &&
+                  tData.filter(
+                    (item) =>
+                      Number(item.t_id) === Number(backgorundFilters.tId)
+                  )[0].territory_name,
               ].join(", ")}
               )
             </div>
