@@ -150,7 +150,7 @@ const District = () => {
           <table className="min-w-full divide-y border- divide-gray-200 ">
             <thead className="border-b">
               <tr className="bg-gray-50 font-arial w-max ">
-                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider ">
                   Action
                 </th>
                 <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider ">
@@ -173,6 +173,13 @@ const District = () => {
                 </th>
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
                   T-GMT
+                </th>
+
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  T-SVN
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  T-GVM
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
                   T-CAP
@@ -228,13 +235,21 @@ const District = () => {
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
                   W-SHC
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap"></th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
+                  Business Unit
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
+                  Business Segement
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
+                  Company Name
+                </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs ">
               {data.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
-                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs font-bold">
                     <button
                       onClick={() => {
                         router.push({
@@ -312,6 +327,12 @@ const District = () => {
                     {item.t_gmt}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.t_svn}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.t_gvm}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.t_cap}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
@@ -365,11 +386,20 @@ const District = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.w_shc}
                   </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.business_unit_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.business_segment}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.cmpny_name}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div className="h-full w-full">
+          {/* <div className="h-full w-full">
             <ReactPaginate
               previousLabel={"< Previous"}
               nextLabel={"Next >"}
@@ -380,7 +410,7 @@ const District = () => {
               activeClassName={"active"}
               className="flex flex-row gap-2 mt-4"
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </Layout>

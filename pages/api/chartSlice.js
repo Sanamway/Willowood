@@ -1,11 +1,11 @@
+import { categoryData } from "@/components/Dashboard/sampleData";
 import { createSlice } from "@reduxjs/toolkit";
 
 const chartReports = createSlice({
   name: "Activity",
   initialState: {
-    cartItem: [],
-    tableItem: [],
-    collectionData: [],
+    brandItems: [],
+    categoryItems: [],
   },
 
   reducers: {

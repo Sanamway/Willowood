@@ -41,6 +41,7 @@ const BusinessSegment = () => {
   });
 
   useEffect(() => {
+    if (router.query.type === "Add") return;
     setFilter({
       cId: router.query.cId,
       bgId: router.query.bgId,
@@ -214,12 +215,17 @@ const BusinessSegment = () => {
   };
 
   const [allMrData, setAllMrData] = useState([]);
-
+  const [localItems, setLocalItems] = useState({
+    cId: "",
+  });
   const getMrCatData = async (cId) => {
     try {
+      setLocalItems({
+        cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+      });
       const respond = await axios.get(`${url}/api/get_mr_category`, {
         params: {
-          c_id: cId,
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         },
         headers: headers,
       });
@@ -228,8 +234,8 @@ const BusinessSegment = () => {
     } catch (error) {}
   };
   useEffect(() => {
-    getMrCatData(filter.cId);
-  }, [filter.cId]);
+    getMrCatData();
+  }, []);
 
   const handleSave = () => {
     if (router.query.type === "Add") {
@@ -291,7 +297,7 @@ const BusinessSegment = () => {
             ...item,
             bg_id: Number(filter.bgId) || null,
             bu_id: Number(filter.buId) || null,
-            c_id: Number(filter.cId) || null,
+            c_id: localItems.cId || null,
             mrc_id: filter.mrCat || null,
             mr_Category_name:
               allMrData.filter(
@@ -312,6 +318,7 @@ const BusinessSegment = () => {
           });
         });
     } catch (errors) {
+      console.log("pop", errors);
       const errorMessage = errors?.response?.data?.message;
       if (errorMessage) {
         toast.error(errorMessage);
@@ -361,9 +368,9 @@ const BusinessSegment = () => {
           <select
             id="attendanceType"
             className="  border p-1 rounded ml-2 w-72"
-            value={filter.cId}
+            value={localItems.cId}
             onChange={(e) => setFilter({ ...filter, cId: e.target.value })}
-            disabled={router.query.type !== "Add"}
+            disabled
           >
             <option value={""}>Company Info</option>
             {companyInfo.map((item) => (
@@ -409,6 +416,7 @@ const BusinessSegment = () => {
               onChange={handleYearChange}
               hand
               showYearPicker
+              minDate={new Date(new Date().getFullYear(), 0, 1)}
             />
           ) : (
             <input
@@ -424,7 +432,7 @@ const BusinessSegment = () => {
             onChange={(e) => setFilter({ ...filter, mrCat: e.target.value })}
             disabled={router.query.type !== "Add"}
           >
-            <option value={""}>MR Category</option>
+            <option value={""}>Select MR Category</option>
             {allMrData.map((item) => (
               <option value={item.mrc_id}>{item.mr_Category_name}</option>
             ))}
@@ -432,8 +440,8 @@ const BusinessSegment = () => {
         </div>
 
         <div className="bg-white  max-w-full pb-12 ">
-          <div className=" text-black font-arial  w-full p-1 h-[780px] overflow-y-auto scrollbar-">
-            <table className="min-w-full divide-y border- divide-gray-200">
+          <div className=" text-black font-arial  w-full p-1 h-[760px] overflow-y-auto scrollbar-">
+            <table className="min-w-full divide-y border- divide-gray-200 font-bold">
               <thead className="border-b w-max">
                 <tr className="bg-sky-800 font-arial w-max ">
                   <th className="px-4 py-2 text-left border-black border-x-2  border-t-2 text-xs font-medium text-white whitespace-nowrap  tracking-wider">
@@ -459,18 +467,25 @@ const BusinessSegment = () => {
                     SVN
                   </th>
                   <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
+                    GVM
+                  </th>
+                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
                     CAP
                   </th>
                   <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
                     SHC
                   </th>
+
                   <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
                     Total
+                  </th>
+                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
+                    Action
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-                {monthList.map((item) => (
+                {monthList.map((item, index) => (
                   <tr className="dark:border-2">
                     <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
                       {`${item.month} - ${item.year}`}
@@ -482,24 +497,28 @@ const BusinessSegment = () => {
                           <input
                             className="p-0 w-16 text-white h-6 bg-sky-800 "
                             value="Target"
+                            disabled
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black bg-sky-800  p-1">
                           <input
                             className="p-0 w-16 text-white h-6 bg-sky-800 "
                             value="Min Ach."
+                            disabled
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black bg-sky-800  p-1">
                           <input
                             className="p-0 w-16 text-white h-6 bg-sky-800 "
                             value="Weightage"
+                            disabled
                           />
                         </li>
                         <li className="  flex justify-center bg-green-400  text-black   p-1  ">
                           <input
                             className="p-0 w-16 h-6   text-white bg-green-400"
                             value="Score"
+                            disabled
                           />
                         </li>
                       </ul>
@@ -509,7 +528,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black   p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right "
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_demo ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_demo}
                             onChange={(e) => {
@@ -525,9 +546,11 @@ const BusinessSegment = () => {
                             }}
                           />
                         </li>
-                        <li className="border-b-2 border-black  flex justify-center     p-1">
+                        <li className="border-b-2 border-black  flex justify-center  text-black   p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right  text-black"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_demo ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_demo}
                             onChange={(e) => {
@@ -543,9 +566,11 @@ const BusinessSegment = () => {
                             }}
                           />
                         </li>
-                        <li className="border-b-2 border-black  flex justify-center   p-1">
+                        <li className="border-b-2 border-black  flex justify-center  text-black p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right text-black"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_demo ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_demo}
                             onChange={(e) => {
@@ -563,7 +588,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="  flex justify-center bg-green-400  text-black   p-1  ">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.score ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.score}
                             onChange={(e) => {
@@ -586,7 +613,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_f_day ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_f_day}
                             onChange={(e) => {
@@ -604,7 +633,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_f_day ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_f_day}
                             onChange={(e) => {
@@ -622,7 +653,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_f_day ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_f_day}
                             onChange={(e) => {
@@ -652,7 +685,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_o2o ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_o2o}
                             onChange={(e) => {
@@ -670,7 +705,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_o2o ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_o2o}
                             onChange={(e) => {
@@ -688,7 +725,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_o2o ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_o2o}
                             onChange={(e) => {
@@ -708,6 +747,7 @@ const BusinessSegment = () => {
                           <input
                             className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
                             type="number"
+                            disabled
                             value={"-"}
                           />
                         </li>
@@ -717,7 +757,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_gmt ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_gmt}
                             onChange={(e) => {
@@ -735,7 +777,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_gmt ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_gmt}
                             onChange={(e) => {
@@ -753,7 +797,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_gmt ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_gmt}
                             onChange={(e) => {
@@ -773,6 +819,7 @@ const BusinessSegment = () => {
                           <input
                             className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
                             type="number"
+                            disabled
                             value={"-"}
                           />
                         </li>
@@ -782,7 +829,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_svn ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_svn}
                             onChange={(e) => {
@@ -800,7 +849,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_svn ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_svn}
                             onChange={(e) => {
@@ -818,7 +869,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_svn ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_svn}
                             onChange={(e) => {
@@ -838,6 +891,7 @@ const BusinessSegment = () => {
                           <input
                             className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
                             type="number"
+                            disabled
                             value={"-"}
                           />
                         </li>
@@ -847,7 +901,81 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_gvm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
+                            type="number"
+                            value={item.t_gvm}
+                            onChange={(e) => {
+                              setMonthList(
+                                monthList.map((el) => {
+                                  if (el.month === item.month) {
+                                    return { ...el, t_gvm: e.target.value };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              );
+                            }}
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
+                          <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_gvm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
+                            type="number"
+                            value={item.m_gvm}
+                            onChange={(e) => {
+                              setMonthList(
+                                monthList.map((el) => {
+                                  if (el.month === item.month) {
+                                    return { ...el, m_gvm: e.target.value };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              );
+                            }}
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
+                          <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_gvm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
+                            type="number"
+                            value={item.w_gvm}
+                            onChange={(e) => {
+                              setMonthList(
+                                monthList.map((el) => {
+                                  if (el.month === item.month) {
+                                    return { ...el, w_gvm: e.target.value };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              );
+                            }}
+                          />
+                        </li>
+                        <li className="  flex justify-center bg-green-400  text-black   p-1  ">
+                          <input
+                            className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
+                            type="number"
+                            disabled
+                            value={"-"}
+                          />
+                        </li>
+                      </ul>
+                    </td>
+                    <td className="  border-2 border-black  whitespace-nowrap text-white p-0 bg-white">
+                      <ul>
+                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
+                          <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_cap ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_cap}
                             onChange={(e) => {
@@ -865,7 +993,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_cap ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_cap}
                             onChange={(e) => {
@@ -883,7 +1013,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_cap ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_cap}
                             onChange={(e) => {
@@ -903,6 +1035,7 @@ const BusinessSegment = () => {
                           <input
                             className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
                             type="number"
+                            disabled
                             value={"-"}
                           />
                         </li>
@@ -912,7 +1045,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_shc ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_shc}
                             onChange={(e) => {
@@ -930,7 +1065,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_shc ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_shc}
                             onChange={(e) => {
@@ -948,7 +1085,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-black text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_shc ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_shc}
                             onChange={(e) => {
@@ -968,6 +1107,7 @@ const BusinessSegment = () => {
                           <input
                             className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
                             type="number"
+                            disabled
                             value={"-"}
                           />
                         </li>
@@ -979,6 +1119,7 @@ const BusinessSegment = () => {
                         <li className="border-b-2 border-black  flex justify-center text-black  bg-gray-400  p-1">
                           <input
                             className="p-0 w-16 text-white h-6  bg-gray-400 "
+                            disabled
                             value={
                               Number(item.t_demo) +
                               Number(item.t_f_day) +
@@ -993,6 +1134,7 @@ const BusinessSegment = () => {
                         <li className="border-b-2 border-black  flex justify-center text-black  bg-gray-400  p-1">
                           <input
                             className="p-0 w-16 text-white h-6  bg-gray-400 "
+                            disabled
                             value={
                               Number(item.m_demo) +
                               Number(item.m_f_day) +
@@ -1007,6 +1149,7 @@ const BusinessSegment = () => {
                         <li className="border-b-2 border-black  flex justify-center text-black bg-gray-400  p-1">
                           <input
                             className="p-0 w-16 text-white h-6  bg-gray-400 "
+                            disabled
                             value={
                               Number(item.w_demo) +
                               Number(item.w_f_day) +
@@ -1021,39 +1164,62 @@ const BusinessSegment = () => {
                         <li className="  flex justify-center  bg-gray-400  text-black   p-1  ">
                           <input
                             className="p-0 w-16 h-6   text-white  bg-gray-400"
+                            disabled
                             value={item.score}
                           />
                         </li>
                       </ul>
                     </td>
+                    <td className="pl-4 w-20 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                      {index !== 0 && (
+                        <button
+                          className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-8"
+                          onClick={() => {
+                            setMonthList(
+                              monthList.map((el) => {
+                                if (el.month === item.month) {
+                                  return {
+                                    ...monthList[index - 1],
+                                    month: el.month,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            );
+                          }}
+                        >
+                          Copy
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            {router.query.type === "Add" || router.query.type === "Edit" ? (
+              <div className="flex w-full h-8 gap-4 m-2 ">
+                <button
+                  className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-8"
+                  onClick={() => handleSave()}
+                >
+                  Submit
+                </button>
+                <button
+                  onClick={() => {
+                    router.push({
+                      pathname: "/MR_Portal_Web/Table_MR_ActivityTarget",
+                    });
+                  }}
+                  className="bg-red-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-8"
+                >
+                  Close
+                </button>
+              </div>
+            ) : (
+              <div className="flex w-full  gap-4 m-2 "></div>
+            )}
           </div>
-
-          {router.query.type === "Add" || router.query.type === "Edit" ? (
-            <div className="flex w-full  gap-4 m-2 ">
-              <button
-                className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-12"
-                onClick={() => handleSave()}
-              >
-                Submit
-              </button>
-              <button
-                onClick={() => {
-                  router.push({
-                    pathname: "/MR_Portal_Web/Table_MR_ActivityTarget",
-                  });
-                }}
-                className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-12"
-              >
-                Close
-              </button>
-            </div>
-          ) : (
-            <div className="flex w-full  gap-4 m-2 "></div>
-          )}
         </div>
       </div>
     </Layout>

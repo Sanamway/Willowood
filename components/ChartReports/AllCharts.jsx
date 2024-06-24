@@ -493,8 +493,8 @@ const AllCharts = (props) => {
             Chart
           </button>
         </div>
-        <div className="flex flex-row gap-4 flex-wrap ">
-          <div className="w-1/3 px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md lg:w-1/5">
+        <div className="flex flex-row flex-wrap lg:gap-4">
+          <div className="w-full px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md lg:w-1/5">
             <div className="bg-white p-2 flex-1 md:flex items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
               <div className="flex items-center justify-between w-full text-gray-600">
                 <div className="flex items-center justify-center gap-1 ">
@@ -525,7 +525,7 @@ const AllCharts = (props) => {
               </div>
             </div>
           </div>
-          <div className="w-1/3 px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md lg:w-1/5">
+          <div className="w-full px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md lg:w-1/5">
             <div className="bg-white p-2 flex-1 md:flex items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
               <div className="flex items-center justify-between w-full text-gray-600">
                 <div className="flex items-center justify-center gap-1 ">
@@ -557,7 +557,7 @@ const AllCharts = (props) => {
             </div>
           </div>
 
-          <div className="w-1/3 px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md lg:w-1/5">
+          <div className="w-full px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md lg:w-1/5">
             <div className="bg-white p-2 flex-1 md:flex items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
               <div className="flex items-center justify-between w-full text-gray-600">
                 <div className="flex items-center justify-center gap-1 ">
@@ -589,7 +589,7 @@ const AllCharts = (props) => {
             </div>
           </div>
 
-          <div className="w-1/3 px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md lg:w-1/5">
+          <div className="w-full px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md lg:w-1/5">
             <div className="bg-white p-2 flex-1 md:flex items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
               <div className="flex items-center justify-between w-full text-gray-600">
                 <div className="flex items-center justify-center gap-1 ">
@@ -1670,14 +1670,13 @@ const AllCharts = (props) => {
                         ).toFixed(2)}
                   </span>
                 </div>
-                <div className="border border-gray-300  flex justify-between items-center">
+                <div className="border border-gray-300  flex justify-between items-center ">
                   <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
                     {props.cSummaryData.targetCurrent.toFixed(2)}
                   </span>
                   <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
                     {props.cSummaryData.actualCurrent.toFixed(2)}
                   </span>
-
                   <span className=" flex items-center  justify-center  border-gray-300 w-20">
                     {(
                       (props.cSummaryData.actualCurrent /
@@ -1698,19 +1697,6 @@ const AllCharts = (props) => {
                   </span>
                 </div>
               </div>
-            </div>
-
-            <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
-              {/* Product Segment Table  */}
-
-              <TableChartTwo
-                heading={"Product Segment"}
-                title={
-                  "Product Segment ( Target vs Achievement )  - Annual , YTD , MTD"
-                }
-                color={"bg-white"}
-                datas={props.productSegmentData || []}
-              ></TableChartTwo>
             </div>
 
             <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
@@ -1736,6 +1722,19 @@ const AllCharts = (props) => {
                 }
                 color={"bg-white"}
                 datas={props.productBrandData || []}
+              ></TableChartTwo>
+            </div>
+
+            <div className="mt-2 lg:mt-6 md:flex items-start justify-center gap-4  ">
+              {/* Product Segment Table  */}
+
+              <TableChartTwo
+                heading={"Product Segment"}
+                title={
+                  "Product Segment ( Target vs Achievement )  - Annual , YTD , MTD"
+                }
+                color={"bg-white"}
+                datas={props.productSegmentData || []}
               ></TableChartTwo>
             </div>
           </div>

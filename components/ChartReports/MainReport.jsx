@@ -9,11 +9,8 @@ import { url } from "@/constants/url";
 import * as XLSX from "xlsx";
 import CollectionChartPopup from "./CollectionChartPopup";
 import SaleChartPopup from "./SaleChartPopup";
-import { useSelector } from "react-redux";
 
 const MainReport = () => {
-  const allData = useSelector((store) => store);
-
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
