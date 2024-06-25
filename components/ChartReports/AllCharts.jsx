@@ -1709,6 +1709,7 @@ const AllCharts = (props) => {
                 }
                 color={"bg-white"}
                 datas={props.productCategoryData || []}
+                filterState={props.filterState}
               ></TableChartTwo>
             </div>
 
@@ -1722,6 +1723,7 @@ const AllCharts = (props) => {
                 }
                 color={"bg-white"}
                 datas={props.productBrandData || []}
+                filterState={props.filterState}
               ></TableChartTwo>
             </div>
 
@@ -1735,6 +1737,7 @@ const AllCharts = (props) => {
                 }
                 color={"bg-white"}
                 datas={props.productSegmentData || []}
+                filterState={props.filterState}
               ></TableChartTwo>
             </div>
           </div>

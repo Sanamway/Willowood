@@ -1546,8 +1546,10 @@ const MainReport = () => {
               downloadExcelData.yr
             )
           }
+          filterState={filterState}
         />
       </div>
+      {console.log("njkl", filterState)}
       {showSalesModal && (
         <SaleChartPopup
           handleClose={() => setShowSalesModal(false)}

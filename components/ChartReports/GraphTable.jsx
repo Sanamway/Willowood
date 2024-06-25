@@ -68,7 +68,7 @@ const GraphTable = (props) => {
 
   // console.log(obj1.w); // { name: 'obj1', getThis: [Function: getThis] }
   // console.log(obj2.getThis()); // { name: 'obj2', getThis: [Function: getThis] }
-
+  const handleFilterBrand = () => {};
   return (
     <>
       {mounted && (
@@ -80,16 +80,24 @@ const GraphTable = (props) => {
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 h-full">
             <thead className="text-xs text-gray-900 text-center bg-gray-100 ">
               <tr className="">
+                {props.heading === "Product Brand" && (
+                  <th className="px-4 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
+                    Product Category
+                  </th>
+                )}
                 <th className="px-4 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
                   {props.heading}
                 </th>
 
+                {console.log("njkl", props)}
                 <th className="px-4 py-1 text-center text-[0.6rem]  border font-medium text-gray-800 t">
-                  FY Sales Val 21-22
+                  FY Sales Val {(props.filterState.yr - 2) % 100} -{" "}
+                  {(props.filterState.yr - 1) % 100}
                 </th>
 
                 <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
-                  FY Sales Val 22-23
+                  FY Sales Val {(props.filterState.yr - 1) % 100} -{" "}
+                  {props.filterState.yr % 100}
                 </th>
                 {props.heading === "Product Brand" && (
                   <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
@@ -130,6 +138,10 @@ const GraphTable = (props) => {
                 <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
                   YTD Budget Value
                 </th>
+
+                <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
+                  YTD RSP Value
+                </th>
                 <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
                   YTD Actual Sale Value
                 </th>
@@ -137,7 +149,7 @@ const GraphTable = (props) => {
                   YTD Budget Achivement %
                 </th>
                 <th className="px-2 py-1 text-center text-[0.6rem] bg-green-200 border font-medium text-gray-800   ">
-                  YTD RSP Achivement %
+                  YTD Sales Achivement %
                 </th>
 
                 <th className="px-2 py-1 text-center text-[0.6rem] bg-orange-100 border font-medium text-gray-800   ">
@@ -149,6 +161,12 @@ const GraphTable = (props) => {
               {data?.length &&
                 data?.map((item, index) => (
                   <tr key={index}>
+                    <td
+                      className={`px-2 text-left whitespace-nowrap
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
+                      {item["category"]}
+                    </td>
                     <td
                       className={`px-2 text-left whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
@@ -264,6 +282,12 @@ const GraphTable = (props) => {
                       className={`px-2 text-center whitespace-nowrap 
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
+                      {item[Object.keys(item)[36]]}
+                    </td>
+                    <td
+                      className={`px-2 text-center whitespace-nowrap 
+                   py-1 text-[0.6rem] text-gray-900 border `}
+                    >
                       {item[Object.keys(item)[8]]}
                     </td>
                     <td
@@ -284,6 +308,7 @@ const GraphTable = (props) => {
                           ).toFixed(2) + " %"
                         : "0 %"}
                     </td>
+
                     <td
                       className={`px-2 text-center whitespace-nowrap ${
                         index == 9 || index == 10
@@ -294,8 +319,13 @@ const GraphTable = (props) => {
                   ${index == 16 || index == 17 ? "bg-orange-100" : ""}
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
-                      {"0%"}
-                      {/* {item[Object.keys(item)["%"]]} */}
+                      {item[Object.keys(item)[6]] !== 0
+                        ? (
+                            (item[Object.keys(item)[8]] /
+                              item[Object.keys(item)[36]]) *
+                            100
+                          ).toFixed(2) + " %"
+                        : "0 %"}
                     </td>
 
                     <td
@@ -324,6 +354,7 @@ const GraphTable = (props) => {
         ${columnIndex === 14 || columnIndex === 15 ? "bg-green-200" : ""}
         ${columnIndex === 16 || columnIndex === 17 ? "bg-orange-100" : ""}
         py-1 text-[0.6rem] text-gray-900 border `}
+onClick={()=> handleFilterBrand()}
                       >
                         {columnIndex === 9 || columnIndex === 10 || columnIndex === 5
                           ? ""
@@ -387,6 +418,9 @@ const GraphTable = (props) => {
                 )}
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
                   {parseFloat(resultSum[Object.keys(resultSum)[25]]).toFixed(2)}
+                </td>
+                <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                  {parseFloat(resultSum[Object.keys(resultSum)[36]]).toFixed(2)}
                 </td>
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
                   {parseFloat(resultSum[Object.keys(resultSum)[8]]).toFixed(2)}

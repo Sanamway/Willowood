@@ -262,6 +262,7 @@ const TableChartTwo = (props) => {
             } px-2`}
             data={datas || []}
             heading={props.heading}
+            filterState={props.filterState}
           />
         )}
       </div>
