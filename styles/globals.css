@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@tailwindcss/animation;
+@tailwindcss /animation;
 
 /* :root {
   --foreground-rgb: 0, 0, 0;
@@ -57,7 +57,6 @@ body {
   border-width: 0px !important;
 }
 
-
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
@@ -79,13 +78,10 @@ body {
   background-color: #ffffff;
 }
 
-
-
 /* custom.css */
 .no-outline:focus {
   outline: none;
 }
-
 
 /* Progress Bar Css */
 
@@ -187,38 +183,42 @@ body {
 
 .progress-striped .progress-bar,
 .progress-bar-striped {
-  background-image: -webkit-linear-gradient(45deg,
-      rgba(255, 255, 255, 0.15) 25%,
-      transparent 25%,
-      transparent 50%,
-      rgba(255, 255, 255, 0.15) 50%,
-      rgba(255, 255, 255, 0.15) 75%,
-      transparent 75%,
-      transparent);
-  background-image: -o-linear-gradient(45deg,
-      rgba(255, 255, 255, 0.15) 25%,
-      transparent 25%,
-      transparent 50%,
-      rgba(255, 255, 255, 0.15) 50%,
-      rgba(255, 255, 255, 0.15) 75%,
-      transparent 75%,
-      transparent);
-  background-image: linear-gradient(45deg,
-      rgba(255, 255, 255, 0.15) 25%,
-      transparent 25%,
-      transparent 50%,
-      rgba(255, 255, 255, 0.15) 50%,
-      rgba(255, 255, 255, 0.15) 75%,
-      transparent 75%,
-      transparent);
+  background-image: -webkit-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-image: -o-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
   background-size: 40px 40px;
 }
 
 .progress-bar-success {
   background-color: #64dd17;
 }
-
-
 
 .inputOTPBOX {
   margin: 2px !important;
@@ -231,21 +231,19 @@ body {
 @layer utilities {
   @variants responsive {
     .no-scrollbar::-webkit-scrollbar {
-        display: none;
+      display: none;
     }
     .no-scrollbar {
-        -ms-overflow-style: none; 
-        scrollbar-width: none; 
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   }
 }
-
 
 /* homepagetbscroll */
 .tabscrollbar-hide::-webkit-scrollbar {
   display: none;
 }
-
 
 /* chat scroll bar  */
 
@@ -267,9 +265,8 @@ body {
 }
 
 .chat-scrollbar:hover::-webkit-scrollbar-track {
-  background-color:white;
+  background-color: white;
 }
-
 
 /* RPTransaction Plan  */
 
@@ -283,31 +280,27 @@ body {
   z-index: -1;
 } */
 
-
-
 .steps li {
   position: relative;
-  
 }
 
-
 .steps li::after {
-  content: '';
+  content: "";
   position: absolute;
   height: 2px;
-  background: #01a9ac; 
-  width: 100%; 
+  background: #01a9ac;
+  width: 100%;
   top: 50%;
   left: 100%;
   z-index: -1;
 }
 
 .steps li::before {
-  content: '';
+  content: "";
   position: absolute;
   height: 2px;
-  background: #01a9ac; 
-  width: 100%; 
+  background: #01a9ac;
+  width: 100%;
   top: 50%;
   right: 100%;
   z-index: -1;
@@ -317,7 +310,6 @@ body {
 
 .tableInfo {
   width: 86vw;
- 
 }
 
 @media screen and (min-width: 768px) {
@@ -328,22 +320,21 @@ body {
 
 /* tableName  */
 
-.tabletitle{
-font-size: 1.25rem;
+.tabletitle {
+  font-size: 1.25rem;
 }
 
 /* sidebarmenus  */
 
-.sidemenuActive{
-color:green;
-background-color: #ff5722;
+.sidemenuActive {
+  color: green;
+  background-color: #ff5722;
 }
 
-.sidemenuNoActive{
-color:white;
-background-color: #ff5722;
+.sidemenuNoActive {
+  color: white;
+  background-color: #ff5722;
 }
-
 
 /* removing the incre decre */
 
@@ -360,7 +351,3 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
-
-
-
-

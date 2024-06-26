@@ -161,12 +161,15 @@ const GraphTable = (props) => {
               {data?.length &&
                 data?.map((item, index) => (
                   <tr key={index}>
-                    <td
-                      className={`px-2 text-left whitespace-nowrap
-                   py-1 text-[0.6rem] text-gray-900 border `}
-                    >
-                      {item["category"]}
-                    </td>
+                    {props.heading === "Product Brand" && (
+                      <td
+                        className={`px-2 text-left whitespace-nowrap
+                py-1 text-[0.6rem] text-gray-900 border `}
+                      >
+                        {item["category"]}
+                      </td>
+                    )}
+
                     <td
                       className={`px-2 text-left whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
@@ -319,7 +322,7 @@ const GraphTable = (props) => {
                   ${index == 16 || index == 17 ? "bg-orange-100" : ""}
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
-                      {item[Object.keys(item)[6]] !== 0
+                      {item[Object.keys(item)[36]] !== 0
                         ? (
                             (item[Object.keys(item)[8]] /
                               item[Object.keys(item)[36]]) *
@@ -371,6 +374,11 @@ onClick={()=> handleFilterBrand()}
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border whitespace-nowrap">
                   Total ( All Values in Cr.)
                 </td>
+                {props.heading === "Product Brand" && (
+                  <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                    -
+                  </td>
+                )}
                 <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
                   {parseFloat(resultSum[Object.keys(resultSum)[2]]).toFixed(2)}
                 </td>

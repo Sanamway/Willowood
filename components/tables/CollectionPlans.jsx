@@ -228,8 +228,6 @@ const CollectionPlans = () => {
     }
   }, [allYearData]);
 
- 
-
   const [bgData, setBgData] = useState([]);
 
   const getBusinesSegmentInfo = async () => {
@@ -452,8 +450,124 @@ const CollectionPlans = () => {
       });
 
       const apires = await respond.data.data;
+
       console.log("new data", apires);
       setAllTableData(apires);
+      let actualValue = 0;
+      let budgetValue = 0;
+      let targetValue = 0;
+      let mtargetValue = 0;
+      let actualValueH1 = 0;
+      let budgetValueH1 = 0;
+      let targetValueH1 = 0;
+      let mtargetValueH1 = 0;
+      let actualValueH2 = 0;
+      let budgetValueH2 = 0;
+      let targetValueH2 = 0;
+      let mtargetValueH2 = 0;
+      let actualValueCurrent = 0;
+      let budgetValueCurrent = 0;
+      let targetValueCurrent = 0;
+      let mtargetValueCurrent = 0;
+      apires.forEach((element) => {
+        actualValue = Number(actualValue) + Number(element.actual);
+        budgetValue = Number(budgetValue) + Number(element.budget);
+        targetValue = Number(targetValue) + Number(element.target);
+        mtargetValue = Number(mtargetValue) + Number(element.m_target);
+        if (Number(moment(element.m_year).format("M")) === 4) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+          mtargetValueH1 = Number(mtargetValueH1) + Number(element.m_target);
+        } else if (Number(moment(element.m_year).format("M")) === 5) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+          mtargetValueH1 = Number(mtargetValueH1) + Number(element.m_target);
+        } else if (Number(moment(element.m_year).format("M")) === 6) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+          mtargetValueH1 = Number(mtargetValueH1) + Number(element.m_target);
+        } else if (Number(moment(element.m_year).format("M")) === 7) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+          mtargetValueH1 = Number(mtargetValueH1) + Number(element.m_target);
+        } else if (Number(moment(element.m_year).format("M")) === 8) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+          mtargetValueH1 = Number(mtargetValueH1) + Number(element.m_target);
+        } else if (Number(moment(element.m_year).format("M")) === 9) {
+          actualValueH1 = Number(actualValueH1) + Number(element.actual);
+          budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
+          targetValueH1 = Number(targetValueH1) + Number(element.target);
+          mtargetValueH1 = Number(mtargetValueH1) + Number(element.m_target);
+        } else if (Number(moment(element.m_year).format("M")) === 10) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+          mtargetValueH2 = Number(mtargetValueH2) + Number(element.m_target);
+        } else if (Number(moment(element.m_year).format("M")) === 11) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+          mtargetValueH2 = Number(mtargetValueH2) + Number(element.m_target);
+        } else if (Number(moment(element.m_year).format("M")) === 12) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+          mtargetValueH2 = Number(mtargetValueH2) + Number(element.m_target);
+        } else if (Number(moment(element.m_year).format("M")) === 1) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+          mtargetValueH2 = Number(mtargetValueH2) + Number(element.m_target);
+        } else if (Number(moment(element.m_year).format("M")) === 2) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+          mtargetValueH2 = Number(mtargetValueH2) + Number(element.m_target);
+        } else if (Number(moment(element.m_year).format("M")) === 3) {
+          actualValueH2 = Number(actualValueH2) + Number(element.actual);
+          budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
+          targetValueH2 = Number(targetValueH2) + Number(element.target);
+          mtargetValueH2 = Number(mtargetValueH2) + Number(element.m_target);
+        }
+
+        if (
+          moment(element.m_year).format("M") === moment(new Date()).format("M")
+        ) {
+          actualValueCurrent =
+            Number(actualValueCurrent) + Number(element.actual);
+          budgetValueCurrent =
+            Number(budgetValueCurrent) + Number(element.budget);
+          targetValueCurrent =
+            Number(targetValueCurrent) + Number(element.target);
+          mtargetValueCurrent =
+            Number(mtargetValueCurrent) + Number(element.m_target);
+        }
+        setCollectionSummaryData({
+          actual: actualValue,
+          budget: budgetValue,
+          target: targetValue,
+          mTarget: mtargetValue,
+          actualH1: actualValueH1,
+          budgetH1: budgetValueH1,
+          targetH1: targetValueH1,
+          mTargetH1: mtargetValueH1,
+          actualH2: actualValueH2,
+          budgetH2: budgetValueH2,
+          targetH2: targetValueH2,
+          mTargetH2: mtargetValueH2,
+
+          actualCurrent: actualValueCurrent,
+          budgetCurrent: budgetValueCurrent,
+          targetCurrent: targetValueCurrent,
+          mTargetCurrent: mtargetValueCurrent,
+        });
+      });
     } catch (error) {
       setDownloadLoading(false);
       if (!error) return;
@@ -574,6 +688,7 @@ const CollectionPlans = () => {
       const apires = await respond.data.data;
       handleDraftClose();
       setSuccessMsg(respond.data.message);
+
       setSuccessOpen(true);
       getAllSalesPlanStatus(
         filterState.yr || null,
@@ -3414,6 +3529,109 @@ const CollectionPlans = () => {
     getReviewMsgDropDown(rejectModalData.cId);
   }, [rejectModalData.cId]);
 
+  const [collectionSummaryData, setCollectionSummaryData] = useState({
+    actual: 0,
+    budget: 0,
+    target: 0,
+    mTarget: 0,
+
+    actualH1: 0,
+    budgetH1: 0,
+    targetH1: 0,
+    mTargetH1: 0,
+
+    actualH2: 0,
+    budgetH2: 0,
+    targetH2: 0,
+    mTargetH2: 0,
+
+    actualCurrent: 0,
+    budgetCurrent: 0,
+    targetCurrent: 0,
+    mTargetCurrent: 0,
+  });
+
+  const getProgressBar = (item) => {
+    let percentage = (item.actual / item.target) * 100;
+    if (percentage <= 50 || !isFinite(percentage)) {
+      return (
+        <div className="progress progress-striped active flex flex-row pr-4 justify-between">
+          <span className="font-bold text-xs whitespace-nowrap">
+            {item.target}/ {item.actual}
+          </span>
+          <div
+            role="progressbar"
+            style={{
+              width: `${(item.actual / item.target) * 100}%`,
+            }}
+            className=" bg-red-500 rounded-md flex    justify-end"
+          >
+            <span className="inline-block text-xs font-bold whitespace-nowrap  ">
+              {(Number(item.actual / item.target) * 100).toFixed(2)} %
+            </span>
+          </div>
+        </div>
+      );
+    } else if (percentage > 50 && percentage <= 74) {
+      return (
+        <div className="progress progress-striped active flex flex-row pr-4 justify-between">
+          <span className="font-bold text-xs whitespace-nowrap">
+            {item.target}/ {item.actual}
+          </span>
+          <div
+            role="progressbar"
+            style={{
+              width: `${(item.actual / item.target) * 100}%`,
+            }}
+            className=" bg-blue-500 rounded-md flex    justify-end"
+          >
+            <span className="inline-block text-xs font-bold whitespace-nowrap ">
+              {(Number(item.actual / item.target) * 100).toFixed(2)} %
+            </span>
+          </div>
+        </div>
+      );
+    } else if (percentage > 74 && percentage <= 90) {
+      return (
+        <div className="progress progress-striped active flex flex-row pr-4 justify-between">
+          <span className="font-bold text-xs whitespace-nowrap">
+            {item.target}/ {item.actual}
+          </span>
+          <div
+            role="progressbar"
+            style={{
+              width: `${(item.actual / item.target) * 100}%`,
+            }}
+            className=" bg-orange-500 rounded-md flex    justify-end"
+          >
+            <span className="inline-block text-xs font-bold whitespace-nowrap ">
+              {(Number(item.actual / item.target) * 100).toFixed(2)} %
+            </span>
+          </div>
+        </div>
+      );
+    } else if (percentage > 90) {
+      return (
+        <div className="progress progress-striped active flex flex-row pr-4 justify-between">
+          <span className="font-bold text-xs whitespace-nowrap">
+            {item.target}/ {item.actual}
+          </span>
+          <div
+            role="progressbar"
+            style={{
+              width: `${(item.actual / item.target) * 100}%`,
+            }}
+            className=" bg-green-500 rounded-md  flex    justify-end"
+          >
+            <span className="inline-block text-xs font-bold whitespace-nowrap ">
+              {(Number(item.actual / item.target) * 100).toFixed(2)} %
+            </span>
+          </div>
+        </div>
+      );
+    }
+  };
+
   return (
     <Layout>
       <div className="h-screen  w-full font-arial bg-white">
@@ -3630,7 +3848,212 @@ const CollectionPlans = () => {
             </select>
           </div>
         </div>
-        <div className="bg-white h-screen flex items-start justify-center max-w-full">
+        <h2 className="font-bold self-center text-sm mt-2 px-12">
+          {" "}
+          Collection Plan
+        </h2>
+        <div className="hidden lg:flex flex-col mt-2 text-sm px-12">
+          <div className="grid grid-cols-4  text-sm ">
+            <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200 ">
+              YTD
+            </div>
+            <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200">
+              H1 - (April - Sept)
+            </div>
+            <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200">
+              H2 - (Oct - March)
+            </div>
+            <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200">
+              Current Month-MTD
+            </div>
+          </div>
+
+          <div className="grid grid-cols-4  text-sm  font-bold text-xs ">
+            <div className="border border-gray-300  flex justify-between items-center">
+              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                Target
+              </span>
+              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                M Target
+              </span>
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                Actual
+              </span>
+
+              <span className=" flex items-center justify-center   border-gray-300 w-20">
+                Ach%
+              </span>
+            </div>
+            <div className="border border-gray-300  flex justify-between items-center">
+              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                Target
+              </span>
+              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                M Target
+              </span>
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                Actual
+              </span>
+
+              <span className=" flex items-center justify-center   border-gray-300 w-20">
+                Ach%
+              </span>
+            </div>
+            <div className="border border-gray-300  flex justify-between items-center">
+              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                Target
+              </span>
+              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                M Target
+              </span>
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                Actual
+              </span>
+
+              <span className=" flex items-center justify-center   border-gray-300 w-20">
+                Ach%
+              </span>
+            </div>
+            <div className="border border-gray-300  flex justify-between items-center">
+              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                Target
+              </span>
+              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                M Target
+              </span>
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                Actual
+              </span>
+
+              <span className=" flex items-center justify-center   border-gray-300 w-20">
+                Ach%
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-4  text-sm bg-white ">
+            <div className="border border-gray-300  flex justify-between items-center">
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                {collectionSummaryData.target.toFixed(2)}
+              </span>
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                {collectionSummaryData.mTarget.toFixed(2)}
+              </span>
+              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                {collectionSummaryData.actual.toFixed(2)}
+              </span>
+
+              <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                {(
+                  (collectionSummaryData.actual /
+                    collectionSummaryData.target) *
+                  100
+                ).toFixed(2) === "NaN" ||
+                (
+                  (collectionSummaryData.actual.toFixed(2) /
+                    collectionSummaryData.target.toFixed(2)) *
+                  100
+                ).toFixed(2) === "Infinity"
+                  ? 0
+                  : (
+                      (collectionSummaryData.actual /
+                        collectionSummaryData.target) *
+                      100
+                    ).toFixed(2)}
+              </span>
+            </div>
+            <div className="border border-gray-300  flex justify-between items-center">
+              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                {collectionSummaryData.targetH1.toFixed(2)}
+              </span>
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                {collectionSummaryData.mTargetH1.toFixed(2)}
+              </span>
+              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                {collectionSummaryData.actualH1.toFixed(2)}
+              </span>
+
+              <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                {(
+                  (collectionSummaryData.actualH1 /
+                    collectionSummaryData.targetH1) *
+                  100
+                ).toFixed(2) === "NaN" ||
+                (
+                  (collectionSummaryData.actualH1.toFixed(2) /
+                    collectionSummaryData.targetH1.toFixed(2)) *
+                  100
+                ).toFixed(2) === "Infinity"
+                  ? 0
+                  : (
+                      (collectionSummaryData.actualH1 /
+                        collectionSummaryData.targetH1) *
+                      100
+                    ).toFixed(2)}
+              </span>
+            </div>
+            <div className="border border-gray-300  flex justify-between items-center">
+              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                {collectionSummaryData.targetH2.toFixed(2)}
+              </span>
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                {collectionSummaryData.mTargetH2.toFixed(2)}
+              </span>
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                {collectionSummaryData.actualH2.toFixed(2)}
+              </span>
+
+              <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                {(
+                  (collectionSummaryData.actualH2 /
+                    collectionSummaryData.targetH2) *
+                  100
+                ).toFixed(2) === "NaN" ||
+                (
+                  (collectionSummaryData.actualH2.toFixed(2) /
+                    collectionSummaryData.targetH2.toFixed(2)) *
+                  100
+                ).toFixed(2) === "Infinity"
+                  ? 0
+                  : (
+                      (collectionSummaryData.actualH2 /
+                        collectionSummaryData.targetH2) *
+                      100
+                    ).toFixed(2)}
+              </span>
+            </div>
+            <div className="border border-gray-300  flex justify-between items-center ">
+              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                {collectionSummaryData.targetCurrent.toFixed(2)}
+              </span>
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                {collectionSummaryData.mTargetCurrent.toFixed(2)}
+              </span>
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                {collectionSummaryData.actualCurrent.toFixed(2)}
+              </span>
+              <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                {(
+                  (collectionSummaryData.actualCurrent /
+                    collectionSummaryData.targetCurrent) *
+                  100
+                ).toFixed(2) === "NaN" ||
+                (
+                  (collectionSummaryData.actualCurrent.toFixed(2) /
+                    collectionSummaryData.targetCurrent.toFixed(2)) *
+                  100
+                ).toFixed(2) === "Infinity"
+                  ? 0
+                  : (
+                      (collectionSummaryData.actualCurrent /
+                        collectionSummaryData.targetCurrent) *
+                      100
+                    ).toFixed(2)}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white h-screen flex items-start justify-center max-w-full mt-4">
           <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full px-4 min-h-screen">
             <table className="min-w-full divide-y border- divide-gray-200  ">
               <thead className="">
@@ -3694,27 +4117,7 @@ const CollectionPlans = () => {
                       </p>
                     </td>
                     <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
-                      <div className="demo-preview">
-                        <div className="progress progress-striped active flex flex-row justify-between  ">
-                          <div
-                            role="progressbar "
-                            style={{
-                              width: `${(item.actual / item.target) * 100}%`,
-                            }}
-                            className="progress-bar progress-bar-success rounded-md"
-                          >
-                            <span className="inline-block text-xs font-bold whitespace-nowrap">
-                              {(
-                                Number(item.actual / item.target) * 100
-                              ).toFixed(2)}{" "}
-                              %
-                            </span>
-                          </div>
-                          <span className="font-bold text-xs whitespace-nowrap">
-                            {item.actual} / {item.target}
-                          </span>
-                        </div>
-                      </div>
+                      {getProgressBar(item)}
                     </td>
 
                     <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">

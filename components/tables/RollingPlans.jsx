@@ -401,17 +401,21 @@ const RollingPlans = () => {
   const [summaryData, setSummaryData] = useState({
     actual: 0,
     budget: 0,
+    mTarget: 0,
     target: 0,
 
     actualH1: 0,
     budgetH1: 0,
+    mTargetH1: 0,
     targetH1: 0,
 
     actualH2: 0,
     budgetH2: 0,
+    mTargetH2: 0,
     targetH2: 0,
 
     actualCurrent: 0,
+    mTargetCurrent: 0,
     budgetCurrent: 0,
     targetCurrent: 0,
   });
@@ -462,69 +466,91 @@ const RollingPlans = () => {
 
       setAllTableData(apires);
       let actualValue = 0;
+      let mTargetValue = 0;
+      let mAchValue = 0;
       let budgetValue = 0;
       let targetValue = 0;
       let actualValueH1 = 0;
+      let mTargetValueH1 = 0;
+
       let budgetValueH1 = 0;
       let targetValueH1 = 0;
+
       let actualValueH2 = 0;
+      let mTargetValueH2 = 0;
+
       let budgetValueH2 = 0;
       let targetValueH2 = 0;
       let actualValueCurrent = 0;
+      let mTargetValueCurrent = 0;
       let budgetValueCurrent = 0;
       let targetValueCurrent = 0;
       apires.forEach((element) => {
         actualValue = Number(actualValue) + Number(element.actual);
+
         budgetValue = Number(budgetValue) + Number(element.budget);
         targetValue = Number(targetValue) + Number(element.target);
+        mTargetValue = Number(mTargetValue) + Number(element.m_target);
         if (Number(moment(element.m_year).format("M")) === 4) {
           actualValueH1 = Number(actualValueH1) + Number(element.actual);
           budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
           targetValueH1 = Number(targetValueH1) + Number(element.target);
+          mTargetValueH1 = Number(mTargetValueH1) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 5) {
           actualValueH1 = Number(actualValueH1) + Number(element.actual);
           budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
           targetValueH1 = Number(targetValueH1) + Number(element.target);
+          mTargetValueH1 = Number(mTargetValueH1) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 6) {
           actualValueH1 = Number(actualValueH1) + Number(element.actual);
           budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
           targetValueH1 = Number(targetValueH1) + Number(element.target);
+          mTargetValueH1 = Number(mTargetValueH1) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 7) {
           actualValueH1 = Number(actualValueH1) + Number(element.actual);
           budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
           targetValueH1 = Number(targetValueH1) + Number(element.target);
+          mTargetValueH1 = Number(mTargetValueH1) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 8) {
           actualValueH1 = Number(actualValueH1) + Number(element.actual);
           budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
           targetValueH1 = Number(targetValueH1) + Number(element.target);
+          mTargetValueH1 = Number(mTargetValueH1) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 9) {
           actualValueH1 = Number(actualValueH1) + Number(element.actual);
           budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
           targetValueH1 = Number(targetValueH1) + Number(element.target);
+          mTargetValueH1 = Number(mTargetValueH1) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 10) {
           actualValueH2 = Number(actualValueH2) + Number(element.actual);
           budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
           targetValueH2 = Number(targetValueH2) + Number(element.target);
+          mTargetValueH2 = Number(mTargetValueH2) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 11) {
           actualValueH2 = Number(actualValueH2) + Number(element.actual);
           budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
           targetValueH2 = Number(targetValueH2) + Number(element.target);
+          mTargetValueH2 = Number(mTargetValueH2) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 12) {
           actualValueH2 = Number(actualValueH2) + Number(element.actual);
           budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
           targetValueH2 = Number(targetValueH2) + Number(element.target);
+          mTargetValueH2 = Number(mTargetValueH2) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 1) {
           actualValueH2 = Number(actualValueH2) + Number(element.actual);
           budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
           targetValueH2 = Number(targetValueH2) + Number(element.target);
+          mTargetValueH2 = Number(mTargetValueH2) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 2) {
           actualValueH2 = Number(actualValueH2) + Number(element.actual);
           budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
           targetValueH2 = Number(targetValueH2) + Number(element.target);
+          mTargetValueH2 = Number(mTargetValueH2) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 3) {
           actualValueH2 = Number(actualValueH2) + Number(element.actual);
           budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
           targetValueH2 = Number(targetValueH2) + Number(element.target);
+          mTargetValueH2 = Number(mTargetValueH2) + Number(element.m_target);
         }
 
         if (
@@ -536,21 +562,27 @@ const RollingPlans = () => {
             Number(budgetValueCurrent) + Number(element.budget);
           targetValueCurrent =
             Number(targetValueCurrent) + Number(element.target);
+          mTargetValueCurrent =
+            Number(targetValueCurrent) + Number(element.m_target);
         }
 
         setSummaryData({
           actual: actualValue,
           budget: budgetValue,
           target: targetValue,
+          mTarget: mTargetValue,
           actualH1: actualValueH1,
           budgetH1: budgetValueH1,
           targetH1: targetValueH1,
+          mTargetH1: mTargetValueH1,
           actualH2: actualValueH2,
           budgetH2: budgetValueH2,
           targetH2: targetValueH2,
+          mTargetH2: mTargetValueH2,
           actualCurrent: actualValueCurrent,
           budgetCurrent: budgetValueCurrent,
           targetCurrent: targetValueCurrent,
+          mTargetCurrent: mTargetValueCurrent,
         });
       });
     } catch (error) {
@@ -688,9 +720,22 @@ const RollingPlans = () => {
 
   const handleSaveDraft = async () => {
     try {
-      const respond = await axios.get(`${url}/api/rsp_update_status`, {
-        headers: headers,
-        params: {
+      let dataObject;
+      if (
+        (filterState.rId || filterState.rId === "All") &&
+        localStorageItems.roleId === 4
+      ) {
+        dataObject = {
+          t_year: filterState.yr,
+          m_year: rejectModalData.mYr,
+          plan_id: rejectModalData.planId,
+          tran_id: rejectModalData.tranId,
+          r_id: Number(rejectModalData.rId),
+          rp_status: "Draft Submit",
+          remarks: rejectModalData.data,
+        };
+      } else {
+        dataObject = {
           t_year: filterState.yr,
           m_year: rejectModalData.mYr,
           plan_id: rejectModalData.planId,
@@ -698,7 +743,11 @@ const RollingPlans = () => {
           t_id: Number(rejectModalData.tId),
           rp_status: "Draft Submit",
           remarks: rejectModalData.data,
-        },
+        };
+      }
+      const respond = await axios.get(`${url}/api/rsp_update_status`, {
+        headers: headers,
+        params: dataObject,
       });
       const apires = await respond.data.data;
       handleDraftClose();
@@ -1167,7 +1216,7 @@ const RollingPlans = () => {
           );
         } else {
           return (
-            <ul className=" text-black text-lg flex flex-col gap-  font-Rale cursor-pointer">
+            <ul className=" text-black text-lg flex flex-col   font-Rale cursor-pointer">
               <li
                 className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
                 onClick={() =>
@@ -1285,6 +1334,27 @@ const RollingPlans = () => {
                         tranId: tranId,
                         mYr: mYr,
                         tId: t,
+                        cId: cId,
+                      });
+                    }}
+                  >
+                    <FaSkullCrossbones className="text-red-400" /> Reject as
+                    Draft
+                  </li>
+                )}
+              {(filterState.rId || filterState.rId === "All") &&
+                localStorageItems.roleId === 4 && (
+                  <li
+                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                    onClick={() => {
+                      setRejectDraftModal(true);
+                      setRejectModalData({
+                        ...rejectModalData,
+                        planId: planId,
+                        tranId: tranId,
+                        mYr: mYr,
+                        tId: t,
+                        rId: r,
                         cId: cId,
                       });
                     }}
@@ -3585,7 +3655,6 @@ const RollingPlans = () => {
   };
 
   const handleDeleteRps = async (data) => {
-    console.log("pkl", data);
     try {
       let paramsData;
       if (filterState.tId || filterState.tId === "All") {
@@ -3752,6 +3821,86 @@ const RollingPlans = () => {
     getReviewMsgDropDown(rejectModalData.cId);
   }, [rejectModalData.cId]);
 
+  const getProgressBar = (item) => {
+    let percentage = (item.actual / item.target) * 100;
+    if (percentage <= 50 || !isFinite(percentage)) {
+      return (
+        <div className="progress progress-striped active flex flex-row pr-4 justify-between">
+          <span className="font-bold text-xs whitespace-nowrap">
+            {item.target}/ {item.actual}
+          </span>
+          <div
+            role="progressbar"
+            style={{
+              width: `${(item.actual / item.target) * 100}%`,
+            }}
+            className=" bg-red-500 rounded-md flex    justify-end"
+          >
+            <span className="inline-block text-xs font-bold whitespace-nowrap  ">
+              {(Number(item.actual / item.target) * 100).toFixed(2)} %
+            </span>
+          </div>
+        </div>
+      );
+    } else if (percentage > 50 && percentage <= 74) {
+      return (
+        <div className="progress progress-striped active flex flex-row pr-4 justify-between">
+          <span className="font-bold text-xs whitespace-nowrap">
+            {item.target}/ {item.actual}
+          </span>
+          <div
+            role="progressbar"
+            style={{
+              width: `${(item.actual / item.target) * 100}%`,
+            }}
+            className=" bg-blue-500 rounded-md flex    justify-end"
+          >
+            <span className="inline-block text-xs font-bold whitespace-nowrap ">
+              {(Number(item.actual / item.target) * 100).toFixed(2)} %
+            </span>
+          </div>
+        </div>
+      );
+    } else if (percentage > 74 && percentage <= 90) {
+      return (
+        <div className="progress progress-striped active flex flex-row pr-4 justify-between">
+          <span className="font-bold text-xs whitespace-nowrap">
+            {item.target}/ {item.actual}
+          </span>
+          <div
+            role="progressbar"
+            style={{
+              width: `${(item.actual / item.target) * 100}%`,
+            }}
+            className=" bg-orange-500 rounded-md flex    justify-end"
+          >
+            <span className="inline-block text-xs font-bold whitespace-nowrap ">
+              {(Number(item.actual / item.target) * 100).toFixed(2)} %
+            </span>
+          </div>
+        </div>
+      );
+    } else if (percentage > 90) {
+      return (
+        <div className="progress progress-striped active flex flex-row pr-4 justify-between">
+          <span className="font-bold text-xs whitespace-nowrap">
+            {item.target}/ {item.actual}
+          </span>
+          <div
+            role="progressbar"
+            style={{
+              width: `${(item.actual / item.target) * 100}%`,
+            }}
+            className=" bg-green-500 rounded-md  flex    justify-end"
+          >
+            <span className="inline-block text-xs font-bold whitespace-nowrap ">
+              {(Number(item.actual / item.target) * 100).toFixed(2)} %
+            </span>
+          </div>
+        </div>
+      );
+    }
+  };
   return (
     <Layout>
       <div className="h-screen  w-full font-arial bg-white">
@@ -3772,7 +3921,7 @@ const RollingPlans = () => {
             <div class="border border-gray-300 p-2">Current Month-MTD</div>
 
             <div class="border border-gray-300 p-2">
-              <div>Budget</div>
+              <div>Bud.</div>
               <div>RSP</div>
               <div>Sale</div>
               <div>B.Ach %</div>
@@ -3780,7 +3929,7 @@ const RollingPlans = () => {
             </div>
 
             <div class="border border-gray-300 p-2">
-              <div>Budget</div>
+              <div>Bud.</div>
               <div>RSP</div>
               <div>Sale</div>
               <div>B.Ach %</div>
@@ -3788,7 +3937,7 @@ const RollingPlans = () => {
             </div>
 
             <div class="border border-gray-300 p-2">
-              <div>Budget</div>
+              <div>Bud.</div>
               <div>RSP</div>
               <div>Sale</div>
               <div>B.Ach %</div>
@@ -3796,7 +3945,7 @@ const RollingPlans = () => {
             </div>
 
             <div class="border border-gray-300 p-2">
-              <div>Budget</div>
+              <div>Bud.</div>
               <div>RSP</div>
               <div>Sale</div>
               <div>B.Ach %</div>
@@ -4009,10 +4158,24 @@ const RollingPlans = () => {
             </select>
           </div>
         </div>
-        <h2 className="flex justify-center items-center  w-full font-bold text-xs">
-          Total Summary Rolling Plan (in Lac)
-        </h2>
-        <div className="grid grid-cols-4  text-sm px-12">
+        <div className="flex flex-row w-full justify-between px-12 ">
+          <h2 className="flex  font-bold text-xs">
+            Total Summary Rolling Plan (in Lac){" "}
+          </h2>
+          <div className="flex flex-row px-2 items-center gap-4 font-bold text-xs">
+            <span>Target Ach </span>{" "}
+            <span className="flex h-3 w-3 bg-red-500"></span>
+            {"< = 50"}
+            <span className="flex h-3 w-3 bg-blue-500"></span>
+            {"51 to 74  %"}
+            <span className="flex h-3 w-3 bg-orange-500"></span>
+            {"75 to 90 %"}
+            <span className="flex h-3 w-3 bg-green-500"></span>
+            {" > 90 %"}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-4  text-sm px-12 py-2">
           <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-[#4285F4] ">
             YTD
           </div>
@@ -4029,71 +4192,99 @@ const RollingPlans = () => {
 
         <div className="grid grid-cols-4  text-sm px-12 font-bold text-xs ">
           <div className="border border-gray-300  flex justify-between items-center">
-            <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-              Budget
-            </span>
-            <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-              RSP
-            </span>
-            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-              Sale
-            </span>
-            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-              B ach
-            </span>
-            <span className=" flex items-center justify-center   border-gray-300 w-20">
-              R ach
-            </span>
-          </div>
-          <div className="border border-gray-300  flex justify-between items-center">
             <span className=" flex items-center   justify-center border-r border-gray-300 w-20">
-              Budget
+              Bud.
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              M.Tar
             </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
               RSP
             </span>
+
             <span className=" flex items-center justify-center   border-r border-gray-300 w-20">
               Sale
             </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-              B ach
+              B. Ach
+            </span>
+            <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+              M. Ach
             </span>
             <span className=" flex items-center justify-center   border-gray-300 w-20">
-              R ach
+              R. Ach
             </span>
           </div>
           <div className="border border-gray-300  flex justify-between items-center">
-            <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-              Budget
-            </span>
-            <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-              RSP
-            </span>
-            <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-              Sale
+            <span className=" flex items-center   justify-center border-r border-gray-300 w-20">
+              Bud.
             </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-              B ach
-            </span>
-            <span className=" flex items-center  justify-center  border-gray-300 w-20">
-              R ach
-            </span>
-          </div>
-          <div className="border border-gray-300  flex justify-between items-center">
-            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-              Budget
+              M.Tar
             </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
               RSP
             </span>
+
+            <span className=" flex items-center justify-center   border-r border-gray-300 w-20">
+              Sale
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              B. ach
+            </span>
+            <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+              M. Ach
+            </span>
+            <span className=" flex items-center justify-center   border-gray-300 w-20">
+              R. Ach
+            </span>
+          </div>
+
+          <div className="border border-gray-300  flex justify-between items-center">
+            <span className=" flex items-center   justify-center border-r border-gray-300 w-20">
+              Bud.
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              M.Tar
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              RSP
+            </span>
+
+            <span className=" flex items-center justify-center   border-r border-gray-300 w-20">
+              Sale
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              B. Ach
+            </span>
+            <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+              M. Ach
+            </span>
+            <span className=" flex items-center justify-center   border-gray-300 w-20">
+              R. Ach
+            </span>
+          </div>
+          <div className="border border-gray-300  flex justify-between items-center">
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              Bud.
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              M.Tar
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              RSP
+            </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
               Sale
             </span>
             <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-              B ach
+              B Ach
+            </span>
+            <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+              M. Ach
             </span>
             <span className=" flex items-center  justify-center  border-gray-300 w-20">
-              R ach
+              R. Ach
             </span>
           </div>
         </div>
@@ -4104,8 +4295,12 @@ const RollingPlans = () => {
               {summaryData.budget.toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              {summaryData.mTarget.toFixed(2)}
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
               {summaryData.target.toFixed(2)}
             </span>
+
             <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
               {summaryData.actual.toFixed(2)}
             </span>
@@ -4119,6 +4314,14 @@ const RollingPlans = () => {
               ).toFixed(2) === "Infinity"
                 ? 0
                 : ((summaryData.actual / summaryData.budget) * 100).toFixed(2)}
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              {((summaryData.actual / summaryData.mTarget) * 100).toFixed(2) ===
+                "NaN" ||
+              ((summaryData.actual / summaryData.mTarget) * 100).toFixed(2) ===
+                "Infinity"
+                ? 0
+                : ((summaryData.actual / summaryData.mTarget) * 100).toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center  border-gray-300 w-20">
               {((summaryData.actual / summaryData.target) * 100).toFixed(2) ===
@@ -4135,6 +4338,9 @@ const RollingPlans = () => {
           <div className="border border-gray-300  flex justify-between items-center">
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
               {summaryData.budgetH1.toFixed(2)}
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              {summaryData.mTargetH1.toFixed(2)}
             </span>
             <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
               {summaryData.targetH1.toFixed(2)}
@@ -4157,6 +4363,19 @@ const RollingPlans = () => {
                     2
                   )}
             </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              {((summaryData.actualH1 / summaryData.mTargetH1) * 100).toFixed(
+                2
+              ) === "NaN" ||
+              ((summaryData.actualH1 / summaryData.mTargetH1) * 100).toFixed(
+                2
+              ) === "Infinity"
+                ? 0
+                : (
+                    (summaryData.actualH1 / summaryData.mTargetH1) *
+                    100
+                  ).toFixed(2)}
+            </span>
             <span className=" flex items-center  justify-center  border-gray-300 w-20">
               {((summaryData.actualH1 / summaryData.targetH1) * 100).toFixed(
                 2
@@ -4175,6 +4394,9 @@ const RollingPlans = () => {
           <div className="border border-gray-300  flex justify-between items-center">
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
               {summaryData.budgetH2.toFixed(2)}
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              {summaryData.mTargetH2.toFixed(2)}
             </span>
             <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
               {summaryData.targetH2.toFixed(2)}
@@ -4197,6 +4419,19 @@ const RollingPlans = () => {
                     2
                   )}
             </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              {((summaryData.actualH2 / summaryData.mTargetH2) * 100).toFixed(
+                2
+              ) === "NaN" ||
+              ((summaryData.actualH2 / summaryData.mTargetH2) * 100).toFixed(
+                2
+              ) === "Infinity"
+                ? 0
+                : (
+                    (summaryData.actualH2 / summaryData.mTargetH2) *
+                    100
+                  ).toFixed(2)}
+            </span>
             <span className=" flex items-center  justify-center  border-gray-300 w-20">
               {((summaryData.actualH2 / summaryData.targetH2) * 100).toFixed(
                 2
@@ -4216,6 +4451,9 @@ const RollingPlans = () => {
             <span className=" flex items-center justify-center border-r border-gray-300 w-20">
               {summaryData.budgetCurrent.toFixed(2)}
             </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              {summaryData.mTargetCurrent.toFixed(2)}
+            </span>
             <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
               {summaryData.targetCurrent.toFixed(2)}
             </span>
@@ -4234,6 +4472,21 @@ const RollingPlans = () => {
                 ? 0
                 : (
                     (summaryData.actualCurrent / summaryData.budgetCurrent) *
+                    100
+                  ).toFixed(2)}
+            </span>
+            <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+              {(
+                (summaryData.actualCurrent / summaryData.mTargetCurrent) *
+                100
+              ).toFixed(2) === "NaN" ||
+              (
+                (summaryData.actualCurrent / summaryData.mTargetCurrent) *
+                100
+              ).toFixed(2) === "Infinity"
+                ? 0
+                : (
+                    (summaryData.actualCurrent / summaryData.mTargetCurrent) *
                     100
                   ).toFixed(2)}
             </span>
@@ -4267,10 +4520,10 @@ const RollingPlans = () => {
                     Depot
                   </th>
                   <th className="pl-4 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
-                    Segment / Unit / Zone / Region / Territory
+                    Business Structure (ZRT)
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
-                    Actual Sale vs Rolling Sales Target
+                  <th className="px-0 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
+                    Rolling Sales Target vs Actual Sale
                   </th>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
                     Stage
@@ -4319,27 +4572,7 @@ const RollingPlans = () => {
                       </p>
                     </td>
                     <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
-                      <div className="demo-preview">
-                        <div className="progress progress-striped active flex flex-row justify-between  ">
-                          <div
-                            role="progressbar "
-                            style={{
-                              width: `${(item.actual / item.target) * 100}%`,
-                            }}
-                            className="progress-bar progress-bar-success rounded-md"
-                          >
-                            <span className="inline-block text-xs font-bold whitespace-nowrap">
-                              {(
-                                Number(item.actual / item.target) * 100
-                              ).toFixed(2)}{" "}
-                              %
-                            </span>
-                          </div>
-                          <span className="font-bold text-xs whitespace-nowrap">
-                            {item.actual} / {item.target}
-                          </span>
-                        </div>
-                      </div>
+                      <div className="demo-preview">{getProgressBar(item)}</div>
                     </td>
 
                     <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
@@ -4532,9 +4765,14 @@ const RollingPlans = () => {
                     as="h3"
                     className="text-[1.25rem]  font-medium leading-6 text-center text-gray-900"
                   >
-                    Review Message
+                    Reject as a Draft
                   </Dialog.Title>
+
                   <div className="mt-2">
+                    <span className="flex w-full justify-center">
+                      {" "}
+                      Review Message
+                    </span>
                     <select
                       className=" w-1/2 max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="stateSelect"
