@@ -451,7 +451,6 @@ const CollectionPlans = () => {
 
       const apires = await respond.data.data;
 
-      console.log("new data", apires);
       setAllTableData(apires);
       let actualValue = 0;
       let budgetValue = 0;
@@ -561,7 +560,6 @@ const CollectionPlans = () => {
           budgetH2: budgetValueH2,
           targetH2: targetValueH2,
           mTargetH2: mtargetValueH2,
-
           actualCurrent: actualValueCurrent,
           budgetCurrent: budgetValueCurrent,
           targetCurrent: targetValueCurrent,
@@ -669,21 +667,39 @@ const CollectionPlans = () => {
     planId: "",
     tId: "",
     cId: "",
+    rId: "",
   });
 
   const handleSaveDraft = async () => {
+    let dataObject;
+    if (
+      (filterState.rId || filterState.rId === "All") &&
+      localStorageItems.roleId === 4
+    ) {
+      dataObject = {
+        t_year: filterState.yr,
+        m_year: rejectModalData.mYr,
+        plan_id: rejectModalData.planId,
+        tran_id: rejectModalData.tranId,
+        r_id: Number(rejectModalData.rId),
+        rp_status: "Draft Submit",
+        remarks: rejectModalData.data,
+      };
+    } else {
+      dataObject = {
+        t_year: filterState.yr,
+        m_year: rejectModalData.mYr,
+        plan_id: rejectModalData.planId,
+        tran_id: rejectModalData.tranId,
+        t_id: Number(rejectModalData.tId),
+        rp_status: "Draft Submit",
+        remarks: rejectModalData.data,
+      };
+    }
     try {
       const respond = await axios.get(`${url}/api/cp_update_status`, {
         headers: headers,
-        params: {
-          t_year: filterState.yr,
-          m_year: rejectModalData.mYr,
-          plan_id: rejectModalData.planId,
-          tran_id: rejectModalData.tranId,
-          t_id: Number(rejectModalData.tId),
-          rp_status: "Draft Submit",
-          remarks: rejectModalData.data,
-        },
+        params: dataObject,
       });
       const apires = await respond.data.data;
       handleDraftClose();
@@ -1334,6 +1350,27 @@ const CollectionPlans = () => {
                         tranId: tranId,
                         mYr: mYr,
                         tId: t,
+                        cId: cId,
+                      });
+                    }}
+                  >
+                    <FaSkullCrossbones className="text-red-400" /> Reject as
+                    Draft
+                  </li>
+                )}
+              {(filterState.rId || filterState.rId === "All") &&
+                localStorageItems.roleId === 4 && (
+                  <li
+                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                    onClick={() => {
+                      setRejectDraftModal(true);
+                      setRejectModalData({
+                        ...rejectModalData,
+                        planId: planId,
+                        tranId: tranId,
+                        mYr: mYr,
+                        tId: t,
+                        rId: r,
                         cId: cId,
                       });
                     }}
@@ -3848,10 +3885,22 @@ const CollectionPlans = () => {
             </select>
           </div>
         </div>
-        <h2 className="font-bold self-center text-sm mt-2 px-12">
-          {" "}
-          Collection Plan
-        </h2>
+        <div className="flex flex-row w-full justify-between px-12 ">
+          <h2 className="flex  font-bold text-xs">
+            Total Summary Collection Plan (in Lac){" "}
+          </h2>
+          <div className="flex flex-row px-2 items-center gap-4 font-bold text-xs">
+            <span>Target Ach </span>{" "}
+            <span className="flex h-3 w-3 bg-red-500"></span>
+            {"< = 50"}
+            <span className="flex h-3 w-3 bg-blue-500"></span>
+            {"51 to 74  %"}
+            <span className="flex h-3 w-3 bg-orange-500"></span>
+            {"75 to 90 %"}
+            <span className="flex h-3 w-3 bg-green-500"></span>
+            {" > 90 %"}
+          </div>
+        </div>
         <div className="hidden lg:flex flex-col mt-2 text-sm px-12">
           <div className="grid grid-cols-4  text-sm ">
             <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200 ">
@@ -3871,62 +3920,77 @@ const CollectionPlans = () => {
           <div className="grid grid-cols-4  text-sm  font-bold text-xs ">
             <div className="border border-gray-300  flex justify-between items-center">
               <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                Target
+                C.Target
               </span>
               <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                M Target
+                M.Target
               </span>
+
               <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
                 Actual
               </span>
 
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                C.Ach%
+              </span>
               <span className=" flex items-center justify-center   border-gray-300 w-20">
-                Ach%
+                M.Ach %
               </span>
             </div>
             <div className="border border-gray-300  flex justify-between items-center">
               <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                Target
+                C.Target
               </span>
               <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                M Target
+                M.Target
               </span>
+
               <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
                 Actual
               </span>
 
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                C.Ach%
+              </span>
               <span className=" flex items-center justify-center   border-gray-300 w-20">
-                Ach%
+                M.Ach %
               </span>
             </div>
             <div className="border border-gray-300  flex justify-between items-center">
               <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                Target
+                C.Target
               </span>
               <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                M Target
+                M.Target
               </span>
+
               <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
                 Actual
               </span>
 
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                C.Ach%
+              </span>
               <span className=" flex items-center justify-center   border-gray-300 w-20">
-                Ach%
+                M.Ach %
               </span>
             </div>
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                Target
+            <div className="border border-gray-300 flex justify-between items-center">
+              <span className="flex items-center  justify-center  border-r border-gray-300 w-20">
+                C.Target
               </span>
-              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                M Target
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                Actual
+              <span className="flex items-center  justify-center  border-r border-gray-300 w-20">
+                M.Target
               </span>
 
-              <span className=" flex items-center justify-center   border-gray-300 w-20">
-                Ach%
+              <span className="flex items-center  justify-center border-r border-gray-300 w-20">
+                Actual
+              </span>
+              <span className="flex items-center  justify-center border-r border-gray-300 w-20">
+                C.Ach%
+              </span>
+              <span className="flex items-center justify-center   border-gray-300 w-20">
+                M.Ach %
               </span>
             </div>
           </div>
@@ -3939,11 +4003,12 @@ const CollectionPlans = () => {
               <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
                 {collectionSummaryData.mTarget.toFixed(2)}
               </span>
+
               <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
                 {collectionSummaryData.actual.toFixed(2)}
               </span>
 
-              <span className=" flex items-center  justify-center  border-gray-300 w-20">
+              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
                 {(
                   (collectionSummaryData.actual /
                     collectionSummaryData.target) *
@@ -3961,6 +4026,24 @@ const CollectionPlans = () => {
                       100
                     ).toFixed(2)}
               </span>
+              <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                {(
+                  (collectionSummaryData.actual /
+                    collectionSummaryData.mTarget) *
+                  100
+                ).toFixed(2) === "NaN" ||
+                (
+                  (collectionSummaryData.actual /
+                    collectionSummaryData.mTarget) *
+                  100
+                ).toFixed(2) === "Infinity"
+                  ? 0
+                  : (
+                      (collectionSummaryData.actual /
+                        collectionSummaryData.mTarget) *
+                      100
+                    ).toFixed(2)}
+              </span>
             </div>
             <div className="border border-gray-300  flex justify-between items-center">
               <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
@@ -3969,11 +4052,12 @@ const CollectionPlans = () => {
               <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
                 {collectionSummaryData.mTargetH1.toFixed(2)}
               </span>
+
               <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
                 {collectionSummaryData.actualH1.toFixed(2)}
               </span>
 
-              <span className=" flex items-center  justify-center  border-gray-300 w-20">
+              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
                 {(
                   (collectionSummaryData.actualH1 /
                     collectionSummaryData.targetH1) *
@@ -3991,6 +4075,24 @@ const CollectionPlans = () => {
                       100
                     ).toFixed(2)}
               </span>
+              <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                {(
+                  (collectionSummaryData.actualH1 /
+                    collectionSummaryData.mTargetH1) *
+                  100
+                ).toFixed(2) === "NaN" ||
+                (
+                  (collectionSummaryData.actualH1 /
+                    collectionSummaryData.mTargetH1) *
+                  100
+                ).toFixed(2) === "Infinity"
+                  ? 0
+                  : (
+                      (collectionSummaryData.actualH1 /
+                        collectionSummaryData.mTargetH1) *
+                      100
+                    ).toFixed(2)}
+              </span>
             </div>
             <div className="border border-gray-300  flex justify-between items-center">
               <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
@@ -3999,11 +4101,12 @@ const CollectionPlans = () => {
               <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
                 {collectionSummaryData.mTargetH2.toFixed(2)}
               </span>
+
               <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
                 {collectionSummaryData.actualH2.toFixed(2)}
               </span>
 
-              <span className=" flex items-center  justify-center  border-gray-300 w-20">
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
                 {(
                   (collectionSummaryData.actualH2 /
                     collectionSummaryData.targetH2) *
@@ -4021,6 +4124,24 @@ const CollectionPlans = () => {
                       100
                     ).toFixed(2)}
               </span>
+              <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                {(
+                  (collectionSummaryData.actualH2 /
+                    collectionSummaryData.mTargetH2) *
+                  100
+                ).toFixed(2) === "NaN" ||
+                (
+                  (collectionSummaryData.actualH2 /
+                    collectionSummaryData.mTargetH2) *
+                  100
+                ).toFixed(2) === "Infinity"
+                  ? 0
+                  : (
+                      (collectionSummaryData.actualH2 /
+                        collectionSummaryData.mTargetH2) *
+                      100
+                    ).toFixed(2)}
+              </span>
             </div>
             <div className="border border-gray-300  flex justify-between items-center ">
               <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
@@ -4029,10 +4150,11 @@ const CollectionPlans = () => {
               <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
                 {collectionSummaryData.mTargetCurrent.toFixed(2)}
               </span>
+
               <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
                 {collectionSummaryData.actualCurrent.toFixed(2)}
               </span>
-              <span className=" flex items-center  justify-center  border-gray-300 w-20">
+              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
                 {(
                   (collectionSummaryData.actualCurrent /
                     collectionSummaryData.targetCurrent) *
@@ -4050,6 +4172,24 @@ const CollectionPlans = () => {
                       100
                     ).toFixed(2)}
               </span>
+              <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                {(
+                  (collectionSummaryData.actualCurrent /
+                    collectionSummaryData.mTargetCurrent) *
+                  100
+                ).toFixed(2) === "NaN" ||
+                (
+                  (collectionSummaryData.actualCurrent /
+                    collectionSummaryData.mTargetCurrent) *
+                  100
+                ).toFixed(2) === "Infinity"
+                  ? 0
+                  : (
+                      (collectionSummaryData.actualCurrent /
+                        collectionSummaryData.mTargetCurrent) *
+                      100
+                    ).toFixed(2)}
+              </span>
             </div>
           </div>
         </div>
@@ -4059,16 +4199,14 @@ const CollectionPlans = () => {
               <thead className="">
                 <tr>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider ">
-                    Collection Plan
+                    Collection Sales Plan
                   </th>
-                  <th className="px- py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
-                    Depot
-                  </th>
+
                   <th className="pl-4 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
-                    Segment / Unit / Zone / Region / Territory
+                    Business Structure (ZRT)
                   </th>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
-                    Actual Collection vs Collection Target
+                    Collection Sales Target vs Actual Sale
                   </th>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  tracking-wider">
                     Stage
@@ -4098,11 +4236,7 @@ const CollectionPlans = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="px- py-2 border-b border-gray-200 bg-white text-sm ">
-                      <p className="text-gray-900 whitespace-no-wrap text-xs ">
-                        {item.depot_name}
-                      </p>
-                    </td>
+
                     <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
                       <p className="text-gray-900 whitespace-no-wrap text-xs">
                         {item.business_segment}
@@ -4255,7 +4389,7 @@ const CollectionPlans = () => {
                     as="h3"
                     className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
                   >
-                    Rolling Plan
+                    Collection Plan
                   </Dialog.Title>
                   <div className="mt-2">{successMsg}</div>
                   <div className="mt-4 flex items-center justify-center">
@@ -4311,9 +4445,13 @@ const CollectionPlans = () => {
                     as="h3"
                     className="text-[1.25rem]  font-medium leading-6 text-center text-gray-900"
                   >
-                    Review Message
+                    Reject as a Draft
                   </Dialog.Title>
                   <div className="mt-2">
+                    <span className="flex w-full justify-center">
+                      {" "}
+                      Review Message
+                    </span>
                     <select
                       className=" w-1/2 max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                       id="stateSelect"
