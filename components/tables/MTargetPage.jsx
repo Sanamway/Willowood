@@ -1,34 +1,22 @@
 import React, { useEffect, useState, Fragment } from "react";
 import Layout from "../Layout";
-import { FaDownload } from "react-icons/fa";
-import { FcApprovall } from "react-icons/io";
-import { FcApproval } from "react-icons/fc";
-import { FaUpload } from "react-icons/fa";
-import { VscPreview } from "react-icons/vsc";
+
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 import axios from "axios";
-import { CiEdit } from "react-icons/ci";
-import { MdOutlinePreview } from "react-icons/md";
-import { TbDeviceDesktopAnalytics } from "react-icons/tb";
-import { CgNotes } from "react-icons/cg";
-import { FaSkullCrossbones } from "react-icons/fa6";
-import { FaWhatsapp } from "react-icons/fa";
-import { GrTask } from "react-icons/gr";
+
 import toast, { Toaster } from "react-hot-toast";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Popover } from "@headlessui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import * as XLSX from "xlsx";
-import { Dialog, Transition } from "@headlessui/react";
-import { MdDelete } from "react-icons/md";
-import moment from "moment";
-import { FcBullish } from "react-icons/fc";
-const MTarget = () => {
-  const [successOpen, setSuccessOpen] = useState(false);
-  const [successMsg, setSuccessMsg] = useState("");
 
+import moment from "moment";
+
+import SummmaryTable from "../MtargetUtils/SummaryTable";
+import MainTable from "../MtargetUtils/MainTable";
+const MTarget = () => {
   const router = useRouter();
   // const endDate = new Date(2024, 4, 16);
   const headers = {
@@ -67,9 +55,7 @@ const MTarget = () => {
       });
       const apires = await respond.data.data;
       setAllYearData([...new Set(apires.map((item) => item.t_year))]);
-    } catch (error) {
-      setDownloadLoading(false);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -84,9 +70,7 @@ const MTarget = () => {
       const apires = await respond.data.data;
 
       setAllMonthData([...new Set(apires.map((item) => item.m_year))]);
-    } catch (error) {
-      setDownloadLoading(false);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -247,7 +231,6 @@ const MTarget = () => {
         )
       );
     } catch (error) {
-      setDownloadLoading(false);
       console.log(error);
     }
   };
@@ -270,7 +253,6 @@ const MTarget = () => {
 
       setBuData(apires.filter((item, idx) => item.isDeleted === false));
     } catch (error) {
-      setDownloadLoading(false);
       console.log(error);
     }
   };
@@ -294,9 +276,7 @@ const MTarget = () => {
           .filter((item) => Number(item.bg_id) === Number(segmentId))
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
       );
-    } catch (error) {
-      setDownloadLoading(false);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -320,9 +300,7 @@ const MTarget = () => {
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
           .filter((item) => Number(item.z_id) === Number(zoneId))
       );
-    } catch (error) {
-      setDownloadLoading(false);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -354,9 +332,7 @@ const MTarget = () => {
           .filter((item) => Number(item.z_id) === Number(zoneId))
           .filter((item) => Number(item.r_id) === Number(regionId))
       );
-    } catch (error) {
-      setDownloadLoading(false);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -386,9 +362,7 @@ const MTarget = () => {
       const apires = await respond.data.data;
 
       setDepotData(apires.filter((item) => item.c_id === cId));
-    } catch (error) {
-      setDownloadLoading(false);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -396,7 +370,7 @@ const MTarget = () => {
     getAllDepotData(JSON.parse(window.localStorage.getItem("userinfo")).c_id);
   }, []);
 
-  const [allTableData, setAllTableData] = useState([]);
+  const [rollingTableData, setRollingTableData] = useState([]);
   const getAllRollingSalesPlanStatus = async (
     yr,
     month,
@@ -440,89 +414,94 @@ const MTarget = () => {
 
       const apires = await respond.data.data;
 
-      setAllTableData(apires);
+      setRollingTableData(apires);
 
       let actualValue = 0;
+      let mTargetValue = 0;
+      let mAchValue = 0;
       let budgetValue = 0;
       let targetValue = 0;
-      let mtargetValue = 0;
       let actualValueH1 = 0;
+      let mTargetValueH1 = 0;
+
       let budgetValueH1 = 0;
       let targetValueH1 = 0;
-      let mtargetValueH1 = 0;
+
       let actualValueH2 = 0;
+      let mTargetValueH2 = 0;
+
       let budgetValueH2 = 0;
       let targetValueH2 = 0;
-      let mtargetValueH2 = 0;
       let actualValueCurrent = 0;
+      let mTargetValueCurrent = 0;
       let budgetValueCurrent = 0;
       let targetValueCurrent = 0;
-      let mtargetValueCurrent = 0;
       apires.forEach((element) => {
         actualValue = Number(actualValue) + Number(element.actual);
+
         budgetValue = Number(budgetValue) + Number(element.budget);
         targetValue = Number(targetValue) + Number(element.target);
-        mtargetValue = Number(mtargetValue) + Number(element.m_target);
+        mTargetValue = Number(mTargetValue) + Number(element.m_target);
         if (Number(moment(element.m_year).format("M")) === 4) {
           actualValueH1 = Number(actualValueH1) + Number(element.actual);
           budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
           targetValueH1 = Number(targetValueH1) + Number(element.target);
-          mtargetValueH1 = Number(mtargetValueH1) + Number(element.m_target);
+          mTargetValueH1 = Number(mTargetValueH1) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 5) {
           actualValueH1 = Number(actualValueH1) + Number(element.actual);
           budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
           targetValueH1 = Number(targetValueH1) + Number(element.target);
-          mtargetValueH1 = Number(mtargetValueH1) + Number(element.m_target);
+          mTargetValueH1 = Number(mTargetValueH1) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 6) {
           actualValueH1 = Number(actualValueH1) + Number(element.actual);
           budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
           targetValueH1 = Number(targetValueH1) + Number(element.target);
-          mtargetValueH1 = Number(mtargetValueH1) + Number(element.m_target);
+          mTargetValueH1 = Number(mTargetValueH1) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 7) {
           actualValueH1 = Number(actualValueH1) + Number(element.actual);
           budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
           targetValueH1 = Number(targetValueH1) + Number(element.target);
-          mtargetValueH1 = Number(mtargetValueH1) + Number(element.m_target);
+          mTargetValueH1 = Number(mTargetValueH1) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 8) {
           actualValueH1 = Number(actualValueH1) + Number(element.actual);
           budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
           targetValueH1 = Number(targetValueH1) + Number(element.target);
-          mtargetValueH1 = Number(mtargetValueH1) + Number(element.m_target);
+          mTargetValueH1 = Number(mTargetValueH1) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 9) {
           actualValueH1 = Number(actualValueH1) + Number(element.actual);
           budgetValueH1 = Number(budgetValueH1) + Number(element.budget);
           targetValueH1 = Number(targetValueH1) + Number(element.target);
-          mtargetValueH1 = Number(mtargetValueH1) + Number(element.m_target);
+          mTargetValueH1 = Number(mTargetValueH1) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 10) {
           actualValueH2 = Number(actualValueH2) + Number(element.actual);
           budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
           targetValueH2 = Number(targetValueH2) + Number(element.target);
-          mtargetValueH2 = Number(mtargetValueH2) + Number(element.m_target);
+          mTargetValueH2 = Number(mTargetValueH2) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 11) {
           actualValueH2 = Number(actualValueH2) + Number(element.actual);
           budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
           targetValueH2 = Number(targetValueH2) + Number(element.target);
-          mtargetValueH2 = Number(mtargetValueH2) + Number(element.m_target);
+          mTargetValueH2 = Number(mTargetValueH2) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 12) {
           actualValueH2 = Number(actualValueH2) + Number(element.actual);
           budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
           targetValueH2 = Number(targetValueH2) + Number(element.target);
-          mtargetValueH2 = Number(mtargetValueH2) + Number(element.m_target);
+          mTargetValueH2 = Number(mTargetValueH2) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 1) {
           actualValueH2 = Number(actualValueH2) + Number(element.actual);
           budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
           targetValueH2 = Number(targetValueH2) + Number(element.target);
-          mtargetValueH2 = Number(mtargetValueH2) + Number(element.m_target);
+          mTargetValueH2 = Number(mTargetValueH2) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 2) {
           actualValueH2 = Number(actualValueH2) + Number(element.actual);
           budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
           targetValueH2 = Number(targetValueH2) + Number(element.target);
-          mtargetValueH2 = Number(mtargetValueH2) + Number(element.m_target);
+          mTargetValueH2 = Number(mTargetValueH2) + Number(element.m_target);
         } else if (Number(moment(element.m_year).format("M")) === 3) {
           actualValueH2 = Number(actualValueH2) + Number(element.actual);
           budgetValueH2 = Number(budgetValueH2) + Number(element.budget);
           targetValueH2 = Number(targetValueH2) + Number(element.target);
-          mtargetValueH2 = Number(mtargetValueH2) + Number(element.m_target);
+          mTargetValueH2 = Number(mTargetValueH2) + Number(element.m_target);
         }
 
         if (
@@ -534,33 +513,36 @@ const MTarget = () => {
             Number(budgetValueCurrent) + Number(element.budget);
           targetValueCurrent =
             Number(targetValueCurrent) + Number(element.target);
-          mtargetValueCurrent =
-            Number(mtargetValueCurrent) + Number(element.m_target);
+          mTargetValueCurrent =
+            Number(targetValueCurrent) + Number(element.m_target);
         }
-        setCollectionSummaryData({
+
+        setSummaryData({
           actual: actualValue,
           budget: budgetValue,
           target: targetValue,
-          mTarget: mtargetValue,
+          mTarget: mTargetValue,
           actualH1: actualValueH1,
           budgetH1: budgetValueH1,
           targetH1: targetValueH1,
-          mTargetH1: mtargetValueH1,
+          mTargetH1: mTargetValueH1,
           actualH2: actualValueH2,
           budgetH2: budgetValueH2,
           targetH2: targetValueH2,
-          mTargetH2: mtargetValueH2,
+          mTargetH2: mTargetValueH2,
           actualCurrent: actualValueCurrent,
           budgetCurrent: budgetValueCurrent,
           targetCurrent: targetValueCurrent,
-          mTargetCurrent: mtargetValueCurrent,
+          mTargetCurrent: mTargetValueCurrent,
         });
       });
     } catch (error) {
       if (!error) return;
-      setAllTableData([]);
+      setRollingTableData([]);
     }
   };
+
+  const [collectionTableData, setCollectionTableData] = useState([]);
   const getAllSalesPlanStatus = async (
     yr,
     month,
@@ -616,7 +598,7 @@ const MTarget = () => {
 
       const apires = await respond.data.data;
 
-      setAllTableData(apires);
+      setCollectionTableData(apires);
       let actualValue = 0;
       let budgetValue = 0;
       let targetValue = 0;
@@ -732,9 +714,8 @@ const MTarget = () => {
         });
       });
     } catch (error) {
-      setDownloadLoading(false);
       if (!error) return;
-      setAllTableData([]);
+      setCollectionTableData([]);
     }
   };
 
@@ -792,6 +773,27 @@ const MTarget = () => {
     targetCurrent: 0,
     mTargetCurrent: 0,
   });
+  const [summaryData, setSummaryData] = useState({
+    actual: 0,
+    budget: 0,
+    mTarget: 0,
+    target: 0,
+
+    actualH1: 0,
+    budgetH1: 0,
+    mTargetH1: 0,
+    targetH1: 0,
+
+    actualH2: 0,
+    budgetH2: 0,
+    mTargetH2: 0,
+    targetH2: 0,
+
+    actualCurrent: 0,
+    mTargetCurrent: 0,
+    budgetCurrent: 0,
+    targetCurrent: 0,
+  });
 
   return (
     <Layout>
@@ -801,6 +803,7 @@ const MTarget = () => {
             Management Target Status
           </h2>
         </div>
+
         <div className="my-4 flex  flex-col w-full gap-4 px-12 ">
           <div className="flex gap-4 w-full">
             <select
@@ -837,7 +840,7 @@ const MTarget = () => {
               disabled={!filterState.yr}
             >
               <option value="All" className="font-bold">
-                All
+                - Select -
               </option>
               {allMonthData.map((item, idx) => (
                 <option value={item} key={idx}>
@@ -1000,462 +1003,32 @@ const MTarget = () => {
             </select>
           </div>
         </div>
-        <div className="flex flex-row w-full justify-between px-12 ">
-          <h2 className="flex  font-bold text-xs">
-            Total Summary Collection Plan (in Lac){" "}
-          </h2>
-          <div className="flex flex-row px-2 items-center gap-4 font-bold text-xs">
-            <span>Target Ach </span>{" "}
-            <span className="flex h-3 w-3 bg-red-500"></span>
-            {"< = 50"}
-            <span className="flex h-3 w-3 bg-blue-500"></span>
-            {"51 to 74  %"}
-            <span className="flex h-3 w-3 bg-orange-500"></span>
-            {"75 to 90 %"}
-            <span className="flex h-3 w-3 bg-green-500"></span>
-            {" > 90 %"}
-          </div>
-        </div>
-        <div className="hidden lg:flex flex-col mt-2 text-sm px-12">
-          <div className="grid grid-cols-4  text-sm ">
-            <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200 ">
-              YTD
-            </div>
-            <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200">
-              H1 - (April - Sept)
-            </div>
-            <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200">
-              H2 - (Oct - March)
-            </div>
-            <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-gray-200">
-              Current Month-MTD
-            </div>
-          </div>
 
-          <div className="grid grid-cols-4  text-sm  font-bold text-xs ">
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                C.Target
-              </span>
-              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                M.Target
-              </span>
-
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                Actual
-              </span>
-
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                C.Ach%
-              </span>
-              <span className=" flex items-center justify-center   border-gray-300 w-20">
-                M.Ach %
-              </span>
-            </div>
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                C.Target
-              </span>
-              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                M.Target
-              </span>
-
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                Actual
-              </span>
-
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                C.Ach%
-              </span>
-              <span className=" flex items-center justify-center   border-gray-300 w-20">
-                M.Ach %
-              </span>
-            </div>
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                C.Target
-              </span>
-              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                M.Target
-              </span>
-
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                Actual
-              </span>
-
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                C.Ach%
-              </span>
-              <span className=" flex items-center justify-center   border-gray-300 w-20">
-                M.Ach %
-              </span>
-            </div>
-            <div className="border border-gray-300 flex justify-between items-center">
-              <span className="flex items-center  justify-center  border-r border-gray-300 w-20">
-                C.Target
-              </span>
-              <span className="flex items-center  justify-center  border-r border-gray-300 w-20">
-                M.Target
-              </span>
-
-              <span className="flex items-center  justify-center border-r border-gray-300 w-20">
-                Actual
-              </span>
-              <span className="flex items-center  justify-center border-r border-gray-300 w-20">
-                C.Ach%
-              </span>
-              <span className="flex items-center justify-center   border-gray-300 w-20">
-                M.Ach %
-              </span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-4  text-sm bg-white ">
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {collectionSummaryData.target.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {collectionSummaryData.mTarget.toFixed(2)}
-              </span>
-
-              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-                {collectionSummaryData.actual.toFixed(2)}
-              </span>
-
-              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-                {(
-                  (collectionSummaryData.actual /
-                    collectionSummaryData.target) *
-                  100
-                ).toFixed(2) === "NaN" ||
-                (
-                  (collectionSummaryData.actual.toFixed(2) /
-                    collectionSummaryData.target.toFixed(2)) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (collectionSummaryData.actual /
-                        collectionSummaryData.target) *
-                      100
-                    ).toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center  border-gray-300 w-20">
-                {(
-                  (collectionSummaryData.actual /
-                    collectionSummaryData.mTarget) *
-                  100
-                ).toFixed(2) === "NaN" ||
-                (
-                  (collectionSummaryData.actual /
-                    collectionSummaryData.mTarget) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (collectionSummaryData.actual /
-                        collectionSummaryData.mTarget) *
-                      100
-                    ).toFixed(2)}
-              </span>
-            </div>
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-                {collectionSummaryData.targetH1.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {collectionSummaryData.mTargetH1.toFixed(2)}
-              </span>
-
-              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                {collectionSummaryData.actualH1.toFixed(2)}
-              </span>
-
-              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                {(
-                  (collectionSummaryData.actualH1 /
-                    collectionSummaryData.targetH1) *
-                  100
-                ).toFixed(2) === "NaN" ||
-                (
-                  (collectionSummaryData.actualH1.toFixed(2) /
-                    collectionSummaryData.targetH1.toFixed(2)) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (collectionSummaryData.actualH1 /
-                        collectionSummaryData.targetH1) *
-                      100
-                    ).toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center  border-gray-300 w-20">
-                {(
-                  (collectionSummaryData.actualH1 /
-                    collectionSummaryData.mTargetH1) *
-                  100
-                ).toFixed(2) === "NaN" ||
-                (
-                  (collectionSummaryData.actualH1 /
-                    collectionSummaryData.mTargetH1) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (collectionSummaryData.actualH1 /
-                        collectionSummaryData.mTargetH1) *
-                      100
-                    ).toFixed(2)}
-              </span>
-            </div>
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-                {collectionSummaryData.targetH2.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {collectionSummaryData.mTargetH2.toFixed(2)}
-              </span>
-
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {collectionSummaryData.actualH2.toFixed(2)}
-              </span>
-
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {(
-                  (collectionSummaryData.actualH2 /
-                    collectionSummaryData.targetH2) *
-                  100
-                ).toFixed(2) === "NaN" ||
-                (
-                  (collectionSummaryData.actualH2.toFixed(2) /
-                    collectionSummaryData.targetH2.toFixed(2)) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (collectionSummaryData.actualH2 /
-                        collectionSummaryData.targetH2) *
-                      100
-                    ).toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center  border-gray-300 w-20">
-                {(
-                  (collectionSummaryData.actualH2 /
-                    collectionSummaryData.mTargetH2) *
-                  100
-                ).toFixed(2) === "NaN" ||
-                (
-                  (collectionSummaryData.actualH2 /
-                    collectionSummaryData.mTargetH2) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (collectionSummaryData.actualH2 /
-                        collectionSummaryData.mTargetH2) *
-                      100
-                    ).toFixed(2)}
-              </span>
-            </div>
-            <div className="border border-gray-300  flex justify-between items-center ">
-              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                {collectionSummaryData.targetCurrent.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {collectionSummaryData.mTargetCurrent.toFixed(2)}
-              </span>
-
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {collectionSummaryData.actualCurrent.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {(
-                  (collectionSummaryData.actualCurrent /
-                    collectionSummaryData.targetCurrent) *
-                  100
-                ).toFixed(2) === "NaN" ||
-                (
-                  (collectionSummaryData.actualCurrent.toFixed(2) /
-                    collectionSummaryData.targetCurrent.toFixed(2)) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (collectionSummaryData.actualCurrent /
-                        collectionSummaryData.targetCurrent) *
-                      100
-                    ).toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center  border-gray-300 w-20">
-                {(
-                  (collectionSummaryData.actualCurrent /
-                    collectionSummaryData.mTargetCurrent) *
-                  100
-                ).toFixed(2) === "NaN" ||
-                (
-                  (collectionSummaryData.actualCurrent /
-                    collectionSummaryData.mTargetCurrent) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (collectionSummaryData.actualCurrent /
-                        collectionSummaryData.mTargetCurrent) *
-                      100
-                    ).toFixed(2)}
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-end w-full px-12 gap-2 mt-2">
-          <button className="inline-flex justify-center rounded-md border border-transparent bg-blue-400 px-3 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
-            Upload
-          </button>
-          <button className="inline-flex justify-center rounded-md border border-transparent bg-blue-400 px-3 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
-            Download
-          </button>
-        </div>
-        <div className="bg-white h-screen flex items-start justify-center max-w-full mt-4">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full px-4 min-h-screen">
-            <table className="min-w-full divide-y border- divide-gray-200  ">
-              <thead className="">
-                <tr>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
-                    Month-Year
-                  </th>
-
-                  <th className="pl-4 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white">
-                    Segment
-                  </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
-                    Unit
-                  </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
-                    Zone
-                  </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
-                    Region
-                  </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
-                    Budget
-                  </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
-                    RSP
-                  </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
-                    M.Target
-                  </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
-                    Sale
-                  </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
-                    B.Ach
-                  </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
-                    R.Ach
-                  </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
-                    M.Ach
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {allTableData.map((item, idx) => (
-                  <tr key={idx}>
-                    <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
-                      {moment(item.m_year).format("MMM YYYY")}
-                    </td>
-
-                    <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
-                      {item.business_segment}
-                    </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
-                      {item.business_unit_name}
-                    </td>
-
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
-                      {item.zone_name}
-                    </td>
-
-                    <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
-                      {item.region_name}
-                    </td>
-                    <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
-                      {item.budget}
-                    </td>
-
-                    <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
-                      {item.target}
-                    </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
-                      <input
-                        className="border-2 border-solid border-black-500 px-2 py-2"
-                        placeholder="Enter M.Target"
-                        value={item.m_target}
-                      />
-                    </td>
-
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
-                      {item.target}
-                    </td>
-
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
-                      {" "}
-                      {((item.actual / item.m_target) * 100).toFixed(2) ===
-                        "NaN" ||
-                      ((item.actual / item.m_target) * 100).toFixed(2) ===
-                        "Infinity"
-                        ? 0
-                        : ((item.actual / item.m_target) * 100).toFixed(2)}
-                    </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
-                      {" "}
-                      {(
-                        (collectionSummaryData.actualH2 /
-                          collectionSummaryData.mTargetH2) *
-                        100
-                      ).toFixed(2) === "NaN" ||
-                      (
-                        (collectionSummaryData.actualH2 /
-                          collectionSummaryData.mTargetH2) *
-                        100
-                      ).toFixed(2) === "Infinity"
-                        ? 0
-                        : (
-                            (collectionSummaryData.actualH2 /
-                              collectionSummaryData.mTargetH2) *
-                            100
-                          ).toFixed(2)}
-                    </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
-                      {((item.actual / item.m_target) * 100).toFixed(2) ===
-                        "NaN" ||
-                      ((item.actual / item.m_target) * 100).toFixed(2) ===
-                        "Infinity"
-                        ? 0
-                        : ((item.actual / item.m_target) * 100).toFixed(2)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div className="mt-4 flex items-center justify-start gap-4">
-              <button
-                type="button"
-                className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-              >
-                Submit
-              </button>
-              <button
-                type="button"
-                className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
+        <SummmaryTable
+          gridType={gridType}
+          summaryData={summaryData}
+          collectionSummaryData={collectionSummaryData}
+        />
+        <MainTable
+          gridType={gridType}
+          rTableData={rollingTableData}
+          setRTableData={setRollingTableData}
+          cTableData={collectionTableData}
+          summaryData={summaryData}
+          collectionSummaryData={collectionSummaryData}
+          getRollingPlanData={() =>
+            getAllRollingSalesPlanStatus(
+              filterState.yr || null,
+              filterState.month || null,
+              filterState.bgId || null,
+              filterState.buId || null,
+              filterState.zId || null,
+              filterState.rId || null,
+              filterState.tId
+            )
+          }
+          isRegionSelected={filterState.rId ? true : false}
+        />
       </div>
       <div className="mt-4 flex items-center justify-start gap-4">
         <button
