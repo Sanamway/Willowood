@@ -527,18 +527,9 @@ function SummmaryTable({ gridType, summaryData, collectionSummaryData }) {
                     (collectionSummaryData.actual /
                       collectionSummaryData.mTarget) *
                     100
-                  ).toFixed(2) === "NaN" ||
-                  (
-                    (collectionSummaryData.actual /
-                      collectionSummaryData.mTarget) *
-                    100
-                  ).toFixed(2) === "Infinity"
+                  ).toFixed(2) === "NaN"
                     ? 0
-                    : (
-                        (collectionSummaryData.actual /
-                          collectionSummaryData.mTarget) *
-                        100
-                      ).toFixed(2)}
+                    : 0}
                 </span>
               </div>
               <div className="border border-gray-300  flex justify-between items-center">

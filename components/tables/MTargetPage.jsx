@@ -1,19 +1,13 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../Layout";
-
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 import axios from "axios";
-
 import toast, { Toaster } from "react-hot-toast";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { Popover } from "@headlessui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import * as XLSX from "xlsx";
-
 import moment from "moment";
-
 import SummmaryTable from "../MtargetUtils/SummaryTable";
 import MainTable from "../MtargetUtils/MainTable";
 const MTarget = () => {
@@ -308,68 +302,6 @@ const MTarget = () => {
     getAllRegionData(filterState.bgId, filterState.buId, filterState.zId);
   }, [filterState.bgId, filterState.buId, filterState.zId]);
 
-  const [territoryData, setTerritoryData] = useState([]);
-
-  const getAllTerritoryData = async (
-    segmentId,
-    businessUnitId,
-    zoneId,
-    regionId
-  ) => {
-    try {
-      const currentDate = new Date();
-
-      const respond = await axios.get(`${url}/api/get_territory`, {
-        headers: headers,
-      });
-
-      const apires = await respond.data.data;
-
-      setTerritoryData(
-        apires
-          .filter((item) => Number(item.bg_id) === Number(segmentId))
-          .filter((item) => Number(item.bu_id) === Number(businessUnitId))
-          .filter((item) => Number(item.z_id) === Number(zoneId))
-          .filter((item) => Number(item.r_id) === Number(regionId))
-      );
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    if (
-      !filterState.bgId ||
-      !filterState.buId ||
-      !filterState.zId ||
-      !filterState.rId
-    )
-      return;
-    getAllTerritoryData(
-      filterState.bgId,
-      filterState.buId,
-      filterState.zId,
-      filterState.rId
-    );
-  }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
-
-  const [depotData, setDepotData] = useState([]);
-
-  const getAllDepotData = async (cId) => {
-    try {
-      const respond = await axios.get(`${url}/api/get_warehousedepot`, {
-        headers: headers,
-      });
-
-      const apires = await respond.data.data;
-
-      setDepotData(apires.filter((item) => item.c_id === cId));
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    if (!JSON.parse(window.localStorage.getItem("userinfo")).c_id) return;
-    getAllDepotData(JSON.parse(window.localStorage.getItem("userinfo")).c_id);
-  }, []);
-
   const [rollingTableData, setRollingTableData] = useState([]);
   const getAllRollingSalesPlanStatus = async (
     yr,
@@ -552,8 +484,6 @@ const MTarget = () => {
     rId,
     tId
   ) => {
-    const currentDate = new Date();
-
     let endPoint;
     console.log("salesplan", yr, month, bgId, buId, zId, rId, tId);
     if (bgId && buId && zId && rId && tId) {
@@ -966,30 +896,6 @@ const MTarget = () => {
               ))}
             </select>
 
-            {/* <select
-              className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-              id="stateSelect"
-              value={filterState.tId}
-              disabled={
-                localStorageItems.roleId === 11 ||
-                localStorageItems.roleId === 6
-              }
-              onChange={(e) =>
-                setFilterState({
-                  ...filterState,
-                  tId: e.target.value,
-                })
-              }
-            >
-              <option value={""}>- Territory -</option>
-              <option value="All">All Territory</option>
-              {territoryData.map((item, idx) => (
-                <option value={item.t_id} key={idx}>
-                  {item.territory_name}
-                </option>
-              ))}
-            </select> */}
-
             <select
               className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
@@ -1030,20 +936,7 @@ const MTarget = () => {
           isRegionSelected={filterState.rId ? true : false}
         />
       </div>
-      <div className="mt-4 flex items-center justify-start gap-4">
-        <button
-          type="button"
-          className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-        >
-          Send
-        </button>
-        <button
-          type="button"
-          className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-        >
-          Close
-        </button>
-      </div>
+
       <Toaster position="bottom-center" reverseOrder={false} />
     </Layout>
   );

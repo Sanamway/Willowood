@@ -4,6 +4,7 @@ import axios from "axios";
 import { url } from "@/constants/url";
 import toast, { Toaster } from "react-hot-toast";
 import moment from "moment";
+import * as XLSX from "xlsx";
 
 function MainTable({
   gridType,
@@ -108,14 +109,91 @@ function MainTable({
       );
     }
   };
+  const handleTableDownloadRSP = () => {
+    const ws = XLSX.utils.json_to_sheet(
+      rTableData.map((item) => {
+        return {
+          Year: item.t_year,
+          Month: item.m_year,
+          Region: item.region_name,
+          Budget: item.budget,
+          RSP: item.actual,
+          MTarget: item.m_target,
+          Acutal: item.actual,
+          plan_id: item.plan_id,
+          tran_id: item.tran_id,
+          r_id: item.r_id,
+          z_id: item.z_id,
+          bu_id: item.bu_id,
+          bg_id: item.bg_id,
+          c_id: item.c_id,
+        };
+      })
+    );
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, `RSP.xlsx`);
+  };
+  const [fileData, setFileData] = useState(null);
+
+  const handleAddExcel = (e) => {
+    setFileData(e.target.files[0]);
+    e.preventDefault();
+  };
+
+  const handleConvert = async () => {
+    let JsonData;
+    if (fileData) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const data = e.target.result;
+        const workbook = XLSX.read(data, { type: "binary" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const json = XLSX.utils.sheet_to_json(worksheet, {
+          header: 1,
+          blankrows: false,
+        });
+        json.shift();
+        console.log("pop", json);
+        JsonData = json;
+      };
+      reader.readAsBinaryString(fileData);
+    }
+    console.log("pop", JsonData);
+
+    try {
+      const respond = await axios
+        .post(
+          `${url}/api/update_m_target`,
+          JSON.stringify({ data: rTableData }),
+          {
+            headers: headers,
+          }
+        )
+        .then((res) => {
+          if (!res) return;
+          getRollingPlanData();
+          toast.success("Rolling Plan Edited successfully!");
+        });
+    } catch (errors) {}
+  };
+
+  const [uploadModal, setUploadModal] = useState(false);
 
   return (
     <Fragment>
       <div className="flex justify-end w-full px-12 gap-2 mt-2">
-        <button className="inline-flex justify-center rounded-md border border-transparent bg-blue-400 px-3 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
+        <button
+          className="inline-flex justify-center rounded-md border border-transparent bg-blue-400 px-3 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          onClick={() => setUploadModal(true)}
+        >
           Upload
         </button>
-        <button className="inline-flex justify-center rounded-md border border-transparent bg-blue-400 px-3 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
+        <button
+          className="inline-flex justify-center rounded-md border border-transparent bg-blue-400 px-3 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          onClick={() => handleTableDownloadRSP()}
+        >
           Download
         </button>
       </div>
@@ -272,18 +350,26 @@ function MainTable({
                     -
                   </td>
                   <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
-                    -
+                    {rTableData.reduce((acc, curr) => {
+                      return (acc = Number(acc) + Number(curr.budget));
+                    }, 0)}
                   </td>
 
                   <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
-                    -
+                    {rTableData.reduce((acc, curr) => {
+                      acc = Number(acc) + Number(curr.target);
+                    }, 0) || 0}
                   </td>
                   <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-center">
-                    -
+                    {rTableData.reduce((acc, curr) => {
+                      return (acc = Number(acc) + Number(curr.m_target));
+                    }, 0)}
                   </td>
 
                   <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
-                    -
+                    {rTableData.reduce((acc, curr) => {
+                      return (acc = Number(acc) + Number(curr.actual));
+                    }, 0)}
                   </td>
 
                   <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
@@ -459,6 +545,73 @@ function MainTable({
           </div> */}
         </div>
       )}
+      <Transition appear show={uploadModal} as={Fragment}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          onClose={() => setUploadModal(false)}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="font-arial transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all ">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
+                  >
+                    Upload Excel
+                  </Dialog.Title>
+                  <div className="mt-4">
+                    <input
+                      type="file"
+                      accept=".xlsx, .xls"
+                      className="file-input"
+                      onChange={handleAddExcel}
+                    />
+                  </div>
+                  <div className="mt-4 flex justify-around space-x-4">
+                    <button
+                      onClick={() => {
+                        // Add your submit logic here
+                        handleConvert();
+                      }}
+                      className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                    >
+                      Submit
+                    </button>
+                    <button
+                      onClick={() => setUploadModal(false)}
+                      className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </Fragment>
   );
 }
