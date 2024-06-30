@@ -142,7 +142,7 @@ function MainTable({
   };
 
   const handleConvert = async () => {
-    let JsonData;
+    let JsonData = [];
     if (fileData) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -156,23 +156,40 @@ function MainTable({
         });
         json.shift();
         console.log("pop", json);
-        JsonData = json;
+
+        JsonData = json.map((item) => {
+          return {
+            t_year: item[0],
+            m_year: item[1],
+            region_name: item[2],
+            budget: item[3],
+            actual: item[4],
+            m_target: item[5],
+            actual: item[6],
+            plan_id: item[7],
+            tran_id: item[8],
+            r_id: item[9],
+            z_id: item[10],
+            bu_id: item[11],
+            bg_id: item[12],
+            c_id: item[13],
+          };
+        });
       };
-      reader.readAsBinaryString(fileData);
     }
-    console.log("pop", JsonData);
 
     try {
       const respond = await axios
         .post(
           `${url}/api/update_m_target`,
-          JSON.stringify({ data: rTableData }),
+          JSON.stringify({ data: JsonData }),
           {
             headers: headers,
           }
         )
         .then((res) => {
           if (!res) return;
+          setUploadModal(false);
           getRollingPlanData();
           toast.success("Rolling Plan Edited successfully!");
         });
