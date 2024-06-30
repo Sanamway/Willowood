@@ -137,13 +137,8 @@ function MainTable({
   const [fileData, setFileData] = useState(null);
 
   const handleAddExcel = (e) => {
-    setFileData(e.target.files[0]);
     e.preventDefault();
-  };
-
-  const handleConvert = async () => {
-    let JsonData = [];
-    if (fileData) {
+    if (e.target.files[0]) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const data = e.target.result;
@@ -155,42 +150,67 @@ function MainTable({
           blankrows: false,
         });
         json.shift();
-        console.log("pop", json);
+        console.log(
+          "pop",
+          json.map((item) => {
+            return {
+              t_year: item[0],
+              m_year: item[1],
+              region_name: item[2],
+              budget: item[3],
+              actual: item[4],
+              m_target: item[5],
+              actual: item[6],
+              plan_id: item[7],
+              tran_id: item[8],
+              r_id: item[9],
+              z_id: item[10],
+              bu_id: item[11],
+              bg_id: item[12],
+              c_id: item[13],
+            };
+          })
+        );
 
-        JsonData = json.map((item) => {
-          return {
-            t_year: item[0],
-            m_year: item[1],
-            region_name: item[2],
-            budget: item[3],
-            actual: item[4],
-            m_target: item[5],
-            actual: item[6],
-            plan_id: item[7],
-            tran_id: item[8],
-            r_id: item[9],
-            z_id: item[10],
-            bu_id: item[11],
-            bg_id: item[12],
-            c_id: item[13],
-          };
-        });
+        setFileData(
+          json.map((item) => {
+            return {
+              t_year: item[0],
+              m_year: item[1],
+              region_name: item[2],
+              budget: item[3],
+              actual: item[4],
+              m_target: item[5],
+              actual: item[6],
+              plan_id: item[7],
+              tran_id: item[8],
+              r_id: item[9],
+              z_id: item[10],
+              bu_id: item[11],
+              bg_id: item[12],
+              c_id: item[13],
+            };
+          })
+        );
       };
+      reader.readAsBinaryString(e.target.files[0]);
     }
+  };
 
+  const handleConvert = async () => {
     try {
       const respond = await axios
         .post(
           `${url}/api/update_m_target`,
-          JSON.stringify({ data: JsonData }),
+          JSON.stringify({ data: fileData }),
           {
             headers: headers,
           }
         )
         .then((res) => {
           if (!res) return;
-          setUploadModal(false);
           getRollingPlanData();
+          setUploadModal(false);
           toast.success("Rolling Plan Edited successfully!");
         });
     } catch (errors) {}
