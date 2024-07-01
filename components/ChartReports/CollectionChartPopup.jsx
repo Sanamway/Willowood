@@ -143,37 +143,48 @@ const CollectionChartPopup = ({
           <div className="flex items-center justify-between py-1.5 px-2 border-b-2">
             <div className="px-2 text-[0.89rem] font-semibold text-gray-500 py-1">
               {" "}
-              Collection Register (
+              {console.log("lop", backgorundFilters)}
+              Sales Register (
               {[
-                backgorundFilters.bgId !== "All" &&
+                (backgorundFilters.bgId !== "All" &&
+                  backgorundFilters.bgId &&
                   bgData.filter(
                     (item) =>
                       Number(item.bg_id) === Number(backgorundFilters.bgId)
-                  )[0].business_segment,
+                  )[0].business_segment) ||
+                  "",
 
-                backgorundFilters.buId !== "All" &&
+                (backgorundFilters.buId !== "All" &&
+                  backgorundFilters.buId &&
                   buData.filter(
                     (item) =>
                       Number(item.bu_id) === Number(backgorundFilters.buId)
-                  )[0].business_unit_name,
+                  )[0].business_unit_name) ||
+                  "",
 
-                backgorundFilters.zId !== "All" &&
+                (backgorundFilters.zId !== "All" &&
+                  backgorundFilters.zId &&
                   zoneData.filter(
                     (item) =>
                       Number(item.z_id) === Number(backgorundFilters.zId)
-                  )[0].zone_name,
+                  )[0].zone_name) ||
+                  "",
 
-                backgorundFilters.rId !== "All" &&
+                (backgorundFilters.rId !== "All" &&
+                  backgorundFilters.rId &&
                   regionData.filter(
                     (item) =>
                       Number(item.r_id) === Number(backgorundFilters.rId)
-                  )[0].region_name,
+                  )[0].region_name) ||
+                  "",
 
-                backgorundFilters.tId !== "All" &&
+                (backgorundFilters.tId !== "All" &&
+                  backgorundFilters.tId &&
                   tData.filter(
                     (item) =>
                       Number(item.t_id) === Number(backgorundFilters.tId)
-                  )[0].territory_name,
+                  )[0].territory_name) ||
+                  "",
               ].join(", ")}
               )
             </div>

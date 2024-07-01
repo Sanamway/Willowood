@@ -14,7 +14,7 @@ function SummmaryTable({ gridType, summaryData, collectionSummaryData }) {
     <div>
       {gridType === "Rolling" ? (
         <Fragment>
-          <div className="flex flex-row w-full justify-between px-12 ">
+          <div className="flex flex-col w-full my-4 gap-2 px-4 lg:flex-row  justify-between lg:px-12">
             <h2 className="flex  font-bold text-xs">
               Total Summary Rolling Plan (in Lac){" "}
             </h2>
@@ -30,352 +30,494 @@ function SummmaryTable({ gridType, summaryData, collectionSummaryData }) {
               {" > 90 %"}
             </div>
           </div>
+          <div className="hidden lg:flex flex-col mt-2 text-sm">
+            <div className="grid grid-cols-4  text-sm px-12 py-2">
+              <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-[#4285F4] ">
+                YTD
+              </div>
+              <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-[#4285F4]">
+                H1 - (April - Sept)
+              </div>
+              <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-[#4285F4]">
+                H2 - (Oct - March)
+              </div>
+              <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-[#4285F4]">
+                Current Month-MTD
+              </div>
+            </div>
 
-          <div className="grid grid-cols-4  text-sm px-12 py-2">
-            <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-[#4285F4] ">
-              YTD
+            <div className="grid grid-cols-4  text-sm px-12 font-bold text-xs ">
+              <div className="border border-gray-300  flex justify-between items-center">
+                <span className=" flex items-center   justify-center border-r border-gray-300 w-20">
+                  Bud.
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  M.Tar
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  RSP
+                </span>
+
+                <span className=" flex items-center justify-center   border-r border-gray-300 w-20">
+                  Sale
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  B. Ach
+                </span>
+                <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                  M. Ach
+                </span>
+                <span className=" flex items-center justify-center   border-gray-300 w-20">
+                  R. Ach
+                </span>
+              </div>
+              <div className="border border-gray-300  flex justify-between items-center">
+                <span className=" flex items-center   justify-center border-r border-gray-300 w-20">
+                  Bud.
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  M.Tar
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  RSP
+                </span>
+
+                <span className=" flex items-center justify-center   border-r border-gray-300 w-20">
+                  Sale
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  B. ach
+                </span>
+                <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                  M. Ach
+                </span>
+                <span className=" flex items-center justify-center   border-gray-300 w-20">
+                  R. Ach
+                </span>
+              </div>
+
+              <div className="border border-gray-300  flex justify-between items-center">
+                <span className=" flex items-center   justify-center border-r border-gray-300 w-20">
+                  Bud.
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  M.Tar
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  RSP
+                </span>
+
+                <span className=" flex items-center justify-center   border-r border-gray-300 w-20">
+                  Sale
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  B. Ach
+                </span>
+                <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                  M. Ach
+                </span>
+                <span className=" flex items-center justify-center   border-gray-300 w-20">
+                  R. Ach
+                </span>
+              </div>
+              <div className="border border-gray-300  flex justify-between items-center">
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  Bud.
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  M.Tar
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  RSP
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  Sale
+                </span>
+                <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                  B Ach
+                </span>
+                <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                  M. Ach
+                </span>
+                <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                  R. Ach
+                </span>
+              </div>
             </div>
-            <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-[#4285F4]">
-              H1 - (April - Sept)
-            </div>
-            <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-[#4285F4]">
-              H2 - (Oct - March)
-            </div>
-            <div className="border border-gray-300 py-1 flex justify-center items-center font-bold text-xs bg-[#4285F4]">
-              Current Month-MTD
+
+            <div className="grid grid-cols-4  text-sm px-12">
+              <div className="border border-gray-300  flex justify-between items-center">
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {summaryData.budget.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {summaryData.mTarget.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {summaryData.target.toFixed(2)}
+                </span>
+
+                <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                  {summaryData.actual.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {((summaryData.actual / summaryData.budget) * 100).toFixed(
+                    2
+                  ) === "NaN" ||
+                  (
+                    (summaryData.actual.toFixed(2) /
+                      summaryData.budget.toFixed(2)) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : ((summaryData.actual / summaryData.budget) * 100).toFixed(
+                        2
+                      )}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {((summaryData.actual / summaryData.mTarget) * 100).toFixed(
+                    2
+                  ) === "NaN" ||
+                  ((summaryData.actual / summaryData.mTarget) * 100).toFixed(
+                    2
+                  ) === "Infinity"
+                    ? 0
+                    : (
+                        (summaryData.actual / summaryData.mTarget) *
+                        100
+                      ).toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                  {((summaryData.actual / summaryData.target) * 100).toFixed(
+                    2
+                  ) === "NaN" ||
+                  (
+                    (summaryData.actual.toFixed(2) /
+                      summaryData.target.toFixed(2)) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : ((summaryData.actual / summaryData.target) * 100).toFixed(
+                        2
+                      )}
+                </span>
+              </div>
+              <div className="border border-gray-300  flex justify-between items-center">
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {summaryData.budgetH1.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {summaryData.mTargetH1.toFixed(2)}
+                </span>
+                <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                  {summaryData.targetH1.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                  {summaryData.actualH1.toFixed(2)}
+                </span>
+
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {(
+                    (summaryData.actualH1 / summaryData.budgetH1) *
+                    100
+                  ).toFixed(2) === "NaN" ||
+                  (
+                    (summaryData.actualH1.toFixed(2) /
+                      summaryData.budgetH1.toFixed(2)) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : (
+                        (summaryData.actualH1 / summaryData.budgetH1) *
+                        100
+                      ).toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {(
+                    (summaryData.actualH1 / summaryData.mTargetH1) *
+                    100
+                  ).toFixed(2) === "NaN" ||
+                  (
+                    (summaryData.actualH1 / summaryData.mTargetH1) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : (
+                        (summaryData.actualH1 / summaryData.mTargetH1) *
+                        100
+                      ).toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                  {(
+                    (summaryData.actualH1 / summaryData.targetH1) *
+                    100
+                  ).toFixed(2) === "NaN" ||
+                  (
+                    (summaryData.actualH1.toFixed(2) /
+                      summaryData.targetH1.toFixed(2)) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : (
+                        (summaryData.actualH1 / summaryData.targetH1) *
+                        100
+                      ).toFixed(2)}
+                </span>
+              </div>
+              <div className="border border-gray-300  flex justify-between items-center">
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {summaryData.budgetH2.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {summaryData.mTargetH2.toFixed(2)}
+                </span>
+                <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                  {summaryData.targetH2.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {summaryData.actualH2.toFixed(2)}
+                </span>
+
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {(
+                    (summaryData.actualH2 / summaryData.budgetH2) *
+                    100
+                  ).toFixed(2) === "NaN" ||
+                  (
+                    (summaryData.actualH2.toFixed(2) /
+                      summaryData.budgetH2.toFixed(2)) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : (
+                        (summaryData.actualH2 / summaryData.budgetH2) *
+                        100
+                      ).toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {(
+                    (summaryData.actualH2 / summaryData.mTargetH2) *
+                    100
+                  ).toFixed(2) === "NaN" ||
+                  (
+                    (summaryData.actualH2 / summaryData.mTargetH2) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : (
+                        (summaryData.actualH2 / summaryData.mTargetH2) *
+                        100
+                      ).toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                  {(
+                    (summaryData.actualH2 / summaryData.targetH2) *
+                    100
+                  ).toFixed(2) === "NaN" ||
+                  (
+                    (summaryData.actualH2.toFixed(2) /
+                      summaryData.targetH2.toFixed(2)) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : (
+                        (summaryData.actualH2 / summaryData.targetH2) *
+                        100
+                      ).toFixed(2)}
+                </span>
+              </div>
+              <div className="border border-gray-300  flex justify-between items-center">
+                <span className=" flex items-center justify-center border-r border-gray-300 w-20">
+                  {summaryData.budgetCurrent.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {summaryData.mTargetCurrent.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                  {summaryData.targetCurrent.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {summaryData.actualCurrent.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {(
+                    (summaryData.actualCurrent / summaryData.budgetCurrent) *
+                    100
+                  ).toFixed(2) === "NaN" ||
+                  (
+                    (summaryData.actualCurrent / summaryData.budgetCurrent) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : (
+                        (summaryData.actualCurrent /
+                          summaryData.budgetCurrent) *
+                        100
+                      ).toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {(
+                    (summaryData.actualCurrent / summaryData.mTargetCurrent) *
+                    100
+                  ).toFixed(2) === "NaN" ||
+                  (
+                    (summaryData.actualCurrent / summaryData.mTargetCurrent) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : (
+                        (summaryData.actualCurrent /
+                          summaryData.mTargetCurrent) *
+                        100
+                      ).toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                  {(
+                    (summaryData.actualCurrent / summaryData.targetCurrent) *
+                    100
+                  ).toFixed(2) === "NaN" ||
+                  (
+                    (summaryData.actualCurrent.toFixed(2) /
+                      summaryData.targetCurrent.toFixed(2)) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : (
+                        (summaryData.actualCurrent /
+                          summaryData.targetCurrent) *
+                        100
+                      ).toFixed(2)}
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-4  text-sm px-12 font-bold text-xs ">
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center   justify-center border-r border-gray-300 w-20">
-                Bud.
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                M.Tar
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                RSP
-              </span>
+          <div className="flex flex-col overflow-auto text-xs px-4 lg:hidden ">
+            <div className="grid grid-rows-4  text-sm ">
+              <div className="border border-gray-300 py-1 flex px-2 items-center font-bold text-xs bg-gray-200 ">
+                YTD
+              </div>
+              <div className="border border-gray-300 text-xs flex justify-between items-center">
+                <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                  Budget
+                </span>
+                <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                  RSP
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  Sale
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  B ach
+                </span>
+                <span className=" flex items-center justify-center   border-gray-300 w-20">
+                  R ach
+                </span>
+              </div>
+              <div className="border border-gray-300   text-xs flex justify-between items-center">
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {summaryData.budget.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {summaryData.target.toFixed(2)}
+                </span>
+                <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
+                  {summaryData.actual.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {((summaryData.actual / summaryData.budget) * 100).toFixed(
+                    2
+                  ) === "NaN" ||
+                  (
+                    (summaryData.actual.toFixed(2) /
+                      summaryData.budget.toFixed(2)) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : ((summaryData.actual / summaryData.budget) * 100).toFixed(
+                        2
+                      )}
+                </span>
+                <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                  {((summaryData.actual / summaryData.target) * 100).toFixed(
+                    2
+                  ) === "NaN" ||
+                  (
+                    (summaryData.actual.toFixed(2) /
+                      summaryData.target.toFixed(2)) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : ((summaryData.actual / summaryData.target) * 100).toFixed(
+                        2
+                      )}
+                </span>
+              </div>
 
-              <span className=" flex items-center justify-center   border-r border-gray-300 w-20">
-                Sale
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                B. Ach
-              </span>
-              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-                M. Ach
-              </span>
-              <span className=" flex items-center justify-center   border-gray-300 w-20">
-                R. Ach
-              </span>
-            </div>
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center   justify-center border-r border-gray-300 w-20">
-                Bud.
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                M.Tar
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                RSP
-              </span>
-
-              <span className=" flex items-center justify-center   border-r border-gray-300 w-20">
-                Sale
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                B. ach
-              </span>
-              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-                M. Ach
-              </span>
-              <span className=" flex items-center justify-center   border-gray-300 w-20">
-                R. Ach
-              </span>
-            </div>
-
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center   justify-center border-r border-gray-300 w-20">
-                Bud.
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                M.Tar
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                RSP
-              </span>
-
-              <span className=" flex items-center justify-center   border-r border-gray-300 w-20">
-                Sale
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                B. Ach
-              </span>
-              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-                M. Ach
-              </span>
-              <span className=" flex items-center justify-center   border-gray-300 w-20">
-                R. Ach
-              </span>
-            </div>
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                Bud.
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                M.Tar
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                RSP
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                Sale
-              </span>
-              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-                B Ach
-              </span>
-              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-                M. Ach
-              </span>
-              <span className=" flex items-center  justify-center  border-gray-300 w-20">
-                R. Ach
-              </span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-4  text-sm px-12">
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {summaryData.budget.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {summaryData.mTarget.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {summaryData.target.toFixed(2)}
-              </span>
-
-              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-                {summaryData.actual.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {((summaryData.actual / summaryData.budget) * 100).toFixed(
-                  2
-                ) === "NaN" ||
-                (
-                  (summaryData.actual.toFixed(2) /
-                    summaryData.budget.toFixed(2)) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : ((summaryData.actual / summaryData.budget) * 100).toFixed(
-                      2
-                    )}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {((summaryData.actual / summaryData.mTarget) * 100).toFixed(
-                  2
-                ) === "NaN" ||
-                ((summaryData.actual / summaryData.mTarget) * 100).toFixed(
-                  2
-                ) === "Infinity"
-                  ? 0
-                  : ((summaryData.actual / summaryData.mTarget) * 100).toFixed(
-                      2
-                    )}
-              </span>
-              <span className=" flex items-center  justify-center  border-gray-300 w-20">
-                {((summaryData.actual / summaryData.target) * 100).toFixed(
-                  2
-                ) === "NaN" ||
-                (
-                  (summaryData.actual.toFixed(2) /
-                    summaryData.target.toFixed(2)) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : ((summaryData.actual / summaryData.target) * 100).toFixed(
-                      2
-                    )}
-              </span>
-            </div>
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {summaryData.budgetH1.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {summaryData.mTargetH1.toFixed(2)}
-              </span>
-              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-                {summaryData.targetH1.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                {summaryData.actualH1.toFixed(2)}
-              </span>
-
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {((summaryData.actualH1 / summaryData.budgetH1) * 100).toFixed(
-                  2
-                ) === "NaN" ||
-                (
-                  (summaryData.actualH1.toFixed(2) /
-                    summaryData.budgetH1.toFixed(2)) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (summaryData.actualH1 / summaryData.budgetH1) *
-                      100
-                    ).toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {((summaryData.actualH1 / summaryData.mTargetH1) * 100).toFixed(
-                  2
-                ) === "NaN" ||
-                ((summaryData.actualH1 / summaryData.mTargetH1) * 100).toFixed(
-                  2
-                ) === "Infinity"
-                  ? 0
-                  : (
-                      (summaryData.actualH1 / summaryData.mTargetH1) *
-                      100
-                    ).toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center  border-gray-300 w-20">
-                {((summaryData.actualH1 / summaryData.targetH1) * 100).toFixed(
-                  2
-                ) === "NaN" ||
-                (
-                  (summaryData.actualH1.toFixed(2) /
-                    summaryData.targetH1.toFixed(2)) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (summaryData.actualH1 / summaryData.targetH1) *
-                      100
-                    ).toFixed(2)}
-              </span>
-            </div>
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {summaryData.budgetH2.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {summaryData.mTargetH2.toFixed(2)}
-              </span>
-              <span className=" flex items-center justify-center  border-r border-gray-300 w-20">
-                {summaryData.targetH2.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {summaryData.actualH2.toFixed(2)}
-              </span>
-
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {((summaryData.actualH2 / summaryData.budgetH2) * 100).toFixed(
-                  2
-                ) === "NaN" ||
-                (
-                  (summaryData.actualH2.toFixed(2) /
-                    summaryData.budgetH2.toFixed(2)) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (summaryData.actualH2 / summaryData.budgetH2) *
-                      100
-                    ).toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {((summaryData.actualH2 / summaryData.mTargetH2) * 100).toFixed(
-                  2
-                ) === "NaN" ||
-                ((summaryData.actualH2 / summaryData.mTargetH2) * 100).toFixed(
-                  2
-                ) === "Infinity"
-                  ? 0
-                  : (
-                      (summaryData.actualH2 / summaryData.mTargetH2) *
-                      100
-                    ).toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center  border-gray-300 w-20">
-                {((summaryData.actualH2 / summaryData.targetH2) * 100).toFixed(
-                  2
-                ) === "NaN" ||
-                (
-                  (summaryData.actualH2.toFixed(2) /
-                    summaryData.targetH2.toFixed(2)) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (summaryData.actualH2 / summaryData.targetH2) *
-                      100
-                    ).toFixed(2)}
-              </span>
-            </div>
-            <div className="border border-gray-300  flex justify-between items-center">
-              <span className=" flex items-center justify-center border-r border-gray-300 w-20">
-                {summaryData.budgetCurrent.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {summaryData.mTargetCurrent.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
-                {summaryData.targetCurrent.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {summaryData.actualCurrent.toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {(
-                  (summaryData.actualCurrent / summaryData.budgetCurrent) *
-                  100
-                ).toFixed(2) === "NaN" ||
-                (
-                  (summaryData.actualCurrent / summaryData.budgetCurrent) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (summaryData.actualCurrent / summaryData.budgetCurrent) *
-                      100
-                    ).toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
-                {(
-                  (summaryData.actualCurrent / summaryData.mTargetCurrent) *
-                  100
-                ).toFixed(2) === "NaN" ||
-                (
-                  (summaryData.actualCurrent / summaryData.mTargetCurrent) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (summaryData.actualCurrent / summaryData.mTargetCurrent) *
-                      100
-                    ).toFixed(2)}
-              </span>
-              <span className=" flex items-center  justify-center  border-gray-300 w-20">
-                {(
-                  (summaryData.actualCurrent / summaryData.targetCurrent) *
-                  100
-                ).toFixed(2) === "NaN" ||
-                (
-                  (summaryData.actualCurrent.toFixed(2) /
-                    summaryData.targetCurrent.toFixed(2)) *
-                  100
-                ).toFixed(2) === "Infinity"
-                  ? 0
-                  : (
-                      (summaryData.actualCurrent / summaryData.targetCurrent) *
-                      100
-                    ).toFixed(2)}
-              </span>
+              <div className="border border-gray-300 py-1 text-xs flex  items-center font-bold px-2 text-xs bg-gray-200">
+                Current Month-MTD
+              </div>
+              <div className="border border-gray-300 text-xs flex justify-between items-center">
+                <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                  Budget
+                </span>
+                <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                  RSP
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  Sale
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  B ach
+                </span>
+                <span className=" flex items-center justify-center   border-gray-300 w-20">
+                  R ach
+                </span>
+              </div>
+              <div className="border border-gray-300 text-xs flex justify-between items-center">
+                <span className=" flex items-center justify-center border-r border-gray-300 w-20">
+                  {summaryData.budgetCurrent.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center  border-r border-gray-300 w-20">
+                  {summaryData.targetCurrent.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {summaryData.actualCurrent.toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
+                  {(
+                    (summaryData.actualCurrent / summaryData.budgetCurrent) *
+                    100
+                  ).toFixed(2) === "NaN" ||
+                  (
+                    (summaryData.actualCurrent / summaryData.budgetCurrent) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : (
+                        (summaryData.actualCurrent /
+                          summaryData.budgetCurrent) *
+                        100
+                      ).toFixed(2)}
+                </span>
+                <span className=" flex items-center  justify-center  border-gray-300 w-20">
+                  {(
+                    (summaryData.actualCurrent / summaryData.targetCurrent) *
+                    100
+                  ).toFixed(2) === "NaN" ||
+                  (
+                    (summaryData.actualCurrent.toFixed(2) /
+                      summaryData.targetCurrent.toFixed(2)) *
+                    100
+                  ).toFixed(2) === "Infinity"
+                    ? 0
+                    : (
+                        (summaryData.actualCurrent /
+                          summaryData.targetCurrent) *
+                        100
+                      ).toFixed(2)}
+                </span>
+              </div>
             </div>
           </div>
         </Fragment>

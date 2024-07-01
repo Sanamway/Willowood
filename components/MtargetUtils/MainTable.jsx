@@ -220,7 +220,7 @@ function MainTable({
 
   return (
     <Fragment>
-      <div className="flex justify-end w-full px-12 gap-2 mt-2">
+      <div className="flex justify-end w-full pr-6 gap-2 m-4 ">
         <button
           className="inline-flex justify-center rounded-md border border-transparent bg-blue-400 px-3 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
           onClick={() => setUploadModal(true)}

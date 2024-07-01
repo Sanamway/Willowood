@@ -657,8 +657,7 @@ const MTarget = () => {
         filterState.bgId || null,
         filterState.buId || null,
         filterState.zId || null,
-        filterState.rId || null,
-        filterState.tId
+        filterState.rId
       );
     } else {
       getAllSalesPlanStatus(
@@ -727,14 +726,190 @@ const MTarget = () => {
 
   return (
     <Layout>
-      <div className="h-screen  w-full font-arial bg-white">
+      <div className="h-screen  font-arial bg-white  w-screen lg:w-full">
         <div className="grid justify-items-stretch grid-flow-col px-8 py-2">
           <h2 className="flex font-arial  text-xl  py-2 font-bold  text-teal-400  justify-self-center underline">
             Management Target Status
           </h2>
         </div>
 
-        <div className="my-4 flex  flex-col w-full gap-4 px-12 ">
+        <div className=" flex  flex-col w-full gap-4  lg:hidden ">
+          <div className="flex  flex-row w-full flex-wrap  gap-4 pl-4 ">
+            <select
+              className="  max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500  w-[40%] lg:w-full "
+              id="stateSelect"
+              value={filterState.yr}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  yr: e.target.value,
+                })
+              }
+              disabled={!filterState.yr}
+            >
+              <option value="All" className="font-bold" disabled={true}>
+                -- Select --
+              </option>
+              {allYearData.map((item, idx) => (
+                <option value={item} key={idx}>
+                  {item}
+                </option>
+              ))}
+            </select>
+            <select
+              className=" max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[40%] lg:w-full"
+              id="stateSelect"
+              value={filterState.month}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  month: e.target.value,
+                })
+              }
+              disabled={!filterState.yr}
+            >
+              <option value="All" className="font-bold">
+                - Select -
+              </option>
+              {allMonthData.map((item, idx) => (
+                <option value={item} key={idx}>
+                  {moment(item).format("MMM YYYY")}
+                </option>
+              ))}
+            </select>
+            <select
+              className=" max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[40%] lg:w-full"
+              id="stateSelect"
+              value={filterState.bgId}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  bgId: e.target.value,
+                  buId: null,
+                  zId: null,
+                  rId: null,
+                  tId: null,
+                })
+              }
+              disabled={
+                localStorageItems.roleId === 11 ||
+                localStorageItems.roleId === 6 ||
+                localStorageItems.roleId === 5 ||
+                localStorageItems.roleId === 4 ||
+                localStorageItems.roleId === 3 ||
+                localStorageItems.roleId === 10
+              }
+            >
+              <option value={""} className="font-bold">
+                - Business Segment -
+              </option>
+              <option value={"All"}>All Segment</option>
+              {bgData.map((item, idx) => (
+                <option value={item.bg_id} key={idx}>
+                  {item.business_segment}
+                </option>
+              ))}
+            </select>
+            <select
+              className=" px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[40%] lg:w-full"
+              id="stateSelect"
+              value={filterState.buId}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  buId: e.target.value,
+
+                  zId: "",
+                  rId: "",
+                  tId: "",
+                })
+              }
+              disabled={
+                localStorageItems.roleId === 11 ||
+                localStorageItems.roleId === 6 ||
+                localStorageItems.roleId === 5 ||
+                localStorageItems.roleId === 4 ||
+                localStorageItems.roleId === 3
+              }
+            >
+              <option value={""}>- Business Unit -</option>
+              <option value={"All"}>All Unit</option>
+              {buData.map((item, idx) => (
+                <option value={item.bu_id} key={idx}>
+                  {item.business_unit_name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              className=" px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[40%] lg:w-full"
+              id="stateSelect"
+              value={filterState.zId}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  zId: e.target.value,
+                  rId: "",
+                  tId: "",
+                })
+              }
+              disabled={
+                localStorageItems.roleId === 11 ||
+                localStorageItems.roleId === 6 ||
+                localStorageItems.roleId === 5 ||
+                localStorageItems.roleId === 4
+              }
+            >
+              <option value={""}>- Zone -</option>
+              <option value={"All"}>All Zone</option>
+              {zoneData.map((item, idx) => (
+                <option value={item.z_id} key={idx}>
+                  {item.zone_name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              className=" px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[40%] lg:w-full"
+              id="stateSelect"
+              value={filterState.rId}
+              disabled={
+                localStorageItems.roleId === 11 ||
+                localStorageItems.roleId === 6 ||
+                localStorageItems.roleId === 5
+              }
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  rId: e.target.value,
+                  tId: "",
+                })
+              }
+            >
+              <option value={""}>- Region -</option>
+              <option value={"All"}>All Region</option>
+              {regionData.map((item, idx) => (
+                <option value={item.r_id} key={idx}>
+                  {item.region_name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              className=" px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[40%] lg:w-full"
+              id="stateSelect"
+              value={gridType}
+              onChange={(e) => setGridType(e.target.value)}
+            >
+              <option value={""}>- Grid Type -</option>
+
+              <option value="Rolling">Rolling Plan</option>
+              <option value="Collection">Collection Plan</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="hidden lg:block lg:my-4 flex flex-col w-full gap-4 px-12 w-full">
           <div className="flex gap-4 w-full">
             <select
               className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -909,7 +1084,6 @@ const MTarget = () => {
             </select>
           </div>
         </div>
-
         <SummmaryTable
           gridType={gridType}
           summaryData={summaryData}
@@ -929,8 +1103,7 @@ const MTarget = () => {
               filterState.bgId || null,
               filterState.buId || null,
               filterState.zId || null,
-              filterState.rId || null,
-              filterState.tId
+              filterState.rId || null
             )
           }
           isRegionSelected={filterState.rId ? true : false}
