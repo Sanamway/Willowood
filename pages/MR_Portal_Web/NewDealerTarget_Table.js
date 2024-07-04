@@ -1,0 +1,15 @@
+import React, { useState, useEffect } from "react";
+import Layout from "@/components/Layout1";
+import { AiTwotoneHome } from "react-icons/ai";
+import { useRouter } from "next/router";
+import { url } from "@/constants/url";
+import { AiOutlineSearch } from "react-icons/ai";
+import axios from "axios";
+// import ConfirmationModal from "../modals/ConfirmationModal";
+import { CSVLink } from "react-csv";
+import { TbFileDownload } from "react-icons/tb";
+import toast, { Toaster } from "react-hot-toast";
+import moment from "moment";
+import ReactPaginate from "react-paginate";
+const NewDealer = () => {};
+export default NewDealer;

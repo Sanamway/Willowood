@@ -24,7 +24,6 @@ const SaleChartPopup = ({
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-  console.log("POp", backgorundFilters);
 
   const springProps = useSpring({
     from: { opacity: 0, scale: 0.8 },
@@ -81,25 +80,43 @@ const SaleChartPopup = ({
       setTableLoading(true);
       const resp = await axios.get(`${url}/api/get_sales_registed`, {
         params: {
-          start_date: new Date(from),
-          end_date: new Date(to),
+          start_date: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+          end_date: moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           customer_code: cust.value,
-          t_des: tData.filter(
-            (item) => Number(item.t_id) === Number(backgorundFilters.tId)
-          )[0].territory_name,
-          r_des: regionData.filter(
-            (item) => Number(item.r_id) === Number(backgorundFilters.rId)
-          )[0].region_name,
-          z_des: zoneData.filter(
-            (item) => Number(item.z_id) === Number(backgorundFilters.zId)
-          )[0].zone_name,
-          bu_des: buData.filter(
-            (item) => Number(item.bu_id) === Number(backgorundFilters.buId)
-          )[0].business_unit_name,
-          bg_des: bgData.filter(
-            (item) => Number(item.bg_id) === Number(backgorundFilters.bgId)
-          )[0].business_segment,
+          t_des:
+            backgorundFilters.tId === "All" || !backgorundFilters.tId
+              ? null
+              : tData.filter(
+                  (item) => Number(item.t_id) === Number(backgorundFilters.tId)
+                )[0].territory_name,
+          r_des:
+            backgorundFilters.rId === "All" || !backgorundFilters.rId
+              ? null
+              : regionData.filter(
+                  (item) => Number(item.r_id) === Number(backgorundFilters.rId)
+                )[0].region_name,
+
+          z_des:
+            backgorundFilters.zId === "All" || !backgorundFilters.zId
+              ? null
+              : zoneData.filter(
+                  (item) => Number(item.z_id) === Number(backgorundFilters.zId)
+                )[0].zone_name,
+          bu_des:
+            backgorundFilters.buId === "All" || !backgorundFilters.buId
+              ? null
+              : buData.filter(
+                  (item) =>
+                    Number(item.bu_id) === Number(backgorundFilters.buId)
+                )[0].business_unit_name,
+          bg_des:
+            backgorundFilters.bgId === "All" || !backgorundFilters.bgId
+              ? null
+              : bgData.filter(
+                  (item) =>
+                    Number(item.bg_id) === Number(backgorundFilters.bgId)
+                )[0].business_segment,
         },
         headers: headers,
       });
@@ -115,6 +132,7 @@ const SaleChartPopup = ({
       );
       setTableLoading(false);
     } catch (error) {
+      console.log("zop", error);
       setTableData([]);
       setTableLoading(false);
     }
@@ -143,45 +161,42 @@ const SaleChartPopup = ({
               {console.log("lop", backgorundFilters)}
               Sales Register (
               {[
-                (backgorundFilters.bgId !== "All" &&
-                  backgorundFilters.bgId &&
-                  bgData.filter(
-                    (item) =>
-                      Number(item.bg_id) === Number(backgorundFilters.bgId)
-                  )[0].business_segment) ||
-                  "",
+                backgorundFilters.bgId !== "All" &&
+                backgorundFilters.bgId !== ""
+                  ? bgData.filter(
+                      (item) =>
+                        Number(item.bg_id) === Number(backgorundFilters.bgId)
+                    )[0].business_segment
+                  : "",
 
-                (backgorundFilters.buId !== "All" &&
-                  backgorundFilters.buId &&
-                  buData.filter(
-                    (item) =>
-                      Number(item.bu_id) === Number(backgorundFilters.buId)
-                  )[0].business_unit_name) ||
-                  "",
+                backgorundFilters.buId !== "All" &&
+                backgorundFilters.buId !== ""
+                  ? buData.filter(
+                      (item) =>
+                        Number(item.bu_id) === Number(backgorundFilters.buId)
+                    )[0].business_unit_name
+                  : "",
 
-                (backgorundFilters.zId !== "All" &&
-                  backgorundFilters.zId &&
-                  zoneData.filter(
-                    (item) =>
-                      Number(item.z_id) === Number(backgorundFilters.zId)
-                  )[0].zone_name) ||
-                  "",
+                backgorundFilters.zId !== "All" && backgorundFilters.zId !== ""
+                  ? zoneData.filter(
+                      (item) =>
+                        Number(item.z_id) === Number(backgorundFilters.zId)
+                    )[0].zone_name
+                  : "",
 
-                (backgorundFilters.rId !== "All" &&
-                  backgorundFilters.rId &&
-                  regionData.filter(
-                    (item) =>
-                      Number(item.r_id) === Number(backgorundFilters.rId)
-                  )[0].region_name) ||
-                  "",
+                backgorundFilters.rId !== "All" && backgorundFilters.rId !== ""
+                  ? regionData.filter(
+                      (item) =>
+                        Number(item.r_id) === Number(backgorundFilters.rId)
+                    )[0].region_name
+                  : "",
 
-                (backgorundFilters.tId !== "All" &&
-                  backgorundFilters.tId &&
-                  tData.filter(
-                    (item) =>
-                      Number(item.t_id) === Number(backgorundFilters.tId)
-                  )[0].territory_name) ||
-                  "",
+                backgorundFilters.tId !== "All" && backgorundFilters.tId !== ""
+                  ? tData.filter(
+                      (item) =>
+                        Number(item.t_id) === Number(backgorundFilters.tId)
+                    )[0].territory_name
+                  : "",
               ].join(", ")}
               )
             </div>
@@ -346,6 +361,19 @@ const SaleChartPopup = ({
                                         {tableData.reduce((acc, curr) => {
                                           console.log("jki", acc, curr);
                                           acc += curr.Price;
+                                          return acc;
+                                        }, 0)}
+                                      </td>
+                                    );
+                                  } else if (cellIndex === 17) {
+                                    return (
+                                      <td
+                                        key={cellIndex}
+                                        className={`px-4 font-semibold ${"text-right"} whitespace-nowrap py-1 text-[0.74rem] text-gray-500 border`}
+                                      >
+                                        {tableData.reduce((acc, curr) => {
+                                          console.log("jki", acc, curr);
+                                          acc += curr["Bill Value"];
                                           return acc;
                                         }, 0)}
                                       </td>

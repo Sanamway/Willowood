@@ -10,8 +10,12 @@ function MainTable({
   gridType,
   rTableData,
   setRTableData,
+  cTableData,
+  setCTableData,
   getRollingPlanData,
+  getCollectionPlanData,
   isRegionSelected,
+  roleId,
 }) {
   const headers = {
     "Content-Type": "application/json",
@@ -33,6 +37,24 @@ function MainTable({
           if (!res) return;
           getRollingPlanData();
           toast.success("Rolling Plan Edited successfully!");
+        });
+    } catch (errors) {}
+  };
+  const handleSubmitCollectionPlan = async (e) => {
+    e.preventDefault();
+    try {
+      const respond = await axios
+        .post(
+          `${url}/api/update_m_target_cp`,
+          JSON.stringify({ data: cTableData }),
+          {
+            headers: headers,
+          }
+        )
+        .then((res) => {
+          if (!res) return;
+          getCollectionPlanData();
+          toast.success("Collection Plan Edited successfully!");
         });
     } catch (errors) {}
   };
@@ -115,9 +137,11 @@ function MainTable({
         return {
           Year: item.t_year,
           Month: item.m_year,
+          BusinessUnit: item.business_unit_name,
+          Zone: item.zone_name,
           Region: item.region_name,
           Budget: item.budget,
-          RSP: item.actual,
+          RSP: item.target,
           MTarget: item.m_target,
           Acutal: item.actual,
           plan_id: item.plan_id,
@@ -133,6 +157,34 @@ function MainTable({
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
     XLSX.writeFile(wb, `RSP.xlsx`);
+  };
+
+  const handleTableDownloadCSP = () => {
+    const ws = XLSX.utils.json_to_sheet(
+      cTableData.map((item) => {
+        return {
+          Year: item.t_year,
+          Month: item.m_year,
+          BusinessUnit: item.business_unit_name,
+          Zone: item.zone_name,
+          Region: item.region_name,
+
+          CTarget: item.target,
+          MTarget: item.m_target,
+          Acutal: item.actual,
+          plan_id: item.plan_id,
+          tran_id: item.tran_id,
+          r_id: item.r_id,
+          z_id: item.z_id,
+          bu_id: item.bu_id,
+          bg_id: item.bg_id,
+          c_id: item.c_id,
+        };
+      })
+    );
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, `CSP.xlsx`);
   };
   const [fileData, setFileData] = useState(null);
 
@@ -157,41 +209,62 @@ function MainTable({
               t_year: item[0],
               m_year: item[1],
               region_name: item[2],
-              budget: item[3],
-              actual: item[4],
-              m_target: item[5],
-              actual: item[6],
-              plan_id: item[7],
-              tran_id: item[8],
-              r_id: item[9],
-              z_id: item[10],
-              bu_id: item[11],
-              bg_id: item[12],
-              c_id: item[13],
+              target: item[3],
+              m_target: item[4],
+              actual: item[5],
+              plan_id: item[6],
+              tran_id: item[7],
+              r_id: item[8],
+              z_id: item[9],
+              bu_id: item[10],
+              bg_id: item[11],
+              c_id: item[12],
             };
           })
         );
 
-        setFileData(
-          json.map((item) => {
-            return {
-              t_year: item[0],
-              m_year: item[1],
-              region_name: item[2],
-              budget: item[3],
-              actual: item[4],
-              m_target: item[5],
-              actual: item[6],
-              plan_id: item[7],
-              tran_id: item[8],
-              r_id: item[9],
-              z_id: item[10],
-              bu_id: item[11],
-              bg_id: item[12],
-              c_id: item[13],
-            };
-          })
-        );
+        if (gridType === "Rolling") {
+          setFileData(
+            json.map((item) => {
+              return {
+                t_year: item[0],
+                m_year: item[1],
+                region_name: item[2],
+                budget: item[3],
+                actual: item[4],
+                m_target: item[5],
+                actual: item[6],
+                plan_id: item[7],
+                tran_id: item[8],
+                r_id: item[9],
+                z_id: item[10],
+                bu_id: item[11],
+                bg_id: item[12],
+                c_id: item[13],
+              };
+            })
+          );
+        } else {
+          setFileData(
+            json.map((item) => {
+              return {
+                t_year: item[0],
+                m_year: item[1],
+                region_name: item[2],
+                target: item[3],
+                m_target: item[4],
+                actual: item[5],
+                plan_id: item[6],
+                tran_id: item[7],
+                r_id: item[8],
+                z_id: item[9],
+                bu_id: item[10],
+                bg_id: item[11],
+                c_id: item[12],
+              };
+            })
+          );
+        }
       };
       reader.readAsBinaryString(e.target.files[0]);
     }
@@ -199,19 +272,27 @@ function MainTable({
 
   const handleConvert = async () => {
     try {
+      let dataUrl;
+      if (gridType === "Rolling") {
+        dataUrl = "update_m_target";
+      } else {
+        dataUrl = "update_m_target_cp";
+      }
       const respond = await axios
-        .post(
-          `${url}/api/update_m_target`,
-          JSON.stringify({ data: fileData }),
-          {
-            headers: headers,
-          }
-        )
+        .post(`${url}/api/${dataUrl}`, JSON.stringify({ data: fileData }), {
+          headers: headers,
+        })
         .then((res) => {
           if (!res) return;
           getRollingPlanData();
+          getCollectionPlanData();
           setUploadModal(false);
-          toast.success("Rolling Plan Edited successfully!");
+          setFileData(null);
+          if (gridType === "Rolling") {
+            toast.success("Rolling Plan Edited successfully!");
+          } else {
+            toast.success("Collection Plan Edited successfully!");
+          }
         });
     } catch (errors) {}
   };
@@ -220,18 +301,27 @@ function MainTable({
 
   return (
     <Fragment>
-      <div className="flex justify-end w-full pr-6 gap-2 m-4 ">
+      <div className="flex justify-end w-full pr-8 gap-2 m-4 ">
         <button
           className="inline-flex justify-center rounded-md border border-transparent bg-blue-400 px-3 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
           onClick={() => setUploadModal(true)}
+          disabled={
+            gridType === "Collection" && (!roleId === 14 || !roleId === 1)
+          }
         >
-          Upload
+          Upload M.Target
         </button>
         <button
           className="inline-flex justify-center rounded-md border border-transparent bg-blue-400 px-3 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-          onClick={() => handleTableDownloadRSP()}
+          onClick={() => {
+            if (gridType === "Rolling") {
+              handleTableDownloadRSP();
+            } else {
+              handleTableDownloadCSP();
+            }
+          }}
         >
-          Download
+          Download XLS M.Target
         </button>
       </div>
 
@@ -239,81 +329,81 @@ function MainTable({
         <div className="bg-white h-screen flex items-start justify-center max-w-full mt-4">
           <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full px-4 min-h-screen">
             <table className="min-w-full divide-y border- divide-gray-200">
-              <thead className="">
+              <thead className="text-[10px]">
                 <tr>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
+                  <th className="px-3 py-2 border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white hidden">
                     Month-Year
                   </th>
 
-                  <th className="pl-4 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white">
+                  <th className="pl-4 py-2 border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white hidden">
                     Segment
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
                     Unit
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
                     Zone
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
+                  <th className=" border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
                     Region
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
+                  <th className=" border-b-2 border-gray-200 bg-[#626364] text-left font-semibold text-white">
                     Budget
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
+                  <th className="border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
                     RSP
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
+                  <th className=" border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
                     M.Target
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
+                  <th className=" pl-2 py-2 border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
                     Sale
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
+                  <th className="py-2 border-b-2 border-gray-200 bg-[#626364] text-left font-semibold text-white">
                     B.Ach
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
+                  <th className="px-2 py-2 border-b-2 border-gray-200 bg-[#626364] text-left font-semibold text-white">
                     R.Ach
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
+                  <th className="px-2 py-2 border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
                     M.Ach
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left font-semibold text-white">
                     Overall Achievement
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {rTableData.map((item, idx) => (
-                  <tr key={idx}>
-                    <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
+                  <tr key={idx} className="text-[10px]">
+                    <td className="px-5 py-1 border-b border-gray-200 bg-white  hidden">
                       {moment(item.m_year).format("MMM YYYY")}
                     </td>
 
-                    <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="pl-4 py-2 border-b border-gray-200 bg-white hidden ">
                       {item.business_segment}
                     </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white  text-left">
                       {item.business_unit_name}
                     </td>
 
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white ">
                       {item.zone_name}
                     </td>
 
-                    <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
+                    <td className=" py-1 border-b border-gray-200 bg-white ">
                       {item.region_name}
                     </td>
-                    <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
+                    <td className="py-1 border-b border-gray-200 bg-white ">
                       {item.budget}
                     </td>
 
-                    <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className=" py-2 border-b border-gray-200 bg-white ">
                       {item.target}
                     </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
+                    <td className=" py-2 border-b border-gray-200 bg-white  text-left">
                       <input
-                        className="border-2 border-solid border-black-500 px-2 py-2 text-right  w-16"
+                        className="border-2 border-solid border-black-500 px-2 py-2 text-right    w-12 h-4"
                         placeholder="Enter M.Target"
                         value={item.m_target}
                         disabled={isRegionSelected === false}
@@ -331,11 +421,11 @@ function MainTable({
                       />
                     </td>
 
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white   text-center">
                       {item.actual}
                     </td>
 
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white   text-center">
                       {" "}
                       {((item.actual / item.budget) * 100).toFixed(2) ===
                         "NaN" ||
@@ -344,7 +434,7 @@ function MainTable({
                         ? 0
                         : ((item.actual / item.budget) * 100).toFixed(2)}
                     </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white   text-center">
                       {" "}
                       {((item.actual / item.target) * 100).toFixed(2) ===
                         "NaN" ||
@@ -353,7 +443,7 @@ function MainTable({
                         ? 0
                         : ((item.actual / item.target) * 100).toFixed(2)}
                     </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white   text-center">
                       {((item.actual / item.m_target) * 100).toFixed(2) ===
                         "NaN" ||
                       ((item.actual / item.m_target) * 100).toFixed(2) ===
@@ -361,64 +451,72 @@ function MainTable({
                         ? 0
                         : ((item.actual / item.m_target) * 100).toFixed(2)}
                     </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white   text-right">
                       <div className="demo-preview">{getProgressBar(item)}</div>
                     </td>
                   </tr>
                 ))}
 
-                <tr>
-                  <td className="px-5 py-1 border-b border-gray-200 bg-white font-bold">
+                <tr className="text-[10px]">
+                  <td className="  px-5 py-1 border-b border-gray-200 bg-white font-bold hidden">
                     Total
                   </td>
 
-                  <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
+                  <td className="pl-4 py-2 border-b border-gray-200 bg-white hidden">
                     -
                   </td>
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
-                    -
-                  </td>
-
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white  text-left">
                     -
                   </td>
 
-                  <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white ">
                     -
-                  </td>
-                  <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
-                    {rTableData.reduce((acc, curr) => {
-                      return (acc = Number(acc) + Number(curr.budget));
-                    }, 0)}
                   </td>
 
-                  <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
-                    {rTableData.reduce((acc, curr) => {
-                      acc = Number(acc) + Number(curr.target);
-                    }, 0) || 0}
+                  <td className="px-5 py-1 border-b border-gray-200 bg-white ">
+                    -
                   </td>
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-center">
-                    {rTableData.reduce((acc, curr) => {
-                      return (acc = Number(acc) + Number(curr.m_target));
-                    }, 0)}
+                  <td className=" py-1 border-b border-gray-200 bg-white  text-left">
+                    {rTableData
+                      .reduce((acc, curr) => {
+                        return (acc = Number(acc) + Number(curr.budget));
+                      }, 0)
+                      ?.toFixed(2)}
                   </td>
 
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
-                    {rTableData.reduce((acc, curr) => {
-                      return (acc = Number(acc) + Number(curr.actual));
-                    }, 0)}
+                  <td className=" py-2 border-b border-gray-200 bg-white  text-left">
+                    {rTableData
+                      .reduce((acc, curr) => {
+                        return (acc = Number(acc) + Number(curr.target));
+                      }, 0)
+                      ?.toFixed(2) || 0}
+                  </td>
+                  <td className=" py-2 border-b border-gray-200 bg-white  text-left">
+                    {rTableData
+                      .reduce((acc, curr) => {
+                        return (acc = Number(acc) + Number(curr.m_target));
+                      }, 0)
+                      ?.toFixed(2)}
                   </td>
 
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white  text-center">
+                    {rTableData
+                      .reduce((acc, curr) => {
+                        return (acc = Number(acc) + Number(curr.actual));
+                      }, 0)
+                      ?.toFixed(2)}
+                  </td>
+
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white ">
                     -
                   </td>
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white ">
                     -
                   </td>
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white ">
                     -
                   </td>
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white ">
                     -
                   </td>
                 </tr>
@@ -445,8 +543,8 @@ function MainTable({
         </div>
       ) : (
         <div className="bg-white h-screen flex items-start justify-center max-w-full mt-4">
-          {/* <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full px-4 min-h-screen">
-            <table className="min-w-full divide-y border- divide-gray-200  ">
+          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full px-4 min-h-screen">
+            <table className="min-w-full divide-y border- divide-gray-200">
               <thead className="">
                 <tr>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
@@ -465,26 +563,25 @@ function MainTable({
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
                     Region
                   </th>
+
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
-                    Budget
-                  </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
-                    RSP
+                    C.Target
                   </th>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
                     M.Target
                   </th>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
-                    Sale
+                    Actual
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
-                    B.Ach
-                  </th>
+
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
                     R.Ach
                   </th>
                   <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
                     M.Ach
+                  </th>
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
+                    Overall Achievement
                   </th>
                 </tr>
               </thead>
@@ -509,27 +606,44 @@ function MainTable({
                     <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
                       {item.region_name}
                     </td>
-                    <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
-                      {item.budget}
-                    </td>
 
-                    <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="pl-4 py-2 border-b border-gray-200 bg-white text-left">
                       {item.target}
                     </td>
                     <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
                       <input
-                        className="border-2 border-solid border-black-500 px-2 py-2"
+                        className="border-2 border-solid border-black-500 px-2 py-2 text-right  w-16 h-4"
                         placeholder="Enter M.Target"
                         value={item.m_target}
+                        disabled={isRegionSelected === false}
+                        onChange={(e) =>
+                          setCTableData(
+                            cTableData.map((el) => {
+                              if (el._id === item._id) {
+                                return { ...el, m_target: e.target.value };
+                              } else {
+                                return el;
+                              }
+                            })
+                          )
+                        }
                       />
                     </td>
 
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
-                      {item.target}
+                    <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm text-left">
+                      {item.actual}
                     </td>
 
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm text-left">
                       {" "}
+                      {((item.actual / item.target) * 100).toFixed(2) ===
+                        "NaN" ||
+                      ((item.actual / item.target) * 100).toFixed(2) ===
+                        "Infinity"
+                        ? 0
+                        : ((item.actual / item.target) * 100).toFixed(2)}
+                    </td>
+                    <td className="pr-6 py-2 border-b border-gray-200 bg-white text-sm text-right w-12">
                       {((item.actual / item.m_target) * 100).toFixed(2) ===
                         "NaN" ||
                       ((item.actual / item.m_target) * 100).toFixed(2) ===
@@ -538,48 +652,90 @@ function MainTable({
                         : ((item.actual / item.m_target) * 100).toFixed(2)}
                     </td>
                     <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
-                      {" "}
-                      {(
-                        (summaryData.actualH2 / summaryData.mTargetH2) *
-                        100
-                      ).toFixed(2) === "NaN" ||
-                      (
-                        (summaryData.actualH2 / summaryData.mTargetH2) *
-                        100
-                      ).toFixed(2) === "Infinity"
-                        ? 0
-                        : (
-                            (summaryData.actualH2 / summaryData.mTargetH2) *
-                            100
-                          ).toFixed(2)}
-                    </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
-                      {((item.actual / item.m_target) * 100).toFixed(2) ===
-                        "NaN" ||
-                      ((item.actual / item.m_target) * 100).toFixed(2) ===
-                        "Infinity"
-                        ? 0
-                        : ((item.actual / item.m_target) * 100).toFixed(2)}
+                      <div className="demo-preview">{getProgressBar(item)}</div>
                     </td>
                   </tr>
                 ))}
+
+                <tr className=" font-bold">
+                  <td className="px-5 py-1 border-b border-gray-200 bg-white font-bold">
+                    Total
+                  </td>
+
+                  <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
+                    -
+                  </td>
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
+                    -
+                  </td>
+
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                    -
+                  </td>
+
+                  <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
+                    -
+                  </td>
+
+                  <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
+                    {cTableData
+                      .reduce((acc, curr) => {
+                        return (acc = Number(acc) + Number(curr.target));
+                      }, 0)
+                      ?.toFixed(2)}
+                  </td>
+                  <td className="pr-6 py-2 border-b border-gray-200 bg-white text-sm text-center">
+                    {cTableData
+                      .reduce((acc, curr) => {
+                        return (acc = Number(acc) + Number(curr.m_target));
+                      }, 0)
+                      ?.toFixed(2)}
+                  </td>
+
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm ">
+                    {cTableData
+                      .reduce((acc, curr) => {
+                        return (acc = Number(acc) + Number(curr.actual));
+                      }, 0)
+                      ?.toFixed(2)}
+                  </td>
+
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                    -
+                  </td>
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                    -
+                  </td>
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
+                    -
+                  </td>
+                </tr>
               </tbody>
             </table>
             <div className="mt-4 flex items-center justify-start gap-4">
-              <button
-                type="button"
-                className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-              >
-                Submit
-              </button>
-              <button
-                type="button"
-                className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-              >
-                Close
-              </button>
+              {roleId === 14 || roleId === 1 ? (
+                <Fragment>
+                  <button
+                    type="button"
+                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    onClick={(e) => {
+                      handleSubmitCollectionPlan(e);
+                    }}
+                  >
+                    Submit
+                  </button>
+                  <button
+                    type="button"
+                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  >
+                    Close
+                  </button>
+                </Fragment>
+              ) : (
+                <div></div>
+              )}
             </div>
-          </div> */}
+          </div>
         </div>
       )}
       <Transition appear show={uploadModal} as={Fragment}>
@@ -626,6 +782,7 @@ function MainTable({
                       onChange={handleAddExcel}
                     />
                   </div>
+
                   <div className="mt-4 flex justify-around space-x-4">
                     <button
                       onClick={() => {

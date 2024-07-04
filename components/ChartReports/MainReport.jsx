@@ -94,21 +94,50 @@ const MainReport = () => {
     switch (roleId) {
       case 6:
         filterState = {
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId:
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
         };
         setLocalStorageItems({
-          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId:
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -117,22 +146,49 @@ const MainReport = () => {
         break;
       case 5:
         filterState = {
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
           tId: "All",
           yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
         };
         setLocalStorageItems({
-          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId:
-            JSON.parse(window.localStorage.getItem("userinfo")).t_id || "All",
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
+                "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -141,24 +197,50 @@ const MainReport = () => {
         break;
       case 4:
         filterState = {
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
           rId: "All",
           tId: "All",
           yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
         };
         setLocalStorageItems({
-          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
 
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
           rId:
-            JSON.parse(window.localStorage.getItem("userinfo")).r_id || "All",
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
+                "All",
           tId:
-            JSON.parse(window.localStorage.getItem("userinfo")).t_id || "All",
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
+                "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -167,25 +249,49 @@ const MainReport = () => {
         break;
       case 3:
         filterState = {
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: "All",
           tId: "All",
           yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
         };
         setLocalStorageItems({
-          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId:
-            JSON.parse(window.localStorage.getItem("userinfo")).bu_id || "All",
-          rId:
-            JSON.parse(window.localStorage.getItem("userinfo")).r_id || "All",
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
           zId:
-            JSON.parse(window.localStorage.getItem("userinfo")).z_id || "All",
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
+                "All",
           tId:
-            JSON.parse(window.localStorage.getItem("userinfo")).t_id || "All",
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
+                "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -203,16 +309,30 @@ const MainReport = () => {
           month: allMonthData[allMonthData.length - 1],
         };
         setLocalStorageItems({
-          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId:
-            JSON.parse(window.localStorage.getItem("userinfo")).bu_id || "All",
-          rId:
-            JSON.parse(window.localStorage.getItem("userinfo")).r_id || "All",
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
           zId:
-            JSON.parse(window.localStorage.getItem("userinfo")).z_id || "All",
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
+                "All",
           tId:
-            JSON.parse(window.localStorage.getItem("userinfo")).t_id || "All",
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
+                "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 

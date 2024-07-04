@@ -8,8 +8,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import * as XLSX from "xlsx";
 import moment from "moment";
-import SummmaryTable from "../MtargetUtils/SummaryTable";
-import MainTable from "../MtargetUtils/MainTable";
+import SummmaryTable from "../ManagmentTarget/SummaryTable";
+import MainTable from "../ManagmentTarget/MainTable";
 const MTarget = () => {
   const router = useRouter();
   // const endDate = new Date(2024, 4, 16);
@@ -27,7 +27,7 @@ const MTarget = () => {
     tId: null,
     roleId: null,
   });
-  const [gridType, setGridType] = useState("");
+  const [gridType, setGridType] = useState("Rolling");
   const [filterState, setFilterState] = useState({
     bgId: null,
     buId: null,
@@ -41,9 +41,16 @@ const MTarget = () => {
   });
   const [allMonthData, setAllMonthData] = useState([]);
   const [allYearData, setAllYearData] = useState([]);
+
   const getAllTransactionPlan = async () => {
+    let dataUrl;
+    if (gridType === "Rolling") {
+      dataUrl = "get_rp";
+    } else {
+      dataUrl = "get_cp";
+    }
     try {
-      const respond = await axios.get(`${url}/api/get_cp`, {
+      const respond = await axios.get(`${url}/api/${dataUrl}`, {
         headers: headers,
         params: { status: true },
       });
@@ -54,10 +61,17 @@ const MTarget = () => {
 
   useEffect(() => {
     getAllTransactionPlan();
-  }, []);
+  }, [gridType]);
+
   const getAllTransactionYear = async (yr) => {
+    let dataUrl;
+    if (gridType === "Rolling") {
+      dataUrl = "get_rp";
+    } else {
+      dataUrl = "get_cp";
+    }
     try {
-      const respond = await axios.get(`${url}/api/get_cp`, {
+      const respond = await axios.get(`${url}/api/${dataUrl}`, {
         headers: headers,
         params: { status: true, year: yr },
       });
@@ -70,7 +84,7 @@ const MTarget = () => {
   useEffect(() => {
     if (!filterState.yr) return;
     getAllTransactionYear(filterState.yr);
-  }, [filterState.yr]);
+  }, [filterState.yr, gridType]);
 
   useEffect(() => {
     if (!allYearData.length) return;
@@ -666,8 +680,7 @@ const MTarget = () => {
         filterState.bgId || null,
         filterState.buId || null,
         filterState.zId || null,
-        filterState.rId || null,
-        filterState.tId
+        filterState.rId || null
       );
     }
   }, [
@@ -677,7 +690,7 @@ const MTarget = () => {
     filterState.buId,
     filterState.zId,
     filterState.rId,
-    filterState.tId,
+
     gridType,
   ]);
 
@@ -733,10 +746,21 @@ const MTarget = () => {
           </h2>
         </div>
 
-        <div className=" flex  flex-col w-full gap-4  lg:hidden ">
+        <div className=" flex  flex-col w-full gap-4  text-[12px] lg:hidden ">
           <div className="flex  flex-row w-full flex-wrap  gap-4 pl-4 ">
             <select
-              className="  max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500  w-[40%] lg:w-full "
+              className=" px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[30%] lg:w-full"
+              id="stateSelect"
+              value={gridType}
+              onChange={(e) => setGridType(e.target.value)}
+            >
+              <option value={""}>- Grid Type -</option>
+
+              <option value="Rolling">Rolling Plan</option>
+              <option value="Collection">Collection Plan</option>
+            </select>
+            <select
+              className="  max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500  w-[30%] lg:w-full "
               id="stateSelect"
               value={filterState.yr}
               onChange={(e) =>
@@ -757,7 +781,7 @@ const MTarget = () => {
               ))}
             </select>
             <select
-              className=" max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[40%] lg:w-full"
+              className=" max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[30%] lg:w-full"
               id="stateSelect"
               value={filterState.month}
               onChange={(e) =>
@@ -778,7 +802,7 @@ const MTarget = () => {
               ))}
             </select>
             <select
-              className=" max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[40%] lg:w-full"
+              className=" max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[30%] lg:w-full"
               id="stateSelect"
               value={filterState.bgId}
               onChange={(e) =>
@@ -811,7 +835,7 @@ const MTarget = () => {
               ))}
             </select>
             <select
-              className=" px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[40%] lg:w-full"
+              className=" px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[30%] lg:w-full"
               id="stateSelect"
               value={filterState.buId}
               onChange={(e) =>
@@ -842,7 +866,7 @@ const MTarget = () => {
             </select>
 
             <select
-              className=" px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[40%] lg:w-full"
+              className=" px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[30%] lg:w-full"
               id="stateSelect"
               value={filterState.zId}
               onChange={(e) =>
@@ -870,7 +894,7 @@ const MTarget = () => {
             </select>
 
             <select
-              className=" px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[40%] lg:w-full"
+              className=" px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[30%] lg:w-full"
               id="stateSelect"
               value={filterState.rId}
               disabled={
@@ -893,24 +917,23 @@ const MTarget = () => {
                   {item.region_name}
                 </option>
               ))}
-            </select>
-
-            <select
-              className=" px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500 w-[40%] lg:w-full"
-              id="stateSelect"
-              value={gridType}
-              onChange={(e) => setGridType(e.target.value)}
-            >
-              <option value={""}>- Grid Type -</option>
-
-              <option value="Rolling">Rolling Plan</option>
-              <option value="Collection">Collection Plan</option>
             </select>
           </div>
         </div>
 
-        <div className="hidden lg:block lg:my-4 flex flex-col w-full gap-4 px-12 w-full">
+        <div className="hidden lg:block lg:my-4 flex flex-col w-full gap-4 px-12 w-full ">
           <div className="flex gap-4 w-full">
+            <select
+              className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              id="stateSelect"
+              value={gridType}
+              onChange={(e) => setGridType(e.target.value)}
+            >
+              <option value={""}>- Grid Type -</option>
+
+              <option value="Rolling">Rolling Plan</option>
+              <option value="Collection">Collection Plan</option>
+            </select>
             <select
               className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
@@ -1069,18 +1092,6 @@ const MTarget = () => {
                   {item.region_name}
                 </option>
               ))}
-            </select>
-
-            <select
-              className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-              id="stateSelect"
-              value={gridType}
-              onChange={(e) => setGridType(e.target.value)}
-            >
-              <option value={""}>- Grid Type -</option>
-
-              <option value="Rolling">Rolling Plan</option>
-              <option value="Collection">Collection Plan</option>
             </select>
           </div>
         </div>
@@ -1094,6 +1105,7 @@ const MTarget = () => {
           rTableData={rollingTableData}
           setRTableData={setRollingTableData}
           cTableData={collectionTableData}
+          setCTableData={setCollectionTableData}
           summaryData={summaryData}
           collectionSummaryData={collectionSummaryData}
           getRollingPlanData={() =>
@@ -1106,7 +1118,18 @@ const MTarget = () => {
               filterState.rId || null
             )
           }
+          getCollectionPlanData={() =>
+            getAllSalesPlanStatus(
+              filterState.yr || null,
+              filterState.month || null,
+              filterState.bgId || null,
+              filterState.buId || null,
+              filterState.zId || null,
+              filterState.rId || null
+            )
+          }
           isRegionSelected={filterState.rId ? true : false}
+          roleId={localStorageItems.roleId}
         />
       </div>
 

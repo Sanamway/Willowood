@@ -1,6 +1,6 @@
 import React from "react";
 
-import MTarget from "@/components/tables/MTargetPage";
+import MTarget from "@/components/tables/ManagmentTarget";
 
 const index = () => {
   return (
