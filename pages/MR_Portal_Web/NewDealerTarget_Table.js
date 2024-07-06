@@ -254,7 +254,7 @@ const NewDealer = () => {
                         router.push({
                           pathname: "/MR_Portal_Web/NewDealerTarget_Form",
                           query: {
-                            empId: item.emp_id,
+                            empId: item.emp_code,
                             yr: item.year,
                             custCode: item.customer_code,
                             tDes: item.territory_name,
@@ -271,7 +271,7 @@ const NewDealer = () => {
                         router.push({
                           pathname: "/MR_Portal_Web/NewDealerTarget_Form",
                           query: {
-                            empId: item.emp_id,
+                            empId: item.emp_code,
                             yr: item.year,
                             custCode: item.customer_code,
                             tDes: item.territory_name,

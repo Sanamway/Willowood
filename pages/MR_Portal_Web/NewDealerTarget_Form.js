@@ -302,7 +302,7 @@ const DealerTarget = () => {
     if (router.query.type !== "Add") {
       tDes = router.query.tDes;
       paramsData = {
-        t_id: tId,
+        t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
         c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         t_des: tDes,
         year: router.query.yr,
