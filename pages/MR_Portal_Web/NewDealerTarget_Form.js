@@ -295,6 +295,10 @@ const DealerTarget = () => {
   }, []);
 
   const [allMRSalesTarget, setAllMRSalesTarget] = useState([]);
+  const [editviewFilter, setEditviewFilter] = useState({
+    disName: "",
+    empName: "",
+  });
   const getAllMRSalesTarget = async () => {
     const { tId, yr, empCode, dId } = filterState;
     let tDes;
@@ -329,6 +333,12 @@ const DealerTarget = () => {
 
       const apires = await respond.data.data;
       setAllMRSalesTarget(apires);
+      if (router.query.type !== "Add") {
+        setEditviewFilter({
+          disName: apires[0].distribution_name,
+          empName: apires[0].emp_name,
+        });
+      }
     } catch (error) {}
   };
   const [selectedYr, setSelectedYr] = useState(null);
@@ -338,6 +348,11 @@ const DealerTarget = () => {
   const handleSave = async () => {
     try {
       let endPoint = "api/add_mr_sales_target";
+      if (router.query.type === "Add") {
+        endPoint = "api/add_mr_sales_target";
+      } else {
+        endPoint = "api/update_mr_target";
+      }
 
       const data = allMRSalesTarget
         ?.map((item, idx) => {
@@ -376,6 +391,7 @@ const DealerTarget = () => {
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
       console.log("koi", errors);
+      toast.error(errorMessage);
       if (!errorMessage) return;
       getAllMRSalesTarget();
     }
@@ -385,9 +401,9 @@ const DealerTarget = () => {
       <div className="w-full font-arial bg-white">
         <Toaster position="bottom-center" reverseOrder={false} />
 
-        <div className="flex flex-row m-4 w-full gap-2">
+        <div className="flex flex-row m-4 w-100 gap-2 flex-wrap">
           <DatePicker
-            className="border p-1 rounded ml-2 w-72"
+            className="border p-1 rounded ml-2 w-40 "
             showYearDropdown
             dateFormat="yyyy"
             placeholderText="Enter Year"
@@ -397,11 +413,12 @@ const DealerTarget = () => {
             hand
             showYearPicker
             minDate={new Date(new Date().getFullYear(), 0, 1)}
+            disabled={router.query.type !== "Add"}
           />
 
           <select
             id="attendanceType"
-            className="border p-1 rounded ml-2 w-72"
+            className="border p-1 rounded ml-2 w-1/6 "
             value={filterState.bgId}
             onChange={(e) =>
               setFilterState({ ...filterState, bgId: e.target.value })
@@ -416,7 +433,7 @@ const DealerTarget = () => {
 
           <select
             id="attendanceType"
-            className="  border p-1 rounded ml-2 w-72"
+            className="  border p-1 rounded ml-2 w-1/6 "
             value={filterState.buId}
             onChange={(e) =>
               setFilterState({ ...filterState, buId: e.target.value })
@@ -430,7 +447,7 @@ const DealerTarget = () => {
           </select>
           <select
             id="attendanceType"
-            className="  border p-1 rounded ml-2 w-72"
+            className="  border p-1 rounded ml-2 w-1/6 "
             value={filterState.zId}
             onChange={(e) =>
               setFilterState({ ...filterState, zId: e.target.value })
@@ -444,7 +461,7 @@ const DealerTarget = () => {
           </select>
           <select
             id="attendanceType"
-            className="  border p-1 rounded ml-2 w-72"
+            className="  border p-1 rounded ml-2 w-1/6 "
             value={filterState.rId}
             onChange={(e) =>
               setFilterState({ ...filterState, rId: e.target.value })
@@ -458,7 +475,7 @@ const DealerTarget = () => {
           </select>
           <select
             id="attendanceType"
-            className="  border p-1 rounded ml-2 w-72"
+            className="border p-1 rounded ml-2 w-1/6"
             value={filterState.tId}
             onChange={(e) =>
               setFilterState({ ...filterState, tId: e.target.value })
@@ -475,44 +492,64 @@ const DealerTarget = () => {
         <div className="flex flex-row my-4 mx-5 w-full gap-8">
           <div className="flex flex-row gap-2">
             <span className="font-bold self-center">M.R. Executive</span>
-            <select
-              id="attendanceType"
-              className="border p-1 rounded  w-52"
-              value={filterState.empCode}
-              onChange={(e) =>
-                setFilterState({ ...filterState, empCode: e.target.value })
-              }
-            >
-              <option value={""}>Mr. Executive</option>
-              {allEmployee.map((item) => (
-                <option value={item.appl_no}>
-                  {item.fname} {item.mname} {item.lname}
-                </option>
-              ))}
-            </select>
+            {router.query.type === "Add" ? (
+              <select
+                id="attendanceType"
+                className="border p-1 rounded  w-52"
+                value={filterState.empCode}
+                onChange={(e) =>
+                  setFilterState({ ...filterState, empCode: e.target.value })
+                }
+              >
+                <option value={""}>Mr. Executive</option>
+                {allEmployee.map((item) => (
+                  <option value={item.appl_no}>
+                    {item.fname} {item.mname} {item.lname}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                className="border p-1 rounded  w-52"
+                value={editviewFilter.empName}
+                disabled
+              />
+            )}
           </div>
           <div className="flex flex-row gap-2">
             <span className="font-bold self-center">Dealer</span>
-            <select
-              id="attendanceType"
-              className="border p-1 rounded  w-52"
-              value={filterState.dId}
-              onChange={(e) =>
-                setFilterState({ ...filterState, dId: e.target.value })
-              }
-            >
-              <option value={""}>Dealer</option>
-              {allDealer.map((item) => (
-                <option value={item.party_Name}>{item.party_Name}</option>
-              ))}
-            </select>
+            {router.query.type === "Add" ? (
+              <select
+                id="attendanceType"
+                className="border p-1 rounded  w-52"
+                value={filterState.dId}
+                onChange={(e) =>
+                  setFilterState({ ...filterState, dId: e.target.value })
+                }
+              >
+                <option value={""}>Dealer</option>
+                {allDealer.map((item) => (
+                  <option value={item.party_Name}>{item.party_Name}</option>
+                ))}
+              </select>
+            ) : (
+              <input
+                className="border p-1 rounded  w-52"
+                value={editviewFilter.disName}
+                disabled
+              />
+            )}
           </div>
         </div>
         {router.query.type === "Add" && (
           <button
             className="bg-blue-500 px-4 py-1 text-white cursor-pointer ml-4 mb-4"
             onClick={() => {
-              getAllMRSalesTarget();
+              if (selectedYr) {
+                getAllMRSalesTarget();
+              } else {
+                toast.error("Please Select Year");
+              }
             }}
           >
             View Data
@@ -522,867 +559,962 @@ const DealerTarget = () => {
         <h2 className="font-bold mx-4">
           MR - Dealer Sales Target Plan of the Year {filterState.yr}
         </h2>
-        <div className="bg-white  max-w-full pb-12 mx-4">
-          <div className=" text-black font-arial  w-full p-1 h-[760px] overflow-y-auto scrollbar-">
-            <table className="min-w-full divide-y border- divide-gray-200 font-bold">
-              <thead className="border-b w-max">
-                <tr className=" font-arial w-max ">
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
-                    Emp Code
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
-                    Emp Name
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
-                    MR HQ
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
-                    Party Code
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
-                    Name of Distributors
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
-                    Focus Product
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
-                    F.Y -22-23 Sale
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
-                    F.Y -22-23 Sale
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
-                    APR
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
-                    MAY
-                  </th>
 
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
-                    JUNE
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
-                    Q1-Total
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
-                    JUL
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
-                    AUG
-                  </th>
+        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto  ">
+          <table className="min-w-full divide-y border- divide-gray-200 ">
+            <thead className="border-b w-max">
+              <tr className=" font-arial w-max ">
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
+                  Emp Code
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
+                  Emp Name
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
+                  MR HQ
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
+                  Party Code
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
+                  Name of Distributors
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
+                  Focus Product
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
+                  F.Y -22-23 Sale
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
+                  F.Y -22-23 Sale
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
+                  APR
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
+                  MAY
+                </th>
 
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
-                    SEP
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
-                    Q2-Total
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
-                    OCT
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
-                    NOV
-                  </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
+                  JUNE
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
+                  Q1-Total
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
+                  JUL
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
+                  AUG
+                </th>
 
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
-                    DEC
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
-                    Q3-Total
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
-                    JAN
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
-                    FEB
-                  </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
+                  SEP
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
+                  Q2-Total
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
+                  OCT
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
+                  NOV
+                </th>
 
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
-                    MAR
-                  </th>
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
-                    Q4-Total
-                  </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
+                  DEC
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
+                  Q3-Total
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
+                  JAN
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
+                  FEB
+                </th>
+
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
+                  MAR
+                </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
+                  Q4-Total
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
+              {allMRSalesTarget.map((item) => (
+                <tr className="dark:border-2">
+                  <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                    {item.emp_code}
+                  </td>
+                  <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                    {item.emp_name}
+                  </td>
+
+                  <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                    {item.mr_hq}
+                  </td>
+                  <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                    {item.party_code}
+                  </td>
+                  <td className="pl-4 w-52 text-left border-2 border-black justify-center whitespace-nowrap font-arial text-xs ">
+                    {item.distribution_name}
+                  </td>
+
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
+                    <ul>
+                      {item.category_result.map((item, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-center "
+                            value={item[Object.keys(item)[0]]}
+                            disabled
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6  font-bold text-center"
+                          value="Tot-Party"
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 ">
+                    <ul>
+                      {item.category_result.map((item, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right text-right "
+                            type="number"
+                            value={item[Object.keys(item)[1]]}
+                            disabled
+                          />
+                        </li>
+                      ))}{" "}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16  h-6 text-right text-right "
+                          type="number"
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[1]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 ">
+                    <ul>
+                      {item.category_result.map((item, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right text-right "
+                            type="number"
+                            value={item[Object.keys(item)[2]]}
+                            disabled
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16  h-6 text-right text-right "
+                          type="number"
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[2]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right text-right "
+                            type="number"
+                            value={catItem[Object.keys(catItem)[3]]}
+                            onChange={(e) =>
+                              setAllMRSalesTarget(
+                                allMRSalesTarget.map((el) => {
+                                  if (el.party_code === item.party_code) {
+                                    return {
+                                      ...el,
+                                      category_result: el.category_result.map(
+                                        (pl) => {
+                                          if (
+                                            catItem[Object.keys(catItem)[0]] ===
+                                            pl[Object.keys(pl)[0]]
+                                          ) {
+                                            return {
+                                              ...pl,
+                                              [Object.keys(pl)[3]]:
+                                                e.target.value,
+                                            };
+                                          } else {
+                                            return pl;
+                                          }
+                                        }
+                                      ),
+                                    };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              )
+                            }
+                          />
+                        </li>
+                      ))}
+
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[3]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right text-right "
+                            type="number"
+                            value={catItem[Object.keys(catItem)[4]]}
+                            onChange={(e) =>
+                              setAllMRSalesTarget(
+                                allMRSalesTarget.map((el) => {
+                                  if (el.party_code === item.party_code) {
+                                    return {
+                                      ...el,
+                                      category_result: el.category_result.map(
+                                        (pl) => {
+                                          if (
+                                            catItem[Object.keys(catItem)[0]] ===
+                                            pl[Object.keys(pl)[0]]
+                                          ) {
+                                            return {
+                                              ...pl,
+                                              [Object.keys(pl)[4]]:
+                                                e.target.value,
+                                            };
+                                          } else {
+                                            return pl;
+                                          }
+                                        }
+                                      ),
+                                    };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              )
+                            }
+                          />
+                        </li>
+                      ))}
+
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[4]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right  text-right"
+                            value={catItem[Object.keys(catItem)[5]]}
+                            onChange={(e) =>
+                              setAllMRSalesTarget(
+                                allMRSalesTarget.map((el) => {
+                                  if (el.party_code === item.party_code) {
+                                    return {
+                                      ...el,
+                                      category_result: el.category_result.map(
+                                        (pl) => {
+                                          if (
+                                            catItem[Object.keys(catItem)[0]] ===
+                                            pl[Object.keys(pl)[0]]
+                                          ) {
+                                            return {
+                                              ...pl,
+                                              [Object.keys(pl)[5]]:
+                                                e.target.value,
+                                            };
+                                          } else {
+                                            return pl;
+                                          }
+                                        }
+                                      ),
+                                    };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              )
+                            }
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[5]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right  "
+                            value={
+                              Number(catItem[Object.keys(catItem)[5]]) +
+                              Number(catItem[Object.keys(catItem)[4]]) +
+                              Number(catItem[Object.keys(catItem)[3]])
+                            }
+                            disabled
+                          />
+                        </li>
+                      ))}{" "}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) +
+                              Number(curr[Object.keys(curr)[5]]) +
+                              Number(curr[Object.keys(curr)[4]]) +
+                              Number(curr[Object.keys(curr)[3]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right  text-right"
+                            value={catItem[Object.keys(catItem)[6]]}
+                            onChange={(e) =>
+                              setAllMRSalesTarget(
+                                allMRSalesTarget.map((el) => {
+                                  if (el.party_code === item.party_code) {
+                                    return {
+                                      ...el,
+                                      category_result: el.category_result.map(
+                                        (pl) => {
+                                          if (
+                                            catItem[Object.keys(catItem)[0]] ===
+                                            pl[Object.keys(pl)[0]]
+                                          ) {
+                                            return {
+                                              ...pl,
+                                              [Object.keys(pl)[6]]:
+                                                e.target.value,
+                                            };
+                                          } else {
+                                            return pl;
+                                          }
+                                        }
+                                      ),
+                                    };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              )
+                            }
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[6]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 ">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right  text-right"
+                            value={catItem[Object.keys(catItem)[7]]}
+                            onChange={(e) =>
+                              setAllMRSalesTarget(
+                                allMRSalesTarget.map((el) => {
+                                  if (el.party_code === item.party_code) {
+                                    return {
+                                      ...el,
+                                      category_result: el.category_result.map(
+                                        (pl) => {
+                                          if (
+                                            catItem[Object.keys(catItem)[0]] ===
+                                            pl[Object.keys(pl)[0]]
+                                          ) {
+                                            return {
+                                              ...pl,
+                                              [Object.keys(pl)[7]]:
+                                                e.target.value,
+                                            };
+                                          } else {
+                                            return pl;
+                                          }
+                                        }
+                                      ),
+                                    };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              )
+                            }
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[7]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white ">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right text-right "
+                            type="number"
+                            value={catItem[Object.keys(catItem)[8]]}
+                            onChange={(e) =>
+                              setAllMRSalesTarget(
+                                allMRSalesTarget.map((el) => {
+                                  if (el.party_code === item.party_code) {
+                                    return {
+                                      ...el,
+                                      category_result: el.category_result.map(
+                                        (pl) => {
+                                          if (
+                                            catItem[Object.keys(catItem)[0]] ===
+                                            pl[Object.keys(pl)[0]]
+                                          ) {
+                                            return {
+                                              ...pl,
+                                              [Object.keys(pl)[8]]:
+                                                e.target.value,
+                                            };
+                                          } else {
+                                            return pl;
+                                          }
+                                        }
+                                      ),
+                                    };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              )
+                            }
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[8]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right  "
+                            value={
+                              Number(catItem[Object.keys(catItem)[6]]) +
+                              Number(catItem[Object.keys(catItem)[7]]) +
+                              Number(catItem[Object.keys(catItem)[8]])
+                            }
+                            disabled
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(curr[Object.keys(curr)[6]]) +
+                              Number(curr[Object.keys(curr)[7]]) +
+                              Number(curr[Object.keys(curr)[8]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right  text-right"
+                            value={catItem[Object.keys(catItem)[9]]}
+                            onChange={(e) =>
+                              setAllMRSalesTarget(
+                                allMRSalesTarget.map((el) => {
+                                  if (el.party_code === item.party_code) {
+                                    return {
+                                      ...el,
+                                      category_result: el.category_result.map(
+                                        (pl) => {
+                                          if (
+                                            catItem[Object.keys(catItem)[0]] ===
+                                            pl[Object.keys(pl)[0]]
+                                          ) {
+                                            return {
+                                              ...pl,
+                                              [Object.keys(pl)[9]]:
+                                                e.target.value,
+                                            };
+                                          } else {
+                                            return pl;
+                                          }
+                                        }
+                                      ),
+                                    };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              )
+                            }
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[9]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right text-right "
+                            type="number"
+                            value={catItem[Object.keys(catItem)[10]]}
+                            onChange={(e) =>
+                              setAllMRSalesTarget(
+                                allMRSalesTarget.map((el) => {
+                                  if (el.party_code === item.party_code) {
+                                    return {
+                                      ...el,
+                                      category_result: el.category_result.map(
+                                        (pl) => {
+                                          if (
+                                            catItem[Object.keys(catItem)[0]] ===
+                                            pl[Object.keys(pl)[0]]
+                                          ) {
+                                            return {
+                                              ...pl,
+                                              [Object.keys(pl)[10]]:
+                                                e.target.value,
+                                            };
+                                          } else {
+                                            return pl;
+                                          }
+                                        }
+                                      ),
+                                    };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              )
+                            }
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[10]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right  text-right"
+                            value={catItem[Object.keys(catItem)[11]]}
+                            onChange={(e) =>
+                              setAllMRSalesTarget(
+                                allMRSalesTarget.map((el) => {
+                                  if (el.party_code === item.party_code) {
+                                    return {
+                                      ...el,
+                                      category_result: el.category_result.map(
+                                        (pl) => {
+                                          if (
+                                            catItem[Object.keys(catItem)[0]] ===
+                                            pl[Object.keys(pl)[0]]
+                                          ) {
+                                            return {
+                                              ...pl,
+                                              [Object.keys(pl)[11]]:
+                                                e.target.value,
+                                            };
+                                          } else {
+                                            return pl;
+                                          }
+                                        }
+                                      ),
+                                    };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              )
+                            }
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[11]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300">
+                    <ul>
+                      {item.category_result.map((item, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right  "
+                            value={
+                              Number(item[Object.keys(item)[9]]) +
+                              Number(item[Object.keys(item)[10]]) +
+                              Number(item[Object.keys(item)[11]])
+                            }
+                            disabled
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(curr[Object.keys(curr)[9]]) +
+                              Number(curr[Object.keys(curr)[10]]) +
+                              Number(curr[Object.keys(curr)[11]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right  text-right"
+                            value={catItem[Object.keys(catItem)[12]]}
+                            onChange={(e) =>
+                              setAllMRSalesTarget(
+                                allMRSalesTarget.map((el) => {
+                                  if (el.party_code === item.party_code) {
+                                    return {
+                                      ...el,
+                                      category_result: el.category_result.map(
+                                        (pl) => {
+                                          if (
+                                            catItem[Object.keys(catItem)[0]] ===
+                                            pl[Object.keys(pl)[0]]
+                                          ) {
+                                            return {
+                                              ...pl,
+                                              [Object.keys(pl)[12]]:
+                                                e.target.value,
+                                            };
+                                          } else {
+                                            return pl;
+                                          }
+                                        }
+                                      ),
+                                    };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              )
+                            }
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[12]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 ">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right  text-right"
+                            value={catItem[Object.keys(catItem)[13]]}
+                            onChange={(e) =>
+                              setAllMRSalesTarget(
+                                allMRSalesTarget.map((el) => {
+                                  if (el.party_code === item.party_code) {
+                                    return {
+                                      ...el,
+                                      category_result: el.category_result.map(
+                                        (pl) => {
+                                          if (
+                                            catItem[Object.keys(catItem)[0]] ===
+                                            pl[Object.keys(pl)[0]]
+                                          ) {
+                                            return {
+                                              ...pl,
+                                              [Object.keys(pl)[13]]:
+                                                e.target.value,
+                                            };
+                                          } else {
+                                            return pl;
+                                          }
+                                        }
+                                      ),
+                                    };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              )
+                            }
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[13]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right  text-right"
+                            value={catItem[Object.keys(catItem)[14]]}
+                            onChange={(e) =>
+                              setAllMRSalesTarget(
+                                allMRSalesTarget.map((el) => {
+                                  if (el.party_code === item.party_code) {
+                                    return {
+                                      ...el,
+                                      category_result: el.category_result.map(
+                                        (pl) => {
+                                          if (
+                                            catItem[Object.keys(catItem)[0]] ===
+                                            pl[Object.keys(pl)[0]]
+                                          ) {
+                                            return {
+                                              ...pl,
+                                              [Object.keys(pl)[14]]:
+                                                e.target.value,
+                                            };
+                                          } else {
+                                            return pl;
+                                          }
+                                        }
+                                      ),
+                                    };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              )
+                            }
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) + Number(curr[Object.keys(curr)[14]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300">
+                    <ul>
+                      {item.category_result.map((item, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right  "
+                            value={
+                              Number(item[Object.keys(item)[14]]) +
+                              Number(item[Object.keys(item)[13]]) +
+                              Number(item[Object.keys(item)[12]])
+                            }
+                            disabled
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result.reduce((acc, curr) => {
+                            acc =
+                              Number(acc) +
+                              Number(curr[Object.keys(curr)[14]]) +
+                              Number(curr[Object.keys(curr)[13]]) +
+                              Number(curr[Object.keys(curr)[12]]);
+                            return acc;
+                          }, 0)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-                {allMRSalesTarget.map((item) => (
-                  <tr className="dark:border-2">
-                    <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
-                      {item.emp_code}
-                    </td>
-                    <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
-                      {item.emp_name}
-                    </td>
+              ))}
+            </tbody>
+            {(router.query.type === "Add" ||
+              router.query.type === "Edit") && (
+                <div className="flex w-full h-8 gap-4 m-2 ">
+                  <button
+                    className="bg-green-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
+                    onClick={() => handleSave()}
+                  >
+                    Submit
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push({
+                        pathname: "/MR_Portal_Web/Table_MR_ActivityTarget",
+                      });
+                    }}
+                    className="bg-red-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
+                  >
+                    Close
+                  </button>
+                </div>
+              )}
+          </table>
 
-                    <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
-                      {item.mr_hq}
-                    </td>
-                    <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
-                      {item.party_code}
-                    </td>
-                    <td className="pl-4 w-52 text-left border-2 border-black justify-center whitespace-nowrap font-arial text-xs ">
-                      {item.distribution_name}
-                    </td>
-
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
-                      <ul>
-                        {item.category_result.map((item, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6  "
-                              value={item[Object.keys(item)[0]]}
-                              disabled
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6  font-bold "
-                            value="Tot-Party"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 ">
-                      <ul>
-                        {item.category_result.map((item, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6 text-right "
-                              value={item[Object.keys(item)[1]]}
-                              disabled
-                            />
-                          </li>
-                        ))}{" "}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16  h-6 text-right "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 ">
-                      <ul>
-                        {item.category_result.map((item, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6 text-right "
-                              value={item[Object.keys(item)[2]]}
-                              disabled
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16  h-6 text-right "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
-                      <ul>
-                        {item.category_result.map((catItem, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6 text-right "
-                              value={catItem[Object.keys(catItem)[3]]}
-                              onChange={(e) =>
-                                setAllMRSalesTarget(
-                                  allMRSalesTarget.map((el) => {
-                                    if (el.party_code === item.party_code) {
-                                      return {
-                                        ...el,
-                                        category_result: el.category_result.map(
-                                          (pl) => {
-                                            if (
-                                              catItem[
-                                                Object.keys(catItem)[0]
-                                              ] === pl[Object.keys(pl)[0]]
-                                            ) {
-                                              return {
-                                                ...pl,
-                                                [Object.keys(pl)[3]]:
-                                                  e.target.value,
-                                              };
-                                            } else {
-                                              return pl;
-                                            }
-                                          }
-                                        ),
-                                      };
-                                    } else {
-                                      return el;
-                                    }
-                                  })
-                                )
-                              }
-                            />
-                          </li>
-                        ))}
-
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
-                      <ul>
-                        {item.category_result.map((catItem, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6 text-right "
-                              value={catItem[Object.keys(catItem)[4]]}
-                              onChange={(e) =>
-                                setAllMRSalesTarget(
-                                  allMRSalesTarget.map((el) => {
-                                    if (el.party_code === item.party_code) {
-                                      return {
-                                        ...el,
-                                        category_result: el.category_result.map(
-                                          (pl) => {
-                                            if (
-                                              catItem[
-                                                Object.keys(catItem)[0]
-                                              ] === pl[Object.keys(pl)[0]]
-                                            ) {
-                                              return {
-                                                ...pl,
-                                                [Object.keys(pl)[4]]:
-                                                  e.target.value,
-                                              };
-                                            } else {
-                                              return pl;
-                                            }
-                                          }
-                                        ),
-                                      };
-                                    } else {
-                                      return el;
-                                    }
-                                  })
-                                )
-                              }
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
-                      <ul>
-                        {item.category_result.map((catItem, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6  text-right"
-                              value={catItem[Object.keys(catItem)[5]]}
-                              onChange={(e) =>
-                                setAllMRSalesTarget(
-                                  allMRSalesTarget.map((el) => {
-                                    if (el.party_code === item.party_code) {
-                                      return {
-                                        ...el,
-                                        category_result: el.category_result.map(
-                                          (pl) => {
-                                            if (
-                                              catItem[
-                                                Object.keys(catItem)[0]
-                                              ] === pl[Object.keys(pl)[0]]
-                                            ) {
-                                              return {
-                                                ...pl,
-                                                [Object.keys(pl)[5]]:
-                                                  e.target.value,
-                                              };
-                                            } else {
-                                              return pl;
-                                            }
-                                          }
-                                        ),
-                                      };
-                                    } else {
-                                      return el;
-                                    }
-                                  })
-                                )
-                              }
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300">
-                      <ul>
-                        {item.category_result.map((item, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6  "
-                              value="Total"
-                              disabled
-                            />
-                          </li>
-                        ))}{" "}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
-                      <ul>
-                        {item.category_result.map((catItem, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6  text-right"
-                              value={catItem[Object.keys(catItem)[6]]}
-                              onChange={(e) =>
-                                setAllMRSalesTarget(
-                                  allMRSalesTarget.map((el) => {
-                                    if (el.party_code === item.party_code) {
-                                      return {
-                                        ...el,
-                                        category_result: el.category_result.map(
-                                          (pl) => {
-                                            if (
-                                              catItem[
-                                                Object.keys(catItem)[0]
-                                              ] === pl[Object.keys(pl)[0]]
-                                            ) {
-                                              return {
-                                                ...pl,
-                                                [Object.keys(pl)[6]]:
-                                                  e.target.value,
-                                              };
-                                            } else {
-                                              return pl;
-                                            }
-                                          }
-                                        ),
-                                      };
-                                    } else {
-                                      return el;
-                                    }
-                                  })
-                                )
-                              }
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 ">
-                      <ul>
-                        {item.category_result.map((catItem, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6  text-right"
-                              value={catItem[Object.keys(catItem)[7]]}
-                              onChange={(e) =>
-                                setAllMRSalesTarget(
-                                  allMRSalesTarget.map((el) => {
-                                    if (el.party_code === item.party_code) {
-                                      return {
-                                        ...el,
-                                        category_result: el.category_result.map(
-                                          (pl) => {
-                                            if (
-                                              catItem[
-                                                Object.keys(catItem)[0]
-                                              ] === pl[Object.keys(pl)[0]]
-                                            ) {
-                                              return {
-                                                ...pl,
-                                                [Object.keys(pl)[7]]:
-                                                  e.target.value,
-                                              };
-                                            } else {
-                                              return pl;
-                                            }
-                                          }
-                                        ),
-                                      };
-                                    } else {
-                                      return el;
-                                    }
-                                  })
-                                )
-                              }
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white ">
-                      <ul>
-                        {item.category_result.map((catItem, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6 text-right "
-                              value={catItem[Object.keys(catItem)[8]]}
-                              onChange={(e) =>
-                                setAllMRSalesTarget(
-                                  allMRSalesTarget.map((el) => {
-                                    if (el.party_code === item.party_code) {
-                                      return {
-                                        ...el,
-                                        category_result: el.category_result.map(
-                                          (pl) => {
-                                            if (
-                                              catItem[
-                                                Object.keys(catItem)[0]
-                                              ] === pl[Object.keys(pl)[0]]
-                                            ) {
-                                              return {
-                                                ...pl,
-                                                [Object.keys(pl)[8]]:
-                                                  e.target.value,
-                                              };
-                                            } else {
-                                              return pl;
-                                            }
-                                          }
-                                        ),
-                                      };
-                                    } else {
-                                      return el;
-                                    }
-                                  })
-                                )
-                              }
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300">
-                      <ul>
-                        {item.category_result.map((item, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6  "
-                              value="Dummy"
-                              disabled
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
-                      <ul>
-                        {item.category_result.map((catItem, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6  text-right"
-                              value={catItem[Object.keys(catItem)[9]]}
-                              onChange={(e) =>
-                                setAllMRSalesTarget(
-                                  allMRSalesTarget.map((el) => {
-                                    if (el.party_code === item.party_code) {
-                                      return {
-                                        ...el,
-                                        category_result: el.category_result.map(
-                                          (pl) => {
-                                            if (
-                                              catItem[
-                                                Object.keys(catItem)[0]
-                                              ] === pl[Object.keys(pl)[0]]
-                                            ) {
-                                              return {
-                                                ...pl,
-                                                [Object.keys(pl)[9]]:
-                                                  e.target.value,
-                                              };
-                                            } else {
-                                              return pl;
-                                            }
-                                          }
-                                        ),
-                                      };
-                                    } else {
-                                      return el;
-                                    }
-                                  })
-                                )
-                              }
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0">
-                      <ul>
-                        {item.category_result.map((catItem, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6 text-right "
-                              value={catItem[Object.keys(catItem)[10]]}
-                              onChange={(e) =>
-                                setAllMRSalesTarget(
-                                  allMRSalesTarget.map((el) => {
-                                    if (el.party_code === item.party_code) {
-                                      return {
-                                        ...el,
-                                        category_result: el.category_result.map(
-                                          (pl) => {
-                                            if (
-                                              catItem[
-                                                Object.keys(catItem)[0]
-                                              ] === pl[Object.keys(pl)[0]]
-                                            ) {
-                                              return {
-                                                ...pl,
-                                                [Object.keys(pl)[10]]:
-                                                  e.target.value,
-                                              };
-                                            } else {
-                                              return pl;
-                                            }
-                                          }
-                                        ),
-                                      };
-                                    } else {
-                                      return el;
-                                    }
-                                  })
-                                )
-                              }
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
-                      <ul>
-                        {item.category_result.map((catItem, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6  text-right"
-                              value={catItem[Object.keys(catItem)[11]]}
-                              onChange={(e) =>
-                                setAllMRSalesTarget(
-                                  allMRSalesTarget.map((el) => {
-                                    if (el.party_code === item.party_code) {
-                                      return {
-                                        ...el,
-                                        category_result: el.category_result.map(
-                                          (pl) => {
-                                            if (
-                                              catItem[
-                                                Object.keys(catItem)[0]
-                                              ] === pl[Object.keys(pl)[0]]
-                                            ) {
-                                              return {
-                                                ...pl,
-                                                [Object.keys(pl)[11]]:
-                                                  e.target.value,
-                                              };
-                                            } else {
-                                              return pl;
-                                            }
-                                          }
-                                        ),
-                                      };
-                                    } else {
-                                      return el;
-                                    }
-                                  })
-                                )
-                              }
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300">
-                      <ul>
-                        {item.category_result.map((item, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6  "
-                              value="Dummy"
-                              disabled
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
-                      <ul>
-                        {item.category_result.map((catItem, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6  text-right"
-                              value={catItem[Object.keys(catItem)[12]]}
-                              onChange={(e) =>
-                                setAllMRSalesTarget(
-                                  allMRSalesTarget.map((el) => {
-                                    if (el.party_code === item.party_code) {
-                                      return {
-                                        ...el,
-                                        category_result: el.category_result.map(
-                                          (pl) => {
-                                            if (
-                                              catItem[
-                                                Object.keys(catItem)[0]
-                                              ] === pl[Object.keys(pl)[0]]
-                                            ) {
-                                              return {
-                                                ...pl,
-                                                [Object.keys(pl)[12]]:
-                                                  e.target.value,
-                                              };
-                                            } else {
-                                              return pl;
-                                            }
-                                          }
-                                        ),
-                                      };
-                                    } else {
-                                      return el;
-                                    }
-                                  })
-                                )
-                              }
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 ">
-                      <ul>
-                        {item.category_result.map((catItem, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6  text-right"
-                              value={catItem[Object.keys(catItem)[13]]}
-                              onChange={(e) =>
-                                setAllMRSalesTarget(
-                                  allMRSalesTarget.map((el) => {
-                                    if (el.party_code === item.party_code) {
-                                      return {
-                                        ...el,
-                                        category_result: el.category_result.map(
-                                          (pl) => {
-                                            if (
-                                              catItem[
-                                                Object.keys(catItem)[0]
-                                              ] === pl[Object.keys(pl)[0]]
-                                            ) {
-                                              return {
-                                                ...pl,
-                                                [Object.keys(pl)[13]]:
-                                                  e.target.value,
-                                              };
-                                            } else {
-                                              return pl;
-                                            }
-                                          }
-                                        ),
-                                      };
-                                    } else {
-                                      return el;
-                                    }
-                                  })
-                                )
-                              }
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
-                      <ul>
-                        {item.category_result.map((catItem, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6  text-right"
-                              value={catItem[Object.keys(catItem)[14]]}
-                              onChange={(e) =>
-                                setAllMRSalesTarget(
-                                  allMRSalesTarget.map((el) => {
-                                    if (el.party_code === item.party_code) {
-                                      return {
-                                        ...el,
-                                        category_result: el.category_result.map(
-                                          (pl) => {
-                                            if (
-                                              catItem[
-                                                Object.keys(catItem)[0]
-                                              ] === pl[Object.keys(pl)[0]]
-                                            ) {
-                                              return {
-                                                ...pl,
-                                                [Object.keys(pl)[14]]:
-                                                  e.target.value,
-                                              };
-                                            } else {
-                                              return pl;
-                                            }
-                                          }
-                                        ),
-                                      };
-                                    } else {
-                                      return el;
-                                    }
-                                  })
-                                )
-                              }
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300">
-                      <ul>
-                        {item.category_result.map((item, idx) => (
-                          <li className="border-b-2 border-black  flex justify-center text-black   p-1">
-                            <input
-                              className="p-0 w-16  h-6  "
-                              value="Dummy"
-                              disabled
-                            />
-                          </li>
-                        ))}
-                        <li className="  flex justify-center font-bold  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 h-6    "
-                            value="Dummy"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {router.query.type === "Add" && (
-              <div className="flex w-full h-8 gap-4 m-2 ">
-                <button
-                  className="bg-green-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
-                  onClick={() => handleSave()}
-                >
-                  Submit
-                </button>
-                <button
-                  onClick={() => {
-                    router.push({
-                      pathname: "/MR_Portal_Web/Table_MR_ActivityTarget",
-                    });
-                  }}
-                  className="bg-red-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
-                >
-                  Close
-                </button>
-              </div>
-            )}
-
-            {/* ) : (
+          {/* ) : (
               <div className="flex w-full  gap-4 m-2 "></div>
             )} */}
-          </div>
         </div>
       </div>
     </Layout>

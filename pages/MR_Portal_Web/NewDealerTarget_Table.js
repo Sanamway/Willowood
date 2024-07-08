@@ -31,7 +31,7 @@ const NewDealer = () => {
   const router = useRouter();
 
   const [data, setData] = useState([]);
-  const getDistrict = async (currentPage) => {
+  const getData = async (currentPage) => {
     try {
       const respond = await axios.get(`${url}/api/get_mr_target_grid`, {
         params: {
@@ -57,33 +57,30 @@ const NewDealer = () => {
     setCurrentPage(pageNumber + 1);
   };
   useEffect(() => {
-    getDistrict(currentPage.selected);
+    getData(currentPage.selected);
   }, [currentPage.selected]);
 
   const deleteHandler = (id) => {
     setisOpen(true);
   };
 
-  const handleDeteleRow = async (mrcId, mraId, bgId, buId, cId, yr) => {
+  const handleDeteleRow = async (tId, empCode, custCode) => {
     try {
-      const respond = await axios.get(`${url}/api/delete_mr_activity`, {
+      const respond = await axios.get(`${url}/api/delete_mr_target`, {
         headers: headers,
         params: {
-          c_id: cId,
-          bg_id: bgId,
-          bu_id: buId,
-          mrc_id: mrcId,
-          mra_id: mraId,
-          year: yr,
+          t_id: tId,
+          customer_code: custCode,
+          emp_code: empCode,
         },
       });
       const apires = await respond;
       console.log("pop", apires);
       toast.success(apires.data.message);
-      getDistrict(1);
+      getData(1);
     } catch (error) {
-      console.log(error);
-      toast.error(error);
+      console.log("nop", error.message);
+      toast.error(error.message);
     }
   };
 
@@ -238,10 +235,10 @@ const NewDealer = () => {
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  Business Segement
+                  Segement
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  Company Name
+                  Company
                 </th>
               </tr>
             </thead>
@@ -285,16 +282,13 @@ const NewDealer = () => {
                     </button>
                     <button
                       className="b text-black hover:text-red-500 ml-2"
-                      onClick={() => {
+                      onClick={() =>
                         handleDeteleRow(
-                          item.mrc_id,
-                          item.mra_id,
-                          item.c_id,
-                          item.bg_id,
-                          item.bu_id,
-                          item.year
-                        );
-                      }}
+                          item.t_id,
+                          item.emp_code,
+                          item.customer_code
+                        )
+                      }
                     >
                       Delete
                     </button>
@@ -313,10 +307,10 @@ const NewDealer = () => {
                     {item.product_category}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    -
+                    {item.fy_1}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    -
+                    {item.fy_2}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.apr}
@@ -329,7 +323,7 @@ const NewDealer = () => {
                     {item.june}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    -
+                    {Number(item.apr + item.may + item.june)}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.july}
@@ -342,7 +336,7 @@ const NewDealer = () => {
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    -
+                    {Number(item.july + item.aug + item.sep)}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.oct}
@@ -354,7 +348,7 @@ const NewDealer = () => {
                     {item.dec}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    -
+                    {Number(item.oct + item.nov + item.dec)}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.jan}
@@ -366,10 +360,13 @@ const NewDealer = () => {
                     {item.march}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    -
+                    {Number(item.jan + item.feb + item.march)}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    -
+                    {Number(item.apr + item.may + item.june) +
+                      Number(item.july + item.aug + item.sep) +
+                      Number(item.oct + item.nov + item.dec) +
+                      Number(item.jan + item.feb + item.march)}
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
