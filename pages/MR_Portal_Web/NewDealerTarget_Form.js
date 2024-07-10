@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment, useMemo } from "react";
 
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
@@ -14,6 +14,7 @@ import toast, { Toaster } from "react-hot-toast";
 import Layout from "@/components/Layout1";
 import Navbar from "@/components/MR_Portal_Apps/Navbar";
 import moment from "moment";
+import { data } from "autoprefixer";
 
 const DealerTarget = () => {
   const csvHeaders = [
@@ -266,7 +267,7 @@ const DealerTarget = () => {
       });
 
       const apires = await respond.data.data;
-      console.log("new", apires);
+
       setAllEmployee(apires);
     } catch (error) {}
   };
@@ -275,13 +276,19 @@ const DealerTarget = () => {
   }, []);
 
   const [allDealer, setAllDealer] = useState([]);
-  const getAllDealerData = async () => {
+  const getAllDealerData = async (empCode) => {
     try {
-      const respond = await axios.get(`${url}/api/get_dealer`, {
+      const respond = await axios.get(`${url}/api/get_mr_dealer_map`, {
         headers: headers,
         params: {
-          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          t_des: territoryData.filter(
+            (item) =>
+              item.t_id ===
+              JSON.parse(window.localStorage.getItem("userinfo")).t_id
+          )[0].territory_name,
+          empcode: empCode ? empCode : null,
         },
       });
 
@@ -291,15 +298,18 @@ const DealerTarget = () => {
     } catch (error) {}
   };
   useEffect(() => {
-    getAllDealerData();
-  }, []);
+    if (!territoryData.length) return;
+    getAllDealerData(filterState.empCode);
+  }, [territoryData, filterState.empCode]);
 
   const [allMRSalesTarget, setAllMRSalesTarget] = useState([]);
   const [editviewFilter, setEditviewFilter] = useState({
     disName: "",
     empName: "",
+    empCode: "",
   });
   const getAllMRSalesTarget = async () => {
+    if (!selectedYr) return;
     const { tId, yr, empCode, dId } = filterState;
     let tDes;
     let paramsData = {};
@@ -310,8 +320,8 @@ const DealerTarget = () => {
         c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         t_des: tDes,
         year: router.query.yr,
-        appl_no: router.query.empId,
-        customer_code: router.query.custCode,
+        empcode: router.query.empId,
+        // customer_code: router.query.custCode,
       };
     } else {
       tDes = territoryData.filter((item) => item.t_id === tId)[0]
@@ -321,8 +331,8 @@ const DealerTarget = () => {
         c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         t_des: tDes,
         year: selectedYr.getFullYear(),
-        appl_no: empCode,
-        party_Name: dId,
+        empcode: empCode ? empCode : null,
+        customer_code: dId ? dId : null,
       };
     }
     try {
@@ -334,16 +344,28 @@ const DealerTarget = () => {
       const apires = await respond.data.data;
       setAllMRSalesTarget(apires);
       if (router.query.type !== "Add") {
-        setEditviewFilter({
-          disName: apires[0].distribution_name,
-          empName: apires[0].emp_name,
-        });
+        if (apires.length > 1) {
+          setEditviewFilter({
+            disName: "All Dealer",
+            empName: apires[0].emp_name,
+            empCode: apires[0].emp_code,
+          });
+        } else {
+          setEditviewFilter({
+            disName: apires[0].distribution_name,
+            empName: apires[0].emp_name,
+            empCode: apires[0].emp_code,
+          });
+        }
       }
     } catch (error) {}
   };
-  const [selectedYr, setSelectedYr] = useState(null);
 
-  console.log("Nol", allMRSalesTarget);
+  useEffect(() => {
+    getAllMRSalesTarget();
+  }, [filterState.empCode, filterState.dId]);
+
+  const [selectedYr, setSelectedYr] = useState(null);
 
   const handleSave = async () => {
     try {
@@ -396,171 +418,257 @@ const DealerTarget = () => {
       getAllMRSalesTarget();
     }
   };
+
+  const [groupedArray, setGroupedArray] = useState({});
+
+  useEffect(() => {
+    const processArray = (arr) => {
+      return arr.reduce((acc, item) => {
+        if (!acc[item.emp_code]) {
+          acc[item.emp_code] = [];
+        }
+        acc[item.emp_code].push(item);
+        return acc;
+      }, {});
+    };
+
+    const newArray = processArray(allMRSalesTarget);
+    setGroupedArray(newArray);
+  }, [allMRSalesTarget]);
+
   return (
     <Layout>
-      <div className="w-full font-arial bg-white">
+      <div className="w-full font-arial bg-white h-screen absolute overflow-y-auto no-scrollbar">
         <Toaster position="bottom-center" reverseOrder={false} />
+        <div className="flex flex-row justify-between  h-max  px-5">
+          <h2 className="font-arial font-normal text-3xl  py-2"></h2>
+          <span className="flex items-center gap-2 cursor-pointer">
+            <TiArrowBack
+              onClick={() => {
+                router.push({
+                  pathname: "/MR_Portal_Web/NewDealerTarget_Table",
+                });
+              }}
+              className="text-gray-400"
+              size={35}
+            />
 
-        <div className="flex flex-row m-4 w-100 gap-2 flex-wrap">
-          <DatePicker
-            className="border p-1 rounded ml-2 w-40 "
-            showYearDropdown
-            dateFormat="yyyy"
-            placeholderText="Enter Year"
-            yearDropdownItemNumber={15} // Uncommented and provided a value
-            selected={selectedYr}
-            onChange={(date) => setSelectedYr(date)}
-            hand
-            showYearPicker
-            minDate={new Date(new Date().getFullYear(), 0, 1)}
-            disabled={router.query.type !== "Add"}
-          />
-
-          <select
-            id="attendanceType"
-            className="border p-1 rounded ml-2 w-1/6 "
-            value={filterState.bgId}
-            onChange={(e) =>
-              setFilterState({ ...filterState, bgId: e.target.value })
-            }
-            disabled
-          >
-            <option value={""}>Business Segment</option>
-            {bgData.map((item) => (
-              <option value={item.bg_id}>{item.business_segment}</option>
-            ))}
-          </select>
-
-          <select
-            id="attendanceType"
-            className="  border p-1 rounded ml-2 w-1/6 "
-            value={filterState.buId}
-            onChange={(e) =>
-              setFilterState({ ...filterState, buId: e.target.value })
-            }
-            disabled
-          >
-            <option value={""}>Business Unit</option>
-            {buData.map((item) => (
-              <option value={item.bu_id}>{item.business_unit_name}</option>
-            ))}
-          </select>
-          <select
-            id="attendanceType"
-            className="  border p-1 rounded ml-2 w-1/6 "
-            value={filterState.zId}
-            onChange={(e) =>
-              setFilterState({ ...filterState, zId: e.target.value })
-            }
-            disabled
-          >
-            <option value={""}>Zone</option>
-            {zoneData.map((item) => (
-              <option value={item.z_id}>{item.zone_name}</option>
-            ))}
-          </select>
-          <select
-            id="attendanceType"
-            className="  border p-1 rounded ml-2 w-1/6 "
-            value={filterState.rId}
-            onChange={(e) =>
-              setFilterState({ ...filterState, rId: e.target.value })
-            }
-            disabled
-          >
-            <option value={""}>Region</option>
-            {regionData.map((item) => (
-              <option value={item.r_id}>{item.region_name}</option>
-            ))}
-          </select>
-          <select
-            id="attendanceType"
-            className="border p-1 rounded ml-2 w-1/6"
-            value={filterState.tId}
-            onChange={(e) =>
-              setFilterState({ ...filterState, tId: e.target.value })
-            }
-            disabled
-          >
-            <option value={""}>Territory</option>
-            {territoryData.map((item) => (
-              <option value={item.t_id}>{item.territory_name}</option>
-            ))}
-          </select>
+            <AiTwotoneHome
+              className="text-red-500"
+              onClick={() => {
+                router.push({
+                  pathname: "/",
+                });
+              }}
+              size={34}
+            />
+          </span>
         </div>
+        <div className="flex flex-row m-4 w-100 gap-2 ">
+          <div className="flex flex-col gap-2">
+            <span className="font-bold ">Select Yr</span>
+            <DatePicker
+              className="border p-1 rounded ml-2 w-40 "
+              showYearDropdown
+              dateFormat="yyyy"
+              placeholderText="Enter Year"
+              yearDropdownItemNumber={15} // Uncommented and provided a value
+              selected={selectedYr}
+              onChange={(date) => setSelectedYr(date)}
+              hand
+              showYearPicker
+              minDate={new Date(new Date().getFullYear(), 0, 1)}
+              disabled={router.query.type !== "Add"}
+            />
+          </div>
 
-        <div className="flex flex-row my-4 mx-5 w-full gap-8">
-          <div className="flex flex-row gap-2">
-            <span className="font-bold self-center">M.R. Executive</span>
-            {router.query.type === "Add" ? (
-              <select
-                id="attendanceType"
-                className="border p-1 rounded  w-52"
-                value={filterState.empCode}
-                onChange={(e) =>
-                  setFilterState({ ...filterState, empCode: e.target.value })
-                }
-              >
-                <option value={""}>Mr. Executive</option>
-                {allEmployee.map((item) => (
-                  <option value={item.appl_no}>
-                    {item.fname} {item.mname} {item.lname}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <input
-                className="border p-1 rounded  w-52"
-                value={editviewFilter.empName}
-                disabled
-              />
-            )}
-          </div>
-          <div className="flex flex-row gap-2">
-            <span className="font-bold self-center">Dealer</span>
-            {router.query.type === "Add" ? (
-              <select
-                id="attendanceType"
-                className="border p-1 rounded  w-52"
-                value={filterState.dId}
-                onChange={(e) =>
-                  setFilterState({ ...filterState, dId: e.target.value })
-                }
-              >
-                <option value={""}>Dealer</option>
-                {allDealer.map((item) => (
-                  <option value={item.party_Name}>{item.party_Name}</option>
-                ))}
-              </select>
-            ) : (
-              <input
-                className="border p-1 rounded  w-52"
-                value={editviewFilter.disName}
-                disabled
-              />
-            )}
-          </div>
-        </div>
-        {router.query.type === "Add" && (
-          <button
-            className="bg-blue-500 px-4 py-1 text-white cursor-pointer ml-4 mb-4"
-            onClick={() => {
-              if (selectedYr) {
-                getAllMRSalesTarget();
-              } else {
-                toast.error("Please Select Year");
+          <div className="flex flex-col gap-2">
+            <span className="font-bold ">Business Segment</span>
+            <select
+              id="attendanceType"
+              className="border p-1 rounded ml-2  "
+              value={filterState.bgId}
+              onChange={(e) =>
+                setFilterState({ ...filterState, bgId: e.target.value })
               }
-            }}
-          >
-            View Data
-          </button>
-        )}
+              disabled
+            >
+              <option value={""}>Business Segment</option>
+              {bgData.map((item) => (
+                <option value={item.bg_id}>{item.business_segment}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <span className="font-bold ">Business Unit</span>
+            <select
+              id="attendanceType"
+              className="  border p-1 rounded ml-2  "
+              value={filterState.buId}
+              onChange={(e) =>
+                setFilterState({ ...filterState, buId: e.target.value })
+              }
+              disabled
+            >
+              <option value={""}>Business Unit</option>
+              {buData.map((item) => (
+                <option value={item.bu_id}>{item.business_unit_name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <span className="font-bold ">Zone</span>
+            <select
+              id="attendanceType"
+              className="  border p-1 rounded ml-2"
+              value={filterState.zId}
+              onChange={(e) =>
+                setFilterState({ ...filterState, zId: e.target.value })
+              }
+              disabled
+            >
+              <option value={""}>Zone</option>
+              {zoneData.map((item) => (
+                <option value={item.z_id}>{item.zone_name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <span className="font-bold ">Region</span>
+            <select
+              id="attendanceType"
+              className="  border p-1 rounded ml-2  "
+              value={filterState.rId}
+              onChange={(e) =>
+                setFilterState({ ...filterState, rId: e.target.value })
+              }
+              disabled
+            >
+              <option value={""}>Region</option>
+              {regionData.map((item) => (
+                <option value={item.r_id}>{item.region_name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className="font-bold ">Territory</span>
+            <select
+              id="attendanceType"
+              className="border p-1 w-50 rounded ml-2"
+              value={filterState.tId}
+              onChange={(e) =>
+                setFilterState({ ...filterState, tId: e.target.value })
+              }
+              disabled
+            >
+              <option value={""}>Territory</option>
+              {territoryData.map((item) => (
+                <option value={item.t_id}>{item.territory_name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col gap-2 ">
+            <span className="font-bold ">M.R. Executive</span>
+            {router.query.type === "Add" ? (
+              <div className="flex flex-row gap-2 ">
+                <input
+                  className="w-20 border p-1 rounded "
+                  value={filterState.empCode}
+                  disabled
+                />
+                <select
+                  id="attendanceType"
+                  className="border p-1 rounded  "
+                  value={filterState.empCode}
+                  onChange={(e) =>
+                    setFilterState({ ...filterState, empCode: e.target.value })
+                  }
+                >
+                  <option value={""}>All MR</option>
+                  {allEmployee.map((item) => (
+                    <option value={item.empcode}>
+                      {item.fname} {item.mname} {item.lname} {item.empcode}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <div className=" flex flex-row gap-2 ">
+                <input
+                  className=" w-20 border p-1"
+                  value={editviewFilter.empCode}
+                  disabled
+                />
+                <input
+                  className="border p-1 rounded w-full "
+                  value={editviewFilter.empName}
+                  disabled22
+                />
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col gap-2 ">
+            <span className="font-bold ">Dealer</span>
+            {router.query.type === "Add" ? (
+              <div className=" flex flex-row gap-2">
+                <input
+                  className=" w-20 border p-1 rounded "
+                  value={
+                    filterState.dId
+                      ? allDealer.filter(
+                          (item) =>
+                            Number(item.customer_code) ===
+                            Number(filterState.dId)
+                        )[0].emp_code
+                      : ""
+                  }
+                  disabled
+                />
+
+                <select
+                  id="attendanceType"
+                  className="border p-1 rounded w-80 "
+                  value={filterState.dId}
+                  onChange={(e) => {
+                    setFilterState({
+                      ...filterState,
+                      dId: e.target.value,
+                    });
+                  }}
+                >
+                  <option value={""}>All Dealer</option>
+                  {allDealer.map((item) => (
+                    <option value={item.customer_code}>
+                      {item.party_Name} {item.emp_code}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <div className=" flex flex-row gap-2 ">
+                <input
+                  className="w-20 border p-1 rounded w-[40%]"
+                  value={editviewFilter.empCode}
+                  disabled
+                />
+                <input
+                  className="border p-1 rounded w-full "
+                  value={editviewFilter.disName}
+                  disabled
+                />
+              </div>
+            )}
+          </div>
+        </div>
 
         <h2 className="font-bold mx-4">
           MR - Dealer Sales Target Plan of the Year {filterState.yr}
         </h2>
 
-        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto  ">
+        <div className="bg-white h-full pb-12 flex flex-col gap-2  select-none items-start justify-between w-full   absolute p-2 overflow-x-auto  no-scrollbar   ">
           <table className="min-w-full divide-y border- divide-gray-200 ">
             <thead className="border-b w-max">
               <tr className=" font-arial w-max ">
@@ -570,10 +678,10 @@ const DealerTarget = () => {
                 <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
                   Emp Name
                 </th>
-                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider whitespace-nowrap">
                   MR HQ
                 </th>
-                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider whitespace-nowrap">
                   Party Code
                 </th>
                 <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
@@ -583,10 +691,28 @@ const DealerTarget = () => {
                   Focus Product
                 </th>
                 <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
-                  F.Y -22-23 Sale
+                  F.Y Sale
+                  {selectedYr ? (
+                    <div>
+                      {String(selectedYr.getFullYear() - 2).slice(-2) +
+                        "-" +
+                        String(selectedYr.getFullYear() - 1).slice(-2)}
+                    </div>
+                  ) : (
+                    "-"
+                  )}{" "}
                 </th>
                 <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
-                  F.Y -22-23 Sale
+                  F.Y Sale{" "}
+                  {selectedYr ? (
+                    <div>
+                      {String(selectedYr.getFullYear() - 1).slice(-2) +
+                        "-" +
+                        String(selectedYr.getFullYear()).slice(-2)}
+                    </div>
+                  ) : (
+                    "-"
+                  )}{" "}
                 </th>
                 <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium bg-sky-800 text-white  tracking-wider">
                   APR
@@ -640,6 +766,9 @@ const DealerTarget = () => {
                 <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
                   Q4-Total
                 </th>
+                <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
+                  Total Year Plan
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
@@ -648,11 +777,11 @@ const DealerTarget = () => {
                   <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
                     {item.emp_code}
                   </td>
-                  <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                  <td className=" px-12 w-52 text-center border-2 border-black whitespace-nowrap font-arial text-xs ">
                     {item.emp_name}
                   </td>
 
-                  <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                  <td className="px-12 w-82 text-center border-2 border-black whitespace-nowrap font-arial text-xs ">
                     {item.mr_hq}
                   </td>
                   <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
@@ -662,12 +791,12 @@ const DealerTarget = () => {
                     {item.distribution_name}
                   </td>
 
-                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
+                  <td className="  border-2 border-black  whitespace-nowrap  text-xsm p-0 bg-white">
                     <ul>
                       {item.category_result.map((item, idx) => (
                         <li className="border-b-2 border-black  flex justify-center text-black   p-1">
                           <input
-                            className="p-0 w-16  h-6 text-center "
+                            className="p-0 w-28  h-6 text-center "
                             value={item[Object.keys(item)[0]]}
                             disabled
                           />
@@ -694,15 +823,18 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}{" "}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1 ">
                         <input
                           className="p-0 w-16  h-6 text-right text-right "
                           type="number"
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[1]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[1]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
@@ -711,7 +843,7 @@ const DealerTarget = () => {
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 ">
                     <ul>
                       {item.category_result.map((item, idx) => (
-                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1 ">
                           <input
                             className="p-0 w-16  h-6 text-right text-right "
                             type="number"
@@ -720,15 +852,18 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16  h-6 text-right text-right "
                           type="number"
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[2]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[2]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
@@ -737,7 +872,7 @@ const DealerTarget = () => {
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
-                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1 bg-yellow-300">
                           <input
                             className="p-0 w-16  h-6 text-right text-right "
                             type="number"
@@ -775,23 +910,26 @@ const DealerTarget = () => {
                         </li>
                       ))}
 
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[3]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[3]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
                     </ul>
                   </td>
-                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 b   ">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
-                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                        <li className="border-b-2 border-black  flex justify-center text-black bg-yellow-300  p-1">
                           <input
                             className="p-0 w-16  h-6 text-right text-right "
                             type="number"
@@ -829,14 +967,17 @@ const DealerTarget = () => {
                         </li>
                       ))}
 
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[4]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[4]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
@@ -845,7 +986,7 @@ const DealerTarget = () => {
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
-                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                        <li className="border-b-2 border-black  flex justify-center text-black  bg-yellow-300 p-1">
                           <input
                             className="p-0 w-16  h-6 text-right  text-right"
                             value={catItem[Object.keys(catItem)[5]]}
@@ -881,20 +1022,23 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[5]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[5]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
                     </ul>
                   </td>
-                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300">
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
                         <li className="border-b-2 border-black  flex justify-center text-black   p-1">
@@ -909,17 +1053,19 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}{" "}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) +
-                              Number(curr[Object.keys(curr)[5]]) +
-                              Number(curr[Object.keys(curr)[4]]) +
-                              Number(curr[Object.keys(curr)[3]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[5]]) +
+                                Number(curr[Object.keys(curr)[4]]) +
+                                Number(curr[Object.keys(curr)[3]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
@@ -928,7 +1074,7 @@ const DealerTarget = () => {
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
-                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                        <li className="border-b-2 border-black  flex justify-center text-black  bg-yellow-300  p-1">
                           <input
                             className="p-0 w-16  h-6 text-right  text-right"
                             value={catItem[Object.keys(catItem)[6]]}
@@ -964,14 +1110,17 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[6]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[6]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
@@ -980,7 +1129,7 @@ const DealerTarget = () => {
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 ">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
-                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                        <li className="border-b-2 border-black  flex justify-center text-black bg-yellow-300  p-1">
                           <input
                             className="p-0 w-16  h-6 text-right  text-right"
                             value={catItem[Object.keys(catItem)[7]]}
@@ -1016,14 +1165,17 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[7]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[7]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
@@ -1032,7 +1184,7 @@ const DealerTarget = () => {
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white ">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
-                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                        <li className="border-b-2 border-black  flex justify-center text-black bg-yellow-300  p-1">
                           <input
                             className="p-0 w-16  h-6 text-right text-right "
                             type="number"
@@ -1069,20 +1221,23 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[8]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[8]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
                     </ul>
                   </td>
-                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300">
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
                         <li className="border-b-2 border-black  flex justify-center text-black   p-1">
@@ -1097,16 +1252,18 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black    p-1  ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(curr[Object.keys(curr)[6]]) +
-                              Number(curr[Object.keys(curr)[7]]) +
-                              Number(curr[Object.keys(curr)[8]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(curr[Object.keys(curr)[6]]) +
+                                Number(curr[Object.keys(curr)[7]]) +
+                                Number(curr[Object.keys(curr)[8]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
@@ -1115,7 +1272,7 @@ const DealerTarget = () => {
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
-                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                        <li className="border-b-2 border-black  flex justify-center text-black bg-yellow-300  p-1">
                           <input
                             className="p-0 w-16  h-6 text-right  text-right"
                             value={catItem[Object.keys(catItem)[9]]}
@@ -1151,14 +1308,17 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[9]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[9]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
@@ -1167,7 +1327,7 @@ const DealerTarget = () => {
                   <td className="  border-2 border-black  whitespace-nowrap  p-0">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
-                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                        <li className="border-b-2 border-black  flex justify-center text-black bg-yellow-300  p-1">
                           <input
                             className="p-0 w-16  h-6 text-right text-right "
                             type="number"
@@ -1204,14 +1364,17 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[10]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[10]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
@@ -1220,7 +1383,7 @@ const DealerTarget = () => {
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
-                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                        <li className="border-b-2 border-black  flex justify-center text-black  bg-yellow-300 p-1">
                           <input
                             className="p-0 w-16  h-6 text-right  text-right"
                             value={catItem[Object.keys(catItem)[11]]}
@@ -1256,20 +1419,23 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[11]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[11]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
                     </ul>
                   </td>
-                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300">
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
                     <ul>
                       {item.category_result.map((item, idx) => (
                         <li className="border-b-2 border-black  flex justify-center text-black   p-1">
@@ -1284,16 +1450,18 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(curr[Object.keys(curr)[9]]) +
-                              Number(curr[Object.keys(curr)[10]]) +
-                              Number(curr[Object.keys(curr)[11]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(curr[Object.keys(curr)[9]]) +
+                                Number(curr[Object.keys(curr)[10]]) +
+                                Number(curr[Object.keys(curr)[11]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
@@ -1302,7 +1470,7 @@ const DealerTarget = () => {
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
-                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                        <li className="border-b-2 border-black  flex justify-center text-black bg-yellow-300  p-1">
                           <input
                             className="p-0 w-16  h-6 text-right  text-right"
                             value={catItem[Object.keys(catItem)[12]]}
@@ -1338,14 +1506,17 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[12]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[12]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
@@ -1354,7 +1525,7 @@ const DealerTarget = () => {
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 ">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
-                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                        <li className="border-b-2 border-black  flex justify-center text-black bg-yellow-300  p-1">
                           <input
                             className="p-0 w-16  h-6 text-right  text-right"
                             value={catItem[Object.keys(catItem)[13]]}
@@ -1390,14 +1561,17 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[13]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[13]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
@@ -1406,7 +1580,7 @@ const DealerTarget = () => {
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
-                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                        <li className="border-b-2 border-black  flex justify-center text-black  bg-yellow-300 p-1">
                           <input
                             className="p-0 w-16  h-6 text-right  text-right"
                             value={catItem[Object.keys(catItem)[14]]}
@@ -1442,20 +1616,23 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) + Number(curr[Object.keys(curr)[14]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[14]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
                     </ul>
                   </td>
-                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300">
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
                     <ul>
                       {item.category_result.map((item, idx) => (
                         <li className="border-b-2 border-black  flex justify-center text-black   p-1">
@@ -1470,17 +1647,71 @@ const DealerTarget = () => {
                           />
                         </li>
                       ))}
-                      <li className="  flex justify-center font-bold  text-black   p-1  ">
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
-                          value={item.category_result.reduce((acc, curr) => {
-                            acc =
-                              Number(acc) +
-                              Number(curr[Object.keys(curr)[14]]) +
-                              Number(curr[Object.keys(curr)[13]]) +
-                              Number(curr[Object.keys(curr)[12]]);
-                            return acc;
-                          }, 0)}
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[14]]) +
+                                Number(curr[Object.keys(curr)[13]]) +
+                                Number(curr[Object.keys(curr)[12]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      {item.category_result.map((catItem, idx) => (
+                        <li className="border-b-2 border-black  flex justify-center text-black   p-1">
+                          <input
+                            className="p-0 w-16  h-6 text-right  "
+                            value={
+                              Number(catItem[Object.keys(catItem)[5]]) +
+                              Number(catItem[Object.keys(catItem)[4]]) +
+                              Number(catItem[Object.keys(catItem)[3]]) +
+                              Number(catItem[Object.keys(catItem)[6]]) +
+                              Number(catItem[Object.keys(catItem)[7]]) +
+                              Number(catItem[Object.keys(catItem)[8]]) +
+                              Number(catItem[Object.keys(catItem)[9]]) +
+                              Number(catItem[Object.keys(catItem)[10]]) +
+                              Number(catItem[Object.keys(catItem)[11]]) +
+                              Number(catItem[Object.keys(catItem)[14]]) +
+                              Number(catItem[Object.keys(catItem)[13]]) +
+                              Number(catItem[Object.keys(catItem)[12]])
+                            }
+                            disabled
+                          />
+                        </li>
+                      ))}
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={item.category_result
+                            .reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[5]]) +
+                                Number(curr[Object.keys(curr)[4]]) +
+                                Number(curr[Object.keys(curr)[3]]) +
+                                Number(curr[Object.keys(curr)[6]]) +
+                                Number(curr[Object.keys(curr)[7]]) +
+                                Number(curr[Object.keys(curr)[8]]) +
+                                Number(curr[Object.keys(curr)[9]]) +
+                                Number(curr[Object.keys(curr)[10]]) +
+                                Number(curr[Object.keys(curr)[11]]) +
+                                Number(curr[Object.keys(curr)[14]]) +
+                                Number(curr[Object.keys(curr)[13]]) +
+                                Number(curr[Object.keys(curr)[12]]);
+                              return acc;
+                            }, 0)
+                            ?.toFixed(2)}
                           disabled
                         />
                       </li>
@@ -1488,28 +1719,1701 @@ const DealerTarget = () => {
                   </td>
                 </tr>
               ))}
+              <h1 className="w-full flex justify-between font-bold mt-2"></h1>
+              {Object.keys(groupedArray).map((empcode) => (
+                <tr className="dark:border-2">
+                  <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                    {groupedArray[empcode][0].emp_code}
+                  </td>
+                  <td className="px-12 w-52 text-center border-2 border-black whitespace-nowrap font-arial text-xs ">
+                    {groupedArray[empcode][0].emp_name}
+                  </td>
+
+                  <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                    -
+                  </td>
+                  <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                    -
+                  </td>
+                  <td className="pl-4 w-52 text-left border-2 border-black justify-center whitespace-nowrap font-arial text-xs ">
+                    -
+                  </td>
+
+                  <td className="  border-2 border-black  whitespace-nowrap  text-xsm p-0 bg-white">
+                    <li className="  flex justify-center  text-black   p-1  ">
+                      <input
+                        className="p-0 w-16 h-6  font-bold text-center"
+                        value="M.R. Total"
+                        disabled
+                      />
+                    </li>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[1]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[2]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[3]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[4]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[5]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          type="number"
+                          value={
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[3]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[4]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[5]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0)
+                          }
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[6]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[7]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[8]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          type="number"
+                          value={
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[6]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[7]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[8]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0)
+                          }
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[9]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[10]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[11]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          type="number"
+                          value={
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[9]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[10]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[11]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0)
+                          }
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[12]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[13]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          value={groupedArray[empcode]
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[14]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                            ?.toFixed(2)}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          type="number"
+                          value={
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[12]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[13]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[14]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0)
+                          }
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                    <ul>
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                        <input
+                          className="p-0 w-16 h-6   text-right "
+                          type="number"
+                          value={
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[3]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[4]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[5]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[6]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[7]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[8]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[9]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[10]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[11]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[12]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[13]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0) +
+                            groupedArray[empcode]
+                              .map((item) => {
+                                return item.category_result.reduce(
+                                  (acc, curr) => {
+                                    acc =
+                                      Number(acc) +
+                                      Number(curr[Object.keys(curr)[14]]);
+                                    return acc;
+                                  },
+                                  0
+                                );
+                              })
+                              .reduce((acc1, curr1) => {
+                                acc1 = acc1 + curr1;
+                                return acc1;
+                              }, 0)
+                          }
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+              ))}
+
+              <h1 className="w-full flex justify-between font-bold mt-2"></h1>
+              <tr className="dark:border-2">
+                <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                  -
+                </td>
+                <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                  -
+                </td>
+
+                <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                  -
+                </td>
+                <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
+                  -
+                </td>
+                <td className="pl-4 w-52 text-left border-2 border-black justify-center whitespace-nowrap font-arial text-xs ">
+                  -
+                </td>
+
+                <td className="  border-2 border-black  whitespace-nowrap  text-xsm p-0 bg-white">
+                  <li className="  flex justify-center  text-black   p-1  ">
+                    <input
+                      className="p-0 w-18 h-6  font-bold text-center"
+                      value="Grand Total"
+                      disabled
+                    />
+                  </li>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[1]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[2]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[3]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[4]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[5]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[3]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[4]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[5]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                        }
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[6]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[7]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[8]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[6]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[7]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[8]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                        }
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[9]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[10]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[11]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[9]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[10]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[11]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                        }
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[12]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[13]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={allMRSalesTarget
+                          .map((item) => {
+                            return item.category_result.reduce((acc, curr) => {
+                              acc =
+                                Number(acc) +
+                                Number(curr[Object.keys(curr)[14]]);
+                              return acc;
+                            }, 0);
+                          })
+                          .reduce((acc1, curr1) => {
+                            acc1 = acc1 + curr1;
+                            return acc1;
+                          }, 0)
+                          ?.toFixed(2)}
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[12]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[13]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[14]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                        }
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+
+                <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <ul>
+                    <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
+                      <input
+                        className="p-0 w-16 h-6   text-right "
+                        value={
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[3]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[4]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[5]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[6]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[7]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[8]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[9]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[10]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[11]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[12]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[13]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0) +
+                          allMRSalesTarget
+                            .map((item) => {
+                              return item.category_result.reduce(
+                                (acc, curr) => {
+                                  acc =
+                                    Number(acc) +
+                                    Number(curr[Object.keys(curr)[14]]);
+                                  return acc;
+                                },
+                                0
+                              );
+                            })
+                            .reduce((acc1, curr1) => {
+                              acc1 = acc1 + curr1;
+                              return acc1;
+                            }, 0)
+                        }
+                        disabled
+                      />
+                    </li>
+                  </ul>
+                </td>
+              </tr>
             </tbody>
-            {(router.query.type === "Add" ||
-              router.query.type === "Edit") && (
-                <div className="flex w-full h-8 gap-4 m-2 ">
-                  <button
-                    className="bg-green-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
-                    onClick={() => handleSave()}
-                  >
-                    Submit
-                  </button>
-                  <button
-                    onClick={() => {
-                      router.push({
-                        pathname: "/MR_Portal_Web/Table_MR_ActivityTarget",
-                      });
-                    }}
-                    className="bg-red-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
-                  >
-                    Close
-                  </button>
-                </div>
-              )}
+            {router.query.type === "Add" || router.query.type === "Edit" ? (
+              <div className="flex w-full h-8 gap-4 m-2 ">
+                <button
+                  className="bg-green-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
+                  onClick={() => handleSave()}
+                >
+                  Submit
+                </button>
+                <button
+                  onClick={() => {
+                    router.push({
+                      pathname: "/MR_Portal_Web/NewDealerTarget_Table",
+                    });
+                  }}
+                  className="bg-red-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
+                >
+                  Close
+                </button>
+              </div>
+            ) : (
+              <div className="h-12"></div>
+            )}
           </table>
 
           {/* ) : (

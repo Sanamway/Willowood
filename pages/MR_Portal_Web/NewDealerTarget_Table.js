@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import Layout from "@/components/Layout1";
 import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
+import { Dialog, Transition } from "@headlessui/react";
 // import ConfirmationModal from "../modals/ConfirmationModal";
 import { CSVLink } from "react-csv";
 import { TbFileDownload } from "react-icons/tb";
@@ -77,6 +78,7 @@ const NewDealer = () => {
       const apires = await respond;
       console.log("pop", apires);
       toast.success(apires.data.message);
+      setDeleteOpen({ open: false, data: {} });
       getData(1);
     } catch (error) {
       console.log("nop", error.message);
@@ -84,15 +86,14 @@ const NewDealer = () => {
     }
   };
 
-  // use
-
+  const [deleteOpen, setDeleteOpen] = useState({ open: false, data: {} });
   return (
     <Layout>
       <div className=" overflow-auto w-full ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
-            Mr Dealer Target
+            M.R. Dealer Target
           </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
@@ -126,8 +127,13 @@ const NewDealer = () => {
 
             <h2>
               <AiTwotoneHome
-                className="text-black-500"
+                className="text-red-500"
                 size={34}
+                onClick={() => {
+                  router.push({
+                    pathname: "/",
+                  });
+                }}
               ></AiTwotoneHome>
             </h2>
             <button
@@ -137,17 +143,17 @@ const NewDealer = () => {
                   query: { id: null, type: "Add" },
                 });
               }}
-              className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
+              className="text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
             >
               Create New
             </button>
           </div>
         </div>
 
-        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto  ">
-          <table className="min-w-full divide-y border- divide-gray-200 ">
+        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto">
+          <table className="min-w-full divide-y border- divide-gray-200 mb-20">
             <thead className="border-b">
-              <tr className="bg-gray-50 font-arial w-max ">
+              <tr className="bg-gray-50 font-arial w-max">
                 <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider ">
                   Action
                 </th>
@@ -155,10 +161,16 @@ const NewDealer = () => {
                   Year
                 </th>
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
-                  Emp_Code
+                  Emp Code
                 </th>
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Sap_Code
+                  Party Code
+                </th>
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                  Emp Name
+                </th>
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  Party Name
                 </th>
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
                   Product Cat
@@ -233,7 +245,6 @@ const NewDealer = () => {
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
                   Units
                 </th>
-
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
                   Segement
                 </th>
@@ -282,12 +293,17 @@ const NewDealer = () => {
                     </button>
                     <button
                       className="b text-black hover:text-red-500 ml-2"
-                      onClick={() =>
-                        handleDeteleRow(
-                          item.t_id,
-                          item.emp_code,
-                          item.customer_code
-                        )
+                      onClick={
+                        () =>
+                          setDeleteOpen({
+                            open: true,
+                            data: item,
+                          })
+                        // handleDeteleRow(
+                        //   item.t_id,
+                        //   item.emp_code,
+                        //   item.customer_code
+                        // )
                       }
                     >
                       Delete
@@ -302,6 +318,13 @@ const NewDealer = () => {
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.customer_code}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.emp_name}
+                  </td>
+
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.party_name}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.product_category}
@@ -392,20 +415,91 @@ const NewDealer = () => {
               ))}
             </tbody>
           </table>
-          {/* <div className="h-full w-full">
-            <ReactPaginate
-              previousLabel={"< Previous"}
-              nextLabel={"Next >"}
-              breakLabel={"..."}
-              pageCount={pageCount}
-              onPageChange={handlePageChange}
-              containerClassName={"pagination"}
-              activeClassName={"active"}
-              className="flex flex-row gap-2 mt-4"
-            />
-          </div> */}
+          <div className="h-12"></div>
         </div>
       </div>
+
+      <Transition appear show={deleteOpen.open} as={Fragment}>
+        <Dialog
+          as="div"
+          className="z-10"
+          onClose={() =>
+            setDeleteOpen({
+              open: false,
+              data: {},
+            })
+          }
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
+                  >
+                    Are you sure ?
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <p className="text-sm text-center text-gray-500">
+                      Do you really want to delete this ?
+                    </p>
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-between">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={() =>
+                        setDeleteOpen({
+                          open: false,
+                          data: {},
+                        })
+                      }
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={() =>
+                        handleDeteleRow(
+                          deleteOpen.data.t_id,
+                          deleteOpen.data.emp_code,
+                          deleteOpen.data.customer_code
+                        )
+                      }
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </Layout>
   );
 };

@@ -262,10 +262,10 @@ const Farmer = () => {
                       {item.region_name}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                    {item.business_unit_name}
+                      {item.business_unit_name}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                    {item.business_segment}
+                      {item.business_segment}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.isDeleted == false ? "Enabled" : "Disabled"}
@@ -273,7 +273,6 @@ const Farmer = () => {
                   </tr>
                 ))}
               </tbody>
-
             </table>
           </div>
         </div>
