@@ -256,7 +256,7 @@ const NewDealer = () => {
             <tbody className="bg-white divide-y  divide-gray-200 text-xs ">
               {data.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
-                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs font-bold">
+                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                     <button
                       onClick={() => {
                         router.push({
