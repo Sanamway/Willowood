@@ -89,7 +89,7 @@ const NewDealer = () => {
   const [deleteOpen, setDeleteOpen] = useState({ open: false, data: {} });
   return (
     <Layout>
-      <div className=" overflow-auto w-full ">
+      <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
@@ -127,7 +127,7 @@ const NewDealer = () => {
 
             <h2>
               <AiTwotoneHome
-                className="text-red-500"
+                className="text-black"
                 size={34}
                 onClick={() => {
                   router.push({
@@ -143,7 +143,7 @@ const NewDealer = () => {
                   query: { id: null, type: "Add" },
                 });
               }}
-              className="text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
+              className=" text-white py-1 px-2 rounded-md bg-blue-500 hover:bg-orange-500"
             >
               Create New
             </button>
@@ -163,12 +163,13 @@ const NewDealer = () => {
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                   Emp Code
                 </th>
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Party Code
-                </th>
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                   Emp Name
                 </th>
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  Party Code
+                </th>
+
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
                   Party Name
                 </th>
@@ -315,12 +316,11 @@ const NewDealer = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.emp_code}
                   </td>
-
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.customer_code}
-                  </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.emp_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.customer_code}
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">

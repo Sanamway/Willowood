@@ -147,7 +147,7 @@ const FarmerMeet = () => {
   };
   return (
     <Layout>
-      <div className=" overflow-auto w-full ">
+      <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
@@ -184,7 +184,10 @@ const FarmerMeet = () => {
             </h2>
 
             <h2>
-              <AiTwotoneHome className="text-black-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome
+                className="text-black-500"
+                size={34}
+              ></AiTwotoneHome>
             </h2>
             {/* <button
       onClick={() => {
@@ -200,7 +203,7 @@ const FarmerMeet = () => {
           </div>
         </div>
 
-        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto  ">
+        <div className=" absolute overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
           <table className="min-w-full divide-y border- divide-gray-200 ">
             <thead className="border-b ">
               <tr className="bg-gray-50 font-arial w-max">
@@ -400,19 +403,19 @@ const FarmerMeet = () => {
                 </tr>
               ))}
             </tbody>
-            <div className="">
-              <ReactPaginate
-                previousLabel={"< Previous"}
-                nextLabel={"Next >"}
-                breakLabel={"..."}
-                pageCount={pageCount}
-                onPageChange={handlePageChange}
-                containerClassName={"pagination"}
-                activeClassName={"active"}
-                className="flex flex-row gap-2 mt-4  "
-              />
-            </div>
           </table>
+          <div className="w-full  mx-4 h-12 scrollbar-hidden">
+            <ReactPaginate
+              previousLabel={"< Previous"}
+              nextLabel={"Next >"}
+              breakLabel={"..."}
+              pageCount={pageCount}
+              onPageChange={handlePageChange}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+              className="flex flex-row gap-2 mt-4  "
+            />
+          </div>
         </div>
       </div>
 

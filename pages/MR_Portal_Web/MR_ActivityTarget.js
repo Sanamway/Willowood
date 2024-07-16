@@ -440,7 +440,7 @@ const BusinessSegment = () => {
         </div>
 
         <div className="bg-white  max-w-full pb-12 ">
-          <div className=" text-black font-arial  w-full p-1 h-[760px] overflow-y-auto scrollbar-">
+          <div className=" text-black font-arial  w-full p-1 h-[760px] overflow-y-auto no-scrollbar">
             <table className="min-w-full divide-y border- divide-gray-200 font-bold">
               <thead className="border-b w-max">
                 <tr className="bg-sky-800 font-arial w-max ">

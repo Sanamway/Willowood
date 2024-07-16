@@ -161,7 +161,7 @@ const AdditionalInfo = (props) => {
                     </button>
                     <button
                       className="b text-black hover:text-yellow-400 ml-2"
-                      onClick={() => { 
+                      onClick={() => {
                         router.push({
                           pathname: "/MR_Portal_Web/Crop_info_form",
                           query: {

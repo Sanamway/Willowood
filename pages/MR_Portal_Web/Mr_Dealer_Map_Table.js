@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import Layout from "@/components/Layout1";
 import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
+import { Dialog, Transition } from "@headlessui/react";
 // import ConfirmationModal from "../modals/ConfirmationModal";
 import { CSVLink } from "react-csv";
 import { TbFileDownload } from "react-icons/tb";
 import toast, { Toaster } from "react-hot-toast";
 import moment from "moment";
 import ReactPaginate from "react-paginate";
-const District = () => {
+const NewDealer = () => {
   const csvHeaders = [
     { label: "Id", key: "ds_id" },
     { label: "District", key: "district_name" },
@@ -31,14 +32,15 @@ const District = () => {
   const router = useRouter();
 
   const [data, setData] = useState([]);
-  const getDistrict = async (currentPage) => {
+  const getData = async (currentPage) => {
     try {
-      const respond = await axios.get(`${url}/api/get_mr_activity`, {
+      const respond = await axios.get(`${url}/api/mr_dealer_map`, {
         params: {
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          paging: true,
-          page: currentPage,
-          size: 50,
+          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          //   paging: true,
+          //   page: currentPage,
+          //   size: 50,
         },
         headers: headers,
       });
@@ -56,45 +58,42 @@ const District = () => {
     setCurrentPage(pageNumber + 1);
   };
   useEffect(() => {
-    getDistrict(currentPage.selected);
+    getData(currentPage.selected);
   }, [currentPage.selected]);
 
   const deleteHandler = (id) => {
     setisOpen(true);
   };
 
-  const handleDeteleRow = async (mrcId, mraId, bgId, buId, cId, yr) => {
+  const handleDeteleRow = async (tId, empCode, custCode) => {
     try {
-      const respond = await axios.get(`${url}/api/delete_mr_activity`, {
+      const respond = await axios.get(`${url}/api/delete_mr_dealer_map`, {
         headers: headers,
         params: {
-          c_id: cId,
-          bg_id: bgId,
-          bu_id: buId,
-          mrc_id: mrcId,
-          mra_id: mraId,
-          year: yr,
+          t_id: tId,
+          customer_code: custCode,
+          emp_code: empCode,
         },
       });
       const apires = await respond;
       console.log("pop", apires);
       toast.success(apires.data.message);
-      getDistrict(1);
+      setDeleteOpen({ open: false, data: {} });
+      getData(1);
     } catch (error) {
-      console.log(error);
-      toast.error(error);
+      console.log("nop", error.message);
+      toast.error(error.message);
     }
   };
 
-  // use
-
+  const [deleteOpen, setDeleteOpen] = useState({ open: false, data: {} });
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
-            Mr Activity Table
+            M.R. Dealer Map
           </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
@@ -128,8 +127,13 @@ const District = () => {
 
             <h2>
               <AiTwotoneHome
-                className="text-black-500"
+                className="text-black"
                 size={34}
+                onClick={() => {
+                  router.push({
+                    pathname: "/",
+                  });
+                }}
               ></AiTwotoneHome>
             </h2>
             <button
@@ -139,17 +143,17 @@ const District = () => {
                   query: { id: null, type: "Add" },
                 });
               }}
-              className=" text-white py-1.5 px-2 rounded-md bg-blue-500 hover:bg-orange-500"
+              className=" text-white py-1 px-2 rounded-md bg-blue-500 hover:bg-orange-500"
             >
               Create New
             </button>
           </div>
         </div>
 
-        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto  ">
-          <table className="min-w-full divide-y border- divide-gray-200 ">
+        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto">
+          <table className="min-w-full divide-y border- divide-gray-200 mb-20">
             <thead className="border-b">
-              <tr className="bg-gray-50 font-arial w-max ">
+              <tr className="bg-gray-50 font-arial w-max">
                 <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider ">
                   Action
                 </th>
@@ -157,110 +161,112 @@ const District = () => {
                   Year
                 </th>
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
-                  MR Category
+                  Emp Code
+                </th>
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                  Emp Name
                 </th>
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Month-Year
+                  Party Code
+                </th>
+
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  Party Name
                 </th>
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  T-Demo
+                  Party Complete Address
+                </th>
+                {/* <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  Prev Y1 Tot
                 </th>
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  T-F. Day
+                  Prev Y2 Tot
                 </th>
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  T-O2O
-                </th>
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  T-GMT
+                  Apr
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  T-SVN
+                  May
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  T-GVM
+                  June
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  T-CAP
+                  Q1 Plan Tot
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  T-SHC
+                  July
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  M-Demo
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  M_F. Day
+                  Aug
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  M-O2O
+                  Sept
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  Q2 Plan Tot
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  M-GMT
+                  Oct
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  Nov
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  Dec
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  Q3 Plan Tot
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  M-SVN
+                  Jan
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  Feb
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  March
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  Q4 Plan Tot
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  Year total
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  M-GVM
+                  Territory
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  M-CAP
+                  Region
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  M-SHC
+                  Zone
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  W-Demo
+                  Units
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  W-F. Day
+                  Segement
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  W-O2O
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  W-GMT
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  W-SVN
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  W-GVM
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  W-CAP
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  W-SHC
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  Business Unit
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  Business Segement
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  Company Name
-                </th>
+                  Company
+                </th> */}
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs ">
               {data.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
-                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs font-bold">
+                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                     <button
                       onClick={() => {
                         router.push({
                           pathname: "/MR_Portal_Web/MR_ActivityTarget",
                           query: {
-                            mrcId: item.mrc_id,
-                            mraId: item.mra_id,
-                            cId: item.c_id,
-                            bgId: item.bg_id,
-                            buId: item.bu_id,
+                            empId: item.emp_code,
                             yr: item.year,
+                            custCode: item.customer_code,
+                            tDes: item.territory_name,
                             type: "View",
                           },
                         });
@@ -274,12 +280,10 @@ const District = () => {
                         router.push({
                           pathname: "/MR_Portal_Web/MR_ActivityTarget",
                           query: {
-                            mrcId: item.mrc_id,
-                            mraId: item.mra_id,
-                            cId: item.c_id,
-                            bgId: item.bg_id,
-                            buId: item.bu_id,
+                            empId: item.emp_code,
                             yr: item.year,
+                            custCode: item.customer_code,
+                            tDes: item.territory_name,
                             type: "Edit",
                           },
                         });
@@ -290,16 +294,18 @@ const District = () => {
                     </button>
                     <button
                       className="b text-black hover:text-red-500 ml-2"
-                      onClick={() => {
-                        handleDeteleRow(
-                          item.mrc_id,
-                          item.mra_id,
-                          item.c_id,
-                          item.bg_id,
-                          item.bu_id,
-                          item.year
-                        );
-                      }}
+                      onClick={
+                        () =>
+                          setDeleteOpen({
+                            open: true,
+                            data: item,
+                          })
+                        // handleDeteleRow(
+                        //   item.t_id,
+                        //   item.emp_code,
+                        //   item.customer_code
+                        // )
+                      }
                     >
                       Delete
                     </button>
@@ -308,113 +314,112 @@ const District = () => {
                     {item.year}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.mr_Category_name}
+                    {item.emp_code}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.emp_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.customer_code}
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.month} {item.year}
+                    {item.party_name}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.t_demo}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.t_f_day}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.t_o2o}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.t_gmt}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.t_svn}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.t_gvm}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.t_cap}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.t_shc}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.m_demo}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.m_f_day}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.m_o2o}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.m_gmt}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.m_svn}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.m_gvm}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.m_cap}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.m_shc}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.w_demo}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.w_f_day}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.w_o2o}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.w_gmt}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.w_svn}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.w_gvm}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.w_cap}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.w_shc}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.business_unit_name}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.business_segment}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.cmpny_name}
+                    {item.party_address}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {/* <div className="h-full w-full">
-            <ReactPaginate
-              previousLabel={"< Previous"}
-              nextLabel={"Next >"}
-              breakLabel={"..."}
-              pageCount={pageCount}
-              onPageChange={handlePageChange}
-              containerClassName={"pagination"}
-              activeClassName={"active"}
-              className="flex flex-row gap-2 mt-4"
-            />
-          </div> */}
+          <div className="h-12"></div>
         </div>
       </div>
+
+      <Transition appear show={deleteOpen.open} as={Fragment}>
+        <Dialog
+          as="div"
+          className="z-10"
+          onClose={() =>
+            setDeleteOpen({
+              open: false,
+              data: {},
+            })
+          }
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
+                  >
+                    Are you sure ?
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <p className="text-sm text-center text-gray-500">
+                      Do you really want to delete this ?
+                    </p>
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-between">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={() =>
+                        setDeleteOpen({
+                          open: false,
+                          data: {},
+                        })
+                      }
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={() =>
+                        handleDeteleRow(
+                          deleteOpen.data.t_id,
+                          deleteOpen.data.emp_code,
+                          deleteOpen.data.customer_code
+                        )
+                      }
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </Layout>
   );
 };
 
-export default District;
+export default NewDealer;

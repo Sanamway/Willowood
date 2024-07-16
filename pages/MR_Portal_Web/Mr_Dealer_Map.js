@@ -33,50 +33,144 @@ const NewDealer = () => {
   };
   const router = useRouter();
 
-  const [data, setData] = useState([]);
-  const getData = async (currentPage) => {
+  const [selectAll, setSelectAll] = useState(false);
+  const [selectedYr, setSelectedYr] = useState(false);
+
+  const [allEmployee, setAllEmployee] = useState([]);
+  const getAllEmployeeData = async () => {
     try {
-      const respond = await axios.get(`${url}/api/get_mr_target_grid`, {
+      const respond = await axios.get(`${url}/api/get_employee`, {
+        headers: headers,
+        params: {
+          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        },
+      });
+
+      const apires = await respond.data.data;
+
+      setAllEmployee(apires);
+    } catch (error) {}
+  };
+  useEffect(() => {
+    getAllEmployeeData();
+  }, []);
+  const [filterState, setFilterState] = useState({
+    empCode: null,
+  });
+
+  const [allDealer, setAllDealer] = useState([]);
+  const getAllDealerData = async (empCode) => {
+    const dummyData = [
+      { id: 1, customer_code: 121, address: "ABCD", selected: false },
+      { id: 2, customer_code: 123, address: "ABCD", selected: false },
+      { id: 3, customer_code: 122, address: "ABCD", selected: false },
+      { id: 4, customer_code: 124, address: "ABCD", selected: false },
+    ];
+    setAllDealer(dummyData);
+    try {
+      const respond = await axios.get(`${url}/api/get_mr_dealer_sales`, {
+        headers: headers,
         params: {
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          //   paging: true,
-          //   page: currentPage,
-          //   size: 50,
+          t_des: territoryData.filter(
+            (item) =>
+              item.t_id ===
+              JSON.parse(window.localStorage.getItem("userinfo")).t_id
+          )[0].territory_name,
+          empcode: empCode ? empCode : null,
         },
+      });
+
+      const apires = await respond.data.data;
+
+      setAllDealer(apires);
+    } catch (error) {}
+  };
+
+  const [territoryData, setTerritoryData] = useState([]);
+
+  const getAllTerritoryData = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_territory`, {
         headers: headers,
       });
+
       const apires = await respond.data.data;
-      setData(apires);
-      const count = await respond.data.data.length;
-    } catch (error) {
-      setData([]);
+
+      setTerritoryData(apires);
+    } catch (error) {}
+  };
+  useEffect(() => {
+    getAllTerritoryData();
+  }, []);
+
+  useEffect(() => {
+    // if (!territoryData.length) return;   correction
+    getAllDealerData(filterState.empCode);
+  }, [territoryData, filterState.empCode, selectedYr]);
+
+  const handleSave = async () => {
+    try {
+      let endPoint = "api/add_mr_dealer_map";
+      if (router.query.type === "Add") {
+        endPoint = "api/add_mr_dealer_map";
+      } else {
+        endPoint = "api/update_mr_dealer_map";
+      }
+
+      const data = allDealer?.map((item, idx) => {
+        return {
+          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bg_id: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          bu_id: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          r_id: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          z_id: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          year: selectedYr.getFullYear(),
+          emp_code: filterState.empCode,
+          customer_code: item.customer_code,
+        };
+      });
+
+      const respond = await axios
+        .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
+          headers: headers,
+        })
+        .then((res) => {
+          if (!res) return;
+          toast.success(res.data.message);
+          router.push({
+            pathname: "/MR_Portal_Web/NewDealerTarget_Table",
+          });
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.message;
+      console.log("koi", errors);
+      toast.error(errorMessage);
+      if (!errorMessage) return;
+      getAllMRSalesTarget();
     }
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const [selectAll, setSelectAll] = useState(false);
-  const [selectedYr, setSelectedYr] = useState(false);
   return (
     <Layout>
-      <div className="absolute h-full w-full overflow-x-auto no-scrollbar ">
+      <div className="absolute h-full w-full overflow-x-auto no-scrollbar mx-4">
         <Toaster position="bottom-center" reverseOrder={false} />
-        <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">
+        <div className="text-black flex items-center justify-between bg-white max-w-full font-arial  ">
+          <h2 className="font-arial font-normal text-3xl  py-2 pl-4">
             M.R. Dealer Mapping
           </h2>
         </div>
         <div className="flex flex-row px-4  py-2 gap-6 w-full">
           <div className="flex flex-row gap-2">
-            <span className="text-sm ">Select Year</span>
+            <span className="text-sm self-center">Select Year</span>
             <DatePicker
-              className="border p-1 rounded  w-16 h-6  text-sm"
+              className="border p-1 rounded  w-16 h-6  text-sm text-[12px]"
               showYearDropdown
               dateFormat="yyyy"
-              placeholderText="Enter Year"
+              placeholderText="Year"
               yearDropdownItemNumber={15} // Uncommented and provided a value
               selected={selectedYr}
               onChange={(date) => setSelectedYr(date)}
@@ -91,17 +185,19 @@ const NewDealer = () => {
             <span className="text-sm self-center">M.R. Executive</span>
             <select
               id="attendanceType"
-              className="border p-1 rounded  w-80 h-6  text-sm"
-              //   value={filterState.bgId}
-              //   onChange={(e) =>
-              //     setFilterState({ ...filterState, bgId: e.target.value })
-              //   }
-              disabled
+              className="border p-1 rounded  w-80 h-6  text-[12px]"
+              value={filterState.empCode}
+              onChange={(e) =>
+                setFilterState({ ...filterState, empCode: e.target.value })
+              }
             >
               <option value={""}>M.R. Executive</option>
-              {/* {bgData.map((item) => (
-                <option value={item.bg_id}>{item.business_segment}</option>
-              ))} */}
+
+              {allEmployee.map((item) => (
+                <option value={item.empcode}>
+                  {item.fname} {item.mname} {item.lname} {item.empcode}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -110,25 +206,39 @@ const NewDealer = () => {
             <input
               type="checkbox"
               checked={selectAll}
-              onClick={() => setSelectAll(!selectAll)}
+              onClick={() => {
+                setSelectAll(!selectAll);
+                setAllDealer(
+                  allDealer.map((item) => {
+                    return { ...item, selected: true };
+                  })
+                );
+              }}
             />
             <span className="text-sm">Select All</span>
           </div>{" "}
           <div className="flex flex-row gap-2 justify-start items-center">
             <input
               type="checkbox"
-              checked={selectAll}
-              onClick={() => setSelectAll(!selectAll)}
+              checked={!selectAll}
+              onClick={() => {
+                setSelectAll(!selectAll);
+                setAllDealer(
+                  allDealer.map((item) => {
+                    return { ...item, selected: false };
+                  })
+                );
+              }}
             />
             <span className="text-sm">Deselect All</span>
           </div>{" "}
         </div>
 
         <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 ">
-          <table className="min-w-full divide-y border- divide-gray-200 mb-20">
+          <table className="min-w-full divide-y border- divide-gray-200 mb-4">
             <thead className="border-b">
               <tr className="bg-gray-50 font-arial w-100">
-                <th className="px-4  py-2  text-left dark:border-2  text-xs font-medium text-gray-500    ">
+                <th className="px-4  py-2  text-left dark:border-2 w-8 text-xs font-medium text-gray-500    ">
                   Action
                 </th>
                 <th className="px-4 py-2 text-left dark:border-2 w-12 text-xs font-medium text-gray-500   tracking-wider whitespace-nowrap ">
@@ -167,21 +277,22 @@ const NewDealer = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs ">
-              {data.map((item, idx) => (
+              {allDealer.map((item, idx) => (
                 <tr className="dark:border-2 w-100" key={idx}>
                   <td className="px-4  text-left dark:border-2    whitespace-nowrap font-arial text-xs font-bold">
                     <input
                       type="checkbox"
                       className="w-4"
-                      // disabled={!menu.isEditable}
-                      // checked={menu.Delete}
-                      // onChange={() => {
-                      //   setAllMenus(
-                      //     allMenus.map((el) =>
-                      //       el._id === menu._id ? { ...el, Delete: !el.Delete } : el
-                      //     )
-                      //   );
-                      // }}
+                      checked={item.selected}
+                      onChange={() => {
+                        setAllDealer(
+                          allDealer.map((el) =>
+                            el.customer_code === item.customer_code
+                              ? { ...el, selected: !el.selected }
+                              : el
+                          )
+                        );
+                      }}
                     />
                   </td>
 
@@ -210,25 +321,26 @@ const NewDealer = () => {
                 </tr>
               ))}
             </tbody>
-            <div className="flex w-full h-8 gap-4 m-2 ">
-              <button
-                className="bg-green-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
-                onClick={() => handleSave()}
-              >
-                Submit
-              </button>
-              <button
-                onClick={() => {
-                  router.push({
-                    pathname: "/MR_Portal_Web/NewDealerTarget_Table",
-                  });
-                }}
-                className="bg-red-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
-              >
-                Close
-              </button>
-            </div>
           </table>
+
+          <div className="flex w-full h-8 gap-4 mb-4 ">
+            <button
+              className="bg-green-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
+              onClick={() => handleSave()}
+            >
+              Submit
+            </button>
+            <button
+              onClick={() => {
+                router.push({
+                  pathname: "/MR_Portal_Web/NewDealerTarget_Table",
+                });
+              }}
+              className="bg-red-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     </Layout>

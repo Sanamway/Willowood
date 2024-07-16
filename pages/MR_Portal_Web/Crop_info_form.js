@@ -691,7 +691,7 @@ const AdditionalInfo = (props) => {
                   <col style={{ width: "20%" }} />
                 </colgroup>
                 <thead>
-                  <tr className="bg-orange-500 text-white">
+                  <tr className="bg-blue-500 text-white">
                     <th className="border border-gray-400 px-4 py-2">
                       District
                     </th>
@@ -1068,7 +1068,7 @@ const AdditionalInfo = (props) => {
                   <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
                 </colgroup>
                 <thead>
-                  <tr className="bg-orange-500 text-white">
+                  <tr className="bg-blue-500 text-white">
                     <th className="border border-gray-400 px-4 py-2">
                       Crop Stage
                     </th>
@@ -1480,7 +1480,7 @@ const AdditionalInfo = (props) => {
                   )}
                 </colgroup>
                 <thead>
-                  <tr className="bg-orange-500 text-white">
+                  <tr className="bg-blue-500 text-white">
                     <th className="border border-gray-400 px-4 py-2">
                       Market/Mandi Name
                     </th>
@@ -1660,10 +1660,10 @@ const AdditionalInfo = (props) => {
               </table>
             </div>
 
-            <div className="w-full flex mt-12 gap-4">
+            <div className="w-full flex h-20 gap-4 mt-4">
               {router.query.type !== "View" && (
                 <button
-                  className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-lg w-24"
+                  className="text-center rounded-md bg-green-500 text-white py-1 px-4 h-12 text-lg w-24"
                   type="submit"
                   onClick={(e) => handleSubmit(e)}
                 >
@@ -1671,7 +1671,7 @@ const AdditionalInfo = (props) => {
                 </button>
               )}
               <button
-                className="text-center rounded-md bg-green-500 text-white py-1 px-4 text-lg  w-24"
+                className="text-center rounded-md bg-red-500 text-white py-1 px-4 text-lg h-12 w-24"
                 type="submit"
                 onClick={(e) => {
                   e.preventDefault();

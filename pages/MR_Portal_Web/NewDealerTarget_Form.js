@@ -438,7 +438,7 @@ const DealerTarget = () => {
 
   return (
     <Layout>
-      <div className="w-full font-arial bg-white h-screen absolute overflow-y-auto no-scrollbar">
+      <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2"></h2>
@@ -454,7 +454,7 @@ const DealerTarget = () => {
             />
 
             <AiTwotoneHome
-              className="text-red-500"
+              className="text-black-500"
               onClick={() => {
                 router.push({
                   pathname: "/",
@@ -668,8 +668,8 @@ const DealerTarget = () => {
           MR - Dealer Sales Target Plan of the Year {filterState.yr}
         </h2>
 
-        <div className="bg-white h-full pb-12 flex flex-col gap-2  select-none items-start justify-between w-full   absolute p-2 overflow-x-auto  no-scrollbar   ">
-          <table className="min-w-full divide-y border- divide-gray-200 ">
+        <div className=" absolute overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[100%] my-2 no-scrollbar">
+          <table className="w-full divide-y border- divide-gray-200 ">
             <thead className="border-b w-max">
               <tr className=" font-arial w-max ">
                 <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
@@ -3392,33 +3392,30 @@ const DealerTarget = () => {
                 </td>
               </tr>
             </tbody>
-            {router.query.type === "Add" || router.query.type === "Edit" ? (
-              <div className="flex w-full h-8 gap-4 m-2 ">
-                <button
-                  className="bg-green-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
-                  onClick={() => handleSave()}
-                >
-                  Submit
-                </button>
-                <button
-                  onClick={() => {
-                    router.push({
-                      pathname: "/MR_Portal_Web/NewDealerTarget_Table",
-                    });
-                  }}
-                  className="bg-red-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
-                >
-                  Close
-                </button>
-              </div>
-            ) : (
-              <div className="h-12"></div>
-            )}
           </table>
 
-          {/* ) : (
-              <div className="flex w-full  gap-4 m-2 "></div>
-            )} */}
+          {router.query.type === "Add" || router.query.type === "Edit" ? (
+            <div className="flex w-full h-12 gap-4 m-2 ">
+              <button
+                className="text-center rounded-md bg-green-500 text-white py-1 px-4 h-12 text-lg w-24"
+                onClick={() => handleSave()}
+              >
+                Submit
+              </button>
+              <button
+                onClick={() => {
+                  router.push({
+                    pathname: "/MR_Portal_Web/NewDealerTarget_Table",
+                  });
+                }}
+                className="text-center rounded-md bg-red-500 text-white py-1 px-4 text-lg h-12 w-24"
+              >
+                Close
+              </button>
+            </div>
+          ) : (
+            <div className="h-12"></div>
+          )}
         </div>
       </div>
     </Layout>
