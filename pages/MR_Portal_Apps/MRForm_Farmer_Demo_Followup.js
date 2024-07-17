@@ -297,7 +297,7 @@ const AdditionalInfo = (props) => {
             className="self-center "
             onClick={() =>
               router.push({
-                pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+                pathname: "/MR_Portal_Apps/MRHome",
               })
             }
           />

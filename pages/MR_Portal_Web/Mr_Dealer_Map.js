@@ -61,25 +61,18 @@ const NewDealer = () => {
 
   const [allDealer, setAllDealer] = useState([]);
   const getAllDealerData = async (empCode) => {
-    const dummyData = [
-      { id: 1, customer_code: 121, address: "ABCD", selected: false },
-      { id: 2, customer_code: 123, address: "ABCD", selected: false },
-      { id: 3, customer_code: 122, address: "ABCD", selected: false },
-      { id: 4, customer_code: 124, address: "ABCD", selected: false },
-    ];
-    setAllDealer(dummyData);
     try {
       const respond = await axios.get(`${url}/api/get_mr_dealer_sales`, {
         headers: headers,
         params: {
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+
           t_des: territoryData.filter(
             (item) =>
               item.t_id ===
               JSON.parse(window.localStorage.getItem("userinfo")).t_id
           )[0].territory_name,
-          empcode: empCode ? empCode : null,
+          year: new Date(selectedYr).getFullYear(),
         },
       });
 
@@ -234,8 +227,8 @@ const NewDealer = () => {
           </div>{" "}
         </div>
 
-        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 ">
-          <table className="min-w-full divide-y border- divide-gray-200 mb-4">
+        <div className="bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 ">
+          <table className="min-w-full divide-y border- divide-gray-200  h-min">
             <thead className="border-b">
               <tr className="bg-gray-50 font-arial w-100">
                 <th className="px-4  py-2  text-left dark:border-2 w-8 text-xs font-medium text-gray-500    ">

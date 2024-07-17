@@ -132,21 +132,6 @@ const AdditionalInfo = (props) => {
                   } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
                 >
                   <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
-                    <li
-                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                      onClick={() => setAddFarmerModal(true)}
-                    >
-                      <GiFarmer
-                        className="text-[#626364] cursor-pointer"
-                        size={20}
-                        onClick={() =>
-                          router.push({
-                            pathname: "/MR_Portal_Apps/MyTimesheet",
-                          })
-                        }
-                      />{" "}
-                      Timesheet
-                    </li>
                     <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
                       <FaHandsHelping
                         className="text-[#626364] cursor-pointer"
@@ -227,8 +212,8 @@ const AdditionalInfo = (props) => {
           </tr>
         </thead>
         <tbody>
-          <tr className="bg-green-100">
-            <td className="border border-gray-200 py-2 px-2 whitespace-nowrap font-thin ">
+          <tr className="bg-green-100 font-bold">
+            <td className="border border-gray-200 py-2 px-2 whitespace-nowrap ">
               Target
             </td>
             <td className="border border-gray-200 py-2 px-2">-</td>
@@ -240,21 +225,69 @@ const AdditionalInfo = (props) => {
             <td className="border border-gray-200 py-2 px-2">-</td>
             <td className="border border-gray-200 py-2 px-2">-</td>
           </tr>
-          <tr className="bg-white">
-            <td className="border border-gray-200 py-2 px-2 whitespace-nowrap font-thin">
+          <tr className="bg-white font-bold">
+            <td className="border border-gray-200 py-2 px-2 whitespace-nowrap">
               Total
             </td>
             <td className="border border-gray-200 py-2 px-2">-</td>
             <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.o2o)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.svn)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.gvm)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.cap)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.shc)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.att)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
           </tr>
-          <tr className="bg-white">
-            <td className="border border-gray-200 py-2 px-2 whitespace-nowrap font-thin">
+          <tr className="bg-white font-bold">
+            <td className="border border-gray-200 py-2 px-2 whitespace-nowrap">
               Achiv %
             </td>
             <td className="border border-gray-200 py-2 px-2">-</td>
@@ -297,7 +330,7 @@ const AdditionalInfo = (props) => {
               </td>
             </tr>
           ))}
-          <tr className="bg-white">
+          <tr className="bg-white font-bold">
             <td className="border border-gray-200 py-2 px-2 whitespace-nowrap">
               Total
             </td>
@@ -360,16 +393,18 @@ const AdditionalInfo = (props) => {
           </tr>
         </tbody>
       </table>
-      <FaArrowAltCircleUp
-        size={42}
-        className="self-center size-120 text-black-400 text-blue-400 "
-        onClick={() =>
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth", // Smooth scrolling animation
-          })
-        }
-      />
+      <div className="flex justify-end w-full">
+        <FaArrowAltCircleUp
+          size={42}
+          className="self-center size-120 text-black-400 text-blue-400  "
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth", // Smooth scrolling animation
+            })
+          }
+        />
+      </div>
       {/* Example row */}
 
       {/* {tableData.map((item) => 

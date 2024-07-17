@@ -517,11 +517,11 @@ const AdditionalInfo = (props) => {
             className="self-center "
             onClick={() =>
               router.push({
-                pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+                pathname: "/MR_Portal_Apps/MRHome",
               })
             }
           />
-          <span>Farmer Field Day Followup</span>
+          <span>Farmer Field Day</span>
         </span>{" "}
         <span className="text-white self-center">
           <Popover as="div" className="relative border-none outline-none mt-2">
@@ -543,17 +543,17 @@ const AdditionalInfo = (props) => {
                   <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
                     <li
                       className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center "
-                      onClick={() =>
-                        router.push({
-                          pathname: "MR_Farmer_list_demo",
-                        })
-                      }
+                      // onClick={() =>
+                      //   router.push({
+                      //     pathname: "MR_Farmer_list_demo",
+                      //   })
+                      // }
                     >
                       <BsCalendar2Month
                         className="text-[#626364] cursor-pointer"
                         size={20}
                       />{" "}
-                      List of Demo
+                      List of Field Day
                     </li>
                     <li
                       className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -1540,7 +1540,7 @@ const AdditionalInfo = (props) => {
                       onClick={() => {
                         setAddFarmerModal(false);
                         router.push({
-                          pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+                          pathname: "/MR_Portal_Apps/MRForm_Farmer_Fieldday",
                         });
                       }}
                     >

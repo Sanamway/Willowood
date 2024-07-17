@@ -181,7 +181,7 @@ const AdditionalInfo = (props) => {
             className="self-center "
             onClick={() =>
               router.push({
-                pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+                pathname: "/MR_Portal_Apps/MRHome",
               })
             }
           />
@@ -207,16 +207,15 @@ const AdditionalInfo = (props) => {
                   <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
                     <li
                       className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                      onClick={() => setAddFarmerModal(true)}
+                      onClick={() =>
+                        router.push({
+                          pathname: "/MR_Portal_Apps/MyTimesheet",
+                        })
+                      }
                     >
                       <GiFarmer
                         className="text-[#626364] cursor-pointer"
                         size={20}
-                        onClick={() =>
-                          router.push({
-                            pathname: "/MR_Portal_Apps/MyTimesheet",
-                          })
-                        }
                       />{" "}
                       Timesheet
                     </li>

@@ -125,7 +125,7 @@ const AdditionalInfo = (props) => {
           <span>Holiday Calender</span>
         </span>{" "}
         <span className="text-white self-center">
-          <Popover as="div" className="relative border-none outline-none mt-2">
+          {/* <Popover as="div" className="relative border-none outline-none mt-2">
             {({ open }) => (
               <>
                 <Popover.Button className="focus:outline-none">
@@ -175,7 +175,7 @@ const AdditionalInfo = (props) => {
                 </Popover.Panel>
               </>
             )}
-          </Popover>
+          </Popover> */}
         </span>
       </div>
       <div className="flex mb-4 mt-2 mb-8">

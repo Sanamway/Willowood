@@ -609,11 +609,11 @@ const AdditionalInfo = (props) => {
                         })
                       }
                     >
-                      <BsCalendar2Month
+                      <IoTodayOutline
                         className="text-[#626364] cursor-pointer"
                         size={20}
                       />{" "}
-                      List of Farmer Demo
+                      List of Demo
                     </li>
                     <li
                       className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "

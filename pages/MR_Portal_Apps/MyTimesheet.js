@@ -117,7 +117,7 @@ const AdditionalInfo = (props) => {
           {status}
         </div>;
         break;
-        
+
       case "A":
         <div className="flex w-12 h-12 bg-red-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
           {status}
@@ -152,7 +152,7 @@ const AdditionalInfo = (props) => {
             className="self-center "
             onClick={() =>
               router.push({
-                pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+                pathname: "/MR_Portal_Apps/MRHome",
               })
             }
           />

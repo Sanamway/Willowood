@@ -477,7 +477,7 @@ const AdditionalInfo = (props) => {
             className="self-center "
             onClick={() =>
               router.push({
-                pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+                pathname: "/MR_Portal_Apps/MRHome",
               })
             }
           />
@@ -498,22 +498,22 @@ const AdditionalInfo = (props) => {
                   as="div"
                   className={`${
                     open ? "block" : "hidden"
-                  } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
+                  } absolute z-40 top-1 right-0 mt-2 w-86 bg-white  text-black border rounded-md shadow-md`}
                 >
                   <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
                     <li
-                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap "
+                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap  "
                       // onClick={() =>
                       //   router.push({
                       //     pathname: "MR_Farmer_list_demo",
                       //   })
                       // }
                     >
-                      <BsCalendar2Month
+                      <IoTodayOutline
                         className="text-[#626364] cursor-pointer"
                         size={20}
                       />{" "}
-                      Followup History
+                      List of Farmer Meet
                     </li>
                     <li
                       className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -1599,7 +1599,7 @@ const AdditionalInfo = (props) => {
                       onClick={() => {
                         setAddFarmerModal(false);
                         router.push({
-                          pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+                          pathname: "/MR_Portal_Apps/MRFarmer_Meet",
                         });
                       }}
                     >
