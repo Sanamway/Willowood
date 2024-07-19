@@ -281,28 +281,25 @@ const AdditionalInfo = (props) => {
 
     if (number.length === 10) {
       try {
-        const respond = await axios.get(`${url}/api/get_mr_form_demo`, {
+        const respond = await axios.get(`${url}/api/get_farmer`, {
           headers: headers,
           params: {
             mob_no: number,
-
-            t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-
-            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-
-            emp_code: window.localStorage.getItem("emp_code"),
           },
         });
-        const apires = await respond.data.data.MR_demo[0];
+        const apires = await respond.data.data[0];
+
         setFormData({
           ...formData,
-
-          farmerId: apires.farmer_id,
-          farmerName: apires.farmer_name,
-          farmerFatherName: apires.farmer_father_name,
-          village: apires.village,
-          farmerType: apires.farmer_type,
-          plotSize: apires.plot_size,
+          purposeMeet: formData.purposeMeet,
+          meetType: formData.meetType,
+          farmerMobile: number,
+          farmerId: apires.f_id,
+          farmerName: apires.f_name,
+          farmerFatherName: apires.ff_name,
+          farmerType: apires.f_type,
+          plotSize: apires.f_lacre,
+          village: apires.v_id,
         });
       } catch (error) {
         setFormData({
@@ -311,26 +308,14 @@ const AdditionalInfo = (props) => {
       }
     } else {
       setFormData({
+        ...formData,
+        farmerMobile: "",
         farmerId: "",
         farmerName: "",
         farmerFatherName: "",
-        village: "",
         farmerType: "",
         plotSize: "",
-        schNo: "",
-        schDate: "",
-        nitrogen: "",
-        phosphorus: "",
-        potassium: "",
-        ph: "",
-        ec: "",
-        organicCarbon: "",
-        sulphur: "",
-        zinc: "",
-        boron: "",
-        iron: "",
-        magnese: "",
-        copper: "",
+        village: "",
       });
     }
   };
@@ -929,16 +914,18 @@ const AdditionalInfo = (props) => {
         </button>
       </div>
 
-      <FaArrowAltCircleUp
-        size={42}
-        className="self-center size-120 text-black-400 text-blue-400 "
-        onClick={() =>
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth", // Smooth scrolling animation
-          })
-        }
-      />
+      <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
+        <FaArrowAltCircleUp
+          size={42}
+          className="self-center size-120 text-black-400 text-blue-400 "
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth", // Smooth scrolling animation
+            })
+          }
+        />
+      </div>
       <Transition appear show={addFarmerModal} as={Fragment}>
         <Dialog
           as="div"

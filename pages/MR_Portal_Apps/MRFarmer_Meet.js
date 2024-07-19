@@ -139,6 +139,11 @@ const AdditionalInfo = (props) => {
     potentialFarmer: "Yes",
     nextVisitDate: "",
     status: "Open",
+    farmerAvailable: 0,
+    venueAddress: "",
+    territoryPresence: "",
+    devManagerPresence: "",
+    zoneManagerPresence: "",
   });
 
   const [farmerContactInfo, setFarmerContactInfo] = useState({
@@ -148,7 +153,7 @@ const AdditionalInfo = (props) => {
   });
 
   const handleAddFarmerMeet = async () => {
-    console.log("poye ", formData.farmerFatherName);
+    console.log("poye ", formData);
     try {
       const data = {
         f_meet_no: fMeetCode,
@@ -186,7 +191,14 @@ const AdditionalInfo = (props) => {
         emp_code: window.localStorage.getItem("emp_code"),
         t_id: Number(localStorageItems.tId),
         c_id: Number(localStorageItems.cId),
+        how_many_farmer: formData.farmerAvailable,
+        meeting_address: formData.venueAddress,
+
+        t_presence: formData.territoryPresence,
+        dm_presence: formData.devManagerPresence,
+        zdm_presence: formData.zoneManagerPresence,
       };
+      console.log("qop", formData);
 
       const respond = await axios
         .post(`${url}/api/add_farmer_meet`, JSON.stringify(data), {
@@ -223,6 +235,11 @@ const AdditionalInfo = (props) => {
             potentialFarmer: "Yes",
             nextVisitDate: "",
             status: "Open",
+            farmerAvailable: 0,
+            venueAddress: "",
+            territoryPresence: "",
+            devManagerPresence: "",
+            zoneManagerPresence: "",
           });
         });
     } catch (errors) {
@@ -348,30 +365,26 @@ const AdditionalInfo = (props) => {
 
     if (number.length === 10) {
       try {
-        const respond = await axios.get(`${url}/api/get_mr_form_demo`, {
+        const respond = await axios.get(`${url}/api/get_farmer`, {
           headers: headers,
           params: {
             mob_no: number,
-
-            t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-
-            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-
-            emp_code: window.localStorage.getItem("emp_code"),
           },
         });
-        const apires = await respond.data.data.MR_demo[0];
+        const apires = await respond.data.data[0];
+        console.log("nop", apires);
+
         setFormData({
           ...formData,
           purposeMeet: formData.purposeMeet,
           meetType: formData.meetType,
-          fDemoCode: apires.f_demo_code,
-          farmerId: apires.farmer_id,
-          farmerName: apires.farmer_name,
-          farmerFatherName: apires.farmer_father_name,
-          village: apires.village,
-          farmerType: apires.farmer_type,
-          plotSize: apires.plot_size,
+          farmerMobile: number,
+          farmerId: apires.f_id,
+          farmerName: apires.f_name,
+          farmerFatherName: apires.ff_name,
+          farmerType: apires.f_type,
+          plotSize: apires.f_lacre,
+          village: apires.v_id,
         });
       } catch (error) {
         setFormData({
@@ -380,26 +393,14 @@ const AdditionalInfo = (props) => {
       }
     } else {
       setFormData({
-        purposeMeet: "",
-        meetType: "",
+        ...formData,
+        farmerMobile: "",
         farmerId: "",
         farmerName: "",
         farmerFatherName: "",
-        village: "",
         farmerType: "",
         plotSize: "",
-        crop: [],
-        farmerProblems: "",
-        cause: "",
-        possibleSoln: "",
-        techFarmer: "",
-        productBrand: [],
-        farmerSuggestion: "",
-        expense: "",
-        remarks: "",
-        potentialFarmer: "Yes",
-        nextVisitDate: "",
-        status: "Open",
+        village: "",
       });
     }
   };
@@ -562,7 +563,7 @@ const AdditionalInfo = (props) => {
       </div>
       <Toaster position="bottom-center" reverseOrder={false} />
       <div className="flex my-2 flex-row gap-2">
-        <div className="fle gap-4 w-full px-2">
+        <div className="fle gap-4 w-full px-2 pt-2">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"
@@ -577,7 +578,7 @@ const AdditionalInfo = (props) => {
             value={fMeetCode}
           />
         </div>
-        <div className="fle gap-4 w-full px-2">
+        <div className="fle gap-4 w-full px-2 pt-2">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"
@@ -599,7 +600,7 @@ const AdditionalInfo = (props) => {
       </div>
 
       <div className="flex flex-col my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
+        <div className="w-full px-2 pt-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -621,26 +622,38 @@ const AdditionalInfo = (props) => {
               Select
             </option>
             <option
-              value="New One"
+              value="Farmer Meet"
               className="focus:outline-none focus:border-b bg-white"
             >
-              New One
+              Farmer Meet
             </option>
             <option
-              value="Odd One"
+              value="Camapaign Programme"
               className="focus:outline-none focus:border-b bg-white"
             >
-              Odd One
+              Camapaign Programme
             </option>
             <option
-              value="Old One"
+              value="Project Driven Programme"
               className="focus:outline-none focus:border-b bg-white"
             >
-              Old One
+              Project Driven Programme
+            </option>
+            <option
+              value="Traning"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Traning
+            </option>
+            <option
+              value="Others"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Others
             </option>
           </select>
         </div>
-        <div className="w-full px-2 mt-2">
+        <div className="w-full px-2 pt-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2  "
             htmlFor="inputField"
@@ -651,9 +664,29 @@ const AdditionalInfo = (props) => {
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             value={formData.meetType}
-            onChange={(e) =>
-              setFormData({ ...formData, meetType: e.target.value })
-            }
+            onChange={(e) => {
+              if (
+                e.target.value === "Farmer Group Meeting (FGM)" ||
+                e.target.value === "Organised Farmer Meeting (OFM)" ||
+                e.target.value === "Mega Farmer Meeting (MFM)"
+              ) {
+                setFormData({
+                  ...formData,
+                  meetType: e.target.value,
+                  territoryPresence: "Yes",
+                  devManagerPresence: "Yes",
+                  zoneManagerPresence: "Yes",
+                });
+              } else {
+                setFormData({
+                  ...formData,
+                  meetType: e.target.value,
+                  territoryPresence: "No",
+                  devManagerPresence: "No",
+                  zoneManagerPresence: "No",
+                });
+              }
+            }}
           >
             <option
               value=""
@@ -661,16 +694,27 @@ const AdditionalInfo = (props) => {
             >
               Option
             </option>
-            <option value="resident_individual">Residential Individual</option>
-            <option value="domestic_company">Domestic Company</option>
-            <option value="proprietary_concern">Proprietary Concern</option>
-            <option value="partner_firm">Partner Firm</option>
+            <option value="Individual Farmer Contact (IFC)">
+              Individual Farmer Contact (IFC)
+            </option>
+            <option value="Farmer Group Meeting (FGM)">
+              Farmer Group Meeting (FGM)
+            </option>
+            <option value="Organised Farmer Meeting (OFM)">
+              Organised Farmer Meeting (OFM)
+            </option>
+            <option value="Mega Farmer Meeting (MFM)">
+              Mega Farmer Meeting (MFM)
+            </option>
+            <option value="Retailer Traning Programme (RTP)">
+              Retailer Traning Programme (RTP)
+            </option>
           </select>
         </div>
       </div>
 
       <div className="flex flex-col my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
+        <div className="w-full px-2 pt-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2 flex flex-row"
             htmlFor="inputField"
@@ -697,13 +741,7 @@ const AdditionalInfo = (props) => {
           </div>
         </div>
 
-        <div className="w-full px-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer ID
-          </label>
+        <div className="w-full px-2 pt-2">
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -716,13 +754,7 @@ const AdditionalInfo = (props) => {
       </div>
 
       <div className="flex flex-col my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Name
-          </label>
+        <div className="w-full px-2 ">
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -737,13 +769,7 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2  mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Father Name
-          </label>
+        <div className="w-full px-2 pt-2  ">
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -758,13 +784,7 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2  mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Village
-          </label>
+        <div className="w-full px-2 pt-2  ">
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -781,13 +801,7 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
       <div className="flex flex-row my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Type
-          </label>
+        <div className="w-full px-2  ">
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -802,13 +816,7 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Plot Size
-          </label>
+        <div className="w-full px-2  ">
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -830,7 +838,7 @@ const AdditionalInfo = (props) => {
       </h1>
 
       <div className="flex flex-row my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
+        <div className="w-[100%] pl-2 pt-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -860,30 +868,31 @@ const AdditionalInfo = (props) => {
             <option value={"Three Farmer"}>Three Farmer</option>
           </select>
         </div>
+        <div className="w-full pr-2 pt-2 mt-2">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2  "
+            htmlFor="inputField"
+          >
+            <small className="text-red-600 ">*</small> Name
+          </label>
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 lg:w-1/4 px-2 py-2 "
+            type="text"
+            id="inputField"
+            placeholder="Name"
+            value={farmerContactInfo.name}
+            onChange={(e) =>
+              setFarmerContactInfo({
+                ...farmerContactInfo,
+                name: e.target.value,
+              })
+            }
+          />
+        </div>
       </div>
-      <div className="w-full px-2 mt-2">
-        <label
-          className="block text-gray-700 text-sm font-bold mb-2  "
-          htmlFor="inputField"
-        >
-          <small className="text-red-600 ">*</small> Name
-        </label>
-        <input
-          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 lg:w-1/4 px-2 py-2 "
-          type="text"
-          id="inputField"
-          placeholder="Name"
-          value={farmerContactInfo.name}
-          onChange={(e) =>
-            setFarmerContactInfo({
-              ...farmerContactInfo,
-              name: e.target.value,
-            })
-          }
-        />
-      </div>
+
       <div className="flex flex-row my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
+        <div className="px-2 pt-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2 flex flex-row lg:flex-col "
             htmlFor="inputField"
@@ -975,7 +984,7 @@ const AdditionalInfo = (props) => {
       <h1 className="flex justify-start font-bold m-4">
         Farmer Meeting Information
       </h1>
-      <div className="w-full px-2 mt-2">
+      <div className="w-full px-2 pt-2 mt-2">
         <label
           className="block text-gray-700 text-sm font-bold mb-2  "
           htmlFor="inputField"
@@ -995,7 +1004,7 @@ const AdditionalInfo = (props) => {
       </div>
 
       <div className="flex flex-col my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
+        <div className="w-full px-2 pt-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -1004,7 +1013,7 @@ const AdditionalInfo = (props) => {
             Challenge Face
           </label>
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full h-28 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Farmer Problems / Challenge Face"
@@ -1014,7 +1023,7 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2">
+        <div className="w-full px-2 pt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -1022,7 +1031,7 @@ const AdditionalInfo = (props) => {
             <small className="text-red-600">*</small> Cause
           </label>
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full h-28 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Cause"
@@ -1032,7 +1041,7 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2">
+        <div className="w-full px-2 pt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -1040,7 +1049,7 @@ const AdditionalInfo = (props) => {
             <small className="text-red-600">*</small>Possible Solution
           </label>
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full h-28 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Possible Solution"
@@ -1050,7 +1059,7 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2">
+        <div className="w-full px-2 pt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -1059,7 +1068,7 @@ const AdditionalInfo = (props) => {
             Farmer
           </label>
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full h-28 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Teach the Techniques to Farmer"
@@ -1069,7 +1078,7 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2">
+        <div className="w-full px-2 pt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -1088,7 +1097,7 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2">
+        <div className="w-full px-2 pt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -1097,34 +1106,163 @@ const AdditionalInfo = (props) => {
             Farmer Suggestion / Opinion / Idea
           </label>
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full h-28 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
-            placeholder="Teach the Techniques to Farmer"
+            placeholder="Farmer Suggestion / Opinion / Idea"
             value={formData.farmerSuggestion}
             onChange={(e) =>
               setFormData({ ...formData, farmerSuggestion: e.target.value })
             }
           />
         </div>
-        <div className="w-full px-2">
+        <div className="w-full px-2 pt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
             <small className="text-red-600">*</small>
-            Expenses Occurred during meeting
+            How many Farmer Available
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
+            type="number"
             id="inputField"
             placeholder="Teach the Techniques to Farmer"
-            value={formData.expense}
+            value={formData.farmerAvailable}
             onChange={(e) =>
-              setFormData({ ...formData, expense: e.target.value })
+              setFormData({ ...formData, farmerAvailable: e.target.value })
             }
           />
+        </div>
+        <div className="w-full px-2 pt-2">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
+          >
+            <small className="text-red-600">*</small>
+            Venue Address
+          </label>
+          <textarea
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            id="inputField"
+            rows="3"
+            placeholder="Enter Address"
+            value={formData.venueAddress}
+            onChange={(e) =>
+              setFormData({ ...formData, venueAddress: e.target.value })
+            }
+          />
+        </div>
+        <div className="flex flex-row justify-around ">
+          <div className="w-full px-2 pt-2">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="inputField"
+            >
+              <small className="text-red-600">*</small>
+              Territory Presence
+            </label>
+            <select
+              className="w-full px-3  border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 "
+              id="userSelect"
+              value={formData.territoryPresence}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  territoryPresence: e.target.value,
+                })
+              }
+            >
+              <option
+                value={""}
+                className="focus:outline-none focus:border-b bg-white"
+              >
+                Select
+              </option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div className="w-full px-2 pt-2">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2 "
+              htmlFor="inputField"
+            >
+              <small className="text-red-600">*</small>
+              Dev Manager Presence
+            </label>
+            <select
+              className="w-full px-3  border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500  "
+              id="userSelect"
+              value={formData.devManagerPresence}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  devManagerPresence: e.target.value,
+                })
+              }
+            >
+              <option
+                value={""}
+                className="focus:outline-none focus:border-b bg-white"
+              >
+                Select
+              </option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+        </div>
+        <div className="flex flex-row justify-around ">
+          <div className="w-full px-2 pt-2">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2 "
+              htmlFor="inputField"
+            >
+              <small className="text-red-600">*</small>
+              Zone Dev Manager
+            </label>
+            <select
+              className="w-full px-3  border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 "
+              id="userSelect"
+              value={formData.zoneManagerPresence}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  zoneManagerPresence: e.target.value,
+                })
+              }
+            >
+              <option
+                value={""}
+                className="focus:outline-none focus:border-b bg-white"
+              >
+                Select
+              </option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div className="w-full px-2 pt-2">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="inputField"
+            >
+              <small className="text-red-600">*</small>
+              Expenses Occurred
+            </label>
+            <input
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              type="text"
+              id="inputField"
+              placeholder="Expenses Occurred"
+              value={formData.expense}
+              onChange={(e) =>
+                setFormData({ ...formData, expense: e.target.value })
+              }
+            />
+          </div>
         </div>
       </div>
 
@@ -1132,7 +1270,7 @@ const AdditionalInfo = (props) => {
 
       <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
         <div className="wrap ">
-          <div className=" w-full px-2 profpic relative group bo">
+          <div className=" w-full px-2 pt-2 profpic relative group bo">
             <Image
               src={""}
               className=" rounded  bg-gray-200"
@@ -1158,7 +1296,7 @@ const AdditionalInfo = (props) => {
           </div>
         </div>
       </div>
-      <div className="w-full px-2">
+      <div className="w-full px-2 pt-2">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
           htmlFor="inputField"
@@ -1175,7 +1313,7 @@ const AdditionalInfo = (props) => {
         ></textarea>
       </div>
       <div className="flex my-2 mb-2 lg:flex-row flex-col">
-        <div className="w-full px-2 mt-2">
+        <div className="w-full px-2 pt-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -1217,7 +1355,7 @@ const AdditionalInfo = (props) => {
       </div>
 
       <div className="flex flex-row my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
+        <div className="w-full px-2 pt-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -1242,7 +1380,7 @@ const AdditionalInfo = (props) => {
             dropdownMode="select"
           />
         </div>
-        <div className="w-full px-2 mt-2">
+        <div className="w-full px-2 pt-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -1354,7 +1492,7 @@ const AdditionalInfo = (props) => {
 
                   <div>
                     <div className="flex flex-row my-2 mb-2  ">
-                      <div className="w-full px-2">
+                      <div className="w-full px-2 pt-2">
                         <input
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
@@ -1371,7 +1509,7 @@ const AdditionalInfo = (props) => {
                       </div>
                     </div>
                     <div>
-                      <div className="w-full px-2 ">
+                      <div className="w-full px-2 pt-2 ">
                         <input
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
@@ -1389,9 +1527,9 @@ const AdditionalInfo = (props) => {
                     </div>
 
                     <div>
-                      <div className="w-full px-2 ">
+                      <div className="w-full px-2 pt-2 ">
                         <textarea
-                          className="w-full px-2 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
+                          className="w-full px-2 pt-2 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
                           id="textareaField"
                           placeholder="Farmer Address"
                           rows="3"
@@ -1407,7 +1545,7 @@ const AdditionalInfo = (props) => {
                     </div>
 
                     <div className="flex flex-row my-2 mb-2 ">
-                      <div className="w-full px-2">
+                      <div className="w-full px-2 pt-2">
                         <select
                           className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
                           id="userSelect"
@@ -1435,7 +1573,7 @@ const AdditionalInfo = (props) => {
                         </select>
                       </div>
 
-                      <div className="w-full px-2 ">
+                      <div className="w-full px-2 pt-2 ">
                         <select
                           className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
                           id="userSelect"
@@ -1472,7 +1610,7 @@ const AdditionalInfo = (props) => {
                       </div>
                     </div>
 
-                    <div className="w-full px-2">
+                    <div className="w-full px-2 pt-2">
                       <input
                         className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                         type="text"
@@ -1489,7 +1627,7 @@ const AdditionalInfo = (props) => {
                     </div>
 
                     <div className="flex flex-row my-2 mb-2 ">
-                      <div className="w-full px-2">
+                      <div className="w-full px-2 pt-2">
                         <select
                           className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                           id="stateSelect"
@@ -1519,7 +1657,7 @@ const AdditionalInfo = (props) => {
                         </select>
                       </div>
 
-                      <div className="w-full px-2 ">
+                      <div className="w-full px-2 pt-2 ">
                         <select
                           className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                           id="stateSelect"
@@ -1550,7 +1688,7 @@ const AdditionalInfo = (props) => {
                     </div>
 
                     <div className="flex flex-row my-2 mb-2 ">
-                      <div className="w-full px-2">
+                      <div className="w-full px-2 pt-2">
                         <input
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
@@ -1566,7 +1704,7 @@ const AdditionalInfo = (props) => {
                         />
                       </div>
 
-                      <div className="w-full px-2 ">
+                      <div className="w-full px-2 pt-2 ">
                         <input
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="number"

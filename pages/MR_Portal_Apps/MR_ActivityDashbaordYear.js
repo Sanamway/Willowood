@@ -235,8 +235,13 @@ const AdditionalInfo = (props) => {
                   {item.month_year ? item.month_year : "-"}{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">- </td>
-                <td className="border border-gray-200 py-2 px-2">
-                  {item.tot ? item.tot : "-"}{" "}
+                <td className="border border-gray-200 py-2 px-2 font-bold">
+                  {item.demo +
+                    item.f_day +
+                    item.o2o +
+                    item.gmt +
+                    item.svn +
+                    item.gvm}{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">- </td>
                 <td className="border border-gray-200 py-2 px-2">
@@ -274,7 +279,29 @@ const AdditionalInfo = (props) => {
             <tr className="bg-white whitespace-nowrap font-bold">
               <td className="border border-gray-200 py-2 px-2 ">Total</td>
               <td className="border border-gray-200 py-2 px-2">- </td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
+              <td className="border border-gray-200 py-2 px-2">
+                {tableData
+                  .map((item) => item.o2o)
+                  .reduce((acc, current) => {
+                    // Check if the current element is a number
+
+                    return Number(acc) + Number(current);
+                  }, 0) +
+                  tableData
+                    .map((item) => item.gmt)
+                    .reduce((acc, current) => {
+                      // Check if the current element is a number
+
+                      return Number(acc) + Number(current);
+                    }, 0) +
+                  tableData
+                    .map((item) => item.gvm)
+                    .reduce((acc, current) => {
+                      // Check if the current element is a number
+
+                      return Number(acc) + Number(current);
+                    }, 0)}
+              </td>
               <td className="border border-gray-200 py-2 px-2">- </td>
               <td className="border border-gray-200 py-2 px-2">-</td>
               <td className="border border-gray-200 py-2 px-2">-</td>

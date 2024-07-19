@@ -38,9 +38,6 @@ const NewDealer = () => {
         params: {
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          //   paging: true,
-          //   page: currentPage,
-          //   size: 50,
         },
         headers: headers,
       });
@@ -139,7 +136,7 @@ const NewDealer = () => {
             <button
               onClick={() => {
                 router.push({
-                  pathname: "/MR_Portal_Web/MR_ActivityTarget",
+                  pathname: "/MR_Portal_Web/Mr_Dealer_Map",
                   query: { id: null, type: "Add" },
                 });
               }}
@@ -176,82 +173,24 @@ const NewDealer = () => {
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
                   Party Complete Address
                 </th>
-                {/* <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Prev Y1 Tot
-                </th>
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Prev Y2 Tot
-                </th>
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Apr
-                </th>
-
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  May
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  June
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Q1 Plan Tot
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  July
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Aug
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Sept
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Q2 Plan Tot
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  Oct
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Nov
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Dec
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Q3 Plan Tot
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  Jan
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Feb
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  March
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Q4 Plan Tot
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  Year total
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
                   Territory
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
                   Region
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
                   Zone
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  Units
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                  Business Unit
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
                   Segement
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
+                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
                   Company
-                </th> */}
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs ">
@@ -261,12 +200,17 @@ const NewDealer = () => {
                     <button
                       onClick={() => {
                         router.push({
-                          pathname: "/MR_Portal_Web/MR_ActivityTarget",
+                          pathname: "/MR_Portal_Web/Mr_Dealer_Map",
                           query: {
-                            empId: item.emp_code,
+                            empCode: item.emp_code,
                             yr: item.year,
-                            custCode: item.customer_code,
+                            partyCode: item.customer_code,
                             tDes: item.territory_name,
+                            empName: [
+                              item.emp_f_name,
+                              item.emp_m_name,
+                              item.emp_l_name,
+                            ].join(" "),
                             type: "View",
                           },
                         });
@@ -278,12 +222,17 @@ const NewDealer = () => {
                     <button
                       onClick={() => {
                         router.push({
-                          pathname: "/MR_Portal_Web/MR_ActivityTarget",
+                          pathname: "/MR_Portal_Web/Mr_Dealer_Map",
                           query: {
-                            empId: item.emp_code,
+                            empCode: item.emp_code,
                             yr: item.year,
-                            custCode: item.customer_code,
+                            partyCode: item.customer_code,
                             tDes: item.territory_name,
+                            empName: [
+                              item.emp_f_name,
+                              item.emp_m_name,
+                              item.emp_l_name,
+                            ].join(" "),
                             type: "Edit",
                           },
                         });
@@ -291,23 +240,6 @@ const NewDealer = () => {
                       className="b text-black hover:text-yellow-400 ml-2"
                     >
                       Edit
-                    </button>
-                    <button
-                      className="b text-black hover:text-red-500 ml-2"
-                      onClick={
-                        () =>
-                          setDeleteOpen({
-                            open: true,
-                            data: item,
-                          })
-                        // handleDeteleRow(
-                        //   item.t_id,
-                        //   item.emp_code,
-                        //   item.customer_code
-                        // )
-                      }
-                    >
-                      Delete
                     </button>
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
@@ -317,7 +249,9 @@ const NewDealer = () => {
                     {item.emp_code}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.emp_name}
+                    {[item.emp_f_name, item.emp_m_name, item.emp_l_name].join(
+                      " "
+                    )}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.customer_code}
@@ -328,6 +262,24 @@ const NewDealer = () => {
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.party_address}
+                  </td>
+                  <td className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                    {item.territory_name}
+                  </td>
+                  <td className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                    {item.region_name}
+                  </td>
+                  <td className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                    {item.zone_name}
+                  </td>
+                  <td className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                    {item.business_unit_name}
+                  </td>
+                  <td className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                    {item.business_segment}
+                  </td>
+                  <td className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
+                    {item.cmpny_name}
                   </td>
                 </tr>
               ))}

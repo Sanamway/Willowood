@@ -256,14 +256,7 @@ const AdditionalInfo = (data) => {
 
       <div className="fixed top-0 w-full flex flex-col h-32 bg-white justify-between px-4  pb-2 shadow-lg  lg:flex-col   ">
         <div className="flex flex-row gap-4 font-bold w-full items-center h-12">
-          <FaArrowLeftLong
-            className=""
-            onClick={() =>
-              router.push({
-                pathname: "MRForm_Farmer_Demo",
-              })
-            }
-          />
+          <FaArrowLeftLong className="" onClick={() => router.back()} />
           <h2 className="font-bold ">List of Farmer </h2>
           <div></div>
         </div>

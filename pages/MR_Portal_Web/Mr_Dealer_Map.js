@@ -33,7 +33,6 @@ const NewDealer = () => {
   };
   const router = useRouter();
 
-  const [selectAll, setSelectAll] = useState(false);
   const [selectedYr, setSelectedYr] = useState(false);
 
   const [allEmployee, setAllEmployee] = useState([]);
@@ -60,25 +59,50 @@ const NewDealer = () => {
   });
 
   const [allDealer, setAllDealer] = useState([]);
-  const getAllDealerData = async (empCode) => {
+  const getAllDealerData = async () => {
+    if (!selectedYr) return;
+    let data;
+    if (router.query.type !== "Add") {
+      data = {
+        c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        t_des: router.query.tDes,
+        year: new Date(selectedYr).getFullYear(),
+        emp_code: router.query.empCode,
+        edit: true,
+      };
+    } else {
+      data = {
+        c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+
+        t_des: territoryData.filter(
+          (item) =>
+            item.t_id ===
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id
+        )[0].territory_name,
+        year: new Date(selectedYr).getFullYear(),
+        add: true,
+      };
+    }
     try {
       const respond = await axios.get(`${url}/api/get_mr_dealer_sales`, {
         headers: headers,
-        params: {
-          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-
-          t_des: territoryData.filter(
-            (item) =>
-              item.t_id ===
-              JSON.parse(window.localStorage.getItem("userinfo")).t_id
-          )[0].territory_name,
-          year: new Date(selectedYr).getFullYear(),
-        },
+        params: data,
       });
 
       const apires = await respond.data.data;
-
-      setAllDealer(apires);
+      if (router.query.type !== "Add") {
+        setAllDealer(
+          apires.map((item) => {
+            return { ...item, selected: item.is_mapped };
+          })
+        );
+      } else {
+        setAllDealer(
+          apires.map((item) => {
+            return { ...item, selected: false };
+          })
+        );
+      }
     } catch (error) {}
   };
 
@@ -100,50 +124,103 @@ const NewDealer = () => {
   }, []);
 
   useEffect(() => {
+    if (router.query.type !== "Add") {
+      setSelectedYr(new Date(router.query.yr));
+    } else {
+      return;
+    }
+  }, [router.query.type]);
+  useEffect(() => {
     // if (!territoryData.length) return;   correction
-    getAllDealerData(filterState.empCode);
-  }, [territoryData, filterState.empCode, selectedYr]);
+    getAllDealerData();
+  }, [selectedYr]);
 
   const handleSave = async () => {
-    try {
-      let endPoint = "api/add_mr_dealer_map";
-      if (router.query.type === "Add") {
-        endPoint = "api/add_mr_dealer_map";
-      } else {
-        endPoint = "api/update_mr_dealer_map";
-      }
+    if (allDealer?.filter((el) => el.selected === true).length) {
+      try {
+        let endPoint = "api/add_mr_dealer_map";
+        let params;
 
-      const data = allDealer?.map((item, idx) => {
-        return {
-          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          bg_id: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          bu_id: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          r_id: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          z_id: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          year: selectedYr.getFullYear(),
-          emp_code: filterState.empCode,
-          customer_code: item.customer_code,
-        };
-      });
+        if (router.query.type === "Add") {
+          endPoint = "api/add_mr_dealer_map";
+        } else {
+          endPoint = "api/update_mr_dealer_map";
+          params = {
+            emp_code: router.query.empCode,
+            year: selectedYr.getFullYear(),
+          };
+        }
 
-      const respond = await axios
-        .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
-          headers: headers,
-        })
-        .then((res) => {
-          if (!res) return;
-          toast.success(res.data.message);
-          router.push({
-            pathname: "/MR_Portal_Web/NewDealerTarget_Table",
+        const data =
+          router.query.type !== "Add"
+            ? allDealer.map((item, idx) => {
+                return {
+                  t_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                    .t_id,
+                  c_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                    .c_id,
+                  bg_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                    .bg_id,
+                  bu_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                    .bu_id,
+                  r_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                    .r_id,
+                  z_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                    .z_id,
+                  year: selectedYr.getFullYear(),
+                  customer_code: item.party_code,
+                  checked: item.selected,
+                  emp_code:
+                    router.query.type !== "Add"
+                      ? router.query.empCode
+                      : filterState.empCode,
+                };
+              })
+            : allDealer
+                ?.filter((el) => el.selected === true)
+                .map((item, idx) => {
+                  return {
+                    t_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                      .t_id,
+                    c_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                      .c_id,
+                    bg_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                      .bg_id,
+                    bu_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                      .bu_id,
+                    r_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                      .r_id,
+                    z_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                      .z_id,
+                    year: selectedYr.getFullYear(),
+                    customer_code: item.party_code,
+                    emp_code:
+                      router.query.type !== "Add"
+                        ? router.query.empCode
+                        : filterState.empCode,
+                  };
+                });
+
+        const respond = await axios
+          .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
+            headers: headers,
+            params: params,
+          })
+          .then((res) => {
+            if (!res) return;
+            toast.success(res.data.message);
+            router.push({
+              pathname: "/MR_Portal_Web/Mr_Dealer_Map_Table",
+            });
           });
-        });
-    } catch (errors) {
-      const errorMessage = errors?.response?.data?.message;
-      console.log("koi", errors);
-      toast.error(errorMessage);
-      if (!errorMessage) return;
-      getAllMRSalesTarget();
+      } catch (errors) {
+        const errorMessage = errors?.response?.data?.message;
+
+        toast.error(errorMessage);
+        if (!errorMessage) return;
+      }
+    } else {
+      toast.error("please select atleast 1 party");
     }
   };
 
@@ -176,56 +253,88 @@ const NewDealer = () => {
 
           <div className="flex flex-row gap-2">
             <span className="text-sm self-center">M.R. Executive</span>
-            <select
-              id="attendanceType"
-              className="border p-1 rounded  w-80 h-6  text-[12px]"
-              value={filterState.empCode}
-              onChange={(e) =>
-                setFilterState({ ...filterState, empCode: e.target.value })
-              }
-            >
-              <option value={""}>M.R. Executive</option>
 
-              {allEmployee.map((item) => (
-                <option value={item.empcode}>
-                  {item.fname} {item.mname} {item.lname} {item.empcode}
-                </option>
-              ))}
-            </select>
+            {router.query.type !== "Add" ? (
+              <input
+                id="attendanceType"
+                className="border p-1 rounded  w-80 h-6  text-[12px]"
+                value={router.query.empName}
+              />
+            ) : (
+              <select
+                id="attendanceType"
+                className="border p-1 rounded  w-80 h-6  text-[12px]"
+                value={filterState.empCode}
+                onChange={(e) =>
+                  setFilterState({ ...filterState, empCode: e.target.value })
+                }
+              >
+                <option value={""}>M.R. Executive</option>
+
+                {allEmployee.map((item) => (
+                  <option value={item.empcode}>
+                    {item.fname} {item.mname} {item.lname} {item.empcode}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
         </div>
-        <div className="flex flex-row px-4  py-2 gap-5 w-full">
-          <div className="flex flex-row gap-2 justify-start items-center">
-            <input
-              type="checkbox"
-              checked={selectAll}
-              onClick={() => {
-                setSelectAll(!selectAll);
-                setAllDealer(
-                  allDealer.map((item) => {
-                    return { ...item, selected: true };
-                  })
-                );
-              }}
-            />
-            <span className="text-sm">Select All</span>
-          </div>{" "}
-          <div className="flex flex-row gap-2 justify-start items-center">
-            <input
-              type="checkbox"
-              checked={!selectAll}
-              onClick={() => {
-                setSelectAll(!selectAll);
-                setAllDealer(
-                  allDealer.map((item) => {
-                    return { ...item, selected: false };
-                  })
-                );
-              }}
-            />
-            <span className="text-sm">Deselect All</span>
-          </div>{" "}
-        </div>
+        {allDealer.length ? (
+          <div className="flex flex-row px-4  py-2 gap-5 w-full">
+            <div className="flex flex-row gap-2 justify-start items-center">
+              <input
+                type="checkbox"
+                disabled={router.query.type === "View"}
+                checked={
+                  !allDealer.map((item) => item.selected).includes(false)
+                }
+                onClick={() => {
+                  setAllDealer(
+                    allDealer.map((item) => {
+                      return { ...item, selected: true };
+                    })
+                  );
+                }}
+              />
+              <span className="text-sm">Select All</span>
+            </div>{" "}
+            <div className="flex flex-row gap-2 justify-start items-center">
+              <input
+                type="checkbox"
+                disabled={router.query.type === "View"}
+                checked={!allDealer.map((item) => item.selected).includes(true)}
+                onClick={() => {
+                  setAllDealer(
+                    allDealer.map((item) => {
+                      return { ...item, selected: false };
+                    })
+                  );
+                }}
+              />
+              <span className="text-sm">Deselect All</span>
+            </div>{" "}
+          </div>
+        ) : (
+          <div className="flex flex-row px-4  py-2 gap-5 w-full">
+            <div className="flex flex-row gap-2 justify-start items-center">
+              <input
+                type="checkbox"
+                disabled={router.query.type === "View"}
+                checked={false}
+              />
+              <span className="text-sm">Select All</span>
+            </div>{" "}
+            <div className="flex flex-row gap-2 justify-start items-center">
+              <input
+                type="checkbox"
+                disabled={router.query.type === "View"}
+                checked={false}
+              />
+              <span className="text-sm">Deselect All</span>
+            </div>{" "}
+          </div>
+        )}
 
         <div className="bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 ">
           <table className="min-w-full divide-y border- divide-gray-200  h-min">
@@ -275,12 +384,13 @@ const NewDealer = () => {
                   <td className="px-4  text-left dark:border-2    whitespace-nowrap font-arial text-xs font-bold">
                     <input
                       type="checkbox"
+                      disabled={router.query.type === "View"}
                       className="w-4"
                       checked={item.selected}
                       onChange={() => {
                         setAllDealer(
                           allDealer.map((el) =>
-                            el.customer_code === item.customer_code
+                            el.party_code === item.party_code
                               ? { ...el, selected: !el.selected }
                               : el
                           )
@@ -290,50 +400,47 @@ const NewDealer = () => {
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    Party
+                    {item.party_code}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    PARTY NAME
+                    {item.distribution_name}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    931/2 Bhartiya Calony Minlana Rd, Bhagpat, UP
-                    <br />
-                    931/2 Bhartiya Calony Minlana Rd, Bhagpat, UP
-                    <br />
-                    931/2 Bhartiya Calony Minlana Rd, Bhagpat, UP
-                    <br />
-                    931/2 Bhartiya Calony Minlana Rd, Bhagpat, UP
+                    {item.address}
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.customer_code}
+                    {item.fy_result.fy_1}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.customer_code}
+                    {item.fy_result.fy_2}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-
-          <div className="flex w-full h-8 gap-4 mb-4 ">
-            <button
-              className="bg-green-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
-              onClick={() => handleSave()}
-            >
-              Submit
-            </button>
-            <button
-              onClick={() => {
-                router.push({
-                  pathname: "/MR_Portal_Web/NewDealerTarget_Table",
-                });
-              }}
-              className="bg-red-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
-            >
-              Close
-            </button>
-          </div>
+          {router.query.type === "View" ? (
+            <div className="flex w-full h-8 gap-4 mb-4 "></div>
+          ) : (
+            <div className="flex w-full h-8 gap-4 mb-4 ">
+              <button
+                className="bg-green-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
+                onClick={() => handleSave()}
+              >
+                Submit
+              </button>
+              <button
+                onClick={() => {
+                  router.push({
+                    pathname: "/MR_Portal_Web/Mr_Dealer_Map_Table",
+                  });
+                }}
+                className="bg-red-500 flex items-center justify-center whitespace-nowrap  px-2 py-1.5 rounded-sm h-8"
+              >
+                Close
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </Layout>
