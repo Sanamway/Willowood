@@ -65,6 +65,7 @@ const NewDealer = () => {
     if (router.query.type !== "Add") {
       data = {
         c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
         t_des: router.query.tDes,
         year: new Date(selectedYr).getFullYear(),
         emp_code: router.query.empCode,
@@ -73,7 +74,7 @@ const NewDealer = () => {
     } else {
       data = {
         c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-
+        t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
         t_des: territoryData.filter(
           (item) =>
             item.t_id ===
@@ -93,7 +94,10 @@ const NewDealer = () => {
       if (router.query.type !== "Add") {
         setAllDealer(
           apires.map((item) => {
-            return { ...item, selected: item.is_mapped };
+            return {
+              ...item,
+              selected: item.is_mapped === "true" ? true : false,
+            };
           })
         );
       } else {
@@ -170,6 +174,7 @@ const NewDealer = () => {
                   year: selectedYr.getFullYear(),
                   customer_code: item.party_code,
                   checked: item.selected,
+                  party_name: item.distribution_name,
                   emp_code:
                     router.query.type !== "Add"
                       ? router.query.empCode
@@ -337,22 +342,22 @@ const NewDealer = () => {
         )}
 
         <div className="bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 ">
-          <table className="min-w-full divide-y border- divide-gray-200  h-min">
+          <table className="min-w-[98%] divide-y border- divide-gray-200  h-min">
             <thead className="border-b">
-              <tr className="bg-gray-50 font-arial w-100">
-                <th className="px-4  py-2  text-left dark:border-2 w-8 text-xs font-medium text-gray-500    ">
+              <tr className="bg-gray-50 font-arial ">
+                <th className="px-4  py-2  text-left dark:border-2  text-xs font-medium text-gray-500    ">
                   Action
                 </th>
-                <th className="px-4 py-2 text-left dark:border-2 w-12 text-xs font-medium text-gray-500   tracking-wider whitespace-nowrap ">
+                <th className="px-4 py-2 text-left dark:border-2  text-xs font-medium text-gray-500   tracking-wider whitespace-nowrap ">
                   Party Code
                 </th>
-                <th className="px-4 py-2 text-left dark:border-2  w-80 text-xs font-medium text-gray-500  tracking-wider ">
+                <th className="px-4 py-2 text-left dark:border-2   text-xs font-medium text-gray-500  tracking-wider ">
                   Party Name
                 </th>
-                <th className="px-4 py-2 text-left dark:border-2  text-xs font-medium text-gray-500  tracking-wider ">
+                <th className=" py-2 px-4  text-left dark:border-2  text-xs font-medium text-gray-500  tracking-wider ">
                   Address
                 </th>
-                <th className="px-4 py-2 text-left dark:border-2  text-xs font-medium text-gray-500  tracking-wider ">
+                <th className=" py-2 px-4  text-right dark:border-2  text-xs font-medium text-gray-500  tracking-wider ">
                   Sale FY{" "}
                   {selectedYr ? (
                     <div>
@@ -364,8 +369,8 @@ const NewDealer = () => {
                     "-"
                   )}{" "}
                 </th>
-                <th className="px-4 py-2 text-left dark:border-2 text-xs  font-medium text-gray-500  tracking-wider ">
-                  Sale
+                <th className=" py-2 text-right dark:border-2 text-xs  font-medium text-gray-500  tracking-wider ">
+                  Sale FY
                   {selectedYr ? (
                     <div>
                       {String(selectedYr.getFullYear() - 2).slice(-2) +
@@ -405,14 +410,12 @@ const NewDealer = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.distribution_name}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.address}
-                  </td>
+                  <td className=" py-2  dark:border-2 ">{item.address}</td>
 
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  <td className="px-4 py-2 dark:border-2  text-right whitespace-nowrap">
                     {item.fy_result.fy_1}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  <td className=" py-2 dark:border-2    text-right whitespace-nowrap">
                     {item.fy_result.fy_2}
                   </td>
                 </tr>

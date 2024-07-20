@@ -570,6 +570,8 @@ const DealerTarget = () => {
               ))}
             </select>
           </div>
+        </div>
+        <div className="flex flex-row m-4 w-100 gap-2 ">
           <div className="flex flex-col gap-2 ">
             <span className="font-bold ">M.R. Executive</span>
             {router.query.type === "Add" ? (
@@ -671,7 +673,7 @@ const DealerTarget = () => {
         <div className=" absolute overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[100%] my-2 no-scrollbar">
           <table className="w-full divide-y border- divide-gray-200 ">
             <thead className="border-b w-max">
-              <tr className=" font-arial w-max ">
+              <tr className=" font-arial  ">
                 <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider">
                   Emp Code
                 </th>
