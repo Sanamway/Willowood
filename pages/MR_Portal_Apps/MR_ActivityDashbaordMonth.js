@@ -203,10 +203,11 @@ const AdditionalInfo = (props) => {
             <th className="border border-gray-200 py-2 px-2 font-thin">
               F.Day
             </th>
-            <th className="border border-gray-200 py-2 px-2 font-thin">O2O</th>
-            <th className="border border-gray-200 py-2 px-2 font-thin">SVN</th>
-            <th className="border border-gray-200 py-2 px-2 font-thin">GVM</th>
-            <th className="border border-gray-200 py-2 px-2 font-thin">CAP</th>
+            <th className="border border-gray-200 py-2 px-2 font-thin">IFC</th>
+            <th className="border border-gray-200 py-2 px-2 font-thin">FGM</th>
+            <th className="border border-gray-200 py-2 px-2 font-thin">OFM</th>
+            <th className="border border-gray-200 py-2 px-2 font-thin">MFM</th>
+            <th className="border border-gray-200 py-2 px-2 font-thin">RTP</th>
             <th className="border border-gray-200 py-2 px-2 font-thin">SHC</th>
             <th className="border border-gray-200 py-2 px-2 font-thin">AT</th>
           </tr>
@@ -224,16 +225,26 @@ const AdditionalInfo = (props) => {
             <td className="border border-gray-200 py-2 px-2">-</td>
             <td className="border border-gray-200 py-2 px-2">-</td>
             <td className="border border-gray-200 py-2 px-2">-</td>
+            <td className="border border-gray-200 py-2 px-2">-</td>
           </tr>
           <tr className="bg-white font-bold">
             <td className="border border-gray-200 py-2 px-2 whitespace-nowrap">
               Total
             </td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
             <td className="border border-gray-200 py-2 px-2">
+              {" "}
               {tableData
-                .map((item) => item.o2o)
+                .map((item) => item.demo)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {" "}
+              {tableData
+                .map((item) => item.f_day)
                 .reduce((acc, current) => {
                   // Check if the current element is a number
 
@@ -242,7 +253,7 @@ const AdditionalInfo = (props) => {
             </td>
             <td className="border border-gray-200 py-2 px-2">
               {tableData
-                .map((item) => item.svn)
+                .map((item) => item.ifc)
                 .reduce((acc, current) => {
                   // Check if the current element is a number
 
@@ -251,7 +262,7 @@ const AdditionalInfo = (props) => {
             </td>
             <td className="border border-gray-200 py-2 px-2">
               {tableData
-                .map((item) => item.gvm)
+                .map((item) => item.fgm)
                 .reduce((acc, current) => {
                   // Check if the current element is a number
 
@@ -260,7 +271,25 @@ const AdditionalInfo = (props) => {
             </td>
             <td className="border border-gray-200 py-2 px-2">
               {tableData
-                .map((item) => item.cap)
+                .map((item) => item.ofm)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.mfm)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.rtp)
                 .reduce((acc, current) => {
                   // Check if the current element is a number
 
@@ -298,6 +327,7 @@ const AdditionalInfo = (props) => {
             <td className="border border-gray-200 py-2 px-2">-</td>
             <td className="border border-gray-200 py-2 px-2">-</td>
             <td className="border border-gray-200 py-2 px-2">-</td>
+            <td className="border border-gray-200 py-2 px-2">-</td>
           </tr>
           {tableData.map((item, index) => (
             <tr key={index} className="bg-white">
@@ -311,16 +341,19 @@ const AdditionalInfo = (props) => {
                 {item.f_day ? item.f_day : "-"}
               </td>
               <td className="border border-gray-200 py-2 px-2">
-                {item.o2o ? item.o2o : "-"}
+                {item.ifc ? item.ifc : "-"}
               </td>
               <td className="border border-gray-200 py-2 px-2">
-                {item.svn ? item.svn : "-"}
+                {item.fgm ? item.fgm : "-"}
               </td>
               <td className="border border-gray-200 py-2 px-2">
-                {item.gvm ? item.gvm : "-"}
+                {item.ofm ? item.ofm : "-"}
               </td>
               <td className="border border-gray-200 py-2 px-2">
-                {item.cap ? item.cap : "-"}
+                {item.mfm ? item.mfm : "-"}
+              </td>
+              <td className="border border-gray-200 py-2 px-2">
+                {item.rtp ? item.rtp : "-"}
               </td>
               <td className="border border-gray-200 py-2 px-2">
                 {item.shc ? item.shc : "-"}
@@ -334,11 +367,20 @@ const AdditionalInfo = (props) => {
             <td className="border border-gray-200 py-2 px-2 whitespace-nowrap">
               Total
             </td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
             <td className="border border-gray-200 py-2 px-2">
+              {" "}
               {tableData
-                .map((item) => item.o2o)
+                .map((item) => item.demo)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {" "}
+              {tableData
+                .map((item) => item.f_day)
                 .reduce((acc, current) => {
                   // Check if the current element is a number
 
@@ -347,7 +389,7 @@ const AdditionalInfo = (props) => {
             </td>
             <td className="border border-gray-200 py-2 px-2">
               {tableData
-                .map((item) => item.svn)
+                .map((item) => item.ifc)
                 .reduce((acc, current) => {
                   // Check if the current element is a number
 
@@ -356,7 +398,7 @@ const AdditionalInfo = (props) => {
             </td>
             <td className="border border-gray-200 py-2 px-2">
               {tableData
-                .map((item) => item.gvm)
+                .map((item) => item.fgm)
                 .reduce((acc, current) => {
                   // Check if the current element is a number
 
@@ -365,7 +407,25 @@ const AdditionalInfo = (props) => {
             </td>
             <td className="border border-gray-200 py-2 px-2">
               {tableData
-                .map((item) => item.cap)
+                .map((item) => item.ofm)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.mfm)
+                .reduce((acc, current) => {
+                  // Check if the current element is a number
+
+                  return Number(acc) + Number(current);
+                }, 0)}
+            </td>
+            <td className="border border-gray-200 py-2 px-2">
+              {tableData
+                .map((item) => item.rtp)
                 .reduce((acc, current) => {
                   // Check if the current element is a number
 

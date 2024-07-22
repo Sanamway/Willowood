@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaArrowDown } from "react-icons/fa";
 import { FaArrowUp } from "react-icons/fa";
+import Image from "next/image";
 import { url } from "@/constants/url";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -12,6 +13,8 @@ import { GiFarmer } from "react-icons/gi";
 import { FaMobileAlt } from "react-icons/fa";
 import moment from "moment";
 import { FaArrowAltCircleUp } from "react-icons/fa";
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 const AdditionalInfo = () => {
   const headers = {
@@ -63,10 +66,10 @@ const AdditionalInfo = () => {
     let field = null;
     let order = null;
     if (date === "desc") {
-      field = "demo_date";
+      field = "meeting_date";
       order = "desc";
     } else if (date === "aesc") {
-      field = "demo_date";
+      field = "meeting_date";
       order = "aesc";
     } else if (mob === "desc") {
       field = "farmer_mob_no";
@@ -89,7 +92,7 @@ const AdditionalInfo = () => {
     }
 
     try {
-      const respond = await axios.get(`${url}/api/get_mr_form_demo`, {
+      const respond = await axios.get(`${url}/api/get_farmer_meet`, {
         headers: headers,
         params: {
           mob_no: mobile,
@@ -103,14 +106,14 @@ const AdditionalInfo = () => {
           emp_code: window.localStorage.getItem("emp_code"),
         },
       });
-      const apires = await respond.data.data.MR_demo;
+      const apires = await respond.data.data;
       console.log("moye", respond);
       setFarmerListData(apires);
     } catch (error) {
       setFarmerListData([]);
     }
   };
-
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <form
       className="bg-white rounded w-full overflow-hidden pb-4"
@@ -121,11 +124,11 @@ const AdditionalInfo = () => {
       <div className="fixed top-0 w-full flex flex-col h-32 bg-white justify-between px-4  pb-2 shadow-lg  lg:flex-col   ">
         <div className="flex flex-row gap-4 font-bold w-full items-center h-12">
           <FaArrowLeftLong className="" onClick={() => router.back()} />
-          <h2 className="font-bold ">List of Farmer Demo</h2>
+          <h2 className="font-bold ">List of Farmer Meet </h2>
           <div></div>
         </div>
         <div className="relative">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center md:relative flex-col lg:hidden ">
+          <span className="absolute inset-y-0 left-0 top-2 pl-3 flex items-center md:relative flex-col lg:hidden ">
             {/* Your icon component goes here */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -189,13 +192,13 @@ const AdditionalInfo = () => {
 
       <div className="flex bg-gray-200 h-8 mt-36 justify-between items-center px-2">
         <small className="font-bold">Sort By</small>
-        <small>{farmerListData.length} Demo Retrive</small>
+        <small>{farmerListData.length} Farmer Meet Retrive</small>
       </div>
       {farmerListData.length > 1 && (
-        <div className="flex flex-row justify-around items-center h-10 border-2 border-gray-200   rounded-lg text-sm font-bold text-blue-400">
+        <div className="flex flex-row justify-around items-center h-10 border-2 border-gray-200   rounded-lg text-sm font-bold text-blue-800">
           {allfilterState.dateShortDecend === "desc" ? (
             <span
-              className="flex flex-row gap-2 items-center text-blue-400"
+              className="flex flex-row gap-2 items-center text-blue-800"
               onClick={() =>
                 setAllFilterState({
                   ...allfilterState,
@@ -227,7 +230,7 @@ const AdditionalInfo = () => {
           <div className="h-8 bg-gray-400 w-px"></div>
           {allfilterState.mobShortDecend === "desc" ? (
             <span
-              className="flex flex-row gap-2 items-center  text-blue-400"
+              className="flex flex-row gap-2 items-center  text-blue-800"
               onClick={() =>
                 setAllFilterState({
                   ...allfilterState,
@@ -261,7 +264,7 @@ const AdditionalInfo = () => {
           <div className="h-8 bg-gray-400 w-px"></div>{" "}
           {allfilterState.nameShortDecend === "desc" ? (
             <span
-              className="flex flex-row gap-2 items-center  text-blue-400"
+              className="flex flex-row gap-2 items-center  text-blue-800"
               onClick={() =>
                 setAllFilterState({
                   ...allfilterState,
@@ -293,7 +296,7 @@ const AdditionalInfo = () => {
           <div className="h-8 bg-gray-400 w-px"></div>
           {allfilterState.villShortDecend === "desc" ? (
             <span
-              className="flex flex-row gap-2 items-center  text-blue-400"
+              className="flex flex-row gap-2 items-center  text-blue-800"
               onClick={() =>
                 setAllFilterState({
                   ...allfilterState,
@@ -328,101 +331,76 @@ const AdditionalInfo = () => {
       )}
 
       {farmerListData?.map((item) => (
-        <div className="flex w-full flex-col gap-1">
-          <div className="flex flex-row w-full p-2  text-sm justify-between   mt-2  rounded-lg lg:hidden">
-            <div className="flex flex-col h-full gap-4 items-center">
-              <GiFarmer className="h-16 w-24 text-green-400" />
-              <small className="text-sm font-bold">
-                {moment(item.demo_date).format("DD-MMM")}
+        <div className="flex w-full flex-col gap-2 px-4 mt-4">
+          <span className=" font-bold text-sm">
+            Farmer Meet Date : {moment(item.meeting_date).format("DD-MM-YYYY")}
+          </span>
+          <hr className="bg-black border-1 w-full" />
+          <span className=" font-bold text-blue-800 text-sm">
+            Meeting Type :{" "}
+            <small className="font-normal pl-2 text-base">
+              {item.meeting_type}
+            </small>
+          </span>
+          <span className=" font-bold text-sm text-blue-800">
+            Farmer name :{" "}
+            <small className="font-normal pl-2 text-base">
+              {item.farmer_name}
+            </small>
+          </span>
+          <div className="flex flex-row gap-10 ">
+            <span className="">
+              Village :
+              <small className="font-normal pl-2 text-base">
+                {item.village}
+              </small>{" "}
+            </span>
+            <span className="">
+              Plot Sie :
+              <small className="font-normal pl-2 text-base">
+                {item.plot_size}
               </small>
-            </div>
-
-            <div className="flex flex-col font-bold lg:none w-[50%]">
-              <span className="text-[#4285F4] flex flex-row">
-                <FaMobileAlt className="" />
-                +91 {item.farmer_mob_no}
-              </span>
-              <span className="font-bold">{item.farmer_name}</span>
-
-              <div className="flex flex-row gap-2 font-bold text-gray-400 whitespace-nowrap">
-                <span className="text-black text-sm">
-                  Village{" "}
-                  <small className="text-gray-400">{item.village}</small>
-                </span>
-              </div>
-              <div className="flex gap-2">
-                <span className="text-black text-sm">
-                  District{" "}
-                  <small className="text-gray-400">{item.district}</small>
-                </span>
-                <span className="text-black text-sm">
-                  State <small className="text-gray-400">{item.state}</small>
-                </span>
-              </div>
-              <div className="flex flex-col gap-0  text-gray-400">
-                {item.MRCrops.map((el) => (
-                  <div>
-                    <small>
-                      {el.crop}-{el.stage}-{el.product_brand}
-                    </small>
-                  </div>
-                ))}
-              </div>
-              <div className="flex flex-row gap-2 font-bold text-gray-400">
-                <small className="text-black flex flex-col ">
-                  Potential:
-                  <span className="font-thin">{item.potential_farmer}</span>
-                </small>
-                <small className="text-black flex flex-col ">
-                  Next Visit Date:{" "}
-                  <span className="font-thin">
-                    {moment(item.next_visit_date).format("DD-MMM-YYYY")}
-                  </span>
-                </small>
-                <small className="text-black flex flex-col ">
-                  Status:
-                  <span className="font-thin">{item.status}</span>
-                </small>
-              </div>
-            </div>
-            {new Date(item.next_visit_date) > new Date() && (
-              <div className="flex flex-col gap-4 self-start">
-                <button
-                  className="bg-[#4285F4] text-white-400 p-2 rounded-full whitespace-nowrap"
-                  onClick={() => {
-                    router.push({
-                      pathname: "/MR_Portal_Apps/MRForm_Farmer_Demo_Followup",
-                      query: {
-                        f_demo_code: item.f_demo_code,
-                      },
-                    });
-                  }}
-                >
-                  Follow up
-                </button>
-                <button
-                  className="bg-orange-400 text-white-400 p-2 rounded-full whitespace-nowrap"
-                  onClick={() => {
-                    router.push({
-                      pathname: "/MR_Portal_Apps/MRForm_Farmer_Fieldday",
-                      query: {
-                        f_demo_code: item.f_demo_code,
-                      },
-                    });
-                  }}
-                >
-                  Open Filed Day
-                </button>
-              </div>
-            )}
+            </span>
           </div>
+          <span className="">
+            No of Farmer Available : {item.farmer_available_in_field_day}
+          </span>
+          <span className=" font-bold text-sm">Focus on product Brand</span>
+          <span className=" font-bold text-sm">
+            {item.push_product_brand.join(", ")}
+          </span>
+          <span className=" font-bold text-sm">Venue Address</span>
+          <span className=" font-bold text-sm">{item.meeting_address}</span>
+          <div className="flex justify-center gap-3">
+            <span>
+              Territory: <small className="font-bold">{item.t_presence}</small>
+            </span>
+            <span>
+              DevMgr: <small className="font-bold">{item.dm_presence}</small>
+            </span>
+            <span>
+              ZoneDM: <small className="font-bold">{item.zdm_presence}</small>
+            </span>
+          </div>
+          <span className=" font-bold text-sm">Farmer Suggestion</span>
+          <span className=" font-bold text-sm">
+            {item.farmer_suggestion_opinion_idea}
+          </span>
+
+          <button
+            className="w-full border border-black font-bold text-blue-800"
+            onClick={() => setIsOpen(true)}
+          >
+            {" "}
+            View Farmer Meet Image
+          </button>
           <hr className="bg-gray-200 border-1 w-full" />
         </div>
       ))}
       <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
         <FaArrowAltCircleUp
           size={42}
-          className="self-center size-120 text-black-400 text-blue-400 "
+          className="self-center size-120 text-blue-800  "
           onClick={() =>
             window.scrollTo({
               top: 0,
@@ -431,6 +409,55 @@ const AdditionalInfo = () => {
           }
         />
       </div>
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          onClose={() => setIsOpen(false)}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
+                  >
+                    Farmer Meet Image
+                  </Dialog.Title>
+
+                  <Image
+                    src="/profile.png"
+                    width={500}
+                    height={500}
+                    alt="Picture of the author"
+                  />
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </form>
   );
 };

@@ -157,7 +157,7 @@ const AdditionalInfo = (props) => {
     try {
       const data = {
         f_meet_no: fMeetCode,
-        meeting_date: moment(new Date()).format("YYYY-MM-DD[T00:00:00.000Z]"),
+        meeting_date: moment().format("YYYY-MM-DD[T00:00:00.000Z]"),
         purpose_of_meeting: formData.purposeMeet,
         meeting_type: formData.meetType,
         farmer_mob_no: Number(farmerMobileNumber),
@@ -504,11 +504,11 @@ const AdditionalInfo = (props) => {
                   <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
                     <li
                       className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap  "
-                      // onClick={() =>
-                      //   router.push({
-                      //     pathname: "MR_Farmer_list_demo",
-                      //   })
-                      // }
+                      onClick={() =>
+                        router.push({
+                          pathname: "MRFarmer_Meet_list",
+                        })
+                      }
                     >
                       <IoTodayOutline
                         className="text-[#626364] cursor-pointer"

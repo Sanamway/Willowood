@@ -66,10 +66,10 @@ const AdditionalInfo = () => {
     let field = null;
     let order = null;
     if (date === "desc") {
-      field = "demo_field_date";
+      field = "shc_date";
       order = "desc";
     } else if (date === "aesc") {
-      field = "demo_field_date";
+      field = "shc_date";
       order = "aesc";
     } else if (mob === "desc") {
       field = "farmer_mob_no";
@@ -92,7 +92,7 @@ const AdditionalInfo = () => {
     }
 
     try {
-      const respond = await axios.get(`${url}/api/get_farmer_demo_fields`, {
+      const respond = await axios.get(`${url}/api/get_mr_shc`, {
         headers: headers,
         params: {
           mob_no: mobile,
@@ -124,7 +124,7 @@ const AdditionalInfo = () => {
       <div className="fixed top-0 w-full flex flex-col h-32 bg-white justify-between px-4  pb-2 shadow-lg  lg:flex-col   ">
         <div className="flex flex-row gap-4 font-bold w-full items-center h-12">
           <FaArrowLeftLong className="" onClick={() => router.back()} />
-          <h2 className="font-bold ">List of Field Day</h2>
+          <h2 className="font-bold ">List of Soil Health Card </h2>
           <div></div>
         </div>
         <div className="relative">
@@ -189,13 +189,13 @@ const AdditionalInfo = () => {
           </div>
         </div>
       </div>
-      {console.log("nope", farmerListData)}
+
       <div className="flex bg-gray-200 h-8 mt-36 justify-between items-center px-2">
         <small className="font-bold">Sort By</small>
-        <small>{farmerListData.length} Field day Retrive</small>
+        <small>{farmerListData.length} SHC Retrive</small>
       </div>
       {farmerListData.length > 1 && (
-        <div className="flex flex-row justify-around items-center h-10 border-2 border-gray-200   rounded-lg text-sm font-bold text-blue-800">
+        <div className="flex flex-row justify-around items-center h-10 border-t-2 border-l-2 border-gray-200   rounded-lg text-sm font-bold text-blue-800">
           {allfilterState.dateShortDecend === "desc" ? (
             <span
               className="flex flex-row gap-2 items-center text-blue-800"
@@ -333,49 +333,221 @@ const AdditionalInfo = () => {
       {farmerListData?.map((item) => (
         <div className="flex w-full flex-col gap-2 px-4 mt-4">
           <span className=" font-bold text-sm">
-            Field Day Date : {moment(item.demo_field_date).format("DD-MM-YYYY")}
+            SHC Date : : {moment(item.shc_date).format("DD-MM-YYYY")}
           </span>
           <hr className="bg-black border-1 w-full" />
           <span className=" font-bold text-blue-800 text-sm">
-            Mobile No : {item.farmer_mob_no}
+            Mobile No :{" "}
+            <small className="font-normal pl-2 text-base">
+              {item.farmer_mob_no}
+            </small>
           </span>
           <span className=" font-bold text-sm text-blue-800">
-            Farmer name : {item.farmer_name}
+            Farmer name :
+            <small className="font-normal pl-2 text-base">
+              {item.farmer_name}
+            </small>
           </span>
-          <div className="flex flex-row gap-10  text-sm">
+          <div className="flex flex-row gap-10 ">
             <span className="">
               Village :
-              <small className="font-normal pl-2 text-sm">{item.village}</small>{" "}
+              <small className="font-normal pl-2 text-base">
+                {item.village}
+              </small>{" "}
             </span>
-            <span className=" text-sm">
+            <span className="">
               Plot Size :
-              <small className="font-normal pl-2 text-sm">
+              <small className="font-normal pl-2 text-base">
                 {item.plot_size}
               </small>
             </span>
           </div>
-          <span className="text-sm">
-            No of Farmer Available : {item.farmer_available_in_field_day}
-          </span>
-          <span className=" font-bold text-sm">Product Demo Info</span>
-          <p className="text-xsm">
-            {item.MRCrops.map((item) => (
-              <small className="mr-2 text-sm">
-                {item.crop}: {item.product_brand}
-              </small>
-            ))}{" "}
-          </p>
-          <span className=" font-bold text-sm">
-            Farmer Remarks: <small>{item.field_day_remarks}</small>
-          </span>
 
-          <button
-            className="w-full border border-black text-sm font-bold text-blue-800"
-            onClick={() => setIsOpen(true)}
-          >
-            {" "}
-            View Filed Day Image
-          </button>
+          <hr className="bg-gray-200 border-1 w-full" />
+          <span className=" font-bold text-sm">Soil Info</span>
+          <div className="flex flex-row  overflow-auto">
+            <ul>
+              <li className="border-t-2 border-l-2 border-black  flex justify-center text-black  bg-gray-200   p-1">
+                <input
+                  className="p-0 w-10  h-5 font-bold"
+                  value="NT"
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2 border-black  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-14  h-5 text-center"
+                  value={item.nitrogen}
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2 border-black bg-gray-200  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-10  h-5 font-bold"
+                  value="SUL"
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2  border-b-2 border-black  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-14  h-5 text-center"
+                  value={item.sulphur}
+                  disabled
+                />
+              </li>
+            </ul>
+            <ul>
+              <li className="border-t-2 border-l-2 border-black  flex justify-center text-black bg-gray-200   p-1">
+                <input
+                  className="p-0 w-10  h-5 font-bold"
+                  value="PH"
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2 border-black  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-14  h-5 text-center"
+                  value={item.ph}
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2 border-black bg-gray-200  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-10  h-5 font-bold"
+                  value="ZNC"
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2   border-b-2 border-black  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-14  h-5 text-center"
+                  value={item.zinc}
+                  disabled
+                />
+              </li>
+            </ul>
+            <ul>
+              <li className="border-t-2 border-l-2 border-black  flex justify-center text-black bg-gray-200   p-1">
+                <input
+                  className="p-0 w-10  h-5 font-bold"
+                  value="POT"
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2 border-black  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-14  h-5 text-center"
+                  value={item.potassium}
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2 border-black bg-gray-200  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-10  h-5 font-bold"
+                  value="BOR"
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2   border-b-2 border-black  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-14  h-5 text-center"
+                  value={item.boron}
+                  disabled
+                />
+              </li>
+            </ul>
+            <ul>
+              <li className="border-t-2 border-l-2 border-black  flex justify-center text-black bg-gray-200   p-1">
+                <input
+                  className="p-0 w-10  h-5 font-bold"
+                  value="PH"
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2 border-black  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-14  h-5 text-center"
+                  value={item.ph}
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2 border-black bg-gray-200  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-10  h-5 font-bold"
+                  value="IRON"
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2  border-b-2 border-black  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-14  h-5 text-center"
+                  value={item.iron}
+                  disabled
+                />
+              </li>
+            </ul>
+            <ul>
+              <li className="border-t-2 border-l-2 border-black  flex justify-center text-black bg-gray-200   p-1">
+                <input
+                  className="p-0 w-10  h-5 font-bold"
+                  value="EC"
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2 border-black  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-14  h-5 text-center"
+                  value={item.ec}
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2 border-black bg-gray-200  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-10  h-5 font-bold"
+                  value="MAN"
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2  border-b-2 border-black  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-14  h-5 text-center"
+                  value={item.manganese}
+                  disabled
+                />
+              </li>
+            </ul>
+            <ul>
+              <li className="border-t-2 border-l-2 border-r-2  border-black  flex justify-center text-black bg-gray-200   p-1">
+                <input
+                  className="p-0 w-10  h-5 font-bold"
+                  value="CAR"
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2  border-r-2 border-black  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-14  h-5 text-center"
+                  value={item.organic_carbon}
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2 border-r-2  border-black bg-gray-200  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-10  h-5 font-bold"
+                  value="COP"
+                  disabled
+                />
+              </li>
+              <li className="border-t-2 border-l-2  border-r-2  border-b-2 border-black  flex justify-center text-black  p-1">
+                <input
+                  className="p-0 w-14  h-5 text-center"
+                  value={item.copper}
+                  disabled
+                />
+              </li>
+            </ul>
+          </div>
+
           <hr className="bg-gray-200 border-1 w-full" />
         </div>
       ))}
@@ -425,7 +597,7 @@ const AdditionalInfo = () => {
                     as="h3"
                     className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
                   >
-                    Filed Day Image
+                    Farmer Meet Image
                   </Dialog.Title>
 
                   <Image

@@ -208,7 +208,7 @@ const AdditionalInfo = (props) => {
     try {
       const data = {
         f_demo_follow_no: 1212,
-        demo_followup_date: new Date(),
+        demo_followup_date: moment().format("YYYY-MM-DD[T00:00:00.000Z]"),
         demo_followup_time: new Date(),
         dealer_id: Number(formData.dealer),
 

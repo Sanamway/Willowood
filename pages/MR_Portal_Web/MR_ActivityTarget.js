@@ -151,27 +151,27 @@ const BusinessSegment = () => {
 
           t_demo: "",
           t_f_day: "",
-          t_o2o: "",
-          t_gmt: "",
-          t_svn: "",
-          t_gvm: "",
-          t_cap: "",
+          t_ifc: "",
+          t_fgm: "",
+          t_ofm: "",
+          t_mfm: "",
+          t_rtp: "",
           t_shc: "",
           m_demo: "",
           m_f_day: "",
-          m_o2o: "",
-          m_gmt: "",
-          m_svn: "",
-          m_gvm: "",
-          m_cap: "",
+          m_ifc: "",
+          m_fgm: "",
+          m_ofm: "",
+          m_mfm: "",
+          m_rtp: "",
           m_shc: "",
           w_demo: "",
           w_f_day: "",
-          w_o2o: "",
-          w_gmt: "",
-          w_svn: "",
-          w_gvm: "",
-          w_cap: "",
+          w_ifc: "",
+          w_fgm: "",
+          w_ofm: "",
+          w_mfm: "",
+          w_rtp: "",
           w_shc: "",
           score: "",
         };
@@ -184,27 +184,27 @@ const BusinessSegment = () => {
           year: year,
           t_demo: newData.t_demo,
           t_f_day: newData.t_f_day,
-          t_o2o: newData.t_o2o,
-          t_gmt: newData.t_gmt,
-          t_svn: newData.t_svn,
-          t_gvm: newData.t_gvm,
-          t_cap: newData.t_cap,
+          t_ifc: newData.t_ifc,
+          t_fgm: newData.t_fgm,
+          t_ofm: newData.t_ofm,
+          t_mfm: newData.t_mfm,
+          t_rtp: newData.t_rtp,
           t_shc: newData.t_shc,
           m_demo: newData.m_demo,
           m_f_day: newData.m_f_day,
-          m_o2o: newData.m_o2o,
-          m_gmt: newData.m_gmt,
-          m_svn: newData.m_svn,
-          m_gvm: newData.m_gvm,
-          m_cap: newData.m_cap,
+          m_ifc: newData.m_ifc,
+          m_fgm: newData.m_fgm,
+          m_ofm: newData.m_ofm,
+          m_mfm: newData.m_mfm,
+          m_rtp: newData.m_rtp,
           m_shc: newData.m_shc,
           w_demo: newData.w_demo,
           w_f_day: newData.w_f_day,
-          w_o2o: newData.w_o2o,
-          w_gmt: newData.w_gmt,
-          w_svn: newData.w_svn,
-          w_gvm: newData.w_gvm,
-          w_cap: newData.w_cap,
+          w_ifc: newData.w_ifc,
+          w_fgm: newData.w_fgm,
+          w_ofm: newData.w_ofm,
+          w_mfm: newData.w_mfm,
+          w_rtp: newData.w_rtp,
           w_shc: newData.w_shc,
           score: newData.score,
         };
@@ -361,7 +361,7 @@ const BusinessSegment = () => {
 
   return (
     <Layout>
-      <div className="w-full font-arial bg-white">
+      <div className="w-full font-arial bg-white h-full absolute overflow-y-auto overflow-x-hidden no-scrollbar ">
         <Toaster position="bottom-center" reverseOrder={false} />
 
         <div className="flex flex-row m-4 w-full gap-2">
@@ -440,7 +440,7 @@ const BusinessSegment = () => {
         </div>
 
         <div className="bg-white  max-w-full pb-12 ">
-          <div className=" text-black font-arial  w-full p-1 h-[760px] overflow-y-auto no-scrollbar">
+          <div className=" text-black font-arial  w-full p-1 h-max  ">
             <table className="min-w-full divide-y border- divide-gray-200 font-bold">
               <thead className="border-b w-max">
                 <tr className="bg-sky-800 font-arial w-max ">
@@ -457,20 +457,21 @@ const BusinessSegment = () => {
                   <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
                     F.Day
                   </th>
+
                   <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
-                    O2O
+                    IFC
                   </th>
                   <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
-                    GMT
+                    FGM
                   </th>
                   <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
-                    SVN
+                    OFM
                   </th>
                   <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
-                    GVM
+                    MFM
                   </th>
                   <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
-                    CAP
+                    RTP
                   </th>
                   <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
                     SHC
@@ -686,15 +687,15 @@ const BusinessSegment = () => {
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
                             className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.t_o2o ? "bg-white-100" : "bg-yellow-100"
+                              item.t_ifc ? "bg-white-100" : "bg-yellow-100"
                             }`}
                             type="number"
-                            value={item.t_o2o}
+                            value={item.t_ifc}
                             onChange={(e) => {
                               setMonthList(
                                 monthList.map((el) => {
                                   if (el.month === item.month) {
-                                    return { ...el, t_o2o: e.target.value };
+                                    return { ...el, t_ifc: e.target.value };
                                   } else {
                                     return el;
                                   }
@@ -706,15 +707,15 @@ const BusinessSegment = () => {
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
                             className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.m_o2o ? "bg-white-100" : "bg-yellow-100"
+                              item.m_ifc ? "bg-white-100" : "bg-yellow-100"
                             }`}
                             type="number"
-                            value={item.m_o2o}
+                            value={item.m_ifc}
                             onChange={(e) => {
                               setMonthList(
                                 monthList.map((el) => {
                                   if (el.month === item.month) {
-                                    return { ...el, m_o2o: e.target.value };
+                                    return { ...el, m_ifc: e.target.value };
                                   } else {
                                     return el;
                                   }
@@ -726,87 +727,15 @@ const BusinessSegment = () => {
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
                             className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.w_o2o ? "bg-white-100" : "bg-yellow-100"
+                              item.w_ifc ? "bg-white-100" : "bg-yellow-100"
                             }`}
                             type="number"
-                            value={item.w_o2o}
+                            value={item.w_ifc}
                             onChange={(e) => {
                               setMonthList(
                                 monthList.map((el) => {
                                   if (el.month === item.month) {
-                                    return { ...el, w_o2o: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
-                          />
-                        </li>
-                        <li className="  flex justify-center bg-green-400  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
-                            type="number"
-                            disabled
-                            value={"-"}
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap text-white p-0 bg-white">
-                      <ul>
-                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.t_gmt ? "bg-white-100" : "bg-yellow-100"
-                            }`}
-                            type="number"
-                            value={item.t_gmt}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, t_gmt: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
-                          />
-                        </li>
-                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.m_gmt ? "bg-white-100" : "bg-yellow-100"
-                            }`}
-                            type="number"
-                            value={item.m_gmt}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, m_gmt: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
-                          />
-                        </li>
-                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.w_gmt ? "bg-white-100" : "bg-yellow-100"
-                            }`}
-                            type="number"
-                            value={item.w_gmt}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, w_gmt: e.target.value };
+                                    return { ...el, w_ifc: e.target.value };
                                   } else {
                                     return el;
                                   }
@@ -830,15 +759,15 @@ const BusinessSegment = () => {
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
                             className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.t_svn ? "bg-white-100" : "bg-yellow-100"
+                              item.t_fgm ? "bg-white-100" : "bg-yellow-100"
                             }`}
                             type="number"
-                            value={item.t_svn}
+                            value={item.t_fgm}
                             onChange={(e) => {
                               setMonthList(
                                 monthList.map((el) => {
                                   if (el.month === item.month) {
-                                    return { ...el, t_svn: e.target.value };
+                                    return { ...el, t_fgm: e.target.value };
                                   } else {
                                     return el;
                                   }
@@ -850,15 +779,15 @@ const BusinessSegment = () => {
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
                             className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.m_svn ? "bg-white-100" : "bg-yellow-100"
+                              item.m_fgm ? "bg-white-100" : "bg-yellow-100"
                             }`}
                             type="number"
-                            value={item.m_svn}
+                            value={item.m_fgm}
                             onChange={(e) => {
                               setMonthList(
                                 monthList.map((el) => {
                                   if (el.month === item.month) {
-                                    return { ...el, m_svn: e.target.value };
+                                    return { ...el, m_fgm: e.target.value };
                                   } else {
                                     return el;
                                   }
@@ -870,87 +799,15 @@ const BusinessSegment = () => {
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
                             className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.w_svn ? "bg-white-100" : "bg-yellow-100"
+                              item.w_fgm ? "bg-white-100" : "bg-yellow-100"
                             }`}
                             type="number"
-                            value={item.w_svn}
+                            value={item.w_fgm}
                             onChange={(e) => {
                               setMonthList(
                                 monthList.map((el) => {
                                   if (el.month === item.month) {
-                                    return { ...el, w_svn: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
-                          />
-                        </li>
-                        <li className="  flex justify-center bg-green-400  text-black   p-1  ">
-                          <input
-                            className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
-                            type="number"
-                            disabled
-                            value={"-"}
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="  border-2 border-black  whitespace-nowrap text-white p-0 bg-white">
-                      <ul>
-                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.t_gvm ? "bg-white-100" : "bg-yellow-100"
-                            }`}
-                            type="number"
-                            value={item.t_gvm}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, t_gvm: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
-                          />
-                        </li>
-                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.m_gvm ? "bg-white-100" : "bg-yellow-100"
-                            }`}
-                            type="number"
-                            value={item.m_gvm}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, m_gvm: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
-                          />
-                        </li>
-                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.w_gvm ? "bg-white-100" : "bg-yellow-100"
-                            }`}
-                            type="number"
-                            value={item.w_gvm}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, w_gvm: e.target.value };
+                                    return { ...el, w_fgm: e.target.value };
                                   } else {
                                     return el;
                                   }
@@ -974,15 +831,15 @@ const BusinessSegment = () => {
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
                             className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.t_cap ? "bg-white-100" : "bg-yellow-100"
+                              item.t_ofm ? "bg-white-100" : "bg-yellow-100"
                             }`}
                             type="number"
-                            value={item.t_cap}
+                            value={item.t_ofm}
                             onChange={(e) => {
                               setMonthList(
                                 monthList.map((el) => {
                                   if (el.month === item.month) {
-                                    return { ...el, t_cap: e.target.value };
+                                    return { ...el, t_ofm: e.target.value };
                                   } else {
                                     return el;
                                   }
@@ -994,15 +851,15 @@ const BusinessSegment = () => {
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
                             className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.m_cap ? "bg-white-100" : "bg-yellow-100"
+                              item.m_ofm ? "bg-white-100" : "bg-yellow-100"
                             }`}
                             type="number"
-                            value={item.m_cap}
+                            value={item.m_ofm}
                             onChange={(e) => {
                               setMonthList(
                                 monthList.map((el) => {
                                   if (el.month === item.month) {
-                                    return { ...el, m_cap: e.target.value };
+                                    return { ...el, m_ofm: e.target.value };
                                   } else {
                                     return el;
                                   }
@@ -1014,15 +871,159 @@ const BusinessSegment = () => {
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
                             className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.w_cap ? "bg-white-100" : "bg-yellow-100"
+                              item.w_ofm ? "bg-white-100" : "bg-yellow-100"
                             }`}
                             type="number"
-                            value={item.w_cap}
+                            value={item.w_ofm}
                             onChange={(e) => {
                               setMonthList(
                                 monthList.map((el) => {
                                   if (el.month === item.month) {
-                                    return { ...el, w_cap: e.target.value };
+                                    return { ...el, w_ofm: e.target.value };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              );
+                            }}
+                          />
+                        </li>
+                        <li className="  flex justify-center bg-green-400  text-black   p-1  ">
+                          <input
+                            className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
+                            type="number"
+                            disabled
+                            value={"-"}
+                          />
+                        </li>
+                      </ul>
+                    </td>
+                    <td className="  border-2 border-black  whitespace-nowrap text-white p-0 bg-white">
+                      <ul>
+                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
+                          <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_mfm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
+                            type="number"
+                            value={item.t_mfm}
+                            onChange={(e) => {
+                              setMonthList(
+                                monthList.map((el) => {
+                                  if (el.month === item.month) {
+                                    return { ...el, t_mfm: e.target.value };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              );
+                            }}
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
+                          <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_mfm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
+                            type="number"
+                            value={item.m_mfm}
+                            onChange={(e) => {
+                              setMonthList(
+                                monthList.map((el) => {
+                                  if (el.month === item.month) {
+                                    return { ...el, m_mfm: e.target.value };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              );
+                            }}
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
+                          <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_mfm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
+                            type="number"
+                            value={item.w_mfm}
+                            onChange={(e) => {
+                              setMonthList(
+                                monthList.map((el) => {
+                                  if (el.month === item.month) {
+                                    return { ...el, w_mfm: e.target.value };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              );
+                            }}
+                          />
+                        </li>
+                        <li className="  flex justify-center bg-green-400  text-black   p-1  ">
+                          <input
+                            className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
+                            type="number"
+                            disabled
+                            value={"-"}
+                          />
+                        </li>
+                      </ul>
+                    </td>
+                    <td className="  border-2 border-black  whitespace-nowrap text-white p-0 bg-white">
+                      <ul>
+                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
+                          <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_rtp ? "bg-white-100" : "bg-yellow-100"
+                            }`}
+                            type="number"
+                            value={item.t_rtp}
+                            onChange={(e) => {
+                              setMonthList(
+                                monthList.map((el) => {
+                                  if (el.month === item.month) {
+                                    return { ...el, t_rtp: e.target.value };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              );
+                            }}
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
+                          <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_rtp ? "bg-white-100" : "bg-yellow-100"
+                            }`}
+                            type="number"
+                            value={item.m_rtp}
+                            onChange={(e) => {
+                              setMonthList(
+                                monthList.map((el) => {
+                                  if (el.month === item.month) {
+                                    return { ...el, m_rtp: e.target.value };
+                                  } else {
+                                    return el;
+                                  }
+                                })
+                              );
+                            }}
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-center text-black  p-1">
+                          <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_rtp ? "bg-white-100" : "bg-yellow-100"
+                            }`}
+                            type="number"
+                            value={item.w_rtp}
+                            onChange={(e) => {
+                              setMonthList(
+                                monthList.map((el) => {
+                                  if (el.month === item.month) {
+                                    return { ...el, w_rtp: e.target.value };
                                   } else {
                                     return el;
                                   }
@@ -1123,10 +1124,10 @@ const BusinessSegment = () => {
                             value={
                               Number(item.t_demo) +
                               Number(item.t_f_day) +
-                              Number(item.t_o2o) +
-                              Number(item.t_gmt) +
-                              Number(item.t_svn) +
-                              Number(item.t_cap) +
+                              Number(item.t_ifc) +
+                              Number(item.t_fgm) +
+                              Number(item.t_ofm) +
+                              Number(item.t_rtp) +
                               Number(item.t_shc)
                             }
                           />
@@ -1138,10 +1139,10 @@ const BusinessSegment = () => {
                             value={
                               Number(item.m_demo) +
                               Number(item.m_f_day) +
-                              Number(item.m_o2o) +
-                              Number(item.m_gmt) +
-                              Number(item.m_svn) +
-                              Number(item.m_cap) +
+                              Number(item.m_ifc) +
+                              Number(item.m_fgm) +
+                              Number(item.m_ofm) +
+                              Number(item.m_rtp) +
                               Number(item.m_shc)
                             }
                           />
@@ -1153,10 +1154,10 @@ const BusinessSegment = () => {
                             value={
                               Number(item.w_demo) +
                               Number(item.w_f_day) +
-                              Number(item.w_o2o) +
-                              Number(item.w_gmt) +
-                              Number(item.w_svn) +
-                              Number(item.w_cap) +
+                              Number(item.w_ifc) +
+                              Number(item.w_fgm) +
+                              Number(item.w_ofm) +
+                              Number(item.w_rtp) +
                               Number(item.w_shc)
                             }
                           />

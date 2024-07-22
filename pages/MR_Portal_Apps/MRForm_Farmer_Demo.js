@@ -190,7 +190,7 @@ const AdditionalInfo = (props) => {
     setSubmitFormLoading(true);
     try {
       const data = {
-        demo_date: moment().format("YYYY-MM-DD"),
+        demo_date: moment().format("YYYY-MM-DD[T00:00:00.000Z]"),
         demo_time: new Date(),
         dealer_id: Number(formData.dealer),
         purpose_of_demo: formData.purposeDemo,

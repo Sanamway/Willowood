@@ -168,21 +168,22 @@ const District = () => {
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
                   T-F. Day
                 </th>
+
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  T-O2O
+                  T-IFC
                 </th>
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  T-GMT
+                  T-FGM
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  T-SVN
+                  T-OFM
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  T-GVM
+                  T-MFM
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  T-CAP
+                  T-RTP
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
                   T-SHC
@@ -193,20 +194,21 @@ const District = () => {
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
                   M_F. Day
                 </th>
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider whitespace-nowrap">
-                  M-O2O
+                  M-IFC
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  M-GMT
+                  M-FGM
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  M-SVN
+                  M-OFM
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  M-GVM
+                  M-MFM
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  M-CAP
+                  M-RTP
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
                   M-SHC
@@ -217,20 +219,21 @@ const District = () => {
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
                   W-F. Day
                 </th>
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  W-O2O
+                  W-IFC
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  W-GMT
+                  W-FGM
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  W-SVN
+                  W-OFM
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  W-GVM
+                  W-MFM
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
-                  W-CAP
+                  W-RTP
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap">
                   W-SHC
@@ -320,20 +323,21 @@ const District = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.t_f_day}
                   </td>
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.t_o2o}
+                    {item.t_ifc}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.t_gmt}
+                    {item.t_fgm}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.t_svn}
+                    {item.t_ofm}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.t_gvm}
+                    {item.t_mfm}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.t_cap}
+                    {item.t_rtp}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.t_shc}
@@ -344,20 +348,21 @@ const District = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.m_f_day}
                   </td>
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.m_o2o}
+                    {item.m_ifc}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.m_gmt}
+                    {item.m_fgm}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.m_svn}
+                    {item.m_ofm}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.m_gvm}
+                    {item.m_mfm}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.m_cap}
+                    {item.m_rtp}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.m_shc}
@@ -368,20 +373,21 @@ const District = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.w_f_day}
                   </td>
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.w_o2o}
+                    {item.w_ifc}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.w_gmt}
+                    {item.w_fgm}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.w_svn}
+                    {item.w_ofm}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.w_gvm}
+                    {item.w_mfm}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.w_cap}
+                    {item.w_rtp}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.w_shc}

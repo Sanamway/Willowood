@@ -232,7 +232,7 @@ const AdditionalInfo = (props) => {
     try {
       const data = {
         f_demo_field_no: fDemoCode,
-        demo_field_date: new Date(),
+        demo_field_date: moment().format("YYYY-MM-DD[T00:00:00.000Z]"),
         demo_field_time: new Date(),
         dealer_id: Number(formData.dealer),
         f_demo_code: formData.fDemoCode,
@@ -543,11 +543,11 @@ const AdditionalInfo = (props) => {
                   <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
                     <li
                       className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center "
-                      // onClick={() =>
-                      //   router.push({
-                      //     pathname: "MR_Farmer_list_demo",
-                      //   })
-                      // }
+                      onClick={() =>
+                        router.push({
+                          pathname: "MRFarmer_Field_list",
+                        })
+                      }
                     >
                       <BsCalendar2Month
                         className="text-[#626364] cursor-pointer"
