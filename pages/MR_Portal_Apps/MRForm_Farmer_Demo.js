@@ -467,6 +467,22 @@ const AdditionalInfo = (props) => {
     }
   };
 
+  const uploadImage = async () => {
+    try {
+      const respond = await axios
+        .post(`${url}/api/upload_file`, JSON.stringify(img), {
+          headers: headers,
+        })
+        .then((res) => {
+          if (!res) return;
+          toast.success("Submitted");
+        });
+    } catch (errors) {
+      console.log(errors);
+      toast.error(errors.response?.data.message);
+    }
+  };
+
   const [allState, setAllState] = useState([]);
   const [allStateCityData, setAllStateCityData] = useState([]);
   const [img, setImg] = useState([]);
@@ -1260,13 +1276,8 @@ const AdditionalInfo = (props) => {
                 setImgType("Old");
               }}
             />
-            <input
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              id="fileInput"
-            />
-
+            {console.log("kop", img)}
+            <button onClick={() => uploadImage()}>NONIO</button>
             {!img && (
               <label
                 htmlFor="fileInput "
@@ -1296,12 +1307,7 @@ const AdditionalInfo = (props) => {
                 setImgType("New");
               }}
             />
-            <input
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              id="fileInput"
-            />
+
             {!newImg && (
               <label
                 htmlFor="fileInput "

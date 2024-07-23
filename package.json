@@ -12,6 +12,7 @@
     "@headlessui/react": "^0.0.0-insiders.1469b85",
     "@reduxjs/toolkit": "^2.2.5",
     "axios": "^1.5.1",
+    "buffer": "^6.0.3",
     "chart.js": "^4.4.1",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",

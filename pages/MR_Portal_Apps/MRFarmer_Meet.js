@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import Image from "next/image";
 import { BsCheck2Circle } from "react-icons/bs";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -211,6 +211,7 @@ const AdditionalInfo = (props) => {
             top: 0,
             behavior: "smooth", // Smooth scrolling animation
           });
+          uploadImage();
           setFarmerMobileNumber("");
           generateEmpCode();
           setFormData({
@@ -297,6 +298,7 @@ const AdditionalInfo = (props) => {
         .then((res) => {
           if (!res) return;
           toast.success(res.data.message);
+
           setFarmerState({
             purposeMeet: "",
             meetType: "",
@@ -466,6 +468,64 @@ const AdditionalInfo = (props) => {
     } catch (error) {
       if (error.response) toast.error(error.response.data.message);
     }
+  };
+
+  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedNewImage, setSelectedNewImage] = useState("");
+  const fileInputRef = useRef(null);
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+
+    setSelectedNewImage(file);
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setSelectedImage(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async () => {
+    function getFileExtension(filename) {
+      if (typeof filename !== "string") {
+        console.error("Invalid input. Expected a string.");
+        return "";
+      }
+
+      const parts = filename.split(".");
+      if (parts.length > 1) {
+        return parts[parts.length - 1];
+      } else {
+        return "";
+      }
+    }
+
+    try {
+      const renamedBlob = new Blob([selectedNewImage], {
+        type: selectedNewImage?.type,
+      });
+
+      const fd = new FormData();
+      fd.append("myFile", renamedBlob, `new.jpeg`);
+
+      const response = await axios
+        .post(`${url}/api/upload_file`, fd, {
+          params: {
+            file_path: "mr_meet",
+            farmer_meet_image_Url: `${fMeetCode}.jpej`,
+            f_meet_no: fMeetCode,
+          },
+        })
+        .then(() => {
+          setSelectedImage(""), setSelectedNewImage("");
+        });
+    } catch (error) {}
+  };
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
   };
   return (
     <form
@@ -1266,36 +1326,34 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      <h1 className="flex justify-start font-bold m-4"> Farmer Meet Image</h1>
+      <h1 className="flex justify-start font-bold m-4">Farmer Meet Image</h1>
 
       <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
         <div className="wrap ">
           <div className=" w-full px-2 pt-2 profpic relative group bo">
-            <Image
-              src={""}
-              className=" rounded  bg-gray-200"
+            <img
+              src={selectedImage}
+              className=" rounded  bg-gray-200 w-72 h-60"
               alt="img"
-              width={300}
-              height={200}
+              onClick={triggerFileInput}
             />
-            <input
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              id="fileInput"
-            />
-            <label
-              htmlFor="fileInput "
-              className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
-            >
-              <FaCameraRetro
-                size={50}
-                className="mr-2  self-center size-120 text-black-400"
-              />
-            </label>
+
+            {!selectedImage && (
+              <label
+                htmlFor="fileInput "
+                className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+                onClick={triggerFileInput}
+              >
+                <FaCameraRetro
+                  size={50}
+                  className="mr-2  self-center size-120 text-black-400"
+                />
+              </label>
+            )}
           </div>
         </div>
       </div>
+
       <div className="w-full px-2 pt-2">
         <label
           className="block text-gray-700 text-sm font-bold mb-2"
@@ -1750,6 +1808,14 @@ const AdditionalInfo = (props) => {
           </div>
         </Dialog>
       </Transition>
+      <input
+        type="file"
+        accept="image/*"
+        id="fileInput"
+        className="hidden"
+        onChange={handleImageUpload}
+        ref={fileInputRef}
+      />
     </form>
   );
 };
