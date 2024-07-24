@@ -12,6 +12,8 @@ import { GiFarmer } from "react-icons/gi";
 import { FaMobileAlt } from "react-icons/fa";
 import moment from "moment";
 import { FaArrowAltCircleUp } from "react-icons/fa";
+import { Fragment } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 
 const AdditionalInfo = () => {
   const headers = {
@@ -110,7 +112,8 @@ const AdditionalInfo = () => {
       setFarmerListData([]);
     }
   };
-
+  const [isOpen, setIsOpen] = useState(false);
+  const [imgUrl, setImgUrl] = useState("");
   return (
     <form
       className="bg-white rounded w-full overflow-hidden pb-4"
@@ -416,6 +419,16 @@ const AdditionalInfo = () => {
               </div>
             )}
           </div>
+          <button
+            className="w-full border border-black font-bold text-blue-800"
+            onClick={() => {
+              setIsOpen(true);
+              setImgUrl(item.field_photo_url);
+            }}
+          >
+            {" "}
+            View Farmer Demo Image
+          </button>
           <hr className="bg-gray-200 border-1 w-full" />
         </div>
       ))}
@@ -431,6 +444,59 @@ const AdditionalInfo = () => {
           }
         />
       </div>
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          onClose={() => {
+            setIsOpen(false);
+            setImgUrl("");
+          }}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
+                  >
+                    Farmer Demo Image
+                  </Dialog.Title>
+
+                  <img
+                    className="m-2"
+                    src={imgUrl}
+                    width={500}
+                    height={500}
+                    alt="Picture of the author"
+                  />
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </form>
   );
 };

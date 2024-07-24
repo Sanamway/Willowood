@@ -153,7 +153,6 @@ const AdditionalInfo = (props) => {
   });
 
   const handleAddFarmerMeet = async () => {
-    console.log("poye ", formData);
     try {
       const data = {
         f_meet_no: fMeetCode,
@@ -180,8 +179,7 @@ const AdditionalInfo = (props) => {
         push_product_brand: formData.productBrand.map((item) => item.value),
         farmer_suggestion_opinion_idea: formData.farmerSuggestion,
         expenses_occured_during_meeting: formData.expense,
-        farmer_meet_image_Url:
-          "https://source.unsplash.com/user/c_v_r/1900x800",
+
         remarks: formData.remarks,
 
         next_visit_date: moment(formData.nextVisitDate).format(
@@ -490,16 +488,16 @@ const AdditionalInfo = (props) => {
 
   const uploadImage = async () => {
     function getFileExtension(filename) {
-      if (typeof filename !== "string") {
+      if (typeof filename.name !== "string") {
         console.error("Invalid input. Expected a string.");
-        return "";
+        return toast.error("Input a valid Image");
       }
 
-      const parts = filename.split(".");
+      const parts = filename.name.split(".");
       if (parts.length > 1) {
         return parts[parts.length - 1];
       } else {
-        return "";
+        return "jpg";
       }
     }
 
@@ -509,13 +507,19 @@ const AdditionalInfo = (props) => {
       });
 
       const fd = new FormData();
-      fd.append("myFile", renamedBlob, `new.jpeg`);
+      fd.append(
+        "myFile",
+        renamedBlob,
+        `${fMeetCode}.${getFileExtension(selectedNewImage)}`
+      );
 
       const response = await axios
         .post(`${url}/api/upload_file`, fd, {
           params: {
             file_path: "mr_meet",
-            farmer_meet_image_Url: `${fMeetCode}.jpej`,
+            farmer_meet_image_Url: `${fMeetCode}.${getFileExtension(
+              selectedNewImage
+            )}`,
             f_meet_no: fMeetCode,
           },
         })
@@ -1326,7 +1330,11 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      <h1 className="flex justify-start font-bold m-4">Farmer Meet Image</h1>
+      <h1 className="flex justify-start font-bold m-4">
+        {" "}
+        <FaUpload className="mr-2 text-blue-400 self-center" /> Farmer Meet
+        Image
+      </h1>
 
       <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
         <div className="wrap ">

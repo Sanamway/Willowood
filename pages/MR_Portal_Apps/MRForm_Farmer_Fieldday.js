@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useRef } from "react";
 import Image from "next/image";
 import { BsCheck2Circle } from "react-icons/bs";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -245,7 +245,7 @@ const AdditionalInfo = (props) => {
         farmer_type: formData.farmerType,
 
         plot_size: formData.plotSize,
-        field_day_image_Url: "https://source.unsplash.com/user/c_v_r/1900x800",
+
         farmer_available_in_field_day: formData.farmerNumber,
         location_lat: 12,
         location_long: 21,
@@ -266,10 +266,12 @@ const AdditionalInfo = (props) => {
         .then((res) => {
           if (!res) return;
           toast.success("Submitted");
+          uploadImage();
           window.scrollTo({
             top: 0,
             behavior: "smooth", // Smooth scrolling animation
           });
+
           setFormData({
             purposeDemo: "",
             dealer: "",
@@ -289,9 +291,6 @@ const AdditionalInfo = (props) => {
           });
           setProductDemoTableData([]);
           setFollowTableData([]);
-          router.push({
-            pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
-          });
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
@@ -441,7 +440,7 @@ const AdditionalInfo = (props) => {
 
     if (number.length === 10) {
       try {
-        const respond = await axios.get(`${url}/api/get_mr_form_demo`, {
+        const respond = await axios.get(`${url}/api/get_farmer`, {
           headers: headers,
           params: {
             mob_no: number,
@@ -453,37 +452,26 @@ const AdditionalInfo = (props) => {
             emp_code: window.localStorage.getItem("emp_code"),
           },
         });
-        const apires = await respond.data.data.MR_demo[0];
+
+        const apires = await respond.data.data[0];
+        console.log("zui", apires);
         setFormData({
           ...formData,
-          purposeDemo: apires.purpose_of_demo,
-          dealer: apires.d_id,
-          fDemoCode: apires.f_demo_code,
-          farmerId: apires.farmer_id,
-          farmerName: apires.farmer_name,
-          farmerFatherName: apires.farmer_father_name,
-          village: apires.village,
-          farmerType: apires.farmer_type,
-          plotSize: apires.plot_size,
+          
+          purposeMeet: formData.purposeMeet,
+          meetType: formData.meetType,
+          farmerMobile: number,
+          farmerId: apires.f_id,
+          farmerName: apires.f_name,
+          farmerFatherName: apires.ff_name,
+          farmerType: apires.f_type,
+          plotSize: apires.f_lacre,
+          village: apires.v_id,
         });
         console.log("New", apires);
       } catch (error) {
         setFormData({
-          purposeDemo: "",
-          dealer: "",
-
-          farmerId: "",
-          farmerName: "",
-          farmerFatherName: "",
-          village: "",
-          farmerType: "",
-          plotSize: "",
-          farmerObservation: "",
-          productRating: "",
-          remarks: "",
-          potentialFarmer: "",
-          nextVisitDate: "",
-          status: "Open",
+          ...formData,
         });
       }
     } else {
@@ -506,6 +494,74 @@ const AdditionalInfo = (props) => {
       });
     }
   };
+
+  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedNewImage, setSelectedNewImage] = useState("");
+  const fileInputRef = useRef(null);
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+
+    setSelectedNewImage(file);
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setSelectedImage(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async () => {
+    function getFileExtension(filename) {
+      if (typeof filename.name !== "string") {
+        console.error("Invalid input. Expected a string.");
+        return toast.error("Input a valid Image");
+      }
+
+      const parts = filename.name.split(".");
+      if (parts.length > 1) {
+        return parts[parts.length - 1];
+      } else {
+        return "jpg";
+      }
+    }
+
+    try {
+      const renamedBlob = new Blob([selectedNewImage], {
+        type: selectedNewImage?.type,
+      });
+
+      const fd = new FormData();
+      fd.append(
+        "myFile",
+        renamedBlob,
+        `${fDemoCode}.${getFileExtension(selectedNewImage)}`
+      );
+
+      const response = await axios
+        .post(`${url}/api/upload_file`, fd, {
+          params: {
+            file_path: "mr_fieldday",
+            field_day_image_Url: `${fDemoCode}.${getFileExtension(
+              selectedNewImage
+            )}`,
+            f_demo_field_no: fDemoCode,
+          },
+        })
+        .then(() => {
+          setSelectedImage("");
+          setSelectedNewImage("");
+        });
+    } catch (error) {
+      console.log("NOP", error);
+    }
+  };
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <form
       className="bg-white rounded w-full overflow-hidden pb-4"
@@ -1075,32 +1131,26 @@ const AdditionalInfo = (props) => {
       </h1>
       <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
         <div className="wrap ">
-          <div className=" w-full px-2 profpic relative group">
-            <Image
-              src={""}
-              className="h-32 w-full rounded bg-gray-200"
-              width={250}
-              height={100}
+          <div className=" w-full px-2 pt-2 profpic relative group bo">
+            <img
+              src={selectedImage}
+              className=" rounded  bg-gray-200 w-72 h-60"
+              alt="img"
+              onClick={triggerFileInput}
             />
-            <input
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              id="fileInput"
-            />
-            <label
-              htmlFor="fileInput "
-              className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
-                userImage == "" ? "opacity-50" : "opacity-0"
-              } ${
-                userImage !== ""
-                  ? "group-hover:opacity-100"
-                  : "group-hover:opacity-0"
-              }  transition-opacity duration-300`}
-            >
-              <span className="text-red-500 whitespace-nowrap text-xs">*</span>{" "}
-              Upload the field day Image
-            </label>
+
+            {!selectedImage && (
+              <label
+                htmlFor="fileInput "
+                className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+                onClick={triggerFileInput}
+              >
+                <FaCameraRetro
+                  size={50}
+                  className="mr-2  self-center size-120 text-black-400"
+                />
+              </label>
+            )}
           </div>
         </div>
       </div>
@@ -1553,6 +1603,14 @@ const AdditionalInfo = (props) => {
           </div>
         </Dialog>
       </Transition>
+      <input
+        type="file"
+        accept="image/*"
+        id="fileInput"
+        className="hidden"
+        onChange={handleImageUpload}
+        ref={fileInputRef}
+      />
     </form>
   );
 };

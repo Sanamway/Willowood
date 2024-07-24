@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useRef } from "react";
 import Image from "next/image";
 import { BsCheck2Circle } from "react-icons/bs";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -14,7 +14,7 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 import Navbar from "@/components/MR_Portal_Apps/Navbar";
-import { FaArrowAltCircleUp } from "react-icons/fa";
+import { FaArrowAltCircleUp, FaUpload } from "react-icons/fa";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
@@ -25,6 +25,7 @@ import { BsCalendar2Month } from "react-icons/bs";
 import { IoTodayOutline } from "react-icons/io5";
 import { Dialog, Transition } from "@headlessui/react";
 import CameraComponent from "@/components/Camera";
+
 const AdditionalInfo = (props) => {
   const headers = {
     "Content-Type": "application/json",
@@ -203,7 +204,7 @@ const AdditionalInfo = (props) => {
         farmer_type: formData.farmerType,
         plot_size: formData.plotSize,
         demo_photo_url: "https://source.unsplash.com/user/c_v_r/1900x800",
-        field_photo_url: "https://source.unsplash.com/user/c_v_r/1900x800",
+
         location_lat: 12,
         location_long: 21,
         potential_farmer: formData.potentialFarmer,
@@ -226,6 +227,7 @@ const AdditionalInfo = (props) => {
             top: 0,
             behavior: "smooth", // Smooth scrolling animation
           });
+          uploadImage();
           generateEmpCode();
 
           setSubmitFormLoading(false);
@@ -467,22 +469,6 @@ const AdditionalInfo = (props) => {
     }
   };
 
-  const uploadImage = async () => {
-    try {
-      const respond = await axios
-        .post(`${url}/api/upload_file`, JSON.stringify(img), {
-          headers: headers,
-        })
-        .then((res) => {
-          if (!res) return;
-          toast.success("Submitted");
-        });
-    } catch (errors) {
-      console.log(errors);
-      toast.error(errors.response?.data.message);
-    }
-  };
-
   const [allState, setAllState] = useState([]);
   const [allStateCityData, setAllStateCityData] = useState([]);
   const [img, setImg] = useState([]);
@@ -533,6 +519,74 @@ const AdditionalInfo = (props) => {
     getProductDemoTable(fDemoCode);
   }, [fDemoCode]);
   const [showCamera, setShowCamera] = useState(false);
+
+  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedNewImage, setSelectedNewImage] = useState("");
+  const fileInputRef = useRef(null);
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+
+    setSelectedNewImage(file);
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setSelectedImage(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async () => {
+    function getFileExtension(filename) {
+      if (typeof filename.name !== "string") {
+        console.error("Invalid input. Expected a string.");
+        return toast.error("Input a valid Image");
+      }
+
+      const parts = filename.name.split(".");
+      if (parts.length > 1) {
+        return parts[parts.length - 1];
+      } else {
+        return "jpg";
+      }
+    }
+
+    try {
+      const renamedBlob = new Blob([selectedNewImage], {
+        type: selectedNewImage?.type,
+      });
+
+      const fd = new FormData();
+      fd.append(
+        "myFile",
+        renamedBlob,
+        `${fDemoCode}.${getFileExtension(selectedNewImage)}`
+      );
+
+      const response = await axios
+        .post(`${url}/api/upload_file`, fd, {
+          params: {
+            file_path: "mr_demo",
+            field_photo_url: `${fDemoCode}.${getFileExtension(
+              selectedNewImage
+            )}`,
+            f_demo_code: fDemoCode,
+          },
+        })
+        .then(() => {
+          setSelectedImage("");
+          setSelectedNewImage("");
+        });
+    } catch (error) {
+      console.log("NOP", error);
+    }
+  };
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -1276,8 +1330,7 @@ const AdditionalInfo = (props) => {
                 setImgType("Old");
               }}
             />
-            {console.log("kop", img)}
-            <button onClick={() => uploadImage()}>NONIO</button>
+
             {!img && (
               <label
                 htmlFor="fileInput "
@@ -1293,32 +1346,33 @@ const AdditionalInfo = (props) => {
         </div>
         <div className="wrap ">
           <h1 className="flex justify-center font-bold m-4">
-            Capture Fields Photo
+            <FaUpload className="mr-2 text-blue-400 self-center" /> Upload the
+            field day Image
           </h1>
-          <div className=" w-full px-2 profpic relative group">
-            <Image
-              src={newImg}
-              className=" rounded bg-gray-200"
-              alt="img"
-              width={300}
-              height={200}
-              onClick={() => {
-                setShowCamera(true);
-                setImgType("New");
-              }}
-            />
-
-            {!newImg && (
-              <label
-                htmlFor="fileInput "
-                className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
-              >
-                <FaCameraRetro
-                  size={50}
-                  className="mr-2  self-center size-120 text-black-400"
+          <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
+            <div className="wrap ">
+              <div className=" w-full px-2 pt-2 profpic relative group bo">
+                <img
+                  src={selectedImage}
+                  className=" rounded  bg-gray-200 w-72 h-60"
+                  alt="img"
+                  onClick={triggerFileInput}
                 />
-              </label>
-            )}
+
+                {!selectedImage && (
+                  <label
+                    htmlFor="fileInput "
+                    className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+                    onClick={triggerFileInput}
+                  >
+                    <FaCameraRetro
+                      size={50}
+                      className="mr-2  self-center size-120 text-black-400"
+                    />
+                  </label>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1766,6 +1820,14 @@ const AdditionalInfo = (props) => {
           </div>
         </Dialog>
       </Transition>
+      <input
+        type="file"
+        accept="image/*"
+        id="fileInput"
+        className="hidden"
+        onChange={handleImageUpload}
+        ref={fileInputRef}
+      />
     </form>
   );
 };

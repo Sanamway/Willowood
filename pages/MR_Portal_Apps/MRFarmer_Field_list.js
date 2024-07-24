@@ -114,6 +114,7 @@ const AdditionalInfo = () => {
     }
   };
   const [isOpen, setIsOpen] = useState(false);
+  const [imgUrl, setImgUrl] = useState("");
   return (
     <form
       className="bg-white rounded w-full overflow-hidden pb-4"
@@ -371,7 +372,10 @@ const AdditionalInfo = () => {
 
           <button
             className="w-full border border-black text-sm font-bold text-blue-800"
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              setIsOpen(true);
+              setImgUrl(item.field_day_image_Url);
+            }}
           >
             {" "}
             View Filed Day Image
@@ -395,7 +399,10 @@ const AdditionalInfo = () => {
         <Dialog
           as="div"
           className="relative z-10"
-          onClose={() => setIsOpen(false)}
+          onClose={() => {
+            setIsOpen(false);
+            setImgUrl("");
+          }}
         >
           <Transition.Child
             as={Fragment}
@@ -428,8 +435,9 @@ const AdditionalInfo = () => {
                     Filed Day Image
                   </Dialog.Title>
 
-                  <Image
-                    src="/profile.png"
+                  <img
+                    className="m-2"
+                    src={imgUrl}
                     width={500}
                     height={500}
                     alt="Picture of the author"
