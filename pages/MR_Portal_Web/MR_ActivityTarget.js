@@ -225,7 +225,7 @@ const BusinessSegment = () => {
       });
       const respond = await axios.get(`${url}/api/get_mr_category`, {
         params: {
-          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          c_id: 1,
         },
         headers: headers,
       });

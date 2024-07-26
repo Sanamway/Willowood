@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import { BsBell, BsQuestionSquare } from "react-icons/bs";
 import { AiOutlineMail } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
-import Profile from "../public/userimg.jpg";
 import Image from "next/image";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdLogout } from "react-icons/md";
 // import WillLogo from "../public/Willowood.png";
-import WillLogo from "../public/NewLogo.png";
+import WillLogo from "@/public/NewLogo.png";
 import { Popover } from "@headlessui/react";
 import { useRouter } from "next/router";
 import menuItems from "@/constants/sidebarMenus";
@@ -16,7 +15,7 @@ import { url } from "@/constants/url";
 import Link from "next/link";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import WhatsAppChat from "../public/whatsappchat.webp";
+
 import { FcVoicePresentation } from "react-icons/fc";
 import toast, { Toaster } from "react-hot-toast";
 

@@ -3,16 +3,14 @@ import { Dialog, Transition } from "@headlessui/react";
 import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
-import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
-import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import Layout from "@/components/Layout1";
 import { MdDelete } from "react-icons/md";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import ConfirmationModal from "@/components/modals/ConfirmationModal";
+
 const HolidayCalender = () => {
   const router = useRouter();
 
@@ -53,14 +51,10 @@ const HolidayCalender = () => {
         headers: headers,
       });
       const apires = await respond.data.data;
-
       setBgData(
-        apires.filter(
-          (item) =>
-            item.isDeleted === false &&
-            Number(item.c_id) ===
-              JSON.parse(window.localStorage.getItem("userinfo")).c_id
-        )
+        apires.filter((item) => {
+          return item.isDeleted === false;
+        })
       );
     } catch (error) {
       console.log(error);
@@ -347,24 +341,7 @@ const HolidayCalender = () => {
           </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
-              <div className="container">
-                <form className="form flex items-center ">
-                  <input
-                    type="search"
-                    placeholder="Search"
-                    className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
-                  />
-                  <button
-                    type="submit"
-                    className="bg-blue-500 text-white rounded-r-md p-1 "
-                  >
-                    <AiOutlineSearch
-                      className="mx-2 my-1"
-                      size={20}
-                    ></AiOutlineSearch>
-                  </button>
-                </form>
-              </div>
+              <div className="container"></div>
             </div>
             <h2>
               {/* <CSVLink data={data} headers={csvHeaders}>
@@ -376,7 +353,15 @@ const HolidayCalender = () => {
             </h2>
 
             <h2>
-              <AiTwotoneHome className="text-black-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome
+                className="text-black"
+                size={34}
+                onClick={() => {
+                  router.push("/");
+                }}
+              >
+                {" "}
+              </AiTwotoneHome>
             </h2>
             {/* <button
          onClick={() => {

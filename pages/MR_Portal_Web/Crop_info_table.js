@@ -82,19 +82,6 @@ const AdditionalInfo = (props) => {
             Crop Info
           </h2>
           <span className="flex items-center gap-2 cursor-pointer">
-            <span className="flex flex-row">
-              <input
-                type="search"
-                placeholder="Search"
-                className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
-              />
-              <button
-                type="submit"
-                className="bg-blue-500 text-white rounded-r-md p-1 "
-              >
-                <AiOutlineSearch className="mx-2 my-1" size={20} />
-              </button>
-            </span>
             <h2></h2>
             <AiTwotoneHome
               className="text-black"

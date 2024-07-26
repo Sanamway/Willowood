@@ -19,7 +19,7 @@ const AdditionalInfo = (props) => {
       const resp = await axios.get(`${url}/api/get_product_brand`, {
         headers: headers,
         params: {
-          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          c_id: JSON.parse(window.localStorage.getItem("c_id"))[0],
         },
       });
       const respData = await resp.data.data;
@@ -35,7 +35,7 @@ const AdditionalInfo = (props) => {
       const resp = await axios.get(`${url}/api/get_product_segment`, {
         headers: headers,
         params: {
-          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          c_id: JSON.parse(window.localStorage.getItem("c_id"))[0],
         },
       });
       const respData = await resp.data.data;
@@ -62,7 +62,7 @@ const AdditionalInfo = (props) => {
         headers: headers,
         params: {
           cr_id: router.query.crId,
-          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          c_id: JSON.parse(window.localStorage.getItem("c_id"))[0],
         },
       });
       const apires = await respond.data.data;
@@ -120,12 +120,12 @@ const AdditionalInfo = (props) => {
     if (router.query.type === "Add") {
       setAllFilters({
         ...allFilters,
-        companyId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        companyId: JSON.parse(window.localStorage.getItem("c_id"))[0],
       });
     } else {
       getCropInfo();
       setAllFilters({
-        companyId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        companyId: JSON.parse(window.localStorage.getItem("c_id"))[0],
         crop: router.query.crId,
         season: router.query.season,
       });
@@ -137,6 +137,9 @@ const AdditionalInfo = (props) => {
     try {
       const respond = await axios.get(`${url}/api/get_dist_state`, {
         headers: headers,
+        params: {
+          c_id: JSON.parse(window.localStorage.getItem("c_id"))[0],
+        },
       });
       const apires = await respond.data.data;
 
@@ -147,6 +150,7 @@ const AdditionalInfo = (props) => {
   useEffect(() => {
     getDistrict();
   }, []);
+
   const [allCompanyData, setAllCompanyData] = useState([]);
   const getCompanyInfo = async () => {
     try {
@@ -193,6 +197,7 @@ const AdditionalInfo = (props) => {
   }, [allFilters.crop]);
 
   useEffect(() => {
+    if (!allFilters.companyId) return;
     getCrops(allFilters.companyId);
   }, [allFilters.companyId]);
   useEffect(() => {
@@ -610,10 +615,10 @@ const AdditionalInfo = (props) => {
 
   return (
     <Layout>
-      <div className="bg-white rounded p-4 w-full overflow-auto">
+      <div className="bg-white rounded p-4 w-full h-full   overflow-auto no-scrollbar">
         <Toaster position="bottom-center" reverseOrder={false} />
         {/* Filters */}
-        <div className="mb-8">
+        <div className="mb-8 text-sm">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="text-black">Company</label>
@@ -643,7 +648,7 @@ const AdditionalInfo = (props) => {
               <select
                 className="block w-full text-black border border-gray-400 rounded py-2 px-4"
                 value={allFilters.crop}
-                disabled={router.query.type !== ""}
+                disabled={router.query.type !== "Add"}
                 onChange={(e) => {
                   setAllFilters({
                     ...allFilters,
@@ -674,11 +679,11 @@ const AdditionalInfo = (props) => {
         {/* Form */}
         <form>
           <div className="mb-8">
-            <h2 className="text-xl font-bold mb-4">
+            <h2 className="text-md font-bold mb-4">
               Crop Details (District Level)
             </h2>
             <div className="overflow-x-auto">
-              <table className="border-collapse border border-gray-400 w-full">
+              <table className="border-collapse border border-gray-400 w-full text-sm">
                 <colgroup>
                   <col style={{ width: "15%" }} />
                   <col style={{ width: "14%" }} />
@@ -691,7 +696,7 @@ const AdditionalInfo = (props) => {
                   <col style={{ width: "20%" }} />
                 </colgroup>
                 <thead>
-                  <tr className="bg-blue-500 text-white">
+                  <tr className="bg-blue-500 text-white text-sm">
                     <th className="border border-gray-400 px-4 py-2">
                       District
                     </th>
@@ -1048,11 +1053,11 @@ const AdditionalInfo = (props) => {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-xl font-bold mb-4">
+            <h2 className="text-md font-bold mb-4">
               Crop Segmentation (District Level)
             </h2>
             <div className="overflow-x-auto">
-              <table className="border-collapse border border-gray-400 w-full">
+              <table className="border-collapse border border-gray-400 w-full text-sm">
                 <colgroup>
                   <col style={{ width: "10%" }} />{" "}
                   {/* Adjust width as needed */}
@@ -1464,11 +1469,11 @@ const AdditionalInfo = (props) => {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-xl font-bold mb-4">
+            <h2 className="text-md font-bold mb-4">
               Crop Market Share (District Level)
             </h2>
             <div className="overflow-x-auto">
-              <table className="border-collapse border border-gray-400 w-full">
+              <table className="border-collapse border border-gray-400 w-full text-sm">
                 <colgroup>
                   <col style={{ width: "10%" }} />{" "}
                   {/* Adjust width as needed */}
@@ -1663,7 +1668,7 @@ const AdditionalInfo = (props) => {
             <div className="w-full flex h-20 gap-4 mt-4">
               {router.query.type !== "View" && (
                 <button
-                  className="text-center rounded-md bg-green-500 text-white py-1 px-4 h-12 text-lg w-24"
+                  className="text-center rounded-md bg-green-500 text-white py-1 px-4 h-8 text-lg w-24"
                   type="submit"
                   onClick={(e) => handleSubmit(e)}
                 >
@@ -1671,7 +1676,7 @@ const AdditionalInfo = (props) => {
                 </button>
               )}
               <button
-                className="text-center rounded-md bg-red-500 text-white py-1 px-4 text-lg h-12 w-24"
+                className="text-center rounded-md bg-red-500 text-white py-1 px-4 text-lg h-8 w-24"
                 type="submit"
                 onClick={(e) => {
                   e.preventDefault();
