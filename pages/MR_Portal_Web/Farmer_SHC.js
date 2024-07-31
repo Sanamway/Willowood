@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
-import { AiOutlineSearch } from "react-icons/ai";
+
 import axios from "axios";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
@@ -26,14 +26,30 @@ const FarmerSHC = () => {
   };
 
   const [pageCount, setPageCount] = useState(0);
-  const getFarmerDemo = async (currentPage) => {
+  const getFarmerDemo = async (
+    currentPage,
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    from,
+    to,
+    empCode
+  ) => {
     try {
-      const respond = await axios.get(`${url}/api/get_farmer_meet`, {
+      const respond = await axios.get(`${url}/api/get_mr_shc`, {
         headers: headers,
         params: {
-          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+          to: moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          emp_code: window.localStorage.getItem("emp_code"),
+          emp_code: empCode,
           paging: true,
           page: currentPage,
           size: 50,
@@ -43,12 +59,10 @@ const FarmerSHC = () => {
       const count = await respond.data.data.Total_count;
       setPageCount(Math.ceil(count / 50));
       setData(apires);
-    } catch (error) {}
+    } catch (error) {
+      setData([]);
+    }
   };
-
-  useEffect(() => {
-    getFarmerDemo(currentPage.selected + 1);
-  }, [currentPage.selected]);
 
   const [showImageModal, setShowImageModal] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
@@ -170,7 +184,7 @@ const FarmerSHC = () => {
     buDes: null,
     bgDes: null,
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-    endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
   });
 
   const [bgData, setBgData] = useState([]);
@@ -318,7 +332,9 @@ const FarmerSHC = () => {
       });
       const apires = await respond.data.data;
       setAllEmployee(apires);
-    } catch (error) {}
+    } catch (error) {
+      setAllEmployee([]);
+    }
   };
   useEffect(() => {
     getAllEmployeeData(
@@ -373,7 +389,11 @@ const FarmerSHC = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -427,7 +447,11 @@ const FarmerSHC = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -480,7 +504,11 @@ const FarmerSHC = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -535,7 +563,11 @@ const FarmerSHC = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -580,7 +612,11 @@ const FarmerSHC = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -634,13 +670,40 @@ const FarmerSHC = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         });
         setFilterState(filterState);
 
         break;
     }
   }, []);
+  useEffect(() => {
+    getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
+  }, [
+    currentPage.selected,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+    filterState.startDate,
+    filterState.endDate,
+    filterState.empCode,
+  ]);
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -672,10 +735,10 @@ const FarmerSHC = () => {
                 setFilterState({
                   ...filterState,
                   bgId: e.target.value,
-                  buId: "",
-                  zId: "",
-                  rId: "",
-                  tId: "",
+                  buId: "All",
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -712,9 +775,9 @@ const FarmerSHC = () => {
                   ...filterState,
                   buId: e.target.value,
 
-                  zId: "",
-                  rId: "",
-                  tId: "",
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -748,8 +811,8 @@ const FarmerSHC = () => {
                 setFilterState({
                   ...filterState,
                   zId: e.target.value,
-                  rId: "",
-                  tId: "",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -785,7 +848,7 @@ const FarmerSHC = () => {
                 setFilterState({
                   ...filterState,
                   rId: e.target.value,
-                  tId: "",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -847,7 +910,9 @@ const FarmerSHC = () => {
               selected={filterState.startDate}
               placeholderText="Enter Date"
               scrollableYearDropdown
-              // onChange={handleYearChange}
+              onChange={(date) =>
+                setFilterState({ ...filterState, startDate: date })
+              }
               hand
             />
             <small>TO</small>
@@ -856,9 +921,10 @@ const FarmerSHC = () => {
               dateFormat="dd-MM-yyyy"
               selected={filterState.endDate}
               placeholderText="Enter Date"
-              // selected={selectedYear}
               scrollableYearDropdown
-              // onChange={handleYearChange}
+              onChange={(date) =>
+                setFilterState({ ...filterState, endDate: date })
+              }
               hand
             />
           </div>
@@ -877,6 +943,12 @@ const FarmerSHC = () => {
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   SHC Date
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Emp Code
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Emp Name
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Farmer Mobile No
@@ -941,6 +1013,21 @@ const FarmerSHC = () => {
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Deleted
                 </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Territory
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Region
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Zone
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Business Unit
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Company
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
@@ -990,14 +1077,20 @@ const FarmerSHC = () => {
                     </button>
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.f_meet_no}
+                    {item.f_shc_no}
                   </td>
                   {/* <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {moment(item.next_followup_date).format("MM/DD/YYYY")}
                     </td> */}
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.purpose_of_meeting}
+                    {moment(item.shc_date).format("MM/DD/YYYY")}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.emp_code}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.emp_name}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.farmer_mob_no}
@@ -1059,8 +1152,24 @@ const FarmerSHC = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.copper}
                   </td>
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.isDeleted ? "Yes" : "No"}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.territory_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.region_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.zone_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.business_unit_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.cmpny_name}
                   </td>
                 </tr>
               ))}

@@ -942,7 +942,12 @@ const FarmerMeet = () => {
                 <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   F Meet Code
                 </th>
-
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Emp Code
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Emp Name
+                </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Purpose of Meet
                 </th>
@@ -1025,6 +1030,21 @@ const FarmerMeet = () => {
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Status
                 </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Territory
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Region
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Zone
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Business Unit
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Company
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
@@ -1084,6 +1104,12 @@ const FarmerMeet = () => {
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.f_meet_no}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.emp_code}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.emp_name}
                   </td>
                   {/* <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {moment(item.next_followup_date).format("MM/DD/YYYY")}
@@ -1168,6 +1194,21 @@ const FarmerMeet = () => {
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.status}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.territory_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.region_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.zone_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.business_unit_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.cmpny_name}
                   </td>
                 </tr>
               ))}

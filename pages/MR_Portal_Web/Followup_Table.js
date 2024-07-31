@@ -946,7 +946,12 @@ const DemoTable = () => {
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Re Visit Date
                 </th>
-
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Emp Code
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Emp Name
+                </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Dealer
                 </th>
@@ -993,9 +998,7 @@ const DemoTable = () => {
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Next Follow Up Date
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Territory
-                </th>
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   User
                 </th>
@@ -1004,6 +1007,21 @@ const DemoTable = () => {
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Status
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Territory
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Region
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Zone
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Business Unit
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Company
                 </th>
               </tr>
             </thead>
@@ -1059,9 +1077,15 @@ const DemoTable = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {moment(item.next_followup_date).format("MM/DD/YYYY")}
                   </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.emp_code}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.emp_name}
+                  </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.dealer}
+                    {item.dealer_des}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.farmer_mob_no}
@@ -1105,9 +1129,7 @@ const DemoTable = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {moment(item.next_followup_date).format("MM/DD/YYYY")}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.territory_name}
-                  </td>
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.user_name}
                   </td>
@@ -1117,6 +1139,21 @@ const DemoTable = () => {
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.status}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.territory_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.region_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.zone_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.business_unit_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.cmpny_name}
                   </td>
                 </tr>
               ))}

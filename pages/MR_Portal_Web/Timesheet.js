@@ -26,14 +26,30 @@ const Timesheet = () => {
   };
 
   const [pageCount, setPageCount] = useState(0);
-  const getTimesheet = async (currentPage) => {
+  const getTimesheet = async (
+    currentPage,
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    from,
+    to,
+    empCode
+  ) => {
     try {
       const respond = await axios.get(`${url}/api/get_emp_attendance`, {
         headers: headers,
         params: {
-          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+          to: moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          emp_code: window.localStorage.getItem("emp_code"),
+          emp_code: empCode,
           paging: true,
           page: currentPage,
           size: 50,
@@ -44,12 +60,10 @@ const Timesheet = () => {
       const count = await respond.data.data.Total_count;
       setPageCount(Math.ceil(count / 50));
       setData(apires);
-    } catch (error) {}
+    } catch (error) {
+      setData([]);
+    }
   };
-
-  useEffect(() => {
-    getTimesheet(currentPage.selected + 1);
-  }, [currentPage.selected]);
 
   const [showImageModal, setShowImageModal] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
@@ -172,7 +186,7 @@ const Timesheet = () => {
     buDes: null,
     bgDes: null,
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-    endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
   });
 
   const [bgData, setBgData] = useState([]);
@@ -304,25 +318,41 @@ const Timesheet = () => {
     );
   }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
   const [allEmployee, setAllEmployee] = useState([]);
-  const getAllEmployeeData = async () => {
+  const getAllEmployeeData = async (bg, bu, z, r, t) => {
     try {
       const respond = await axios.get(`${url}/api/get_employee`, {
         headers: headers,
         params: {
-          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          zrt: true,
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         },
       });
-
       const apires = await respond.data.data;
-
       setAllEmployee(apires);
-    } catch (error) {}
+    } catch (error) {
+      setAllEmployee([]);
+    }
   };
   useEffect(() => {
-    getAllEmployeeData();
-  }, []);
-  2;
+    getAllEmployeeData(
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId
+    );
+  }, [
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+  ]);
   useEffect(() => {
     // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     const roleId = 6;
@@ -361,7 +391,11 @@ const Timesheet = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -415,7 +449,11 @@ const Timesheet = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -468,7 +506,11 @@ const Timesheet = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -523,7 +565,11 @@ const Timesheet = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -568,7 +614,11 @@ const Timesheet = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -622,13 +672,41 @@ const Timesheet = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         });
         setFilterState(filterState);
 
         break;
     }
   }, []);
+
+  useEffect(() => {
+    getTimesheet(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
+  }, [
+    currentPage.selected,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+    filterState.startDate,
+    filterState.endDate,
+    filterState.empCode,
+  ]);
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -680,10 +758,10 @@ const Timesheet = () => {
                 setFilterState({
                   ...filterState,
                   bgId: e.target.value,
-                  buId: "",
-                  zId: "",
-                  rId: "",
-                  tId: "",
+                  buId: "All",
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -720,9 +798,9 @@ const Timesheet = () => {
                   ...filterState,
                   buId: e.target.value,
 
-                  zId: "",
-                  rId: "",
-                  tId: "",
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -756,8 +834,8 @@ const Timesheet = () => {
                 setFilterState({
                   ...filterState,
                   zId: e.target.value,
-                  rId: "",
-                  tId: "",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -793,7 +871,7 @@ const Timesheet = () => {
                 setFilterState({
                   ...filterState,
                   rId: e.target.value,
-                  tId: "",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -855,7 +933,9 @@ const Timesheet = () => {
               selected={filterState.startDate}
               placeholderText="Enter Date"
               scrollableYearDropdown
-              // onChange={handleYearChange}
+              onChange={(date) =>
+                setFilterState({ ...filterState, startDate: date })
+              }
               hand
             />
             <small>TO</small>
@@ -866,7 +946,9 @@ const Timesheet = () => {
               placeholderText="Enter Date"
               // selected={selectedYear}
               scrollableYearDropdown
-              // onChange={handleYearChange}
+              onChange={(date) =>
+                setFilterState({ ...filterState, endDate: date })
+              }
               hand
             />
           </div>
@@ -883,8 +965,9 @@ const Timesheet = () => {
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Name
+                  Emp Name
                 </th>
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Attendence Type
                 </th>
@@ -906,6 +989,21 @@ const Timesheet = () => {
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Deleted
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Territory
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Region
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Zone
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Business Unit
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Company
                 </th>
               </tr>
             </thead>
@@ -958,10 +1056,10 @@ const Timesheet = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.emp_code}
                   </td>
-
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.user_name}
+                    {item.emp_name}
                   </td>
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.attendance_type}
                   </td>
@@ -984,6 +1082,21 @@ const Timesheet = () => {
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.isDeleted ? "Enable" : "Disable"}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.territory_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.region_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.zone_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.business_unit_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.cmpny_name}
                   </td>
                 </tr>
               ))}
