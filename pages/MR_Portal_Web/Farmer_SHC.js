@@ -302,25 +302,39 @@ const FarmerSHC = () => {
     );
   }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
   const [allEmployee, setAllEmployee] = useState([]);
-  const getAllEmployeeData = async () => {
+  const getAllEmployeeData = async (bg, bu, z, r, t) => {
     try {
       const respond = await axios.get(`${url}/api/get_employee`, {
         headers: headers,
         params: {
-          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          zrt: true,
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         },
       });
-
       const apires = await respond.data.data;
-
       setAllEmployee(apires);
     } catch (error) {}
   };
   useEffect(() => {
-    getAllEmployeeData();
-  }, []);
-  2;
+    getAllEmployeeData(
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId
+    );
+  }, [
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+  ]);
   useEffect(() => {
     // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     const roleId = 6;

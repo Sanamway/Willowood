@@ -26,14 +26,30 @@ const FarmerMeet = () => {
   };
 
   const [pageCount, setPageCount] = useState(0);
-  const getFarmerDemo = async (currentPage) => {
+  const getFarmerDemo = async (
+    currentPage,
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    from,
+    to,
+    empCode
+  ) => {
     try {
       const respond = await axios.get(`${url}/api/get_farmer_meet`, {
         headers: headers,
         params: {
-          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+          to: moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          emp_code: window.localStorage.getItem("emp_code"),
+          emp_code: empCode,
           paging: true,
           page: currentPage,
           size: 50,
@@ -43,12 +59,10 @@ const FarmerMeet = () => {
       const count = await respond.data.data.Total_count;
       setPageCount(Math.ceil(count / 50));
       setData(apires);
-    } catch (error) {}
+    } catch (error) {
+      setData([]);
+    }
   };
-
-  useEffect(() => {
-    getFarmerDemo(currentPage.selected + 1);
-  }, [currentPage.selected]);
 
   const [showImageModal, setShowImageModal] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
@@ -172,7 +186,8 @@ const FarmerMeet = () => {
     buDes: null,
     bgDes: null,
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-    endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
+    empCode: null,
   });
 
   const [bgData, setBgData] = useState([]);
@@ -304,25 +319,39 @@ const FarmerMeet = () => {
     );
   }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
   const [allEmployee, setAllEmployee] = useState([]);
-  const getAllEmployeeData = async () => {
+  const getAllEmployeeData = async (bg, bu, z, r, t) => {
     try {
       const respond = await axios.get(`${url}/api/get_employee`, {
         headers: headers,
         params: {
-          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          zrt: true,
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         },
       });
-
       const apires = await respond.data.data;
-
       setAllEmployee(apires);
     } catch (error) {}
   };
   useEffect(() => {
-    getAllEmployeeData();
-  }, []);
-  2;
+    getAllEmployeeData(
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId
+    );
+  }, [
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+  ]);
   useEffect(() => {
     // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     const roleId = 6;
@@ -361,7 +390,11 @@ const FarmerMeet = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -415,7 +448,11 @@ const FarmerMeet = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -468,7 +505,11 @@ const FarmerMeet = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -523,7 +564,11 @@ const FarmerMeet = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -568,7 +613,11 @@ const FarmerMeet = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -622,13 +671,40 @@ const FarmerMeet = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         });
         setFilterState(filterState);
 
         break;
     }
   }, []);
+  useEffect(() => {
+    getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
+  }, [
+    currentPage.selected,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+    filterState.startDate,
+    filterState.endDate,
+    filterState.empCode,
+  ]);
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -660,10 +736,10 @@ const FarmerMeet = () => {
                 setFilterState({
                   ...filterState,
                   bgId: e.target.value,
-                  buId: "",
-                  zId: "",
-                  rId: "",
-                  tId: "",
+                  buId: "All",
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -700,9 +776,9 @@ const FarmerMeet = () => {
                   ...filterState,
                   buId: e.target.value,
 
-                  zId: "",
-                  rId: "",
-                  tId: "",
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -736,8 +812,8 @@ const FarmerMeet = () => {
                 setFilterState({
                   ...filterState,
                   zId: e.target.value,
-                  rId: "",
-                  tId: "",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -773,7 +849,7 @@ const FarmerMeet = () => {
                 setFilterState({
                   ...filterState,
                   rId: e.target.value,
-                  tId: "",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -835,7 +911,9 @@ const FarmerMeet = () => {
               selected={filterState.startDate}
               placeholderText="Enter Date"
               scrollableYearDropdown
-              // onChange={handleYearChange}
+              onChange={(date) =>
+                setFilterState({ ...filterState, startDate: date })
+              }
               hand
             />
             <small>TO</small>
@@ -846,7 +924,9 @@ const FarmerMeet = () => {
               placeholderText="Enter Date"
               // selected={selectedYear}
               scrollableYearDropdown
-              // onChange={handleYearChange}
+              onChange={(date) =>
+                setFilterState({ ...filterState, endDate: date })
+              }
               hand
             />
           </div>
