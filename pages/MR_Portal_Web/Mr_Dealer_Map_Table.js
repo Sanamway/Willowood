@@ -579,14 +579,14 @@ const NewDealer = () => {
 
     filterState.empCode,
   ]);
-
+  const { name } = router.query;
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
-            M.R. Dealer Map
+            {name ? name : "M.R. Dealer Map"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
@@ -874,7 +874,14 @@ const NewDealer = () => {
                             empCode: item.emp_code,
                             yr: item.year,
                             partyCode: item.customer_code,
+                            cId: item.c_id,
+                            bgId: item.bg_id,
+                            buId: item.bu_id,
+                            rId: item.r_id,
+                            zId: item.z_id,
+                            tId: item.t_id,
                             tDes: item.territory_name,
+
                             empName: [
                               item.emp_f_name,
                               item.emp_m_name,
@@ -896,7 +903,15 @@ const NewDealer = () => {
                             empCode: item.emp_code,
                             yr: item.year,
                             partyCode: item.customer_code,
+
+                            cId: item.c_id,
+                            bgId: item.bg_id,
+                            buId: item.bu_id,
+                            rId: item.r_id,
+                            zId: item.z_id,
+                            tId: item.t_id,
                             tDes: item.territory_name,
+
                             empName: [
                               item.emp_f_name,
                               item.emp_m_name,

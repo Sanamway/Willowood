@@ -443,16 +443,6 @@ const DealerTarget = () => {
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2"></h2>
           <span className="flex items-center gap-2 cursor-pointer">
-            <TiArrowBack
-              onClick={() => {
-                router.push({
-                  pathname: "/MR_Portal_Web/NewDealerTarget_Table",
-                });
-              }}
-              className="text-gray-400"
-              size={35}
-            />
-
             <AiTwotoneHome
               className="text-black-500"
               onClick={() => {
@@ -466,7 +456,6 @@ const DealerTarget = () => {
         </div>
         <div className="flex flex-row m-4 w-100 gap-2 ">
           <div className="flex flex-col gap-2">
-            <span className="font-bold ">Select Yr</span>
             <DatePicker
               className="border p-1 rounded ml-2 w-40 "
               showYearDropdown
@@ -483,7 +472,6 @@ const DealerTarget = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <span className="font-bold ">Business Segment</span>
             <select
               id="attendanceType"
               className="border p-1 rounded ml-2  "
@@ -501,7 +489,6 @@ const DealerTarget = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <span className="font-bold ">Business Unit</span>
             <select
               id="attendanceType"
               className="  border p-1 rounded ml-2  "
@@ -519,7 +506,6 @@ const DealerTarget = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <span className="font-bold ">Zone</span>
             <select
               id="attendanceType"
               className="  border p-1 rounded ml-2"
@@ -537,7 +523,6 @@ const DealerTarget = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <span className="font-bold ">Region</span>
             <select
               id="attendanceType"
               className="  border p-1 rounded ml-2  "
@@ -554,7 +539,6 @@ const DealerTarget = () => {
             </select>
           </div>
           <div className="flex flex-col gap-2">
-            <span className="font-bold ">Territory</span>
             <select
               id="attendanceType"
               className="border p-1 w-50 rounded ml-2"
@@ -570,10 +554,7 @@ const DealerTarget = () => {
               ))}
             </select>
           </div>
-        </div>
-        <div className="flex flex-row m-4 w-100 gap-2 ">
           <div className="flex flex-col gap-2 ">
-            <span className="font-bold ">M.R. Executive</span>
             {router.query.type === "Add" ? (
               <div className="flex flex-row gap-2 ">
                 <input
@@ -583,7 +564,7 @@ const DealerTarget = () => {
                 />
                 <select
                   id="attendanceType"
-                  className="border p-1 rounded  "
+                  className="border p-1 w-80 rounded  "
                   value={filterState.empCode}
                   onChange={(e) =>
                     setFilterState({ ...filterState, empCode: e.target.value })
@@ -613,7 +594,6 @@ const DealerTarget = () => {
             )}
           </div>
           <div className="flex flex-col gap-2 ">
-            <span className="font-bold ">Dealer</span>
             {router.query.type === "Add" ? (
               <div className=" flex flex-row gap-2">
                 <input
@@ -3399,7 +3379,7 @@ const DealerTarget = () => {
           {router.query.type === "Add" || router.query.type === "Edit" ? (
             <div className="flex w-full h-12 gap-4 m-2 ">
               <button
-                className="text-center rounded-md bg-green-500 text-white py-1 px-4 h-12 text-lg w-24"
+                className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-8 w-16"
                 onClick={() => handleSave()}
               >
                 Submit
@@ -3410,7 +3390,7 @@ const DealerTarget = () => {
                     pathname: "/MR_Portal_Web/NewDealerTarget_Table",
                   });
                 }}
-                className="text-center rounded-md bg-red-500 text-white py-1 px-4 text-lg h-12 w-24"
+                className="bg-red-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-8 w-16"
               >
                 Close
               </button>

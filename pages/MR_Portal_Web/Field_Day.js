@@ -681,13 +681,14 @@ const FieldDay = () => {
     filterState.endDate,
     filterState.empCode,
   ]);
+  const { name } = router.query;
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
-            Farmer Field Day Table
+            {name ? name : "Farmer Field Day Table"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer pr-4">
             <h2>

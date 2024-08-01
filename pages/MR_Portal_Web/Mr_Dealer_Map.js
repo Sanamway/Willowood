@@ -1,17 +1,12 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "@/components/Layout1";
-import { AiTwotoneHome } from "react-icons/ai";
+
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
-import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
-import { Dialog, Transition } from "@headlessui/react";
-// import ConfirmationModal from "../modals/ConfirmationModal";
-import { CSVLink } from "react-csv";
-import { TbFileDownload } from "react-icons/tb";
+
 import toast, { Toaster } from "react-hot-toast";
-import moment from "moment";
-import ReactPaginate from "react-paginate";
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 const NewDealer = () => {
@@ -35,37 +30,13 @@ const NewDealer = () => {
 
   const [selectedYr, setSelectedYr] = useState(false);
 
-  const [allEmployee, setAllEmployee] = useState([]);
-  const getAllEmployeeData = async () => {
-    try {
-      const respond = await axios.get(`${url}/api/get_employee`, {
-        headers: headers,
-        params: {
-          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-        },
-      });
-
-      const apires = await respond.data.data;
-
-      setAllEmployee(apires);
-    } catch (error) {}
-  };
-  useEffect(() => {
-    getAllEmployeeData();
-  }, []);
-  const [filterState, setFilterState] = useState({
-    empCode: null,
-  });
-
   const [allDealer, setAllDealer] = useState([]);
   const getAllDealerData = async () => {
-    if (!selectedYr) return;
     let data;
     if (router.query.type !== "Add") {
       data = {
         c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-        t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+        t_id: filterState.tId,
         t_des: router.query.tDes,
         year: new Date(selectedYr).getFullYear(),
         emp_code: router.query.empCode,
@@ -74,12 +45,12 @@ const NewDealer = () => {
     } else {
       data = {
         c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-        t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-        t_des: territoryData.filter(
-          (item) =>
-            item.t_id ===
-            JSON.parse(window.localStorage.getItem("userinfo")).t_id
-        )[0].territory_name,
+        t_id: filterState.tId,
+        emp_code: filterState.empCode,
+        t_des:
+          allTerritoryData.filter(
+            (item) => Number(item.t_id) === Number(filterState.tId)
+          )[0]?.territory_name || null,
         year: new Date(selectedYr).getFullYear(),
         add: true,
       };
@@ -110,23 +81,6 @@ const NewDealer = () => {
     } catch (error) {}
   };
 
-  const [territoryData, setTerritoryData] = useState([]);
-
-  const getAllTerritoryData = async () => {
-    try {
-      const respond = await axios.get(`${url}/api/get_territory`, {
-        headers: headers,
-      });
-
-      const apires = await respond.data.data;
-
-      setTerritoryData(apires);
-    } catch (error) {}
-  };
-  useEffect(() => {
-    getAllTerritoryData();
-  }, []);
-
   useEffect(() => {
     if (router.query.type !== "Add") {
       setSelectedYr(new Date(router.query.yr));
@@ -134,10 +88,6 @@ const NewDealer = () => {
       return;
     }
   }, [router.query.type]);
-  useEffect(() => {
-    // if (!territoryData.length) return;   correction
-    getAllDealerData();
-  }, [selectedYr]);
 
   const handleSave = async () => {
     if (allDealer?.filter((el) => el.selected === true).length) {
@@ -150,55 +100,44 @@ const NewDealer = () => {
         } else {
           endPoint = "api/update_mr_dealer_map";
           params = {
-            emp_code: router.query.empCode,
+            emp_code: filterState.empCode,
             year: selectedYr.getFullYear(),
           };
         }
 
         const data =
           router.query.type !== "Add"
-            ? allDealer.map((item, idx) => {
-                return {
-                  t_id: JSON.parse(window.localStorage.getItem("userinfo"))
-                    .t_id,
-                  c_id: JSON.parse(window.localStorage.getItem("userinfo"))
-                    .c_id,
-                  bg_id: JSON.parse(window.localStorage.getItem("userinfo"))
-                    .bg_id,
-                  bu_id: JSON.parse(window.localStorage.getItem("userinfo"))
-                    .bu_id,
-                  r_id: JSON.parse(window.localStorage.getItem("userinfo"))
-                    .r_id,
-                  z_id: JSON.parse(window.localStorage.getItem("userinfo"))
-                    .z_id,
-                  year: selectedYr.getFullYear(),
-                  customer_code: item.party_code,
-                  checked: item.selected,
-                  party_name: item.distribution_name,
-                  emp_code:
-                    router.query.type !== "Add"
-                      ? router.query.empCode
-                      : filterState.empCode,
-                };
-              })
+            ? allDealer
+                ?.filter((el) => el.selected === true)
+                .map((item, idx) => {
+                  return {
+                    t_id: filterState.tId,
+                    c_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                      .c_id,
+                    bg_id: filterState.bgId,
+                    bu_id: filterState.buId,
+                    r_id: filterState.rId,
+                    z_id: filterState.zId,
+                    year: selectedYr.getFullYear(),
+                    customer_code: Number(item.party_code),
+                    checked: item.selected,
+                    party_name: item.distribution_name,
+                    emp_code: filterState.empCode,
+                  };
+                })
             : allDealer
                 ?.filter((el) => el.selected === true)
                 .map((item, idx) => {
                   return {
-                    t_id: JSON.parse(window.localStorage.getItem("userinfo"))
-                      .t_id,
+                    t_id: filterState.tId,
                     c_id: JSON.parse(window.localStorage.getItem("userinfo"))
                       .c_id,
-                    bg_id: JSON.parse(window.localStorage.getItem("userinfo"))
-                      .bg_id,
-                    bu_id: JSON.parse(window.localStorage.getItem("userinfo"))
-                      .bu_id,
-                    r_id: JSON.parse(window.localStorage.getItem("userinfo"))
-                      .r_id,
-                    z_id: JSON.parse(window.localStorage.getItem("userinfo"))
-                      .z_id,
+                    bg_id: filterState.bgId,
+                    bu_id: filterState.buId,
+                    r_id: filterState.rId,
+                    z_id: filterState.zId,
                     year: selectedYr.getFullYear(),
-                    customer_code: item.party_code,
+                    customer_code: Number(item.party_code),
                     emp_code:
                       router.query.type !== "Add"
                         ? router.query.empCode
@@ -229,6 +168,494 @@ const NewDealer = () => {
     }
   };
 
+  const [localStorageItems, setLocalStorageItems] = useState({
+    cId: null,
+    bgId: null,
+    buId: null,
+    rId: null,
+    zId: null,
+    tId: null,
+    roleId: null,
+  });
+
+  // All Filters
+  const [filterState, setFilterState] = useState({
+    bgId: null,
+    buId: null,
+    zId: null,
+    rId: null,
+    tId: null,
+    tDes: null,
+    rDes: null,
+    zDes: null,
+    buDes: null,
+    bgDes: null,
+    empCode: null,
+  });
+
+  const [bgData, setBgData] = useState([]);
+
+  const getBusinesSegmentInfo = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_business_segment`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+
+      setBgData(apires.filter((item, idx) => item.isDeleted === false));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getBusinesSegmentInfo();
+  }, []);
+
+  const [buData, setBuData] = useState([]);
+
+  const getBusinessUnitInfo = async (businessSegmentId) => {
+    try {
+      const respond = await axios.get(
+        `${url}/api/get_business_unit_by_segmentId/${businessSegmentId}`,
+        {
+          headers: headers,
+        }
+      );
+      const apires = await respond.data.data;
+
+      setBuData(apires.filter((item, idx) => item.isDeleted === false));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getBusinessUnitInfo(filterState.bgId);
+  }, [filterState.bgId]);
+
+  const [allZoneData, setAllZoneData] = useState([]);
+  const getAllZoneData = async (segmentId, businessUnitId) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_zone`, {
+        headers: headers,
+      });
+
+      const apires = await respond.data.data;
+
+      setAllZoneData(
+        apires
+          .filter((item) => Number(item.bg_id) === Number(segmentId))
+          .filter((item) => Number(item.bu_id) === Number(businessUnitId))
+      );
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (!filterState.bgId || !filterState.buId) return;
+    getAllZoneData(filterState.bgId, filterState.buId);
+  }, [filterState.bgId, filterState.buId]);
+
+  const [allRegionData, setAllRegionData] = useState([]);
+
+  const getAllRegionData = async (segmentId, businessUnitId, zoneId) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_region`, {
+        headers: headers,
+      });
+
+      const apires = await respond.data.data;
+
+      setAllRegionData(apires);
+      setAllRegionData(
+        apires
+          .filter((item) => Number(item.bg_id) === Number(segmentId))
+          .filter((item) => Number(item.bu_id) === Number(businessUnitId))
+          .filter((item) => Number(item.z_id) === Number(zoneId))
+      );
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (!filterState.bgId || !filterState.buId || !filterState.zId) return;
+    getAllRegionData(filterState.bgId, filterState.buId, filterState.zId);
+  }, [filterState.bgId, filterState.buId, filterState.zId]);
+
+  const [allTerritoryData, setAllTerritoryData] = useState([]);
+
+  const getAllTerritoryData = async (
+    segmentId,
+    businessUnitId,
+    zoneId,
+    regionId
+  ) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_territory`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      setAllTerritoryData(
+        apires
+          .filter((item) => Number(item.bg_id) === Number(segmentId))
+          .filter((item) => Number(item.bu_id) === Number(businessUnitId))
+          .filter((item) => Number(item.z_id) === Number(zoneId))
+          .filter((item) => Number(item.r_id) === Number(regionId))
+      );
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (
+      !filterState.bgId ||
+      !filterState.buId ||
+      !filterState.zId ||
+      !filterState.rId
+    )
+      return;
+    getAllTerritoryData(
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId
+    );
+  }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
+  const [allEmployee, setAllEmployee] = useState([]);
+  const getAllEmployeeData = async (bg, bu, z, r, t) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_employee`, {
+        headers: headers,
+        params: {
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          zrt: true,
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        },
+      });
+      const apires = await respond.data.data;
+      setAllEmployee(apires);
+    } catch (error) {
+      setAllEmployee([]);
+    }
+  };
+  useEffect(() => {
+    getAllEmployeeData(
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId
+    );
+  }, [
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+  ]);
+  useEffect(() => {
+    // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
+    const roleId = 6;
+    let filterState = {
+      bgId: "All",
+      buId: "All",
+      zId: "All",
+      rId: "All",
+      tId: "All",
+    };
+    if (router.query.type === "Add") {
+      switch (roleId) {
+        case 6:
+          filterState = {
+            bgId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+            rId:
+              JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+            zId:
+              JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+            tId:
+              JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          };
+          setLocalStorageItems({
+            bgId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+            rId:
+              JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+            zId:
+              JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+            tId:
+              JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+            roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+          });
+
+          setFilterState(filterState);
+
+          break;
+        case 5:
+          filterState = {
+            bgId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+            rId:
+              JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+            zId:
+              JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
+            tId: "All",
+          };
+          setLocalStorageItems({
+            bgId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+            rId:
+              JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+            zId:
+              JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+            tId:
+              JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
+                  "All",
+            roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+          });
+
+          setFilterState(filterState);
+
+          break;
+        case 4:
+          filterState = {
+            bgId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+            zId:
+              JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
+            rId: "All",
+            tId: "All",
+          };
+          setLocalStorageItems({
+            bgId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+            zId:
+              JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
+            rId:
+              JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
+                  "All",
+            tId:
+              JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
+                  "All",
+            roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+          });
+
+          setFilterState(filterState);
+
+          break;
+        case 3:
+          filterState = {
+            bgId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+            zId:
+              JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+            rId: "All",
+            tId: "All",
+          };
+          setLocalStorageItems({
+            bgId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+            zId:
+              JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
+            rId:
+              JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
+                  "All",
+            tId:
+              JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
+                  "All",
+            roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+          });
+
+          setFilterState(filterState);
+
+          break;
+        case 10:
+          filterState = {
+            bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+            zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+            rId: "All",
+            tId: "All",
+          };
+          setLocalStorageItems({
+            bgId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+            zId:
+              JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
+            rId:
+              JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
+                  "All",
+            tId:
+              JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
+                  "All",
+            roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+          });
+
+          setFilterState(filterState);
+
+          break;
+        default:
+          setLocalStorageItems({
+            cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+            rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+            zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+            tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          });
+
+          setFilterState({
+            bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+            rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+            zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+            tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          });
+          setFilterState(filterState);
+
+          break;
+      }
+    } else {
+      filterState = {
+        cId: router.query.cId,
+        bgId: router.query.bgId,
+        buId: router.query.buId,
+        rId: router.query.rId,
+        zId: router.query.zId,
+        tId: router.query.tId,
+        empCode: router.query.empCode,
+      };
+      setLocalStorageItems({
+        cId: router.query.cId,
+        bgId: router.query.bgId,
+        buId: router.query.buId,
+        rId: router.query.rId,
+        zId: router.query.zId,
+        tId: router.query.tId,
+      });
+
+      setFilterState(filterState);
+    }
+  }, [router.query.type]);
+  console.log("zxs", filterState);
+  useEffect(() => {
+    if (selectedYr && filterState.tId) {
+      getAllDealerData();
+    } else {
+      toast.error("Year and Teritory");
+    }
+  }, [selectedYr, filterState.tId, filterState.empCode]);
+
   return (
     <Layout>
       <div className="absolute h-full w-full overflow-x-auto no-scrollbar mx-4">
@@ -238,53 +665,221 @@ const NewDealer = () => {
             M.R. Dealer Mapping
           </h2>
         </div>
-        <div className="flex flex-row px-4  py-2 gap-6 w-full">
-          <div className="flex flex-row gap-2">
-            <span className="text-sm self-center">Select Year</span>
-            <DatePicker
-              className="border p-1 rounded  w-16 h-6  text-sm text-[12px]"
-              showYearDropdown
-              dateFormat="yyyy"
-              placeholderText="Year"
-              yearDropdownItemNumber={15} // Uncommented and provided a value
-              selected={selectedYr}
-              onChange={(date) => setSelectedYr(date)}
-              hand
-              showYearPicker
-              minDate={new Date(new Date().getFullYear(), 0, 1)}
-              //   disabled={router.query.type !== "Add"}
+        <div className="flex flex-row gap-4  px-4 pr-8 pb-2">
+          <select
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.bgId}
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  bgId: e.target.value,
+                  buId: "All",
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  bgId: e.target.value,
+                });
+              }
+            }}
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              localStorageItems.roleId === 4 ||
+              localStorageItems.roleId === 3 ||
+              localStorageItems.roleId === 10 ||
+              router.query.type !== "Add"
+            }
+          >
+            <option value={"All"} className="font-bold">
+              - All Business Segment -
+            </option>
+
+            {bgData.map((item, idx) => (
+              <option value={item.bg_id} key={idx}>
+                {item.business_segment}
+              </option>
+            ))}
+          </select>
+          <select
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.buId}
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  buId: e.target.value,
+
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  buId: e.target.value,
+                });
+              }
+            }}
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              localStorageItems.roleId === 4 ||
+              localStorageItems.roleId === 3 ||
+              router.query.type !== "Add"
+            }
+          >
+            <option value={"All"}>- All Business Unit -</option>
+
+            {buData.map((item, idx) => (
+              <option value={item.bu_id} key={idx}>
+                {item.business_unit_name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.zId}
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  zId: e.target.value,
+                  rId: "All",
+                  tId: "All",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  zId: e.target.value,
+                });
+              }
+            }}
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              localStorageItems.roleId === 4 ||
+              router.query.type !== "Add"
+            }
+          >
+            <option value={"All"}>- All Zone -</option>
+
+            {allZoneData.map((item, idx) => (
+              <option value={item.z_id} key={idx}>
+                {item.zone_name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.rId}
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              router.query.type !== "Add"
+            }
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  rId: e.target.value,
+                  tId: "All",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  rId: e.target.value,
+                });
+              }
+            }}
+          >
+            <option value={"All"}>-All Region -</option>
+
+            {allRegionData.map((item, idx) => (
+              <option value={item.r_id} key={idx}>
+                {item.region_name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="border rounded px-2 py-1 w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.tId}
+            disabled={
+              localStorageItems.roleId === 6 || router.query.type !== "Add"
+            }
+            onChange={(e) =>
+              setFilterState({
+                ...filterState,
+                tId: e.target.value,
+              })
+            }
+          >
+            <option value="All">- All Territory -</option>
+
+            {allTerritoryData.map((item, idx) => (
+              <option value={item.t_id} key={idx}>
+                {item.territory_name}
+              </option>
+            ))}
+          </select>
+          {router.query.type !== "Add" ? (
+            <input
+              id="attendanceType"
+              className="border rounded px-2 py-1  w-1/2 h-8"
+              disabled={router.query.type !== "Add"}
+              value={router.query.empName}
             />
-          </div>
+          ) : (
+            <select
+              id="attendanceType"
+              className="border rounded px-2 py-1  w-1/2 h-8"
+              value={filterState.empCode}
+              disabled={router.query.type !== "Add"}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  empCode: e.target.value,
+                })
+              }
+            >
+              <option value={""}>M.R. Executive</option>
 
-          <div className="flex flex-row gap-2">
-            <span className="text-sm self-center">M.R. Executive</span>
+              {allEmployee.map((item) => (
+                <option value={item.empcode}>
+                  {item.fname} {item.mname} {item.lname} {item.empcode}
+                </option>
+              ))}
+            </select>
+          )}
 
-            {router.query.type !== "Add" ? (
-              <input
-                id="attendanceType"
-                className="border p-1 rounded  w-80 h-6  text-[12px]"
-                value={router.query.empName}
-              />
-            ) : (
-              <select
-                id="attendanceType"
-                className="border p-1 rounded  w-80 h-6  text-[12px]"
-                value={filterState.empCode}
-                onChange={(e) =>
-                  setFilterState({ ...filterState, empCode: e.target.value })
-                }
-              >
-                <option value={""}>M.R. Executive</option>
-
-                {allEmployee.map((item) => (
-                  <option value={item.empcode}>
-                    {item.fname} {item.mname} {item.lname} {item.empcode}
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
+          <DatePicker
+            className="border rounded px-2 py-1  w-32 h-8"
+            showYearDropdown
+            dateFormat="yyyy"
+            placeholderText="Year"
+            yearDropdownItemNumber={15} // Uncommented and provided a value
+            selected={selectedYr}
+            onChange={(date) => setSelectedYr(date)}
+            hand
+            showYearPicker
+            minDate={new Date(new Date().getFullYear(), 0, 1)}
+            disabled={router.query.type !== "Add"}
+            //   disabled={router.query.type !== "Add"}
+          />
         </div>
+
         {allDealer.length ? (
           <div className="flex flex-row px-4  py-2 gap-5 w-full">
             <div className="flex flex-row gap-2 justify-start items-center">

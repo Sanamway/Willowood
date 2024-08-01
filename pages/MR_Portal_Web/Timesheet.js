@@ -963,11 +963,9 @@ const Timesheet = () => {
                 <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Emp Code
                 </th>
-
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Emp Name
                 </th>
-
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Attendence Type
                 </th>

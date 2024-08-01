@@ -261,7 +261,7 @@ const District = () => {
   useEffect(() => {
     getAllEmployeeData();
   }, []);
-  2;
+
   useEffect(() => {
     // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     const roleId = 6;
@@ -568,14 +568,16 @@ const District = () => {
         break;
     }
   }, []);
+  const { name } = router.query;
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
-            Mr Activity Table
+            {name ? name : "Mr Activity Table"}
           </h2>
+
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8"></div>
             <h2>

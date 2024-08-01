@@ -331,13 +331,14 @@ const HolidayCalender = () => {
     show: false,
     id: "",
   });
+  const { name } = router.query;
   return (
     <Layout>
       <div className=" overflow-auto w-full ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
-            Holiday Calender
+            {name ? name : "Holiday Calender"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">

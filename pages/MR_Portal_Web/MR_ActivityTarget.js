@@ -477,7 +477,7 @@ const BusinessSegment = () => {
                     SHC
                   </th>
 
-                  <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
+                  <th className="w-40 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
                     Total
                   </th>
                   <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium text-white tracking-wider">
@@ -494,31 +494,31 @@ const BusinessSegment = () => {
 
                     <td className="  border-2 border-black  whitespace-nowrap text-white p-0 bg-white">
                       <ul>
-                        <li className="border-b-2 border-black  flex justify-center text-black bg-sky-800  p-1">
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
                           <input
-                            className="p-0 w-16 text-white h-6 bg-sky-800 "
-                            value="Target"
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="HR Expect Target"
                             disabled
                           />
                         </li>
-                        <li className="border-b-2 border-black  flex justify-center text-black bg-sky-800  p-1">
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
                           <input
-                            className="p-0 w-16 text-white h-6 bg-sky-800 "
-                            value="Min Ach."
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="HR Min Ach."
                             disabled
                           />
                         </li>
-                        <li className="border-b-2 border-black  flex justify-center text-black bg-sky-800  p-1">
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
                           <input
-                            className="p-0 w-16 text-white h-6 bg-sky-800 "
-                            value="Weightage"
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="Weightage %"
                             disabled
                           />
                         </li>
-                        <li className="  flex justify-center bg-green-400  text-black   p-1  ">
+                        <li className="  flex justify-left bg-green-400  text-black   p-1  ">
                           <input
-                            className="p-0 w-16 h-6   text-white bg-green-400"
-                            value="Score"
+                            className="p-0 w-28 h-6   text-white bg-green-400"
+                            value="Activity Score"
                             disabled
                           />
                         </li>
@@ -1127,8 +1127,8 @@ const BusinessSegment = () => {
                               Number(item.t_ifc) +
                               Number(item.t_fgm) +
                               Number(item.t_ofm) +
-                              Number(item.t_rtp) +
-                              Number(item.t_shc)
+                              Number(item.t_mfm) +
+                              Number(item.t_rtp)
                             }
                           />
                         </li>
@@ -1142,8 +1142,8 @@ const BusinessSegment = () => {
                               Number(item.m_ifc) +
                               Number(item.m_fgm) +
                               Number(item.m_ofm) +
-                              Number(item.m_rtp) +
-                              Number(item.m_shc)
+                              Number(item.m_mfm) +
+                              Number(item.m_rtp)
                             }
                           />
                         </li>
@@ -1157,8 +1157,8 @@ const BusinessSegment = () => {
                               Number(item.w_ifc) +
                               Number(item.w_fgm) +
                               Number(item.w_ofm) +
-                              Number(item.w_rtp) +
-                              Number(item.w_shc)
+                              Number(item.w_mfm) +
+                              Number(item.w_rtp)
                             }
                           />
                         </li>
@@ -1201,7 +1201,7 @@ const BusinessSegment = () => {
             {router.query.type === "Add" || router.query.type === "Edit" ? (
               <div className="flex w-full h-8 gap-4 m-2 ">
                 <button
-                  className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-8"
+                  className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-8 w-16"
                   onClick={() => handleSave()}
                 >
                   Submit
@@ -1212,7 +1212,7 @@ const BusinessSegment = () => {
                       pathname: "/MR_Portal_Web/Table_MR_ActivityTarget",
                     });
                   }}
-                  className="bg-red-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-8"
+                  className="bg-red-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-8 w-16"
                 >
                   Close
                 </button>
