@@ -157,14 +157,7 @@ const BusinessSegment = () => {
           t_mfm: "",
           t_rtp: "",
           t_shc: "",
-          m_demo: "",
-          m_f_day: "",
-          m_ifc: "",
-          m_fgm: "",
-          m_ofm: "",
-          m_mfm: "",
-          m_rtp: "",
-          m_shc: "",
+
           w_demo: "",
           w_f_day: "",
           w_ifc: "",
@@ -173,7 +166,6 @@ const BusinessSegment = () => {
           w_mfm: "",
           w_rtp: "",
           w_shc: "",
-          score: "",
         };
       });
     } else {
@@ -190,14 +182,7 @@ const BusinessSegment = () => {
           t_mfm: newData.t_mfm,
           t_rtp: newData.t_rtp,
           t_shc: newData.t_shc,
-          m_demo: newData.m_demo,
-          m_f_day: newData.m_f_day,
-          m_ifc: newData.m_ifc,
-          m_fgm: newData.m_fgm,
-          m_ofm: newData.m_ofm,
-          m_mfm: newData.m_mfm,
-          m_rtp: newData.m_rtp,
-          m_shc: newData.m_shc,
+
           w_demo: newData.w_demo,
           w_f_day: newData.w_f_day,
           w_ifc: newData.w_ifc,
@@ -206,11 +191,9 @@ const BusinessSegment = () => {
           w_mfm: newData.w_mfm,
           w_rtp: newData.w_rtp,
           w_shc: newData.w_shc,
-          score: newData.score,
         };
       });
     }
-
     setMonthList(monthList);
   };
 
@@ -257,6 +240,23 @@ const BusinessSegment = () => {
             mr_Category_name: allMrData.filter(
               (item) => Number(item.mrc_id) === Number(filter.mrCat)
             )[0].mr_Category_name,
+
+            activity_score_demo:
+              (item.t_demo * item.w_demo * item.w_demo) / 10000,
+            activity_score_f_day:
+              (item.t_f_day * item.w_f_day * item.w_f_day) / 10000,
+            activity_score_ifc: (item.t_ifc * item.w_ifc * item.w_ifc) / 10000,
+            activity_score_fgm: (item.t_fgm * item.w_fgm * item.w_fgm) / 10000,
+            activity_score_ofm: (item.t_ofm * item.w_ofm * item.w_ofm) / 10000,
+            activity_score_mfm: (item.t_mfm * item.w_mfm * item.w_mfm) / 10000,
+            m_demo: (item.t_demo * item.w_demo) / 100,
+            m_f_day: (item.t_f_day * item.w_f_day) / 100,
+            m_ifc: (item.t_ifc * item.w_ifc) / 100,
+            m_fgm: (item.t_fgm * item.w_fgm) / 100,
+            m_ofm: (item.t_ofm * item.w_ofm) / 100,
+            m_mfm: (item.t_mfm * item.w_mfm) / 100,
+            m_rtp: (item.t_rtp * item.w_rtp) / 100,
+            m_shc: (item.t_shc * item.w_shc) / 100,
           };
         }),
       };
@@ -303,6 +303,22 @@ const BusinessSegment = () => {
               allMrData.filter(
                 (item) => Number(item.mrc_id) === Number(filter.mrCat)
               )[0].mr_Category_name || null,
+            activity_score_demo:
+              (item.t_demo * item.w_demo * item.w_demo) / 10000,
+            activity_score_f_day:
+              (item.t_f_day * item.w_f_day * item.w_f_day) / 10000,
+            activity_score_ifc: (item.t_ifc * item.w_ifc * item.w_ifc) / 10000,
+            activity_score_fgm: (item.t_fgm * item.w_fgm * item.w_fgm) / 10000,
+            activity_score_ofm: (item.t_ofm * item.w_ofm * item.w_ofm) / 10000,
+            activity_score_mfm: (item.t_mfm * item.w_mfm * item.w_mfm) / 10000,
+            m_demo: (item.t_demo * item.w_demo) / 100,
+            m_f_day: (item.t_f_day * item.w_f_day) / 100,
+            m_ifc: (item.t_ifc * item.w_ifc) / 100,
+            m_fgm: (item.t_fgm * item.w_fgm) / 100,
+            m_ofm: (item.t_ofm * item.w_ofm) / 100,
+            m_mfm: (item.t_mfm * item.w_mfm) / 100,
+            m_rtp: (item.t_rtp * item.w_rtp) / 100,
+            m_shc: (item.t_shc * item.w_shc) / 100,
           };
         }),
       };
@@ -549,22 +565,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center  text-black   p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.m_demo ? "bg-white-100" : "bg-yellow-100"
-                            }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            value={item.m_demo}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, m_demo: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
+                            value={(item.t_demo * item.w_demo) / 100}
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center  text-black p-1">
@@ -587,24 +590,14 @@ const BusinessSegment = () => {
                             }}
                           />
                         </li>
+
                         <li className="  flex justify-center bg-green-400  text-black   p-1  ">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.score ? "bg-white-100" : "bg-yellow-100"
-                            }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            value={item.score}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, score: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
+                            value={
+                              (item.t_demo * item.w_demo * item.w_demo) / 10000
+                            }
                           />
                         </li>
                       </ul>
@@ -634,22 +627,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.m_f_day ? "bg-white-100" : "bg-yellow-100"
-                            }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            value={item.m_f_day}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, m_f_day: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
+                            value={(item.t_f_day * item.w_f_day) / 100}
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
@@ -674,10 +654,12 @@ const BusinessSegment = () => {
                         </li>
                         <li className="  flex justify-center bg-green-400  text-black   p-1  ">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            disabled
-                            value={"-"}
+                            value={
+                              (item.t_f_day * item.w_f_day * item.w_f_day) /
+                              10000
+                            }
                           />
                         </li>
                       </ul>
@@ -706,22 +688,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.m_ifc ? "bg-white-100" : "bg-yellow-100"
-                            }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            value={item.m_ifc}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, m_ifc: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
+                            value={(item.t_ifc * item.w_ifc) / 100}
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
@@ -746,10 +715,11 @@ const BusinessSegment = () => {
                         </li>
                         <li className="  flex justify-center bg-green-400  text-black   p-1  ">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            disabled
-                            value={"-"}
+                            value={
+                              (item.t_ifc * item.w_ifc * item.w_ifc) / 10000
+                            }
                           />
                         </li>
                       </ul>
@@ -778,22 +748,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.m_fgm ? "bg-white-100" : "bg-yellow-100"
-                            }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            value={item.m_fgm}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, m_fgm: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
+                            value={(item.t_fgm * item.w_fgm) / 100}
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
@@ -818,10 +775,11 @@ const BusinessSegment = () => {
                         </li>
                         <li className="  flex justify-center bg-green-400  text-black   p-1  ">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            disabled
-                            value={"-"}
+                            value={
+                              (item.t_fgm * item.w_fgm * item.w_fgm) / 10000
+                            }
                           />
                         </li>
                       </ul>
@@ -850,22 +808,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.m_ofm ? "bg-white-100" : "bg-yellow-100"
-                            }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            value={item.m_ofm}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, m_ofm: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
+                            value={(item.t_ofm * item.w_ofm) / 100}
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
@@ -890,10 +835,11 @@ const BusinessSegment = () => {
                         </li>
                         <li className="  flex justify-center bg-green-400  text-black   p-1  ">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            disabled
-                            value={"-"}
+                            value={
+                              (item.t_ofm * item.w_ofm * item.w_ofm) / 10000
+                            }
                           />
                         </li>
                       </ul>
@@ -922,22 +868,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.m_mfm ? "bg-white-100" : "bg-yellow-100"
-                            }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            value={item.m_mfm}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, m_mfm: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
+                            value={(item.t_mfm * item.w_mfm) / 100}
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
@@ -962,10 +895,11 @@ const BusinessSegment = () => {
                         </li>
                         <li className="  flex justify-center bg-green-400  text-black   p-1  ">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            disabled
-                            value={"-"}
+                            value={
+                              (item.t_mfm * item.w_mfm * item.w_mfm) / 10000
+                            }
                           />
                         </li>
                       </ul>
@@ -994,22 +928,10 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.m_rtp ? "bg-white-100" : "bg-yellow-100"
-                            }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            value={item.m_rtp}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, m_rtp: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
+                            value={(item.t_rtp * item.w_rtp) / 100}
+                            disabled
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
@@ -1034,10 +956,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="  flex justify-center bg-green-400  text-black   p-1  ">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
+                            className={`p-0 w-16 h-6 text-right ${"bg-green-400"}`}
                             type="number"
                             disabled
-                            value={"-"}
                           />
                         </li>
                       </ul>
@@ -1066,22 +987,10 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
-                              item.m_shc ? "bg-white-100" : "bg-yellow-100"
-                            }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
-                            value={item.m_shc}
-                            onChange={(e) => {
-                              setMonthList(
-                                monthList.map((el) => {
-                                  if (el.month === item.month) {
-                                    return { ...el, m_shc: e.target.value };
-                                  } else {
-                                    return el;
-                                  }
-                                })
-                              );
-                            }}
+                            value={(item.t_shc * item.w_shc) / 100}
+                            disabled
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
@@ -1106,10 +1015,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="  flex justify-center bg-green-400  text-black   p-1  ">
                           <input
-                            className="p-0 w-16 border-2 h-6 border-green-400 bg-green-400 text-right"
+                            className={`p-0 w-16 h-6 text-right ${"bg-green-400"}`}
                             type="number"
                             disabled
-                            value={"-"}
                           />
                         </li>
                       </ul>
@@ -1137,13 +1045,14 @@ const BusinessSegment = () => {
                             className="p-0 w-16 text-white h-6  bg-gray-400 "
                             disabled
                             value={
-                              Number(item.m_demo) +
-                              Number(item.m_f_day) +
-                              Number(item.m_ifc) +
-                              Number(item.m_fgm) +
-                              Number(item.m_ofm) +
-                              Number(item.m_mfm) +
-                              Number(item.m_rtp)
+                              (item.t_demo * item.w_demo) / 100 +
+                              (item.t_f_day * item.w_f_day) / 100 +
+                              (item.t_ifc * item.w_ifc) / 100 +
+                              (item.t_fgm * item.w_fgm) / 100 +
+                              (item.t_ofm * item.w_ofm) / 100 +
+                              (item.t_mfm * item.w_mfm) / 100 +
+                              (item.t_rtp * item.w_rtp) / 100 +
+                              (item.t_shc * item.w_shc) / 100
                             }
                           />
                         </li>
@@ -1158,15 +1067,26 @@ const BusinessSegment = () => {
                               Number(item.w_fgm) +
                               Number(item.w_ofm) +
                               Number(item.w_mfm) +
-                              Number(item.w_rtp)
+                              Number(item.w_rtp) +
+                              Number(item.w_shc)
                             }
                           />
                         </li>
+
                         <li className="  flex justify-center  bg-gray-400  text-black   p-1  ">
                           <input
                             className="p-0 w-16 h-6   text-white  bg-gray-400"
                             disabled
-                            value={item.score}
+                            value={
+                              (item.t_demo * item.w_demo * item.w_demo) /
+                                10000 +
+                              (item.t_f_day * item.w_f_day * item.w_f_day) /
+                                10000 +
+                              (item.t_ifc * item.w_ifc * item.w_ifc) / 10000 +
+                              (item.t_fgm * item.w_fgm * item.w_fgm) / 10000 +
+                              (item.t_ofm * item.w_ofm * item.w_ofm) / 10000 +
+                              (item.t_mfm * item.w_mfm * item.w_mfm) / 10000
+                            }
                           />
                         </li>
                       </ul>

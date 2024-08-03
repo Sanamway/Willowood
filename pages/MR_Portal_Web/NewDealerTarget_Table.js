@@ -627,10 +627,10 @@ const NewDealer = () => {
                 setFilterState({
                   ...filterState,
                   bgId: e.target.value,
-                  buId: "",
-                  zId: "",
-                  rId: "",
-                  tId: "",
+                  buId: "All",
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -667,9 +667,9 @@ const NewDealer = () => {
                   ...filterState,
                   buId: e.target.value,
 
-                  zId: "",
-                  rId: "",
-                  tId: "",
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -703,8 +703,8 @@ const NewDealer = () => {
                 setFilterState({
                   ...filterState,
                   zId: e.target.value,
-                  rId: "",
-                  tId: "",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -740,7 +740,7 @@ const NewDealer = () => {
                 setFilterState({
                   ...filterState,
                   rId: e.target.value,
-                  tId: "",
+                  tId: "All",
                 });
               } else {
                 setFilterState({

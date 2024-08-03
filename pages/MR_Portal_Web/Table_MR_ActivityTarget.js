@@ -33,14 +33,17 @@ const District = () => {
   const router = useRouter();
 
   const [data, setData] = useState([]);
-  const getDistrict = async (currentPage) => {
+  const getActivityTarget = async (cId, bg, bu, from, empCode) => {
     try {
       const respond = await axios.get(`${url}/api/get_mr_activity`, {
         params: {
-          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          paging: true,
-          page: currentPage,
-          size: 50,
+          c_id: cId === "All" ? null : cId,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+
+          year: moment(from).format("YYYY"),
+
+          emp_code: empCode,
         },
         headers: headers,
       });
@@ -57,9 +60,6 @@ const District = () => {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber + 1);
   };
-  useEffect(() => {
-    getDistrict(currentPage.selected);
-  }, [currentPage.selected]);
 
   const deleteHandler = (id) => {
     setisOpen(true);
@@ -81,7 +81,7 @@ const District = () => {
       const apires = await respond;
       console.log("pop", apires);
       toast.success(apires.data.message);
-      getDistrict(1);
+      getActivityTarget();
     } catch (error) {
       console.log(error);
       toast.error(error);
@@ -100,38 +100,51 @@ const District = () => {
 
   // All Filters
   const [filterState, setFilterState] = useState({
+    empCode: null,
+    cId: null,
     bgId: null,
     buId: null,
-    zId: null,
-    rId: null,
-    tId: null,
-    tDes: null,
-    rDes: null,
-    zDes: null,
-    buDes: null,
-    bgDes: null,
-    startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-    endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+
+    startDate: new Date(),
   });
+
+  const [allCompanyInfo, setAllCompanyInfo] = useState([]);
+  const getAllCompanyInfo = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_company_information`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      setAllCompanyInfo(apires);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getAllCompanyInfo();
+  }, []);
 
   const [bgData, setBgData] = useState([]);
 
-  const getBusinesSegmentInfo = async () => {
+  const getBusinesSegmentInfo = async (cId) => {
     try {
       const respond = await axios.get(`${url}/api/get_business_segment`, {
         headers: headers,
       });
       const apires = await respond.data.data;
 
-      setBgData(apires.filter((item, idx) => item.isDeleted === false));
+      setBgData(
+        apires
+          .filter((item, idx) => item.isDeleted === false)
+          .filter((item, idx) => Number(item.c_id) === Number(cId))
+      );
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getBusinesSegmentInfo();
-  }, []);
+    getBusinesSegmentInfo(filterState.cId);
+  }, [filterState.cId]);
 
   const [buData, setBuData] = useState([]);
 
@@ -155,101 +168,16 @@ const District = () => {
     getBusinessUnitInfo(filterState.bgId);
   }, [filterState.bgId]);
 
-  const [allZoneData, setAllZoneData] = useState([]);
-  const getAllZoneData = async (segmentId, businessUnitId) => {
-    try {
-      const respond = await axios.get(`${url}/api/get_zone`, {
-        headers: headers,
-      });
-
-      const apires = await respond.data.data;
-
-      setAllZoneData(
-        apires
-          .filter((item) => Number(item.bg_id) === Number(segmentId))
-          .filter((item) => Number(item.bu_id) === Number(businessUnitId))
-      );
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    if (!filterState.bgId || !filterState.buId) return;
-    getAllZoneData(filterState.bgId, filterState.buId);
-  }, [filterState.bgId, filterState.buId]);
-
-  const [allRegionData, setAllRegionData] = useState([]);
-
-  const getAllRegionData = async (segmentId, businessUnitId, zoneId) => {
-    try {
-      const respond = await axios.get(`${url}/api/get_region`, {
-        headers: headers,
-      });
-
-      const apires = await respond.data.data;
-
-      setAllRegionData(apires);
-      setAllRegionData(
-        apires
-          .filter((item) => Number(item.bg_id) === Number(segmentId))
-          .filter((item) => Number(item.bu_id) === Number(businessUnitId))
-          .filter((item) => Number(item.z_id) === Number(zoneId))
-      );
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    if (!filterState.bgId || !filterState.buId || !filterState.zId) return;
-    getAllRegionData(filterState.bgId, filterState.buId, filterState.zId);
-  }, [filterState.bgId, filterState.buId, filterState.zId]);
-
-  const [allTerritoryData, setAllTerritoryData] = useState([]);
-
-  const getAllTerritoryData = async (
-    segmentId,
-    businessUnitId,
-    zoneId,
-    regionId
-  ) => {
-    try {
-      const respond = await axios.get(`${url}/api/get_territory`, {
-        headers: headers,
-      });
-
-      const apires = await respond.data.data;
-
-      setAllTerritoryData(
-        apires
-          .filter((item) => Number(item.bg_id) === Number(segmentId))
-          .filter((item) => Number(item.bu_id) === Number(businessUnitId))
-          .filter((item) => Number(item.z_id) === Number(zoneId))
-          .filter((item) => Number(item.r_id) === Number(regionId))
-      );
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    if (
-      !filterState.bgId ||
-      !filterState.buId ||
-      !filterState.zId ||
-      !filterState.rId
-    )
-      return;
-    getAllTerritoryData(
-      filterState.bgId,
-      filterState.buId,
-      filterState.zId,
-      filterState.rId
-    );
-  }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
   const [allEmployee, setAllEmployee] = useState([]);
-  const getAllEmployeeData = async () => {
+  const getAllEmployeeData = async (cId, bgId, buId) => {
     try {
       const respond = await axios.get(`${url}/api/get_employee`, {
         headers: headers,
         params: {
-          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          c_id: cId === "All" ? null : cId,
+          bg_id: bgId === "All" ? null : bgId,
+          bu_id: buId === "All" ? null : buId,
+          zrt: true,
         },
       });
 
@@ -259,22 +187,25 @@ const District = () => {
     } catch (error) {}
   };
   useEffect(() => {
-    getAllEmployeeData();
-  }, []);
+    getAllEmployeeData(filterState.cId, filterState.bgId, filterState.buId);
+  }, [filterState.cId, filterState.bgId, filterState.buId]);
 
   useEffect(() => {
     // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     const roleId = 6;
     let filterState = {
+      cId: "All",
       bgId: "All",
       buId: "All",
-      zId: "All",
-      rId: "All",
-      tId: "All",
     };
     switch (roleId) {
       case 6:
         filterState = {
+          empCode: null,
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -283,26 +214,14 @@ const District = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          rId:
-            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId:
-            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId:
-            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          startDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            1
-          ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+
+          startDate: new Date(),
         };
         setLocalStorageItems({
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -331,6 +250,11 @@ const District = () => {
         break;
       case 5:
         filterState = {
+          empCode: null,
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -339,24 +263,14 @@ const District = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          rId:
-            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId:
-            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
 
-          tId: "All",
-          startDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            1
-          ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          startDate: new Date(),
         };
         setLocalStorageItems({
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -386,6 +300,11 @@ const District = () => {
         break;
       case 4:
         filterState = {
+          empCode: null,
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -395,21 +314,13 @@ const District = () => {
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
 
-          zId:
-            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-
-          rId: "All",
-          tId: "All",
-          startDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            1
-          ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          startDate: new Date(),
         };
         setLocalStorageItems({
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -442,6 +353,11 @@ const District = () => {
         break;
       case 3:
         filterState = {
+          empCode: null,
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -451,20 +367,13 @@ const District = () => {
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
 
-          zId:
-            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          rId: "All",
-          tId: "All",
-          startDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            1
-          ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          startDate: new Date(),
         };
         setLocalStorageItems({
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -497,19 +406,21 @@ const District = () => {
         break;
       case 10:
         filterState = {
+          empCode: null,
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          rId: "All",
-          tId: "All",
-          startDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            1
-          ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+
+          startDate: new Date(),
         };
         setLocalStorageItems({
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -551,17 +462,14 @@ const District = () => {
         });
 
         setFilterState({
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          startDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            1
-          ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+
+          startDate: new Date(),
         });
         setFilterState(filterState);
 
@@ -569,6 +477,21 @@ const District = () => {
     }
   }, []);
   const { name } = router.query;
+  useEffect(() => {
+    getActivityTarget(
+      filterState.cId,
+      filterState.bgId,
+      filterState.buId,
+      filterState.startDate,
+      filterState.empCode
+    );
+  }, [
+    filterState.cId,
+    filterState.bgId,
+    filterState.buId,
+    filterState.startDate,
+    filterState.empCode,
+  ]);
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -593,6 +516,11 @@ const District = () => {
               <AiTwotoneHome
                 className="text-black-500"
                 size={34}
+                onClick={() => {
+                  router.push({
+                    pathname: "/",
+                  });
+                }}
               ></AiTwotoneHome>
             </h2>
             <button
@@ -612,16 +540,53 @@ const District = () => {
           <select
             className="border rounded px-2 py-1  w-1/2 h-8"
             id="stateSelect"
+            value={filterState.cId}
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  cId: e.target.value,
+                  bgId: "All",
+                  buId: "All",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  cId: e.target.value,
+                });
+              }
+            }}
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              localStorageItems.roleId === 4 ||
+              localStorageItems.roleId === 3 ||
+              localStorageItems.roleId === 10
+            }
+          >
+            <option value={"All"} className="font-bold">
+              - All Company -
+            </option>
+
+            {allCompanyInfo.map((item, idx) => (
+              <option value={item.c_id} key={idx}>
+                {item.cmpny_name}
+              </option>
+            ))}
+          </select>
+          <select
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
             value={filterState.bgId}
             onChange={(e) => {
               if (e.target.value === "All") {
                 setFilterState({
                   ...filterState,
                   bgId: e.target.value,
-                  buId: "",
-                  zId: "",
-                  rId: "",
-                  tId: "",
+                  buId: "All",
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -658,9 +623,9 @@ const District = () => {
                   ...filterState,
                   buId: e.target.value,
 
-                  zId: "",
-                  rId: "",
-                  tId: "",
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
                 });
               } else {
                 setFilterState({
@@ -686,91 +651,6 @@ const District = () => {
           </select>
 
           <select
-            className="border rounded px-2 py-1  w-1/2 h-8"
-            id="stateSelect"
-            value={filterState.zId}
-            onChange={(e) => {
-              if (e.target.value === "All") {
-                setFilterState({
-                  ...filterState,
-                  zId: e.target.value,
-                  rId: "",
-                  tId: "",
-                });
-              } else {
-                setFilterState({
-                  ...filterState,
-                  zId: e.target.value,
-                });
-              }
-            }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4
-            }
-          >
-            <option value={"All"}>- All Zone -</option>
-
-            {allZoneData.map((item, idx) => (
-              <option value={item.z_id} key={idx}>
-                {item.zone_name}
-              </option>
-            ))}
-          </select>
-
-          <select
-            className="border rounded px-2 py-1  w-1/2 h-8"
-            id="stateSelect"
-            value={filterState.rId}
-            disabled={
-              localStorageItems.roleId === 6 || localStorageItems.roleId === 5
-            }
-            onChange={(e) => {
-              if (e.target.value === "All") {
-                setFilterState({
-                  ...filterState,
-                  rId: e.target.value,
-                  tId: "",
-                });
-              } else {
-                setFilterState({
-                  ...filterState,
-                  rId: e.target.value,
-                });
-              }
-            }}
-          >
-            <option value={"All"}>-All Region -</option>
-
-            {allRegionData.map((item, idx) => (
-              <option value={item.r_id} key={idx}>
-                {item.region_name}
-              </option>
-            ))}
-          </select>
-
-          <select
-            className="border rounded px-2 py-1 w-1/2 h-8"
-            id="stateSelect"
-            value={filterState.tId}
-            disabled={localStorageItems.roleId === 6}
-            onChange={(e) =>
-              setFilterState({
-                ...filterState,
-                tId: e.target.value,
-              })
-            }
-          >
-            <option value="All">- All Territory -</option>
-
-            {allTerritoryData.map((item, idx) => (
-              <option value={item.t_id} key={idx}>
-                {item.territory_name}
-              </option>
-            ))}
-          </select>
-          <select
             id="attendanceType"
             className="border rounded px-2 py-1 w-full h-8"
             value={filterState.empCode}
@@ -789,22 +669,14 @@ const District = () => {
           <div className="flex flex-row gap-2  items-center w-1/4">
             <DatePicker
               className="border p-1 rounded w-28 "
-              dateFormat="dd-MM-yyyy"
+              dateFormat="yyyy"
               selected={filterState.startDate}
               placeholderText="Enter Date"
               scrollableYearDropdown
-              // onChange={handleYearChange}
-              hand
-            />
-            <small>TO</small>
-            <DatePicker
-              className="border p-1 rounded w-28  "
-              dateFormat="dd-MM-yyyy"
-              selected={filterState.endDate}
-              placeholderText="Enter Date"
-              // selected={selectedYear}
-              scrollableYearDropdown
-              // onChange={handleYearChange}
+              showYearPicker
+              onChange={(date) =>
+                setFilterState({ ...filterState, startDate: date })
+              }
               hand
             />
           </div>
