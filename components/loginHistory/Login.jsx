@@ -15,47 +15,44 @@ const Login = () => {
   const [phone, setPhone] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [isLoggedMode, setLoggedMode] = useState(null)
+  const [isLoggedMode, setLoggedMode] = useState(null);
 
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
   };
-
 
   const loginHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
-         console.log("data", phone);
+    console.log("data", phone);
     if (phone.length < 10) {
       toast.error("Enter the valid Mobile number");
-      setLoading(false)
+      setLoading(false);
       return;
     }
     const payload = {
-      phone_number: phone,
+      phone_number: phone
     };
     try {
       const resp = await axios.post(`${url}/api/login_user`, payload, {
-        headers: headers,
+        headers: headers
       });
       const respdata = await resp.data;
-      console.log("check", respdata.data)
+      console.log("check", respdata.data);
       // return
-      if(respdata.message =='OTP sent successfully!'){
+      if (respdata.message == "OTP sent successfully!") {
         toast.success(respdata.message);
-        const uuid =  respdata.data;
-        setTimeout(()=>{
+        const uuid = respdata.data;
+        setTimeout(() => {
           router.push({
             pathname: `/otp`,
             query: { phone_number: phone, uid: uuid }
           });
-        },1000)
-       
+        }, 1000);
       }
       const phone_number = respdata?.data?.loginHistory?.phone_no;
       const uid = respdata?.data.uid || respdata?.data?.loginHistory.uid;
-
       const email_id = respdata?.data?.loginHistory?.email_id;
       const user_name = respdata?.data?.loginHistory?.user_name;
       const _id = respdata?.data?.loginHistory?._id;
@@ -79,25 +76,34 @@ const Login = () => {
         const mode = respdata?.data?.loginHistory?.mode;
         const c_id = respdata?.data?.loginHistory?.c_id;
         const emp_code = respdata?.data?.loginHistory?.emp_code;
-
-
+        const logout_time = respdata?.data?.loginHistory?.logout_time;
+        const login_in_time = respdata?.data?.loginHistory?.login_in_time;
         const userinfo = respdata?.data?.userBSTDetails;
         toast.success(respdata?.message);
+
         localStorage.setItem("uid", uid);
         localStorage.setItem("email_id", email_id);
         localStorage.setItem("mode", mode);
-        localStorage.setItem("emp_code", emp_code);
-
         localStorage.setItem("c_id", JSON.stringify(c_id));
-
+        localStorage.setItem("emp_code", emp_code);
+        localStorage.setItem("logout_time", logout_time);
+        localStorage.setItem("login_in_time", login_in_time);
         localStorage.setItem("userinfo", JSON.stringify(userinfo));
-        if(mode=="mobile"){
-          router.push('/MR_Portal_Apps/MRHome')
-        }else{
-          router.push('/')
+
+        sessionStorage.setItem("uid",uid);
+        sessionStorage.setItem("mode", mode);
+
+
+        const apiExpireTime = Date.now() + 60000;
+        localStorage.setItem("expireTime", apiExpireTime);
+        sessionStorage.setItem("expireTime", apiExpireTime);
+
+        if (mode == "mobile") {
+          router.push("/MR_Portal_Apps/MRHome");
+        } else {
+          router.push("/");
         }
-       
-      } 
+      }
 
       if (respdata?.message && respdata?.status == false) {
         setLoading(false);
@@ -115,22 +121,24 @@ const Login = () => {
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("id", _id);
         localStorage.setItem("userinfo", JSON.stringify(userinfo));
-        if(mode =="mobile"){
-          router.push('/MR_Portal_Apps/MRHome')
-        }else{
+
+        sessionStorage.setItem("uid", uid)
+
+        if (mode == "mobile") {
+          router.push("/MR_Portal_Apps/MRHome");
+        } else {
           router.push("/");
         }
       }
-
     } catch (error) {
       console.log("re", error);
       console.log("err", error?.response?.data?.message);
-      if(error?.response?.data?.message){
+      if (error?.response?.data?.message) {
         toast.error(error?.response?.data?.message);
       }
       const errorMessage = error?.response?.data?.message;
       const status = error?.response?.data?.status;
-      
+
       if (errorMessage && status == false) {
         console.log("loginms", errorMessage == "OTP is not verified");
 
@@ -160,7 +168,7 @@ const Login = () => {
         if (errorMessage == "OTP is not verified") {
           router.push({
             pathname: `/otp`,
-            query: { phone_number: phone , uid: uid}
+            query: { phone_number: phone, uid: uid }
           });
         }
       }
@@ -177,14 +185,11 @@ const Login = () => {
   useEffect(() => {
     if (isLoggedIn) {
       router.push("/");
-    }
-    else if(isLoggedIn && isLoggedMode=="mobile"){
+    } else if (isLoggedIn && isLoggedMode == "mobile") {
       router.push("/MR_Portal_Apps/MRHome");
-    }else{
+    } else {
     }
-  }, [isLoggedIn, isLoggedMode]);
-
-  
+  }, [isLoggedIn]);
 
   //setting up the menus in localStorage
 

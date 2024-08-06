@@ -747,7 +747,7 @@ const AdditionalInfo = (data) => {
                           type="text"
                           id="inputField"
                           placeholder="State"
-                          value={farmerState.state}
+                           value={farmerState.state}
                         />
                       </div>
 

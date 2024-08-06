@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import Layout from "../Layout";
+import Layout from "@/components/Layout1";
 import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import { TbFileDownload } from "react-icons/tb";
 import axios from "axios";
-import ConfirmationModal from "../modals/ConfirmationModal";
+import ConfirmationModal from "@/components/modals/ConfirmationModal";
 import toast, { Toaster } from "react-hot-toast";
 
 import { CSVLink } from "react-csv";
@@ -24,8 +24,10 @@ const Farmer = () => {
     try {
       const respond = await axios.get(`${url}/api/get_farmer`, {
         headers: headers,
+        // c_id: JSON.parse(window.localStorage.getItem("c_id")[0]),
       });
       const apires = await respond.data.data;
+
       setData(apires);
     } catch (error) {}
   };
@@ -78,22 +80,7 @@ const Farmer = () => {
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
-                <form className="form flex items-center ">
-                  <input
-                    type="search"
-                    placeholder="Search"
-                    className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
-                  />
-                  <button
-                    type="submit"
-                    className="bg-blue-500 text-white rounded-r-md p-1 "
-                  >
-                    <AiOutlineSearch
-                      className="mx-2 my-1"
-                      size={20}
-                    ></AiOutlineSearch>
-                  </button>
-                </form>
+                
               </div>
             </div>
             <h2>
@@ -106,29 +93,29 @@ const Farmer = () => {
             </h2>
 
             <h2>
-              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
+              <AiTwotoneHome  className="text-black-500"
+                size={34}
+                onClick={() => {
+                  router.push("/");
+                }} ></AiTwotoneHome>
             </h2>
             <button
               onClick={() => {
                 router.push({
-                  pathname: "/form/farmer_info_form",
+                  pathname: "/MR_Portal_Web/FarmerInfoForm",
                   query: { id: null, type: "Add" },
                 });
               }}
-              className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
+              className=" text-white py-1 px-2 rounded-md bg-blue-500 hover:bg-orange-500 "
             >
               Create New
             </button>
           </div>
         </div>
 
-        <div className="bg-white h-screen flex select-none items-start justify-center max-w-full">
-          <div
-            className=" text-black font-arial scrollbar-hide overflow-x-auto tableInfo p-2 "
-            ref={tableRef}
-          >
-            <table className="min-w-full divide-y border- divide-gray-200 ">
-              <thead className="border-b">
+        <div className=" absolute overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
+          <table className="min-w-full divide-y border- divide-gray-200 ">
+            <thead className="border-b w-max">
                 <tr className="bg-gray-50 font-arial">
                   <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Action
@@ -165,7 +152,9 @@ const Farmer = () => {
                   <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Territory
                   </th>
-
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    State
+                  </th>
                   <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     District
                   </th>
@@ -194,7 +183,7 @@ const Farmer = () => {
                       <button
                         onClick={() => {
                           router.push({
-                            pathname: "/form/farmer_info_form",
+                            pathname: "/MR_Portal_Web/FarmerInfoForm",
                             query: { id: item.f_id, type: "View" },
                           });
                         }}
@@ -205,7 +194,7 @@ const Farmer = () => {
                       <button
                         onClick={() => {
                           router.push({
-                            pathname: "/form/farmer_info_form",
+                            pathname: "/MR_Portal_Web/FarmerInfoForm",
                             query: { id: item.f_id, type: "Edit" },
                           });
                         }}
@@ -241,7 +230,7 @@ const Farmer = () => {
                       {item.f_cat}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.village_town_name}
+                      {item.v_id}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.f_pin}
@@ -251,6 +240,9 @@ const Farmer = () => {
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.territory_name}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.st_id}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.district_name}
@@ -275,7 +267,7 @@ const Farmer = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        
       </div>
       <ConfirmationModal
         isOpen={isOpen}

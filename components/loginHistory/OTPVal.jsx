@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
 import { BiSolidLockAlt } from "react-icons/bi";
-import { AiFillGoogleCircle, AiFillTwitterCircle } from "react-icons/ai";
+
 import { BsFacebook } from "react-icons/bs";
 import Logo from "../../public/Willowood.png";
 import Image from "next/image";
@@ -167,21 +167,7 @@ const OTPVal = () => {
                 </button>
               </div>
 
-              {/* <div className="googleWrap flex items-center flex-col justify-center mt-10">
-                <h2 className="text-gray-600">or sign up using</h2>
-                <div className="icons flex items-center justify-center gap-2 mt-2 mb-4">
-                  <BsFacebook className="text-blue-600" size={26}></BsFacebook>
-                  <AiFillTwitterCircle
-                    className="text-blue-500"
-                    size={29}
-                    color="blue"
-                  ></AiFillTwitterCircle>
-                  <AiFillGoogleCircle
-                    className="text-red-600"
-                    size={29}
-                  ></AiFillGoogleCircle>
-                </div>
-              </div> */}
+             
             </div>
           </div>
         </div>

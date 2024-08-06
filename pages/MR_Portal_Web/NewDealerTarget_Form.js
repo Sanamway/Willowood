@@ -44,6 +44,15 @@ const DealerTarget = () => {
     empCode: null,
     roleId: null,
   });
+  const [localStorageItems, setLocalStorageItems] = useState({
+    cId: null,
+    bgId: null,
+    buId: null,
+    rId: null,
+    zId: null,
+    tId: null,
+    roleId: null,
+  });
 
   useEffect(() => {
     if (router.query.type !== "Add") {
@@ -53,68 +62,288 @@ const DealerTarget = () => {
   }, []);
 
   useEffect(() => {
-    const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
-
+    // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
+    const roleId = 6;
+    let filterState = {
+      cId: "All",
+      bgId: "All",
+      buId: "All",
+    };
     switch (roleId) {
       case 6:
-        setFilterState({
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: null,
+        filterState = {
+          empCode: null,
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+          startDate: new Date(),
+        };
+        setLocalStorageItems({
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId:
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
+
+        setFilterState(filterState);
+
         break;
       case 5:
-        setFilterState({
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: null,
+        filterState = {
+          empCode: null,
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+          startDate: new Date(),
+        };
+        setLocalStorageItems({
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId:
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
+                "All",
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
+
+        setFilterState(filterState);
+
         break;
       case 4:
-        setFilterState({
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: null,
+        filterState = {
+          empCode: null,
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+          startDate: new Date(),
+        };
+        setLocalStorageItems({
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
+                "All",
+          tId:
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
+                "All",
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
+
+        setFilterState(filterState);
+
         break;
       case 3:
-        setFilterState({
+        filterState = {
+          empCode: null,
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+          startDate: new Date(),
+        };
+        setLocalStorageItems({
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
+                "All",
+          tId:
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
+                "All",
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
+
+        setFilterState(filterState);
+
+        break;
+      case 10:
+        filterState = {
+          empCode: null,
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+          startDate: new Date(),
+        };
+        setLocalStorageItems({
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          bgId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+          buId:
+            JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
+                "All",
+          tId:
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
+                "All",
+          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+        });
+
+        setFilterState(filterState);
+
+        break;
+      default:
+        setLocalStorageItems({
+          cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: null,
         });
-        break;
-      case 10:
+
         setFilterState({
+          cId:
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: null,
+          buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+
+          startDate: new Date(),
         });
-        break;
-      default:
-        setFilterState({
-          bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: null,
-        });
+        setFilterState(filterState);
+
         break;
     }
   }, []);
@@ -127,15 +356,8 @@ const DealerTarget = () => {
         headers: headers,
       });
       const apires = await respond.data.data;
-      console.log("Bye", window.localStorage.getItem("userinfo").c_id);
-      setBgData(
-        apires.filter(
-          (item) =>
-            item.isDeleted === false &&
-            Number(item.c_id) ===
-              JSON.parse(window.localStorage.getItem("userinfo")).c_id
-        )
-      );
+
+      setBgData(apires.filter((item, idx) => item.isDeleted === false));
     } catch (error) {
       console.log(error);
     }
@@ -164,11 +386,10 @@ const DealerTarget = () => {
   };
 
   useEffect(() => {
-    if (!filterState.bgId) return;
     getBusinessUnitInfo(filterState.bgId);
   }, [filterState.bgId]);
 
-  const [zoneData, setAllZoneData] = useState([]);
+  const [allZoneData, setAllZoneData] = useState([]);
   const getAllZoneData = async (segmentId, businessUnitId) => {
     try {
       const respond = await axios.get(`${url}/api/get_zone`, {
@@ -190,7 +411,7 @@ const DealerTarget = () => {
     getAllZoneData(filterState.bgId, filterState.buId);
   }, [filterState.bgId, filterState.buId]);
 
-  const [regionData, setRegionData] = useState([]);
+  const [allRegionData, setAllRegionData] = useState([]);
 
   const getAllRegionData = async (segmentId, businessUnitId, zoneId) => {
     try {
@@ -200,7 +421,8 @@ const DealerTarget = () => {
 
       const apires = await respond.data.data;
 
-      setRegionData(
+      setAllRegionData(apires);
+      setAllRegionData(
         apires
           .filter((item) => Number(item.bg_id) === Number(segmentId))
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
@@ -214,7 +436,7 @@ const DealerTarget = () => {
     getAllRegionData(filterState.bgId, filterState.buId, filterState.zId);
   }, [filterState.bgId, filterState.buId, filterState.zId]);
 
-  const [territoryData, setTerritoryData] = useState([]);
+  const [allTerritoryData, setAllTerritoryData] = useState([]);
 
   const getAllTerritoryData = async (
     segmentId,
@@ -229,7 +451,7 @@ const DealerTarget = () => {
 
       const apires = await respond.data.data;
 
-      setTerritoryData(
+      setAllTerritoryData(
         apires
           .filter((item) => Number(item.bg_id) === Number(segmentId))
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
@@ -256,24 +478,44 @@ const DealerTarget = () => {
   }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
 
   const [allEmployee, setAllEmployee] = useState([]);
-  const getAllEmployeeData = async () => {
+  
+
+
+  const getAllEmployeeData = async (bg, bu, z, r, t) => {
     try {
       const respond = await axios.get(`${url}/api/get_employee`, {
         headers: headers,
         params: {
-          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          zrt: true,
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         },
       });
-
       const apires = await respond.data.data;
-
       setAllEmployee(apires);
-    } catch (error) {}
+    } catch (error) {
+      setAllEmployee([]);
+    }
   };
   useEffect(() => {
-    getAllEmployeeData();
-  }, []);
+    getAllEmployeeData(
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId
+    );
+  }, [
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+  ]);
 
   const [allDealer, setAllDealer] = useState([]);
   const getAllDealerData = async (empCode) => {
@@ -283,7 +525,7 @@ const DealerTarget = () => {
         params: {
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          t_des: territoryData.filter(
+          t_des: allTerritoryData.filter(
             (item) =>
               item.t_id ===
               JSON.parse(window.localStorage.getItem("userinfo")).t_id
@@ -298,9 +540,9 @@ const DealerTarget = () => {
     } catch (error) {}
   };
   useEffect(() => {
-    if (!territoryData.length) return;
+ 
     getAllDealerData(filterState.empCode);
-  }, [territoryData, filterState.empCode]);
+  }, [filterState.empCode]);
 
   const [allMRSalesTarget, setAllMRSalesTarget] = useState([]);
   const [editviewFilter, setEditviewFilter] = useState({
@@ -324,7 +566,7 @@ const DealerTarget = () => {
         // customer_code: router.query.custCode,
       };
     } else {
-      tDes = territoryData.filter((item) => item.t_id === tId)[0]
+      tDes =allTerritoryData.filter((item) => item.t_id === tId)[0]
         .territory_name;
       paramsData = {
         t_id: tId,
@@ -454,9 +696,11 @@ const DealerTarget = () => {
             />
           </span>
         </div>
-        <div className="flex flex-row m-4 w-100 gap-2 ">
-          <div className="flex flex-col gap-2">
-            <DatePicker
+       
+         
+          <div className="flex flex-row gap-4  px-4 pr-8 pb-2">
+
+          <DatePicker
               className="border p-1 rounded ml-2 w-40 "
               showYearDropdown
               dateFormat="yyyy"
@@ -469,93 +713,168 @@ const DealerTarget = () => {
               minDate={new Date(new Date().getFullYear(), 0, 1)}
               disabled={router.query.type !== "Add"}
             />
-          </div>
+          <select
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.bgId}
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  bgId: e.target.value,
+                  buId: "All",
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  bgId: e.target.value,
+                });
+              }
+            }}
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              localStorageItems.roleId === 4 ||
+              localStorageItems.roleId === 3 ||
+              localStorageItems.roleId === 10
+            }
+          >
+            <option value={"All"} className="font-bold">
+              - All Business Segment -
+            </option>
 
-          <div className="flex flex-col gap-2">
-            <select
-              id="attendanceType"
-              className="border p-1 rounded ml-2  "
-              value={filterState.bgId}
-              onChange={(e) =>
-                setFilterState({ ...filterState, bgId: e.target.value })
-              }
-              disabled
-            >
-              <option value={""}>Business Segment</option>
-              {bgData.map((item) => (
-                <option value={item.bg_id}>{item.business_segment}</option>
-              ))}
-            </select>
-          </div>
+            {bgData.map((item, idx) => (
+              <option value={item.bg_id} key={idx}>
+                {item.business_segment}
+              </option>
+            ))}
+          </select>
+          <select
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.buId}
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  buId: e.target.value,
 
-          <div className="flex flex-col gap-2">
-            <select
-              id="attendanceType"
-              className="  border p-1 rounded ml-2  "
-              value={filterState.buId}
-              onChange={(e) =>
-                setFilterState({ ...filterState, buId: e.target.value })
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  buId: e.target.value,
+                });
               }
-              disabled
-            >
-              <option value={""}>Business Unit</option>
-              {buData.map((item) => (
-                <option value={item.bu_id}>{item.business_unit_name}</option>
-              ))}
-            </select>
-          </div>
+            }}
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              localStorageItems.roleId === 4 ||
+              localStorageItems.roleId === 3
+            }
+          >
+            <option value={"All"}>- All Business Unit -</option>
 
-          <div className="flex flex-col gap-2">
-            <select
-              id="attendanceType"
-              className="  border p-1 rounded ml-2"
-              value={filterState.zId}
-              onChange={(e) =>
-                setFilterState({ ...filterState, zId: e.target.value })
-              }
-              disabled
-            >
-              <option value={""}>Zone</option>
-              {zoneData.map((item) => (
-                <option value={item.z_id}>{item.zone_name}</option>
-              ))}
-            </select>
-          </div>
+            {buData.map((item, idx) => (
+              <option value={item.bu_id} key={idx}>
+                {item.business_unit_name}
+              </option>
+            ))}
+          </select>
 
-          <div className="flex flex-col gap-2">
-            <select
-              id="attendanceType"
-              className="  border p-1 rounded ml-2  "
-              value={filterState.rId}
-              onChange={(e) =>
-                setFilterState({ ...filterState, rId: e.target.value })
+          <select
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.zId}
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                 setFilterState({
+                  ...filterState,
+                  zId: e.target.value,
+                  rId: "All",
+                  tId: "All",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  zId: e.target.value,
+                });
               }
-              disabled
-            >
-              <option value={""}>Region</option>
-              {regionData.map((item) => (
-                <option value={item.r_id}>{item.region_name}</option>
-              ))}
-            </select>
-          </div>
-          <div className="flex flex-col gap-2">
-            <select
-              id="attendanceType"
-              className="border p-1 w-50 rounded ml-2"
-              value={filterState.tId}
-              onChange={(e) =>
-                setFilterState({ ...filterState, tId: e.target.value })
+            }}
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              localStorageItems.roleId === 4
+            }
+          >
+            <option value={"All"}>- All Zone -</option>
+
+            {allZoneData.map((item, idx) => (
+              <option value={item.z_id} key={idx}>
+                {item.zone_name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.rId}
+            disabled={
+              localStorageItems.roleId === 6 || localStorageItems.roleId === 5
+            }
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  rId: e.target.value,
+                  tId: "All",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  rId: e.target.value,
+                });
               }
-              disabled
-            >
-              <option value={""}>Territory</option>
-              {territoryData.map((item) => (
-                <option value={item.t_id}>{item.territory_name}</option>
-              ))}
-            </select>
-          </div>
-          <div className="flex flex-col gap-2 ">
-            {router.query.type === "Add" ? (
+            }}
+          >
+            <option value={"All"}>-All Region -</option>
+
+            {allRegionData.map((item, idx) => (
+              <option value={item.r_id} key={idx}>
+                {item.region_name}
+              </option>
+            ))}
+          </select>
+ 
+          <select
+            className="border rounded px-2 py-1 w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.tId}
+            disabled={localStorageItems.roleId === 6}
+            onChange={(e) =>
+              setFilterState({
+                ...filterState,
+                tId: e.target.value,
+              })
+            }
+          >
+            <option value="All">- All Territory -</option>
+
+            {allTerritoryData.map((item, idx) => (
+              <option value={item.t_id} key={idx}>
+                {item.territory_name}
+              </option>
+            ))}
+          </select>
+          {router.query.type === "Add" ? (
               <div className="flex flex-row gap-2 ">
                 <input
                   className="w-20 border p-1 rounded "
@@ -592,8 +911,6 @@ const DealerTarget = () => {
                 />
               </div>
             )}
-          </div>
-          <div className="flex flex-col gap-2 ">
             {router.query.type === "Add" ? (
               <div className=" flex flex-row gap-2">
                 <input
@@ -614,6 +931,7 @@ const DealerTarget = () => {
                   id="attendanceType"
                   className="border p-1 rounded w-80 "
                   value={filterState.dId}
+                
                   onChange={(e) => {
                     setFilterState({
                       ...filterState,
@@ -644,7 +962,9 @@ const DealerTarget = () => {
               </div>
             )}
           </div>
-        </div>
+          
+         
+      
 
         <h2 className="font-bold mx-4">
           MR - Dealer Sales Target Plan of the Year {filterState.yr}

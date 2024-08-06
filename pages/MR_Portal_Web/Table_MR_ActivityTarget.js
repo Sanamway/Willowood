@@ -104,9 +104,9 @@ const District = () => {
     cId: null,
     bgId: null,
     buId: null,
-
     startDate: new Date(),
   });
+  
 
   const [allCompanyInfo, setAllCompanyInfo] = useState([]);
   const getAllCompanyInfo = async () => {
@@ -666,7 +666,7 @@ const District = () => {
             ))}
           </select>
 
-          <div className="flex flex-row gap-2  items-center w-1/4">
+           <div className="flex flex-row gap-2  items-center w-1/4">
             <DatePicker
               className="border p-1 rounded w-28 "
               dateFormat="yyyy"
