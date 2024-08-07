@@ -8,7 +8,7 @@ import { TbFileDownload } from "react-icons/tb";
 import axios from "axios";
 import ConfirmationModal from "@/components/modals/ConfirmationModal";
 import toast, { Toaster } from "react-hot-toast";
-
+import ReactPaginate from "react-paginate";
 import { CSVLink } from "react-csv";
 
 const Farmer = () => {
@@ -19,22 +19,45 @@ const Farmer = () => {
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
-  const [data, setData] = useState([]);
-  const getDistrict = async () => {
-    try {
-      const respond = await axios.get(`${url}/api/get_farmer`, {
-        headers: headers,
-        // c_id: JSON.parse(window.localStorage.getItem("c_id")[0]),
-      });
-      const apires = await respond.data.data;
 
+  const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  const [pageCount, setPageCount] = useState(0);
+  const [data, setData] = useState([]);
+ 
+
+
+  const getDistrict = async (currentPage) => {
+    try {
+      
+      const respond = await axios.get(`${url}/api/get_farmer?c_id=${JSON.parse(window.localStorage.getItem("c_id"))[0]}`, {
+        headers: headers,
+        params: {
+         
+          paging: true,
+          page: currentPage,
+          size: 50,
+        },
+      });
+      const apires = await respond.data.data.FarmerData;
+      const count = await respond.data.data.FarmerDataCount;
+      setPageCount(Math.ceil(count / 50));
       setData(apires);
-    } catch (error) {}
+      
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
-    getDistrict();
-  }, []);
+    getDistrict(
+      currentPage.selected + 1,
+    );
+  }, [
+    currentPage.selected + 1,
+  ]);
 
   const deleteHandler = (id) => {
     setisOpen(true);
@@ -68,14 +91,14 @@ const Farmer = () => {
     { label: "Business Segment", key: "business_segment" },
     { label: "Company", key: "cmpny_name" },
   ];
-
+  const { name } = router.query;
   return (
     <Layout>
       <div className=" overflow-auto w-full ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
-            Farmer Information
+          {name ? name : "Farmer Information"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
@@ -115,7 +138,7 @@ const Farmer = () => {
 
         <div className=" absolute overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
           <table className="min-w-full divide-y border- divide-gray-200 ">
-            <thead className="border-b w-max">
+             <thead className="border-b w-max">
                 <tr className="bg-gray-50 font-arial">
                   <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Action
@@ -149,14 +172,15 @@ const Farmer = () => {
                   <th className="px-6  py-2  whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Post Office
                   </th>
-                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                    Territory
-                  </th>
+                  
                   <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     State
                   </th>
                   <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     District
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Territory
                   </th>
 
                   <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
@@ -238,14 +262,16 @@ const Farmer = () => {
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.f_post}
                     </td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.territory_name}
-                    </td>
+                   
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.st_id}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.district_name}
+                      {item.ds_id
+                      }
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.territory_name}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.zone_name}
@@ -266,6 +292,18 @@ const Farmer = () => {
                 ))}
               </tbody>
             </table>
+            <div className="w-full mx-4 h-40 mb-28">
+            <ReactPaginate
+              previousLabel={"< Previous"}
+              nextLabel={"Next >"}
+              breakLabel={"..."}
+              pageCount={pageCount}
+              onPageChange={handlePageChange}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+              className="flex flex-row gap-2 mt-4  "
+            />
+          </div>
           </div>
         
       </div>

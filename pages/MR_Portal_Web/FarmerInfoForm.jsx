@@ -40,8 +40,9 @@ const FarmerInfo = () => {
         regionId: apires[0].r_id,
         territoryId: apires[0].t_id,
         district: apires[0].ds_id,
-        village: apires[0].v_id,
-        pinCode: apires[0].f_pin,
+        village:  apires[0].v_id,
+        state:    apires[0].st_id,
+        pinCode:  apires[0].f_pin,
         postOffice: apires[0].f_post,
         email: apires[0].f_email,
       });
@@ -217,7 +218,7 @@ const FarmerInfo = () => {
     }
   };
 
-  const [villagetData, setVillageData] = useState([]);
+
  
 
   
@@ -225,8 +226,8 @@ const FarmerInfo = () => {
   const [districtData, setDistrictData] = useState([]);
 
   useEffect(() => {
-    if (!farmerState) return;
-     console.log("pop", districtData , farmerState.state , allStateCityData
+    if(!farmerState.state) return
+     console.log("zop", districtData , farmerState.state , allStateCityData
       .filter((item) => item.state === farmerState.state)
       .map((item) => item.district))
     setDistrictData(
@@ -234,7 +235,8 @@ const FarmerInfo = () => {
         .filter((item) => item.state === farmerState.state)
         .map((item) => item.district)
     );
-  }, [farmerState.state]);
+  }, [farmerState.state,allStateCityData]);
+  console.log("dist", districtData)
   const [allState, setAllState] = useState([]);
 
   const getAllState = async () => {
@@ -254,35 +256,7 @@ const FarmerInfo = () => {
     getAllState();
   }, []);
 
-  const getAllDistrictData = async (
-    companyId,
-    segmentId,
-    businessUnitId,
-    zoneId,
-    regionId,
-    territoryId
-  ) => {
-    try {
-      const respond = await axios.get(`${url}/api/get_district`, {
-        headers: headers,
-      });
-
-      const apires = await respond.data.data;
-
-      setDistrictData(
-        apires
-          .filter((item) => Number(item.c_id) === Number(companyId))
-          .filter((item) => Number(item.bg_id) === Number(segmentId))
-          .filter((item) => Number(item.bu_id) === Number(businessUnitId))
-          .filter((item) => Number(item.z_id) === Number(zoneId))
-          .filter((item) => Number(item.r_id) === Number(regionId))
-          .filter((item) => Number(item.t_id) === Number(territoryId))
-      );
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
+  
   useEffect(() => {
     if (
       farmerState.bgId &&
@@ -332,34 +306,7 @@ const FarmerInfo = () => {
     farmerState.regionId,
   ]);
 
-  useEffect(() => {
-    if (
-      farmerState.bgId &&
-      farmerState.companyId &&
-      farmerState.buId &&
-      farmerState.zoneId &&
-      farmerState.regionId &&
-      farmerState.territoryId
-    ) {
-      getAllDistrictData(
-        farmerState.companyId,
-        farmerState.bgId,
-        farmerState.buId,
-        farmerState.zoneId,
-        farmerState.regionId,
-        farmerState.territoryId
-      );
-    } else {
-      return;
-    }
-  }, [
-    farmerState.bgId,
-    farmerState.companyId,
-    farmerState.buId,
-    farmerState.zoneId,
-    farmerState.regionId,
-    farmerState.territoryId,
-  ]);
+  
 
   useEffect(() => {
     if (!farmerState.bgId && !farmerState.companyId) return;
@@ -407,7 +354,7 @@ const FarmerInfo = () => {
         v_id: farmerState.village,
         f_name: farmerState.farmerName,
         f_lacre: farmerState.landInfo,
-        f_mobile: farmerState.mobile,
+        f_mobile: Number(farmerState.mobile),
         f_type: farmerState.farmerTypes,
         ff_name: farmerState.fatherName,
         f_address: farmerState.farmerAddress,
@@ -467,7 +414,7 @@ const FarmerInfo = () => {
         v_id: farmerState.village,
         f_name: farmerState.farmerName,
         f_lacre: farmerState.landInfo,
-        f_mobile: farmerState.mobile,
+        f_mobile: Number(farmerState.mobile),
         f_type: farmerState.farmerTypes,
         ff_name: farmerState.fatherName,
         f_address: farmerState.farmerAddress,
@@ -551,7 +498,8 @@ const FarmerInfo = () => {
               className="block text-gray-700 text-sm font-bold mb-2 flex flex-col gap-2"
               htmlFor="inputField"
             >
-              <small className="text-red-600">*</small> Farmer Id
+             <span><small className="text-red-600">*</small> Farmer Id</span> 
+          
               <input
                 className="w-40 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
                 type="text"
@@ -1198,7 +1146,7 @@ const FarmerInfo = () => {
                   <button
                     className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
                     onClick={() => {
-                      router.push("/MR_Portal_Web/FarmerInfoForm");
+                      router.push("/MR_Portal_Web/FarmerInfo");
                     }}
                   >
                     Close

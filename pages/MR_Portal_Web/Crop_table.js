@@ -11,6 +11,7 @@ import { CSVLink } from "react-csv";
 import { TbFileDownload } from "react-icons/tb";
 import toast, { Toaster } from "react-hot-toast";
 import Layout from "@/components/Layout1";
+import ReactPaginate from "react-paginate";
 const Crop = () => {
   const csvHeaders = [
     { label: "Id", key: "cr_id" },
@@ -26,20 +27,38 @@ const Crop = () => {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-  const getCompanyInfo = async () => {
+
+  const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  const [pageCount, setPageCount] = useState(0);
+  const getCompanyInfo = async (
+    currentPage,
+  ) => {
     try {
-      const respond = await axios.get(`${url}/api/get_crop`, {
+      const respond = await axios.get(`${url}/api/get_crop?c_id=${JSON.parse(window.localStorage.getItem("c_id"))[0]}`, {
         headers: headers,
+        params: {
+         
+          paging: true,
+          page: currentPage,
+          size: 50,
+        },
       });
-      const apires = await respond.data.data;
+       const apires = await respond.data.data.cropData;
+       const count = await respond.data.data.cropDataCount;
+       setPageCount(Math.ceil(count / 50));
       setData(apires);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
-    getCompanyInfo();
-  }, []);
+    getCompanyInfo(
+      currentPage.selected + 1,
+    );
+  }, [currentPage.selected]);
 
   const deleteHandler = (id) => {
     setisOpen(true);
@@ -53,35 +72,32 @@ const Crop = () => {
     getCompanyInfo();
     setisOpen(false);
   };
+  const { name } = router.query;
   return (
     <Layout>
       <div className=" overflow-auto w-full font-arial bg-white ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
-          <h2 className="font-arial font-normal text-3xl  py-2">Crop</h2>
+          <h2 className="font-arial font-normal text-3xl  py-2">   {name ? name : "Crop"}</h2>
           <span className="flex items-center gap-2 cursor-pointer">
-            <span className="flex flex-row">
-              <input
-                type="search"
-                placeholder="Search"
-                className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
-              />
-              <button
-                type="submit"
-                className="bg-blue-500 text-white rounded-r-md p-1 "
-              >
-                <AiOutlineSearch className="mx-2 my-1" size={20} />
-              </button>
-            </span>
+           
             <h2>
               <CSVLink data={data} headers={csvHeaders}>
-                <TbFileDownload
+                 <TbFileDownload
                   className="text-green-600"
                   size={34}
                 ></TbFileDownload>
               </CSVLink>
             </h2>
-            <AiTwotoneHome className="text-red-500" size={34} />
+            <AiTwotoneHome
+                className="text-black"
+                size={34}
+                onClick={() => {
+                  router.push({
+                    pathname: "/",
+                  });
+                }}
+              ></AiTwotoneHome>
             <button
               onClick={() => {
                 router.push({
@@ -89,17 +105,16 @@ const Crop = () => {
                   query: { id: null, type: "Add" },
                 });
               }}
-              className=" text-white py-1 px-2 rounded-md bg-green-500 hover:bg-orange-500"
+              className=" text-white py-1 px-2 rounded-md bg-blue-500 hover:bg-orange-500"
             >
               Create New
             </button>
           </span>
         </div>
 
-        <div className="bg-white  flex items-start  mb-6 justify-center max-w-full ">
-          <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full p-2">
-            <table className=" border divide-gray-200 table-auto w-full ">
-              <thead className="border-b">
+        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto">
+          <table className="min-w-full divide-y border- divide-gray-200 ">
+            <thead className="border-b">
                 <tr className="bg-gray-50 font-arial w-max">
                   <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Action
@@ -174,11 +189,23 @@ const Crop = () => {
                     </td>
                   </tr>
                 ))}
-              </tbody>
+               </tbody>
               
             </table>
+            <div className="w-full mx-4 h-40 mb-28">
+            <ReactPaginate
+              previousLabel={"< Previous"}
+              nextLabel={"Next >"}
+              breakLabel={"..."}
+              pageCount={pageCount}
+              onPageChange={handlePageChange}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+              className="flex flex-row gap-2 mt-4  "
+            />
           </div>
-        </div>
+          </div>
+       
       </div>
       <ConfirmationModal
         isOpen={isOpen}
