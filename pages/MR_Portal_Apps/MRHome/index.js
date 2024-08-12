@@ -3,10 +3,24 @@ import Navbar from "@/components/MR_Portal_Apps/Navbar";
 import Hero from "@/components/MR_Portal_Apps/Hero";
 import { useRouter } from "next/router";
 const index = () => {
-  const router = useRouter();
+
+  const router = useRouter()
+  const [mode, setMode] = useState(null)
+
   useEffect(() => {
-    if (!localStorage.getItem("uid")) {
-      router.push("/login");
+    if(window.localStorage){
+      const mode = localStorage.getItem("mode");
+      const uid = localStorage.getItem("uid");
+      setMode(mode)
+      if (!uid) {
+        router.push("/login");
+      }
+      console.log("mode", mode)
+      if(mode=="mobile"){
+        router.push("/MR_Portal_Apps/MRHome")
+      }else{
+        router.push('/')
+      }  
     }
   }, []);
 
@@ -14,7 +28,6 @@ const index = () => {
     <>
       <main className="w-full overflow-hidden h-screen ">
         <Navbar></Navbar>
-        
         <Hero></Hero>
       </main>
     </>

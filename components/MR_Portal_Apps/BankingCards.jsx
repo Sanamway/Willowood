@@ -137,25 +137,35 @@ const BankingCards = () => {
               <h2 className="font-arial  font-semibold text-[0.85rem]">{item.label}</h2>
               <h2 className="font-semibold text-[0.85rem]"></h2>
             </div>
-            <div className="flex cursor-pointer items-center mrhome justify-start w-full px-2 mt-1 overflow-x-auto overflow-y-hidden my-1.5">
+            <div className="flex  items-center mrhome justify-start w-full px-2 mt-1 overflow-x-auto overflow-y-hidden my-1.5">
               {item.submenu.map(
                 (sub) => (
                   console.log("ICON NAME", sub.icon_link),
                   (
                     <div
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (!sub.page_call?.startsWith("/")) {
-                          router.push({
-                            pathname: `/${sub.page_call}`,
-                            query: { name: `${sub.label}` }
-                          });
-                        }
-                      }}
+                      // onClick={(e) => {
+                      //   e.preventDefault();
+                      //   // if (!sub.page_call?.startsWith("/")) {
+                      //     router.push({
+                      //       pathname: `/${sub.page_call}`,
+                      //       // query: { name: `${sub.label}` }
+                      //     });
+                      //   // }
+                      // }}
                       key={sub.umenu_Name}
                       className="flex flex-col items-center mx-2 w-auto justify-center  "
                     >
-                      <div className="bg-pink-0 rounded-full px-2 py-2">
+                      <button className="bg-pink-0 rounded-full px-2 py-2"
+                       onClick={(e) => {
+                        e.preventDefault();
+                        // if (!sub.page_call?.startsWith("/")) {
+                          router.push({
+                            pathname: `/${sub.page_call}`,
+                            // query: { name: `${sub.label}` }
+                          });
+                        // }
+                      }}
+                      >
                         {/* {sub.icon_link && <sub.icon_link className={`text-red-500`} size={25} />} */}
                         {sub.icon_link && iconComponents[sub.icon_link]
                           ? React.createElement(iconComponents[sub.icon_link], {
@@ -163,7 +173,7 @@ const BankingCards = () => {
                               size: 32
                             })
                           : null}
-                      </div>
+                      </button>
                       <div className="h-12 cursor-pointer">
                         <h2 className="text-[0.6rem] text-center text-black font-semibold font-arial px-1 py-2">
                           {sub.umenu_Name.substring(0)}

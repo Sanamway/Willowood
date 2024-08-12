@@ -26,6 +26,8 @@ const NewTab = () => {
     additional_description: ""
   });
 
+  const [userData, setUserData] = useState(null);
+
   const handleImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
@@ -58,13 +60,22 @@ const NewTab = () => {
   useEffect(() => {
     if (window.localStorage) {
       const storedData = window.localStorage.getItem("userinfo");
+      const userName = window.localStorage.getItem("user_name");
+      const phoneNumber = window.localStorage.getItem("phone_number");
       const userId = window.localStorage.getItem("uid");
       setsupportdetails({
         ...supportdetails,
         user_id: userId
       });
+      setUserData(JSON.parse(storedData));
+      setUserData((prev) => ({
+        ...prev,
+        username: userName,
+        phone_number: phoneNumber
+      }));
     }
   }, []);
+
 
   return (
     <>
@@ -178,7 +189,8 @@ const NewTab = () => {
                   type="text"
                   name="name"
                   id="user_name"
-                  value={supportdetails.user_name}
+                  value={userData?.username}
+                  disabled
                   className="w-full px-3 py-2 mt-1 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                   onChange={(e) => handleInputChange(e, "user_name")}
                   required
@@ -192,7 +204,8 @@ const NewTab = () => {
                   type="text"
                   name="name"
                   id="user_role"
-                  value={supportdetails.user_role}
+                  value={userData?.U_profile_name}
+                  disabled
                   className="w-full px-3 py-2 mt-1 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                   onChange={(e) => handleInputChange(e, "user_role")}
                   required
@@ -206,7 +219,8 @@ const NewTab = () => {
                   type="number"
                   name="number"
                   id="user_number"
-                  value={supportdetails.user_number}
+                  disabled
+                  value={userData?.phone_number}
                   className="w-full px-3 py-2 mt-1 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                   onChange={(e) => {
                     if (e.target.value.length > 10) {
@@ -227,7 +241,8 @@ const NewTab = () => {
                   type="text"
                   name="bst"
                   id="user_bst"
-                  value={supportdetails.user_bst}
+                  disabled
+                  value={userData?.business_unit_name +  " " + userData?.business_segment + " "+userData?.territory_name }
                   className="w-full px-3 py-2 mt-1 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                   onChange={(e) => handleInputChange(e, "user_bst")}
                   required

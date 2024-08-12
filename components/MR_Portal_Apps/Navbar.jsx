@@ -175,7 +175,7 @@ const Navbar = () => {
                 <img src={userImg} className="text-orange-500 h-8 w-8 rounded-full" size={30}></img>
               )}
             </span>
-            <a href="/" className="logo h-[40px] w-[120px] ">
+            <div  className="logo h-[40px] w-[120px] ">
               <Image
                 alt="mr_app"
                 src={WillLogo}
@@ -186,7 +186,7 @@ const Navbar = () => {
                 className="max-w-full max-h-full"
                 loading="lazy"
               />
-            </a>
+            </div>
           </div>
           <div className="flex items-center  py-0.5 gap-4 justify-center ">
             <IoSearchOutline className="text-orange-500" size={26}></IoSearchOutline>
@@ -227,7 +227,7 @@ const Navbar = () => {
                   </div>
                   <div className="sidelinks flex flex-col items-start justify-between w-full  ">
                     <div className="flex items-center justify-between w-full border-b-2 pb-1 mt-2 gap-2 px-4 ">
-                      <Link href={"/mrhome/profile"} className="flex items-center justify-between w-full">
+                      <Link href={"/MR_Portal_Apps/MRHome/profile"} className="flex items-center justify-between w-full">
                         <div className="flex flex-col">
                           <h2 className="font-semibold font-arial text-[0.88rem]">My Profile Setting</h2>
                           <p className="text-[0.68rem] text-gray-500 italic">
@@ -239,7 +239,7 @@ const Navbar = () => {
                     </div>
 
                     <Link
-                      href={"/mrhome/help"}
+                      href={"/MR_Portal_Apps/MRHome/help"}
                       
                       className="flex items-center justify-between w-full border-b-2 pb-1 mt-2 gap-2 px-4"
                     >
