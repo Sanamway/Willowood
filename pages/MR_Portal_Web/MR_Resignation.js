@@ -24,7 +24,7 @@ const DemoTable = () => {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-  const [pageCount, setPageCount] = useState(0);
+ 
   const getEmployeeResignationDemo = async (
     bg,
     bu,
@@ -89,8 +89,7 @@ const DemoTable = () => {
         resignation:true
       }
     }
-    else if( t!== "All"){
-      
+    else if( t!== "All"){     
       data=  {
         t:true,
         t_id: t === "All" ? null :t,
@@ -100,25 +99,18 @@ const DemoTable = () => {
         r_id: r === "All" ? null :  r, 
         c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         emp_code: empCode,
-        resignation:true,
+        resignation: true,
         app_status: "Resignation Submitted",
         t_id_status_resig:"Resignation Accepted-TM"
       }
     }
-   
-   
-
-
-
     try {
       const respond = await axios.get(`${url}/api/get_employee`, {
         headers: headers,
         params: data,
       });
-      const apires = await respond.data.data;
-      
-
-     
+      const apires = await respond.data.data;  
+      console.log("olk", apires)
       setData(apires);
     } catch (error) {
       console.log("zxc", error)
@@ -913,9 +905,7 @@ const DemoTable = () => {
                 {item.fname} {item.mname} {item.lname} {item.empcode}
               </option>
             ))}
-          </select>
-
-         
+          </select>    
         </div>
 
         <div className=" absolute overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
@@ -977,7 +967,6 @@ const DemoTable = () => {
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                 Functional Manager
                 </th>
-
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                 Reporting EMP Code
                 </th>
@@ -998,29 +987,18 @@ const DemoTable = () => {
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Territory
-                </th>
-                
-               
-                
-                
+                </th>           
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Reporting Office
                 </th>
               </tr>
             </thead>
+           
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
               {data?.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
                   <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                    <button
-                      onClick={() => {
-                        setImgUrl(item.field_photo_url);
-                        setIsOpen(true);
-                      }}
-                      className="b text-black hover:text-blue-500 mr-2  "
-                    >
-                      View Field Image
-                    </button>
+                    
                     <button
                       onClick={() => {
                         setShowVerifyModal(true);
@@ -1033,7 +1011,7 @@ const DemoTable = () => {
                       disabled={item.verified === "Yes"}
                       className="b text-black hover:text-blue-500  "
                     >
-                      Verify
+                    HR Approve
                     </button>
                     <button
                       onClick={() => {
@@ -1049,35 +1027,20 @@ const DemoTable = () => {
                     >
                       Approve
                     </button>
-                    <button
-                      className="b text-black hover:text-red-500 ml-2"
-                      onClick={() => {
-                        setShowDeleteModal(true);
-                        setModalData({
-                          ...modalData,
-
-                          id: item.f_demo_id,
-                        });
-                      }}
-                    >
-                      Delete
-                    </button>
+                
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.app_status}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {/* {moment(item.demo_date).format("MM/DD/YYYY")} */}
+                    
                     {item.empcode}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.prefix}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.emp_name}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-              {item.fname}
+                  {item.fname}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                   {item.mname}
@@ -1085,6 +1048,7 @@ const DemoTable = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                   {item.lname}
                   </td>
+                 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                   {item.phone_number}
                   </td>
@@ -1095,59 +1059,61 @@ const DemoTable = () => {
                     {item.sub_dept}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.doj}
+                  {moment(item.doj).format("MM/DD/YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                Resignation
+                  {moment(item.resignation_request_date).format("MM/DD/YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.village}
-                  </td>
-                  <td
-                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
-                    onClick={() => setShowImageModal(true)}
-                  >
-                    View
-                  </td>
-                  <td
-                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
-                    onClick={() => setShowImageModal(true)}
-                  >
-                    View
+               {item.notice_period_in_days}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.potential_farmer}
+                  {moment(item.last_working_date).format("MM/DD/YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.next_visit_date).format("MM/DD/YYYY")}
+                   {item.reason}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                   {item.comment}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.fm_empcode}
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.user_name}
+                 {item.functional_mgr}
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.isDeleted ? "Yes" : "No"}
+                  {item.
+rp_empcode
+}
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.status}
+                    {item.emp_status
+                    }
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.territory_name}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.region_name}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.zone_name}
+                    {item.cmpny_name}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.business_unit_name}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.cmpny_name}
+                    {item.zone_name}
+                  </td> <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.region_name}
                   </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.territory_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.reporting_hq}
+                  </td>
+                
+                 
+                  
                 </tr>
               ))}
             </tbody>

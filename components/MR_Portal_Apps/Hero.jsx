@@ -20,7 +20,7 @@ const Hero = () => {
 
   return (
     <>
-      <section className="main w-full bg-[#15283C] h-screen  ">
+      <section className="main w-full bg-[#012A72] h-screen  ">
         {/* <div className="flex bg-white h-screen text-center">Background Content</div> */}
         <div
           onWheel={handleScroll}

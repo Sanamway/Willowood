@@ -75,13 +75,13 @@ const AdditionalInfo = (props) => {
         comment} = resignFormData
     try {
       const data = {
-        resignation_request_date:resignReqDate,
-       notice_period_date: noticePeriod,
+       resignation_request_date:resignReqDate,
+       notice_period_in_days: noticePeriod,
        last_working_date: lwd,
        reason: reason,
        proposed_lwd: purposedLWD,
        comment: comment,
-    app_status:"Resignation Submitted"
+       app_status:"Resignation Submitted"
       };
       const respond = await axios
         .post(`${url}/api/update_resignation`, JSON.stringify(data), {

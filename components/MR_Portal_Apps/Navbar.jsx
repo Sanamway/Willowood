@@ -5,6 +5,8 @@ import { IoSearchOutline } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { TbMessageChatbot } from "react-icons/tb";
 import { FaRegUserCircle } from "react-icons/fa";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+import { IoMdCloseCircle } from "react-icons/io";
 import WillLogo from "../../public/NewLogo.png";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,9 +18,16 @@ import toast, { Toaster } from "react-hot-toast";
 const Navbar = () => {
   const [isOpen, setOpen] = useState(false);
   const [userImg, setUserImg] = useState(null);
+  const [userDet, setUserDet] = useState({
+    name: "",
+    phone: ""
+  });
   const [uid, setUid] = useState("");
 
+  const [empDetails, setEmpDetails] = useState(null);
+
   const router = useRouter();
+
   const toggleDrawer = () => {
     console.log("Hello");
     setOpen(!isOpen);
@@ -26,13 +35,13 @@ const Navbar = () => {
 
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
   };
 
   const handleLogout = async () => {
     try {
       const resp = await axios.get(`${url}/api/logout?user_id=${uid}`, {
-        headers: headers,
+        headers: headers
       });
       const respdata = await resp.data;
       console.log("Logo", respdata);
@@ -46,8 +55,6 @@ const Navbar = () => {
         localStorage.removeItem("userinfo");
         localStorage.removeItem("phone_number");
         localStorage.removeItem("mode");
-        localStorage.removeItem("c_id");
-
         toast.success(respdata.message);
         setTimeout(() => router.push("/logoutsuccess"), 1000);
       }
@@ -59,17 +66,22 @@ const Navbar = () => {
   useEffect(() => {
     if (window.localStorage) {
       const userImg = localStorage.getItem("ImageLink");
+      const user_name = localStorage.getItem("user_name");
+      const phone_number = localStorage.getItem("phone_number");
       const uid = localStorage.getItem("uid");
       setUid(uid);
       setUserImg(userImg);
+      setUserDet({ name: user_name, phone: phone_number });
     }
   }, []);
 
+
+
   return (
     <>
-      <div className="nav-container bg-[#15283C] h-[60px] flex justify-between invisible md:visible  items-center md:w-full pl-[15px] w-[1600px] max-w-full m-auto">
+      <div className="nav-container bg-[#15283C] h-[60px] flex justify-between items-center pl-[15px] w-[1600px] max-w-full m-auto">
         <Toaster position="bottom-center" reverseOrder={false} />
-        <Link href="/MR_Portal_Apps/MRHome" className="logo w-[200px]">
+        <a href="/" className="logo w-[200px]">
           <Image
             alt="mr_app"
             // src="http://pwebassets.paytm.com/commonwebassets/paytmweb/header/images/logo.svg"
@@ -82,7 +94,7 @@ const Navbar = () => {
             loading="lazy"
             style={{ color: "transparent" }}
           />
-        </Link>
+        </a>
         <div className="right-nav flex items-center gap-[40px] h-full">
           <ul className="menu flex list-none h-full gap-[15px]">
             <li>
@@ -154,27 +166,16 @@ const Navbar = () => {
       <nav className="mobo-nav md:hidden  ">
         <header className="mobo-nav-bar h-[60px] z-30  shadow-md bg-[#15283C] flex justify-between items-center fixed top-0 left-0 right-0 px-[15px] ">
           <div className="mob-items flex items-center gap-3 ">
-            <span
-              onClick={toggleDrawer}
-              className="hamburger hover:text-blue-800"
-            >
+            <span onClick={toggleDrawer} className="hamburger hover:text-blue-800">
               {!isOpen ? (
                 // <FaRegUserCircle className="text-orange-500" size={30}></FaRegUserCircle>
-                <img
-                  src={userImg}
-                  className="text-orange-500 h-8 w-8 rounded-full"
-                  size={30}
-                ></img>
+                <img src={userImg} className="text-orange-500 h-8 w-8 rounded-full" size={30}></img>
               ) : (
                 // <FaRegUserCircle className="text-orange-500" size={30}></FaRegUserCircle>
-                <img
-                  src={userImg}
-                  className="text-orange-500 h-8 w-8 rounded-full"
-                  size={30}
-                ></img>
+                <img src={userImg} className="text-orange-500 h-8 w-8 rounded-full" size={30}></img>
               )}
             </span>
-            <Link href="/MR_Portal_Apps/MRHome" className="logo h-[40px] w-[120px] ">
+            <a href="/" className="logo h-[40px] w-[120px] ">
               <Image
                 alt="mr_app"
                 src={WillLogo}
@@ -184,57 +185,136 @@ const Navbar = () => {
                 data-nimg={1}
                 className="max-w-full max-h-full"
                 loading="lazy"
-                // style={{ color: "transparent" }}
               />
-            </Link>
+            </a>
           </div>
           <div className="flex items-center  py-0.5 gap-4 justify-center ">
-            <IoSearchOutline
-              className="text-orange-500"
-              size={26}
-            ></IoSearchOutline>
-            <TbMessageChatbot
-              className="text-white"
-              size={28}
-            ></TbMessageChatbot>
+            <IoSearchOutline className="text-orange-500" size={26}></IoSearchOutline>
+            <TbMessageChatbot className="text-white" size={28}></TbMessageChatbot>
           </div>
 
           <main
-            className={`mobo-nav-drawer  -z-10  h-100vh bg-gray-100 fixed top-[3.7rem] -left-[100%] right-0 bottom-0 w-[100%]  px-[15px] transition-all ease-in-out ${
+            // className={`mobo-nav-drawer  -z-10  h-100vh bg-gray-100 fixed top-[3.7rem] -left-[100%] right-0 bottom-0 w-[100%]  px-[15px] transition-all ease-in-out ${
+            //   isOpen ? "left-0" : ""
+            // }`}
+            className={`mobo-nav-drawer  z-10  h-100vh bg-gray-100 fixed top-[0rem] -left-[100%] right-0 bottom-0 w-[100%]  transition-all ease-in-out ${
               isOpen ? "left-0" : ""
             }`}
           >
             <div className="top-layer bg-white shadow-md flex justify-between items-center fixed font-[] px-[1px] "></div>
             <div className="mobo-menu">
-              <div className=" flex  items-center justify-between">
-                <div className="flex flex-col items-start justify-center w-full mt-4 gap-8">
-                  <div className="flex items-center justify-between w-full">
-                    <Link
-                      href={"/profile"}
-                      className="flex items-center justify-between w-full"
-                    >
-                      <h2 className="font-semibold font-arial">My Profile</h2>
-                      <IoIosArrowForward className="text-gray-300"></IoIosArrowForward>
-                    </Link>
+              <div className=" flex  items-center justify-between w-full">
+                <div className="flex  flex-col items-start justify-between w-full">
+                  <div className="top-profile py-4 px-2 bg-blue-900 flex  items-center justify-between  w-full gap-3 ">
+                    <div className="flex items-center gap-3 ">
+                      <span onClick={toggleDrawer} className="hamburger  hover:text-blue-800">
+                        {!isOpen ? (
+                          <FaRegUserCircle className="text-orange-500" size={38}></FaRegUserCircle>
+                        ) : (
+                          // <img src={userImg} className="text-orange-500 h-8 w-8 rounded-full" size={30}></img>
+                          // <FaRegUserCircle className="text-orange-500" size={38}></FaRegUserCircle>
+                          <img src={userImg} className="text-orange-500 h-8 w-10 rounded-full"></img>
+                        )}
+                      </span>
+                      <div className="username flex flex-col justify-start w-full items-start">
+                        <h1 className="text-white font-arial text-[0.9rem] font-semibold">{userDet.name}</h1>
+                        <h4 className="text-gray-400 text-[0.8rem] font-arial font-normal">
+                          {userDet.phone}
+                        </h4>
+                      </div>
+                    </div>
+                    <IoMdCloseCircle onClick={toggleDrawer} className="text-white" size={29} />
                   </div>
+                  <div className="sidelinks flex flex-col items-start justify-between w-full  ">
+                    <div className="flex items-center justify-between w-full border-b-2 pb-1 mt-2 gap-2 px-4 ">
+                      <Link href={"/mrhome/profile"} className="flex items-center justify-between w-full">
+                        <div className="flex flex-col">
+                          <h2 className="font-semibold font-arial text-[0.88rem]">My Profile Setting</h2>
+                          <p className="text-[0.68rem] text-gray-500 italic">
+                            add / modify name Profile , add or modify Address , Contact Details , Business
+                            Structure Reporting Person , Agreement Info .
+                          </p>
+                        </div>
+                      </Link>
+                    </div>
 
-                  <div className="flex items-center justify-between w-full">
-                    <h2 className="font-semibold font-arial">Settings</h2>
-                    <IoIosArrowForward className="text-gray-300"></IoIosArrowForward>
-                  </div>
-                  <div className="flex items-center justify-between w-full">
-                    <h2 className="font-semibold font-arial">Help</h2>
-                    <IoIosArrowForward className="text-gray-300"></IoIosArrowForward>
-                  </div>
-                  <div className="flex items-center justify-between w-full">
                     <Link
-                      href={""}
-                      onClick={handleLogout}
-                      className="flex items-center justify-between w-full"
+                      href={"/mrhome/help"}
+                      
+                      className="flex items-center justify-between w-full border-b-2 pb-1 mt-2 gap-2 px-4"
                     >
-                      <h2 className="font-semibold font-arial">Log Out</h2>
-                      <IoIosArrowForward className="text-gray-300"></IoIosArrowForward>
+                      <div className="flex flex-col">
+                        <h2 className="font-semibold font-arial text-[0.88rem]">Help & Support</h2>
+                        <p className="text-[0.68rem] text-gray-500 italic">
+                          You can raise here require Support , Queries , Frequent Asked Questions , Our 24 x 7
+                          Support teams provide immediate solution on this.
+                        </p>
+                      </div>
                     </Link>
+                    <div className="flex items-center justify-between w-full border-b-2 pb-1 mt-2 gap-2 px-4">
+                      <div className="flex flex-col">
+                        <h2 className="font-semibold font-arial text-[0.88rem]">Change Language</h2>
+                        <p className="text-[0.68rem] text-gray-500 italic">
+                          Change the Language you use this Willowood Delight Apps in.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between w-full border-b-2 pb-1  mt-2 gap-2 px-4">
+                      <div className="flex flex-col">
+                        <h2 className="font-semibold font-arial text-[0.88rem]">Your Apps Guide</h2>
+                        <p className="text-[0.68rem] text-gray-500 italic">
+                          On line Help Guide , how to run the apps and get Uncovered unexpected features and
+                          transform your Willowood Delight Experince.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between w-full border-b-2 pb-2 border-gray-400 mt-2 gap-2 px-4">
+                      <div className="flex flex-col">
+                        <h2 className="font-semibold font-arial text-[0.88rem]">Change password</h2>
+                        <p className="text-[0.68rem] text-gray-500 italic">
+                          you can change here your existing password for this application.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between w-full ">
+                      <Link
+                        href={""}
+                        onClick={handleLogout}
+                        className="flex items-center justify-between w-full border-b-2 border-gray-400  mt-2 gap-2 px-4 pb-1"
+                      >
+                        <div className="flex flex-col  ">
+                          <h2 className="font-semibold font-arial text-[0.88rem]">Logout Apps</h2>
+                          <p className="text-[0.68rem] text-gray-500 italic">
+                            Logout from your Willowood Delight account on this device.
+                          </p>
+                        </div>
+                      </Link>
+                    </div>
+
+                    <div className="flex flex-col items-center justify-center w-full ">
+                      <div className="border-b-2 border-t-2 mt-5 w-full flex items-center justify-center">
+                        <h2 className="text-[0.99rem] font-arial text-gray-600">App Version 1.0.0</h2>
+                      </div>
+                      <div className="border-b-2  w-full flex items-center justify-center">
+                        <h2 className="text-[0.85rem] font-arial text-gray-500">
+                          Powered by Corporate Digital IT
+                        </h2>
+                      </div>
+                      <div className=" mt-3 w-full flex items-center justify-center">
+                        <a href="/" className="logo h-[60px] w-[190px] ">
+                          <Image
+                            alt="mr_app"
+                            src={WillLogo}
+                            width={1200}
+                            height={457}
+                            decoding="async"
+                            data-nimg={1}
+                            className="max-w-full max-h-full"
+                            loading="lazy"
+                          />
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

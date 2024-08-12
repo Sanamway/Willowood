@@ -6,18 +6,69 @@ import { FaUserNinja } from "react-icons/fa6";
 import { CiBank } from "react-icons/ci";
 import { CiWallet } from "react-icons/ci";
 import { SlNotebook } from "react-icons/sl";
-import menusContent from "./menusConstant";
 import { HiOutlineBanknotes } from "react-icons/hi2";
 import { FcBusinessman } from "react-icons/fc";
 import { FaRegCircleCheck } from "react-icons/fa6";
+import { GiOnTarget } from "react-icons/gi";
+import { FcBullish } from "react-icons/fc";
+import { VscFeedback } from "react-icons/vsc";
+import { TbView360Number } from "react-icons/tb";
+import { RxText } from "react-icons/rx";
+import { FcCalendar } from "react-icons/fc";
+import { GiExitDoor } from "react-icons/gi";
+import { GiGrass } from "react-icons/gi";
+import { FcSportsMode } from "react-icons/fc";
+import { IoWalkSharp } from "react-icons/io5";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { GiPlantRoots } from "react-icons/gi";
+import { PiPresentationChartLight } from "react-icons/pi";
+import { FcRules } from "react-icons/fc";
+import { CiBoxes } from "react-icons/ci";
+import { BiCartDownload } from "react-icons/bi";
+import { BsImages } from "react-icons/bs";
+
+
+const iconComponents = {
+  MdOutlineQrCodeScanner,
+  RiContactsBookFill,
+  PiBankFill,
+  FaUserNinja,
+  CiBank,
+  CiWallet,
+  SlNotebook,
+  HiOutlineBanknotes,
+  FcBusinessman,
+  FaRegCircleCheck,
+  GiOnTarget,
+  FcBullish,
+  VscFeedback,
+  TbView360Number,
+  RxText,
+  FcCalendar,
+  GiExitDoor,
+  GiGrass,
+  FcSportsMode,
+  IoWalkSharp,
+  FaPeopleGroup,
+  GiPlantRoots,
+  PiPresentationChartLight,
+  FcRules,
+  CiBoxes,
+  BiCartDownload,
+  BsImages,
+  
+};
+
+
 import axios from "axios";
 import { url } from "@/constants/url";
 import { useRouter } from "next/router";
+import menusContent from "./menusConstant";
 
 const BankingCards = () => {
   const [menus, setMenus] = useState([]);
   const [uid, setUid] = useState("");
-  const router = useRouter()
+  const router = useRouter();
 
   const headers = {
     "Content-Type": "application/json",
@@ -55,7 +106,7 @@ const BankingCards = () => {
     if (uid) gettingMenuSidebar(uid);
   }, [uid]);
 
-  console.log("Check Menus", menus)
+  console.log("Check Menus", menus);
   return (
     <>
       {/* {menusContent.map((item) => (
@@ -87,26 +138,41 @@ const BankingCards = () => {
               <h2 className="font-semibold text-[0.85rem]"></h2>
             </div>
             <div className="flex cursor-pointer items-center mrhome justify-start w-full px-2 mt-1 overflow-x-auto overflow-y-hidden my-1.5">
-              {item.submenu.map((sub) => (
-              console.log("gg", sub.page_call),
-                <div onClick={(e) => {
-                  e.preventDefault();
-                  // if (!sub.page_call?.startsWith("/")) {
-                    router.push({
-                      pathname: `/${sub.page_call}`,
-                      query: { name: `${sub.label}` }
-                    });
-                  // }
-                }} key={sub.umenu_Name} className="flex flex-col items-center mx-2 w-auto justify-center  ">
-                  <div className="bg-pink-200 rounded-full px-2 py-2">
-                    {sub.icon && <sub.icon className={`text-${sub.icon_color}-500`} size={25} />}
-                  </div>
-                  <div   className="h-12 cursor-pointer">
-                    
-                    <h2 className="text-[0.6rem] text-center  px-1 py-2">{sub.umenu_Name.substring(0)}</h2>
-                  </div>
-                </div>
-              ))}
+              {item.submenu.map(
+                (sub) => (
+                  console.log("ICON NAME", sub.icon_link),
+                  (
+                    <div
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (!sub.page_call?.startsWith("/")) {
+                          router.push({
+                            pathname: `/${sub.page_call}`,
+                            query: { name: `${sub.label}` }
+                          });
+                        }
+                      }}
+                      key={sub.umenu_Name}
+                      className="flex flex-col items-center mx-2 w-auto justify-center  "
+                    >
+                      <div className="bg-pink-0 rounded-full px-2 py-2">
+                        {/* {sub.icon_link && <sub.icon_link className={`text-red-500`} size={25} />} */}
+                        {sub.icon_link && iconComponents[sub.icon_link]
+                          ? React.createElement(iconComponents[sub.icon_link], {
+                              className: `text-black-500`,
+                              size: 32
+                            })
+                          : null}
+                      </div>
+                      <div className="h-12 cursor-pointer">
+                        <h2 className="text-[0.6rem] text-center text-black font-semibold font-arial px-1 py-2">
+                          {sub.umenu_Name.substring(0)}
+                        </h2>
+                      </div>
+                    </div>
+                  )
+                )
+              )}
             </div>
           </>
         </section>

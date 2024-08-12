@@ -344,12 +344,12 @@ const FarmerInfo = () => {
         abortEarly: false,
       });
       const data = {
-         c_id: Number(farmerState.companyId),
+        c_id: Number(farmerState.companyId),
         bu_id: Number(farmerState.buId),
         bg_id: Number(farmerState.bgId),
-         z_id: Number(farmerState.zoneId),
-         r_id: Number(farmerState.regionId),
-         t_id: Number(farmerState.territoryId),
+        z_id: Number(farmerState.zoneId),
+        r_id: Number(farmerState.regionId),
+        t_id: Number(farmerState.territoryId),
         ds_id: farmerState.district,
         v_id: farmerState.village,
         f_name: farmerState.farmerName,
