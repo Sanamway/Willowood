@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Layout from "../Layout";
+import Layout from "@/components/Layout1";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
@@ -19,9 +19,9 @@ const UserProfileForm = () => {
 
   const getDataById = async () => {
     try {
-      const respond = await axios.get(`${url}/api/get_district`, {
+      const respond = await axios.get(`${url}/api/get_mr_office_hq`, {
         headers: headers,
-        params: { ds_id: router.query.id },
+        params: { rp_id: router.query.id },
       });
       const apires = await respond.data.data;
 
@@ -32,7 +32,7 @@ const UserProfileForm = () => {
         zoneId: apires[0].z_id,
         regionId: apires[0].r_id,
         territoryId: apires[0].t_id,
-        district: apires[0].district_name,
+        district: apires[0].reporting_office_name,
       });
     } catch (error) {
       console.log(error);
@@ -278,7 +278,7 @@ const UserProfileForm = () => {
         z_id: Number(districtState.zoneId),
         r_id: Number(districtState.regionId),
         t_id: Number(districtState.territoryId),
-        district_name: districtState.district,
+        reporting_office_name: districtState.district,
         c_name: localStorage.getItem("c_name")
           ? localStorage.getItem("c_name")
           : "New Man",
@@ -287,14 +287,14 @@ const UserProfileForm = () => {
           : "No Man",
       };
       const respond = await axios
-        .post(`${url}/api/add_district`, JSON.stringify(data), {
+        .post(`${url}/api/add_mr_office_hq`, JSON.stringify(data), {
           headers: headers,
         })
         .then((res) => {
           if (!res) return;
-          toast.success("District added successfully!");
+          toast.success("Reporting HQ added successfully!");
           setTimeout(() => {
-            router.push("/table/table_district");
+            router.push("/MR_Portal_Web/ReportingOfficeHQ_Table");
           }, [3000]);
         });
     } catch (errors) {
@@ -329,7 +329,7 @@ const UserProfileForm = () => {
         z_id: Number(districtState.zoneId),
         r_id: Number(districtState.regionId),
         t_id: Number(districtState.territoryId),
-        district_name: districtState.district,
+        reporting_office_name: districtState.district,
         c_name: localStorage.getItem("c_name")
           ? localStorage.getItem("c_name")
           : "New Man",
@@ -339,7 +339,7 @@ const UserProfileForm = () => {
       };
       const respond = await axios
         .put(
-          `${url}/api/update_district/${router.query.id}`,
+          `${url}/api/update_mr_office_hq/${router.query.id}`,
           JSON.stringify(data),
           {
             headers: headers,
@@ -347,9 +347,9 @@ const UserProfileForm = () => {
         )
         .then((res) => {
           if (!res) return;
-          toast.success("District edited successfully!");
+          toast.success("Reporting HQ edited successfully!");
           setTimeout(() => {
-            router.push("/table/table_district");
+            router.push("/MR_Portal_Web/ReportingOfficeHQ_Table");
           }, [3000]);
         });
     } catch (errors) {
@@ -380,22 +380,20 @@ const UserProfileForm = () => {
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div className=" w-full font-arial bg-white ">
+      <div className=" w-full font-arial bg-white h-[100%] absolute scrollbar-hide overflow-auto">
         <div className="text-black flex items-center justify-between bg-white max-w-6/12 font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-3xl tabletitle  py-2">District</h2>
+          <h2 className="font-arial font-normal text-3xl tabletitle  py-2">MR Reporting Office HQ</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <h2>
               <TiArrowBack
                 onClick={() => {
-                  router.push("/table/table_district");
+                  router.push("/MR_Portal_Web/ReportingOfficeHQ_Table");
                 }}
                 className="text-gray-400"
                 size={35}
               ></TiArrowBack>
             </h2>
-            <h2>
-              <AiTwotoneHome className="text-red-500" size={34}></AiTwotoneHome>
-            </h2>
+           
           </div>
         </div>
 
@@ -409,7 +407,7 @@ const UserProfileForm = () => {
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="inputField"
               >
-                District Id
+               Reporting HQ ID
               </label>
               <input
                 className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -638,12 +636,12 @@ const UserProfileForm = () => {
                   htmlFor="stateSelect"
                 >
                   <small className="block text-gray-700 text-sm font-bold">
-                    * District
+                  <small className="text-red-600">*</small> Reporting HQ
                   </small>
                   <input
                     className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                     id="phoneField"
-                    placeholder="District"
+                    placeholder="Reporting HQ"
                     value={districtState.district}
                     onChange={(e) =>
                       setDistrictState({
@@ -672,7 +670,7 @@ const UserProfileForm = () => {
                 <button
                   className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
                   onClick={() => {
-                    router.push("/table/table_district");
+                    router.push("/MR_Portal_Web/ReportingOfficeHQ_Table");
                   }}
                 >
                   Close

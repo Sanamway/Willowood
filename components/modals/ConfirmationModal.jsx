@@ -113,12 +113,12 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
   const handleDeleteDistrict = async () => {
     try {
       const respond = await axios
-        .delete(`${url}/api/delete_district/${id}`, {
+        .delete(`${url}/api/delete_mr_office_hq/${id}`, {
           headers: headers,
         })
         .then((res) => {
           if (!res) return;
-          toast.success("District deleted successfully!");
+          toast.success("Reporting HQ deleted successfully!");
           onDeletedData();
         });
       const apires = await respond.data.data;
@@ -239,6 +239,22 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       if (error.response) toast.error(error.response.data.message);
     }
   };
+  const handleMRSalesCat = async () => {
+    try {
+      const respond = await axios
+        .delete(`${url}/api/delete_mr_sale_cateogory/${id}`, {
+          headers: headers,
+        })
+        .then((res) => {
+          if (!res) return;
+          toast.success("Sales Cat. deleted successfully!");
+          onDeletedData();
+        });
+      const apires = await respond.data.data;
+    } catch (error) {
+      if (error.response) toast.error(error.response.data.message);
+    }
+  };
 
   const handleDelete = () => {
     if (type === "Company Information") {
@@ -265,7 +281,7 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       handleDeleteTerritory();
       onClose();
       onDeletedData();
-    } else if (type === "District") {
+    } else if (type === "Reporting") {
       handleDeleteDistrict();
       onClose();
       onDeletedData();
@@ -298,7 +314,14 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       handleDeleteDepotWarehouse();
       onClose();
       onDeletedData();
-    } else {
+    }
+    
+    else if (type === "Sales Cat") {
+      handleMRSalesCat();
+      onClose();
+      onDeletedData();
+    }
+    else {
       return;
     }
   };

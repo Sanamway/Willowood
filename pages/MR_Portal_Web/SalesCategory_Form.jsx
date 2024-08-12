@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Layout from "../Layout";
+import Layout from "../../components/Layout1";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
@@ -19,149 +19,99 @@ const ProductCategory = () => {
   };
 
   const [formState, setFromState] = useState({
-    cat_id: "",
-    pcat_name: "",
-    brand_code: "",
-    pseg_id: "",
-    c_name: "WCL",
-    status: false,
     c_id: "",
     pcat_id: "",
-    ul_name: "WCL"
   });
 
-  const [formErrors, setFormErrors] = useState({});
 
-  const validationSchema = Yup.object().shape({
-    pcat_name: Yup.string().required("Product Category Name is required"),
-    c_name: Yup.string().required("Company Name is required")
-  });
-
-  const getPrdCatById = async (id) => {
+  
+  const getDataById = async () => {
     try {
-      const resp = await axios.get(`${url}/api/get_product_category/${id}`, { headers: headers });
-      const respData = await resp.data.data;
-      setFromState({
-        pcat_name: respData?.pcat_name,
-        brand_code: respData?.brand_code,
-        pseg_id: respData?.pseg_id,
-        c_name: respData?.c_name,
-        c_id: respData?.c_id,
-        pcat_id: respData?.pcat_id
+      const respond = await axios.get(`${url}/api/get_mr_sale_cateogory`, {
+        headers: headers,
+      params: { mrsc_id: router.query.id,
+        
+       },
       });
-
-      console.log("geprr", respData);
+      const apires = await respond.data.data[0];
+   console.log("nop", apires)
+      setFromState({
+        c_id: apires.c_id,
+        pcat_id: apires.pcat_id,
+      });
     } catch (error) {
-      console.log("ee", error);
+      console.log(error);
     }
   };
 
   useEffect(() => {
-    if (router.query.type === "CREATE") return;
-    if (id) getPrdCatById(id);
-  }, [id]);
+    if (router.query.type === "Add") return;
+    getDataById();
+  }, [router]);
+  
 
   const handleSaveCat = async (e) => {
     e.preventDefault();
     try {
-      // await validationSchema.validate(formState, { abortEarly: false });
-      const Formdata = {
-        c_name: formState.c_name,
-        c_id: formState.c_id,
-        ul_name: formState.ul_name,
-        pcat_name: formState?.pcat_name,
+      const data = {
+        c_id: formState.c_id,  
         pcat_id:formState?.pcat_id,
-        status:formState?.status
       };
-      console.log("formdata",Formdata)
-      const resp = await axios.post(`${url}/api/add_product_category`, JSON.stringify(Formdata), {
-        headers: headers
-      });
-      const respdata = await resp.data;
-      console.log("saved", respdata);
-      if (respdata) {
-        toast.success(respdata.message);
-        setTimeout(() => {
-          router.push("/table/table_product_category");
-        }, 2500);
-      }
-    } catch (errors) {
-      console.log("ee", errors);
-      const ermsg = errors?.response?.data?.message;
-      // if(ermsg){
-      //   toast.error(ermsg)
+      const respond = await axios
+        .post(`${url}/api/add_mr_sale_cateogory`, JSON.stringify(data), {
+          headers: headers,
+        })
+        .then((res) => {
         
-      // }
-      const errmsg = errors?.response?.data?.error;
-      console.log("fefef", errors)
-      if (errmsg?.includes('pcat_name_1')) {
-        toast.error('Product Category is Duplicate');
-      }else if(errmsg?.includes('brand_code_1')){
-        toast.error('Brand Id is duplicate')
-      }else{
-        toast.error(errmsg)
-      }
-
+          if (!res) return;
+          toast.success("Sales Cat added successfully!");
+          setTimeout(() => {
+            router.push("/MR_Portal_Web/SalesCategory_Table");
+          }, [3000]);
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.error;  
+        toast.error(errorMessage);    
+      const newErrors = {};
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
     }
   };
 
-  
-
-  //Edit Brand
 
   const handleEditCat = async (e) => {
     e.preventDefault();
     try {
-      const Editdata = {
-        c_name: formState.c_name,
-        c_id: formState.c_id,
-        ul_name: formState.ul_name,
-        pcat_name: formState?.pcat_name,
-        pcat_id:formState?.pcat_id
+      
+      const data = {
+        c_id: formState.c_id,  
+        pcat_id:formState?.pcat_id,
       };
-      const emptyFields = Object.entries(Editdata)
-      .filter(([key, value]) => value === "")
-      .map(([key]) => key);
-    if (emptyFields.length > 0) {
-      const customMessages = {
-        c_name: "Company Name",
-        pcat_name: "Product Category",
-        pcat_id: "Product Id",
-        brand_name: "Brand Name"
-      };
-      const requiredFields = emptyFields.map((field) => customMessages[field] || field);
-      toast.error(`${requiredFields.join(", ")} is required.`);
-    }else{
-      const resp = await axios.put(`${url}/api/update_product_category/${id}`, JSON.stringify(Editdata), {
-        headers: headers
-      });
-      const respdata = await resp.data;
-      console.log("resap", respdata);
-      if (respdata) {
-        toast.success(respdata.message);
-        setTimeout(() => {
-          router.push("/table/table_product_category");
-        }, 2500);
-      }
-    }
+      const respond = await axios
+        .put(
+          `${url}/api/update_mr_sale_cateogory/${router.query.id}`,
+          JSON.stringify(data),
+          {
+            headers: headers,
+          }
+        )
+        .then((res) => {
+          if (!res) return;
+          toast.success("Sales Cat edited successfully!");
+          setTimeout(() => {
+            router.push("/MR_Portal_Web/SalesCategory_Table");
+          }, [3000]);
+        });
     } catch (errors) {
-      console.log("e", errors);
-      const ermsg = errors?.response?.data?.message;
-      if(ermsg){
-        toast.error(ermsg)
-        return
-      }
-      const errmsg = errors?.response?.data?.error;
-      console.log("fefef", errors)
-      if (errmsg?.includes('pcat_name_1')) {
-        toast.error('Product Category is Duplicate');
-      }else if(errmsg?.includes('brand_code_1')){
-        toast.error('Brand Id is duplicate')
-      }else{
-        toast.error(errmsg)
-      }
+      const errorMessage = errors?.response?.data?.error;  
+        toast.error(errorMessage);    
+      const newErrors = {};
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
     }
-  };
+  }; 
 
   const handleSubmit = (e) => {
     if (router.query.type !== "Edit") {
@@ -189,11 +139,30 @@ const ProductCategory = () => {
     getCompanyInfo();
   },[])
 
-  const filterCompanyInfo = companyInfo.filter((item) => item.isDeleted == false);
-  console.log("hcekc", filterCompanyInfo)
+  const [allProductCat, setAllProductCat] = useState([]);
+  const getProductCat = async () => {
+    try {
+      const resp = await axios.get(`${url}/api/get_product_category`, {
+        headers: headers,
+        params:{
+          c_id: JSON.parse(window.localStorage.getItem("c_id"))[0],
 
+         }
+      });
+      const respdata = await resp.data.data;
+      setAllProductCat(respdata);
+     
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
 
-  console.log("fvbfvf",formState.c_id)
+  useEffect(()=>{
+    getProductCat();
+  },[])
+
+  
 
   return (
     <>
@@ -201,12 +170,12 @@ const ProductCategory = () => {
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className=" overflow-auto w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-            <h2 className="font-arial font-normal text-3xl tabletitle py-2">Product Category </h2>
+            <h2 className="font-arial font-normal text-3xl tabletitle py-2">Sale Category </h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <h2>
                 <TiArrowBack
                   onClick={() => {
-                    router.push("/table/table_product_category");
+                    router.push("/MR_Portal_Web/SalesCategory_Table");
                   }}
                   className="text-gray-400"
                   size={35}
@@ -243,26 +212,43 @@ const ProductCategory = () => {
                       type="text"
                       id="inputField"
                       placeholder=""
-                      value={ router.query.type=="CREATE" ? "Auto Generated" :formState?.pcat_id }
+                      value={ router.query.type=="Add" ? "Auto Generated" :router.query.id }
                     />
                   </div>
                   <div className="w-full lg:w-1/2 px-2 ">
                     <label className="block text-gray-700 text-sm font-bold mb-2 whitespace-nowrap" htmlFor="inputField">
                       <span className="text-red-500 px-1">*</span>Product Category
                     </label>
-                    <input
-                      className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                      type="text"
-                      id="inputField"
-                      placeholder="Input Product Category"
-                      value={formState.pcat_name}
+                    
+                    <select
+                      className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                      id="userSelect"
+                      value={formState?.pcat_id}
                       onChange={(e) => {
                         setFromState({
                           ...formState,
-                          pcat_name: e.target.value
+                          pcat_id: e.target.value
                         });
                       }}
-                    />
+                    >
+                      {/* <option value="" className="focus:outline-none focus:border-b bg-white">
+                        Select Company Name
+                      </option>
+                      <option value="WCL">WCL</option>
+                      <option value="PCL">PCL</option> */}
+                      <option value={""} className="focus:outline-none focus:border-b bg-white">
+                        Select Options
+                      </option>
+                      {allProductCat.map((option) => (
+                        <option
+                          // value={option?.description}
+                          value={option?.pcat_id}
+                          className="focus:outline-none focus:border-b bg-white"
+                        >
+                          {option?.pcat_name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
                 <div className="flex -mx-2 mb-4">
@@ -302,7 +288,7 @@ const ProductCategory = () => {
                   </div>
                 </div>
 
-                {router.query.type !== "view" && (
+                {router.query.type !== "View" && (
                   <div className="button flex items-center gap-3 mt-6">
                     <div
                       className="bg-green-700 px-4 py-1 text-white cursor-pointer"
@@ -313,7 +299,7 @@ const ProductCategory = () => {
                     <button
                       className="bg-yellow-500 px-4 py-1 text-white cursor-pointer"
                       onClick={() => {
-                        router.push("/table/table_product_category");
+                        router.push("/MR_Portal_Web/SalesCategory_Table");
                       }}
                     >
                       Close

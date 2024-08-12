@@ -1,5 +1,5 @@
 import React from 'react'
-import ProductCategory from '@/components/forms/ProductCategory'
+import ProductCategory from '@/components/Forms/ProductCategory_Form'
 const product_category = () => {
   return (
     <>

@@ -5,17 +5,16 @@ import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { url } from "@/constants/url";
-import { AiOutlineSearch } from "react-icons/ai";
+
 import ConfirmationModal from "@/components/modals/ConfirmationModal";
 import { CSVLink } from "react-csv";
 import { TbFileDownload } from "react-icons/tb";
-import toast, { Toaster } from "react-hot-toast";
+import  { Toaster } from "react-hot-toast";
 import Layout from "@/components/Layout1";
 import ReactPaginate from "react-paginate";
 const Crop = () => {
   const csvHeaders = [
     { label: "Id", key: "cr_id" },
-
     { label: "Crop Name", key: "crop_name" },
     { label: "Season Name", key: "season_name" },
     { label: "Company", key: "cmpny_name" },
@@ -46,9 +45,9 @@ const Crop = () => {
           size: 50,
         },
       });
-       const apires = await respond.data.data.cropData;
-       const count = await respond.data.data.cropDataCount;
-       setPageCount(Math.ceil(count / 50));
+      const apires = await respond.data.data.cropData;
+      const count = await respond.data.data.cropDataCount;
+      setPageCount(Math.ceil(count / 50));
       setData(apires);
     } catch (error) {
       console.log(error);
