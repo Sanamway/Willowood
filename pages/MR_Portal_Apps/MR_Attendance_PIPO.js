@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { BsCheck2Circle } from "react-icons/bs";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -33,6 +33,7 @@ const AdditionalInfo = (props) => {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
+
   const [localStorageItems, setLocalStorageItems] = useState({
     uId: "",
     cId: "",
@@ -43,6 +44,10 @@ const AdditionalInfo = (props) => {
     tId: "",
     roleId: "",
     empCode: "",
+    reportingManager:   "",
+    developmentManager: "",
+    hrManager:          "",
+    reportingHQ:        ""
   });
   useEffect(() => {
     setLocalStorageItems({
@@ -57,6 +62,10 @@ const AdditionalInfo = (props) => {
       ulName: window.localStorage.getItem("phone_number"),
       empCode: window.localStorage.getItem("emp_code"),
       roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+      reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
+      developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
+      hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
+      reportingHQ:JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
     });
   }, []);
 
@@ -91,12 +100,21 @@ const AdditionalInfo = (props) => {
         setAttendenceStatus("Punch In");
         setUserDetails({
           ...userDetails,
-
           attendanceType: "Punch In",
         });
       }
     } catch (error) {
-      console.log(error);
+      if(error.response.status === 404){
+        setAttendenceStatus("Punch In");
+      setUserDetails({
+        ...userDetails,
+
+        attendanceType: "Punch In",
+      });
+      }else {
+return
+      }
+      
     }
   };
   useEffect(() => {
@@ -117,11 +135,11 @@ const AdditionalInfo = (props) => {
           emp_code: localStorageItems.empCode,
           branchCode: 1231,
           date: moment(new Date()).format("YYYY-MM-DD"),
-          attendance_type: "Punch In",
+          attendance_type: userDetails.attendanceType,
           punch_in_time: new Date(),
           punch_in_image: "https://picsum.photos/200/300",
           status: "PI",
-          reason: userDetails.attendanceType,
+          reason: userDetails.reason,
         };
       } else {
         header = `punch_out/${userDetails.attendanceId}`;
@@ -133,11 +151,11 @@ const AdditionalInfo = (props) => {
           emp_code: localStorageItems.empCode,
           branchCode: 1231,
           date: moment(new Date()).format("YYYY-MM-DD"),
-          attendance_type: "Punch In",
+          attendance_type: userDetails.attendanceType,
           punch_out_time: new Date(),
           punch_out_image: "https://picsum.photos/200/300",
           status: "PO",
-          reason: userDetails.attendanceType,
+          reason: userDetails.reason,
         };
       }
       if (type === "PI") {
@@ -147,6 +165,9 @@ const AdditionalInfo = (props) => {
           })
           .then((res) => {
             if (!res) return;
+            router.push({
+              pathname: "/MR_Portal_Apps/MRHome",
+            })
             toast.success(res.data.message);
 
             getAttandenceStatus();
@@ -157,19 +178,23 @@ const AdditionalInfo = (props) => {
             headers: headers,
           })
           .then((res) => {
-            if (!res) return;
+            router.push({
+              pathname: "/MR_Portal_Apps/MRHome",
+            })
+            if (!res) return;      
             toast.success(res.data.message);
-
+          
             getAttandenceStatus();
           });
       }
     } catch (errors) {
+    
       const errorMessage = errors?.response?.data?.message;
 
       toast.error(errorMessage);
     }
   };
-
+  let PunchInTimeString= moment(new Date()).format("DD-MM-YYYY h:mm A") 
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -179,13 +204,16 @@ const AdditionalInfo = (props) => {
         <span className="text-black flex flex-row gap-4 font-bold   ">
           <FaArrowLeftLong
             className="self-center "
-            onClick={() =>
+            onClick={() =>{
               router.push({
                 pathname: "/MR_Portal_Apps/MRHome",
               })
+              
+            }
+              
             }
           />
-          <span>Employee Attendence PunchIn-PunchOut</span>
+          <span>My Attendence</span>
         </span>{" "}
         <span className="text-white self-center">
           <Popover as="div" className="relative border-none outline-none mt-2">
@@ -219,20 +247,7 @@ const AdditionalInfo = (props) => {
                       />{" "}
                       Timesheet
                     </li>
-                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
-                      <FaHandsHelping
-                        className="text-[#626364] cursor-pointer"
-                        size={20}
-                      />{" "}
-                      Help
-                    </li>
-                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:flex-col ">
-                      <IoSettingsOutline
-                        className="text-[#626364] cursor-pointer"
-                        size={20}
-                      />{" "}
-                      Setting
-                    </li>
+                    
                   </ul>
                 </Popover.Panel>
               </>
@@ -245,55 +260,55 @@ const AdditionalInfo = (props) => {
         <div className="">
           <h1 className="font-bold ">Employee Details:</h1>
           <div className="flex mb-4 mt-2">
-            <div className="w-40 h-2  ">
+            <div className="w-40 h-30 flex justify-center items-center">
               <Image
-                className="  h-[7.1rem] w-[7.1rem] rounded-full   "
+                className="h-[5.1rem] w-[5.1rem] rounded-full mt-2"
                 src={Profile}
                 alt="img"
               />
             </div>
 
-            <div className="flex  flex-col px-4 w-full mt-4 md:hidden">
-              <div className="flex  justify-between w-full  w-28">
+            <div className="flex  flex-col  w-full mt-4 md:hidden">
+              <div className="flex w-full  w-28">
                 <div className="flex">
                   <p className=" font-bold text-sm text-blue-800 w-28">
                     Emp Code
                   </p>
                   <span>:</span>
                 </div>
-                <span className="w-28">{localStorageItems.empCode}</span>
+                <span className="w-28 ml-3">{localStorageItems.empCode}</span>
               </div>
-              <div className="flex  justify-between w-full  w-28 ">
+              <div className="flex   w-full  w-28 ">
                 <div className="flex">
                   <p className=" font-bold text-sm text-blue-800 w-28">Name</p>
                   <span>:</span>
                 </div>
-                <span className="w-28"> {localStorageItems.clName}</span>
+                <span className="w-28 ml-3 whitespace-nowrap"> {localStorageItems.clName}</span>
               </div>
 
-              <div className="flex  justify-between w-full  w-28">
+              <div className="flex w-full  w-28">
                 <div className="flex">
                   <p className=" font-bold text-sm text-blue-800 w-28">
-                    Branch
+                    Reporting HQ
                   </p>
                   <span>:</span>
                 </div>
-                <span className="w-28">asfasdfa</span>
+                <span className="w-28 ml-3">{localStorageItems.reportingHQ}</span>
               </div>
+
             </div>
           </div>
         </div>
         {attendenceStatus === "Punch In" ? (
-          <h1 className="text-xl font-bold  flex w-full  mt-2 justify-center border-b-4 border-blue-800 shadow-xl ">
-            Punch-In
+          <h1 className="text-xl font-bold  flex w-full  justify-center border-b-4 border-blue-800 shadow-xl ">
+            Punch-In {PunchInTimeString}
           </h1>
         ) : (
           <h1 className="text-xl font-bold  flex w-full  mt-2 justify-center border-b-4 border-blue-800 shadow-xl ">
             Punch-Out
           </h1>
         )}
-
-        <h1 className=" font-bold flex w-full justify-center h-8 mt-2 border p-1  shadow-xl">
+        <h1 className=" font-bold flex w-full justify-center h-8  border p-1  shadow-xl">
           Last Punch In :{" "}
           {attendenceStatus === "Punch In"
             ? "Not Available"
@@ -308,6 +323,7 @@ const AdditionalInfo = (props) => {
             id="attendanceType"
             className="w-full border p-2 rounded"
             value={userDetails.attendanceType}
+            disabled={userDetails.attendanceType === "Punch In" || userDetails.attendanceType === "Punch Out"}
             onChange={(e) =>
               setUserDetails({
                 ...userDetails,
@@ -327,12 +343,11 @@ const AdditionalInfo = (props) => {
             Take Selfie
           </button>
           <FaCameraRetro
-            size={20}
+            size={10}
             className="mr-4 text-black  self-center justify-self-end  size-120 text-blue-800"
           />
         </div>
-        <div className="w-60 h-60 bg-gray-200 self-center "></div>
-
+        <div className="w-40 h-40 bg-gray-200 self-center "></div>
         <div className="flex flex-col gap-2  md:hidden">
           <label htmlFor="reason" className="block font-bold ">
             Reason for different Punch in/out date required:
@@ -381,18 +396,25 @@ const AdditionalInfo = (props) => {
         <div className="flex  flex-col px-4 w-full  md:hidden">
           <div className="flex justify-between w-full gap-4">
             <p className="text-gray-800 font-bold text-sm">
-              Branch Manger <span className="self-end">: </span>
+              Reporting Manager <span className="self-end">: </span>
             </p>
-            <p className="text-gray-800 text-sm"></p>
+            <p className="text-gray-800 text-sm">{localStorageItems.reportingManager}</p>
           </div>
           <div className="flex justify-between w-full gap-4 mt-2">
             <p className="text-gray-800 font-bold text-sm">
               Development Manager:
             </p>
-            <p className="text-gray-800 text-sm"></p>
+            <p className="text-gray-800 text-sm">{localStorageItems.developmentManager}</p>
+          </div>
+          <div className="flex justify-between w-full gap-4 mt-2">
+            <p className="text-gray-800 font-bold text-sm">
+              HR Manager:
+            </p>
+            <p className="text-gray-800 text-sm">{localStorageItems.hrManager}</p>
           </div>
         </div>
       </div>
+      
     </form>
   );
 };

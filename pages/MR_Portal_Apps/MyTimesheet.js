@@ -74,6 +74,10 @@ const AdditionalInfo = (props) => {
       ulName: window.localStorage.getItem("phone_number"),
       empCode: window.localStorage.getItem("emp_code"),
       roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+      reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
+      developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
+      hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
+      reportingHQ:JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
     });
   }, []);
 
@@ -106,36 +110,55 @@ const AdditionalInfo = (props) => {
     if (localStorageItems) getAttandenceStatus();
   }, [localStorageItems]);
   const getStatus = (status) => {
+  
     switch (status) {
       case "PI":
-        <div className="flex w-12 h-12 bg-gray-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
-          {status}
-        </div>;
+       return <div className="relative flex w-12 h-12 rounded-full overflow-hidden justify-center items-center text-center font-bold text-2xl">
+         <div className="absolute inset-0" style={{background: "linear-gradient(to right, red 50%, green 50%)"}}></div>
+         <div className="relative z-10 text-white">
+           {status}
+         </div>
+       </div>
         break;
       case "P":
-        <div className="flex w-12 h-12 bg-green-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+       return <div className="flex w-12 h-12 bg-green-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
           {status}
         </div>;
         break;
 
       case "A":
-        <div className="flex w-12 h-12 bg-red-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+      return  <div className="flex w-12 h-12 bg-red-400 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
           {status}
         </div>;
         break;
       case "W":
-        <div className="flex w-12 h-12 bg-gray-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+       return <div className="flex w-12 h-12 bg-gray-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
           {status}
         </div>;
         break;
       case "L":
-        <div className="flex w-12 h-12 bg-yellow-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+        return <div className="flex w-12 h-12 bg-yellow-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
           {status}
         </div>;
         break;
+        case "PO":
+         return <div className="flex w-12 h-12 bg-green-300 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+         {status}
+       </div>;
+          break;
 
+          case "WO":
+            return <div className="flex w-12 h-12 bg-purple-400 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+            {status}
+          </div>;
+             break;
+             case "H":
+              return <div className="flex w-12 h-12 bg-purple-400 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+              {status}
+            </div>;
+               break;
       default:
-        <div className="flex w-12 h-12 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+       return <div className="flex w-12 h-12 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
           {status}
         </div>;
         break;
@@ -158,93 +181,46 @@ const AdditionalInfo = (props) => {
           />
           <span>Employee Timesheet</span>
         </span>{" "}
-        <span className="text-white self-center">
-          <Popover as="div" className="relative border-none outline-none mt-2">
-            {({ open }) => (
-              <>
-                <Popover.Button className="focus:outline-none">
-                  <PiDotsThreeOutlineVerticalFill
-                    className="text-[#626364] cursor-pointer"
-                    size={20}
-                  />
-                </Popover.Button>
-
-                <Popover.Panel
-                  as="div"
-                  className={`${
-                    open ? "block" : "hidden"
-                  } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
-                >
-                  <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
-                    <li
-                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                      onClick={() => setAddFarmerModal(true)}
-                    >
-                      <GiFarmer
-                        className="text-[#626364] cursor-pointer"
-                        size={20}
-                        onClick={() =>
-                          router.push({
-                            pathname: "/MR_Portal_Apps/MyTimesheet",
-                          })
-                        }
-                      />{" "}
-                      Timesheet
-                    </li>
-                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
-                      <FaHandsHelping
-                        className="text-[#626364] cursor-pointer"
-                        size={20}
-                      />{" "}
-                      Help
-                    </li>
-                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:flex-col ">
-                      <IoSettingsOutline
-                        className="text-[#626364] cursor-pointer"
-                        size={20}
-                      />{" "}
-                      Setting
-                    </li>
-                  </ul>
-                </Popover.Panel>
-              </>
-            )}
-          </Popover>
-        </span>
+        
       </div>
       <div className="flex mb-4 mt-2 mb-8">
-        <div className="w-40 h-2  ">
-          <Image
-            className="  h-[7.1rem] w-[7.1rem] rounded-full   "
-            src={Profile}
-            alt="img"
-          />
-        </div>
+      <div className="w-40 h-30 flex justify-center items-center">
+              <Image
+                className="h-[5.1rem] w-[5.1rem] rounded-full mt-2"
+                src={Profile}
+                alt="img"
+              />
+            </div>
 
-        <div className="flex  flex-col px-4 w-full mt-4">
-          <div className="flex  justify-between w-full  w-28">
-            <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-28">Emp Code</p>
-              <span>:</span>
-            </div>
-            <span className="w-28">{localStorageItems.empCode}</span>
-          </div>
-          <div className="flex  justify-between w-full  w-28 ">
-            <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-28">Name</p>
-              <span>:</span>
-            </div>
-            <span className="w-28"> {localStorageItems.clName}</span>
-          </div>
+        <div className="flex  flex-col  w-full mt-4 md:hidden">
+              <div className="flex w-full  w-28">
+                <div className="flex">
+                  <p className=" font-bold text-sm text-blue-800 w-28">
+                    Emp Code
+                  </p>
+                  <span>:</span>
+                </div>
+                <span className="w-28 ml-3">{localStorageItems.empCode}</span>
+              </div>
+              <div className="flex   w-full  w-28 ">
+                <div className="flex">
+                  <p className=" font-bold text-sm text-blue-800 w-28">Name</p>
+                  <span>:</span>
+                </div>
+                <span className="w-28 ml-3 whitespace-nowrap"> {localStorageItems.clName}</span>
+              </div>
 
-          <div className="flex  justify-between w-full  w-28">
-            <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-28">Branch</p>
-              <span>:</span>
+              <div className="flex w-full  w-28">
+                <div className="flex">
+                  <p className=" font-bold text-sm text-blue-800 w-28">
+                    Reporting HQ
+                  </p>
+                  <span>:</span>
+                </div>
+                <span className="w-28 ml-3">{localStorageItems.reportingHQ}</span>
+              </div>
+
             </div>
-            <span className="w-28">asfasdfa</span>
-          </div>
-        </div>
       </div>
 
       <h1 className="text-xl font-bold  flex w-full justify-center border-t-4 border-blue-800 shadow-xl mb-4">
@@ -332,6 +308,18 @@ const AdditionalInfo = (props) => {
           <div className="flex flex-col  text-sm gap-2"></div>
         </div>
       ))}
+        <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
+        <FaArrowAltCircleUp
+          size={42}
+          className="self-center size-120 text-black-400 text-blue-400 "
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth", // Smooth scrolling animation
+            })
+          }
+        />
+      </div>
     </form>
   );
 };

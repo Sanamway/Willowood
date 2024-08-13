@@ -364,17 +364,7 @@ const HolidayCalender = () => {
                 {" "}
               </AiTwotoneHome>
             </h2>
-            {/* <button
-         onClick={() => {
-          router.push({
-            pathname: "/form/farmer_info_form",
-            query: { id: null, type: "Add" },
-          });
-        }}
-        className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
-      >
-        Create New
-      </button> */}
+            
           </div>
         </div>
 

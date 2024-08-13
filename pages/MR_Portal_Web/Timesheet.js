@@ -882,7 +882,6 @@ const Timesheet = () => {
             }}
           >
             <option value={"All"}>-All Region -</option>
-
             {allRegionData.map((item, idx) => (
               <option value={item.r_id} key={idx}>
                 {item.region_name}

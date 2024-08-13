@@ -51,11 +51,15 @@ const AdditionalInfo = (props) => {
     tId: "",
     roleId: "",
     empCode: "",
+    reportingManager:   "",
+    developmentManager: "",
+    hrManager:          "",
+    reportingHQ:        ""
   });
   useEffect(() => {
     setLocalStorageItems({
       uId: JSON.parse(window.localStorage.getItem("uid")),
-      cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+      cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
       bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
       buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
       rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
@@ -65,21 +69,25 @@ const AdditionalInfo = (props) => {
       ulName: window.localStorage.getItem("phone_number"),
       empCode: window.localStorage.getItem("emp_code"),
       roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+      reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
+      developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
+      hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
+      reportingHQ:JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
     });
   }, []);
 
-  const [filterYear, setFilterYear] = useState("2024");
+  const [filterYear, setFilterYear] = useState("");
   const [tableData, setTableData] = useState([]);
   const getAllHoliday = async (year) => {
     try {
       const respond = await axios.get(`${url}/api/holiday_list`, {
         headers: headers,
         params: {
-        //   bu_id: localStorageItems.buId,
-        //   c_id: localStorageItems.cId,
-        //   bg_id: localStorageItems.bgId,
-        //   year: year,
-        //   type: "Holiday",
+          bu_id: localStorageItems.buId,
+          c_id: localStorageItems.cId,
+          bg_id: localStorageItems.bgId,
+          year: year,
+          type: "Holiday",
         },
       });
       const apires = await respond.data.data;
@@ -103,7 +111,7 @@ const AdditionalInfo = (props) => {
     }
   };
   useEffect(() => {
-    if (!filterYear) setTableData([]);
+    if (!filterYear) return
     getAllHoliday(filterYear);
   }, [filterYear, localStorageItems]);
 
@@ -178,40 +186,48 @@ const AdditionalInfo = (props) => {
           </Popover> */}
         </span>
       </div>
-      <div className="flex mb-4 mt-2 mb-8">
-        <div className="w-40 h-2  ">
-          <Image
-            className="  h-[7.1rem] w-[7.1rem] rounded-full   "
-            src={Profile}
-            alt="img"
-          />
-        </div>
+      <div className="">
+        
+          <div className="flex mb-4 mt-2">
+            <div className="w-40 h-30 flex justify-center items-center">
+              <Image
+                className="h-[5.1rem] w-[5.1rem] rounded-full mt-2"
+                src={Profile}
+                alt="img"
+              />
+            </div>
 
-        <div className="flex  flex-col px-4 w-full mt-4">
-          <div className="flex  justify-between w-full  w-28">
-            <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-28">Emp Code</p>
-              <span>:</span>
-            </div>
-            <span className="w-28">{localStorageItems.empCode}</span>
-          </div>
-          <div className="flex  justify-between w-full  w-28 ">
-            <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-28">Name</p>
-              <span>:</span>
-            </div>
-            <span className="w-28"> {localStorageItems.clName}</span>
-          </div>
+            <div className="flex  flex-col  w-full mt-4 md:hidden">
+              <div className="flex w-full  w-28">
+                <div className="flex">
+                  <p className=" font-bold text-sm text-blue-800 w-28">
+                    Emp Code
+                  </p>
+                  <span>:</span>
+                </div>
+                <span className="w-28 ml-3">{localStorageItems.empCode}</span>
+              </div>
+              <div className="flex   w-full  w-28 ">
+                <div className="flex">
+                  <p className=" font-bold text-sm text-blue-800 w-28">Name</p>
+                  <span>:</span>
+                </div>
+                <span className="w-28 ml-3 whitespace-nowrap"> {localStorageItems.clName}</span>
+              </div>
 
-          <div className="flex  justify-between w-full  w-28">
-            <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-28">Branch</p>
-              <span>:</span>
+              <div className="flex w-full  w-28">
+                <div className="flex">
+                  <p className=" font-bold text-sm text-blue-800 w-28">
+                    Reporting HQ
+                  </p>
+                  <span>:</span>
+                </div>
+                <span className="w-28 ml-3">{localStorageItems.reportingHQ}</span>
+              </div>
+
             </div>
-            <span className="w-28">asfasdfa</span>
           </div>
         </div>
-      </div>
 
       <h1 className="text-xl font-bold  flex w-full justify-center border-t-4 border-blue-800 shadow-xl mb-4">
         Holiday Calender{" "}
