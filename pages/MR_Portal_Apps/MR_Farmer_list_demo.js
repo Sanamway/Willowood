@@ -14,7 +14,7 @@ import moment from "moment";
 import { FaArrowAltCircleUp } from "react-icons/fa";
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-
+import { GiGrass } from "react-icons/gi";
 const AdditionalInfo = () => {
   const headers = {
     "Content-Type": "application/json",
@@ -25,8 +25,8 @@ const AdditionalInfo = () => {
 
   const [allfilterState, setAllFilterState] = useState({
     number: null,
-    from: null,
-    to: null,
+    from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    to: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
     dateShortDecend: "desc",
     mobShortDecend: "",
     nameShortDecend: "",
@@ -98,15 +98,13 @@ const AdditionalInfo = () => {
           from: from ? moment(from).format("YYYY-MM-DD[T00:00:00.000Z]") : null,
           to: to ? moment(to).format("YYYY-MM-DD[T00:00:00.000Z]") : null,
           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           sortField: field,
           sortOrder: order,
           emp_code: window.localStorage.getItem("emp_code"),
         },
       });
-      const apires = await respond.data.data.MR_demo;
-      console.log("moye", respond);
+      const apires = await respond.data.data;
       setFarmerListData(apires);
     } catch (error) {
       setFarmerListData([]);
@@ -124,11 +122,11 @@ const AdditionalInfo = () => {
       <div className="fixed top-0 w-full flex flex-col h-32 bg-white justify-between px-4  pb-2 shadow-lg  lg:flex-col   ">
         <div className="flex flex-row gap-4 font-bold w-full items-center h-12">
           <FaArrowLeftLong className="" onClick={() => router.back()} />
-          <h2 className="font-bold ">List of Farmer Demo</h2>
+          <h2 className="font-bold ">List of Field Demo</h2>
           <div></div>
         </div>
         <div className="relative">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center md:relative flex-col lg:hidden ">
+          <span className="absolute inset-y-0 left-0 top-2 pl-3 flex items-center md:relative flex-col lg:hidden ">
             {/* Your icon component goes here */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -146,9 +144,10 @@ const AdditionalInfo = () => {
           </span>
           <input
             className="bg-white border-2 border-blue-400 pl-10 py-1 pr-2 rounded-lg w-full lg:w-auto lg:self-center lg:place-self-center"
-            placeholder="Enter Mobile Number"
+            placeholder="Enter Farmer Mobile Number"
             onChange={(e) => getFarmerDetailsByNumber(e.target.value)}
             maxLength={10}
+            
           />
         </div>
 
@@ -334,7 +333,7 @@ const AdditionalInfo = () => {
         <div className="flex w-full flex-col gap-1">
           <div className="flex flex-row w-full p-2  text-sm justify-between   mt-2  rounded-lg lg:hidden">
             <div className="flex flex-col h-full gap-4 items-center">
-              <GiFarmer className="h-16 w-24 text-green-400" />
+              <GiGrass className="h-16 w-24 text-green-800" />
               <small className="text-sm font-bold">
                 {moment(item.demo_date).format("DD-MMM")}
               </small>
@@ -360,6 +359,16 @@ const AdditionalInfo = () => {
                 </span>
                 <span className="text-black text-sm">
                   State <small className="text-gray-400">{item.state}</small>
+                </span>
+              </div>
+
+              <div className="flex gap-2">
+                <span className="text-black ">
+                  Demo Type{" "}:
+                  <span className="ml-2">{item.purpose_of_demo}</span>
+                </span>
+                <span className="text-black text-sm">
+                 
                 </span>
               </div>
               <div className="flex flex-col gap-0  text-gray-400">

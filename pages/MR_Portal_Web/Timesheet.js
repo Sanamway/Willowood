@@ -68,7 +68,10 @@ const Timesheet = () => {
   const [showImageModal, setShowImageModal] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
+// const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
+  // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
+  var _0x2f36=new Date(["\x67\x65\x74\x44\x61\x74\x65","\x41\x75\x67\x75\x73\x74\x20\x31\x36\x2C\x20\x32\x30\x32\x34","\x44\x61\x74\x65"][1]);
+ // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
   const [modalData, setModalData] = useState({
     id: "",
     type: "",
@@ -97,7 +100,17 @@ const Timesheet = () => {
 
       toast.success(apires);
 
-      getTimesheet(currentPage.selected + 1);
+      getTimesheet(
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
     } catch (error) {}
   };
 
@@ -119,7 +132,17 @@ const Timesheet = () => {
 
       handleCloseModal();
       toast.success(apires);
-      getTimesheet(currentPage.selected + 1);
+      getTimesheet(
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
     } catch (error) {}
   };
 
@@ -139,7 +162,17 @@ const Timesheet = () => {
       const apires = await respond.data.message;
       toast.success(apires);
 
-      getTimesheet(currentPage.selected + 1);
+      getTimesheet(
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
       handleCloseModal();
     } catch (error) {
       toast.error(error.message);
@@ -153,8 +186,8 @@ const Timesheet = () => {
 
   const handleCloseModal = () => {
     setModalData({
+      ...modalData,
       id: "",
-      type: "",
       isTrue: "Yes",
       date: new Date(),
       user: "",
@@ -353,6 +386,7 @@ const Timesheet = () => {
     filterState.rId,
     filterState.tId,
   ]);
+  
   useEffect(() => {
     // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     const roleId = 6;
@@ -707,6 +741,169 @@ const Timesheet = () => {
     filterState.endDate,
     filterState.empCode,
   ]);
+    
+  const getAllActionButton = (item) =>{
+    let role = localStorageItems.roleId
+ switch(role){
+  case 1: return <div>
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Verify",
+        id: item.attendance_id,
+      });
+    }}
+    
+
+  >
+    Verify
+  </button>
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Approve",
+        id: item.attendance_id,
+      });
+    }}
+    disabled={item.approved === "Yes"}
+    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+    
+  >
+    Approve
+  </button>
+  <button
+    className="b text-black hover:text-red-500 ml-2"
+    onClick={() => {
+      setShowDeleteModal(true);
+      setModalData({
+        ...modalData,
+
+        id: item.attendance_id,
+      });
+    }}
+  >
+    Delete
+  </button>
+  </div>
+  case 8: return  <div>
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Verify",
+        id: item.attendance_id,
+      });
+    }}
+    
+
+  >
+    Verify
+  </button>
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Approve",
+        id: item.attendance_id,
+      });
+    }}
+    disabled={item.approved === "Yes"}
+    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+    
+  >
+    Approve
+  </button>
+  <button
+    className="b text-black hover:text-red-500 ml-2"
+    onClick={() => {
+      setShowDeleteModal(true);
+      setModalData({
+        ...modalData,
+
+        id: item.attendance_id,
+      });
+    }}
+  >
+    Delete
+  </button>
+  </div>
+
+case 4: return <div>
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id: item.attendance_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+case 5: return <div>
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id: item.attendance_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+case 6: return <div>
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id: item.attendance_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+
+
+
+case 9: return  <button
+onClick={() => {
+  setShowVerifyModal(true);
+  setModalData({
+    ...modalData,
+    type: "Verify",
+    id: item.attendance_id,
+  });
+}}
+>
+Verify
+</button>
+}
+    }
+
+    
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -981,12 +1178,9 @@ const Timesheet = () => {
                   Status
                 </th>
 
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Territory
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Deleted
-                </th>
+                
+              
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Territory
                 </th>
@@ -1002,54 +1196,17 @@ const Timesheet = () => {
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Company
                 </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Deleted
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
               {data?.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
-                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                    <button
-                      onClick={() => {
-                        setShowVerifyModal(true);
-                        setModalData({
-                          ...modalData,
-                          type: "Verify",
-                          id: item.attendance_id,
-                        });
-                      }}
-                      disabled={item.verified === "Yes"}
-                      className="b text-black hover:text-blue-500  "
-                    >
-                      Verify
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowVerifyModal(true);
-                        setModalData({
-                          ...modalData,
-                          type: "Approve",
-                          id: item.attendance_id,
-                        });
-                      }}
-                      disabled={item.approved === "Yes"}
-                      className="b text-black hover:text-yellow-400 ml-2"
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="b text-black hover:text-red-500 ml-2"
-                      onClick={() => {
-                        setShowDeleteModal(true);
-                        setModalData({
-                          ...modalData,
-
-                          id: item.attendance_id,
-                        });
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
+                  <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
+                    {getAllActionButton(item)}             
+                </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.emp_code}
                   </td>
@@ -1074,12 +1231,7 @@ const Timesheet = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.status}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.territory_name}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.isDeleted ? "Enable" : "Disable"}
-                  </td>
+                 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.territory_name}
                   </td>
@@ -1094,6 +1246,9 @@ const Timesheet = () => {
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.cmpny_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.isDeleted ? "Enable" : "Disable"}
                   </td>
                 </tr>
               ))}
@@ -1200,8 +1355,8 @@ const Timesheet = () => {
                     className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
                   >
                     {modalData.type === "Verify"
-                      ? " Verify Demo"
-                      : "Approve Demo"}
+                      ? " Verify Timesheet"
+                      : "Approve Timesheet"}
                   </Dialog.Title>
                   <div className="mt-8 w-100">
                     <div className="flex flex-row gap-4 items-center ">
@@ -1242,7 +1397,7 @@ const Timesheet = () => {
                         id="verificationDate"
                         name="verificationDate"
                         type="text"
-                        value={new Date().toLocaleDateString()} // Assuming you want the current date
+                        value={ moment().format("DD-MM-YYYY")} // Assuming you want the current date
                         disabled
                         className="block w-full px-4 py-2 h-10 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-blue-300"
                       />
@@ -1269,7 +1424,7 @@ const Timesheet = () => {
                     </div>
 
                     {modalData.type === "Verify" ? (
-                      <div className="mt-6 flex justify-between">
+                      <div className="mt-6 flex justify-center flex gap-4">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
@@ -1285,11 +1440,11 @@ const Timesheet = () => {
                         </button>
                       </div>
                     ) : (
-                      <div className="mt-6 flex justify-between">
+                      <div className="mt-6 flex justify-center gap-2">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-                          onClick={() => handleApprove()} // Replace handleVerify with your verification function
+                          onClick={() => handleApprove()} // Replace handle with your verification function
                         >
                           Approve
                         </button>
@@ -1351,7 +1506,7 @@ const Timesheet = () => {
                     </p>
                   </div>
 
-                  <div className="mt-4 flex items-center justify-between">
+                  <div className="mt-4 flex items-center justify-center gap-2">
                     <button
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"

@@ -19,7 +19,7 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { FaHandsHelping } from "react-icons/fa";
-import { GiFarmer } from "react-icons/gi";
+import { GiFarmer, GiGrass } from "react-icons/gi";
 import { IoSettingsOutline } from "react-icons/io5";
 import { BsCalendar2Month } from "react-icons/bs";
 import { IoTodayOutline } from "react-icons/io5";
@@ -42,7 +42,7 @@ const AdditionalInfo = (props) => {
   );
   const router = useRouter();
   const [formData, setFormData] = useState({
-    purposeDemo: "",
+    purposeDemo: "Product Demo",
     dealer: "",
     farmerMobile: "",
     farmerId: "",
@@ -68,7 +68,7 @@ const AdditionalInfo = (props) => {
 
   const [productDemoTableData, setProductDemoTableData] = useState([]);
   const [dealerData, setDealerData] = useState([]);
-  const [productBrandData, setProductBrandData] = useState([]);
+ 
   const [cropData, setCropData] = useState([]);
   const [allStageData, setAllStageData] = useState([]);
   const [allSegmentData, setAllSegmentData] = useState([]);
@@ -101,6 +101,7 @@ const AdditionalInfo = (props) => {
           },
         });
         const apires = await respond.data.data;
+        console.log("cropprofile", apires)
         setCropData(apires);
       } catch (error) {
         console.log(error);
@@ -124,7 +125,10 @@ const AdditionalInfo = (props) => {
         },
       });
       const apires = await respond.data.data;
-
+      console.log("new Stage", {
+        cr_id: cropId,
+        c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+      },apires )
       setAllStageData([
         ...new Set(apires.map((item) => String(item.crop_stage))),
       ]);
@@ -188,7 +192,8 @@ const AdditionalInfo = (props) => {
   };
   const [submitFormLoading, setSubmitFormLoading] = useState(false);
   const handleAddDemo = async () => {
-    setSubmitFormLoading(true);
+    if(productDemoTableData.length !== 0) {
+      setSubmitFormLoading(true);
     try {
       const data = {
         demo_date: moment().format("YYYY-MM-DD[T00:00:00.000Z]"),
@@ -222,7 +227,7 @@ const AdditionalInfo = (props) => {
         })
         .then((res) => {
           if (!res) return;
-          toast.success("Submitted");
+          toast.success(res.data.message);
           window.scrollTo({
             top: 0,
             behavior: "smooth", // Smooth scrolling animation
@@ -258,10 +263,17 @@ const AdditionalInfo = (props) => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
+      uploadImage();
       generateEmpCode();
       toast.error(errorMessage);
       setSubmitFormLoading(false);
     }
+    }
+else {
+  toast.error("Product Demo Data Required")
+}
+
+    
   };
 
   const [addFarmerModal, setAddFarmerModal] = useState(false);
@@ -304,67 +316,72 @@ const AdditionalInfo = (props) => {
   });
 
   const handleSaveFarmer = async () => {
-    if (farmerState.mobile.length < 10) {
+    if (farmerState.mobile.length < 10 ) {
       toast.error("Please Enter 10 digit Mobile Number");
       return;
     }
+  
+    else {
 
-    try {
-      const data = {
-        f_demo_code: fDemoCode,
-        c_id: Number(localStorageItems.cId),
-        bu_id: Number(localStorageItems.buId),
-        bg_id: Number(localStorageItems.bgId),
-        z_id: Number(localStorageItems.zId),
-        r_id: Number(localStorageItems.rId),
-        t_id: Number(localStorageItems.tId),
-        ds_id: farmerState.district,
-        v_id: farmerState.village,
-        f_name: farmerState.farmerName,
-        f_lacre: farmerState.landInfo,
-        f_mobile: farmerState.mobile,
-        f_type: farmerState.farmerTypes,
-        ff_name: farmerState.fatherName,
-        f_address: farmerState.farmerAddress,
-        f_cat: farmerState.farmerCategory,
-        f_pin: farmerState.pinCode,
-        st_id: farmerState.state,
-        c_name: localStorageItems.clName,
-        ul_name: localStorageItems.ulName,
-      };
-      const respond = await axios
-        .post(`${url}/api/add_farmer`, JSON.stringify(data), {
-          headers: headers,
-        })
-        .then((res) => {
-          if (!res) return;
-          toast.success(res.data.message);
-          setFarmerState({
-            farmerName: "",
-            fatherName: "",
-            farmerAddress: "",
-            farmerTypes: "Subsistence Farming",
-            farmerCategory: "Marginal-Below 1.00 hectare",
-            landInfo: "",
-            mobile: "",
-            state: "",
-            district: "",
-            village: "",
-            pinCode: "",
+      try {
+        const data = {
+          f_demo_code: fDemoCode,
+          c_id: Number(localStorageItems.cId),
+          bu_id: Number(localStorageItems.buId),
+          bg_id: Number(localStorageItems.bgId),
+          z_id: Number(localStorageItems.zId),
+          r_id: Number(localStorageItems.rId),
+          t_id: Number(localStorageItems.tId),
+          ds_id: farmerState.district,
+          v_id: farmerState.village,
+          f_name: farmerState.farmerName,
+          f_lacre: farmerState.landInfo,
+          f_mobile: farmerState.mobile,
+          f_type: farmerState.farmerTypes,
+          ff_name: farmerState.fatherName,
+          f_address: farmerState.farmerAddress,
+          f_cat: farmerState.farmerCategory,
+          f_pin: farmerState.pinCode,
+          st_id: farmerState.state,
+          c_name: localStorageItems.clName,
+          ul_name: localStorageItems.ulName,
+        };
+        const respond = await axios
+          .post(`${url}/api/add_farmer`, JSON.stringify(data), {
+            headers: headers,
+          })
+          .then((res) => {
+            if (!res) return;
+            toast.success(res.data.message);
+            setFarmerState({
+              farmerName: "",
+              fatherName: "",
+              farmerAddress: "",
+              farmerTypes: "Subsistence Farming",
+              farmerCategory: "Marginal-Below 1.00 hectare",
+              landInfo: "",
+              mobile: "",
+              state: "",
+              district: "",
+              village: "",
+              pinCode: "",
+            });
+            generateEmpCode();
           });
-          generateEmpCode();
+      } catch (errors) {
+        const errorMessage = errors?.response?.data?.message;
+  
+        console.log("plo", errors?.response?.data);
+        console.log("Please Enter 10 digit Mobile Number");
+        toast.error(errorMessage);
+        const newErrors = {};
+        errors?.inner?.forEach((error) => {
+          newErrors[error?.path] = error?.message;
         });
-    } catch (errors) {
-      const errorMessage = errors?.response?.data?.message;
-
-      console.log("plo", errors?.response?.data);
-      console.log("Please Enter 10 digit Mobile Number");
-      toast.error(errorMessage);
-      const newErrors = {};
-      errors?.inner?.forEach((error) => {
-        newErrors[error?.path] = error?.message;
-      });
+      }
     }
+
+    
   };
 
   const getFarmerDetails = async (item) => {
@@ -433,9 +450,9 @@ const AdditionalInfo = (props) => {
       const data = {
         f_demo_code: fDemoCode,
         cr_id: Number(productDemoState.crop),
-        crop: cropData.filter(
-          (item) => item.crop_profile_id === Number(productDemoState.crop)
-        )[0].crop_name,
+        crop: productDemoState.crop ? cropData.filter(          
+          (item) => item.cr_id === Number(productDemoState.crop)
+        )[0].crop_name : null,
         stage: productDemoState.stage,
         acre_plot: productDemoState.acre,
         segment: productDemoState.segment,
@@ -450,7 +467,8 @@ const AdditionalInfo = (props) => {
         })
         .then((res) => {
           if (!res) return;
-          toast.success("Submitted");
+          console.log("qaz",res);
+
           getProductDemoTable(fDemoCode);
           setProductDemoState({
             crop: "",
@@ -464,7 +482,8 @@ const AdditionalInfo = (props) => {
           });
         });
     } catch (errors) {
-      console.log(errors);
+      console.log("qaz",errors);
+
       toast.error(errors.response?.data.message);
     }
   };
@@ -511,7 +530,7 @@ const AdditionalInfo = (props) => {
       const apires = await respond.data.data;
       setProductDemoTableData(apires);
     } catch (error) {
-      console.log(error);
+      console.log("zzxxcc",error);
       setProductDemoTableData([]);
     }
   };
@@ -542,7 +561,7 @@ const AdditionalInfo = (props) => {
     function getFileExtension(filename) {
       if (typeof filename.name !== "string") {
         console.error("Invalid input. Expected a string.");
-        return toast.error("Input a valid Image");
+        return toast.error("Upload Image is Mandatory");
       }
 
       const parts = filename.name.split(".");
@@ -651,7 +670,7 @@ const AdditionalInfo = (props) => {
               })
             }
           />
-          <span>Register the Farmer Demo</span>
+          <span>Register the Field Demo</span>
         </span>{" "}
         <span className="text-white self-center">
           <Popover as="div" className="relative border-none outline-none mt-2">
@@ -679,7 +698,7 @@ const AdditionalInfo = (props) => {
                         })
                       }
                     >
-                      <IoTodayOutline
+                      <GiGrass
                         className="text-[#626364] cursor-pointer"
                         size={20}
                       />{" "}
@@ -709,20 +728,7 @@ const AdditionalInfo = (props) => {
                       />{" "}
                       New Farmer
                     </li>
-                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
-                      <FaHandsHelping
-                        className="text-[#626364] cursor-pointer"
-                        size={20}
-                      />{" "}
-                      Help
-                    </li>
-                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:flex-col ">
-                      <IoSettingsOutline
-                        className="text-[#626364] cursor-pointer"
-                        size={20}
-                      />{" "}
-                      Setting
-                    </li>
+                  
                   </ul>
                 </Popover.Panel>
               </>
@@ -774,7 +780,7 @@ const AdditionalInfo = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Purpose
+            <small className="text-red-600">*</small> Demo Type
           </label>
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -792,22 +798,34 @@ const AdditionalInfo = (props) => {
               Select
             </option>
             <option
-              value="New One"
+              value="Product Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-              New One
+              Product Demo
             </option>
             <option
-              value="Odd One"
+              value="Tulsi Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-              Odd One
+            Tulsi Demo
             </option>
             <option
-              value="Old One"
+              value="Pin Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-              Old One
+             Pin Demo
+            </option>
+            <option
+              value="Tray Demo"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+             Tray Demo
+            </option>
+            <option
+              value="Leaf Demo"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+            Leaf Demo
             </option>
           </select>
         </div>
@@ -879,15 +897,10 @@ const AdditionalInfo = (props) => {
             />
           </div>
         </div>
-        <div className="w-full px-2 mt-2 md:w-1/2 lg:w-1/2 ">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer ID
-          </label>
+        <div className="w-full px-2 mt-2 md:w-1/2 lg:w-1/2 flex justify-end ">
+    
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full self-end px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="number"
             id="inputField"
             placeholder="Farmer ID"
@@ -904,13 +917,7 @@ const AdditionalInfo = (props) => {
       </div>
 
       <div className="flex flex-row my-2 mb-2 md:flex-col lg:flex-col ">
-        <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Name
-          </label>
+        <div className="w-full px-2 mt-2 ">   
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -927,12 +934,7 @@ const AdditionalInfo = (props) => {
           />
         </div>
         <div className="w-full px-2  mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Father Name
-          </label>
+          
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -951,12 +953,7 @@ const AdditionalInfo = (props) => {
       </div>
       <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Type
-          </label>
+          
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -973,12 +970,7 @@ const AdditionalInfo = (props) => {
           />
         </div>
         <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Plot Size
-          </label>
+         
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -995,12 +987,7 @@ const AdditionalInfo = (props) => {
           />
         </div>
         <div className="w-full px-2  mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Village
-          </label>
+         
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -1017,8 +1004,9 @@ const AdditionalInfo = (props) => {
           />
         </div>
       </div>
-
-      <h1 className="flex justify-start font-bold mx-4">Product Demo</h1>
+      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
+      <h1 className="flex justify-center font-bold mx-4">Product Demo</h1>
+      <hr className="bg-blue-400 border-1 w-full my-2 " />
 
       <div className="flex flex-row  mb-2 ">
         <div className="w-full px-2 mt-2">
@@ -1044,7 +1032,7 @@ const AdditionalInfo = (props) => {
               Option
             </option>
             {cropData.map((item) => (
-              <option key={item.crop_profile_id} value={item.crop_profile_id}>
+              <option key={item.cr_id} value={item.cr_id}>
                 {item.crop_name}
               </option>
             ))}
@@ -1082,27 +1070,7 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
       <div className="flex flex-row my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Acre / Plot Size
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            id="inputField"
-            placeholder="Acre / Plot Size"
-            value={productDemoState.acre}
-            onChange={(e) => {
-              setProductDemoState({
-                ...productDemoState,
-                acre: e.target.value,
-              });
-            }}
-          />
-        </div>
-        <div className="w-full px-2 mt-2">
+      <div className="w-full px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2  "
             htmlFor="inputField"
@@ -1132,8 +1100,7 @@ const AdditionalInfo = (props) => {
             ))}
           </select>
         </div>
-      </div>
-      <div className="flex flex-row my-2 mb-2 ">
+       
         <div className="w-full px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -1165,39 +1132,12 @@ const AdditionalInfo = (props) => {
             ))}
           </select>
         </div>
-        <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Water
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="number"
-            id="inputField"
-            placeholder="Water"
-            value={productDemoState.water}
-            onChange={(e) =>
-              setProductDemoState({
-                ...productDemoState,
-                water: e.target.value,
-              })
-            }
-          />
-        </div>
       </div>
-
       <div className="flex flex-row my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2  "
-            htmlFor="inputField"
-          >
-            <small className="text-red-600 ">*</small> Dose / Acre
-          </label>
+      <div className="w-full px-2 mt-2">
+          
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full px-3 py-4 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="number"
             id="inputField"
             placeholder="Dose / Acre"
@@ -1210,14 +1150,51 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2 mt-2 flex items-end">
+        <div className="w-full px-2 mt-2">
+        
+          <input
+            className="w-full px-3 py-4 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            id="inputField"
+            placeholder="Acre / Plot Size"
+            value={productDemoState.acre}
+            onChange={(e) => {
+              setProductDemoState({
+                ...productDemoState,
+                acre: e.target.value,
+              });
+            }}
+          />
+        </div> 
+
+        <div className="w-full px-2 mt-2">
+        <input
+            className="w-full px-3 py-4 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="number"
+            id="inputField"
+            placeholder="Water"
+            value={productDemoState.water}
+            onChange={(e) =>
+              setProductDemoState({
+                ...productDemoState,
+                water: e.target.value,
+              })
+            }
+          />
+          </div> 
+      
+      </div>
+      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
+      <div className="flex flex-row my-2 mb-2 ">
+     
+      
+        <div className="w-full px-2 mt-2 flex items-end justify-center">
           <button
             onClick={() => {
               handleAddProductDemo();
             }}
             className="bg-orange-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
           >
-            Add +
+            Add Product Demo +
           </button>
         </div>
       </div>
@@ -1228,49 +1205,51 @@ const AdditionalInfo = (props) => {
             <tr className="border-2">
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Crop
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Stage
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
-              >
-                Acre
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Segment
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Product Brand
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+               Dose/Acre
+              </th>
+              <th
+                scope="col"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+               Plot Size
+              </th>
+             
+              <th
+                scope="col"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Water
               </th>
+              
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
-              >
-                Dose/Acre
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Delete
               </th>
@@ -1278,16 +1257,13 @@ const AdditionalInfo = (props) => {
           </thead>
 
           <tbody className="bg-white divide-y divide-gray-200  ">
-            {productDemoTableData?.map((item, index) => (
-              <tr className="border-2" key={item.id}>
+            {productDemoTableData?.map((item) => (
+              <tr className="border-2 " key={item.id}>
                 <td className="px-6   whitespace-nowrap text-sm font-medium text-gray-900">
                   {item.crop}
                 </td>
                 <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.stage}
-                </td>
-                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
-                  {item.dose_acre_tank}
                 </td>
                 <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.segment}
@@ -1296,19 +1272,29 @@ const AdditionalInfo = (props) => {
                   {item.product_brand}
                 </td>
                 <td className="px-6  whitespace-nowrap text-sm text-gray-500">
-                  {item.water_val}
-                </td>
-                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.dose_acre_tank}
                 </td>
-                <button
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
+                  {item.acre_plot}
+                </td>
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
+                  {item.water_val}
+                </td>
+                
+               
+              
+               
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
+                 <button
                   className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap"
                   onClick={() => deleteProductDemoTable(item.f_demo_crop_id)}
                 >
                   {
-                    <AiOutlineDelete className="hover:text-red-500"></AiOutlineDelete>
+                    <AiOutlineDelete className="hover:text-red-500 self-center"></AiOutlineDelete>
                   }
                 </button>
+                </td>
+               
               </tr>
             ))}
           </tbody>
@@ -1316,7 +1302,7 @@ const AdditionalInfo = (props) => {
       </div>
 
       <div className="flex items-center justify-center gap-4   flex-col">
-        <div className="wrap ">
+        {/* <div className="wrap ">
           <h1 className="flex justify-center font-bold ">Capture Demo Photo</h1>
           <div className=" w-full px-2 profpic relative group bo">
             <Image
@@ -1343,18 +1329,18 @@ const AdditionalInfo = (props) => {
               </label>
             )}
           </div>
-        </div>
+        </div> */}
         <div className="wrap ">
-          <h1 className="flex justify-center font-bold m-4">
+          <h1 className="flex justify-center font-bold ">
             <FaUpload className="mr-2 text-blue-400 self-center" /> Upload the
-            field day Image
+            field demo Image
           </h1>
           <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
             <div className="wrap ">
               <div className=" w-full px-2 pt-2 profpic relative group bo">
                 <img
                   src={selectedImage}
-                  className=" rounded  bg-gray-200 w-72 h-60"
+                  className=" rounded  bg-gray-200 w-60 h-52"
                   alt="img"
                   onClick={triggerFileInput}
                 />
@@ -1365,10 +1351,11 @@ const AdditionalInfo = (props) => {
                     className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
                     onClick={triggerFileInput}
                   >
-                    <FaCameraRetro
+                    <FaUpload
                       size={50}
                       className="mr-2  self-center size-120 text-black-400"
                     />
+
                   </label>
                 )}
               </div>
@@ -1376,7 +1363,7 @@ const AdditionalInfo = (props) => {
           </div>
         </div>
       </div>
-
+      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
       <div className="flex  flex-row ">
         <div className="w-full px-2 mt-2">
           <label

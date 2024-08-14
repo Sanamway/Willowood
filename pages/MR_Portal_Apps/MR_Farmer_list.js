@@ -278,10 +278,11 @@ const AdditionalInfo = (data) => {
             </svg>
           </span>
           <input
-            disabled
+            
             className="bg-white border-2 border-blue-400 pl-10 py-1 pr-2 rounded-lg w-full lg:w-auto lg:self-center lg:place-self-center"
             placeholder="Enter Name or Mobile Number"
             onChange={(e) => getFarmerDetailsByNumber(e.target.value)}
+            
             maxLength={10}
           />
         </div>

@@ -1057,21 +1057,21 @@ const AdditionalInfo = (props) => {
               Crop Segmentation (District Level)
             </h2>
             <div className="overflow-x-auto">
-              <table className="border-collapse border border-gray-400 w-full text-sm">
-                <colgroup>
-                  <col style={{ width: "10%" }} />{" "}
-                  {/* Adjust width as needed */}
-                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                  <col style={{ width: "9%" }} /> {/* Adjust width as needed */}
-                </colgroup>
+              <table className="border-collapse border border-gray-400 w-full text-[11px]">
+              <colgroup>
+    <col style={{ width: "18%" }} />   
+    <col style={{ width: "14%" }} />   
+    <col style={{ width: "18%" }} />   
+    <col style={{ width: "6%" }} />   
+    <col style={{ width: "6%" }} />   
+    <col style={{ width: "6%" }} />   
+    <col style={{ width: "6%" }} />   
+    <col style={{ width: "12%" }} />  
+    <col style={{ width: "12%" }} />  
+    <col style={{ width: "6%" }} />   
+    <col style={{ width: "6%" }} />   
+    <col style={{ width: "10%" }} />   
+  </colgroup>
                 <thead>
                   <tr className="bg-blue-500 text-white">
                     <th className="border border-gray-400 px-4 py-2">
@@ -1085,16 +1085,16 @@ const AdditionalInfo = (props) => {
                     </th>
 
                     <th className="border border-gray-400 px-4 py-2">
-                      Dose/Acre (kg/ltr)
+                      Dose/Acre (kg/ltr) 
                     </th>
                     <th className="border border-gray-400 px-4 py-2">
-                      Cost kg/Ltr
+                      Cost kg/Ltr 
                     </th>
                     <th className="border border-gray-400 px-4 py-2">
-                      Cost/Acre (INR)
+                      Cost/Acre (INR) 
                     </th>
                     <th className="border border-gray-400 px-4 py-2">
-                      Average Cost/Acre (INR)
+                      Average Cost/Acre (INR) 
                     </th>
                     <th className="border border-gray-400 px-4 py-2">
                       Start Date
@@ -1103,9 +1103,11 @@ const AdditionalInfo = (props) => {
                       End Date
                     </th>
                     <th className="border border-gray-400 px-4 py-2">
-                      Total Days
+                      Total Days 
                     </th>
-                    <th className="border border-gray-400 px-4 py-2">Stage</th>
+                    <th className="border border-gray-400 px-4 py-2"> 
+                      Stage
+                      </th>
                     {router.query.type !== "View" && (
                       <th className="border border-gray-400 px-4 py-2">
                         Action
@@ -1115,7 +1117,7 @@ const AdditionalInfo = (props) => {
                 </thead>
                 <tbody>
                   {segmentDetails.map((item, index) => (
-                    <tr key={index}>
+                    <tr key={index} className="w-full">
                       <td className="border border-gray-400 px-4 py-2">
                         <input
                           type="text"
@@ -1198,7 +1200,7 @@ const AdditionalInfo = (props) => {
                       <td className="border border-gray-400 px-4 py-2">
                         <input
                           type="number"
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                           className="w-full px-2 py-1 border border-gray-300 rounded "
                           disabled={router.query.type === "View"}
                           value={item.dose}
                           onChange={(e) =>
@@ -1288,7 +1290,7 @@ const AdditionalInfo = (props) => {
                       </td>
                       <td className="border border-gray-400 px-4 py-2">
                         <DatePicker
-                          className="w-full px-3 py-2 border rounded-lg  text-sm border-gray-300 focus:outline-none focus:border-indigo-500"
+                          className="w-full px-3 py-2 border rounded-lg   border-gray-300 focus:outline-none focus:border-indigo-500"
                           dateFormat="dd/MM/yyyy"
                           disabled={router.query.type === "View"}
                           peekNextMonth
@@ -1314,7 +1316,7 @@ const AdditionalInfo = (props) => {
                       </td>
                       <td className="border border-gray-400 px-4 py-2">
                         <DatePicker
-                          className="w-full px-3 py-2 border text-sm rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           dateFormat="dd/MM/yyyy"
                           disabled={router.query.type === "View"}
                           peekNextMonth
@@ -1373,17 +1375,17 @@ const AdditionalInfo = (props) => {
                       </td>
 
                       {router.query.type !== "View" && (
-                        <td className="border border-gray-400 px-4 py-2 flex flex-row gap-2">
+                        <td className="border border-gray-400 px-1 py-2 flex flex-row gap-2">
                           <button
                             type="button"
-                            className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
+                            className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-[11px] hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-12"
                             onClick={() => handleAddCropSegmentDetails(index)}
                           >
-                            Add Row
+                            Add
                           </button>
                           <button
                             type="button"
-                            className="inline-flex justify-center  text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-24"
+                            className="inline-flex justify-center text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-[11px] hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-12"
                             onClick={() => {
                               setSegmentDetails(
                                 segmentDetails
@@ -1396,14 +1398,131 @@ const AdditionalInfo = (props) => {
                             }}
                             disabled={index === 0}
                           >
-                            Delete Row
+                            Delete 
                           </button>
                         </td>
                       )}
                     </tr>
                   ))}
 
-                  {/* Add more rows as needed */}
+<tr  className="w-full">
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="text"
+                          className="w-full px-2 py-1 border border-gray-300 rounded "
+                          value={"Total"}
+                          disabled
+                         
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                      <input
+                          type="text"
+                          className="w-full px-2 py-1 border border-gray-300 rounded "
+                          value={"-"}
+                          disabled
+                         
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                      <input
+                          type="text"
+                          className="w-full px-2 py-1 border border-gray-300 rounded "
+                          value={"-"}
+                          disabled
+                         
+                        />
+                      </td>
+
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                           className="w-full px-2 py-1 border border-gray-300 rounded "
+                          disabled
+                          value={segmentDetails
+                            .map((item) => item.dose)
+                            .reduce((acc, current) => {
+                              // Check if the current element is a number
+    
+                              return Number(acc) + Number(current);
+                            }, 0).toFixed(2)}
+                        
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                           type="number"
+                           className="w-full px-2 py-1 border border-gray-300 rounded "
+                          disabled
+                          value= {segmentDetails
+                            .map((item) => item.share)
+                            .reduce((acc, current) => {
+                              // Check if the current element is a number
+    
+                              return Number(acc) + Number(current);
+                            }, 0)}
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled
+                          value={segmentDetails
+                            .map((item) => item.cost)
+                            .reduce((acc, current) => {
+                              // Check if the current element is a number
+    
+                              return Number(acc) + Number(current);
+                            }, 0)}
+                         
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
+                          disabled={router.query.type === "View"}
+                          value={segmentDetails
+                            .map((item) => item.avCost)
+                            .reduce((acc, current) => {
+                              // Check if the current element is a number
+    
+                              return Number(acc) + Number(current);
+                            }, 0)}
+                         
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                       -
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        -
+                      </td>
+                     
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          className="w-full px-2 py-1 border border-gray-300 rounded "
+                          value={segmentDetails
+                            .map((item) => item.totalDay)
+                            .reduce((acc, current) => {
+                              // Check if the current element is a number
+    
+                              return Number(acc) + Number(current);
+                            }, 0)}
+                          disabled
+                          
+                        />
+                      </td>
+
+                      <td className="border border-gray-400 px-4 py-2">-</td>
+                      <td className="border border-gray-400 px-4 py-2">-</td>
+                    </tr>
+
+
+
+
+
                   <tr className="bg-gray-900 text-white">
                     <td className="border border-gray-400 px-4 py-2">Total</td>
                     <td className="border border-gray-400 px-4 py-2">-</td>
@@ -1417,7 +1536,7 @@ const AdditionalInfo = (props) => {
                           // Check if the current element is a number
 
                           return Number(acc) + Number(current);
-                        }, 0)}
+                        }, 0).toFixed(2)}
                     </td>
                     <td className="border border-gray-400 px-4 py-2">
                       {segmentDetails

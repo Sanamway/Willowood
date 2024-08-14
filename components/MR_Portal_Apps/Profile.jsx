@@ -18,52 +18,60 @@ import axios from "axios";
 
 const Profile = () => {
   const router = useRouter();
-  const { mrhome, profile } = router.query;
-
-  const [profDet, setProfDet] = useState(null);
+  const [profData, setProfileData] = useState(null);
 
   const headers = {
    "Content-Type": "application/json",
    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
  };
-  const profilee = {
-    id: 1,
-    name: "Palak Sharma",
-    address: "Delhi",
-    contact_mobile: "6398067642",
-    email: "palak@gmail.com",
-    role: "regional manager",
-    t_name: "mzn",
-    dev_manager: "xyz",
-    zdev_manager: "PENDING",
-    reporting_manager: "abc",
-    reporting_office: "delhi",
-    start_date: "01-02-2000",
-    end_date: "015-02-2000",
-    status: "true"
-  };
-
   
+  const [localStorageItems, setLocalStorageItems] = useState({
+    uId:"",
+    cId:"",
+    bgId:"",
+    buId:"",
+    rId:"",
+    zId:"",
+    tId:"",
+    empCode:""
+  });
 
-//Handling Side Effect of API
+  useEffect(() => {
+    setLocalStorageItems({
+      uId: JSON.parse(window.localStorage.getItem("uid")),
+      cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
+      bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+      buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+      rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+      zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+      tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,  
+      empCode: window.localStorage.getItem("emp_code"),    
+    });
+  }, []);
+    
+
+  //Handling Side Effect of API
   const getDataEmp = async () => {
-   const empcode = "MR00000007";
    try {
-     const res = await axios.get(`${url}/api/get_employee?empcode=${empcode}&c_id=1`, {
-       headers: headers
+     const res = await axios.get(`${url}/api/get_employee`, {
+       headers: headers,
+        params: {
+                empcode: localStorageItems.empCode,
+                c_id: localStorageItems.cId,        
+            }
      });
      const respdata = await res.data.data;
-     setProfDet(respdata);
-     console.log("Refef", respdata);
+     setProfileData(respdata);
    } catch (error) {
      console.log("Error", error);
    }
  };
 
  useEffect(() => {
-     getDataEmp();
- }, [profile]);
-
+  if(localStorageItems.empCode &&localStorageItems.cId)   getDataEmp();
+   return
+ }, [localStorageItems.empCode ,localStorageItems.cId ]);
+ 
   return (
     <div className="px-0">
       <div className="flex justify-between py-5 px-3">
@@ -82,7 +90,7 @@ const Profile = () => {
           </div>
           <div className="flex flex-col gap-2 font-bold flex-grow pr-20">
             <label>Employee Code:  </label>
-            <p className="border-b-2 text-slate-400 font-normal">{profDet?.empcode}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{profData?.empcode}</p>
           </div>
         </div>
         <div className="flex gap-8 pt-4 pl-2">
@@ -91,7 +99,7 @@ const Profile = () => {
           </div>
           <div className="flex flex-col font-bold gap-2 flex-grow pr-20">
             <label>Employee Name: </label>
-            <p className="border-b-2 text-slate-400 font-normal">{profDet?.fname}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{profData?.fname}</p>
           </div>
         </div>
         <div className="flex gap-8 pt-4 pl-2">
@@ -100,7 +108,7 @@ const Profile = () => {
           </div>
           <div className="flex flex-col font-bold gap-2 flex-grow pr-20">
             <label>Address: </label>
-            <p className="border-b-2 text-slate-400 font-normal">{profDet?.caddress}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{profData?.caddress}</p>
           </div>
         </div>
         <div className="flex gap-8 pt-4 pl-2">
@@ -109,7 +117,7 @@ const Profile = () => {
           </div>
           <div className="flex flex-col font-bold gap-2 flex-grow pr-20">
             <label>Contact Mobile: </label>
-            <p className="border-b-2 text-slate-400 font-normal">{profDet?.phone_number}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{profData?.phone_number}</p>
           </div>
         </div>
         <div className="flex gap-8 pt-4 pl-2">
@@ -118,7 +126,7 @@ const Profile = () => {
           </div>
           <div className="flex flex-col font-bold gap-2 flex-grow pr-20">
             <label>E-Mail ID: </label>
-            <p className="border-b-2 text-slate-400 font-normal">{profDet?.pemail}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{profData?.pemail}</p>
           </div>
         </div>
         <div className="flex gap-8 pt-4 pl-2">
@@ -127,7 +135,7 @@ const Profile = () => {
           </div>
           <div className="flex flex-col font-bold gap-2 flex-grow pr-20">
             <label>Role: </label>
-            <p className="border-b-2 text-slate-400 font-normal">{profDet?.role}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{profData?.design}</p>
           </div>
         </div>
         <div className="flex gap-8 pt-4 pl-2">
@@ -136,7 +144,7 @@ const Profile = () => {
           </div>
           <div className="flex flex-col font-bold gap-2 flex-grow pr-20">
             <label>Territory Name: </label>
-            <p className="border-b-2 text-slate-400 font-normal">{profDet?.t_id_desig}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{profData?.territory_name}</p>
           </div>
         </div>
         <div className="flex gap-8 pt-4 pl-2">
@@ -145,7 +153,7 @@ const Profile = () => {
           </div>
           <div className="flex flex-col font-bold gap-2 flex-grow pr-20">
             <label>Development Manager: </label>
-            <p className="border-b-2 text-slate-400 font-normal">{profDet?.dev_manager}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{profData?.functional_mgr}</p>
           </div>
         </div>
         <div className="flex gap-8 pt-4 pl-2">
@@ -154,7 +162,7 @@ const Profile = () => {
           </div>
           <div className="flex flex-col font-bold gap-2 flex-grow pr-20">
             <label>Zone Development Manager: </label>
-            <p className="border-b-2 text-slate-400 font-normal">{profDet?.zdev_manager}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{profData?.zdm_name}</p>
           </div>
         </div>
         <div className="flex gap-8 pt-4 pl-2">
@@ -163,7 +171,7 @@ const Profile = () => {
           </div>
           <div className="flex flex-col font-bold gap-2 flex-grow pr-20">
             <label>Reporting Manager: </label>
-            <p className="border-b-2 text-slate-400 font-normal">{profDet?.rp_manager}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{profData?.rp_manager}</p>
           </div>
         </div>
         <div className="flex gap-8 pt-4 pl-2">
@@ -172,7 +180,7 @@ const Profile = () => {
           </div>
           <div className="flex flex-col font-bold gap-2 flex-grow pr-20">
             <label>Reporting Office: </label>
-            <p className="border-b-2 text-slate-400 font-normal">{profDet?.reporting_hq}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{profData?.reporting_hq}</p>
           </div>
         </div>
         <div className="flex gap-8 pt-4 pl-2">
@@ -181,7 +189,7 @@ const Profile = () => {
           </div>
           <div className="flex flex-col font-bold gap-2 flex-grow pr-20">
             <label>Agreement Start Date: </label>
-            <p className="border-b-2 text-slate-400 font-normal">{moment(profDet?.agg_startdate).format("DD/MM/Y")}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{moment(profData?.agg_startdate).format("DD/MM/Y")}</p>
           </div>
         </div>
         <div className="flex gap-8 pt-4 pl-2">
@@ -190,16 +198,16 @@ const Profile = () => {
           </div>
           <div className="flex flex-col font-bold gap-2 flex-grow pr-20">
             <label>Agreement End Date: </label>
-            <p className="border-b-2 text-slate-400 font-normal">{moment(profDet?.agg_enddate).format("DD/MM/Y")}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{moment(profData?.agg_enddate).format("DD/MM/Y")}</p>
           </div>
         </div>
         <div className="flex gap-8 pt-4 pl-2">
           <div className="pt-4 pl-4">
             <SiStatuspal className="text-blue-400" />
           </div>
-          <div className="flex flex-col font-bold gap-2 flex-grow pr-20">
+          <div className="flex flex-col font-bold gap-2 flex-grow pr-20 mb-10">
             <label>Status: </label>
-            <p className="border-b-2 text-slate-400 font-normal">{profDet?.status}</p>
+            <p className="border-b-2 text-slate-400 font-normal">{profData?.emp_status}</p>
           </div>
         </div>
       </div>
