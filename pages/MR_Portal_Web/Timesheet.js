@@ -755,7 +755,7 @@ const Timesheet = () => {
         id: item.attendance_id,
       });
     }}
-    
+    disabled={item.verified === "Yes"}
 
   >
     Verify
@@ -799,6 +799,7 @@ const Timesheet = () => {
         id: item.attendance_id,
       });
     }}
+    disabled={item.verified === "Yes"}
     
 
   >
@@ -885,10 +886,8 @@ case 6: return <div>
 </button>
 </div>
 
-
-
-
 case 9: return  <button
+disabled={item.verified === "Yes"}
 onClick={() => {
   setShowVerifyModal(true);
   setModalData({

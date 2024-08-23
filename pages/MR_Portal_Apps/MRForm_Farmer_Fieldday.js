@@ -279,6 +279,7 @@ const AdditionalInfo = (props) => {
             farmerId: "",
             farmerName: "",
             farmerFatherName: "",
+            farmerNumber:"",
             village: "",
             farmerType: "",
             plotSize: "",
@@ -289,6 +290,7 @@ const AdditionalInfo = (props) => {
             nextVisitDate: "",
             status: "Open",
           });
+          setFarmerMobileNumber("")
           setProductDemoTableData([]);
           setFollowTableData([]);
         });
@@ -515,10 +517,10 @@ const AdditionalInfo = (props) => {
 
   const uploadImage = async () => {
     function getFileExtension(filename) {
-      if (typeof filename.name !== "string") {
-        console.error("Invalid input. Expected a string.");
-        return toast.error("Input a valid Image");
-      }
+      // if (typeof filename.name !== "string") {
+      //   console.error("Invalid input. Expected a string.");
+      //   return toast.error("Input a valid Image");
+      // }
 
       const parts = filename.name.split(".");
       if (parts.length > 1) {
@@ -696,18 +698,18 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      <div className="flex flex-col my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
+      <div className="flex flex-row my-2 mb-2 lg:flex-col ">
+        <div className="w-1/2 px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Purpose of Demo
+            <small className="text-red-600">*</small> Demo Type
           </label>
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
-            disabled={formActive}
+            
             value={formData.purposeDemo}
             onChange={(e) =>
               setFormData({ ...formData, purposeDemo: e.target.value })
@@ -720,22 +722,34 @@ const AdditionalInfo = (props) => {
               Select
             </option>
             <option
-              value="New One"
+              value="Product Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-              New One
+              Product Demo
             </option>
             <option
-              value="Odd One"
+              value="Tulsi Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-              Odd One
+            Tulsi Demo
             </option>
             <option
-              value="Old One"
+              value="Pin Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-              Old One
+             Pin Demo
+            </option>
+            <option
+              value="Tray Demo"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+             Tray Demo
+            </option>
+            <option
+              value="Leaf Demo"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+            Leaf Demo
             </option>
           </select>
         </div>
@@ -749,7 +763,7 @@ const AdditionalInfo = (props) => {
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
-            disabled={formActive}
+            
             value={formData.dealer}
             onChange={(e) =>
               setFormData({
@@ -776,7 +790,7 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      <div className="flex flex-col my-2 mb-2 ">
+      <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2 flex flex-row"
@@ -793,25 +807,20 @@ const AdditionalInfo = (props) => {
               placeholder="Farmer Mobile No"
               value={farmerMobileNumber}
               onChange={(e) => {
-                handleChangeFarmerNumber(e.target.value);
-              }}
-            />
+                handleChangeFarmerNumber(e.target.value)
+              }}   />
+           
           </div>
         </div>
-
-        <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer ID
-          </label>
+        <div className="w-full px-2 mt-2 md:w-1/2 lg:w-1/2 flex justify-end ">
+    
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full self-end px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="number"
             id="inputField"
             placeholder="Farmer ID"
             value={formData.farmerId}
+         
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -822,20 +831,15 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      <div className="flex flex-col my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Name
-          </label>
+      <div className="flex flex-row my-2 mb-2 md:flex-col lg:flex-col ">
+        <div className="w-full px-2 mt-2 ">   
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Farmer Name"
             value={formData.farmerName}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -845,18 +849,14 @@ const AdditionalInfo = (props) => {
           />
         </div>
         <div className="w-full px-2  mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Father Name
-          </label>
+          
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Farmer Father Name"
             value={formData.farmerFatherName}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -865,42 +865,17 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2  mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Village
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="Village"
-            value={formData.village}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                village: e.target.value,
-              })
-            }
-          />
-        </div>
       </div>
       <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Type
-          </label>
+          
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Farmer Type"
             value={formData.farmerType}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -910,18 +885,14 @@ const AdditionalInfo = (props) => {
           />
         </div>
         <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Plot Size
-          </label>
+         
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Plot Size"
             value={formData.plotSize}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -930,86 +901,137 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
+        <div className="w-full px-2  mt-2">
+         
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Village"
+            value={formData.village}
+            disabled
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                village: e.target.value,
+              })
+            }
+          />
+        </div>
       </div>
-      <h1 className="flex justify-start font-bold m-4">Product Demo</h1>
-      <div className="overflow-x-auto my-6 sm:overflow-hidden w-full  lg:w-full">
+    
+      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
+      <h1 className="flex justify-center font-bold mx-4">Product Demo</h1>
+      <hr className="bg-blue-400 border-1 w-full my-2 " />
+     
+
+      
+      <div className="overflow-x-auto my-6 sm:over<flow-hidden w-full  lg:w-full">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
             <tr className="border-2">
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Crop
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-                Field Stage
+                Stage
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
-              >
-                Acre
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Segment
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Product Brand
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-                Water
+               Dose/Acre
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-                Dose/Acre (kg/lt)
+               Plot Size
+              </th>
+             
+              <th
+                scope="col"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+                Water
+              </th>
+              
+              <th
+                scope="col"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+                Delete
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200 my-2 ">
-            {productDemoTableData?.map((item, index) => (
-              <tr className="border-2" key={item.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+
+          <tbody className="bg-white divide-y divide-gray-200  ">
+            {productDemoTableData?.map((item) => (
+              <tr className="border-2 " key={item.id}>
+                <td className="px-6   whitespace-nowrap text-sm font-medium text-gray-900">
                   {item.crop}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.stage}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.dose_acre_tank}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.segment}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.product_brand}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.water_val}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.dose_acre_tank}
                 </td>
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
+                  {item.acre_plot}
+                </td>
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
+                  {item.water_val}
+                </td>
+                
+               
+              
+               
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
+                 <button
+                  className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap"
+                  onClick={() => deleteProductDemoTable(item.f_demo_crop_id)}
+                >
+                  {
+                    <AiOutlineDelete className="hover:text-red-500 self-center"></AiOutlineDelete>
+                  }
+                </button>
+                </td>
+               
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <h1 className="flex justify-start font-bold m-4">Follow Up</h1>
+      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
+      <h1 className="flex justify-center font-bold mx-4">Follow Up</h1>
+      <hr className="bg-blue-400 border-1 w-full my-2 " />
+
+     
       <div className="overflow-x-auto my-6 sm:overflow-hidden w-full  lg:w-full">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
@@ -1059,7 +1081,10 @@ const AdditionalInfo = (props) => {
                   {index + 1}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.demo_followup_date}
+                  {
+                  moment(item.demo_followup_date   ).format("DD-MM-YYYY")
+                  
+                  }
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {item.farmer_observation}
@@ -1155,13 +1180,14 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      <div className="flex my-2 mb-2 lg:flex-row flex-col">
+      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
+      <div className="flex  flex-row ">
         <div className="w-full px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Potential Farmer
+            <small className="text-red-600">*</small> Potential
           </label>
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -1181,7 +1207,6 @@ const AdditionalInfo = (props) => {
             >
               Option
             </option>
-
             <option
               value="Yes"
               className="focus:outline-none focus:border-b bg-white"
@@ -1196,9 +1221,6 @@ const AdditionalInfo = (props) => {
             </option>
           </select>
         </div>
-      </div>
-
-      <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -1206,6 +1228,7 @@ const AdditionalInfo = (props) => {
           >
             <small className="text-red-600">*</small> Next Visit Date
           </label>
+
           <DatePicker
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             dateFormat="dd-MM-yyyy"
@@ -1218,6 +1241,7 @@ const AdditionalInfo = (props) => {
                 nextVisitDate: moment(date).format("LL"),
               })
             }
+            minDate={new Date()}
             peekNextMonth
             showMonthDropdown
             showYearDropdown

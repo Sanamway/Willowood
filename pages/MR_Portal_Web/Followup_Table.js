@@ -150,12 +150,12 @@ const DemoTable = () => {
     setCurrentUser(window.localStorage.getItem("user_name"));
   }, []);
 
-  const handleCloseModal = () => {
+   const handleCloseModal = () => {
     setModalData({
-      id: "",
-      type: "",
+      ...modalData,
+     
       isTrue: "Yes",
-      date: new Date(),
+      date: "",
       user: "",
     });
     setShowVerifyModal(false);
@@ -706,6 +706,177 @@ const DemoTable = () => {
     filterState.empCode,
   ]);
   const { name } = router.query;
+  const getAllActionButton = (item) =>{
+    let role = localStorageItems.roleId
+ switch(role){
+  case 1: return <div>
+    
+ 
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Verify",
+        id:  item.f_demo_followup_id,
+      });
+    }}
+    disabled={item.verified === "Yes"}
+
+  >
+    Verify
+  </button>
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Approve",
+        id:  item.f_demo_followup_id,
+      });
+    }}
+    disabled={item.approved === "Yes"}
+    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+    
+  >
+    Approve
+  </button>
+  <button
+    className="b text-black hover:text-red-500 ml-2"
+    onClick={() => {
+      setShowDeleteModal(true);
+      setModalData({
+        ...modalData,
+
+        id:  item.f_demo_followup_id,
+      });
+    }}
+  >
+    Delete
+  </button>
+  </div>
+  case 8: return  <div>
+    
+  
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Verify",
+        id:  item.f_demo_followup_id,
+      });
+    }}
+    disabled={item.verified === "Yes"}
+    
+
+  >
+    Verify
+  </button>
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Approve",
+        id:  item.f_demo_followup_id,
+      });
+    }}
+    disabled={item.approved === "Yes"}
+    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+    
+  >
+    Approve
+  </button>
+  <button
+    className="b text-black hover:text-red-500 ml-2"
+    onClick={() => {
+      setShowDeleteModal(true);
+      setModalData({
+        ...modalData,
+
+        id:  item.f_demo_followup_id,
+      });
+    }}
+  >
+    Delete
+  </button>
+  </div>
+
+case 4: return <div>
+  
+  
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id:  item.f_demo_followup_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+case 5: return <div>
+  
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id:  item.f_demo_followup_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+case 6: return <div>
+  
+  
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id:  item.f_demo_followup_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+case 9: return <div>
+<button
+disabled={item.verified === "Yes"}
+onClick={() => {
+  setShowVerifyModal(true);
+  setModalData({
+    ...modalData,
+    type: "Verify",
+    id:  item.f_demo_followup_id,
+  });
+}}
+>
+Verify
+</button>
+</div> 
+
+}
+    }
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -1000,9 +1171,7 @@ const DemoTable = () => {
                   Next Follow Up Date
                 </th>
 
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  User
-                </th>
+              
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Deleted
                 </th>
@@ -1029,49 +1198,9 @@ const DemoTable = () => {
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
               {data.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
-                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                    <button
-                      onClick={() => {
-                        setShowVerifyModal(true);
-                        setModalData({
-                          ...modalData,
-                          type: "Verify",
-                          id: item.f_demo_followup_id,
-                        });
-                      }}
-                      disabled={item.verified === "Yes"}
-                      className="b text-black hover:text-blue-500  "
-                    >
-                      Verify
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowVerifyModal(true);
-                        setModalData({
-                          ...modalData,
-                          type: "Approve",
-                          id: item.f_demo_followup_id,
-                        });
-                      }}
-                      disabled={item.approved === "Yes"}
-                      className="b text-black hover:text-yellow-400 ml-2"
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="b text-black hover:text-red-500 ml-2"
-                      onClick={() => {
-                        setShowDeleteModal(true);
-                        setModalData({
-                          ...modalData,
-
-                          id: item.f_demo_followup_id,
-                        });
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
+               <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
+                    {getAllActionButton(item)}             
+                </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.f_demo_follow_no}
                   </td>
@@ -1131,9 +1260,7 @@ const DemoTable = () => {
                     {moment(item.next_followup_date).format("MM/DD/YYYY")}
                   </td>
 
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.user_name}
-                  </td>
+                 
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.isDeleted ? "Yes" : "No"}
@@ -1160,7 +1287,28 @@ const DemoTable = () => {
               ))}
             </tbody>
           </table>
-          <div className="w-full  mx-4  h-12 scrollbar-hidden">
+
+
+          <div className="w-full flex flex-row justify-between mx-4   pr-8">
+          <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
+            Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
+            <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
+            <small className="font-bold px-2 self-center text-black">{pageCount}</small> results
+          </div>
+          <ReactPaginate
+            previousLabel={"Previous"}
+            nextLabel={"Next"}
+            breakLabel={"..."}
+            pageCount={pageCount}
+            onPageChange={handlePageChange}
+            containerClassName={"pagination"}
+            activeClassName={"active"}
+            className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
+          />
+        </div>
+
+
+          {/* <div className="w-full  mx-4  h-12 scrollbar-hidden">
             <ReactPaginate
               previousLabel={"< Previous"}
               nextLabel={"Next >"}
@@ -1171,11 +1319,11 @@ const DemoTable = () => {
               activeClassName={"active"}
               className="flex flex-row gap-2 mt-4  "
             />
-          </div>
+          </div> */}
         </div>
       </div>
 
-      <Transition appear show={showImageModal} as={Fragment}>
+       <Transition appear show={showImageModal} as={Fragment}>
         <Dialog
           as="div"
           className="z-10"
@@ -1303,11 +1451,11 @@ const DemoTable = () => {
                         id="verificationDate"
                         name="verificationDate"
                         type="text"
-                        value={new Date().toLocaleDateString()} // Assuming you want the current date
+                        value={moment().format("DD-MM-YYYY")} // Assuming you want the current date
                         disabled
                         className="block w-full px-4 py-2 h-10 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-blue-300"
                       />
-                    </div>
+                     </div>
 
                     <div className="flex flex-row gap-4 mt-2 items-center">
                       <label
@@ -1330,7 +1478,7 @@ const DemoTable = () => {
                     </div>
 
                     {modalData.type === "Verify" ? (
-                      <div className="mt-6 flex justify-between">
+                     <div className="mt-6 flex justify-center gap-1">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
@@ -1346,7 +1494,7 @@ const DemoTable = () => {
                         </button>
                       </div>
                     ) : (
-                      <div className="mt-6 flex justify-between">
+                      <div className="mt-6 flex justify-center gap-1">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"

@@ -152,10 +152,10 @@ const FarmerMeet = () => {
 
   const handleCloseModal = () => {
     setModalData({
-      id: "",
-      type: "",
+      ...modalData,
+     
       isTrue: "Yes",
-      date: new Date(),
+      date: "",
       user: "",
     });
     setShowVerifyModal(false);
@@ -706,6 +706,177 @@ const FarmerMeet = () => {
     filterState.empCode,
   ]);
   const { name } = router.query;
+  const getAllActionButton = (item) =>{
+    let role = localStorageItems.roleId
+ switch(role){
+  case 1: return <div>
+    
+ 
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Verify",
+        id:  item.f_meet_id,
+      });
+    }}
+    disabled={item.verified === "Yes"}
+
+  >
+    Verify
+  </button>
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Approve",
+        id:  item.f_meet_id,
+      });
+    }}
+    disabled={item.approved === "Yes"}
+    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+    
+  >
+    Approve
+  </button>
+  <button
+    className="b text-black hover:text-red-500 ml-2"
+    onClick={() => {
+      setShowDeleteModal(true);
+      setModalData({
+        ...modalData,
+
+        id:  item.f_meet_id,
+      });
+    }}
+  >
+    Delete
+  </button>
+  </div>
+  case 8: return  <div>
+    
+  
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Verify",
+        id:  item.f_meet_id,
+      });
+    }}
+    disabled={item.verified === "Yes"}
+    
+
+  >
+    Verify
+  </button>
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Approve",
+        id:  item.f_meet_id,
+      });
+    }}
+    disabled={item.approved === "Yes"}
+    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+    
+  >
+    Approve
+  </button>
+  <button
+    className="b text-black hover:text-red-500 ml-2"
+    onClick={() => {
+      setShowDeleteModal(true);
+      setModalData({
+        ...modalData,
+
+        id:  item.f_meet_id,
+      });
+    }}
+  >
+    Delete
+  </button>
+  </div>
+
+case 4: return <div>
+  
+  
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id:  item.f_meet_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+case 5: return <div>
+  
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id:  item.f_meet_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+case 6: return <div>
+  
+  
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id:  item.f_meet_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+case 9: return <div>
+<button
+disabled={item.verified === "Yes"}
+onClick={() => {
+  setShowVerifyModal(true);
+  setModalData({
+    ...modalData,
+    type: "Verify",
+    id:  item.f_meet_id,
+  });
+}}
+>
+Verify
+</button>
+</div> 
+
+}
+    }
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -1026,7 +1197,7 @@ const FarmerMeet = () => {
                   Next Visit Date
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Deleted
+                Farmer Meet
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Status
@@ -1046,12 +1217,18 @@ const FarmerMeet = () => {
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Company
                 </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Deleted
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
               {data.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
-                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                   <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
+                    {getAllActionButton(item)}             
+                </td>
+                  {/* <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                     <button
                       onClick={() => {
                         setImgUrl(item.farmer_meet_image_Url);
@@ -1102,7 +1279,7 @@ const FarmerMeet = () => {
                     >
                       Delete
                     </button>
-                  </td>
+                  </td> */}
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.f_meet_no}
                   </td>
@@ -1190,9 +1367,20 @@ const FarmerMeet = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {moment(item.next_visit_date).format("MM/DD/YYYY")}
                   </td>
+                 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.isDeleted ? "Yes" : "No"}
+                  <button
+                      onClick={() => {
+                        setImgUrl(item.farmer_meet_image_Url);
+                        setIsOpen(true);
+                      }}
+                      className="b text-black hover:text-blue-500 mr-2  "
+                    >
+                      View Image
+                    </button>
                   </td>
+                  
+                  
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.status}
                   </td>
@@ -1210,6 +1398,9 @@ const FarmerMeet = () => {
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.cmpny_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.isDeleted ? "Yes" : "No"}
                   </td>
                 </tr>
               ))}
@@ -1358,7 +1549,7 @@ const FarmerMeet = () => {
                         id="verificationDate"
                         name="verificationDate"
                         type="text"
-                        value={new Date().toLocaleDateString()} // Assuming you want the current date
+                        value={moment().format("DD-MM-YYYY")} // Assuming you want the current date
                         disabled
                         className="block w-full px-4 py-2 h-10 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-blue-300"
                       />
@@ -1385,7 +1576,7 @@ const FarmerMeet = () => {
                     </div>
 
                     {modalData.type === "Verify" ? (
-                      <div className="mt-6 flex justify-between">
+                     <div className="mt-6 flex justify-center gap-1">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
@@ -1401,7 +1592,7 @@ const FarmerMeet = () => {
                         </button>
                       </div>
                     ) : (
-                      <div className="mt-6 flex justify-between">
+                      <div className="mt-6 flex justify-center gap-1">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"

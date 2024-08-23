@@ -56,7 +56,7 @@ const DemoTable = () => {
       });
       const apires = await respond.data.data.MR_demo;
       const count = await respond.data.data.Total_count;
-
+     
       setPageCount(Math.ceil(count / 50));
       setData(apires);
     } catch (error) {
@@ -95,7 +95,17 @@ const DemoTable = () => {
 
       toast.success(apires);
 
-      getFarmerDemo(currentPage.selected + 1);
+      getFarmerDemo(
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
       handleCloseModal();
     } catch (error) {
       handleCloseModal();
@@ -120,7 +130,17 @@ const DemoTable = () => {
 
       handleCloseModal();
       toast.success(apires);
-      getFarmerDemo(currentPage.selected + 1);
+      getFarmerDemo(
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
     } catch (error) {
       handleCloseModal();
     }
@@ -142,7 +162,17 @@ const DemoTable = () => {
       const apires = await respond.data.message;
       toast.success(apires);
 
-      getFarmerDemo(currentPage.selected + 1);
+      getFarmerDemo(
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
       handleCloseModal();
     } catch (error) {
       toast.error(error.message);
@@ -156,8 +186,8 @@ const DemoTable = () => {
 
   const handleCloseModal = () => {
     setModalData({
-      id: "",
-      type: "",
+     ...modalData,
+     
       isTrue: "Yes",
       date: "",
       user: "",
@@ -714,6 +744,182 @@ const DemoTable = () => {
     filterState.empCode,
   ]);
   const { name } = router.query;
+
+
+
+
+
+  const getAllActionButton = (item) =>{
+    let role = localStorageItems.roleId
+ switch(role){
+  case 1: return <div>
+    
+ 
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Verify",
+        id:  item.f_demo_id,
+      });
+    }}
+    disabled={item.verified === "Yes"}
+
+  >
+    Verify
+  </button>
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Approve",
+        id:  item.f_demo_id,
+      });
+    }}
+    disabled={item.approved === "Yes"}
+    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+    
+  >
+    Approve
+  </button>
+  <button
+    className="b text-black hover:text-red-500 ml-2"
+    onClick={() => {
+      setShowDeleteModal(true);
+      setModalData({
+        ...modalData,
+
+        id:  item.f_demo_id,
+      });
+    }}
+  >
+    Delete
+  </button>
+  </div>
+  case 8: return  <div>
+    
+  
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Verify",
+        id:  item.f_demo_id,
+      });
+    }}
+    disabled={item.verified === "Yes"}
+    
+
+  >
+    Verify
+  </button>
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Approve",
+        id:  item.f_demo_id,
+      });
+    }}
+    disabled={item.approved === "Yes"}
+    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+    
+  >
+    Approve
+  </button>
+  <button
+    className="b text-black hover:text-red-500 ml-2"
+    onClick={() => {
+      setShowDeleteModal(true);
+      setModalData({
+        ...modalData,
+
+        id:  item.f_demo_id,
+      });
+    }}
+  >
+    Delete
+  </button>
+  </div>
+
+case 4: return <div>
+  
+  
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id:  item.f_demo_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+case 5: return <div>
+  
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id:  item.f_demo_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+case 6: return <div>
+  
+  
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id:  item.f_demo_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+case 9: return <div>
+<button
+disabled={item.verified === "Yes"}
+onClick={() => {
+  setShowVerifyModal(true);
+  setModalData({
+    ...modalData,
+    type: "Verify",
+    id:  item.f_demo_id,
+  });
+}}
+>
+Verify
+</button>
+</div> 
+
+}
+    }
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -947,10 +1153,6 @@ const DemoTable = () => {
                 <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Action
                 </th>
-                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  F Demo Code
-                </th>
-
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Date
                 </th>
@@ -961,16 +1163,13 @@ const DemoTable = () => {
                   Emp Name
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Purpose
+                  Demo Type
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Dealer
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Farmer Mobile No
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Farmer Id
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Farmer Name
@@ -985,30 +1184,26 @@ const DemoTable = () => {
                   Plot Size
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Village
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Demo Photo
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Field Photo
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Potential
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Next Visit Date
-                </th>
-
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  User
+                  Village
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Deleted
+                  Next Visit Follow up
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Field Demo
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Status
                 </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                 Field Demo No.
+                </th>
+                
+              
+                
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Territory
                 </th>
@@ -1024,68 +1219,22 @@ const DemoTable = () => {
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Company
                 </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Deleted
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
               {data.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
-                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                    <button
-                      onClick={() => {
-                        setImgUrl(item.field_photo_url);
-                        setIsOpen(true);
-                      }}
-                      className="b text-black hover:text-blue-500 mr-2  "
-                    >
-                      View Field Image
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowVerifyModal(true);
-                        setModalData({
-                          ...modalData,
-                          type: "Verify",
-                          id: item.f_demo_id,
-                        });
-                      }}
-                      disabled={item.verified === "Yes"}
-                      className="b text-black hover:text-blue-500  "
-                    >
-                      Verify
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowVerifyModal(true);
-                        setModalData({
-                          ...modalData,
-                          type: "Approve",
-                          id: item.f_demo_id,
-                        });
-                      }}
-                      disabled={item.approved === "Yes"}
-                      className="b text-black hover:text-yellow-400 ml-2"
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="b text-black hover:text-red-500 ml-2"
-                      onClick={() => {
-                        setShowDeleteModal(true);
-                        setModalData({
-                          ...modalData,
+                 
 
-                          id: item.f_demo_id,
-                        });
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.f_demo_code}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.demo_date).format("MM/DD/YYYY")}
+<td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
+                    {getAllActionButton(item)}             
+                </td>
+                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {moment(item.demo_date).format("DD-MM-YYYY")}
+                    
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.emp_code}
@@ -1094,16 +1243,13 @@ const DemoTable = () => {
                     {item.emp_name}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.purpose_of_demo}
+                    Demo type
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.dealer_des}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.farmer_mob_no}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.farmer_id}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.farmer_name}
@@ -1118,38 +1264,38 @@ const DemoTable = () => {
                     {item.plot_size}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.village}
-                  </td>
-                  <td
-                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
-                    onClick={() => setShowImageModal(true)}
-                  >
-                    View
-                  </td>
-                  <td
-                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
-                    onClick={() => setShowImageModal(true)}
-                  >
-                    View
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.potential_farmer}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.next_visit_date).format("MM/DD/YYYY")}
+                    {item.village}
                   </td>
-
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.user_name}
+                    {moment(item.next_visit_date).format("DD-MM-YYYY")}
                   </td>
-
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.isDeleted ? "Yes" : "No"}
+                  
+                  <td
+                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
+                    onClick={() => {
+                      setImgUrl(item.field_photo_url);
+                      setIsOpen(true);
+                    }}
+                 
+                  >
+                    View Field Image
                   </td>
-
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.status}
                   </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.f_demo_code}
+                  </td>
+                 
+                  
+                 
+                  
+               
+
+                
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.territory_name}
                   </td>
@@ -1164,6 +1310,9 @@ const DemoTable = () => {
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.cmpny_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.isDeleted ? "Yes" : "No"}
                   </td>
                 </tr>
               ))}
@@ -1181,24 +1330,6 @@ const DemoTable = () => {
               className="flex flex-row gap-2 mt-4  "
             />
           </div>
-
-          {/* <div className="w-full flex flex-row justify-between mx-4   pr-8">
-          <div className="flex flex-row justify-center items-center">
-            Showing <small className="font-bold px-2 self-center">1</small> to{" "}
-            <small className="font-bold px-2 self-center">1</small> of{" "}
-            <small className="font-bold px-2 self-center">2</small> results
-          </div>
-          <ReactPaginate
-            previousLabel={"Previous"}
-            nextLabel={"Next"}
-            breakLabel={"..."}
-            pageCount={pageCount}
-            onPageChange={handlePageChange}
-            containerClassName={"pagination"}
-            activeClassName={"active"}
-            className="flex flex-row gap-2 px-2 py-1 mt-4 border-2 border-black rounded-md"
-          />
-        </div> */}
         </div>
       </div>
 
@@ -1330,7 +1461,7 @@ const DemoTable = () => {
                         id="verificationDate"
                         name="verificationDate"
                         type="text"
-                        value={new Date().toLocaleDateString()} // Assuming you want the current date
+                        value={moment().format("DD-MM-YYYY")} // Assuming you want the current date
                         disabled
                         className="block w-full px-4 py-2 h-10 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-blue-300"
                       />
@@ -1357,7 +1488,7 @@ const DemoTable = () => {
                     </div>
 
                     {modalData.type === "Verify" ? (
-                      <div className="mt-6 flex justify-between">
+                      <div className="mt-6 flex justify-center gap-1">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
@@ -1373,7 +1504,7 @@ const DemoTable = () => {
                         </button>
                       </div>
                     ) : (
-                      <div className="mt-6 flex justify-between">
+                      <div className="mt-6 flex justify-center gap-1">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"

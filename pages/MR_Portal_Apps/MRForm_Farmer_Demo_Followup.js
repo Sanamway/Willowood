@@ -177,6 +177,9 @@ const AdditionalInfo = (props) => {
         village: apires.village,
         farmerType: apires.farmer_type,
         plotSize: apires.plot_size,
+        potentialFarmer:apires.potential_farmer,
+        nextVisitDate:apires.next_visit_date,
+        status:apires.status,
       });
     } catch (error) {
       console.log(error);
@@ -227,7 +230,7 @@ const AdditionalInfo = (props) => {
         location_lat: 12,
         location_long: 21,
         potential_farmer: formData.potentialFarmer,
-        follow_up_remarks: formData.remarks,
+         follow_up_remarks: formData.remarks,
         hand_testimonials_url: "Test",
         video_testimonials_url: "Test",
         next_followup_date: formData.nextVisitDate,
@@ -381,10 +384,10 @@ const AdditionalInfo = (props) => {
         </span>
       </div>
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div className="flex my-2 flex-row gap-1 ">
-        <div className="fle gap-4 w-full px-2">
+      <div className="flex  flex-row gap-1  lg:flex-col lg:hidden">
+        <div className="fle gap-2 w-full px-2">
           <label
-            className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
+            className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap lg:w-1/4"
             htmlFor="inputField"
           >
             <small className="text-red-600">*</small> F Follow Code
@@ -393,7 +396,7 @@ const AdditionalInfo = (props) => {
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
-            placeholder="F Demo Code"
+            placeholder="F Follow Code"
             disabled
             value={fDemoCode}
             // disabled={!formActive}
@@ -419,17 +422,19 @@ const AdditionalInfo = (props) => {
           />
         </div>
       </div>
-      <div className="flex flex-col my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
+
+      <div className="flex flex-row my-2 mb-2 lg:flex-col ">
+        <div className="w-1/2 px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Purpose of Demo
+            <small className="text-red-600">*</small> Demo Type
           </label>
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
+            disabled
             value={formData.purposeDemo}
             onChange={(e) =>
               setFormData({ ...formData, purposeDemo: e.target.value })
@@ -442,22 +447,34 @@ const AdditionalInfo = (props) => {
               Select
             </option>
             <option
-              value="New One"
+              value="Product Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-              New One
+              Product Demo
             </option>
             <option
-              value="Odd One"
+              value="Tulsi Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-              Odd One
+            Tulsi Demo
             </option>
             <option
-              value="Old One"
+              value="Pin Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-              Old One
+             Pin Demo
+            </option>
+            <option
+              value="Tray Demo"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+             Tray Demo
+            </option>
+            <option
+              value="Leaf Demo"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+            Leaf Demo
             </option>
           </select>
         </div>
@@ -471,7 +488,7 @@ const AdditionalInfo = (props) => {
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
-            disabled={formActive}
+            disabled
             value={formData.dealer}
             onChange={(e) =>
               setFormData({
@@ -497,10 +514,12 @@ const AdditionalInfo = (props) => {
           </select>
         </div>
       </div>
-      <div className="flex flex-col my-2 mb-2 ">
+      
+      
+      <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2 flex flex-row md:flex-col lg:flex-col "
+            className="block text-gray-700 text-sm font-bold mb-2 flex flex-row"
             htmlFor="inputField"
           >
             <small className="text-red-600">*</small> Farmer Mobile No
@@ -513,32 +532,25 @@ const AdditionalInfo = (props) => {
               id="inputField"
               placeholder="Farmer Mobile No"
               value={formData.farmerMobile}
-              disabled
               onChange={(e) => {
-                const input = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+                const input = e.target.value.replace(/\D/g, "");
+                console.log("lop", input.length);
                 if (input.length <= 10) {
-                  setFormData({
-                    ...formData,
-                    farmerMobile: input,
-                  });
+                  getFarmerDetails(input);
                 }
               }}
             />
             <AiOutlineFileAdd
               size={42}
               className="  self-center size-120 text-black-400 text-blue-400"
+              onClick={() => setAddFarmerModal(true)}
             />
           </div>
         </div>
-        <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer ID
-          </label>
+        <div className="w-full px-2 mt-2 md:w-1/2 lg:w-1/2 flex justify-end ">
+    
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full self-end px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="number"
             id="inputField"
             placeholder="Farmer ID"
@@ -553,14 +565,9 @@ const AdditionalInfo = (props) => {
           />
         </div>
       </div>
-      <div className="flex flex-col my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Name
-          </label>
+
+      <div className="flex flex-row my-2 mb-2 md:flex-col lg:flex-col ">
+        <div className="w-full px-2 mt-2 ">   
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -577,12 +584,7 @@ const AdditionalInfo = (props) => {
           />
         </div>
         <div className="w-full px-2  mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Father Name
-          </label>
+          
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -598,37 +600,10 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2  mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Village
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="Village"
-            value={formData.village}
-            disabled
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                village: e.target.value,
-              })
-            }
-          />
-        </div>
       </div>
       <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Type
-          </label>
+          
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -645,12 +620,7 @@ const AdditionalInfo = (props) => {
           />
         </div>
         <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Plot Size
-          </label>
+         
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -666,92 +636,126 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
+        <div className="w-full px-2  mt-2">
+         
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Village"
+            value={formData.village}
+            disabled
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                village: e.target.value,
+              })
+            }
+          />
+        </div>
       </div>
-      <h1 className="flex justify-start font-bold m-4">Product Demo</h1>
+     
+     
+      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
+      <h1 className="flex justify-center font-bold mx-4">Product Demo</h1>
+      <hr className="bg-blue-400 border-1 w-full my-2 " />
+     
       <div className="overflow-x-auto my-6 sm:over<flow-hidden w-full  lg:w-full">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
             <tr className="border-2">
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Crop
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-                Field Stage
+                Stage
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
-              >
-                Acre
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Segment
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Product Brand
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+               Dose/Acre
+              </th>
+              <th
+                scope="col"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+               Plot Size
+              </th>
+             
+              <th
+                scope="col"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Water
               </th>
+              
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
-              >
-                Dose/Acre (kg/lt)
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Delete
               </th>
             </tr>
           </thead>
 
-          <tbody className="bg-white divide-y divide-gray-200 my-2 ">
-            {productDemoTableData?.map((item, index) => (
-              <tr className="border-2" key={item.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+          <tbody className="bg-white divide-y divide-gray-200  ">
+            {productDemoTableData?.map((item) => (
+              <tr className="border-2 " key={item.id}>
+                <td className="px-6   whitespace-nowrap text-sm font-medium text-gray-900">
                   {item.crop}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.stage}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.dose_acre_tank}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.segment}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.product_brand}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.water_val}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.dose_acre_tank}
                 </td>
-                <button className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
+                  {item.acre_plot}
+                </td>
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
+                  {item.water_val}
+                </td>
+                
+               
+              
+               
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
+                 <button
+                  className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap"
+                  onClick={() => deleteProductDemoTable(item.f_demo_crop_id)}
+                >
                   {
-                    <AiOutlineDelete className="hover:text-red-500"></AiOutlineDelete>
+                    <AiOutlineDelete className="hover:text-red-500 self-center"></AiOutlineDelete>
                   }
                 </button>
+                </td>
+               
               </tr>
             ))}
           </tbody>
@@ -905,78 +909,83 @@ const AdditionalInfo = (props) => {
           }
         ></textarea>
       </div>
+
       <div className="wrap ">
-        <h1 className="flex justify-start font-bold m-4">
-          <FaUpload className="mr-2 text-blue-400 self-center" /> Video
-          Testimonials
-        </h1>
-        <div className=" w-full px-2 profpic relative group">
-          <Image
-            src={""}
-            className="rounded bg-gray-200"
-            width={300}
-            height={200}
-          />
-          <input
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            id="fileInput"
-          />
-          <label
-            htmlFor="fileInput "
-            className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
-              userImage == "" ? "opacity-50" : "opacity-0"
-            } ${
-              userImage !== ""
-                ? "group-hover:opacity-100"
-                : "group-hover:opacity-0"
-            }  transition-opacity duration-300`}
-          >
-            <span className="text-red-500 whitespace-nowrap">*</span>
-          </label>
+          <h1 className="flex justify-center font-bold ">
+            <FaUpload className="mr-2 text-blue-400 self-center" />  Video
+            Testimonials
+          </h1>
+          <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
+            <div className="wrap ">
+              <div className=" w-full px-2 pt-2 profpic relative group bo">
+                <img
+                  
+                  className=" rounded  bg-gray-200 w-60 h-52"
+                  alt="img"
+                 
+                />
+
+                
+                  <label
+                    htmlFor="fileInput "
+                    className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+                  
+                  >
+                    <FaUpload
+                      size={50}
+                      className="mr-2  self-center size-120 text-black-400"
+                    />
+
+                  </label>
+              
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="wrap ">
-        <h1 className="flex justify-start font-bold m-4">
-          <FaUpload className="mr-2 text-blue-400 self-center" /> Handwritten
-          Testimonials
-        </h1>
-        <div className=" w-full px-2 profpic relative group">
-          <Image
-            src={""}
-            className=" rounded bg-gray-200"
-            width={300}
-            height={200}
-          />
-          <input
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            id="fileInput"
-          />
-          <label
-            htmlFor="fileInput "
-            className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
-              userImage == "" ? "opacity-50" : "opacity-0"
-            } ${
-              userImage !== ""
-                ? "group-hover:opacity-100"
-                : "group-hover:opacity-0"
-            }  transition-opacity duration-300`}
-          >
-            <span className="text-red-500 whitespace-nowrap text-xs">*</span>{" "}
-            Image
-          </label>
+        <div className="wrap ">
+          <h1 className="flex justify-center font-bold ">
+            <FaUpload className="mr-2 text-blue-400 self-center" />  Handwritten
+            Testimonials
+          </h1>
+          <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
+            <div className="wrap ">
+              <div className=" w-full px-2 pt-2 profpic relative group bo">
+                <img
+                  
+                  className=" rounded  bg-gray-200 w-60 h-52"
+                  alt="img"
+                 
+                />
+
+                
+                  <label
+                    htmlFor="fileInput "
+                    className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+                  
+                  >
+                    <FaUpload
+                      size={50}
+                      className="mr-2  self-center size-120 text-black-400"
+                    />
+
+                  </label>
+              
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="flex my-2 mb-2 lg:flex-row flex-col">
+
+     
+  
+      
+      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
+      <div className="flex  flex-row ">
         <div className="w-full px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Potential Farmer
+            <small className="text-red-600">*</small> Potential
           </label>
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
@@ -996,7 +1005,6 @@ const AdditionalInfo = (props) => {
             >
               Option
             </option>
-
             <option
               value="Yes"
               className="focus:outline-none focus:border-b bg-white"
@@ -1011,15 +1019,14 @@ const AdditionalInfo = (props) => {
             </option>
           </select>
         </div>
-      </div>
-      <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Next Follow Up Date
+            <small className="text-red-600">*</small> Next Visit Date
           </label>
+
           <DatePicker
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             dateFormat="dd-MM-yyyy"
@@ -1032,6 +1039,7 @@ const AdditionalInfo = (props) => {
                 nextVisitDate: moment(date).format("LL"),
               })
             }
+            minDate={new Date()}
             peekNextMonth
             showMonthDropdown
             showYearDropdown
@@ -1072,17 +1080,13 @@ const AdditionalInfo = (props) => {
             <option
               value="Close"
               className="focus:outline-none focus:border-b bg-white"
-              onClick={() =>
-                router.push({
-                  pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
-                })
-              }
             >
               Close
             </option>
           </select>
         </div>
       </div>
+
       <div className="flex w-full justify-center gap-4 mt-4 ">
         <button
           onClick={() => {

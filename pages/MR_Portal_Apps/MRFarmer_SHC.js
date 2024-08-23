@@ -421,7 +421,7 @@ const AdditionalInfo = (props) => {
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> F .SHC No
+            <small className="text-red-600">*</small> F. SHC No
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -452,26 +452,26 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      <div className="flex flex-col my-2 ">
+      <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2 flex flex-row"
+        <label
+            className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"
           >
             <small className="text-red-600">*</small> Farmer Mobile No
           </label>
+        
           <div className="flex flex-row ">
             {" "}
             <input
               className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-              type="text"
+              type="number"
               id="inputField"
               placeholder="Farmer Mobile No"
               value={farmerMobileNumber}
               onChange={(e) => {
-                handleChangeFarmerNumber(e.target.value);
-              }}
-            />
+                handleChangeFarmerNumber(e.target.value)
+              }}   />
             <AiOutlineFileAdd
               size={42}
               className="  self-center size-120 text-black-400 text-blue-400"
@@ -479,38 +479,34 @@ const AdditionalInfo = (props) => {
             />
           </div>
         </div>
-
-        <div className="w-full px-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer ID
-          </label>
+        <div className="w-full px-2 mt-2 md:w-1/2 lg:w-1/2 flex justify-end ">
+    
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
+            className="w-full self-end px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="number"
             id="inputField"
             placeholder="Farmer ID"
             value={formData.farmerId}
-            disabled={true}
+         
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                farmerId: e.target.value,
+              })
+            }
           />
         </div>
       </div>
-      <div className="flex flex-col my-2 mb-2 ">
-        <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Name
-          </label>
+
+      <div className="flex flex-row my-2 mb-2 md:flex-col lg:flex-col ">
+        <div className="w-full px-2 mt-2 ">   
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Farmer Name"
             value={formData.farmerName}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -520,18 +516,14 @@ const AdditionalInfo = (props) => {
           />
         </div>
         <div className="w-full px-2  mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Father Name
-          </label>
+          
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Farmer Father Name"
             value={formData.farmerFatherName}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -540,42 +532,17 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2  mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Village
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="Village"
-            value={formData.village}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                village: e.target.value,
-              })
-            }
-          />
-        </div>
       </div>
       <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Farmer Type
-          </label>
+          
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Farmer Type"
             value={formData.farmerType}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -585,22 +552,35 @@ const AdditionalInfo = (props) => {
           />
         </div>
         <div className="w-full px-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Plot Size
-          </label>
+         
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Plot Size"
             value={formData.plotSize}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
                 plotSize: e.target.value,
+              })
+            }
+          />
+        </div>
+        <div className="w-full px-2  mt-2">
+         
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Village"
+            value={formData.village}
+            disabled
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                village: e.target.value,
               })
             }
           />
@@ -618,7 +598,7 @@ const AdditionalInfo = (props) => {
 
           <input
             type="number"
-            className=" border-gray-300 border rounded-md w-28"
+            className=" border-gray-300 border rounded-md w-28 text-right"
             value={formData.nitrogen}
             onChange={(e) =>
               setFormData({
@@ -642,7 +622,7 @@ const AdditionalInfo = (props) => {
 
           <input
             type="number"
-            className=" border-gray-300 border rounded-md w-28"
+            className=" border-gray-300 border rounded-md w-28 text-right"
             value={formData.phosphorus}
             onChange={(e) =>
               setFormData({
@@ -666,7 +646,7 @@ const AdditionalInfo = (props) => {
 
           <input
             type="number"
-            className=" border-gray-300 border rounded-md w-28"
+            className=" border-gray-300 border rounded-md w-28 text-right"
             value={formData.potassium}
             onChange={(e) =>
               setFormData({
@@ -688,7 +668,7 @@ const AdditionalInfo = (props) => {
 
           <input
             type="number"
-            className=" border-gray-300 border rounded-md w-28"
+            className=" border-gray-300 border rounded-md w-28 text-right"
             value={formData.ph}
             onChange={(e) =>
               setFormData({
@@ -710,7 +690,7 @@ const AdditionalInfo = (props) => {
 
           <input
             type="number"
-            className=" border-gray-300 border rounded-md w-28"
+            className=" border-gray-300 border rounded-md w-28 text-right"
             value={formData.ec}
             onChange={(e) =>
               setFormData({
@@ -734,7 +714,7 @@ const AdditionalInfo = (props) => {
 
           <input
             type="number"
-            className=" border-gray-300 border rounded-md w-28"
+            className=" border-gray-300 border rounded-md w-28 text-right"
             value={formData.organicCarbon}
             onChange={(e) =>
               setFormData({
@@ -758,7 +738,7 @@ const AdditionalInfo = (props) => {
 
           <input
             type="number"
-            className=" border-gray-300 border rounded-md w-28"
+            className=" border-gray-300 border rounded-md w-28 text-right"
             value={formData.sulphur}
             onChange={(e) =>
               setFormData({
@@ -782,7 +762,7 @@ const AdditionalInfo = (props) => {
 
           <input
             type="number"
-            className=" border-gray-300 border rounded-md w-28"
+            className=" border-gray-300 border rounded-md w-28 text-right"
             value={formData.zinc}
             onChange={(e) =>
               setFormData({
@@ -805,7 +785,7 @@ const AdditionalInfo = (props) => {
 
           <input
             type="number"
-            className=" border-gray-300 border rounded-md w-28"
+            className=" border-gray-300 border rounded-md w-28 text-right"
             value={formData.boron}
             onChange={(e) =>
               setFormData({
@@ -829,7 +809,7 @@ const AdditionalInfo = (props) => {
 
           <input
             type="number"
-            className=" border-gray-300 border rounded-md w-28"
+            className=" border-gray-300 border rounded-md w-28 text-right"
             value={formData.iron}
             onChange={(e) =>
               setFormData({
@@ -853,7 +833,7 @@ const AdditionalInfo = (props) => {
 
           <input
             type="number"
-            className=" border-gray-300 border rounded-md w-28"
+            className=" border-gray-300 border rounded-md w-28 text-right"
             value={formData.magnese}
             onChange={(e) =>
               setFormData({
@@ -878,7 +858,7 @@ const AdditionalInfo = (props) => {
 
           <input
             type="number"
-            className=" border-gray-300 border rounded-md w-28"
+            className=" border-gray-300 border rounded-md w-28 text-right"
             value={formData.copper}
             onChange={(e) =>
               setFormData({

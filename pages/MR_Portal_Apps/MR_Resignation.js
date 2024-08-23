@@ -116,8 +116,8 @@ const [showSubmitButton , setShowSubmitButton] = useState(true)
         `${url}/api/get_employee`,
         { headers: headers,
           params: {
-            empcode:   "MR00006",
-            c_id:       localStorageItems.cId,
+            empcode:  localStorageItems.empCode,
+            c_id:    localStorageItems.cId,
            
         }
          }

@@ -777,26 +777,26 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      <div className="flex flex-col my-2 mb-2 ">
-        <div className="w-full px-2 pt-2 mt-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2 flex flex-row"
+      <div className="flex flex-row my-2 mb-2 ">
+        <div className="w-full px-2 mt-2">
+        <label
+            className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"
           >
             <small className="text-red-600">*</small> Farmer Mobile No
           </label>
+        
           <div className="flex flex-row ">
             {" "}
             <input
               className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-              type="text"
+              type="number"
               id="inputField"
               placeholder="Farmer Mobile No"
               value={farmerMobileNumber}
               onChange={(e) => {
-                handleChangeFarmerNumber(e.target.value);
-              }}
-            />
+                handleChangeFarmerNumber(e.target.value)
+              }}   />
             <AiOutlineFileAdd
               size={42}
               className="  self-center size-120 text-black-400 text-blue-400"
@@ -804,27 +804,34 @@ const AdditionalInfo = (props) => {
             />
           </div>
         </div>
-
-        <div className="w-full px-2 pt-2">
+        <div className="w-full px-2 mt-2 md:w-1/2 lg:w-1/2 flex justify-end ">
+    
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
+            className="w-full self-end px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="number"
             id="inputField"
             placeholder="Farmer ID"
             value={formData.farmerId}
-            disabled={true}
+         
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                farmerId: e.target.value,
+              })
+            }
           />
         </div>
       </div>
 
-      <div className="flex flex-col my-2 mb-2 ">
-        <div className="w-full px-2 ">
+      <div className="flex flex-row my-2 mb-2 md:flex-col lg:flex-col ">
+        <div className="w-full px-2 mt-2 ">   
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Farmer Name"
             value={formData.farmerName}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -833,13 +840,15 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2 pt-2  ">
+        <div className="w-full px-2  mt-2">
+          
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Farmer Father Name"
             value={formData.farmerFatherName}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -848,30 +857,17 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2 pt-2  ">
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="Village"
-            value={formData.village}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                village: e.target.value,
-              })
-            }
-          />
-        </div>
       </div>
       <div className="flex flex-row my-2 mb-2 ">
-        <div className="w-full px-2  ">
+        <div className="w-full px-2 mt-2">
+          
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Farmer Type"
             value={formData.farmerType}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -880,17 +876,36 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2  ">
+        <div className="w-full px-2 mt-2">
+         
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Plot Size"
             value={formData.plotSize}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
                 plotSize: e.target.value,
+              })
+            }
+          />
+        </div>
+        <div className="w-full px-2  mt-2">
+         
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Village"
+            value={formData.village}
+            disabled
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                village: e.target.value,
               })
             }
           />
@@ -1378,17 +1393,19 @@ const AdditionalInfo = (props) => {
           }
         ></textarea>
       </div>
-      <div className="flex my-2 mb-2 lg:flex-row flex-col">
-        <div className="w-full px-2 pt-2 mt-2">
+      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
+      <div className="flex  flex-row ">
+        <div className="w-full px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Potential Farmer
+            <small className="text-red-600">*</small> Potential
           </label>
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
+           
             value={formData.potentialFarmer}
             onChange={(e) =>
               setFormData({
@@ -1403,7 +1420,6 @@ const AdditionalInfo = (props) => {
             >
               Option
             </option>
-
             <option
               value="Yes"
               className="focus:outline-none focus:border-b bg-white"
@@ -1418,16 +1434,14 @@ const AdditionalInfo = (props) => {
             </option>
           </select>
         </div>
-      </div>
-
-      <div className="flex flex-row my-2 mb-2 ">
-        <div className="w-full px-2 pt-2 mt-2">
+        <div className="w-full px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
             <small className="text-red-600">*</small> Next Visit Date
           </label>
+
           <DatePicker
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             dateFormat="dd-MM-yyyy"
@@ -1440,13 +1454,14 @@ const AdditionalInfo = (props) => {
                 nextVisitDate: moment(date).format("LL"),
               })
             }
+            minDate={new Date()}
             peekNextMonth
             showMonthDropdown
             showYearDropdown
             dropdownMode="select"
           />
         </div>
-        <div className="w-full px-2 pt-2 mt-2">
+        <div className="w-full px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -1456,6 +1471,7 @@ const AdditionalInfo = (props) => {
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
+           
             value={formData.status}
             onChange={(e) =>
               setFormData({
@@ -1470,15 +1486,21 @@ const AdditionalInfo = (props) => {
             >
               Option
             </option>
-            {nextYears.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
+            <option
+              value="Open"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Open
+            </option>
+            <option
+              value="Close"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Close
+            </option>
           </select>
         </div>
       </div>
-
       <div className="flex w-full justify-center gap-4 mt-4 ">
         <button
           onClick={() => {

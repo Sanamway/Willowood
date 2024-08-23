@@ -232,8 +232,9 @@ const AdditionalInfo = (props) => {
             top: 0,
             behavior: "smooth", // Smooth scrolling animation
           });
-          uploadImage();
           generateEmpCode();
+          uploadImage();
+          
 
           setSubmitFormLoading(false);
           setFormData({
