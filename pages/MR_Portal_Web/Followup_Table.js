@@ -96,7 +96,17 @@ const DemoTable = () => {
 
       toast.success(apires);
 
-      getFarmerDemo(currentPage.selected + 1);
+       getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
     } catch (error) {}
   };
 
@@ -118,7 +128,17 @@ const DemoTable = () => {
 
       handleCloseModal();
       toast.success(apires);
-      getFarmerDemo(currentPage.selected + 1);
+       getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
     } catch (error) {}
   };
 
@@ -138,7 +158,17 @@ const DemoTable = () => {
       const apires = await respond.data.message;
       toast.success(apires);
 
-      getFarmerDemo(currentPage.selected + 1);
+       getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
       handleCloseModal();
     } catch (error) {
       toast.error(error.message);
@@ -160,7 +190,17 @@ const DemoTable = () => {
     });
     setShowVerifyModal(false);
     setShowDeleteModal(false);
-    getFarmerDemo(currentPage.selected + 1);
+     getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
   };
   const [localStorageItems, setLocalStorageItems] = useState({
     cId: null,

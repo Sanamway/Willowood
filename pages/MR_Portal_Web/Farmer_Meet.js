@@ -96,7 +96,17 @@ const FarmerMeet = () => {
 
       toast.success(apires);
 
-      getFarmerDemo(currentPage.selected + 1);
+       getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
     } catch (error) {}
   };
 
@@ -118,7 +128,17 @@ const FarmerMeet = () => {
 
       handleCloseModal();
       toast.success(apires);
-      getFarmerDemo(currentPage.selected + 1);
+       getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
     } catch (error) {}
   };
 
@@ -138,7 +158,17 @@ const FarmerMeet = () => {
       const apires = await respond.data.message;
       toast.success(apires);
 
-      getFarmerDemo(currentPage.selected + 1);
+       getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
       handleCloseModal();
     } catch (error) {
       toast.error(error.message);
