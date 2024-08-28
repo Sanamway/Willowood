@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { BsCheck2Circle } from "react-icons/bs";
 import { AiOutlineDelete } from "react-icons/ai";
-import { FaUpload } from "react-icons/fa";
+import { FaUpload, FaVideo } from "react-icons/fa";
 import { FaCameraRetro } from "react-icons/fa";
 import { AiOutlineFileAdd } from "react-icons/ai";
 import { url } from "@/constants/url";
@@ -29,7 +29,7 @@ const AdditionalInfo = (props) => {
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
-  const [fDemoCode, setFDemoCode] = useState("");
+  const [fFollowCode, setFfollowCode] = useState("");
   const generateEmpCode = async () => {
     try {
       const respond = await axios.get(`${url}/api/get_demo_code`, {
@@ -40,7 +40,7 @@ const AdditionalInfo = (props) => {
         },
       });
       const apires = await respond.data.data;
-      setFDemoCode(apires);
+      setFfollowCode(apires);
     } catch (error) {
       console.log(error);
     }
@@ -236,7 +236,7 @@ const AdditionalInfo = (props) => {
         next_followup_date: formData.nextVisitDate,
         status: formData.status,
         f_demo_code: router.query.f_demo_code,
-        f_demo_follow_no: fDemoCode,
+        f_demo_follow_no: fFollowCode,
         t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
         emp_code: window.localStorage.getItem("emp_code"),
         c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
@@ -253,6 +253,8 @@ const AdditionalInfo = (props) => {
             top: 0,
             behavior: "smooth", // Smooth scrolling animation
           });
+         
+          uploadImage();
           setFormData({
             purposeDemo: "",
             dealer: "",
@@ -289,6 +291,125 @@ const AdditionalInfo = (props) => {
       [name]: value,
     });
   };
+
+
+
+
+  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedNewImage, setSelectedNewImage] = useState("");
+  const fileInputRef = useRef(null);
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+
+    setSelectedNewImage(file);
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setSelectedImage(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+  
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
+
+  const [selectedVideo, setSelectedVideo] = useState("");
+  const [selectedNewVideo, setSelectedNewVideo] = useState("");
+  const videoInputRef = useRef(null);
+
+  const handleVideoUpload = (event) => {
+    const file = event.target.files[0];
+    setSelectedNewVideo(file);
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setSelectedVideo(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerVideoFileInput = () => {
+    videoInputRef.current.click();
+  };
+
+  const uploadImage = async () => {
+    function getFileExtension(filename) {
+      if (typeof filename.name !== "string") {
+        console.error("Invalid input. Expected a string.");
+        return toast.error("Input a valid Image");
+      }
+      console.log("lop", filename)
+      const parts = filename.name.split(".");
+      if (parts.length > 1) {
+        return parts[parts.length - 1];
+      } else {
+        return "jpg";
+      }
+    }
+    const getVideoExtension = (filename) => {
+      if (typeof filename.name !== "string") {
+        console.error("Invalid input. Expected a string.");
+        return "Invalid";
+      }
+      console.log("top", filename)
+      const parts = filename.name.split(".");
+      if (parts.length > 1) {
+        return parts[parts.length - 1];
+      } else {
+        return "mp4";
+      }
+    };
+
+    try {
+      const renamedBlob = new Blob([selectedNewImage], {
+        type: selectedNewImage?.type,
+      });
+      const videoBlob = new Blob([selectedNewVideo], {
+        type: selectedNewVideo?.type,
+      });
+      console.log("uio", renamedBlob,videoBlob)
+
+      const fd = new FormData();
+      
+      fd.append(
+        "myFile",
+        renamedBlob,
+        `${fFollowCode}.${getFileExtension(selectedNewImage)}`
+      );
+      fd.append(
+        "vidFile",
+        videoBlob,
+        `${fFollowCode}.${getVideoExtension(selectedNewVideo)}`
+      );
+      console.log("ziop", getFileExtension(selectedNewImage) , videoBlob ,renamedBlob, fd)
+      const response = await axios
+        .post(`${url}/api/upload_file`, fd, {
+          params: {
+            file_path: "mr_followup",
+            hand_testimonials_url: `${fFollowCode}.${getFileExtension(
+              selectedNewImage
+            )}`,
+            video_testimonials_url: `${fFollowCode}.${getVideoExtension(
+              selectedNewVideo
+            )}`,
+            f_demo_follow_no: fFollowCode,
+          },
+        })
+        .then(() => {
+          setSelectedImage(""), setSelectedNewImage("");
+        });
+    } catch (error) {}
+  };
+
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -398,7 +519,7 @@ const AdditionalInfo = (props) => {
             id="inputField"
             placeholder="F Follow Code"
             disabled
-            value={fDemoCode}
+            value={fFollowCode}
             // disabled={!formActive}
           />
         </div>
@@ -911,68 +1032,71 @@ const AdditionalInfo = (props) => {
       </div>
 
       <div className="wrap ">
-          <h1 className="flex justify-center font-bold ">
+      <h1 className="flex justify-center font-bold ">
             <FaUpload className="mr-2 text-blue-400 self-center" />  Video
             Testimonials
           </h1>
           <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
-            <div className="wrap ">
-              <div className=" w-full px-2 pt-2 profpic relative group bo">
-                <img
-                  
-                  className=" rounded  bg-gray-200 w-60 h-52"
-                  alt="img"
-                 
+        <div className="wrap ">
+          <div className=" w-full px-2 pt-2 profpic relative group bo">
+        
+            <video
+              controls
+                className=" rounded  bg-gray-200 w-72 h-60"
+              src={selectedVideo}
+              onClick={() => triggerVideoFileInput(videoInputRef)}
+            />
+        
+
+        {!selectedVideo && (  <label
+                htmlFor="fileInput "
+                className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+                onClick={ triggerVideoFileInput}
+              >
+                <FaVideo
+                  size={50}
+                  className="mr-2  self-center size-120 text-black-400"
                 />
-
-                
-                  <label
-                    htmlFor="fileInput "
-                    className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
-                  
-                  >
-                    <FaUpload
-                      size={50}
-                      className="mr-2  self-center size-120 text-black-400"
-                    />
-
-                  </label>
-              
-              </div>
-            </div>
-          </div>
+              </label>)}
+           
+         
+        </div>
+        </div>
+      </div>
         </div>
         <div className="wrap ">
           <h1 className="flex justify-center font-bold ">
             <FaUpload className="mr-2 text-blue-400 self-center" />  Handwritten
             Testimonials
           </h1>
+         
+
           <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
-            <div className="wrap ">
-              <div className=" w-full px-2 pt-2 profpic relative group bo">
-                <img
-                  
-                  className=" rounded  bg-gray-200 w-60 h-52"
-                  alt="img"
-                 
+        <div className="wrap ">
+          <div className=" w-full px-2 pt-2 profpic relative group bo">
+            <img
+              src={selectedImage}
+              className=" rounded  bg-gray-200 w-72 h-60"
+              alt="img"
+              onClick={triggerFileInput}
+            />
+
+            {!selectedImage && (
+              <label
+                htmlFor="fileInput "
+                className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+                onClick={triggerFileInput}
+              >
+                <FaCameraRetro
+                  size={50}
+                  className="mr-2  self-center size-120 text-black-400"
                 />
-
-                
-                  <label
-                    htmlFor="fileInput "
-                    className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
-                  
-                  >
-                    <FaUpload
-                      size={50}
-                      className="mr-2  self-center size-120 text-black-400"
-                    />
-
-                  </label>
-              
-              </div>
-            </div>
+              </label>
+            )}
           </div>
+        </div>
+      </div>
+
         </div>
 
      
@@ -1087,10 +1211,11 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      <div className="flex w-full justify-center gap-4 mt-4 ">
+       <div className="flex w-full justify-center gap-4 mt-4 ">
         <button
           onClick={() => {
-            handleAddDemo();
+            //  handleAddDemo();
+             uploadImage()
           }}
           className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
         >
@@ -1119,6 +1244,22 @@ const AdditionalInfo = (props) => {
           }
         />
       </div>
+      <input
+        type="file"
+        accept="video/*"
+        id="videoFileInput"
+        className="hidden"
+        onChange={handleVideoUpload}
+        ref={videoInputRef}
+      />
+      <input
+        type="file"
+        accept="image/*"
+        id="fileInput"
+        className="hidden"
+        onChange={handleImageUpload}
+        ref={fileInputRef}
+      />
     </form>
   );
 };

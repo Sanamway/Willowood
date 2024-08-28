@@ -101,7 +101,7 @@ const AdditionalInfo = (props) => {
       const data = {
         f_shc_no: fShcCode,
         shc_date: moment().format("YYYY-MM-DD[T00:00:00.000Z]"),
-        farmer_mob_no: Number(farmerMobileNumber),
+        farmer_mob_no: farmerMobileNumber ? Number(farmerMobileNumber) : "",
         farmer_id: Number(formData.farmerId),
         farmer_name: formData.farmerName,
         farmer_father_name: String(formData.farmerFatherName),

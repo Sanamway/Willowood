@@ -1096,7 +1096,7 @@ const AdditionalInfo = (props) => {
                   {item.follow_up_remarks}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {item.next_followup_date}
+                  {   moment(item.next_followup_date).format("DD-MM-YYYY") }
                 </td>
               </tr>
             ))}

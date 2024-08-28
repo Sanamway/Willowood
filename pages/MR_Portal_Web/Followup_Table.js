@@ -1329,7 +1329,7 @@ Verify
           </table>
 
 
-          <div className="w-full flex flex-row justify-between mx-4   pr-8">
+          <div className="w-full flex flex-row justify-between mx-4   pr-8 pb-10">
           <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
             Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
             <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}

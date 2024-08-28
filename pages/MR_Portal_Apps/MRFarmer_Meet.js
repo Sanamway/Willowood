@@ -159,8 +159,8 @@ const AdditionalInfo = (props) => {
         meeting_date: moment().format("YYYY-MM-DD[T00:00:00.000Z]"),
         purpose_of_meeting: formData.purposeMeet,
         meeting_type: formData.meetType,
-        farmer_mob_no: Number(farmerMobileNumber),
-        farmer_id: Number(formData.farmerId),
+        farmer_mob_no: farmerMobileNumber ? Number(farmerMobileNumber) :null,
+        farmer_id: formData.farmerId ?  Number(formData.farmerId) :null,
         farmer_name: formData.farmerName,
         farmer_father_name: String(formData.farmerFatherName),
         village: formData.village,
@@ -182,9 +182,9 @@ const AdditionalInfo = (props) => {
 
         remarks: formData.remarks,
 
-        next_visit_date: moment(formData.nextVisitDate).format(
+        next_visit_date: formData.nextVisitDate ? moment(formData.nextVisitDate).format(
           "YYYY-MM-DD[T00:00:00.000Z]"
-        ),
+        ) :"",
         status: formData.status,
         emp_code: window.localStorage.getItem("emp_code"),
         t_id: Number(localStorageItems.tId),
