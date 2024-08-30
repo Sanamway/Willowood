@@ -15,7 +15,7 @@ import toast, { Toaster } from "react-hot-toast";
 import Navbar from "@/components/MR_Portal_Apps/Navbar";
 import { FaArrowAltCircleUp } from "react-icons/fa";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { Popover, Switch } from "@headlessui/react";
+import { Popover} from "@headlessui/react";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { BsCalendar2Month } from "react-icons/bs";
 import { IoTodayOutline } from "react-icons/io5";
@@ -400,8 +400,6 @@ const AdditionalInfo = (props) => {
                 {tableData
                   .map((item) => item.shc)
                   .reduce((acc, current) => {
-                    // Check if the current element is a number
-
                     return Number(acc) + Number(current);
                   }, 0)}
               </td>
@@ -409,8 +407,6 @@ const AdditionalInfo = (props) => {
                 {tableData
                   .map((item) => item.att)
                   .reduce((acc, current) => {
-                    // Check if the current element is a number
-
                     return Number(acc) + Number(current);
                   }, 0)}
               </td>

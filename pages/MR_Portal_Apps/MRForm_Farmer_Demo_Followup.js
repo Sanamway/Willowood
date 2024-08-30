@@ -214,7 +214,6 @@ const AdditionalInfo = (props) => {
         demo_followup_date: moment().format("YYYY-MM-DD[T00:00:00.000Z]"),
         demo_followup_time: new Date(),
         dealer_id: Number(formData.dealer),
-
         d_id: Number(formData.dealer),
         farmer_mob_no: Number(formData.farmerMobile),
         farmer_id: Number(1212),
@@ -255,6 +254,7 @@ const AdditionalInfo = (props) => {
           });
          
           uploadImage();
+          uploadVideo();
           setFormData({
             purposeDemo: "",
             dealer: "",
@@ -341,20 +341,10 @@ const AdditionalInfo = (props) => {
     videoInputRef.current.click();
   };
 
-  const uploadImage = async () => {
-    function getFileExtension(filename) {
-      if (typeof filename.name !== "string") {
-        console.error("Invalid input. Expected a string.");
-        return toast.error("Input a valid Image");
-      }
-      console.log("lop", filename)
-      const parts = filename.name.split(".");
-      if (parts.length > 1) {
-        return parts[parts.length - 1];
-      } else {
-        return "jpg";
-      }
-    }
+
+
+  const uploadVideo = async () => {
+    
     const getVideoExtension = (filename) => {
       if (typeof filename.name !== "string") {
         console.error("Invalid input. Expected a string.");
@@ -370,13 +360,54 @@ const AdditionalInfo = (props) => {
     };
 
     try {
-      const renamedBlob = new Blob([selectedNewImage], {
-        type: selectedNewImage?.type,
-      });
+     
       const videoBlob = new Blob([selectedNewVideo], {
         type: selectedNewVideo?.type,
       });
-      console.log("uio", renamedBlob,videoBlob)
+      const fd = new FormData();
+      fd.append(
+        "VidFile",
+        videoBlob,
+        `${fFollowCode}.${getVideoExtension(selectedNewVideo)}`
+      );
+      const response = await axios
+        .post(`${url}/api/upload_video`, fd, {
+          params: {
+            file_path: "mr_followup",
+           
+            video_testimonials_url: `${fFollowCode}.${getVideoExtension(
+              selectedNewVideo
+            )}`,
+            f_demo_follow_no: fFollowCode,
+          },
+        })
+        .then(() => {
+          setSelectedVideo(""), setSelectedNewVideo("");
+        });
+    } catch (error) {}
+  };
+
+  const uploadImage = async () => {
+    function getFileExtension(filename) {
+      if (typeof filename.name !== "string") {
+        console.error("Invalid input. Expected a string.");
+        return toast.error("Input a valid Image");
+      }
+      console.log("lop", filename)
+      const parts = filename.name.split(".");
+      if (parts.length > 1) {
+        return parts[parts.length - 1];
+      } else {
+        return "jpg";
+      }
+    }
+   
+
+    try {
+      const renamedBlob = new Blob([selectedNewImage], {
+        type: selectedNewImage?.type,
+      });
+     
 
       const fd = new FormData();
       
@@ -385,12 +416,7 @@ const AdditionalInfo = (props) => {
         renamedBlob,
         `${fFollowCode}.${getFileExtension(selectedNewImage)}`
       );
-      fd.append(
-        "vidFile",
-        videoBlob,
-        `${fFollowCode}.${getVideoExtension(selectedNewVideo)}`
-      );
-      console.log("ziop", getFileExtension(selectedNewImage) , videoBlob ,renamedBlob, fd)
+    
       const response = await axios
         .post(`${url}/api/upload_file`, fd, {
           params: {
@@ -398,9 +424,7 @@ const AdditionalInfo = (props) => {
             hand_testimonials_url: `${fFollowCode}.${getFileExtension(
               selectedNewImage
             )}`,
-            video_testimonials_url: `${fFollowCode}.${getVideoExtension(
-              selectedNewVideo
-            )}`,
+          
             f_demo_follow_no: fFollowCode,
           },
         })
@@ -1057,9 +1081,7 @@ const AdditionalInfo = (props) => {
                   size={50}
                   className="mr-2  self-center size-120 text-black-400"
                 />
-              </label>)}
-           
-         
+              </label>)}           
         </div>
         </div>
       </div>
@@ -1069,8 +1091,6 @@ const AdditionalInfo = (props) => {
             <FaUpload className="mr-2 text-blue-400 self-center" />  Handwritten
             Testimonials
           </h1>
-         
-
           <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
         <div className="wrap ">
           <div className=" w-full px-2 pt-2 profpic relative group bo">
@@ -1080,7 +1100,6 @@ const AdditionalInfo = (props) => {
               alt="img"
               onClick={triggerFileInput}
             />
-
             {!selectedImage && (
               <label
                 htmlFor="fileInput "
@@ -1096,12 +1115,7 @@ const AdditionalInfo = (props) => {
           </div>
         </div>
       </div>
-
-        </div>
-
-     
-  
-      
+        </div>     
       <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
       <div className="flex  flex-row ">
         <div className="w-full px-2 mt-2">
@@ -1214,8 +1228,7 @@ const AdditionalInfo = (props) => {
        <div className="flex w-full justify-center gap-4 mt-4 ">
         <button
           onClick={() => {
-            //  handleAddDemo();
-             uploadImage()
+           handleAddDemo()
           }}
           className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
         >

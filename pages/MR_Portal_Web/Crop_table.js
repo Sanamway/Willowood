@@ -73,8 +73,49 @@ const Crop = () => {
   };
   const { name } = router.query;
   return (
+    // <Layout>
+    //   <div className=" overflow-auto w-full font-arial bg-white ">
+    //     <Toaster position="bottom-center" reverseOrder={false} />
+    //     <div className="flex flex-row justify-between  h-max  px-5">
+    //       <h2 className="font-arial font-normal text-3xl  py-2">   {name ? name : "Crop"}</h2>
+    //       <span className="flex items-center gap-2 cursor-pointer">
+           
+    //         <h2>
+    //           <CSVLink data={data} headers={csvHeaders}>
+    //              <TbFileDownload
+    //               className="text-green-600"
+    //               size={34}
+    //             ></TbFileDownload>
+    //           </CSVLink>
+    //         </h2>
+    //         <AiTwotoneHome
+    //             className="text-black"
+    //             size={34}
+    //             onClick={() => {
+    //               router.push({
+    //                 pathname: "/",
+    //               });
+    //             }}
+    //           ></AiTwotoneHome>
+    //         <button
+    //           onClick={() => {
+    //             router.push({
+    //               pathname: "/MR_Portal_Web/Crop_form",
+    //               query: { id: null, type: "Add" },
+    //             });
+    //           }}
+    //           className=" text-white py-1 px-2 rounded-md bg-blue-500 hover:bg-orange-500"
+    //         >
+    //           Create New
+    //         </button>
+    //       </span>
+    //     </div>
+
+    //     <div className="overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
+    //       <table className="min-w-full divide-y border- divide-gray-200 ">
+    //         <thead className="border-b w-max">
     <Layout>
-      <div className=" overflow-auto w-full font-arial bg-white ">
+      <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">   {name ? name : "Crop"}</h2>
@@ -111,9 +152,214 @@ const Crop = () => {
           </span>
         </div>
 
-        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto">
+        {/* <div className="flex flex-row gap-4  px-4 pr-8 pb-2">
+          <select
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.bgId}
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  bgId: e.target.value,
+                  buId: "All",
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  bgId: e.target.value,
+                });
+              }
+            }}
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              localStorageItems.roleId === 4 ||
+              localStorageItems.roleId === 3 ||
+              localStorageItems.roleId === 10
+            }
+          >
+            <option value={"All"} className="font-bold">
+              - All Business Segment -
+            </option>
+
+            {bgData.map((item, idx) => (
+              <option value={item.bg_id} key={idx}>
+                {item.business_segment}
+              </option>
+            ))}
+          </select>
+          <select
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.buId}
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  buId: e.target.value,
+
+                  zId: "All",
+                  rId: "All",
+                  tId: "All",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  buId: e.target.value,
+                });
+              }
+            }}
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              localStorageItems.roleId === 4 ||
+              localStorageItems.roleId === 3
+            }
+          >
+            <option value={"All"}>- All Business Unit -</option>
+
+            {buData.map((item, idx) => (
+              <option value={item.bu_id} key={idx}>
+                {item.business_unit_name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.zId}
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  zId: e.target.value,
+                  rId: "All",
+                  tId: "All",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  zId: e.target.value,
+                });
+              }
+            }}
+            disabled={
+              localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5 ||
+              localStorageItems.roleId === 4
+            }
+          >
+            <option value={"All"}>- All Zone -</option>
+
+            {allZoneData.map((item, idx) => (
+              <option value={item.z_id} key={idx}>
+                {item.zone_name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.rId}
+            disabled={
+              localStorageItems.roleId === 6 || localStorageItems.roleId === 5
+            }
+            onChange={(e) => {
+              if (e.target.value === "All") {
+                setFilterState({
+                  ...filterState,
+                  rId: e.target.value,
+                  tId: "All",
+                });
+              } else {
+                setFilterState({
+                  ...filterState,
+                  rId: e.target.value,
+                });
+              }
+            }}
+          >
+            <option value={"All"}>-All Region -</option>
+
+            {allRegionData.map((item, idx) => (
+              <option value={item.r_id} key={idx}>
+                {item.region_name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="border rounded px-2 py-1 w-1/2 h-8"
+            id="stateSelect"
+            value={filterState.tId}
+            disabled={localStorageItems.roleId === 6}
+            onChange={(e) =>
+              setFilterState({
+                ...filterState,
+                tId: e.target.value,
+              })
+            }
+          >
+            <option value="All">- All Territory -</option>
+
+            {allTerritoryData.map((item, idx) => (
+              <option value={item.t_id} key={idx}>
+                {item.territory_name}
+              </option>
+            ))}
+          </select>
+          <select
+            id="attendanceType"
+            className="border rounded px-2 py-1 w-full h-8"
+            value={filterState.empCode}
+            onChange={(e) =>
+              setFilterState({ ...filterState, empCode: e.target.value })
+            }
+          >
+            <option value={""}>MR Executive</option>
+            {allEmployee.map((item) => (
+              <option value={item.empcode}>
+                {item.fname} {item.mname} {item.lname} {item.empcode}
+              </option>
+            ))}
+          </select>
+
+          <div className="flex flex-row gap-2  items-center w-1/4">
+            <DatePicker
+              className="border p-1 rounded w-28 "
+              dateFormat="dd-MM-yyyy"
+              selected={filterState.startDate}
+              placeholderText="Enter Date"
+              scrollableYearDropdown
+              onChange={(date) =>
+                setFilterState({ ...filterState, startDate: date })
+              }
+              hand
+            />
+            <small>TO</small>
+            <DatePicker
+              className="border p-1 rounded w-28  "
+              dateFormat="dd-MM-yyyy"
+              selected={filterState.endDate}
+              placeholderText="Enter Date"
+              scrollableYearDropdown
+              onChange={(date) =>
+                setFilterState({ ...filterState, endDate: date })
+              }
+              hand
+            />
+          </div>
+        </div> */}
+
+        <div className="overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
           <table className="min-w-full divide-y border- divide-gray-200 ">
-            <thead className="border-b">
+            <thead className="border-b w-max">
                 <tr className="bg-gray-50 font-arial w-max">
                   <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Action
@@ -191,7 +437,7 @@ const Crop = () => {
                </tbody>
               
             </table>
-            <div className="w-full mx-4 h-40 mb-28">
+            {/* <div className="w-full mx-4 h-40 mb-28">
             <ReactPaginate
               previousLabel={"< Previous"}
               nextLabel={"Next >"}
@@ -202,9 +448,25 @@ const Crop = () => {
               activeClassName={"active"}
               className="flex flex-row gap-2 mt-4  "
             />
+          </div> */}
           </div>
-          </div>
-       
+          <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
+    <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
+      Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
+      <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
+      <small className="font-bold px-2 self-center text-black">{currentPage.selected+1}</small> results
+    </div>
+    <ReactPaginate
+      previousLabel={"Previous"}
+      nextLabel={"Next"}
+      breakLabel={"..."}
+      pageCount={pageCount}
+      onPageChange={handlePageChange}
+      containerClassName={"pagination"}
+      activeClassName={"active"}
+      className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
+    />
+  </div>
       </div>
       <ConfirmationModal
         isOpen={isOpen}
