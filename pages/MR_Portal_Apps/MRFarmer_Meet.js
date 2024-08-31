@@ -77,7 +77,7 @@ const AdditionalInfo = (props) => {
   const getCropInfo = async () => {
     if (new Date())
       try {
-        const respond = await axios.get(`${url}/api/get_crop_profile`, {
+        const respond = await axios.get(`${url}/api/get_crop`, {
           headers: headers,
         });
         const apires = await respond.data.data;
