@@ -94,7 +94,7 @@ const OTPVal = () => {
         toast.success(respdata?.message, {autoClose:500});
         setTimeout(() => {
           if(mode =="mobile"){
-            router.push('/mrhome')
+            router.push('/MR_Portal_Apps/MRHome')
           }else{
             router.push("/");
           }

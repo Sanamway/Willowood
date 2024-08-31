@@ -22,6 +22,7 @@ import { IoTodayOutline } from "react-icons/io5";
 import { GiFarmer } from "react-icons/gi";
 import { FaHandsHelping } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
+
 const AdditionalInfo = (props) => {
   const router = useRouter();
   const headers = {
@@ -208,80 +209,89 @@ const AdditionalInfo = (props) => {
   }, [productDemoState.crop]);
 
   const handleAddDemo = async () => {
-    try {
-      const data = {
-        f_demo_follow_no: 1212,
-        demo_followup_date: moment().format("YYYY-MM-DD[T00:00:00.000Z]"),
-        demo_followup_time: new Date(),
-        dealer_id: Number(formData.dealer),
-        d_id: Number(formData.dealer),
-        farmer_mob_no: Number(formData.farmerMobile),
-        farmer_id: Number(1212),
-        farmer_name: formData.farmerName,
-        farmer_father_name: formData.farmerFatherName,
-        village: formData.village,
-        farmer_type: formData.farmerType,
-        farmer_observation: formData.farmerObservation,
-        product_rating: formData.productRating,
-        plot_size: formData.plotSize,
-        demo_photo_url: "https://source.unsplash.com/user/c_v_r/1900x800",
-        field_photo_url: "https://source.unsplash.com/user/c_v_r/1900x800",
-        location_lat: 12,
-        location_long: 21,
-        potential_farmer: formData.potentialFarmer,
-         follow_up_remarks: formData.remarks,
-        hand_testimonials_url: "Test",
-        video_testimonials_url: "Test",
-        next_followup_date: formData.nextVisitDate,
-        status: formData.status,
-        f_demo_code: router.query.f_demo_code,
-        f_demo_follow_no: fFollowCode,
-        t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-        emp_code: window.localStorage.getItem("emp_code"),
-        c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-      };
-
-      const respond = await axios
-        .post(`${url}/api/add_farmer_demo_followup`, JSON.stringify(data), {
-          headers: headers,
-        })
-        .then((res) => {
-          if (!res) return;
-          toast.success("Submitted");
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth", // Smooth scrolling animation
-          });
-         
-          uploadImage();
-          uploadVideo();
-          setFormData({
-            purposeDemo: "",
-            dealer: "",
-            farmerMobile: "",
-            farmerId: "",
-            farmerName: "",
-            farmerFatherName: "",
-            village: "",
-            farmerType: "",
-            plotSize: "",
-            farmerObservation: "",
-            productRating: "",
-            remarks: "",
-            potentialFarmer: "",
-            nextVisitDate: "",
-            status: "Open",
-          });
-          setProductDemoTableData([]);
-          router.push({
-            pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
-          });
-        });
-    } catch (errors) {
-      const errorMessage = errors?.response?.data?.message;
-
-      toast.error(errorMessage);
+    if(!selectedImage){
+      toast.error("Please Select Image");
     }
+   else if(!selectedVideo){
+      toast.error("Please Select Video");
+    }
+    else {
+      try {
+        const data = {
+          f_demo_follow_no: 1212,
+          demo_followup_date: moment().format("YYYY-MM-DD[T00:00:00.000Z]"),
+          demo_followup_time: new Date(),
+          dealer_id: Number(formData.dealer),
+          d_id: Number(formData.dealer),
+          farmer_mob_no: Number(formData.farmerMobile),
+          farmer_id: Number(1212),
+          farmer_name: formData.farmerName,
+          farmer_father_name: formData.farmerFatherName,
+          village: formData.village,
+          farmer_type: formData.farmerType,
+          farmer_observation: formData.farmerObservation,
+          product_rating: formData.productRating,
+          plot_size: formData.plotSize,
+          demo_photo_url: "https://source.unsplash.com/user/c_v_r/1900x800",
+          field_photo_url: "https://source.unsplash.com/user/c_v_r/1900x800",
+          location_lat: 12,
+          location_long: 21,
+          potential_farmer: formData.potentialFarmer,
+           follow_up_remarks: formData.remarks,
+          hand_testimonials_url: "Test",
+          video_testimonials_url: "Test",
+          next_followup_date: formData.nextVisitDate,
+          status: formData.status,
+          f_demo_code: router.query.f_demo_code,
+          f_demo_follow_no: fFollowCode,
+          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          emp_code: window.localStorage.getItem("emp_code"),
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        };
+  
+        const respond = await axios
+          .post(`${url}/api/add_farmer_demo_followup`, JSON.stringify(data), {
+            headers: headers,
+          })
+          .then((res) => {
+            if (!res) return;
+            toast.success("Submitted");
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth", // Smooth scrolling animation
+            });
+           
+            uploadImage();
+            uploadVideo();
+            setFormData({
+              purposeDemo: "",
+              dealer: "",
+              farmerMobile: "",
+              farmerId: "",
+              farmerName: "",
+              farmerFatherName: "",
+              village: "",
+              farmerType: "",
+              plotSize: "",
+              farmerObservation: "",
+              productRating: "",
+              remarks: "",
+              potentialFarmer: "",
+              nextVisitDate: "",
+              status: "Open",
+            });
+            setProductDemoTableData([]);
+            router.push({
+              pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+            });
+          });
+      } catch (errors) {
+        const errorMessage = errors?.response?.data?.message;
+  
+        toast.error(errorMessage);
+      }
+    }
+  
   };
 
   const handleInputChange = (event) => {

@@ -1511,7 +1511,12 @@ const AdditionalInfo = (props) => {
           Submit
         </button>
         <button
-          onClick={() => {}}
+         
+          onClick={() =>
+            router.push({
+              pathname: "/MR_Portal_Apps/MRHome",
+            })
+          }
           className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
         >
           Close

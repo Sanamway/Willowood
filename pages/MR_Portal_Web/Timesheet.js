@@ -902,11 +902,19 @@ Verify
 }
     }
 
-    
+    const getTimeDiff = (item) =>{
+      if(item.punch_out_time &&item.punch_in_time ){
+        return String(`${moment.duration(item.punch_out_time.diff(item.punch_in_time)).hours() } hr`+" " + `${moment.duration(item.punch_out_time.diff(item.punch_in_time)).minutes() } mins`)     
+      }
+      else {
+        return "-"
+      }
+      
+    }
   return (
     <Layout>
-      <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
-        <Toaster position="bottom-center" reverseOrder={false} />
+       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
+       <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
             MR Timesheet
@@ -1148,7 +1156,7 @@ Verify
             />
           </div>
         </div>
-        <div className=" absolute overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
+        <div className=" overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
           <table className="min-w-full divide-y border- divide-gray-200 ">
             <thead className="border-b w-max">
               <tr className="bg-gray-50 font-arial w-max">
@@ -1173,6 +1181,10 @@ Verify
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Punch Out Time
                 </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Total Hour
+                </th>
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Status
                 </th>
@@ -1228,6 +1240,13 @@ Verify
                       : "-"}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {getTimeDiff(item)}
+                   
+                   
+                   
+                  </td>
+                  {console.log("klo", item.punch_in_time)}
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.status}
                   </td>
                  
@@ -1253,7 +1272,7 @@ Verify
               ))}
             </tbody>
           </table>
-          <div className="w-full  mx-4 h-12 scrollbar-hidden">
+          {/* <div className="w-full  mx-4 h-12 scrollbar-hidden">
             <ReactPaginate
               previousLabel={"< Previous"}
               nextLabel={"Next >"}
@@ -1265,7 +1284,25 @@ Verify
               className="flex flex-row gap-2 mt-4  "
             />
           </div>
+           */}
         </div>
+        <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
+    <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
+      Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
+      <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
+      <small className="font-bold px-2 self-center text-black">{currentPage.selected+1}</small> results
+    </div>
+    <ReactPaginate
+      previousLabel={"Previous"}
+      nextLabel={"Next"}
+      breakLabel={"..."}
+      pageCount={pageCount}
+      onPageChange={handlePageChange}
+      containerClassName={"pagination"}
+      activeClassName={"active"}
+      className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
+    />
+  </div>
       </div>
 
       <Transition appear show={showImageModal} as={Fragment}>
@@ -1462,6 +1499,8 @@ Verify
           </div>
         </Dialog>
       </Transition>
+
+
 
       <Transition appear show={showDeleteModal} as={Fragment}>
         <Dialog
