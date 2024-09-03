@@ -101,7 +101,7 @@ const District = () => {
         </div>
 
         <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto">
-        <table className="min-w-full divide-y border- divide-gray-200 ">
+        <table className="min-w-full divide-y border- divide-gray-200 mb-40">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial w-max">
                   <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">

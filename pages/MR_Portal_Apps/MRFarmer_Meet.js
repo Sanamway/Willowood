@@ -83,7 +83,7 @@ const AdditionalInfo = (props) => {
         const apires = await respond.data.data;
         setCropData(
           apires.map((item) => {
-            return { value: item.crop_profile_id, label: item.crop_name };
+            return { value: item.crop_name, label: item.crop_name };
           })
         );
       } catch (error) {
@@ -1071,15 +1071,26 @@ const AdditionalInfo = (props) => {
           <small className="text-red-600 ">*</small> Farmer Crop Focus
         </label>
         <Select
+            className="basic-single border border-balck-100"
+            classNamePrefix="select"
+            isMulti={true}
+            name="color"
+            value={formData.crop}
+            options={cropData}
+            
+            onChange={(value) => setFormData({ ...formData, crop: value })}
+          />
+          {console.log("zxsw",formData.crop)}
+        {/* <Select
           className="basic-single border border-balck-100"
           classNamePrefix="select"
-          isMulti={true}
+         
           name="color"
           value={formData.crop}
           options={cropData}
           onChange={(value) => setFormData({ ...formData, crop: value })}
-        />
-        {console.log("mklj", formData)}
+        /> */}
+       
       </div>
 
       <div className="flex flex-col my-2 mb-2 ">
