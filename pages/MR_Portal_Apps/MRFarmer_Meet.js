@@ -196,7 +196,7 @@ const AdditionalInfo = (props) => {
         dm_presence: formData.devManagerPresence,
         zdm_presence: formData.zoneManagerPresence,
       };
-      console.log("qop", formData);
+     
 
       const respond = await axios
         .post(`${url}/api/add_farmer_meet`, JSON.stringify(data), {

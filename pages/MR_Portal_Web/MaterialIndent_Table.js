@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
-import { AiOutlineSearch } from "react-icons/ai";
+
 import axios from "axios";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
@@ -13,12 +13,12 @@ import ReactPaginate from "react-paginate";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-const FieldDay = () => {
-   const router = useRouter();
-   const [data, setData] = useState([]);
-   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
-   const handlePageChange = (pageNumber) => {
-     setCurrentPage(pageNumber);
+const MaterialIndent_Table = () => {
+  const router = useRouter();
+  const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
   const headers = {
     "Content-Type": "application/json",
@@ -38,7 +38,7 @@ const FieldDay = () => {
     empCode
   ) => {
     try {
-      const respond = await axios.get(`${url}/api/get_farmer_demo_fields`, {
+      const respond = await axios.get(`${url}/api/get_material_indent`, {
         headers: headers,
         params: {
           t_id: t === "All" ? null : t,
@@ -53,11 +53,13 @@ const FieldDay = () => {
           paging: true,
           page: currentPage,
           size: 50,
+          zrt:true
         },
       });
-      const apires = await respond.data.data.MR_demo;
-      const count = await respond.data.data.Total_count;
+      const apires = await respond.data.data.MRPlanogramData;
+      const count = await respond.data.data.MRPlanogramcount;
       setPageCount(Math.ceil(count / 50));
+
       setData(apires);
     } catch (error) {
       setData([]);
@@ -85,7 +87,7 @@ const FieldDay = () => {
 
     try {
       const respond = await axios.put(
-        `${url}/api/update_mr_demo_fieldday/${modalData.id}`,
+        `${url}/api/update_planogram/${modalData.id}`,
         JSON.stringify(data),
         {
           headers: headers,
@@ -96,15 +98,17 @@ const FieldDay = () => {
 
       toast.success(apires);
 
-      getFarmerDemo(currentPage.selected + 1,
-        filterState.bgId,
-        filterState.buId,
-        filterState.zId,
-        filterState.rId,
-        filterState.tId,
-        filterState.startDate,
-        filterState.endDate,
-        filterState.empCode);
+      getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
     } catch (error) {}
   };
 
@@ -116,7 +120,7 @@ const FieldDay = () => {
     };
     try {
       const respond = await axios.put(
-        `${url}/api/update_mr_demo_fieldday/${modalData.id}`,
+        `${url}/api/update_planogram/${modalData.id}`,
         JSON.stringify(data),
         {
           headers: headers,
@@ -126,26 +130,27 @@ const FieldDay = () => {
 
       handleCloseModal();
       toast.success(apires);
-      getFarmerDemo(currentPage.selected + 1,
-        filterState.bgId,
-        filterState.buId,
-        filterState.zId,
-        filterState.rId,
-        filterState.tId,
-        filterState.startDate,
-        filterState.endDate,
-        filterState.empCode);
+      getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
     } catch (error) {}
   };
 
   const handleDelete = async () => {
     const paramsData = {
-      f_demo_fields_id: modalData.id,
+      f_planogram_id: modalData.id,
     };
     try {
       const respond = await axios.get(
-        `${url}/api/delete_farmer_demo_fields`,
-
+        `${url}/api/delete_mr_planogram`,
         {
           headers: headers,
           params: paramsData,
@@ -154,15 +159,17 @@ const FieldDay = () => {
       const apires = await respond.data.message;
       toast.success(apires);
 
-      getFarmerDemo(currentPage.selected + 1,
-        filterState.bgId,
-        filterState.buId,
-        filterState.zId,
-        filterState.rId,
-        filterState.tId,
-        filterState.startDate,
-        filterState.endDate,
-        filterState.empCode);
+      getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
       handleCloseModal();
     } catch (error) {
       toast.error(error.message);
@@ -185,8 +192,6 @@ const FieldDay = () => {
     setShowVerifyModal(false);
     setShowDeleteModal(false);
   };
-  const [isOpen, setIsOpen] = useState(false);
-  const [imgUrl, setImgUrl] = useState("");
   const [localStorageItems, setLocalStorageItems] = useState({
     cId: null,
     bgId: null,
@@ -210,8 +215,7 @@ const FieldDay = () => {
     buDes: null,
     bgDes: null,
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-     endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
-    empCode: null,
+    endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
   });
 
   const [bgData, setBgData] = useState([]);
@@ -359,7 +363,9 @@ const FieldDay = () => {
       });
       const apires = await respond.data.data;
       setAllEmployee(apires);
-    } catch (error) {}
+    } catch (error) {
+      setAllEmployee([]);
+    }
   };
   useEffect(() => {
     getAllEmployeeData(
@@ -414,7 +420,11 @@ const FieldDay = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -468,7 +478,11 @@ const FieldDay = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -521,7 +535,11 @@ const FieldDay = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -576,7 +594,11 @@ const FieldDay = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -621,7 +643,11 @@ const FieldDay = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -675,7 +701,11 @@ const FieldDay = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         });
         setFilterState(filterState);
 
@@ -695,7 +725,7 @@ const FieldDay = () => {
       filterState.empCode
     );
   }, [
-    currentPage.selected + 1,
+    currentPage.selected,
     filterState.bgId,
     filterState.buId,
     filterState.zId,
@@ -706,6 +736,7 @@ const FieldDay = () => {
     filterState.empCode,
   ]);
   const { name } = router.query;
+
   const getAllActionButton = (item) =>{
     let role = localStorageItems.roleId
  switch(role){
@@ -718,7 +749,7 @@ const FieldDay = () => {
       setModalData({
         ...modalData,
         type: "Verify",
-        id:  item.f_demo_fields_id,
+        id:  item.f_planogram_id,
       });
     }}
     disabled={item.verified === "Yes"}
@@ -732,7 +763,7 @@ const FieldDay = () => {
       setModalData({
         ...modalData,
         type: "Approve",
-        id:  item.f_demo_fields_id,
+        id:  item.f_planogram_id,
       });
     }}
     disabled={item.approved === "Yes"}
@@ -748,7 +779,7 @@ const FieldDay = () => {
       setModalData({
         ...modalData,
 
-        id:  item.f_demo_fields_id,
+        id:  item.f_planogram_id,
       });
     }}
   >
@@ -764,7 +795,7 @@ const FieldDay = () => {
       setModalData({
         ...modalData,
         type: "Verify",
-        id:  item.f_demo_fields_id,
+        id:  item.f_planogram_id,
       });
     }}
     disabled={item.verified === "Yes"}
@@ -779,7 +810,7 @@ const FieldDay = () => {
       setModalData({
         ...modalData,
         type: "Approve",
-        id:  item.f_demo_fields_id,
+        id:  item.f_planogram_id,
       });
     }}
     disabled={item.approved === "Yes"}
@@ -795,7 +826,7 @@ const FieldDay = () => {
       setModalData({
         ...modalData,
 
-        id:  item.f_demo_fields_id,
+        id:  item.f_planogram_id,
       });
     }}
   >
@@ -812,7 +843,7 @@ case 4: return <div>
     setModalData({
       ...modalData,
       type: "Approve",
-      id:  item.f_demo_fields_id,
+      id:  item.f_planogram_id,
     });
   }}
   disabled={item.approved === "Yes"}
@@ -830,7 +861,7 @@ case 5: return <div>
     setModalData({
       ...modalData,
       type: "Approve",
-      id:  item.f_demo_fields_id,
+      id:  item.f_planogram_id,
     });
   }}
   disabled={item.approved === "Yes"}
@@ -849,7 +880,7 @@ case 6: return <div>
     setModalData({
       ...modalData,
       type: "Approve",
-      id:  item.f_demo_fields_id,
+      id:  item.f_planogram_id,
     });
   }}
   disabled={item.approved === "Yes"}
@@ -867,7 +898,7 @@ onClick={() => {
   setModalData({
     ...modalData,
     type: "Verify",
-    id:  item.f_demo_fields_id,
+    id:  item.f_planogram_id,
   });
 }}
 >
@@ -883,7 +914,7 @@ Verify
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
-            {name ? name : "Farmer Field Day Table"}
+            {name ? name : "MR Indent  "}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer pr-4">
             <h2>
@@ -1094,7 +1125,6 @@ Verify
               dateFormat="dd-MM-yyyy"
               selected={filterState.endDate}
               placeholderText="Enter Date"
-              // selected={selectedYear}
               scrollableYearDropdown
               onChange={(date) =>
                 setFilterState({ ...filterState, endDate: date })
@@ -1104,7 +1134,7 @@ Verify
           </div>
         </div>
 
-        <div className=" overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
+        <div className="overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
           <table className="min-w-full divide-y border- divide-gray-200 ">
             <thead className="border-b w-max">
               <tr className="bg-gray-50 font-arial w-max">
@@ -1112,69 +1142,44 @@ Verify
                   Action
                 </th>
                 <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  F Follow Code
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Next Visit Date
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Emp Code
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Emp Name
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Dealer
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Farmer Mobile No
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Farmer Id
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Farmer Name
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Farmer Father Name
+                Employee Code
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Farmer Type
+                Employee Name
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Plot Size
+                Rquest Date
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                Material / POP Required
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                 Any Specification of Material
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Village
+                 Purpose of Material
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                Priority - DP
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                Current Stock Qty
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                Required  Qty
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                Delivery date
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Farmer Available
+                Current Status
                 </th>
-
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Remarks
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Filed Day Image
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Handwritten Testimonials
-                </th>
-
                
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Deleted
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Field Day
-                </th>
-
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Status
-                </th>
+                
+              
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Territory
                 </th>
@@ -1198,140 +1203,82 @@ Verify
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
               {data.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
-                   <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
+                  <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
                     {getAllActionButton(item)}             
                 </td>
-                  {/* <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                    <button
-                      onClick={() => {
-                        setImgUrl(item.field_day_image_Url);
-                        setIsOpen(true);
-                      }}
-                      className="b text-black hover:text-blue-500 mr-2  "
-                    >
-                      View Image
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowVerifyModal(true);
-                        setModalData({
-                          ...modalData,
-                          type: "Verify",
-                          id: item.f_demo_fields_id,
-                        });
-                      }}
-                      disabled={item.verified === "Yes"}
-                      className="b text-black hover:text-blue-500  "
-                    >
-                      Verify
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowVerifyModal(true);
-                        setModalData({
-                          ...modalData,
-                          type: "Approve",
-                          id: item.f_demo_fields_id,
-                        });
-                      }}
-                      disabled={item.approved === "Yes"}
-                      className="b text-black hover:text-yellow-400 ml-2"
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="b text-black hover:text-red-500 ml-2"
-                      onClick={() => {
-                        setShowDeleteModal(true);
-                        setModalData({
-                          ...modalData,
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.f_planogram_no}
+                  </td>
+               
 
-                          id: item.f_demo_fields_id,
-                        });
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td> */}
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.f_demo_code}
-                  </td>
-                  {/* <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {moment(item.next_followup_date).format("MM/DD/YYYY")}
-                    </td> */}
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.next_visit_date).format("MM/DD/YYYY")}
+                
+                    {moment(item.f_planogram_date).format("DD/MM/YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.emp_code}
-                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.emp_name}
+                    {item.dealer_des} 
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.dealer_des}
+                    {item.emp_code} 
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.farmer_mob_no}
+                    {item.emp_name} 
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.farmer_id}
+                  {item.dealer_address} 
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.farmer_name}
+                  {item.dealer_contact}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.farmer_father_name}
+                    {item.product_brand}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.farmer_type}
+                    {item.product_positioning}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.plot_size}
+                    {item.distribution}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.village}
+                    {item.promotional_material}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.out_of_stock}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.proper_label_tagging}
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.farmer_available_in_field_day}
+                    {item.product_facing}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.field_day_remarks}
+                    {item.damage_condition}
                   </td>
-                  <td
-                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
-                    onClick={() => setShowImageModal(true)}
-                  >
-                    View
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.rack_unique_concept}
                   </td>
-                  <td
-                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
-                    onClick={() => setShowImageModal(true)}
-                  >
-                    View
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.category_placement}
                   </td>
-
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.display_pop}
+                  </td>
+                 
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.current_stock}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.actual_share_of_life}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.compitor_brand}
+                  </td>
+                  
                 
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.isDeleted ? "Yes" : "No"}
-                  </td>
-                  
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  <button
-                      onClick={() => {
-                        setImgUrl(item.field_day_image_Url);
-                        setIsOpen(true);
-                      }}
-                      className="b text-black hover:text-blue-500 mr-2  "
-                    >
-                      View Image
-                    </button>
-                  </td>
-
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.status}
+                    {item.compitor_price}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.territory_name}
@@ -1348,25 +1295,15 @@ Verify
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.cmpny_name}
                   </td>
+                  
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.isDeleted ? "Yes" : "No"}
                   </td>
-                </tr>
+                                  </tr>
               ))}
             </tbody>
           </table>
-          {/* <div className="w-full  mx-4 h-12 scrollbar-hidden">
-            <ReactPaginate
-              previousLabel={"< Previous"}
-              nextLabel={"Next >"}
-              breakLabel={"..."}
-              pageCount={pageCount}
-              onPageChange={handlePageChange}
-              containerClassName={"pagination"}
-              activeClassName={"active"}
-              className="flex flex-row gap-2 mt-4  "
-            />
-          </div> */}
+         
         </div>
         <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
         <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
@@ -1649,61 +1586,8 @@ Verify
           </div>
         </Dialog>
       </Transition>
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          onClose={() => {
-            setIsOpen(false);
-            setImgUrl("");
-          }}
-        >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black/25" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
-                  >
-                    Farmer Filed Day Image
-                  </Dialog.Title>
-
-                  <img
-                    className="m-2"
-                    src={imgUrl}
-                    width={500}
-                    height={500}
-                    alt="Picture of the author"
-                  />
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
     </Layout>
   );
 };
 
-export default FieldDay;
+export default MaterialIndent_Table;

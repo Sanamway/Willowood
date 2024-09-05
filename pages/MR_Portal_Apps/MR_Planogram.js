@@ -139,7 +139,10 @@ const AdditionalInfo = (props) => {
         current_stock:formData.currentStock,
         compitor_brand:formData.competitorBrand,
         actual_share_of_life:formData.shareLife,
-        compitor_price:formData.competitorPrice
+        compitor_price:formData.competitorPrice,
+        emp_code: window.localStorage.getItem("emp_code"),
+        c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
       };
       console.log("qop", formData);
 
@@ -149,7 +152,7 @@ const AdditionalInfo = (props) => {
         })
         .then((res) => {
           if (!res) return;
-          toast.success("Submitted");
+          toast.success(res.data.message);
           window.scrollTo({
             top: 0,
             behavior: "smooth", // Smooth scrolling animation
@@ -782,7 +785,7 @@ const AdditionalInfo = (props) => {
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
+            type="number"
           
             placeholder="Current Stock"
             value={formData.currentStock}
@@ -798,7 +801,7 @@ const AdditionalInfo = (props) => {
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
+            type="number"
           
             placeholder="Actual Share of Life"
             value={formData.shareLife}

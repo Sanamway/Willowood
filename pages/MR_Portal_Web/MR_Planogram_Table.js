@@ -56,9 +56,10 @@ const FarmerSHC = () => {
           zrt:true
         },
       });
-      const apires = await respond.data.data.MR_demo;
-      const count = await respond.data.data.Total_count;
+      const apires = await respond.data.data.MRPlanogramData;
+      const count = await respond.data.data.MRPlanogramcount;
       setPageCount(Math.ceil(count / 50));
+
       setData(apires);
     } catch (error) {
       setData([]);
@@ -86,7 +87,7 @@ const FarmerSHC = () => {
 
     try {
       const respond = await axios.put(
-        `${url}/api/update_mr_shc/${modalData.id}`,
+        `${url}/api/update_planogram/${modalData.id}`,
         JSON.stringify(data),
         {
           headers: headers,
@@ -119,7 +120,7 @@ const FarmerSHC = () => {
     };
     try {
       const respond = await axios.put(
-        `${url}/api/update_mr_shc/${modalData.id}`,
+        `${url}/api/update_planogram/${modalData.id}`,
         JSON.stringify(data),
         {
           headers: headers,
@@ -145,11 +146,11 @@ const FarmerSHC = () => {
 
   const handleDelete = async () => {
     const paramsData = {
-      f_shc_id: modalData.id,
+      f_planogram_id: modalData.id,
     };
     try {
       const respond = await axios.get(
-        `${url}/api/delete_mr_shc`,
+        `${url}/api/delete_mr_planogram`,
         {
           headers: headers,
           params: paramsData,
@@ -748,7 +749,7 @@ const FarmerSHC = () => {
       setModalData({
         ...modalData,
         type: "Verify",
-        id:  item.f_shc_id,
+        id:  item.f_planogram_id,
       });
     }}
     disabled={item.verified === "Yes"}
@@ -762,7 +763,7 @@ const FarmerSHC = () => {
       setModalData({
         ...modalData,
         type: "Approve",
-        id:  item.f_shc_id,
+        id:  item.f_planogram_id,
       });
     }}
     disabled={item.approved === "Yes"}
@@ -778,7 +779,7 @@ const FarmerSHC = () => {
       setModalData({
         ...modalData,
 
-        id:  item.f_shc_id,
+        id:  item.f_planogram_id,
       });
     }}
   >
@@ -794,7 +795,7 @@ const FarmerSHC = () => {
       setModalData({
         ...modalData,
         type: "Verify",
-        id:  item.f_shc_id,
+        id:  item.f_planogram_id,
       });
     }}
     disabled={item.verified === "Yes"}
@@ -809,7 +810,7 @@ const FarmerSHC = () => {
       setModalData({
         ...modalData,
         type: "Approve",
-        id:  item.f_shc_id,
+        id:  item.f_planogram_id,
       });
     }}
     disabled={item.approved === "Yes"}
@@ -825,7 +826,7 @@ const FarmerSHC = () => {
       setModalData({
         ...modalData,
 
-        id:  item.f_shc_id,
+        id:  item.f_planogram_id,
       });
     }}
   >
@@ -842,7 +843,7 @@ case 4: return <div>
     setModalData({
       ...modalData,
       type: "Approve",
-      id:  item.f_shc_id,
+      id:  item.f_planogram_id,
     });
   }}
   disabled={item.approved === "Yes"}
@@ -860,7 +861,7 @@ case 5: return <div>
     setModalData({
       ...modalData,
       type: "Approve",
-      id:  item.f_shc_id,
+      id:  item.f_planogram_id,
     });
   }}
   disabled={item.approved === "Yes"}
@@ -879,7 +880,7 @@ case 6: return <div>
     setModalData({
       ...modalData,
       type: "Approve",
-      id:  item.f_shc_id,
+      id:  item.f_planogram_id,
     });
   }}
   disabled={item.approved === "Yes"}
@@ -897,7 +898,7 @@ onClick={() => {
   setModalData({
     ...modalData,
     type: "Verify",
-    id:  item.f_shc_id,
+    id:  item.f_planogram_id,
   });
 }}
 >
@@ -1151,6 +1152,13 @@ Verify
                   Dealer
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                 Emp Code
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                 Emp Name
+                </th>
+
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                  Dealer Address
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
@@ -1235,21 +1243,26 @@ Verify
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.f_planogram_no}
                   </td>
-                  {/* <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {moment(item.next_followup_date).format("MM/DD/YYYY")}
-                    </td> */}
+               
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.f_planogram_date).format("MM/DD/YYYY")}
+                
+                    {moment(item.f_planogram_date).format("DD/MM/YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {/* {item.emp_code} */} dealer name
+                    {item.dealer_des} 
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-address
+                    {item.emp_code} 
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  contact
+                    {item.emp_name} 
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  {item.dealer_address} 
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  {item.dealer_contact}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.product_brand}
@@ -1285,19 +1298,17 @@ address
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.display_pop}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.organic_carbon}
-                  </td>
+                 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.current_stock}
-                  </td>
-
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.compitor_brand}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.actual_share_of_life}
                   </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.compitor_brand}
+                  </td>
+                  
                 
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
@@ -1318,10 +1329,11 @@ address
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.cmpny_name}
                   </td>
+                  
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.isDeleted ? "Yes" : "No"}
                   </td>
-                </tr>
+                                  </tr>
               ))}
             </tbody>
           </table>
