@@ -56,8 +56,8 @@ const MaterialIndent_Table = () => {
           zrt:true
         },
       });
-      const apires = await respond.data.data.MRPlanogramData;
-      const count = await respond.data.data.MRPlanogramcount;
+      const apires = await respond.data.data.miData;
+      const count = await respond.data.data.miDataCount;
       setPageCount(Math.ceil(count / 50));
 
       setData(apires);
@@ -87,7 +87,7 @@ const MaterialIndent_Table = () => {
 
     try {
       const respond = await axios.put(
-        `${url}/api/update_planogram/${modalData.id}`,
+        `${url}/api/update_material_indent/${modalData.id}`,
         JSON.stringify(data),
         {
           headers: headers,
@@ -95,9 +95,7 @@ const MaterialIndent_Table = () => {
       );
       handleCloseModal();
       const apires = await respond.data.message;
-
       toast.success(apires);
-
       getFarmerDemo(
       currentPage.selected + 1,
       filterState.bgId,
@@ -120,7 +118,7 @@ const MaterialIndent_Table = () => {
     };
     try {
       const respond = await axios.put(
-        `${url}/api/update_planogram/${modalData.id}`,
+        `${url}/api/update_material_indent/${modalData.id}`,
         JSON.stringify(data),
         {
           headers: headers,
@@ -146,11 +144,11 @@ const MaterialIndent_Table = () => {
 
   const handleDelete = async () => {
     const paramsData = {
-      f_planogram_id: modalData.id,
+      mi_id: modalData.id,
     };
     try {
       const respond = await axios.get(
-        `${url}/api/delete_mr_planogram`,
+        `${url}/api/delete_material_indent`,
         {
           headers: headers,
           params: paramsData,
@@ -749,7 +747,7 @@ const MaterialIndent_Table = () => {
       setModalData({
         ...modalData,
         type: "Verify",
-        id:  item.f_planogram_id,
+        id:  item.mi_id,
       });
     }}
     disabled={item.verified === "Yes"}
@@ -763,7 +761,7 @@ const MaterialIndent_Table = () => {
       setModalData({
         ...modalData,
         type: "Approve",
-        id:  item.f_planogram_id,
+        id:  item.mi_id,
       });
     }}
     disabled={item.approved === "Yes"}
@@ -778,8 +776,7 @@ const MaterialIndent_Table = () => {
       setShowDeleteModal(true);
       setModalData({
         ...modalData,
-
-        id:  item.f_planogram_id,
+        id:  item.mi_id,
       });
     }}
   >
@@ -795,7 +792,7 @@ const MaterialIndent_Table = () => {
       setModalData({
         ...modalData,
         type: "Verify",
-        id:  item.f_planogram_id,
+        id:  item.mi_id,
       });
     }}
     disabled={item.verified === "Yes"}
@@ -810,7 +807,7 @@ const MaterialIndent_Table = () => {
       setModalData({
         ...modalData,
         type: "Approve",
-        id:  item.f_planogram_id,
+        id:  item.mi_id,
       });
     }}
     disabled={item.approved === "Yes"}
@@ -826,7 +823,7 @@ const MaterialIndent_Table = () => {
       setModalData({
         ...modalData,
 
-        id:  item.f_planogram_id,
+        id:  item.mi_id,
       });
     }}
   >
@@ -843,7 +840,7 @@ case 4: return <div>
     setModalData({
       ...modalData,
       type: "Approve",
-      id:  item.f_planogram_id,
+      id:  item.mi_id,
     });
   }}
   disabled={item.approved === "Yes"}
@@ -861,7 +858,7 @@ case 5: return <div>
     setModalData({
       ...modalData,
       type: "Approve",
-      id:  item.f_planogram_id,
+      id:  item.mi_id,
     });
   }}
   disabled={item.approved === "Yes"}
@@ -880,7 +877,7 @@ case 6: return <div>
     setModalData({
       ...modalData,
       type: "Approve",
-      id:  item.f_planogram_id,
+      id:  item.mi_id,
     });
   }}
   disabled={item.approved === "Yes"}
@@ -898,7 +895,7 @@ onClick={() => {
   setModalData({
     ...modalData,
     type: "Verify",
-    id:  item.f_planogram_id,
+    id:  item.mi_id,
   });
 }}
 >
@@ -1005,7 +1002,7 @@ Verify
               </option>
             ))}
           </select>
-
+{""}
           <select
             className="border rounded px-2 py-1  w-1/2 h-8"
             id="stateSelect"
@@ -1141,6 +1138,9 @@ Verify
                 <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Action
                 </th>
+                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  Indent Code
+                </th>
                 <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                 Employee Code
                 </th>
@@ -1178,20 +1178,14 @@ Verify
                 Current Status
                 </th>
                
-                
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+              View Image
+                </th>
               
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Territory
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Region
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Zone
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Business Unit
-                </th>
+              
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Company
                 </th>
@@ -1207,91 +1201,76 @@ Verify
                     {getAllActionButton(item)}             
                 </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.f_planogram_no}
+                    {item.
+mi_no
+}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.
+emp_code
+}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.
+emp_name
+}
                   </td>
                
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                 
-                    {moment(item.f_planogram_date).format("DD/MM/YYYY")}
+                    {moment(item.indent_req_date
+).format("DD/MM/YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.dealer_des} 
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.emp_code} 
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.emp_name} 
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {item.dealer_address} 
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {item.dealer_contact}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.product_brand}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.product_positioning}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.distribution}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.promotional_material}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.out_of_stock}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.proper_label_tagging}
-                  </td>
-
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.product_facing}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.damage_condition}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.rack_unique_concept}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.category_placement}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.display_pop}
+                    {item.
+material_pop_require
+} 
                   </td>
                  
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.current_stock}
+                    {item.any_specification_of_material
+                    }
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.actual_share_of_life}
+                    {item.purpose_of_material
+                    }
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.compitor_brand}
+                    {item.
+priority
+}
                   </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.
+current_stock_qty}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.required_qty}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  {moment(item.
+delivery_date
+).format("DD/MM/YYYY")}
                   
-                
+                  </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.compitor_price}
+                    {item.status
+                    }
+                  </td>
+                
+
+                  <td
+                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
+                    onClick={() => setShowImageModal(true)}
+                  >
+                    View
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.territory_name}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.region_name}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.zone_name}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.business_unit_name}
-                  </td>
+               
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.cmpny_name}
                   </td>

@@ -144,8 +144,7 @@ const AdditionalInfo = (props) => {
         c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
       };
-      console.log("qop", formData);
-
+      
       const respond = await axios
         .post(`${url}/api/add_mr_planogram`, JSON.stringify(data), {
           headers: headers,
