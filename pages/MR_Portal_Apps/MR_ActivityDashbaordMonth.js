@@ -57,7 +57,7 @@ const AdditionalInfo = (props) => {
   useEffect(() => {
     setLocalStorageItems({
       uId: JSON.parse(window.localStorage.getItem("uid")),
-      cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+      cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
       bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
       buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
       rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
@@ -67,6 +67,10 @@ const AdditionalInfo = (props) => {
       ulName: window.localStorage.getItem("phone_number"),
       empCode: window.localStorage.getItem("emp_code"),
       roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+      reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
+      developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
+      hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
+      reportingHQ:JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
     });
   }, []);
 
@@ -180,36 +184,38 @@ const AdditionalInfo = (props) => {
             <span className="text-wrap ml-4"> {localStorageItems.clName}</span>
           </div>
 
-          <div className="flex   w-full  w-28">
-            <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-20">Branch</p>
-              <span>:</span>
-            </div>
-            <span className="text-wrap ml-4">asfasdfa</span>
-          </div>
+          <div className="flex w-full  w-28">
+                <div className="flex">
+                  <p className=" font-bold text-sm text-blue-800 w-28">
+                    Reporting HQ
+                  </p>
+                  <span>:</span>
+                </div>
+                <span className="w-28 ml-3">{localStorageItems.reportingHQ}</span>
+              </div>
         </div>
       </div>
 
       <h1 className="text-2xl font-bold text-center ">
         Monthly Summary - Activity
       </h1>
-      <table className="w-full border-collapse border border-gray-200 text-[10px]">
+      <table className="w-full text-4xl border-collapse border border-gray-200 text-[10px] font-bold">
         <thead>
           <tr className="bg-blue-400 text-white">
-            <th className="border border-gray-200 py-2 px-2 whitespace-nowrap font-bold font-thin">
+            <th className="border border-gray-200 py-2 px-2 whitespace-nowrap font-bold">
               Day
             </th>
-            <th className="border border-gray-200 py-2 px-2 font-thin">Dmo</th>
-            <th className="border border-gray-200 py-2 px-2 font-thin">
+            <th className="border border-gray-200 py-2 px-2 ">Dmo</th>
+            <th className="border border-gray-200 py-2 px-2">
               F.Day
             </th>
-            <th className="border border-gray-200 py-2 px-2 font-thin">IFC</th>
-            <th className="border border-gray-200 py-2 px-2 font-thin">FGM</th>
-            <th className="border border-gray-200 py-2 px-2 font-thin">OFM</th>
-            <th className="border border-gray-200 py-2 px-2 font-thin">MFM</th>
-            <th className="border border-gray-200 py-2 px-2 font-thin">RTP</th>
-            <th className="border border-gray-200 py-2 px-2 font-thin">SHC</th>
-            <th className="border border-gray-200 py-2 px-2 font-thin">AT</th>
+            <th className="border border-gray-200 py-2 px-2">IFC</th>
+            <th className="border border-gray-200 py-2 px-2">FGM</th>
+            <th className="border border-gray-200 py-2 px-2">OFM</th>
+            <th className="border border-gray-200 py-2 px-2">MFM</th>
+            <th className="border border-gray-200 py-2 px-2">RTP</th>
+            <th className="border border-gray-200 py-2 px-2">SHC</th>
+            <th className="border border-gray-200 py-2 px-2">AT</th>
           </tr>
         </thead>
         <tbody>

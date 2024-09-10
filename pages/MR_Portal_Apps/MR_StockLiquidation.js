@@ -274,6 +274,12 @@ const AdditionalInfo = (props) => {
       }
    }
 
+
+   const handlePushHome = (path)=>{
+    router.push({
+      pathname: `${path}`,
+    })
+   }
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -759,9 +765,8 @@ Brand_Desc
       <div className="flex w-full">
        <button
        onClick={() =>{
-        router.push({
-          pathname: "/",
-        })
+         handlePushHome("/MR_Portal_Apps/MRHome")
+       
       }}
           className="bg-red-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
         >
