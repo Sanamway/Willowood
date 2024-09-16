@@ -136,7 +136,7 @@ return
           branchCode: 1231,
           date: moment(new Date()).format("YYYY-MM-DD"),
           attendance_type: userDetails.attendanceType,
-          punch_in_time: new Date(),
+          punch_in_time:moment().format('YYYY-MM-DD HH:mm:ss'),
           punch_in_image: "https://picsum.photos/200/300",
           status: "PI",
           reason: userDetails.reason,
@@ -152,7 +152,7 @@ return
           branchCode: 1231,
           date: moment(new Date()).format("YYYY-MM-DD"),
           attendance_type: userDetails.attendanceType,
-          punch_out_time: new Date(),
+          punch_out_time:moment().format('YYYY-MM-DD HH:mm:ss'),
           punch_out_image: "https://picsum.photos/200/300",
           status: "PO",
           reason: userDetails.reason,
@@ -188,7 +188,7 @@ return
           });
       }
     } catch (errors) {
-    
+    console.log("njkil", errors)
       const errorMessage = errors?.response?.data?.message;
 
       toast.error(errorMessage);
@@ -312,7 +312,7 @@ return
           Last Punch In :{" "}
           {attendenceStatus === "Punch In"
             ? "Not Available"
-            : moment(userDetails.lastPunchIn).format("LLL")}
+            : moment(new Date(userDetails.lastPunchIn)).format("dddd, MMMM DD, YYYY h:mm A")}
         </h1>
 
         <div>

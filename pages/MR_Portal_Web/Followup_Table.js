@@ -8,7 +8,7 @@ import axios from "axios";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import Layout from "@/components/Layout1";
-import nmg from "./banner.jpg";
+
 import ReactPaginate from "react-paginate";
 import moment from "moment";
 import DatePicker from "react-datepicker";
@@ -65,6 +65,7 @@ const DemoTable = () => {
   };
 
   const [showImageModal, setShowImageModal] = useState(false);
+  const [imgURL, setIMGURL] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -1156,7 +1157,7 @@ Verify
                 </th>
 
                 <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Re Visit Date
+                  FollowUp Date
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Emp Code
@@ -1166,6 +1167,9 @@ Verify
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Dealer
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Demo No
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Farmer Mobile No
@@ -1212,9 +1216,7 @@ Verify
                 </th>
 
               
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Deleted
-                </th>
+               
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Status
                 </th>
@@ -1233,6 +1235,9 @@ Verify
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Company
                 </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Deleted
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
@@ -1245,7 +1250,8 @@ Verify
                     {item.f_demo_follow_no}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.next_followup_date).format("MM/DD/YYYY")}
+                    {moment(item.
+demo_followup_date).format("DD/MM/YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.emp_code}
@@ -1256,6 +1262,9 @@ Verify
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.dealer_des}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.f_demo_code}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.farmer_mob_no}
@@ -1279,32 +1288,38 @@ Verify
                     {item.farmer_observation}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.potential_farmer}
+                    {item.
+product_rating
+}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.follow_up_remarks}
                   </td>
                   <td
                     className="px-4 py-2 dark:border-2 whitespace-nowrap"
-                    onClick={() => setShowImageModal(true)}
+                  
                   >
                     {item.video_testimonials_url}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap" 
+                    onClick={() => {
+                      setIMGURL(item.hand_testimonials_path)
+                      setShowImageModal(true)
+                    }
+
+                    }>
                     {item.hand_testimonials_url}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.potential_farmer}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.next_followup_date).format("MM/DD/YYYY")}
+                    {moment(item.next_followup_date).format("DD/MM/YYYY")}
                   </td>
 
                  
 
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.isDeleted ? "Yes" : "No"}
-                  </td>
+                 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.status}
                   </td>
@@ -1322,6 +1337,9 @@ Verify
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.cmpny_name}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.isDeleted ? "Yes" : "No"}
                   </td>
                 </tr>
               ))}
@@ -1402,8 +1420,8 @@ Verify
                     Image
                   </Dialog.Title>
                   <div className="mt-2">
-                    <Image
-                      src={nmg}
+                    <img
+                      src={imgURL}
                       className=" rounded bg-gray-200"
                       width={300}
                       height={200}
@@ -1451,8 +1469,8 @@ Verify
                     className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
                   >
                     {modalData.type === "Verify"
-                      ? " Verify Demo"
-                      : "Approve Demo"}
+                      ? " Verify Followup"
+                      : "Approve Followup"}
                   </Dialog.Title>
                   <div className="mt-8 w-100">
                     <div className="flex flex-row gap-4 items-center ">

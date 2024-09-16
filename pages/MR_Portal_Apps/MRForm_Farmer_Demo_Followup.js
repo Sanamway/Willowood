@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import Image from "next/image";
+
 import { BsCheck2Circle } from "react-icons/bs";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaUpload, FaVideo } from "react-icons/fa";
@@ -22,8 +23,10 @@ import { IoTodayOutline } from "react-icons/io5";
 import { GiFarmer } from "react-icons/gi";
 import { FaHandsHelping } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
+import { Dialog, Transition } from "@headlessui/react";
 
 const AdditionalInfo = (props) => {
+  
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
@@ -48,6 +51,29 @@ const AdditionalInfo = (props) => {
   };
   useEffect(() => {
     generateEmpCode();
+  }, []);
+  const [localStorageItems, setLocalStorageItems] = useState({
+    cId: "",
+    bgId: "",
+    buId: "",
+    rId: "",
+    zId: "",
+    tId: "",
+    roleId: "",
+  });
+
+  useEffect(() => {
+    setLocalStorageItems({
+      cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
+      bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+      buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+      rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+      zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+      tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+      clName: window.localStorage.getItem("user_name"),
+      ulName: window.localStorage.getItem("phone_number"),
+      roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+    });
   }, []);
   const [formActive, setFormActive] = useState(false);
   const [userImage, setUserImage] = useState("");
@@ -115,7 +141,6 @@ const AdditionalInfo = (props) => {
         headers: headers,
       });
       const apires = await respond.data.data;
-      console.log("lkl", apires);
       setProductBrandData(apires);
     } catch (error) {
       console.log(error);
@@ -204,16 +229,15 @@ const AdditionalInfo = (props) => {
     }
   };
 
+
   useEffect(() => {
     getStageInfo(productDemoState.crop);
   }, [productDemoState.crop]);
 
+
   const handleAddDemo = async () => {
-    if(!selectedImage){
-      toast.error("Please Select Image");
-    }
-   else if(!selectedVideo){
-      toast.error("Please Select Video");
+    if(!selectedImage && !selectedVideo){
+      toast.error("Please Select Image");     
     }
     else {
       try {
@@ -224,7 +248,7 @@ const AdditionalInfo = (props) => {
           dealer_id: Number(formData.dealer),
           d_id: Number(formData.dealer),
           farmer_mob_no: Number(formData.farmerMobile),
-          farmer_id: Number(1212),
+          farmer_id: Number(formData.farmerId),
           farmer_name: formData.farmerName,
           farmer_father_name: formData.farmerFatherName,
           village: formData.village,
@@ -255,14 +279,14 @@ const AdditionalInfo = (props) => {
           })
           .then((res) => {
             if (!res) return;
-            toast.success("Submitted");
+            toast.success(res.data.message);
+          
             window.scrollTo({
               top: 0,
               behavior: "smooth", // Smooth scrolling animation
             });
-           
-            uploadImage();
-            uploadVideo();
+            
+          
             setFormData({
               purposeDemo: "",
               dealer: "",
@@ -280,6 +304,17 @@ const AdditionalInfo = (props) => {
               nextVisitDate: "",
               status: "Open",
             });
+
+            if(selectedImage)
+              {
+                uploadImage(); 
+              }
+            
+            if(selectedVideo)
+              {
+                uploadVideo();
+              }
+           
             setProductDemoTableData([]);
             router.push({
               pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
@@ -293,6 +328,7 @@ const AdditionalInfo = (props) => {
     }
   
   };
+  
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -303,10 +339,11 @@ const AdditionalInfo = (props) => {
   };
 
 
-
-
+ 
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedNewImage, setSelectedNewImage] = useState("");
+ 
+
   const fileInputRef = useRef(null);
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -434,6 +471,8 @@ const AdditionalInfo = (props) => {
             hand_testimonials_url: `${fFollowCode}.${getFileExtension(
               selectedNewImage
             )}`,
+
+         
           
             f_demo_follow_no: fFollowCode,
           },
@@ -443,7 +482,106 @@ const AdditionalInfo = (props) => {
         });
     } catch (error) {}
   };
+  const [addFarmerModal, setAddFarmerModal] = useState(false);
+  const [farmerState, setFarmerState] = useState({
+    farmerName: "",
+    fatherName: "",
+    farmerAddress: "",
+    farmerTypes: "Subsistence Farming",
+    farmerCategory: "Marginal-Below 1.00 hectare",
+    landInfo: "",
+    mobile: "",
+    state: "",
+    district: "",
+    village: "",
+    pinCode: "",
+  });
 
+  const handleSaveFarmer = async () => {
+    try {
+      const data = {
+      
+
+        c_id: Number(localStorageItems.cId),
+        bu_id: Number(localStorageItems.buId),
+        bg_id: Number(localStorageItems.bgId),
+        z_id: Number(localStorageItems.zId),
+        r_id: Number(localStorageItems.rId),
+        t_id: Number(localStorageItems.tId),
+        ds_id: farmerState.district,
+        v_id: farmerState.village,
+        f_name: farmerState.farmerName,
+        f_lacre: farmerState.landInfo,
+        f_mobile: farmerState.mobile,
+        f_type: farmerState.farmerTypes,
+        ff_name: farmerState.fatherName,
+        f_address: farmerState.farmerAddress,
+        f_cat: farmerState.farmerCategory,
+        f_pin: farmerState.pinCode,
+        st_id: farmerState.state,
+        c_name: localStorageItems.clName,
+        ul_name: localStorageItems.ulName,
+      };
+      const respond = await axios
+        .post(`${url}/api/add_farmer`, JSON.stringify(data), {
+          headers: headers,
+        })
+        .then((res) => {
+          if (!res) return;
+          toast.success(res.data.message);
+          setFarmerState({
+            farmerName: "",
+            fatherName: "",
+            farmerAddress: "",
+            farmerTypes: "Subsistence Farming",
+            farmerCategory: "Marginal-Below 1.00 hectare",
+            landInfo: "",
+            mobile: "",
+            state: "",
+            district: "",
+            village: "",
+            pinCode: "",
+          });
+        });
+    } catch (errors) {
+      console.log("kop", errors);
+      const errorMessage = errors?.response?.data?.message
+
+      toast.error(errorMessage);
+      const newErrors = {};
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+    }
+  };
+  const [allState, setAllState] = useState([]);
+  const [allStateCityData, setAllStateCityData] = useState([]);
+  const getAllState = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_dist_state`, {
+        headers: headers,
+      });
+      const apires = await respond.data.data;
+      setAllStateCityData(apires);
+
+      setAllState([...new Set(apires.map((item) => item.state))]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getAllState();
+  }, []);
+  const [allCityStateWise, setAllCityStateWise] = useState([]);
+  useEffect(() => {
+    if (!farmerState) return;
+
+    setAllCityStateWise(
+      allStateCityData
+        .filter((item) => item.state === farmerState.state)
+        .map((item) => item.district)
+    );
+  }, [farmerState.state]);
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -481,11 +619,6 @@ const AdditionalInfo = (props) => {
                   <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
                     <li
                       className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap "
-                      // onClick={() =>
-                      //   router.push({
-                      //     pathname: "MR_Farmer_list_demo",
-                      //   })
-                      // }
                     >
                       <BsCalendar2Month
                         className="text-[#626364] cursor-pointer"
@@ -517,20 +650,7 @@ const AdditionalInfo = (props) => {
                       />{" "}
                       New Farmer
                     </li>
-                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
-                      <FaHandsHelping
-                        className="text-[#626364] cursor-pointer"
-                        size={20}
-                      />{" "}
-                      Help
-                    </li>
-                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:flex-col ">
-                      <IoSettingsOutline
-                        className="text-[#626364] cursor-pointer"
-                        size={20}
-                      />{" "}
-                      Setting
-                    </li>
+                    
                   </ul>
                 </Popover.Panel>
               </>
@@ -811,9 +931,9 @@ const AdditionalInfo = (props) => {
       </div>
      
      
-      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
+      <hr className="bg-blue-800 h-2 w-full my-2 mt-4" />
       <h1 className="flex justify-center font-bold mx-4">Product Demo</h1>
-      <hr className="bg-blue-400 border-1 w-full my-2 " />
+      <hr className="bg-blue-800 h-2 w-full my-2 " />
      
       <div className="overflow-x-auto my-6 sm:over<flow-hidden w-full  lg:w-full">
         <table className="min-w-full divide-y divide-gray-200 border-2">
@@ -1283,6 +1403,314 @@ const AdditionalInfo = (props) => {
         onChange={handleImageUpload}
         ref={fileInputRef}
       />
+
+<Transition appear show={addFarmerModal} as={Fragment}>
+        <Dialog
+          as="div"
+          className="relative z-10 "
+          onClose={() => setAddFarmerModal(false)}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <div className="w-1/2 px-2 relative ">
+                    <input
+                      className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      type="text"
+                      id="inputField"
+                      placeholder="Mobile"
+                      value={farmerState.mobile}
+                      onChange={(e) => {
+                        const input = e.target.value.replace(/\D/g, "");
+                        if (input.length <= 10) {
+                          setFarmerState({
+                            ...farmerState,
+                            mobile: input,
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex flex-row my-2 mb-2  ">
+                      <div className="w-full px-2 pt-2">
+                        <input
+                          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="inputField"
+                          placeholder="Farmer Name"
+                          value={farmerState.farmerName}
+                          onChange={(e) =>
+                            setFarmerState({
+                              ...farmerState,
+                              farmerName: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="w-full px-2 pt-2 ">
+                        <input
+                          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="inputField"
+                          placeholder="Farmer Father Name"
+                          value={farmerState.fatherName}
+                          onChange={(e) =>
+                            setFarmerState({
+                              ...farmerState,
+                              fatherName: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="w-full px-2 pt-2 ">
+                        <textarea
+                          className="w-full px-2 pt-2 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
+                          id="textareaField"
+                          placeholder="Farmer Address"
+                          rows="3"
+                          value={farmerState.farmerAddress}
+                          onChange={(e) =>
+                            setFarmerState({
+                              ...farmerState,
+                              farmerAddress: e.target.value,
+                            })
+                          }
+                        ></textarea>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row my-2 mb-2 ">
+                      <div className="w-full px-2 pt-2">
+                        <select
+                          className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
+                          id="userSelect"
+                          value={farmerState.farmerTypes}
+                          onChange={(e) =>
+                            setFarmerState({
+                              ...farmerState,
+                              farmerTypes: e.target.value,
+                            })
+                          }
+                        >
+                          <option
+                            value={""}
+                            className="focus:outline-none focus:border-b bg-white"
+                          >
+                            Farmer Type
+                          </option>
+                          <option value="Subsistence Farming">
+                            Subsistence Farming
+                          </option>
+                          <option value="Comercial Farming">
+                            Comercial Farming
+                          </option>
+                          <option value="Home Farming">Home Farming</option>
+                        </select>
+                      </div>
+
+                      <div className="w-full px-2 pt-2 ">
+                        <select
+                          className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
+                          id="userSelect"
+                          value={farmerState.farmerCategory}
+                          onChange={(e) =>
+                            setFarmerState({
+                              ...farmerState,
+                              farmerCategory: e.target.value,
+                            })
+                          }
+                        >
+                          <option
+                            value=""
+                            className="focus:outline-none focus:border-b bg-white"
+                          >
+                            Select Category
+                          </option>
+                          <option value="Marginal-Below 1.00 hectare">
+                            Marginal-Below 1.00 hectare
+                          </option>
+                          <option value="Small 1.00-2.00 hectare">
+                            Small 1.00-2.00 hectare
+                          </option>
+                          <option value="Semi-Medium 2.00-4.00 hectare">
+                            Semi-Medium 2.00-4.00 hectare
+                          </option>
+                          <option value="Medium 4.00-10.00 hectare">
+                            Medium 4.00-10.00 hectare
+                          </option>
+                          <option value="Large 10.00 hectare">
+                            Large 10.00 hectare
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="w-full px-2 pt-2">
+                      <input
+                        className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                        type="text"
+                        id="inputField"
+                        placeholder="Land Information"
+                        value={farmerState.landInfo}
+                        onChange={(e) =>
+                          setFarmerState({
+                            ...farmerState,
+                            landInfo: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+
+                    <div className="flex flex-row my-2 mb-2 ">
+                      <div className="w-full px-2 pt-2">
+                        <select
+                          className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                          id="stateSelect"
+                          value={farmerState.state}
+                          onChange={(e) =>
+                            setFarmerState({
+                              ...farmerState,
+                              state: e.target.value,
+                            })
+                          }
+                        >
+                          <option
+                            value={""}
+                            className="focus:outline-none focus:border-b bg-white"
+                          >
+                            Select State
+                          </option>
+                          {allState?.map((item, idx) => (
+                            <option
+                              value={item}
+                              className="focus:outline-none focus:border-b bg-white"
+                              key={idx}
+                            >
+                              {item}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="w-full px-2 pt-2 ">
+                        <select
+                          className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                          id="stateSelect"
+                          value={farmerState.district}
+                          onChange={(e) =>
+                            setFarmerState({
+                              ...farmerState,
+                              district: e.target.value,
+                            })
+                          }
+                        >
+                          <option
+                            value={""}
+                            className="focus:outline-none focus:border-b bg-white"
+                          >
+                            Select District
+                          </option>
+                          {allCityStateWise.map((item) => (
+                            <option
+                              value={item}
+                              className="focus:outline-none focus:border-b bg-white"
+                            >
+                              {item}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row my-2 mb-2 ">
+                      <div className="w-full px-2 pt-2">
+                        <input
+                          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="inputField"
+                          placeholder="Village"
+                          value={farmerState.village}
+                          onChange={(e) =>
+                            setFarmerState({
+                              ...farmerState,
+                              village: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div className="w-full px-2 pt-2 ">
+                        <input
+                          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="number"
+                          id="inputField"
+                          placeholder="Pin Code"
+                          value={farmerState.pinCode}
+                          onChange={(e) =>
+                            setFarmerState({
+                              ...farmerState,
+                              pinCode: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-100  flex flex-row gap-2 justify-center lg:hidden">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-4 py-2 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={() => handleSaveFarmer()}
+                    >
+                      Submit
+                    </button>
+
+                    <button
+                      type="button"
+                      className="inline-flex justify-center text-white rounded-md border border-transparent bg-green-400 px-4 py-2 text-sm font-medium  hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={() => {
+                        setAddFarmerModal(false);
+                       
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </form>
   );
 };

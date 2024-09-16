@@ -7,7 +7,7 @@ const Swipecards = () => {
   return (
     <>
       <section className="w-full my-1.5 py-2 px-2 ">
-        <div className="wrapperpt gap-2 rounded-md tabscrollbar-hide flex overflow-x-auto scroll snap-x ">
+        {/* <div className="wrapperpt gap-2 rounded-md tabscrollbar-hide flex overflow-x-auto scroll snap-x ">
           <div className="cardpt pt-1 flex-auto bg-white rounded-md h-16 min-w-[50%] p-2">
             <div className="flex items-center justify-around w-full my-3 px-1 ">
               <div className="bg-blue-50 rounded-full px-2 py-2">
@@ -43,7 +43,7 @@ const Swipecards = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </section>
     </>
   );

@@ -23,7 +23,7 @@ import { GiFarmer } from "react-icons/gi";
 import { FaHandsHelping } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Dialog, Transition } from "@headlessui/react";
-import Select from "react-select";
+
 const AdditionalInfo = (props) => {
   const router = useRouter();
   const headers = {
@@ -189,6 +189,7 @@ const AdditionalInfo = (props) => {
     village: "",
     pinCode: "",
   });
+  
 
   const handleSaveFarmer = async () => {
     try {
@@ -587,9 +588,10 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-      <h2 className="whitespace-nowrap w-48 self-center font-bold ml-2">
-        Soil Sample Details
-      </h2>
+      <hr className="bg-blue-800 h-2 w-full my-2 mt-4" />
+      <h1 className="flex justify-center font-bold mx-4">  Soil Sample Details</h1>
+      <hr className="bg-blue-800 h-2 w-full my-2 " />
+     
       <div className="flex flex-col ">
         <div className="w-full px-2 mt-2 flex flex-row gap-1">
           <h2 className="whitespace-nowrap w-48 self-center font-bold">

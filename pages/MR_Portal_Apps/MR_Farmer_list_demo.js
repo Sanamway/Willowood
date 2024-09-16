@@ -397,7 +397,7 @@ const AdditionalInfo = () => {
                 </small>
               </div>
             </div>
-            {new Date(item.next_visit_date) > new Date() && (
+            {new Date(item.next_visit_date) >= new Date() && new Date(item.next_visit_date) <= new Date(new Date().setDate(new Date().getDate() + 4)) && (
               <div className="flex flex-col gap-4 self-start">
                 <button
                   className="bg-[#4285F4] text-white-400 p-2 rounded-full whitespace-nowrap"

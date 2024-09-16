@@ -355,6 +355,9 @@ const Farmer = () => {
                   <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Name
                   </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Mobile
+                  </th>
                   <th className="px-6  py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Father Name
                   </th>
@@ -446,6 +449,9 @@ const Farmer = () => {
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.f_name}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.f_mobile}
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.ff_name}

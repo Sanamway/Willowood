@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Banner from "./Banner";
 import BankingCards from "./BankingCards";
 import Swipecards from "./Swipecards";
 import UPICards from "./UPICards";
+import { FaArrowAltCircleUp } from "react-icons/fa";
 
 const Hero = () => {
   const [dragup, setDragUp] = useState(true);
@@ -17,6 +18,45 @@ const Hero = () => {
     const scrolledUp = touchY > window.innerHeight / 4;
     setDragUp(scrolledUp);
   };
+  
+  
+ 
+  const [error, setError] = useState(null);
+
+  const handleRequestLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+         
+          setError(null);
+        },
+        (error) => {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              setError("User denied the request for Geolocation.");
+              break;
+            case error.POSITION_UNAVAILABLE:
+              setError("Location information is unavailable.");
+              break;
+            case error.TIMEOUT:
+              setError("The request to get user location timed out.");
+              break;
+            case error.UNKNOWN_ERROR:
+              setError("An unknown error occurred.");
+              break;
+            default:
+              setError("An unknown error occurred.");
+          }
+        }
+      );
+    } else {
+      setError("Geolocation is not supported by this browser.");
+    }
+  };
+
+  useEffect(()=>{
+    handleRequestLocation()
+  },[])
 
   return (
     <>
@@ -45,15 +85,32 @@ const Hero = () => {
                 </div> */}
                 <BankingCards></BankingCards>
                 <UPICards></UPICards>
+
+              
               </div>
 
               <div className="bg-[#F2F4FF] w-[97%] my-2 rounded-lg">
                 <Swipecards></Swipecards>
               </div>
+              
             </div>
           </div>
+          <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
+         <FaArrowAltCircleUp
+          size={42}
+          className="self-center size-120 text-black-400 text-blue-400 "
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth", // Smooth scrolling animation
+            })
+          }
+        />
+      </div>
         </div>
+        
       </section>
+     
     </>
   );
 };

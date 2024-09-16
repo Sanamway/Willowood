@@ -94,8 +94,8 @@ const AdditionalInfo = (props) => {
     farmerObservation: "",
     productRating: "",
     remarks: "",
-    potentialFarmer: "",
-    nextVisitDate: "",
+    potentialFarmer: "Yes",
+    nextVisitDate: new Date(),
     status: "Open",
   });
   const [productDemoState, setProductDemoState] = useState({
@@ -156,7 +156,6 @@ const AdditionalInfo = (props) => {
     getCompanyInfo();
     getDelaerData();
     getCropInfo();
-    getFollowDemoTable();
     getAllState();
   }, []);
 
@@ -173,43 +172,21 @@ const AdditionalInfo = (props) => {
     }
   };
 
-  const getFollowDemoTable = async () => {
+  const getFollowDemoTable = async (fDemo) => {
     try {
       const respond = await axios.get(`${url}/api/get_farmer_demo_followup`, {
         headers: headers,
+         params: { f_demo_code: fDemo },
       });
       const apires = await respond.data.data;
       setFollowTableData(apires);
+      
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleAddProductDemo = async () => {
-    try {
-      const data = {
-        crop_profile_id: Number(productDemoState.crop),
-        crop: "Crop_1",
-        stage: productDemoState.stage,
-        acre_plot: productDemoState.acre,
-        segment: productDemoState.segment,
-        product_brand: productDemoState.productBrand,
-        dose_acre_tank: Number(productDemoState.dose),
-        water_val: Number(productDemoState.water),
-      };
-
-      const respond = await axios
-        .post(`${url}/api/add_mr_form_demo_crop`, JSON.stringify(data), {
-          headers: headers,
-        })
-        .then((res) => {
-          if (!res) return;
-          toast.success("Submitted");
-        });
-    } catch (errors) {
-      console.log(errors);
-    }
-  };
+ 
 
   const getStageInfo = async (cropId) => {
     try {
@@ -265,8 +242,12 @@ const AdditionalInfo = (props) => {
         })
         .then((res) => {
           if (!res) return;
-          toast.success("Submitted");
+          toast.success(res.data.message);
+          router.push({
+            pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
+          });
           uploadImage();
+        
           window.scrollTo({
             top: 0,
             behavior: "smooth", // Smooth scrolling animation
@@ -349,6 +330,7 @@ const AdditionalInfo = (props) => {
         .then((res) => {
           if (!res) return;
           toast.success(res.data.message);
+          
           setFarmerState({
             farmerName: "",
             fatherName: "",
@@ -432,10 +414,54 @@ const AdditionalInfo = (props) => {
   };
 
   useEffect(() => {
-    getProductDemoTable(router.query.f_demo_code);
-    getFarmerData(router.query.f_demo_code);
+    if(router.query.f_demo_code){
+      getProductDemoTable(router.query.f_demo_code);
+      getFarmerData(router.query.f_demo_code);
+      getFollowDemoTable(router.query.f_demo_code)
+    }
+    else return
+   
   }, [router.query.f_demo_code]);
 
+  const [newDemoCode ,  setNewDemoCode] = useState(null)
+  const getAllPageData = async (mobile) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_demo_code`, {
+        headers: headers,
+        params: {
+          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          emp_code: window.localStorage.getItem("emp_code"),
+          demo_mobile:true,
+          farmer_mob_no:mobile
+        },
+      });
+      const apires = await respond.data.data.f_demo_code
+      
+      setNewDemoCode(apires ?apires :null)
+    
+     
+    } catch (error) {
+      console.log(error);
+      setNewDemoCode(null)
+    }
+  };
+  useEffect(()=>{
+    if(newDemoCode){
+    
+      getProductDemoTable(newDemoCode);
+      getFarmerData(newDemoCode);
+      getFollowDemoTable(newDemoCode)
+    }else {
+      setProductDemoTableData([])
+      setFollowTableData([])
+      
+      
+      return}
+  
+  },[newDemoCode])
+
+ 
   const [farmerMobileNumber, setFarmerMobileNumber] = useState("");
   const handleChangeFarmerNumber = async (number) => {
     setFarmerMobileNumber(number);
@@ -496,6 +522,16 @@ const AdditionalInfo = (props) => {
       });
     }
   };
+  useEffect(()=>{
+    if(!router.query.f_demo_code){
+      getAllPageData(farmerMobileNumber)
+    }
+    else{
+        return
+        } 
+  },[
+    farmerMobileNumber  
+  ])
 
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedNewImage, setSelectedNewImage] = useState("");
@@ -575,7 +611,7 @@ const AdditionalInfo = (props) => {
             className="self-center "
             onClick={() =>
               router.push({
-                pathname: "/MR_Portal_Apps/MRHome",
+                pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
               })
             }
           />
@@ -598,7 +634,7 @@ const AdditionalInfo = (props) => {
                     open ? "block" : "hidden"
                   } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
                 >
-                  <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
+                  <ul className=" text-black text-sm flex flex-col gap-4 py-2  font-Rale cursor-pointer ">
                     <li
                       className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center "
                       onClick={() =>
@@ -805,6 +841,7 @@ const AdditionalInfo = (props) => {
               type="number"
               id="inputField"
               placeholder="Farmer Mobile No"
+              disabled={router.query.f_demo_code}
               value={farmerMobileNumber}
               onChange={(e) => {
                 handleChangeFarmerNumber(e.target.value)
@@ -819,8 +856,8 @@ const AdditionalInfo = (props) => {
             type="number"
             id="inputField"
             placeholder="Farmer ID"
-            value={formData.farmerId}
-         
+             value={formData.farmerId}
+            disabled
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -920,9 +957,9 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
     
-      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
+      <hr className="bg-blue-800 h-2 w-full my-2 mt-4" />
       <h1 className="flex justify-center font-bold mx-4">Product Demo</h1>
-      <hr className="bg-blue-400 border-1 w-full my-2 " />
+      <hr className="bg-blue-800 h-2 w-full my-2 " />
      
 
       
@@ -1013,7 +1050,7 @@ const AdditionalInfo = (props) => {
                
                 <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                  <button
-                  className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap"
+                  className="text-sm text-gray-900 font-light px-2 py-2 whitespace-nowrap"
                   onClick={() => deleteProductDemoTable(item.f_demo_crop_id)}
                 >
                   {
@@ -1027,9 +1064,11 @@ const AdditionalInfo = (props) => {
           </tbody>
         </table>
       </div>
-      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
+   
+      <hr className="bg-blue-800 h-2 w-full my-2 mt-4" />
       <h1 className="flex justify-center font-bold mx-4">Follow Up</h1>
-      <hr className="bg-blue-400 border-1 w-full my-2 " />
+      <hr className="bg-blue-800 h-2 w-full my-2 " />
+     
 
      
       <div className="overflow-x-auto my-6 sm:overflow-hidden w-full  lg:w-full">
@@ -1077,25 +1116,25 @@ const AdditionalInfo = (props) => {
           <tbody className="bg-white divide-y divide-gray-200 my-2 ">
             {followTableData?.map((item, index) => (
               <tr className="border-2" key={item.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <td className="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
                   {index + 1}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">
                   {
                   moment(item.demo_followup_date   ).format("DD-MM-YYYY")
                   
                   }
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">
                   {item.farmer_observation}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">
                   {item.product_rating}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">
                   {item.follow_up_remarks}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-500">
                   {   moment(item.next_followup_date).format("DD-MM-YYYY") }
                 </td>
               </tr>
@@ -1300,8 +1339,9 @@ const AdditionalInfo = (props) => {
         </button>
         <button
           onClick={() => {
-            router.push("/MR_Portal_Apps/MRHome");
+            router.push("/MR_Portal_Apps/MR_Farmer_list_demo");
           }}
+          
           className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
         >
           Close
@@ -1614,7 +1654,7 @@ const AdditionalInfo = (props) => {
                       onClick={() => {
                         setAddFarmerModal(false);
                         router.push({
-                          pathname: "/MR_Portal_Apps/MRForm_Farmer_Fieldday",
+                          pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
                         });
                       }}
                     >

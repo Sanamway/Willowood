@@ -1005,9 +1005,9 @@ else {
           />
         </div>
       </div>
-      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
+      <hr className="bg-blue-800 h-2 w-full my-2 mt-4" />
       <h1 className="flex justify-center font-bold mx-4">Product Demo</h1>
-      <hr className="bg-blue-400 border-1 w-full my-2 " />
+      <hr className="bg-blue-800 h-2 w-full my-2 " />
 
       <div className="flex flex-row  mb-2 ">
         <div className="w-full px-2 mt-2">

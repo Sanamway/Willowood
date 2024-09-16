@@ -17,6 +17,7 @@ import moment from "moment";
 import { data } from "autoprefixer";
 
 const DealerTarget = () => {
+  
   const csvHeaders = [
     { label: "Id", key: "bg_id" },
     { label: "Business Segment", key: "business_segment" },
@@ -32,7 +33,7 @@ const DealerTarget = () => {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-
+ 
   const [filterState, setFilterState] = useState({
     bgId: null,
     buId: null,
@@ -54,12 +55,7 @@ const DealerTarget = () => {
     roleId: null,
   });
 
-  useEffect(() => {
-    if (router.query.type !== "Add") {
-      setSelectedYr(new Date(router.query.yr));
-      getAllMRSalesTarget();
-    }
-  }, []);
+  
 
   useEffect(() => {
     // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
@@ -322,6 +318,55 @@ const DealerTarget = () => {
         setFilterState(filterState);
 
         break;
+
+        case 1:
+          filterState = {
+            empCode: null,
+            cId:
+              JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+  
+            startDate: new Date(),
+          };
+          setLocalStorageItems({
+            cId:
+              JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            bgId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
+            buId:
+              JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+  
+            zId:
+              JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+  
+            rId:
+              JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
+                  "All",
+            tId:
+              JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+                ? "All"
+                : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
+                  "All",
+            roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+          });
+  
+          setFilterState(filterState);
+  
+          break;
+
       default:
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
@@ -543,7 +588,7 @@ const DealerTarget = () => {
  
     getAllDealerData(filterState.empCode);
   }, [filterState.empCode]);
-
+ 
   const [allMRSalesTarget, setAllMRSalesTarget] = useState([]);
   const [editviewFilter, setEditviewFilter] = useState({
     disName: "",
@@ -566,8 +611,9 @@ const DealerTarget = () => {
         // customer_code: router.query.custCode,
       };
     } else {
-      tDes =allTerritoryData.filter((item) => item.t_id === tId)[0]
-        .territory_name;
+      tDes =allTerritoryData.filter((item) => Number(item.t_id) === Number(tId))[0]
+        ?.territory_name ?allTerritoryData.filter((item) => Number(item.t_id) === Number(tId))[0]
+        .territory_name :"";
       paramsData = {
         t_id: tId,
         c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
@@ -577,6 +623,7 @@ const DealerTarget = () => {
         customer_code: dId ? dId : null,
       };
     }
+    console.log("mkjl", paramsData)
     try {
       const respond = await axios.get(`${url}/api/mr_sales_target`, {
         headers: headers,
@@ -610,6 +657,7 @@ const DealerTarget = () => {
   const [selectedYr, setSelectedYr] = useState(null);
 
   const handleSave = async () => {
+    console.log("kiol", filterState)
     try {
       let endPoint = "api/add_mr_sales_target";
       if (router.query.type === "Add") {
@@ -624,12 +672,12 @@ const DealerTarget = () => {
           return category_result.map((el) => {
             return {
               ...el,
-              t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+              t_id: filterState.tId,
               c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
               bg_id: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
               bu_id: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-              r_id: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
-              z_id: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+              r_id: filterState.rId,
+              z_id: filterState.zId,
               year: selectedYr.getFullYear(),
               product_category: el.category_name,
 
@@ -678,6 +726,19 @@ const DealerTarget = () => {
     setGroupedArray(newArray);
   }, [allMRSalesTarget]);
 
+  useEffect(() => {
+    console.log("zopo",router.query.yr)
+    if (router.query.type === "Add") {
+      setSelectedYr(null);
+      getAllMRSalesTarget();
+    }
+    else if (router.query.type === "Edit") {
+      setSelectedYr(new Date(router.query.yr));
+      getAllMRSalesTarget();
+    }
+  }, [router.query.type]);
+ 
+
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -698,10 +759,10 @@ const DealerTarget = () => {
         </div>
        
          
-          <div className="flex flex-row gap-4  px-4 pr-8 pb-2">
+          <div className="flex flex-row gap-2  px-4 pr-8 pb-2">
 
           <DatePicker
-              className="border p-1 rounded ml-2 w-40 "
+              className="border p-1 rounded ml-2 w-20 "
               showYearDropdown
               dateFormat="yyyy"
               placeholderText="Enter Year"
@@ -761,7 +822,6 @@ const DealerTarget = () => {
                 setFilterState({
                   ...filterState,
                   buId: e.target.value,
-
                   zId: "All",
                   rId: "All",
                   tId: "All",
@@ -877,13 +937,13 @@ const DealerTarget = () => {
           {router.query.type === "Add" ? (
               <div className="flex flex-row gap-2 ">
                 <input
-                  className="w-20 border p-1 rounded "
+                  className="w-16 border p-1 rounded "
                   value={filterState.empCode}
                   disabled
                 />
                 <select
                   id="attendanceType"
-                  className="border p-1 w-80 rounded  "
+                  className="border p-1 w-52 rounded  "
                   value={filterState.empCode}
                   onChange={(e) =>
                     setFilterState({ ...filterState, empCode: e.target.value })
@@ -914,7 +974,7 @@ const DealerTarget = () => {
             {router.query.type === "Add" ? (
               <div className=" flex flex-row gap-2">
                 <input
-                  className=" w-20 border p-1 rounded "
+                  className=" w-16 border p-1 rounded "
                   value={
                     filterState.dId
                       ? allDealer.filter(
@@ -929,7 +989,7 @@ const DealerTarget = () => {
 
                 <select
                   id="attendanceType"
-                  className="border p-1 rounded w-80 "
+                  className="border p-1 rounded w-40 "
                   value={filterState.dId}
                 
                   onChange={(e) => {
@@ -950,7 +1010,7 @@ const DealerTarget = () => {
             ) : (
               <div className=" flex flex-row gap-2 ">
                 <input
-                  className="w-20 border p-1 rounded w-[40%]"
+                  className="w-16 border p-1 rounded w-[40%]"
                   value={editviewFilter.empCode}
                   disabled
                 />
@@ -995,11 +1055,11 @@ const DealerTarget = () => {
                 <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
                   F.Y Sale
                   {selectedYr ? (
-                    <div>
+                    <span>
                       {String(selectedYr.getFullYear() - 2).slice(-2) +
                         "-" +
                         String(selectedYr.getFullYear() - 1).slice(-2)}
-                    </div>
+                    </span>
                   ) : (
                     "-"
                   )}{" "}
@@ -1007,11 +1067,11 @@ const DealerTarget = () => {
                 <th className="px-4 py-2  text-left border-black border-x-2  border-t-2 text-xs font-medium  tracking-wider bg-gray-300">
                   F.Y Sale{" "}
                   {selectedYr ? (
-                    <div>
+                    <span>
                       {String(selectedYr.getFullYear() - 1).slice(-2) +
                         "-" +
                         String(selectedYr.getFullYear()).slice(-2)}
-                    </div>
+                    </span>
                   ) : (
                     "-"
                   )}{" "}
@@ -1540,7 +1600,7 @@ const DealerTarget = () => {
                     </ul>
                   </td>
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
-                    <ul>
+                  <ul>
                       {item.category_result.map((catItem, idx) => (
                         <li className="border-b-2 border-black  flex justify-center text-black   p-1">
                           <input
@@ -1553,13 +1613,14 @@ const DealerTarget = () => {
                             disabled
                           />
                         </li>
-                      ))}
-                      <li className="  flex justify-center font-bold  text-black    p-1  ">
+                      ))}{" "}
+                      <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
                           value={item.category_result
                             .reduce((acc, curr) => {
                               acc =
+                                Number(acc) +
                                 Number(curr[Object.keys(curr)[6]]) +
                                 Number(curr[Object.keys(curr)[7]]) +
                                 Number(curr[Object.keys(curr)[8]]);
@@ -1570,6 +1631,7 @@ const DealerTarget = () => {
                         />
                       </li>
                     </ul>
+                
                   </td>
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-white">
                     <ul>
@@ -1738,26 +1800,29 @@ const DealerTarget = () => {
                     </ul>
                   </td>
                   <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  
+
                     <ul>
-                      {item.category_result.map((item, idx) => (
+                      {item.category_result.map((catItem, idx) => (
                         <li className="border-b-2 border-black  flex justify-center text-black   p-1">
                           <input
                             className="p-0 w-16  h-6 text-right  "
                             value={
-                              Number(item[Object.keys(item)[9]]) +
-                              Number(item[Object.keys(item)[10]]) +
-                              Number(item[Object.keys(item)[11]])
+                              Number(catItem[Object.keys(catItem)[9]]) +
+                              Number(catItem[Object.keys(catItem)[10]]) +
+                              Number(catItem[Object.keys(catItem)[11]])
                             }
                             disabled
                           />
                         </li>
-                      ))}
+                      ))}{" "}
                       <li className="  flex justify-center font-bold  text-black   p-1  bg-gray-300 ">
                         <input
                           className="p-0 w-16 h-6   text-right "
                           value={item.category_result
                             .reduce((acc, curr) => {
                               acc =
+                                Number(acc) +
                                 Number(curr[Object.keys(curr)[9]]) +
                                 Number(curr[Object.keys(curr)[10]]) +
                                 Number(curr[Object.keys(curr)[11]]);
@@ -2021,7 +2086,7 @@ const DealerTarget = () => {
                   </td>
                 </tr>
               ))}
-              <h1 className="w-full flex justify-between font-bold mt-2"></h1>
+          
               {Object.keys(groupedArray).map((empcode) => (
                 <tr className="dark:border-2">
                   <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
@@ -2882,7 +2947,7 @@ const DealerTarget = () => {
                 </tr>
               ))}
 
-              <h1 className="w-full flex justify-between font-bold mt-2"></h1>
+            
               <tr className="dark:border-2">
                 <td className="pl-4 w-52 text-left border-2 border-black whitespace-nowrap font-arial text-xs ">
                   -

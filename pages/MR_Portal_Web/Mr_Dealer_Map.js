@@ -82,10 +82,10 @@ const NewDealer = () => {
   };
 
   useEffect(() => {
-    if (router.query.type !== "Add") {
-      setSelectedYr(new Date(router.query.yr));
+    if (router.query.type === "Add" || router.query.type === undefined) {
+      return
     } else {
-      return;
+      setSelectedYr(new Date(router.query.yr));
     }
   }, [router.query.type]);
 
@@ -652,7 +652,7 @@ const NewDealer = () => {
     if (selectedYr && filterState.tId) {
       getAllDealerData();
     } else {
-      toast.error("Year and Teritory");
+      // toast.error("Year and Teritory");
     }
   }, [selectedYr, filterState.tId, filterState.empCode]);
 

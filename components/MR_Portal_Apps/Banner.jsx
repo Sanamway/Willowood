@@ -68,7 +68,7 @@ const Banner = () => {
               key={i}
               className="img flex items-center w-full justify-center mt-1 rounded-lg border-none cursor-pointer"
             >
-              <div className="image h-28 md:36 lg:h-72 w-full rounded-lg">
+              <div className="image h-36 md:36 lg:h-72 w-full rounded-lg">
                 <Image
                   className="object-fit lg:object-fit aspect-square w-full h-full rounded-lg"
                   src={item.thumbnail}

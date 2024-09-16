@@ -30,6 +30,11 @@ export const bannerData = [
     // "https://cdn.dummyjson.com/product-images/1/4.jpg",
     // "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg"
     // ]
+    // const [location, setLocation] = useState({ latitude: '', longitude: '' });
+    // setLocation({
+    //   latitude: position.coords.latitude,
+    //   longitude: position.coords.longitude
+    // });
   },
   {
     id: 2,

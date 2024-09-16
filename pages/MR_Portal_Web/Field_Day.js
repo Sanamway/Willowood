@@ -414,7 +414,7 @@ const FieldDay = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
         };
         setLocalStorageItems({
           bgId:
@@ -468,7 +468,8 @@ const FieldDay = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
+
         };
         setLocalStorageItems({
           bgId:
@@ -521,7 +522,8 @@ const FieldDay = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
+
         };
         setLocalStorageItems({
           bgId:
@@ -576,7 +578,8 @@ const FieldDay = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
+
         };
         setLocalStorageItems({
           bgId:
@@ -621,7 +624,8 @@ const FieldDay = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
+
         };
         setLocalStorageItems({
           bgId:
@@ -675,7 +679,8 @@ const FieldDay = () => {
             new Date().getMonth(),
             1
           ),
-          endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
+
         });
         setFilterState(filterState);
 
@@ -1094,7 +1099,6 @@ Verify
               dateFormat="dd-MM-yyyy"
               selected={filterState.endDate}
               placeholderText="Enter Date"
-              // selected={selectedYear}
               scrollableYearDropdown
               onChange={(date) =>
                 setFilterState({ ...filterState, endDate: date })
@@ -1112,10 +1116,10 @@ Verify
                   Action
                 </th>
                 <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  F Follow Code
+                  F Field Code
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Next Visit Date
+                 Field Date
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Emp Code
@@ -1125,6 +1129,9 @@ Verify
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Dealer
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Farmer Demo Code
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Farmer Mobile No
@@ -1157,19 +1164,17 @@ Verify
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Remarks
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Filed Day Image
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Handwritten Testimonials
-                </th>
-
+            
+               
                
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Deleted
+                  Field Day
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Field Day
+                  Potential
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Next Visit Date
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
@@ -1201,66 +1206,15 @@ Verify
                    <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
                     {getAllActionButton(item)}             
                 </td>
-                  {/* <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
-                    <button
-                      onClick={() => {
-                        setImgUrl(item.field_day_image_Url);
-                        setIsOpen(true);
-                      }}
-                      className="b text-black hover:text-blue-500 mr-2  "
-                    >
-                      View Image
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowVerifyModal(true);
-                        setModalData({
-                          ...modalData,
-                          type: "Verify",
-                          id: item.f_demo_fields_id,
-                        });
-                      }}
-                      disabled={item.verified === "Yes"}
-                      className="b text-black hover:text-blue-500  "
-                    >
-                      Verify
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowVerifyModal(true);
-                        setModalData({
-                          ...modalData,
-                          type: "Approve",
-                          id: item.f_demo_fields_id,
-                        });
-                      }}
-                      disabled={item.approved === "Yes"}
-                      className="b text-black hover:text-yellow-400 ml-2"
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="b text-black hover:text-red-500 ml-2"
-                      onClick={() => {
-                        setShowDeleteModal(true);
-                        setModalData({
-                          ...modalData,
-
-                          id: item.f_demo_fields_id,
-                        });
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td> */}
+                  
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.f_demo_code}
+                    {item.f_demo_field_no
+                    }
                   </td>
-                  {/* <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {moment(item.next_followup_date).format("MM/DD/YYYY")}
-                    </td> */}
+                 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.next_visit_date).format("MM/DD/YYYY")}
+                    {moment(item.demo_field_date
+).format("DD/MM/YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.emp_code}
@@ -1270,6 +1224,10 @@ Verify
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.dealer_des}
+                  </td>
+                
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {"-"}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.farmer_mob_no}
@@ -1299,24 +1257,10 @@ Verify
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.field_day_remarks}
                   </td>
-                  <td
-                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
-                    onClick={() => setShowImageModal(true)}
-                  >
-                    View
-                  </td>
-                  <td
-                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
-                    onClick={() => setShowImageModal(true)}
-                  >
-                    View
-                  </td>
-
+                 
                 
 
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.isDeleted ? "Yes" : "No"}
-                  </td>
+                 
                   
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                   <button
@@ -1329,7 +1273,16 @@ Verify
                       View Image
                     </button>
                   </td>
-
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.
+potential_farmer}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  
+                  {moment(item.
+next_visit_date
+).format("DD/MM/YYYY")}  
+                  </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.status}
                   </td>
@@ -1473,8 +1426,8 @@ Verify
                     className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
                   >
                     {modalData.type === "Verify"
-                      ? " Verify Demo"
-                      : "Approve Demo"}
+                      ? " Verify Field Day "
+                      : "Approve Field Day"}
                   </Dialog.Title>
                   <div className="mt-8 w-100">
                     <div className="flex flex-row gap-4 items-center ">
