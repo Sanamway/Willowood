@@ -118,8 +118,8 @@ const AdditionalInfo = (props) => {
   );
 
   const [formData, setFormData] = useState({
-    purposeMeet: "",
-    meetType: "",
+    purposeMeet: "Farmer Meet",
+    meetType: "Individual Farmer Contact (IFC)",
     farmerId: "",
     farmerName: "",
     farmerFatherName: "",
@@ -137,11 +137,12 @@ const AdditionalInfo = (props) => {
     expense: "",
     remarks: "",
     potentialFarmer: "Yes",
-    nextVisitDate: "",
+    nextVisitDate: new Date(),
     status: "Open",
     farmerAvailable: 0,
     venueAddress: "",
     territoryPresence: "",
+    regionPresence: "",
     devManagerPresence: "",
     zoneManagerPresence: "",
   });
@@ -193,6 +194,7 @@ const AdditionalInfo = (props) => {
         meeting_address: formData.venueAddress,
 
         t_presence: formData.territoryPresence,
+        r_presence: formData.regionPresence,
         dm_presence: formData.devManagerPresence,
         zdm_presence: formData.zoneManagerPresence,
       };
@@ -237,6 +239,7 @@ const AdditionalInfo = (props) => {
             farmerAvailable: 0,
             venueAddress: "",
             territoryPresence: "",
+            regionPresence: "",
             devManagerPresence: "",
             zoneManagerPresence: "",
           });
@@ -738,6 +741,7 @@ const AdditionalInfo = (props) => {
                   ...formData,
                   meetType: e.target.value,
                   territoryPresence: "Yes",
+                  regionPresence: "Yes",
                   devManagerPresence: "Yes",
                   zoneManagerPresence: "Yes",
                 });
@@ -746,6 +750,7 @@ const AdditionalInfo = (props) => {
                   ...formData,
                   meetType: e.target.value,
                   territoryPresence: "No",
+                  regionPresence: "Yes",
                   devManagerPresence: "No",
                   zoneManagerPresence: "No",
                 });
@@ -1080,7 +1085,7 @@ const AdditionalInfo = (props) => {
             
             onChange={(value) => setFormData({ ...formData, crop: value })}
           />
-          {console.log("zxsw",formData.crop)}
+       
         {/* <Select
           className="basic-single border border-balck-100"
           classNamePrefix="select"
@@ -1103,7 +1108,7 @@ const AdditionalInfo = (props) => {
             Challenge Face
           </label>
           <input
-            className="w-full h-28 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full h-14 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Farmer Problems / Challenge Face"
@@ -1113,7 +1118,7 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2 pt-2">
+        {/* <div className="w-full px-2 pt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -1130,7 +1135,7 @@ const AdditionalInfo = (props) => {
               setFormData({ ...formData, cause: e.target.value })
             }
           />
-        </div>
+        </div> */}
         <div className="w-full px-2 pt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -1139,7 +1144,7 @@ const AdditionalInfo = (props) => {
             <small className="text-red-600">*</small>Possible Solution
           </label>
           <input
-            className="w-full h-28 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full h-14 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Possible Solution"
@@ -1149,7 +1154,7 @@ const AdditionalInfo = (props) => {
             }
           />
         </div>
-        <div className="w-full px-2 pt-2">
+        {/* <div className="w-full px-2 pt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -1167,7 +1172,7 @@ const AdditionalInfo = (props) => {
               setFormData({ ...formData, techFarmer: e.target.value })
             }
           />
-        </div>
+        </div> */}
         <div className="w-full px-2 pt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -1196,7 +1201,7 @@ const AdditionalInfo = (props) => {
             Farmer Suggestion / Opinion / Idea
           </label>
           <input
-            className="w-full h-28 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full h-14 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
             id="inputField"
             placeholder="Farmer Suggestion / Opinion / Idea"
@@ -1251,7 +1256,36 @@ const AdditionalInfo = (props) => {
               htmlFor="inputField"
             >
               <small className="text-red-600">*</small>
-              Territory Presence
+              R.M Presence
+            </label>
+            <select
+              className="w-full px-3  border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 "
+              id="userSelect"
+              value={formData.regionPresence}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  regionPresence: e.target.value,
+                })
+              }
+            >
+              <option
+                value={""}
+                className="focus:outline-none focus:border-b bg-white"
+              >
+                Select
+              </option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div className="w-full px-2 pt-2">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="inputField"
+            >
+              <small className="text-red-600">*</small>
+              T.M Presence
             </label>
             <select
               className="w-full px-3  border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 "
@@ -1274,7 +1308,10 @@ const AdditionalInfo = (props) => {
               <option value="No">No</option>
             </select>
           </div>
-          <div className="w-full px-2 pt-2">
+          
+        </div>
+        <div className="flex flex-row justify-around ">
+        <div className="w-full px-2 pt-2">
             <label
               className="block text-gray-700 text-sm font-bold mb-2 "
               htmlFor="inputField"
@@ -1303,8 +1340,6 @@ const AdditionalInfo = (props) => {
               <option value="No">No</option>
             </select>
           </div>
-        </div>
-        <div className="flex flex-row justify-around ">
           <div className="w-full px-2 pt-2">
             <label
               className="block text-gray-700 text-sm font-bold mb-2 "
@@ -1334,7 +1369,12 @@ const AdditionalInfo = (props) => {
               <option value="No">No</option>
             </select>
           </div>
-          <div className="w-full px-2 pt-2">
+        
+        </div>
+        <div className="flex flex-row justify-start ">
+      
+         
+          <div className="w-1/2 px-2 pt-2">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="inputField"
@@ -1411,7 +1451,7 @@ const AdditionalInfo = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Potential
+            <small className="text-red-600">*</small> Potential Farmer
           </label>
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"

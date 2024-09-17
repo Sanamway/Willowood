@@ -87,6 +87,7 @@ const AdditionalInfo = (props) => {
   const [formData, setFormData] = useState({
     purposeDemo: "",
     dealer: "",
+    dealerName:"",
     farmerMobile: "",
     farmerId: "",
     farmerName: "",
@@ -121,7 +122,7 @@ const AdditionalInfo = (props) => {
 
   const getDelaerData = async () => {
     try {
-      const respond = await axios.get(`${url}/api/get_dealer`, {
+      const respond = await axios.get(`${url}/api/mr_dealer_map`, {
         headers: headers,
         params: {
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
@@ -196,6 +197,7 @@ const AdditionalInfo = (props) => {
         ...formData,
         purposeDemo: apires.purpose_of_demo,
         dealer: apires.d_id,
+        dealerName: apires.dealer_des,
         farmerMobile: apires.farmer_mob_no,
         farmerId: apires.farmer_id,
         farmerName: apires.farmer_name,
@@ -760,11 +762,12 @@ const AdditionalInfo = (props) => {
           >
             <small className="text-red-600 ">*</small> Dealer
           </label>
+          
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             disabled
-            value={formData.dealer}
+            value={formData.dealer ? formData.dealer :"Other"}
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -786,7 +789,25 @@ const AdditionalInfo = (props) => {
                 {item.party_Name}
               </option>
             ))}
+            <option
+              value="Other"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Other
+            </option>
           </select>
+          {console.log("zop", formData.dealerName)}
+          {formData.dealerName && 
+           <input
+           className="w-full px-3 py-2 mt-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+        
+           id="inputField"
+           placeholder="Delaer Name"
+           value={formData.dealerName}
+          
+         />}
+         
+
         </div>
       </div>
       
@@ -967,7 +988,13 @@ const AdditionalInfo = (props) => {
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-               Dose/Acre
+              St. Dose/Acre
+              </th>
+              <th
+                scope="col"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+              Rec. Dose/Acre
               </th>
               <th
                 scope="col"
@@ -1011,6 +1038,9 @@ const AdditionalInfo = (props) => {
                   {item.dose_acre_tank}
                 </td>
                 <td className="px-6  whitespace-nowrap text-sm text-gray-500">
+                  {item.rec_dose}
+                </td>
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.acre_plot}
                 </td>
                 <td className="px-6  whitespace-nowrap text-sm text-gray-500">
@@ -1045,40 +1075,16 @@ const AdditionalInfo = (props) => {
             <small className="text-red-600">*</small>Farmer Observation
           </label>
           <div className="flex flex-row gap-3 text-sm overflow-wrap ">
-            <section className="flex gap-1">
+          <section className="flex gap-1">
               <input
                 type="radio"
-                id="fair"
+                id="outstanding"
                 name="farmerObservation"
-                value="Fair"
+                value="Outstanding"
                 onChange={handleInputChange}
               />
-              <label htmlFor="fair" className="self-center">
-                Fair
-              </label>
-            </section>
-            <section className="flex gap-1">
-              <input
-                type="radio"
-                id="good"
-                name="farmerObservation"
-                value="Good"
-                onChange={handleInputChange}
-              />
-              <label htmlFor="good" className="self-center">
-                Good
-              </label>
-            </section>
-            <section className="flex gap-1">
-              <input
-                type="radio"
-                id="veryGood"
-                name="farmerObservation"
-                value="Very Good"
-                onChange={handleInputChange}
-              />
-              <label htmlFor="veryGood" className="self-center">
-                V.Good
+              <label htmlFor="outstanding" className="self-center">
+                Outstanding
               </label>
             </section>
             <section className="flex gap-1">
@@ -1096,15 +1102,43 @@ const AdditionalInfo = (props) => {
             <section className="flex gap-1">
               <input
                 type="radio"
-                id="outstanding"
+                id="veryGood"
                 name="farmerObservation"
-                value="Outstanding"
+                value="Very Good"
                 onChange={handleInputChange}
               />
-              <label htmlFor="outstanding" className="self-center">
-                Outstanding
+              <label htmlFor="veryGood" className="self-center">
+                V.Good
               </label>
             </section>
+            <section className="flex gap-1">
+              <input
+                type="radio"
+                id="good"
+                name="farmerObservation"
+                value="Good"
+                onChange={handleInputChange}
+              />
+              <label htmlFor="good" className="self-center">
+                Good
+              </label>
+            </section>
+            <section className="flex gap-1">
+              <input
+                type="radio"
+                id="fair"
+                name="farmerObservation"
+                value="Fair"
+                onChange={handleInputChange}
+              />
+              <label htmlFor="fair" className="self-center">
+                Fair
+              </label>
+            </section>
+           
+            
+            
+            
           </div>
         </div>
       </div>
@@ -1117,28 +1151,16 @@ const AdditionalInfo = (props) => {
             <small className="text-red-600">*</small>Product Rating
           </label>
           <div className="flex flex-row justify-between text-sm overflow-auto ">
-            <section className="flex gap-1">
+          <section className="flex gap-1">
               <input
                 type="radio"
-                id="poor"
+                id="excellentProduct"
                 name="productRating"
-                value="Poor"
+                value="Excellent"
                 onChange={handleInputChange}
               />
-              <label htmlFor="poor" className="self-center">
-                Poor
-              </label>
-            </section>
-            <section className="flex gap-1">
-              <input
-                type="radio"
-                id="average"
-                name="productRating"
-                value="Average"
-                onChange={handleInputChange}
-              />
-              <label htmlFor="average" className="self-center">
-                Average
+              <label htmlFor="excellentProduct" className="self-center">
+                Excellent
               </label>
             </section>
             <section className="flex gap-1">
@@ -1156,15 +1178,30 @@ const AdditionalInfo = (props) => {
             <section className="flex gap-1">
               <input
                 type="radio"
-                id="excellentProduct"
+                id="average"
                 name="productRating"
-                value="Excellent"
+                value="Average"
                 onChange={handleInputChange}
               />
-              <label htmlFor="excellentProduct" className="self-center">
-                Excellent
+              <label htmlFor="average" className="self-center">
+                Average
               </label>
             </section>
+            <section className="flex gap-1">
+              <input
+                type="radio"
+                id="poor"
+                name="productRating"
+                value="Poor"
+                onChange={handleInputChange}
+              />
+              <label htmlFor="poor" className="self-center">
+                Poor
+              </label>
+            </section>
+          
+           
+            
           </div>
         </div>
       </div>
@@ -1253,7 +1290,7 @@ const AdditionalInfo = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Potential
+            <small className="text-red-600">*</small> Potential Farmer
           </label>
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"

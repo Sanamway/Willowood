@@ -83,6 +83,7 @@ const AdditionalInfo = (props) => {
   const [formData, setFormData] = useState({
     purposeDemo: "",
     dealer: "",
+    dealerName:"",
     fDemoCode: "",
     farmerId: "",
     farmerName: "",
@@ -118,7 +119,7 @@ const AdditionalInfo = (props) => {
 
   const getDelaerData = async () => {
     try {
-      const respond = await axios.get(`${url}/api/get_dealer`, {
+      const respond = await axios.get(`${url}/api/mr_dealer_map`, {
         headers: headers,
       });
       const apires = await respond.data.data;
@@ -256,6 +257,7 @@ const AdditionalInfo = (props) => {
           setFormData({
             purposeDemo: "",
             dealer: "",
+            dealerName:"",
             farmerMobile: "",
             farmerId: "",
             farmerName: "",
@@ -382,6 +384,8 @@ const AdditionalInfo = (props) => {
     }
   };
 
+
+  
   const getFarmerData = async (fdemo) => {
     try {
       const respond = await axios.get(`${url}/api/get_mr_form_demo`, {
@@ -400,6 +404,7 @@ const AdditionalInfo = (props) => {
         fDemoCode: apires.f_demo_code,
         purposeDemo: apires.purpose_of_demo,
         dealer: apires.d_id,
+        dealerName: apires.dealer_des,
         farmerMobile: apires.farmer_mob_no,
         farmerId: apires.farmer_id,
         farmerName: apires.farmer_name,
@@ -799,8 +804,8 @@ const AdditionalInfo = (props) => {
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
-            
-            value={formData.dealer}
+            disabled
+            value={formData.dealer ? formData.dealer :"Other"}
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -822,7 +827,23 @@ const AdditionalInfo = (props) => {
                 {item.party_Name}
               </option>
             ))}
+            <option
+              value="Other"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Other
+            </option>
           </select>
+       
+          {formData.dealerName && 
+           <input
+           className="w-full px-3 py-2 mt-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+        
+           id="inputField"
+           placeholder="Delaer Name"
+           value={formData.dealerName}
+          
+         />}
         </div>
       </div>
 
@@ -1147,7 +1168,7 @@ const AdditionalInfo = (props) => {
           className="block text-gray-700 text-sm font-bold mb-2 flex flex-row self-center"
           htmlFor="inputField"
         >
-          <small className="text-red-600">*</small> How many Farmer available
+          <small className="text-red-600">*</small> How many Farmer Participation.
         </label>
         <input
           className=" px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 w-12"
@@ -1226,7 +1247,7 @@ const AdditionalInfo = (props) => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Potential
+            <small className="text-red-600">*</small> Potential Farmer
           </label>
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"

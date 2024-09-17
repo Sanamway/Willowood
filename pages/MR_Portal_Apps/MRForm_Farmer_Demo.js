@@ -64,7 +64,9 @@ const AdditionalInfo = (props) => {
     productBrand: "",
     water: "",
     dose: "",
+    recDose:""
   });
+  console.log("pop", productDemoState)
 
   const [productDemoTableData, setProductDemoTableData] = useState([]);
   const [dealerData, setDealerData] = useState([]);
@@ -76,7 +78,7 @@ const AdditionalInfo = (props) => {
 
   const getDelaerData = async () => {
     try {
-      const respond = await axios.get(`${url}/api/get_dealer`, {
+      const respond = await axios.get(`${url}/api/mr_dealer_map`, {
         headers: headers,
         params: {
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
@@ -192,15 +194,17 @@ const AdditionalInfo = (props) => {
   };
   const [submitFormLoading, setSubmitFormLoading] = useState(false);
   const handleAddDemo = async () => {
+    console.log("form", formData.dealer)
     if(productDemoTableData.length !== 0) {
       setSubmitFormLoading(true);
     try {
       const data = {
         demo_date: moment().format("YYYY-MM-DD[T00:00:00.000Z]"),
         demo_time: new Date(),
-        dealer_id: Number(formData.dealer),
+        dealer_id:  Number(formData.dealer) !== "other" ?  Number(formData.dealer) : 0,
+        dealer_name: formData.dealerName || null ,
         purpose_of_demo: formData.purposeDemo,
-        d_id: formData.dealer,
+        d_id: Number(formData.dealer) !== "other" ?  Number(formData.dealer) : 0,
         farmer_mob_no: formData.farmerMobile,
         farmer_id: Number(formData.farmerId),
         farmer_name: formData.farmerName,
@@ -240,6 +244,7 @@ const AdditionalInfo = (props) => {
           setFormData({
             purposeDemo: "",
             dealer: "",
+            dealerName:"",
             farmerMobile: "",
             farmerId: "",
             farmerName: "",
@@ -260,6 +265,7 @@ const AdditionalInfo = (props) => {
             productBrand: "",
             water: "",
             dose: "",
+            recDose:""
           });
         });
     } catch (errors) {
@@ -447,6 +453,7 @@ else {
     generateEmpCode();
   }, []);
   const handleAddProductDemo = async () => {
+    console.log("lop", productDemoState.recDose ,  productDemoState)
     try {
       const data = {
         f_demo_code: fDemoCode,
@@ -456,10 +463,12 @@ else {
         )[0].crop_name : null,
         stage: productDemoState.stage,
         acre_plot: productDemoState.acre,
+        rec_dose: Number(productDemoState.recDose),
         segment: productDemoState.segment,
         product_brand: productDemoState.productBrand,
         dose_acre_tank: Number(productDemoState.dose),
         water_val: Number(productDemoState.water),
+        emp_code: window.localStorage.getItem("emp_code"),
       };
 
       const respond = await axios
@@ -468,7 +477,7 @@ else {
         })
         .then((res) => {
           if (!res) return;
-          console.log("qaz",res);
+       
 
           getProductDemoTable(fDemoCode);
           setProductDemoState({
@@ -476,6 +485,7 @@ else {
             cropName: "",
             stage: "",
             acre: "",
+            recDose:"",
             segment: "",
             productBrand: "",
             water: "",
@@ -843,10 +853,25 @@ else {
             disabled={formActive}
             value={formData.dealer}
             onChange={(e) =>
-              setFormData({
-                ...formData,
-                dealer: e.target.value,
-              })
+            {
+              if(e.target.value === "other"){
+                setFormData({
+                  ...formData,
+                  dealer: e.target.value,
+
+                })
+  
+              }
+              else {
+ setFormData({
+                  ...formData,
+                  dealer: e.target.value,
+                  dealerName: ""
+        
+                })
+              }
+            }
+             
             }
           >
             <option
@@ -860,10 +885,30 @@ else {
                 value={item.d_id}
                 className="focus:outline-none focus:border-b bg-white"
               >
-                {item.party_Name}
+                {item.party_name}
               </option>
             ))}
+             <option
+              value="other"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              Other
+            </option>
           </select>
+          {formData.dealer === "other" && <input
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
+              
+              id="inputField"
+              placeholder="Dealer Name"
+              value={formData.dealerName}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  dealerName: e.target.value,
+                })
+              }      
+            />}
+          
         </div>
       </div>
 
@@ -1135,13 +1180,12 @@ else {
         </div>
       </div>
       <div className="flex flex-row my-2 mb-2 ">
-      <div className="w-full px-2 mt-2">
-          
+      <div className="w-1/2 px-2 mt-2">      
           <input
-            className="w-full px-3 py-4 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="number"
             id="inputField"
-            placeholder="Dose / Acre"
+            placeholder="Standard Dose / Acre"
             value={productDemoState.dose}
             onChange={(e) =>
               setProductDemoState({
@@ -1150,11 +1194,28 @@ else {
               })
             }
           />
+          
+        </div>
+        <div className="w-full px-2 mt-2">      
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="number"
+            id="inputField"
+            placeholder="Recom. Dose / Acre"
+            value={productDemoState.recDose}
+            onChange={(e) =>
+              setProductDemoState({
+                ...productDemoState,
+                recDose: e.target.value,
+              })
+            }
+          />
+          
         </div>
         <div className="w-full px-2 mt-2">
         
           <input
-            className="w-full px-3 py-4 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             id="inputField"
             placeholder="Acre / Plot Size"
             value={productDemoState.acre}
@@ -1169,7 +1230,7 @@ else {
 
         <div className="w-full px-2 mt-2">
         <input
-            className="w-full px-3 py-4 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="number"
             id="inputField"
             placeholder="Water"
@@ -1232,7 +1293,13 @@ else {
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-               Dose/Acre
+              St.Dose/Acre
+              </th>
+              <th
+                scope="col"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+              Rec.Dose/Acre
               </th>
               <th
                 scope="col"
@@ -1274,6 +1341,9 @@ else {
                 </td>
                 <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.dose_acre_tank}
+                </td>
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
+                  {item.rec_dose}
                 </td>
                 <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.acre_plot}
@@ -1333,8 +1403,7 @@ else {
         </div> */}
         <div className="wrap ">
           <h1 className="flex justify-center font-bold ">
-            <FaUpload className="mr-2 text-blue-400 self-center" /> Upload the
-            field demo Image
+            <FaUpload className="mr-2 text-blue-400 self-center" /> Upload the farmer demo Image
           </h1>
           <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
             <div className="wrap ">
@@ -1371,7 +1440,7 @@ else {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Potential
+            <small className="text-red-600">*</small> Potential Farmer
           </label>
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
