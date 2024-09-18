@@ -571,7 +571,7 @@ const AdditionalInfo = (props) => {
               <label htmlFor="positioning_no">No</label>
             </div>
           </li>
-          <li className="flex items-center py-2">
+          {/* <li className="flex items-center py-2">
             <span className="flex-1">Distribution</span>
             <div className="flex space-x-4">
               <input
@@ -595,7 +595,7 @@ const AdditionalInfo = (props) => {
               />
               <label htmlFor="distribution_no">No</label>
             </div>
-          </li>
+          </li> */}
           <li className="flex items-center py-2">
             <span className="flex-1">Promotional Material</span>
             <div className="flex space-x-4">
@@ -619,7 +619,7 @@ const AdditionalInfo = (props) => {
               <label htmlFor="positioning_no">No</label>
             </div>
           </li>
-          <li className="flex items-center py-2">
+          {/* <li className="flex items-center py-2">
             <span className="flex-1">Out of Stock</span>
             <div className="flex space-x-4">
               <input
@@ -639,9 +639,9 @@ const AdditionalInfo = (props) => {
               />
               <label htmlFor="distribution_no">No</label>
             </div>
-          </li>
+          </li> */}
 
-          <li className="flex items-center py-2">
+          {/* <li className="flex items-center py-2">
             <span className="flex-1">Proper Label Tagging</span>
             <div className="flex space-x-4">
               <input
@@ -661,8 +661,8 @@ const AdditionalInfo = (props) => {
               />
               <label htmlFor="positioning_no">No</label>
             </div>
-          </li>
-          <li className="flex items-center py-2">
+          </li> */}
+          {/* <li className="flex items-center py-2">
             <span className="flex-1">Product Facing</span>
             <div className="flex space-x-4">
               <input
@@ -683,7 +683,7 @@ const AdditionalInfo = (props) => {
               />
               <label htmlFor="distribution_no">No</label>
             </div>
-          </li>
+          </li> */}
 
           <li className="flex items-center py-2">
             <span className="flex-1">Damage Condition</span>
@@ -706,7 +706,7 @@ const AdditionalInfo = (props) => {
               <label htmlFor="positioning_no">No</label>
             </div>
           </li>
-          <li className="flex items-center py-2">
+          {/* <li className="flex items-center py-2">
             <span className="flex-1">Rack Unique Concept</span>
             <div className="flex space-x-4">
               <input
@@ -726,7 +726,7 @@ const AdditionalInfo = (props) => {
               />
               <label htmlFor="distribution_no">No</label>
             </div>
-          </li>
+          </li> */}
 
           <li className="flex items-center py-2">
             <span className="flex-1">Category Placement</span>
@@ -750,7 +750,7 @@ const AdditionalInfo = (props) => {
             </div>
           </li>
 
-          <li className="flex items-center py-2">
+          {/* <li className="flex items-center py-2">
             <span className="flex-1">Display POP</span>
             <div className="flex space-x-4">
               <input
@@ -770,7 +770,7 @@ const AdditionalInfo = (props) => {
               />
               <label htmlFor="distribution_no">No</label>
             </div>
-          </li>
+          </li> */}
         </ul>
       </div>
 

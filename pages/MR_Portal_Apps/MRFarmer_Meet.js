@@ -212,6 +212,7 @@ const AdditionalInfo = (props) => {
             behavior: "smooth", // Smooth scrolling animation
           });
           uploadImage();
+          uploadImageFull();
           setFarmerMobileNumber("");
           generateEmpCode();
           setFormData({
@@ -534,6 +535,75 @@ const AdditionalInfo = (props) => {
   const triggerFileInput = () => {
     fileInputRef.current.click();
   };
+
+
+
+
+  const [selectedImageFull, setSelectedImageFull] = useState("");
+  const [selectedNewImageFull, setSelectedNewImageFull] = useState("");
+  const fileInputRefFull = useRef(null);
+  const handleImageUploadFull = (event) => {
+    const file = event.target.files[0];
+
+    setSelectedNewImageFull(file);
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setSelectedImageFull(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImageFull = async () => {
+    function getFileExtension(filename) {
+      if (typeof filename.name !== "string") {
+        console.error("Invalid input. Expected a string.");
+        return toast.error("Input a valid Image");
+      }
+
+      const parts = filename.name.split(".");
+      if (parts.length > 1) {
+        return parts[parts.length - 1];
+      } else {
+        return "jpg";
+      }
+    }
+
+    try {
+      const renamedBlob = new Blob([selectedNewImageFull], {
+        type: selectedNewImageFull?.type,
+      });
+
+      const fd = new FormData();
+      fd.append(
+        "myFile",
+        renamedBlob,
+        `${fMeetCode}.${getFileExtension(selectedNewImageFull)}`
+      );
+
+      const response = await axios
+        .post(`${url}/api/upload_file`, fd, {
+          params: {
+            file_path: "mr_meet_attendance",
+            farmer_meet_attendance_img: `${fMeetCode}.${getFileExtension(
+              selectedNewImageFull
+            )}`,
+            f_meet_no: fMeetCode,
+          },
+        })
+        .then(() => {
+          setSelectedImageFull(""), setSelectedNewImageFull("");
+        });
+    } catch (error) {}
+  };
+  const triggerFileInputFull = () => {
+    fileInputRefFull.current.click();
+  };
+
+  
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -1396,10 +1466,9 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
+      
       <h1 className="flex justify-start font-bold m-4">
-        {" "}
-        <FaUpload className="mr-2 text-blue-400 self-center" /> Farmer Meet
-        Image
+        <FaUpload className="mr-2 text-blue-400 self-center" /> Farmer Meet Image
       </h1>
 
       <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
@@ -1427,6 +1496,39 @@ const AdditionalInfo = (props) => {
           </div>
         </div>
       </div>
+
+
+      <h1 className="flex justify-start font-bold m-4">
+        {" "}
+        <FaUpload className="mr-2 text-blue-400 self-center" /> Farmer Upload Image
+      </h1>
+
+      <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
+        <div className="wrap ">
+          <div className=" w-full px-2 pt-2 profpic relative group bo">
+            <img
+              src={selectedImageFull}
+              className=" rounded  bg-gray-200 w-72 h-60"
+              alt="img"
+              onClick={triggerFileInputFull}
+            />
+
+            {!selectedImageFull && (
+              <label
+                htmlFor="fileInputFull"
+                className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+                onClick={triggerFileInputFull}
+              >
+                <FaCameraRetro
+                  size={50}
+                  className="mr-2  self-center size-120 text-black-400"
+                />
+              </label>
+            )}
+          </div>
+        </div>
+      </div>
+
 
       <div className="w-full px-2 pt-2">
         <label
@@ -1901,6 +2003,14 @@ const AdditionalInfo = (props) => {
         className="hidden"
         onChange={handleImageUpload}
         ref={fileInputRef}
+      />
+       <input
+        type="file"
+        accept="image/*"
+        id="fileInputFull"
+        className="hidden"
+        onChange={handleImageUploadFull}
+        ref={fileInputRefFull}
       />
     </form>
   );

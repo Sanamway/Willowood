@@ -66,7 +66,7 @@ const FarmerSHC = () => {
     }
   };
 
-  const [showImageModal, setShowImageModal] = useState(false);
+   const [showImageModal, setShowImageModal] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -1170,36 +1170,24 @@ Verify
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                 Product Positioning
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Product Distribution
-                </th>
+               
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
               Promotional Material
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-               Out of Stock
-                </th>
+              
 
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Proper Label Tagging
-                </th>
+              
 
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Product Facing
-                </th>
+               
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                Damage Condition 
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Rack Unique Concept
-                </th>
+              
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Category Placement
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Display POP
-                </th>
+               
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                  Current Stock
                 </th>
@@ -1270,34 +1258,22 @@ Verify
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.product_positioning}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.distribution}
-                  </td>
+                
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.promotional_material}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.out_of_stock}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.proper_label_tagging}
-                  </td>
+                
+                  
 
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.product_facing}
-                  </td>
+                 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.damage_condition}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.rack_unique_concept}
-                  </td>
+                 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.category_placement}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.display_pop}
-                  </td>
+                
                  
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.current_stock}

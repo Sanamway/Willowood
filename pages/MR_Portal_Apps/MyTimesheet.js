@@ -295,7 +295,9 @@ const AdditionalInfo = (props) => {
             </div>
             <div className="flex flex-col self-center gap-2 ">
               <span className="font-bold text-sm h-6  border-2 border-black-500  text-black-400 whitespace-nowrap px-2">
-                {moment(item.punch_in_time).format("hh:mm A")}
+                {moment(item.punch_in_time).subtract(5, 'hours')
+            .subtract(30, 'minutes').format("hh:mm A")}
+             
               </span>
               <span className="font-bold text-sm h-6  border-2 border-black-500 bg-sky-900 text-white whitespace-nowrap px-2">
                 {item.punch_out_time

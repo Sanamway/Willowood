@@ -121,6 +121,10 @@ const AdditionalInfo = (props) => {
     try {
       const respond = await axios.get(`${url}/api/mr_dealer_map`, {
         headers: headers,
+        params: {
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+        },
       });
       const apires = await respond.data.data;
       setDealerData(apires);
@@ -207,14 +211,17 @@ const AdditionalInfo = (props) => {
   }, [productDemoState.crop]);
 
   const handleAddFiledDay = async () => {
+    console.log("Hope", formData)
     try {
       const data = {
         f_demo_field_no: fDemoCode,
         demo_field_date: moment().format("YYYY-MM-DD[T00:00:00.000Z]"),
         demo_field_time: new Date(),
-        dealer_id: Number(formData.dealer),
+      
+        dealer_id: formData.dealer !== "other" ?  Number(formData.dealer) : 0,
+        dealer_name: formData.dealerName || null ,
         f_demo_code: formData.fDemoCode,
-        d_id: Number(formData.dealer),
+        d_id: formData.dealer !== "other" ?  Number(formData.dealer) : 0,
         farmer_mob_no: Number(farmerMobileNumber),
         farmer_id: Number(formData.farmerId),
         farmer_name: formData.farmerName,
@@ -509,8 +516,7 @@ const AdditionalInfo = (props) => {
       }
     } else {
       setFormData({
-        purposeDemo: "",
-        dealer: "",
+        ...formData,
 
         farmerId: "",
         farmerName: "",
@@ -522,7 +528,7 @@ const AdditionalInfo = (props) => {
         productRating: "",
         remarks: "",
         potentialFarmer: "",
-        nextVisitDate: "",
+        nextVisitDate: new Date(),
         status: "Open",
       });
     }
@@ -800,11 +806,13 @@ const AdditionalInfo = (props) => {
             htmlFor="inputField"
           >
             <small className="text-red-600 ">*</small> Dealer
-          </label>
-          <select
+           </label>
+           {
+            router.query.f_demo_code ?  
+              <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
-            disabled
+            disabled={router.query.f_demo_code}
             value={formData.dealer ? formData.dealer :"Other"}
             onChange={(e) =>
               setFormData({
@@ -833,17 +841,92 @@ const AdditionalInfo = (props) => {
             >
               Other
             </option>
-          </select>
+          </select>  :
+          <select
+          className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+          id="stateSelect"
+          disabled={formActive}
+          value={formData.dealer}
+          onChange={(e) =>
+          {
+            if(e.target.value === "other"){
+              setFormData({
+                ...formData,
+                dealer: e.target.value,
+
+              })
+
+            }
+            else {
+setFormData({
+                ...formData,
+                dealer: e.target.value,
+                dealerName: ""
+      
+              })
+            }
+          }
+           
+          }
+        >
+          <option
+            value=""
+            className="focus:outline-none focus:border-b bg-white"
+          >
+            Select
+          </option>
+          {dealerData?.map((item) => (
+            <option
+              value={item.d_id}
+              className="focus:outline-none focus:border-b bg-white"
+            >
+              {item.party_name}
+            </option>
+          ))}
+           <option
+            value="other"
+            className="focus:outline-none focus:border-b bg-white"
+          >
+            Other
+          </option>
+        </select>
+           }
        
-          {formData.dealerName && 
-           <input
-           className="w-full px-3 py-2 mt-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-        
-           id="inputField"
-           placeholder="Delaer Name"
-           value={formData.dealerName}
           
-         />}
+
+       {
+            router.query.f_demo_code ?  
+            formData.dealerName && 
+              <input
+              className="w-full px-3 py-2 mt-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+           
+              id="inputField"
+              placeholder="Delaer Name"
+              value={formData.dealerName}
+              disabled
+              onChange={(e) =>
+               setFormData({
+                 ...formData,
+                 dealerName: e.target.value,
+               })
+             }      
+            /> :
+           formData.dealer === "other" && 
+              <input
+              className="w-full px-3 py-2 mt-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+           
+              id="inputField"
+              placeholder="Delaer Name"
+              value={formData.dealerName}
+              onChange={(e) =>
+               setFormData({
+                 ...formData,
+                 dealerName: e.target.value,
+               })
+             }      
+            /> 
+           }
+          
         </div>
       </div>
 

@@ -74,6 +74,8 @@ const AdditionalInfo = (props) => {
     attendanceType: "",
     reason: "",
     attendanceId: "",
+    closingKm:"",
+    openingKm:""
   });
   const [attendenceStatus, setAttendenceStatus] = useState("Punch In");
   const getAttandenceStatus = async () => {
@@ -104,10 +106,10 @@ const AdditionalInfo = (props) => {
         });
       }
     } catch (error) {
-      if(error.response.status === 404){
+      if(error.response?.status === 404){
         setAttendenceStatus("Punch In");
-      setUserDetails({
-        ...userDetails,
+         setUserDetails({
+         ...userDetails,
 
         attendanceType: "Punch In",
       });
@@ -138,6 +140,7 @@ return
           attendance_type: userDetails.attendanceType,
           punch_in_time:moment().format('YYYY-MM-DD HH:mm:ss'),
           punch_in_image: "https://picsum.photos/200/300",
+          opening_km: userDetails.openingKm,
           status: "PI",
           reason: userDetails.reason,
         };
@@ -155,6 +158,7 @@ return
           punch_out_time:moment().format('YYYY-MM-DD HH:mm:ss'),
           punch_out_image: "https://picsum.photos/200/300",
           status: "PO",
+          closing_km: userDetails.closingKm,
           reason: userDetails.reason,
         };
       }
@@ -165,6 +169,7 @@ return
           })
           .then((res) => {
             if (!res) return;
+            uploadImage("pi")
             router.push({
               pathname: "/MR_Portal_Apps/MRHome",
             })
@@ -178,6 +183,7 @@ return
             headers: headers,
           })
           .then((res) => {
+            uploadImage("po")
             router.push({
               pathname: "/MR_Portal_Apps/MRHome",
             })
@@ -195,6 +201,75 @@ return
     }
   };
   let PunchInTimeString= moment(new Date()).format("DD-MM-YYYY h:mm A") 
+
+
+  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedNewImage, setSelectedNewImage] = useState("");
+  const fileInputRef = useRef(null);
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+
+    setSelectedNewImage(file);
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setSelectedImage(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async (type) => {
+    function getFileExtension(filename) {
+      // if (typeof filename.name !== "string") {
+      //   console.error("Invalid input. Expected a string.");
+      //   return toast.error("Input a valid Image");
+      // }
+
+      const parts = filename.name.split(".");
+      if (parts.length > 1) {
+        return parts[parts.length - 1];
+      } else {
+        return "jpg";
+      }
+    }
+
+    try {
+      const renamedBlob = new Blob([selectedNewImage], {
+        type: selectedNewImage?.type,
+      });
+
+      const fd = new FormData();
+      fd.append(
+        "myFile",
+        renamedBlob,
+        `${localStorageItems.empCode}.${getFileExtension(selectedNewImage)}`
+      );
+
+      const response = await axios
+        .post(`${url}/api/upload_file`, fd, {
+          params: {
+            file_path: type,
+             punch_in_image: `${localStorageItems.empCode}.${getFileExtension(
+              selectedNewImage
+            )}`,
+            f_demo_field_no: localStorageItems.empCode,
+          },
+        })
+        .then(() => {
+          setSelectedImage("");
+          setSelectedNewImage("");
+        });
+    } catch (error) {
+      console.log("NOP", error);
+    }
+  };
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -276,7 +351,7 @@ return
                   </p>
                   <span>:</span>
                 </div>
-                <span className="w-28 ml-3">{localStorageItems.empCode}</span>
+                 <span className="w-28 ml-3">{localStorageItems.empCode}</span>
               </div>
               <div className="flex   w-full  w-28 ">
                 <div className="flex">
@@ -308,14 +383,17 @@ return
             Punch-Out
           </h1>
         )}
-        <h1 className=" font-bold flex w-full justify-center h-8  border p-1  shadow-xl">
+        <h1 className=" font-bold text-sm flex w-full justify-center h-8  border p-1  shadow-xl">
           Last Punch In :{" "}
           {attendenceStatus === "Punch In"
             ? "Not Available"
-            : moment(new Date(userDetails.lastPunchIn)).format("dddd, MMMM DD, YYYY h:mm A")}
+            :moment(userDetails.lastPunchIn) .subtract(5, 'hours')
+            .subtract(30, 'minutes').format("dddd, MMMM D, YYYY h:mm A")
+            }
+            {/* :moment(userDetails.lastPunchIn).format("dddd, MMMM D, YYYY h:mm A") */}
         </h1>
-
-        <div>
+<div className="flex flex-row gap-2">
+<div className="w-full">
           <label htmlFor="attendanceType" className="block font-bold mb-2">
             Attendance Type:
           </label>
@@ -337,17 +415,68 @@ return
             <option value="Weekly Off">Weekly Off</option>
           </select>
         </div>
+        {attendenceStatus === "Punch In"
+            ? <div className="w-full">
+            <label htmlFor="attendanceType" className="block font-bold mb-2">
+              Opening Km:
+            </label>
+            <input className="w-full border p-2 rounded" type="number" value={userDetails.openingKm} onChange={(e)=> {
+              setUserDetails({
+                ...userDetails,
+                openingKm: e.target.value
+              })
+            }}/>
+          </div>
+            :<div className="w-full">
+            <label htmlFor="attendanceType" className="block font-bold mb-2">
+              Closing Km:
+            </label>
+            <input className="w-full border p-2 rounded" type="number" value={userDetails.closingKm} onChange={(e)=> {
+              setUserDetails({
+                ...userDetails,
+                closingKm: e.target.value
+              })
+            }}/> 
+          </div>}
+</div>
+     
+
+       
 
         <div className="flex w-full  border my-2  shadow-xl">
           <button className="text-sm font-bold py-1 rounded-md   flex  flex-row w-full justify-center h-8 ">
-            Take Selfie
+          Upload Odometer
           </button>
           <FaCameraRetro
             size={10}
             className="mr-4 text-black  self-center justify-self-end  size-120 text-blue-800"
           />
         </div>
-        <div className="w-40 h-40 bg-gray-200 self-center "></div>
+        <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
+        <div className="wrap ">
+          <div className=" w-full px-2 pt-2 profpic relative group bo">
+            <img
+              src={selectedImage}
+              className=" rounded  bg-gray-200 w-72 h-60"
+              alt="img"
+              onClick={triggerFileInput}
+            />
+
+            {!selectedImage && (
+              <label
+                htmlFor="fileInput "
+                className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+                onClick={triggerFileInput}
+              >
+                <FaCameraRetro
+                  size={50}
+                  className="mr-2  self-center size-120 text-black-400"
+                />
+              </label>
+            )}
+          </div>
+        </div>
+      </div>
         <div className="flex flex-col gap-2  md:hidden">
           <label htmlFor="reason" className="block font-bold ">
             Reason for different Punch in/out date required:
@@ -394,27 +523,34 @@ return
         )}
 
         <div className="flex  flex-col px-4 w-full  md:hidden">
-          <div className="flex justify-between w-full gap-4">
-            <p className="text-gray-800 font-bold text-sm">
-              Reporting Manager <span className="self-end">: </span>
+          <div className="flex  w-full gap-4">
+            <p className="flex justify-between text-gray-800 font-bold text-sm w-40">
+              <span>Reporting Manager</span> <span className="self-end">: </span>
             </p>
             <p className="text-gray-800 text-sm">{localStorageItems.reportingManager}</p>
           </div>
-          <div className="flex justify-between w-full gap-4 mt-2">
-            <p className="text-gray-800 font-bold text-sm">
-              Development Manager:
+          <div className="flex  w-full gap-4 mt-2">
+          <p className="flex justify-between text-gray-800 font-bold text-sm w-40">
+              <span>Development Manager</span> <span className="self-end">: </span>
             </p>
             <p className="text-gray-800 text-sm">{localStorageItems.developmentManager}</p>
           </div>
-          <div className="flex justify-between w-full gap-4 mt-2">
-            <p className="text-gray-800 font-bold text-sm">
-              HR Manager:
+          <div className="flex w-full gap-4 mt-2">
+          <p className="flex justify-between text-gray-800 font-bold text-sm w-40">
+              <span>H.R. Manager</span> <span className="self-end">: </span>
             </p>
             <p className="text-gray-800 text-sm">{localStorageItems.hrManager}</p>
           </div>
         </div>
       </div>
-      
+      <input
+        type="file"
+        accept="image/*"
+        id="fileInput"
+        className="hidden"
+        onChange={handleImageUpload}
+        ref={fileInputRef}
+      />
     </form>
   );
 };
