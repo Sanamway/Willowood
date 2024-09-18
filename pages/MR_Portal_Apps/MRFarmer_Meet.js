@@ -1320,6 +1320,35 @@ const AdditionalInfo = (props) => {
           />
         </div>
         <div className="flex flex-row justify-around ">
+        <div className="w-full px-2 pt-2">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="inputField"
+            >
+              <small className="text-red-600">*</small>
+              T.M Presence
+            </label>
+            <select
+              className="w-full px-3  border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 "
+              id="userSelect"
+              value={formData.territoryPresence}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  territoryPresence: e.target.value,
+                })
+              }
+            >
+              <option
+                value={""}
+                className="focus:outline-none focus:border-b bg-white"
+              >
+                Select
+              </option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
           <div className="w-full px-2 pt-2">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -1349,35 +1378,7 @@ const AdditionalInfo = (props) => {
               <option value="No">No</option>
             </select>
           </div>
-          <div className="w-full px-2 pt-2">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="inputField"
-            >
-              <small className="text-red-600">*</small>
-              T.M Presence
-            </label>
-            <select
-              className="w-full px-3  border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 "
-              id="userSelect"
-              value={formData.territoryPresence}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  territoryPresence: e.target.value,
-                })
-              }
-            >
-              <option
-                value={""}
-                className="focus:outline-none focus:border-b bg-white"
-              >
-                Select
-              </option>
-              <option value="Yes">Yes</option>
-              <option value="No">No</option>
-            </select>
-          </div>
+         
           
         </div>
         <div className="flex flex-row justify-around ">
@@ -1500,7 +1501,7 @@ const AdditionalInfo = (props) => {
 
       <h1 className="flex justify-start font-bold m-4">
         {" "}
-        <FaUpload className="mr-2 text-blue-400 self-center" /> Farmer Upload Image
+        <FaUpload className="mr-2 text-blue-400 self-center" /> Farmer Attendance Sheet
       </h1>
 
       <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">

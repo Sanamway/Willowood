@@ -463,7 +463,7 @@ else {
         )[0].crop_name : null,
         stage: productDemoState.stage,
         acre_plot: productDemoState.acre,
-        rec_dose: Number(productDemoState.recDose),
+        rec_dose: productDemoState.recDose ? Number(productDemoState.recDose) :null,
         segment: productDemoState.segment,
         product_brand: productDemoState.productBrand,
         dose_acre_tank: Number(productDemoState.dose),
@@ -1180,7 +1180,7 @@ else {
         </div>
       </div>
       <div className="flex flex-row my-2 mb-2 ">
-      <div className="w-1/2 px-2 mt-2">      
+      <div className="w-full px-2 mt-2">      
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="number"

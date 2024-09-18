@@ -78,19 +78,14 @@ const AdditionalInfo = (props) => {
    const [dealerData, setDealerData] = useState([]);
    const getDelaerData = async () => {
     try {
-      const respond = await axios.get(`${url}/api/get_dealer`, {
+      const respond = await axios.get(`${url}/api/mr_dealer_map`, {
         headers: headers,
         params: {
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
         },
       });
-      const apires = await respond.data.data.map((item)=> { return {
-        dealerName:item.d_id,
-        address: item.address,
-        contactPerson: item.contact_person,
-        partyName: item.party_Name
-      }});
+      const apires = await respond.data.data;
       setDealerData(apires);
     } catch (error) {
       console.log(error);
@@ -445,14 +440,12 @@ const AdditionalInfo = (props) => {
               Select
             </option>
             
-            {dealerData?.map((item, idx) => (
+            {dealerData?.map((item) => (
               <option
-              key={idx}
-              value={JSON.stringify(item)}
-            
+                value={item.d_id}
                 className="focus:outline-none focus:border-b bg-white"
               >
-                {item.partyName}
+                {item.party_name}
               </option>
             ))}
           </select>
@@ -774,7 +767,7 @@ const AdditionalInfo = (props) => {
         </ul>
       </div>
 
-      <div className="flex my-2 flex-row gap-2">
+      {/* <div className="flex my-2 flex-row gap-2">
         <div className="fle gap-4 w-full px-2">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
@@ -807,7 +800,7 @@ const AdditionalInfo = (props) => {
             onChange={(e)=> setFormData({...formData , shareLife: e.target.value})}
           />
         </div>
-        </div>
+        </div> */}
         <div className="flex my-2 flex-row gap-2">
         <div className="fle gap-4 w-full px-2">
           <label

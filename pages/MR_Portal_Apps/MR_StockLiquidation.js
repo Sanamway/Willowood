@@ -95,7 +95,7 @@ const AdditionalInfo = (props) => {
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
 
-          
+          d_id:formData.dealerData.dealerName,  
         },
       });
       const apires = await respond.data.data;
@@ -122,12 +122,13 @@ const AdditionalInfo = (props) => {
     try {
       const data = {
         sa_code:saCode ,
-        inventory_date: formData.inventoryDate,
+        inventory_date: new Date(),
         current_date: new Date(),
         dealer_id: formData.dealerData.dealerName,   
         product_brand:formData.productBrand,
         crop: formData.crop,
         stock_sale_qty: formData.stockQty,
+        opening_qty: formData.openQty,
         t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
         c_id:  JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         emp_code:window.localStorage.getItem("emp_code"),
@@ -142,14 +143,9 @@ const AdditionalInfo = (props) => {
          
           toast.success(res.data.message);
           setFormData({
-            dealerData: {
-                dealerName:   "",
-                address:      "",
-                contactPerson:"",
-                mobile:""
-              },
+           ...formData,
            productBrand: "",
-           crop: "",
+          openQty:"",
            stockQty:""
           });
             generateEmpCode();
@@ -174,6 +170,7 @@ const AdditionalInfo = (props) => {
        params: {
          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
          t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+        
        },
      });
      const apires = await respond.data.data.map((item)=> { return {
@@ -243,7 +240,8 @@ const AdditionalInfo = (props) => {
       },
    productBrand: "",
    crop: "",
-   stockQty:""
+   stockQty:"",
+   openQty:""
    });
 
    const handleDelete = async(item) =>{
@@ -317,7 +315,7 @@ const AdditionalInfo = (props) => {
                     open ? "block" : "hidden"
                   } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
                 >
-                  <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
+                  <ul className=" text-black text-sm flex flex-col gap-4 py-2  font-Rale cursor-pointer ">
                     <li
                       className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
                       onClick={() =>
@@ -427,13 +425,7 @@ const AdditionalInfo = (props) => {
            className="w-[80%] px-3   border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
            dateFormat="dd-MM-yyyy"         
             selected={
-              formData.inventoryDate ? new Date(formData.inventoryDate) : ""
-            }
-            onChange={(date) =>
-              setFormData({
-                ...formData,
-                inventoryDate: moment(date).format("LL"),
-              })
+             new Date()
             }
             minDate={new Date()}
             peekNextMonth
@@ -445,7 +437,7 @@ const AdditionalInfo = (props) => {
           />    
  </div>
  <div className="flex flex-col ">
- <label
+ {/* <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
@@ -466,7 +458,7 @@ const AdditionalInfo = (props) => {
             dropdownMode="select"
             disabled
             
-          />    
+          />     */}
  </div>
 <div className="flex flex-col ">
  <label
@@ -493,7 +485,7 @@ const AdditionalInfo = (props) => {
           >
             <small className="text-red-600 ">*</small> Dealer Name
           </label>
-        {console.log("Del", allDealerData, formData)}
+    
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
@@ -502,7 +494,7 @@ const AdditionalInfo = (props) => {
             onChange={(e) =>
             {
               let selectedItem= e.target.value ? JSON.parse(e.target.value) :"" ;
-
+              getLiquidation()
               setFormData({
                 ...formData,
                 dealerData: selectedItem,
@@ -532,7 +524,7 @@ const AdditionalInfo = (props) => {
           </select>
         </div>
 <small className="text-red-400 italic">Last Inventory Date {liquidationData.lastInventoryDate ? moment(liquidationData.lastInventoryDate).format("DD-MMM-YYYY"): ""}</small>
-        <div className="fle gap-4 w-full px-2">
+        {/* <div className="fle gap-4 w-full px-2">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"
@@ -549,7 +541,7 @@ const AdditionalInfo = (props) => {
         
             // disabled={!formActive}
           />
-        </div>    
+        </div>     */}
 
  
 
@@ -557,7 +549,7 @@ const AdditionalInfo = (props) => {
        
      
     
-<div className="flex flex-row gap-1">
+{/* <div className="flex flex-row gap-1">
 <div>
 <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -594,10 +586,10 @@ const AdditionalInfo = (props) => {
 
 
  
-</div>
+</div> */}
     
 <div className="flex flex-row justify-between gap-2">
-<div className="flex flex-col w-40 ">
+<div className="flex flex-col w-60 ">
  <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
@@ -629,56 +621,32 @@ const AdditionalInfo = (props) => {
             ))}
           </select>
  </div>
- <div className="flex flex-col w-40">
+ <div className="flex flex-col w-20  ">
  <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="inputField"
           >
-            <small className="text-red-600">*</small> Crop
-          </label>
-          
-          <select
-            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-         
-            value={formData.crop}
-            onChange={(e) =>
-            {
-              
-
-              setFormData({
-                ...formData,
-                crop: e.target.value,
-              })
-            }
-              
-            }
-            
-          >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
-              Select
-            </option>
-            
-            {cropData.map((item) => (
-              <option key={item.cr_id} value={item.cr_id}>
-                {item.crop_name}
-              </option>
-            ))}
-          </select>   
- </div>
-<div className="flex flex-col w-20  ">
- <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Stock Sale. Qty
+            <small className="text-red-600">*</small> Open Qty.
           </label>        
           <input
-            className=" px-3  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
+            className=" mt-3 px-3  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="number"
+            id="inputField"
+            placeholder="Open Sale. Qty"
+            value={formData.openQty}
+            onChange={(e)=>setFormData({...formData , openQty: e.target.value})}
+          />
+ </div> 
+<div className="flex flex-col  w-20   ">
+ <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="inputField"
+          >
+            <small className="text-red-600">*</small> Stock Qty.
+          </label>        
+          <input
+            className=" mt-3 px-3  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="number"
             id="inputField"
             placeholder="Stock Sale. Qty"
             value={formData.stockQty}
@@ -709,44 +677,46 @@ const AdditionalInfo = (props) => {
             <tr className="border-2">
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
                 Product Brand
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-              Crop
+             Open Qty.
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-                Stock Sale Qty.
+                Stock Qty.
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >Action</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 my-2 ">
             {liquidationData.gridData?.map((item, index) => (
               <tr className="border-2" key={index}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <td className="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
                   {item.
 Brand_Desc
 
                   }
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {item.crop_name}
+               
+                <td className="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {item.opening_qty}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <td className="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
                   {item.stock_sale_qty}
                 </td>
-                <button className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
+                <td className="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
+                <button className="text-sm text-gray-900 font-light px-2 py-2 whitespace-nowrap">
                   {
                     <AiOutlineDelete
                       className="text-red-500"
@@ -756,19 +726,22 @@ Brand_Desc
                     ></AiOutlineDelete>
                   }
                 </button>
+                </td>
+               
+                
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="flex w-full">
+      <div className="flex w-full justify-center">
        <button
        onClick={() =>{
          handlePushHome("/MR_Portal_Apps/MRHome")
        
       }}
-          className="bg-red-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
+          className="bg-blue-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
         >
          Close
         </button>

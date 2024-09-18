@@ -904,7 +904,10 @@ Verify
 
     const getTimeDiff = (item) =>{
       if(item.punch_out_time &&item.punch_in_time ){
-        return String(`${moment.duration(item.punch_out_time.diff(item.punch_in_time)).hours() } hr`+" " + `${moment.duration(item.punch_out_time.diff(item.punch_in_time)).minutes() } mins`)     
+        const time1 = moment(moment(item.punch_in_time).subtract(5, 'hours')
+        .subtract(30, 'minutes'));
+        const time2 = moment(item.punch_out_time);
+        return String(`${moment.duration(moment(time2).diff(time2)).hours() }`+"." + `${moment.duration(moment(time2).diff(time1)).minutes() }`)     
       }
       else {
         return "-"
@@ -1232,7 +1235,8 @@ Verify
                     {moment(item.date).format("DD MMM YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.punch_in_time).format("hh:mm A")}
+                    {moment(item.punch_in_time).subtract(5, 'hours')
+            .subtract(30, 'minutes').format("hh:mm A")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.punch_out_time

@@ -1099,7 +1099,13 @@ setFormData({
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-               Dose/Acre
+              St.Dose/Acre
+              </th>
+              <th
+                scope="col"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+              Rec.Dose/Acre
               </th>
               <th
                 scope="col"
@@ -1141,6 +1147,9 @@ setFormData({
                 </td>
                 <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.dose_acre_tank}
+                </td>
+                <td className="px-6  whitespace-nowrap text-sm text-gray-500">
+                  {item.rec_dose}
                 </td>
                 <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.acre_plot}

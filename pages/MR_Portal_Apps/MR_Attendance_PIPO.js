@@ -387,8 +387,8 @@ return
           Last Punch In :{" "}
           {attendenceStatus === "Punch In"
             ? "Not Available"
-            :moment(userDetails.lastPunchIn) .subtract(5, 'hours')
-            .subtract(30, 'minutes').format("dddd, MMMM D, YYYY h:mm A")
+            :moment(userDetails.lastPunchIn).subtract(5, 'hours')
+            .subtract(30, 'minutes').format("DD-MM-YYYY h:mm A")
             }
             {/* :moment(userDetails.lastPunchIn).format("dddd, MMMM D, YYYY h:mm A") */}
         </h1>
@@ -445,7 +445,7 @@ return
 
         <div className="flex w-full  border my-2  shadow-xl">
           <button className="text-sm font-bold py-1 rounded-md   flex  flex-row w-full justify-center h-8 ">
-          Upload Odometer
+          Upload Odometer Image
           </button>
           <FaCameraRetro
             size={10}
@@ -497,7 +497,7 @@ return
         {attendenceStatus === "Punch In" ? (
           <div className="flex w-full justify-center">
             <button
-              className="text-xl py-1 rounded-md    flex  flex-row  w-1/2 justify-center  border my-2 shadow-xl"
+              className="text-xl py-1 rounded-md  bg-blue-200  flex  flex-row  w-1/2 justify-center  border my-2 shadow-xl"
               onClick={() => handlePunchIn("PI")}
             >
               <MdOutlineTimer
@@ -508,9 +508,9 @@ return
             </button>
           </div>
         ) : (
-          <div className="flex w-full justify-center">
+          <div className="flex w-full justify-center ">
             <button
-              className="text-xl py-1 rounded-md    flex  flex-row  w-1/2 justify-center  border my-2 shadow-xl"
+              className="text-xl py-1 rounded-md  bg-blue-200  flex  flex-row  w-1/2 justify-center  border my-2 shadow-xl"
               onClick={() => handlePunchIn("PO")}
             >
               <MdOutlineTimer
