@@ -484,6 +484,27 @@ const AdditionalInfo = (props) => {
         });
     } catch (error) {}
   };
+
+  const [allCrop , setAllCrop] = useState([])
+  const getAllCropInfo = async () => {
+    if (new Date())
+      try {
+        const respond = await axios.get(`${url}/api/get_crop`, {
+          headers: headers,
+          params: {
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+     
+          },
+        });
+        const apires = await respond.data.data;
+        setAllCrop(apires);
+      } catch (error) {
+        console.log(error);
+      }
+  };
+  useEffect(()=>{
+    getAllCropInfo();
+  },[])
   const [addFarmerModal, setAddFarmerModal] = useState(false);
   const [farmerState, setFarmerState] = useState({
     farmerName: "",
@@ -497,56 +518,102 @@ const AdditionalInfo = (props) => {
     district: "",
     village: "",
     pinCode: "",
+    retailer:""
+   
+  });
+  
+  const [farmerCropState, setFarmerCropState] = useState({
+   crop:"", 
+   area:""
   });
 
   const handleSaveFarmer = async () => {
+    if(allCropGridData.length){
+      try {
+        const data = {
+        
+  
+          c_id: Number(localStorageItems.cId),
+          bu_id: Number(localStorageItems.buId),
+          bg_id: Number(localStorageItems.bgId),
+          z_id: Number(localStorageItems.zId),
+          r_id: Number(localStorageItems.rId),
+          t_id: Number(localStorageItems.tId),
+          ds_id: farmerState.district,
+          v_id: farmerState.village,
+          f_name: farmerState.farmerName,
+          f_lacre: farmerState.landInfo,
+          f_mobile: farmerState.mobile,
+          f_type: farmerState.farmerTypes,
+          ff_name: farmerState.fatherName,
+          f_address: farmerState.farmerAddress,
+          f_cat: farmerState.farmerCategory,
+          f_pin: farmerState.pinCode,
+          retailer: farmerState.retailer,
+          st_id: farmerState.state,
+          c_name: localStorageItems.clName,
+          ul_name: localStorageItems.ulName,
+        };
+        const respond = await axios
+          .post(`${url}/api/add_farmer`, JSON.stringify(data), {
+            headers: headers,
+          })
+          .then((res) => {
+            if (!res) return;
+            toast.success(res.data.message);
+            setFarmerState({
+              farmerName: "",
+              fatherName: "",
+              farmerAddress: "",
+              farmerTypes: "Subsistence Farming",
+              farmerCategory: "Marginal-Below 1.00 hectare",
+              landInfo: "",
+              mobile: "",
+              state: "",
+              district: "",
+              village: "",
+              pinCode: "",
+              retailer:""
+            });
+          });
+      } catch (errors) {
+        console.log("kop", errors);
+        const errorMessage = errors?.response?.data?.message
+  
+        toast.error(errorMessage);
+        const newErrors = {};
+        errors?.inner?.forEach((error) => {
+          newErrors[error?.path] = error?.message;
+        });
+      }
+    }
+    else 
+    {
+      toast.error("Please Enter atleast one Area/Crop Data to Save Farmer");
+    }
+  
+  };
+
+  const handleSaveFarmerCrop = async () => {
     try {
       const data = {
-      
-
-        c_id: Number(localStorageItems.cId),
-        bu_id: Number(localStorageItems.buId),
-        bg_id: Number(localStorageItems.bgId),
-        z_id: Number(localStorageItems.zId),
-        r_id: Number(localStorageItems.rId),
-        t_id: Number(localStorageItems.tId),
-        ds_id: farmerState.district,
-        v_id: farmerState.village,
-        f_name: farmerState.farmerName,
-        f_lacre: farmerState.landInfo,
-        f_mobile: farmerState.mobile,
-        f_type: farmerState.farmerTypes,
-        ff_name: farmerState.fatherName,
-        f_address: farmerState.farmerAddress,
-        f_cat: farmerState.farmerCategory,
-        f_pin: farmerState.pinCode,
-        st_id: farmerState.state,
-        c_name: localStorageItems.clName,
-        ul_name: localStorageItems.ulName,
+      cr_id:  farmerCropState.crop,
+      area: farmerCropState.area
       };
       const respond = await axios
-        .post(`${url}/api/add_farmer`, JSON.stringify(data), {
+        .post(`${url}/api/add_farmer_cropinfo`, JSON.stringify(data), {
           headers: headers,
         })
         .then((res) => {
           if (!res) return;
           toast.success(res.data.message);
-          setFarmerState({
-            farmerName: "",
-            fatherName: "",
-            farmerAddress: "",
-            farmerTypes: "Subsistence Farming",
-            farmerCategory: "Marginal-Below 1.00 hectare",
-            landInfo: "",
-            mobile: "",
-            state: "",
-            district: "",
-            village: "",
-            pinCode: "",
+          setFarmerCropState({
+            crop:"", 
+            area:""
           });
         });
     } catch (errors) {
-      console.log("kop", errors);
+     
       const errorMessage = errors?.response?.data?.message
 
       toast.error(errorMessage);
@@ -584,6 +651,13 @@ const AdditionalInfo = (props) => {
         .map((item) => item.district)
     );
   }, [farmerState.state]);
+
+
+  const [allCropGridData , setAllCropGridData] = useState([])
+  
+
+
+  
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -1470,7 +1544,10 @@ const AdditionalInfo = (props) => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                 <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <hr className="bg-blue-600 h-2"/>
+                <h3 className="font-bold w-full flex justify-center ">Farmer Registration</h3>
+                <hr className="bg-blue-600 h-2 mb-2"/>
                   <div className="w-1/2 px-2 relative ">
                     <input
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -1492,7 +1569,7 @@ const AdditionalInfo = (props) => {
 
                   <div>
                     <div className="flex flex-row my-2 mb-2  ">
-                      <div className="w-full px-2 pt-2">
+                      <div className="w-full px-2">
                         <input
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
@@ -1509,7 +1586,7 @@ const AdditionalInfo = (props) => {
                       </div>
                     </div>
                     <div>
-                      <div className="w-full px-2 pt-2 ">
+                      <div className="w-full px-2 ">
                         <input
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
@@ -1527,9 +1604,9 @@ const AdditionalInfo = (props) => {
                     </div>
 
                     <div>
-                      <div className="w-full px-2 pt-2 ">
+                      <div className="w-full px-2 ">
                         <textarea
-                          className="w-full px-2 pt-2 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
+                          className="w-full px-2 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
                           id="textareaField"
                           placeholder="Farmer Address"
                           rows="3"
@@ -1545,7 +1622,7 @@ const AdditionalInfo = (props) => {
                     </div>
 
                     <div className="flex flex-row my-2 mb-2 ">
-                      <div className="w-full px-2 pt-2">
+                      <div className="w-full px-2">
                         <select
                           className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
                           id="userSelect"
@@ -1573,7 +1650,7 @@ const AdditionalInfo = (props) => {
                         </select>
                       </div>
 
-                      <div className="w-full px-2 pt-2 ">
+                      <div className="w-full px-2 ">
                         <select
                           className="w-full px-3 py-2 border-b border-gray-500 rounded- bg-white focus:outline-none focus:border-b focus:border-indigo-500 mt-2"
                           id="userSelect"
@@ -1610,12 +1687,12 @@ const AdditionalInfo = (props) => {
                       </div>
                     </div>
 
-                    <div className="w-full px-2 pt-2">
+                    <div className="w-full px-2">
                       <input
                         className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                         type="text"
                         id="inputField"
-                        placeholder="Land Information"
+                        placeholder="Land/Acre Information"
                         value={farmerState.landInfo}
                         onChange={(e) =>
                           setFarmerState({
@@ -1627,7 +1704,7 @@ const AdditionalInfo = (props) => {
                     </div>
 
                     <div className="flex flex-row my-2 mb-2 ">
-                      <div className="w-full px-2 pt-2">
+                      <div className="w-full px-2">
                         <select
                           className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                           id="stateSelect"
@@ -1657,7 +1734,7 @@ const AdditionalInfo = (props) => {
                         </select>
                       </div>
 
-                      <div className="w-full px-2 pt-2 ">
+                      <div className="w-full px-2 ">
                         <select
                           className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                           id="stateSelect"
@@ -1688,7 +1765,7 @@ const AdditionalInfo = (props) => {
                     </div>
 
                     <div className="flex flex-row my-2 mb-2 ">
-                      <div className="w-full px-2 pt-2">
+                      <div className="w-full px-2">
                         <input
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="text"
@@ -1704,7 +1781,7 @@ const AdditionalInfo = (props) => {
                         />
                       </div>
 
-                      <div className="w-full px-2 pt-2 ">
+                      <div className="w-full px-2 ">
                         <input
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                           type="number"
@@ -1720,7 +1797,134 @@ const AdditionalInfo = (props) => {
                         />
                       </div>
                     </div>
+                    <div className="flex flex-row my-2 mb-2 ">
+                      <div className="w-full px-2">
+                        <input
+                          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="inputField"
+                          placeholder="Retailer"
+                          value={farmerState.retailer}
+                          onChange={(e) =>
+                            setFarmerState({
+                              ...farmerState,
+                              retailer: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div className="w-full px-2 ">
+                      
+                      </div>
+                    </div>
+                    <hr className="bg-gray-600 h-2"/>
+                    <h3 className="w-full  flex justify-center items-center font-bold">Area / Crop Info</h3>
+                    <hr className="bg-gray-600 h-2"/>
+                    <div className="flex flex-row my-2 mb-2 ">
+                      <div className="w-full px-2">
+                      <select
+                          className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                          id="stateSelect"
+                          value={farmerState.crop}
+                          onChange={(e) =>
+                            setFarmerCropState({
+                              ...farmerCropState,
+                              crop: e.target.value,
+                            })
+                          }
+                        >
+                          <option
+                            value={""}
+                            className="focus:outline-none focus:border-b bg-white"
+                          >
+                            Select Crop
+                          </option>
+                          {allCrop.map((item) => (
+              <option key={item.cr_id} value={item.cr_id}>
+                {item.crop_name}
+              </option>
+            ))}
+                        </select>
+                      </div>
+
+                      <div className="w-1/2 px-2 ">
+                        <input
+                          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="number"
+                          id="inputField"
+                          placeholder="Area"
+                          value={farmerCropState.area}
+                          onChange={(e) =>
+                            setFarmerCropState({
+                              ...farmerCropState,
+                              area: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div className="w-1/2  ">
+                        <button type="button"
+                      className="inline-flex justify-center  text-white rounded-md border border-transparent bg-orange-400 px-4 py-2 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={()=>handleSaveFarmerCrop()}
+                      >Add+</button>
+                      </div>
+                    </div>
+                    <div className="overflow-x-auto my-6 sm:overflow-hidden w-full  lg:w-full">
+        <table className="min-w-full  divide-y divide-gray-200 border-2 lg:max-w-1/2">
+          <thead className="bg-gray-50 border-2">
+            <tr className="border-2">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+                Crop 
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+                Season
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+                Area
+              </th>
+            
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200 my-2 ">
+            {/* {farmerContactTableData.map((item, index) => (
+              <tr className="border-2" key={item.f_meet_key_person_id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {item.type_relation}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {item.name}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {item.mob_no}
+                </td>
+                <button className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
+                  {
+                    <AiOutlineDelete
+                      className="hover:text-red-500"
+                      onClick={() =>
+                        handleDeleteContact(item.f_meet_key_person_id)
+                      }
+                    ></AiOutlineDelete>
+                  }
+                </button>
+              </tr>
+            ))} */}
+          </tbody>
+        </table>
+      </div>
                   </div>
+
 
                   <div className="mt-100  flex flex-row gap-2 justify-center lg:hidden">
                     <button
@@ -1734,10 +1938,7 @@ const AdditionalInfo = (props) => {
                     <button
                       type="button"
                       className="inline-flex justify-center text-white rounded-md border border-transparent bg-green-400 px-4 py-2 text-sm font-medium  hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={() => {
-                        setAddFarmerModal(false);
-                       
-                      }}
+                      onClick={() => setAddFarmerModal(false)}
                     >
                       Close
                     </button>
