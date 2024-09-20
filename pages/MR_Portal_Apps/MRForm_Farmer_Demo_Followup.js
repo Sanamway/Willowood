@@ -493,7 +493,6 @@ const AdditionalInfo = (props) => {
           headers: headers,
           params: {
             c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-     
           },
         });
         const apires = await respond.data.data;
