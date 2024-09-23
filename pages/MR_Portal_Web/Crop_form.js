@@ -59,10 +59,12 @@ const CropForm = () => {
   }, []);
 
   const [cropState, setCropState] = useState({
+    
     crop_id: "",
     companyId: "",
     cropName: "",
     season: "",
+ 
   });
 
   //Defining the Validation Schema
