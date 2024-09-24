@@ -128,7 +128,7 @@ const AdditionalInfo = (props) => {
   useEffect(() => {
     getDelaerData();
     getCropInfo();
-    getAllState();
+  
     getNewCropInfo();
   }, []);
 
@@ -338,12 +338,15 @@ const AdditionalInfo = (props) => {
     farmerName: "",
     fatherName: "",
     farmerAddress: "",
+    email:"",
     farmerTypes: "Subsistence Farming",
     farmerCategory: "Marginal-Below 1.00 hectare",
     landInfo: "",
     mobile: "",
     state: "",
+    subDistrict: "",
     district: "",
+    subDistrict:"",
     village: "",
     pinCode: "",
     retailer:""
@@ -375,6 +378,7 @@ const AdditionalInfo = (props) => {
           f_mobile: farmerState.mobile,
           f_type: farmerState.farmerTypes,
           ff_name: farmerState.fatherName,
+          email:  farmerState.email,
           f_address: farmerState.farmerAddress,
           f_cat: farmerState.farmerCategory,
           f_pin: farmerState.pinCode,
@@ -394,11 +398,13 @@ const AdditionalInfo = (props) => {
               farmerName: "",
               fatherName: "",
               farmerAddress: "",
+              email:"",
               farmerTypes: "Subsistence Farming",
               farmerCategory: "Marginal-Below 1.00 hectare",
               landInfo: "",
               mobile: "",
               state: "",
+              subDistrict:"",
               district: "",
               village: "",
               pinCode: "",
@@ -479,6 +485,8 @@ const AdditionalInfo = (props) => {
           plotSize: apires.f_lacre,
           village: apires.v_id,
         });
+
+
       } catch (error) {
         toast.error(error.response.data.message);
       }
@@ -514,8 +522,11 @@ const AdditionalInfo = (props) => {
   useEffect(() => {
     generateEmpCode();
   }, []);
+
+  
+   
   const handleAddProductDemo = async () => {
-    console.log("lop", productDemoState.recDose ,  productDemoState)
+   
     try {
       const data = {
         f_demo_code: fDemoCode,
@@ -562,38 +573,65 @@ const AdditionalInfo = (props) => {
   };
 
   const [allState, setAllState] = useState([]);
-  const [allStateCityData, setAllStateCityData] = useState([]);
+  const [allDist, setAllDist] = useState([]);
+  const [allSubDist, setAllSubDist] = useState([]);
+  const [allVillage, setAllVillage] = useState([]);
+ 
+ 
   const [img, setImg] = useState([]);
   const [newImg, setNewImg] = useState([]);
   const [imgType, setImgType] = useState("");
 
-  const getAllState = async () => {
+  const getAllState = async (state, district, subDis , village) => {
+   
     try {
       const respond = await axios.get(`${url}/api/get_dist_state`, {
         headers: headers,
+        params:{
+          state:state,
+          district:district, 
+          sub_district:subDis,
+          village:village
+        }
       });
-      const apires = await respond.data.data;
-      setAllStateCityData(apires);
-      console.log(
-        "plk",
-        apires.map((item) => item.state)
-      );
-      setAllState([...new Set(apires.map((item) => item.state))]);
+      const apires = await respond.data.data;   
+      if(!state && !district && !subDis){
+        setAllState(apires);
+      }
+      else if(state && !district && !subDis && !village)
+     {
+      console.log("pop", apires)
+      setAllDist([...new Set(apires.map((item) => item.district))])
+
+     }
+     else if(state && district && !subDis && !village)
+      {
+       console.log("pop", apires)
+       setAllSubDist([...new Set(apires.map((item) => item.sub_district))])
+ 
+      }
+      else if(state && district && subDis && !village )
+        {
+         console.log("pop", apires)
+         setAllVillage([...new Set(apires.map((item) => item.village))])
+   
+        }
+        else if(state && district && subDis && village )
+         
+          {
+         
+           setFarmerState({...farmerState ,  pinCode: apires[0].pin_code})
+     
+          }
     } catch (error) {
       console.log(error);
     }
   };
-  const [allCityStateWise, setAllCityStateWise] = useState([]);
-  useEffect(() => {
-    if (!farmerState) return;
-
-    setAllCityStateWise(
-      allStateCityData
-        .filter((item) => item.state === farmerState.state)
-        .map((item) => item.district)
-    );
-  }, [farmerState.state]);
-
+ 
+ 
+useEffect(()=>{
+  getAllState(farmerState.state, farmerState.district,  farmerState.subDistrict, farmerState.village)
+},[farmerState.state, farmerState.district, farmerState.subDistrict, farmerState.village])
   const getProductDemoTable = async (fdemo) => {
     try {
       const respond = await axios.get(`${url}/api/get_mr_form_demo_crop`, {
@@ -1345,7 +1383,7 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
       <div className="flex flex-row my-2 mb-2 ">
-      <div className="w-full px-2 mt-2">      
+    <div className="w-full px-2 mt-2">      
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="number"
@@ -1358,8 +1396,7 @@ const AdditionalInfo = (props) => {
                 dose: e.target.value,
               })
             }
-          />
-          
+          />      
         </div>
         <div className="w-full px-2 mt-2">      
           <input
@@ -1413,7 +1450,7 @@ const AdditionalInfo = (props) => {
       <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
       <div className="flex flex-row my-2 mb-2 ">
      
-      
+ 
         <div className="w-full px-2 mt-2 flex items-end justify-center">
           <button
             onClick={() => {
@@ -1424,6 +1461,7 @@ const AdditionalInfo = (props) => {
             Add Product Demo +
           </button>
         </div>
+
       </div>
 
       <div className="overflow-x-auto my-6 sm:over<flow-hidden w-full  lg:w-full">
@@ -1842,7 +1880,7 @@ const AdditionalInfo = (props) => {
                           className="w-full px-2 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500 mt-2"
                           id="textareaField"
                           placeholder="Farmer Address"
-                          rows="3"
+                          rows="2"
                           value={farmerState.farmerAddress}
                           onChange={(e) =>
                             setFarmerState({
@@ -1851,6 +1889,21 @@ const AdditionalInfo = (props) => {
                             })
                           }
                         ></textarea>
+                      </div>
+                      <div className="w-full px-2 ">
+                      <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  type="text"
+                  id="inputField"
+                  placeholder="Email"
+                  value={farmerState.email}
+                  onChange={(e) =>
+                    setFarmerState({
+                      ...farmerState,
+                      email: e.target.value,
+                    })
+                  }
+                />
                       </div>
                     </div>
 
@@ -1939,14 +1992,22 @@ const AdditionalInfo = (props) => {
                     <div className="flex flex-row my-2 mb-2 ">
                       <div className="w-full px-2">
                         <select
-                          className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                          className="w-full text-sm px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                           id="stateSelect"
                           value={farmerState.state}
                           onChange={(e) =>
+                          {
                             setFarmerState({
                               ...farmerState,
                               state: e.target.value,
+                              district: "",
+                              subDistrict:"",
+                              village:"",
+                              pinCode:""
                             })
+                          
+                          }
+                            
                           }
                         >
                           <option
@@ -1969,13 +2030,16 @@ const AdditionalInfo = (props) => {
 
                       <div className="w-full px-2 ">
                         <select
-                          className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                          className="w-full text-sm px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                           id="stateSelect"
                           value={farmerState.district}
                           onChange={(e) =>
                             setFarmerState({
                               ...farmerState,
                               district: e.target.value,
+                              subDistrict:"",
+                              village:"",
+                              pinCode:""
                             })
                           }
                         >
@@ -1985,7 +2049,7 @@ const AdditionalInfo = (props) => {
                           >
                             Select District
                           </option>
-                          {allCityStateWise.map((item) => (
+                          {allDist.map((item) => (
                             <option
                               value={item}
                               className="focus:outline-none focus:border-b bg-white"
@@ -1999,20 +2063,72 @@ const AdditionalInfo = (props) => {
 
                     <div className="flex flex-row my-2 mb-2 ">
                       <div className="w-full px-2">
-                        <input
-                          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                          type="text"
-                          id="inputField"
-                          placeholder="Village"
+                        <select
+                          className="w-full px-3 text-sm py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                          id="stateSelect"
+                          value={farmerState.subDistrict}
+                          onChange={(e) =>
+                            setFarmerState({
+                              ...farmerState,
+                              subDistrict: e.target.value,
+                              village:"",
+                              pinCode:""
+                            })
+                          }
+                        >
+                          <option
+                            value={""}
+                            className="focus:outline-none focus:border-b bg-white"
+                          >
+                            Select Sub State
+                          </option>
+                          {allSubDist?.map((item, idx) => (
+                            <option
+                              value={item}
+                              className="focus:outline-none focus:border-b bg-white"
+                              key={idx}
+                            >
+                              {item}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="w-full px-2 ">
+                        <select
+                          className="w-full text-sm px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                          id="stateSelect"
                           value={farmerState.village}
                           onChange={(e) =>
                             setFarmerState({
                               ...farmerState,
                               village: e.target.value,
+                              pinCode:""
+                             
                             })
                           }
-                        />
+                        >
+                          <option
+                            value={""}
+                            className="focus:outline-none focus:border-b bg-white"
+                          >
+                            Select Village
+                          </option>
+                          {allVillage.map((item) => (
+                            <option
+                            
+                              value={item}
+                              className="focus:outline-none focus:border-b bg-white"
+                            >
+                              {item}
+                            </option>
+                          ))}
+                        </select>
                       </div>
+                    </div>
+
+                    <div className="flex flex-row my-2 mb-2 ">
+                     
 
                       <div className="w-full px-2 ">
                         <input
@@ -2020,7 +2136,7 @@ const AdditionalInfo = (props) => {
                           type="number"
                           id="inputField"
                           placeholder="Pin Code"
-                          value={farmerState.pinCode}
+                          value={farmerState.pinCode  }
                           onChange={(e) =>
                             setFarmerState({
                               ...farmerState,
@@ -2029,8 +2145,6 @@ const AdditionalInfo = (props) => {
                           }
                         />
                       </div>
-                    </div>
-                    <div className="flex flex-row my-2 mb-2 ">
                       <div className="w-full px-2">
                         <input
                           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -2046,6 +2160,9 @@ const AdditionalInfo = (props) => {
                           }
                         />
                       </div>
+                    </div>
+                    <div className="flex flex-row my-2 mb-2 ">
+                   
 
                       <div className="w-full px-2 ">
                       
@@ -2057,7 +2174,7 @@ const AdditionalInfo = (props) => {
                     <div className="flex flex-row my-2 mb-2 ">
                       <div className="w-full px-2">
                       <select
-                          className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                          className="w-full text-sm px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                           id="stateSelect"
                           value={addFarmerCrop.cropId}
                           onChange={(e)=> setAddFarmerCrop({...addFarmerCrop , cropId: e.target.value})}
