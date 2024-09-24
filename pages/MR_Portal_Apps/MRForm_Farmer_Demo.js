@@ -91,7 +91,7 @@ const AdditionalInfo = (props) => {
     }
   };
 
-  const [cropData, setCropData] = useState([]);
+  const [newCropData, setNewCropData] = useState([]);
   const [allCropData, setAllCropData] = useState([]);
 
   const getCropInfo = async () => {
@@ -101,22 +101,35 @@ const AdditionalInfo = (props) => {
           headers: headers,
         });
         const apires = await respond.data.data;
-        setCropData(
-          apires.map((item) => {
-            return { value: item.crop_name, label: item.crop_name };
-          })
-        );
+
         setAllCropData(apires)
       } catch (error) {
         console.log(error);
       }
   };
 
+  const getNewCropInfo = async () => {
+    if (new Date())
+      try {
+        const respond = await axios.get(`${url}/api/get_crop_profile`, {
+          headers: headers,
+          params: {
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          },
+        });
+        const apires = await respond.data.data;
+        setNewCropData(apires);  
+      } catch (error) {
+        console.log(error);
+      }
+  };
+  
+
   useEffect(() => {
     getDelaerData();
     getCropInfo();
-
     getAllState();
+    getNewCropInfo();
   }, []);
 
   const getStageInfo = async (cropId, cropStage, cropSegment, productBrand) => {
@@ -124,19 +137,14 @@ const AdditionalInfo = (props) => {
       const respond = await axios.get(`${url}/api/get_crop_segment`, {
         headers: headers,
         params: {
-          cr_id: cropId,
+          cr_id: cropId, 
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         },
       });
       const apires = await respond.data.data;
-      console.log("new Stage", {
-        cr_id: cropId,
-        c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-      },apires )
       setAllStageData([
         ...new Set(apires.map((item) => String(item.crop_stage))),
       ]);
-
       setAllSegmentData([
         ...new Set(
           apires
@@ -144,7 +152,6 @@ const AdditionalInfo = (props) => {
             .map((item) => String(item.crop_segment))
         ),
       ]);
-
       setAllBrandData([
         ...new Set(
           apires
@@ -195,8 +202,7 @@ const AdditionalInfo = (props) => {
     }
   };
   const [submitFormLoading, setSubmitFormLoading] = useState(false);
-  const handleAddDemo = async () => {
-    console.log("form", formData.dealer)
+  const handleAddDemo = async () => {    
     if(productDemoTableData.length !== 0) {
       setSubmitFormLoading(true);
     try {
@@ -215,7 +221,6 @@ const AdditionalInfo = (props) => {
         farmer_type: formData.farmerType,
         plot_size: formData.plotSize,
         demo_photo_url: "https://source.unsplash.com/user/c_v_r/1900x800",
-
         location_lat: 12,
         location_long: 21,
         potential_farmer: formData.potentialFarmer,
@@ -278,11 +283,9 @@ const AdditionalInfo = (props) => {
       setSubmitFormLoading(false);
     }
     }
-else {
+ else {
   toast.error("Product Demo Data Required")
-}
-
-    
+     } 
   };
 
   const [addFarmerModal, setAddFarmerModal] = useState(false);
@@ -517,7 +520,7 @@ else {
       const data = {
         f_demo_code: fDemoCode,
         cr_id: Number(productDemoState.crop),
-        crop: productDemoState.crop ? cropData.filter(          
+        crop: productDemoState.crop ? newCropData.filter(          
           (item) => item.cr_id === Number(productDemoState.crop)
         )[0].crop_name : null,
         stage: productDemoState.stage,
@@ -1239,7 +1242,7 @@ else {
             >
               Option
             </option>
-            {cropData.map((item) => (
+            {newCropData.map((item) => (
               <option key={item.cr_id} value={item.cr_id}>
                 {item.crop_name}
               </option>
@@ -1379,7 +1382,7 @@ else {
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             id="inputField"
-            placeholder="Acre / Plot Size"
+            placeholder="Demo Area"
             value={productDemoState.acre}
             onChange={(e) => {
               setProductDemoState({
