@@ -48,9 +48,13 @@ const AdditionalInfo = (props) => {
     farmerId: "",
     farmerName: "",
     farmerFatherName: "",
-    village: "",
     farmerType: "",
     plotSize: "",
+    village: "",
+    district:"",
+    subDis:"",
+    state:"",
+
     potentialFarmer: "Yes",
     nextVisitDate: new Date(),
     status: "Open",
@@ -218,6 +222,9 @@ const AdditionalInfo = (props) => {
         farmer_name: formData.farmerName,
         farmer_father_name: formData.farmerFatherName,
         village: formData.village,
+        district: formData.district,
+        sub_district: formData.subDis,
+        state:formData.state,
         farmer_type: formData.farmerType,
         plot_size: formData.plotSize,
         demo_photo_url: "https://source.unsplash.com/user/c_v_r/1900x800",
@@ -253,12 +260,17 @@ const AdditionalInfo = (props) => {
             dealer: "",
             dealerName:"",
             farmerMobile: "",
-            farmerId: "",
-            farmerName: "",
-            farmerFatherName: "",
-            village: "",
-            farmerType: "",
-            plotSize: "",
+          
+    farmerId: "",
+    farmerName: "",
+    farmerFatherName: "",
+    farmerType: "",
+    plotSize: "",
+    village: "",
+    district:"",
+    subDis:"",
+    state:"",
+
             potentialFarmer: "Yes",
             nextVisitDate: new Date(),
             status: "Open",
@@ -350,11 +362,9 @@ const AdditionalInfo = (props) => {
     village: "",
     pinCode: "",
     retailer:""
+   
   });
-  const [farmerCropState, setFarmerCropState] = useState({
-    crop:"", 
-    area:""
-   });
+  
 
 
 
@@ -384,6 +394,7 @@ const AdditionalInfo = (props) => {
           f_pin: farmerState.pinCode,
           retailer: farmerState.retailer,
           st_id: farmerState.state,
+          sub_district:farmerState.subDistrict,
           c_name: localStorageItems.clName,
           ul_name: localStorageItems.ulName,
         };
@@ -430,37 +441,9 @@ const AdditionalInfo = (props) => {
     }
   
   };
-  const handleSaveFarmerCrop = async () => {
-    try {
-      const data = {
-      cr_id:  farmerCropState.crop,
-      area: farmerCropState.area
-      };
-      const respond = await axios
-        .post(`${url}/api/add_farmer_cropinfo`, JSON.stringify(data), {
-          headers: headers,
-        })
-        .then((res) => {
-          if (!res) return;
-          toast.success(res.data.message);
-          setFarmerCropState({
-            crop:"", 
-            area:""
-          });
-        });
-    } catch (errors) {
-     
-      const errorMessage = errors?.response?.data?.message
 
-      toast.error(errorMessage);
-      const newErrors = {};
-      errors?.inner?.forEach((error) => {
-        newErrors[error?.path] = error?.message;
-      });
-    }
-  };
   const getFarmerDetails = async (item) => {
-    console.log("Item", item);
+ 
     setFormData({
       ...formData,
       farmerMobile: item,
@@ -474,32 +457,43 @@ const AdditionalInfo = (props) => {
         });
 
         const apires = await respond.data.data[0];
-
+      
         setFormData({
           ...formData,
+          purposeMeet: formData.purposeMeet,
+          meetType: formData.meetType,
           farmerMobile: item,
           farmerId: apires.f_id,
           farmerName: apires.f_name,
           farmerFatherName: apires.ff_name,
           farmerType: apires.f_type,
           plotSize: apires.f_lacre,
+          state: apires.st_id,
+          district:apires.ds_id,
+          subDis:apires.sub_district,
           village: apires.v_id,
         });
 
 
       } catch (error) {
-        toast.error(error.response.data.message);
+        console.log("zop", error)
+        toast.error(error?.response?.data?.message);
       }
     } else {
       setFormData({
         ...formData,
         farmerMobile: item,
-        farmerId: "",
-        farmerName: "",
-        farmerFatherName: "",
-        farmerType: "",
-        plotSize: "",
-        village: "",
+       
+    farmerId: "",
+    farmerName: "",
+    farmerFatherName: "",
+    farmerType: "",
+    plotSize: "",
+    village: "",
+    district:"",
+    subDis:"",
+    state:"",
+
       });
     }
   };
@@ -539,6 +533,7 @@ const AdditionalInfo = (props) => {
         rec_dose: productDemoState.recDose ? Number(productDemoState.recDose) :null,
         segment: productDemoState.segment,
         product_brand: productDemoState.productBrand,
+        
         dose_acre_tank: Number(productDemoState.dose),
         water_val: Number(productDemoState.water),
         emp_code: window.localStorage.getItem("emp_code"),
@@ -1133,7 +1128,7 @@ useEffect(()=>{
               value={formData.farmerMobile}
               onChange={(e) => {
                 const input = e.target.value.replace(/\D/g, "");
-                console.log("lop", input.length);
+                console.log("lop", input, e.target.value );
                 if (input.length <= 10) {
                   getFarmerDetails(input);
                 }
@@ -1235,23 +1230,70 @@ useEffect(()=>{
             }
           />
         </div>
+      
+
+
         <div className="w-full px-2  mt-2">
          
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="Village"
-            value={formData.village}
-            disabled
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                village: e.target.value,
-              })
-            }
-          />
-        </div>
+         <input
+           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+           type="text"
+           id="inputField"
+           placeholder="State"
+           value={formData.state}
+           disabled
+           
+         />
+       </div>
+     </div>
+     <div className="flex flex-row my-2 mb-2 ">
+       <div className="w-full px-2 mt-2">
+         
+         <input
+           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+           type="text"
+           id="inputField"
+           placeholder="District"
+           value={formData.district}
+           disabled
+           onChange={(e) =>
+             setFormData({
+               ...formData,
+               farmerType: e.target.value,
+             })
+           }
+         />
+       </div>
+       <div className="w-full px-2 mt-2">
+        
+         <input
+           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+           type="text"
+           id="inputField"
+           placeholder="Sub Dsitrict"
+           value={formData.subDis}
+           disabled
+           onChange={(e) =>
+             setFormData({
+               ...formData,
+               plotSize: e.target.value,
+             })
+           }
+         />
+       </div>
+       <div className="w-full px-2  mt-2">
+        
+         <input
+           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+           type="text"
+           id="inputField"
+           placeholder="Village"
+           value={formData.village}
+           disabled
+          
+         />
+       </div>
+     
       </div>
       <hr className="bg-blue-800 h-2 w-full my-2 mt-4" />
       <h1 className="flex justify-center font-bold mx-4">Product Demo</h1>
@@ -1820,8 +1862,12 @@ useEffect(()=>{
                       value={autoFarmer}
                      
                     />
+                   
+                  </div>
+                  <div className=" flex flex-row gap-2 w-full px-2 relative mt-2 ">
+                   
                     <input
-                      className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      className="w-1/2 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                       type="text"
                       id="inputField"
                       placeholder="Mobile"
@@ -2080,7 +2126,7 @@ useEffect(()=>{
                             value={""}
                             className="focus:outline-none focus:border-b bg-white"
                           >
-                            Select Sub State
+                            Select Sub District
                           </option>
                           {allSubDist?.map((item, idx) => (
                             <option

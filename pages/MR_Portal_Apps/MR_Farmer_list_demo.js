@@ -428,6 +428,7 @@ const AdditionalInfo = () => {
               </div>
             )}
           </div>
+          
           <button
             className="w-full border border-black font-bold text-blue-800"
             onClick={() => {
