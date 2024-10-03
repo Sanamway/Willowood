@@ -918,10 +918,16 @@ useEffect(()=>{
               Select
             </option>
             <option
-              value="Product Demo"
+              value="SOLO Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-              Product Demo
+              SOLO Demo
+            </option>
+            <option
+              value="Tank Mix Demo"
+              className="focus:outline-none focus:border-b bg-white"
+            >
+            Tank Mix Demo
             </option>
             <option
               value="Tulsi Demo"
@@ -956,7 +962,9 @@ useEffect(()=>{
           >
             <small className="text-red-600 ">*</small> Dealer
           </label>
-          
+           {
+            console.log("pol", formData, dealerData)
+           }
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
@@ -980,7 +988,7 @@ useEffect(()=>{
                 value={item.d_id}
                 className="focus:outline-none focus:border-b bg-white"
               >
-                {item.party_Name}
+                {item.party_name}
               </option>
             ))}
             <option
@@ -991,10 +999,10 @@ useEffect(()=>{
             </option>
           </select>
         
-          {formData.dealerName && 
+          {(formData.dealerName &&  !formData.dealer) &&
            <input
            className="w-full px-3 py-2 mt-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-        
+          disabled
            id="inputField"
            placeholder="Delaer Name"
            value={formData.dealerName}
@@ -1233,28 +1241,27 @@ useEffect(()=>{
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-              St. Dose/Acre
+              Rec.Dose/Acre
               </th>
               <th
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-              Rec. Dose/Acre
+              Apply.Dose/Acre
               </th>
               <th
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-               Plot Size
+               Demo Area
               </th>
              
               <th
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-                Water
+                Water (LT)
               </th>
-              
               <th
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"

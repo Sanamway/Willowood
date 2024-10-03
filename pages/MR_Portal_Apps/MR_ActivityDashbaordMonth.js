@@ -202,42 +202,42 @@ const AdditionalInfo = (props) => {
       <table className="w-full text-4xl border-collapse border border-gray-200 text-[10px] font-bold">
         <thead>
           <tr className="bg-blue-400 text-white">
-            <th className="border border-gray-200 py-2 px-2 whitespace-nowrap font-bold">
+            <th className="border border-gray-200 px-2 whitespace-nowrap font-bold">
               Day
             </th>
-            <th className="border border-gray-200 py-2 px-2 ">Dmo</th>
-            <th className="border border-gray-200 py-2 px-2">
+            <th className="border border-gray-200 px-2 ">Dmo</th>
+            <th className="border border-gray-200 px-2">
               F.Day
             </th>
-            <th className="border border-gray-200 py-2 px-2">IFC</th>
-            <th className="border border-gray-200 py-2 px-2">FGM</th>
-            <th className="border border-gray-200 py-2 px-2">OFM</th>
-            <th className="border border-gray-200 py-2 px-2">MFM</th>
-            <th className="border border-gray-200 py-2 px-2">RTP</th>
-            <th className="border border-gray-200 py-2 px-2">SHC</th>
-            <th className="border border-gray-200 py-2 px-2">AT</th>
+            <th className="border border-gray-200 px-2">IFC</th>
+            <th className="border border-gray-200 px-2">FGM</th>
+            <th className="border border-gray-200 px-2">OFM</th>
+            <th className="border border-gray-200 px-2">MFM</th>
+            <th className="border border-gray-200 px-2">RTP</th>
+            <th className="border border-gray-200 px-2">SHC</th>
+            <th className="border border-gray-200 px-2">AT</th>
           </tr>
         </thead>
         <tbody>
           <tr className="bg-green-100 font-bold">
-            <td className="border border-gray-200 py-2 px-2 whitespace-nowrap ">
-              Target
+            <td className="border border-gray-200 px-2 whitespace-nowrap ">
+              Market Target
             </td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
           </tr>
           <tr className="bg-white font-bold">
-            <td className="border border-gray-200 py-2 px-2 whitespace-nowrap">
-              Total
+            <td className="border border-gray-200 px-2 whitespace-nowrap">
+              Total Activity
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {" "}
               {tableData
                 .map((item) => item.demo)
@@ -247,7 +247,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {" "}
               {tableData
                 .map((item) => item.f_day)
@@ -257,7 +257,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.ifc)
                 .reduce((acc, current) => {
@@ -266,7 +266,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.fgm)
                 .reduce((acc, current) => {
@@ -275,7 +275,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.ofm)
                 .reduce((acc, current) => {
@@ -284,7 +284,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.mfm)
                 .reduce((acc, current) => {
@@ -293,7 +293,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.rtp)
                 .reduce((acc, current) => {
@@ -302,7 +302,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.shc)
                 .reduce((acc, current) => {
@@ -311,7 +311,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.att)
                 .reduce((acc, current) => {
@@ -322,58 +322,58 @@ const AdditionalInfo = (props) => {
             </td>
           </tr>
           <tr className="bg-white font-bold">
-            <td className="border border-gray-200 py-2 px-2 whitespace-nowrap">
+            <td className="border border-gray-200 px-2 whitespace-nowrap">
               Achiv %
             </td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
-            <td className="border border-gray-200 py-2 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
+            <td className="border border-gray-200 px-2">-</td>
           </tr>
           {tableData.map((item, index) => (
             <tr key={index} className="bg-white">
-              <td className="border border-gray-200 py-2 px-2 whitespace-nowrap">
+              <td className="border border-gray-200 px-2 whitespace-nowrap">
                 {item.date}
               </td>
-              <td className="border border-gray-200 py-2 px-2">
+              <td className="border border-gray-200 px-2">
                 {item.demo ? item.demo : "-"}
               </td>
-              <td className="border border-gray-200 py-2 px-2">
+              <td className="border border-gray-200 px-2">
                 {item.f_day ? item.f_day : "-"}
               </td>
-              <td className="border border-gray-200 py-2 px-2">
+              <td className="border border-gray-200 px-2">
                 {item.ifc ? item.ifc : "-"}
               </td>
-              <td className="border border-gray-200 py-2 px-2">
+              <td className="border border-gray-200 px-2">
                 {item.fgm ? item.fgm : "-"}
               </td>
-              <td className="border border-gray-200 py-2 px-2">
+              <td className="border border-gray-200 px-2">
                 {item.ofm ? item.ofm : "-"}
               </td>
-              <td className="border border-gray-200 py-2 px-2">
+              <td className="border border-gray-200 px-2">
                 {item.mfm ? item.mfm : "-"}
               </td>
-              <td className="border border-gray-200 py-2 px-2">
+              <td className="border border-gray-200 px-2">
                 {item.rtp ? item.rtp : "-"}
               </td>
-              <td className="border border-gray-200 py-2 px-2">
+              <td className="border border-gray-200 px-2">
                 {item.shc ? item.shc : "-"}
               </td>
-              <td className="border border-gray-200 py-2 px-2">
+              <td className="border border-gray-200 px-2">
                 {item.att ? item.att : "-"}
               </td>
             </tr>
           ))}
           <tr className="bg-white font-bold">
-            <td className="border border-gray-200 py-2 px-2 whitespace-nowrap">
+            <td className="border border-gray-200 px-2 whitespace-nowrap">
               Total
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {" "}
               {tableData
                 .map((item) => item.demo)
@@ -383,7 +383,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {" "}
               {tableData
                 .map((item) => item.f_day)
@@ -393,7 +393,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.ifc)
                 .reduce((acc, current) => {
@@ -402,7 +402,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.fgm)
                 .reduce((acc, current) => {
@@ -411,7 +411,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.ofm)
                 .reduce((acc, current) => {
@@ -420,7 +420,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.mfm)
                 .reduce((acc, current) => {
@@ -429,7 +429,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.rtp)
                 .reduce((acc, current) => {
@@ -438,7 +438,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.shc)
                 .reduce((acc, current) => {
@@ -447,7 +447,7 @@ const AdditionalInfo = (props) => {
                   return Number(acc) + Number(current);
                 }, 0)}
             </td>
-            <td className="border border-gray-200 py-2 px-2">
+            <td className="border border-gray-200 px-2">
               {tableData
                 .map((item) => item.att)
                 .reduce((acc, current) => {
@@ -475,20 +475,20 @@ const AdditionalInfo = (props) => {
 
       {/* {tableData.map((item) => 
          <tr className="bg-white whitespace-nowrap">
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
-         <td className="border border-gray-200 py-2 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
+         <td className="border border-gray-200 px-2">{item.} </td>
        </tr>
       )} */}
     </form>

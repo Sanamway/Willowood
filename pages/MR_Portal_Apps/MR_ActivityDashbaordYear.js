@@ -82,9 +82,165 @@ const AdditionalInfo = (props) => {
       setTableData([]);
     }
   };
+//   const [targetData, setTargetData] = useState([]);
+//   const getTargetData = async () => {
+//     try {
+//       const respond = await axios.get(`${url}/api/mr_dealer_sale_target`, {
+//         headers: headers,
+//         params: {
+//           emp_code: localStorageItems.empCode,
+//           t_id: localStorageItems.tId,
+//           c_id: localStorageItems.cId,
+//           year: moment().year(),
+//           count_type: "year",
+//         },
+//       });
+//       const apires = await respond.data.data;  
+   
+//       const sumByMonth = {
+//         apr : 0,
+//         may : 0,
+//         june: 0,
+//         july: 0,
+//         aug: 0,
+//         sep: 0,
+//         oct: 0,
+//         nov: 0,
+//         dec: 0,
+//         jan: 0,
+//         feb: 0,
+//         march: 0,
+//     };
+    
+//     // Iterate through each object in the array and sum up the values for each month
+//     apires.forEach(item => {
+//         sumByMonth.apr += item.apr;
+//         sumByMonth.may += item.may;
+//         sumByMonth.june += item.june;
+//         sumByMonth.july += item.july;
+//         sumByMonth.aug += item.aug;
+//         sumByMonth.sep += item.sep;
+//         sumByMonth.oct += item.oct;
+//         sumByMonth.nov += item.nov;
+//         sumByMonth.dec += item.dec;
+//         sumByMonth.jan += item.jan;
+//         sumByMonth.feb += item.feb;
+//         sumByMonth.march += item.march;
+//     });
+//     setTargetData(sumByMonth);
+   
+//   console.log("qaz",sumByMonth)
+//     } catch (error) {
+//       setTargetData([]);
+//     }
+//   };
+
+//   const [saleData, setSaleData] = useState([]);
+//   const getSaleData = async () => {
+//     try {
+//       const respond = await axios.get(`${url}/api/target_sale_mr`, {
+//         headers: headers,
+//         params: {
+//           emp_code: localStorageItems.empCode,
+//           t_id: localStorageItems.tId,
+//           c_id: localStorageItems.cId,
+//           year: moment().year(),
+//           count_type: "year",
+//         },
+//       });
+//       const apires = await respond.data.data;
+   
+//       let sortedData = apires.map(item => item.category_result)
+  
+//     // Initialize an object to store the sum of each month
+//     const sumByMonth = {
+//       apr: 0,
+//       may: 0,
+//       june: 0,
+//       july: 0,
+//       aug: 0,
+//       sep: 0,
+//       oct: 0,
+//       nov: 0,
+//       dec: 0,
+//       jan: 0,
+//       feb: 0,
+//       march: 0,
+//     };
+
+//     // Iterate through each array and sum up the values for each month
+//     sortedData.forEach(categoryArray => {
+//       categoryArray.forEach(item => {
+//           sumByMonth.apr += item.apr;
+//           sumByMonth.may += item.may;
+//           sumByMonth.june += item.june;
+//           sumByMonth.july += item.july;
+//           sumByMonth.aug += item.aug;
+//           sumByMonth.sep += item.sep;
+//           sumByMonth.oct += item.oct;
+//           sumByMonth.nov += item.nov;
+//           sumByMonth.dec += item.dec;
+//           sumByMonth.jan += item.jan;
+//           sumByMonth.feb += item.feb;
+//           sumByMonth.march += item.march;
+//       });
+//     })
+//     setSaleData(sumByMonth)
+
+//     } catch (error) {
+//       setSaleData([]);
+//     }
+//   };
+//   console.log("pop", saleData , targetData, tableData)
+  
   useEffect(() => {
-    getTableData();
+    // getTargetData();
+    getTableData()
+    // getSaleData()
   }, [localStorageItems]);
+
+// useEffect(()=>{
+//   if(targetData && saleData && tableData.length){
+
+//     const monthMap = {
+//       'Apr-24': 'Apr',
+//       'May-24': 'May',
+//       'Jun-24': 'June',
+//       'Jul-24': 'July',
+//       'Aug-24': 'Aug',
+//       'Sep-24': 'Sep',
+//       'Oct-24': 'Oct',
+//       'Nov-24': 'Nov',
+//       'Dec-24': 'Dec',
+//       'Jan-25': 'Jan',
+//       'Feb-25': 'Feb',
+//       'Mar-25': 'March'
+//     };
+    
+//     // Merge function
+//     const mergeData = (table, sales, targets) => {
+//       return table.map((item) => {
+//         const monthYear = item.month_year.split('-')[0]; // Removes the year part (e.g., 'Nov-24' -> 'Nov')
+//         const monthKey = monthMap[item.month_year.toLowerCase()]; // Find corresponding month key in sales and targets
+//           console.log("qap",  monthKey, monthYear)
+//         return {
+//           ...item,
+//           month_year: monthYear,  // Update the month_year to exclude '-24'
+//           sale: sales[monthKey],
+//           target: targets[monthKey]
+//         };
+//       });
+//     };
+    
+//     // Merged Data
+//     const mergedData = mergeData(tableData, saleData, targetData);
+
+//     console.log("qwa", mergedData, saleData, targetData)
+//   }
+  
+
+// },[targetData, saleData, tableData.length])
+ 
 
   return (
     <form
@@ -189,15 +345,17 @@ const AdditionalInfo = (props) => {
           <thead>
             <tr className="bg-blue-400 text-white text-[10px]">
               <th className="border border-gray-200 ">Month-Year</th>
-              <th className="border border-gray-200 ">Tar</th>
+              <th className="border border-gray-200 " >{" "}Tar{" "} </th>
               <th className="border border-gray-200 py-2 px-2">
-                Tot
+                Sale
+                /POG
               </th>
               <th className="border border-gray-200 py-2 px-2">
                 Ach.
               </th>
               <th className="border border-gray-200 py-2 px-2">
-                Scr
+                Act.
+                SCR
               </th>
               <th className="border border-gray-200 py-2 px-2">
                 Dmo

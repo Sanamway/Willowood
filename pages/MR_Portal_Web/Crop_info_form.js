@@ -7,6 +7,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import * as Yup from "yup";
 import Layout from "@/components/Layout1";
+import { totalOsData } from "@/components/Dashboard/sampleData";
 const AdditionalInfo = (props) => {
   const router = useRouter();
   const headers = {
@@ -87,17 +88,24 @@ const AdditionalInfo = (props) => {
         apires.crop_seg.map((item, index) => {
           return {
             idx: index,
-            avCost: item.average_cost_acre,
-            cost: item.cost_kg_ltr,
+            wtaerLt: item.average_cost_acre,
+            costLt: item.cost_kg_ltr,
             segment: item.crop_segment,
-            stage: item.crop_stage,
-            share: item.share_percent,
+            totalCost: item.share_percent,
             dose: item.dose_acre,
             endDate: new Date(item.end_date),
             productBrand: item.product_brand,
             newStage: item.stage,
             startDate: new Date(item.start_date),
             totalDay: item.total_days,
+          };
+        })
+      );
+      setStageDetails(
+        apires.crop_stage.map((item, index) => {
+          return {
+            idx: index,
+            stage: item.stage_name,
           };
         })
       );
@@ -218,6 +226,8 @@ const AdditionalInfo = (props) => {
     },
   ]);
 
+
+
   const validationSchemaCropDetails = Yup.object().shape({
     district: Yup.string()
       .typeError("Add District to add new row")
@@ -297,54 +307,83 @@ const AdditionalInfo = (props) => {
       toast.error(err[0]);
     }
   };
+  
+
+  const [stageDetails, setStageDetails] = useState([{idx: 0, stage: ""}]);
+  const validationSchemaStageDetails = Yup.object().shape({
+    stage: Yup.string()
+      .typeError("Add Stage to add new row")
+      .required("Add Stage to add new row"),
+  });
+
+  const handleAddCropStageDetails = async (idx) => {
+    try {
+      const newArray = [...stageDetails];
+      await validationSchemaStageDetails.validate(newArray[idx], {
+        abortEarly: false,
+      });
+      // Create a copy of the current array
+      const newStageDetail = {
+        idx: idx + 1,
+        stage: "",
+      };
+
+      // Use splice to insert the new object at the specified index
+      newArray.splice(idx + 1, 0, newStageDetail);
+
+      // Update the idx values to keep them sequential
+      const updatedStageDetails = newArray.map((segment, index) => ({
+        ...segment,
+        idx: index,
+      }));
+      // Update the state with the new array
+      setStageDetails(updatedStageDetails);
+    } catch (error) {
+      const newErrors = {};
+      error?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+      const err = Object.values(newErrors);
+      toast.error(err[0]);
+    }
+
+  };
+
+
+
 
   const [segmentDetails, setSegmentDetails] = useState([
     {
       idx: 0,
-      stage: "",
       segment: "",
       productBrand: "",
-      share: "",
       dose: "",
-      cost: "",
-      avCost: "",
+      wtaerLt: "",
+      costLt: "",
+      totalCost: "",
       startDate: "",
       endDate: "",
       totalDay: "",
       newStage: "",
     },
   ]);
+  
   const validationSchemaSegmentDetails = Yup.object().shape({
-    stage: Yup.string()
-      .typeError("Add Stage to add new row")
-      .required("Add Stage to add new row"),
+ 
     segment: Yup.string()
       .typeError("Add Segment to add new row")
       .required("Add Segment to add new row"),
     productBrand: Yup.string()
       .typeError("Add Product Brand to add new row")
       .required("Add Product Brand to add new row"),
-    share: Yup.string()
-      .typeError("Add Cost Kg/Ltr  to add new row")
-      .required("Add Cost Kg/Ltr  to add new row"),
-    dose: Yup.number()
-      .typeError("Add dose to add new row")
-      .required("Add dose to add new row"),
-    cost: Yup.number()
-      .typeError("Add cost to add new row")
-      .required("Add cost to add new row"),
-    avCost: Yup.number()
-      .typeError("Add av cost to add new row")
-      .required("Add av cost to add new row"),
+ 
     startDate: Yup.string()
       .typeError("Add Start date to add new row")
       .required("Add Start date to add new row"),
     endDate: Yup.string()
       .typeError("Add End date to add new row")
       .required("Add End date to add new row"),
-    totalDay: Yup.number()
-      .typeError("Add total days to add new row")
-      .required("Add total days to add new row"),
+  
     newStage: Yup.string()
       .typeError("Add Stage to add new row")
       .required("Add Stage to add new row"),
@@ -359,13 +398,13 @@ const AdditionalInfo = (props) => {
       // Create a copy of the current array
       const newSegmentDetail = {
         idx: idx + 1,
-        stage: "",
+       
         segment: "",
         productBrand: "",
-        share: "",
         dose: "",
-        cost: "",
-        avCost: "",
+        wtaerLt: "",
+        costLt: "",
+        totalCost: "",
         startDate: "",
         endDate: "",
         totalDay: "",
@@ -484,13 +523,13 @@ const AdditionalInfo = (props) => {
           return {
             cr_id: allFilters.crop,
             c_id: allFilters.companyId,
-            crop_stage: item.stage,
+         
             crop_segment: item.segment,
-            share_percent: item.share,
+            share_percent: item.totalCost,
             product_brand: item.productBrand,
             dose_acre: item.dose,
-            cost_kg_ltr: item.cost,
-            average_cost_acre: item.avCost,
+            cost_kg_ltr: item.costLt,
+            average_cost_acre:item.wtaerLt ,
             start_date: item.startDate,
             end_date: item.endDate,
             total_days: item.totalDay,
@@ -505,6 +544,13 @@ const AdditionalInfo = (props) => {
             market_potential: item.marketPotential,
             business: item.business,
             share: item.share,
+          };
+        }),
+        crop_stage: stageDetails.map((item) => {
+          return {       
+            cr_id: allFilters.crop,
+            c_id: allFilters.companyId,
+            stage_name: item.stage,        
           };
         }),
       };
@@ -542,26 +588,26 @@ const AdditionalInfo = (props) => {
             c_id: allFilters.companyId,
             district: item.district,
             total_cultivated_area_in_acre: item.cultivatedArea,
-            area_in_acre: item.area,
+            area_in_acre:  item.area,
             share_percent: item.share,
             average_yield_acre: item.avYield,
-            current_price_qtl: item.currentPrice,
-            input_cost: item.inputCost,
-            output_cost: item.outputCost,
-            roi: item.roi,
+            current_price_qtl:  item.currentPrice,
+            input_cost:         item.inputCost,
+            output_cost:        item.outputCost,
+            roi:    item.roi,
           };
         }),
         crop_seg: segmentDetails.map((item) => {
           return {
             cr_id: allFilters.crop,
             c_id: allFilters.companyId,
-            share_percent: item.share,
-            crop_stage: item.stage,
+         
             crop_segment: item.segment,
+            share_percent: item.totalCost,
             product_brand: item.productBrand,
             dose_acre: item.dose,
-            cost_kg_ltr: item.cost,
-            average_cost_acre: item.avCost,
+            cost_kg_ltr: item.costLt,
+            average_cost_acre:item.wtaerLt ,
             start_date: item.startDate,
             end_date: item.endDate,
             total_days: item.totalDay,
@@ -576,6 +622,13 @@ const AdditionalInfo = (props) => {
             market_potential: item.marketPotential,
             business: item.business,
             share: item.share,
+          };
+        }),
+        crop_stage: stageDetails.map((item) => {
+          return {       
+            cr_id: allFilters.crop,
+            c_id: allFilters.companyId,
+            stage_name: item.stage,        
           };
         }),
       };
@@ -612,7 +665,7 @@ const AdditionalInfo = (props) => {
       handleEdit(e);
     }
   };
-
+    
   return (
     <Layout>
       <div className="bg-white rounded p-4 w-full h-full   overflow-auto no-scrollbar">
@@ -680,7 +733,7 @@ const AdditionalInfo = (props) => {
         <form>
           <div className="mb-8">
             <h2 className="text-md font-bold mb-4">
-              Crop Details (District Level)
+              Crop Details 
             </h2>
             <div className="overflow-x-auto">
               <table className="border-collapse border border-gray-400 w-full text-sm">
@@ -1051,32 +1104,125 @@ const AdditionalInfo = (props) => {
               </table>
             </div>
           </div>
-
           <div className="mb-8">
             <h2 className="text-md font-bold mb-4">
-              Crop Segmentation (District Level)
+              Crop Stage
             </h2>
             <div className="overflow-x-auto">
               <table className="border-collapse border border-gray-400 w-full text-[11px]">
               <colgroup>
     <col style={{ width: "18%" }} />   
-    <col style={{ width: "14%" }} />   
-    <col style={{ width: "18%" }} />   
-    <col style={{ width: "6%" }} />   
-    <col style={{ width: "6%" }} />   
-    <col style={{ width: "6%" }} />   
-    <col style={{ width: "6%" }} />   
     <col style={{ width: "12%" }} />  
-    <col style={{ width: "12%" }} />  
-    <col style={{ width: "6%" }} />   
-    <col style={{ width: "6%" }} />   
+     <col style={{ width: "6%" }} />   
+     <col style={{ width: "6%" }} />   
     <col style={{ width: "10%" }} />   
   </colgroup>
                 <thead>
-                  <tr className="bg-blue-500 text-white">
+                  <tr className="bg-blue-500 text-white">               
                     <th className="border border-gray-400 px-4 py-2">
                       Crop Stage
                     </th>
+                   
+                    {router.query.type !== "View" && (
+                      <th className="border border-gray-400 px-4 py-2">
+                        Action
+                      </th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {stageDetails.map((item, index) => (
+                    <tr key={index} className="w-full">             
+                      <td className="border border-gray-400 px-4 py-2">                      
+                      <input 
+                          className="w-full px-2 py-1 border border-gray-300 rounded "
+                          disabled={router.query.type === "View"}
+                          value={item.stage}
+                          onChange={(e) =>
+                            setStageDetails(
+                              stageDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    stage: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                         
+                      </td>
+                     
+                    
+                    
+                    
+
+                      {router.query.type !== "View" && (
+                        <td className="px-1 py-2 flex flex-row justify-between">
+                          <button
+                            type="button"
+                            className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-2 py-1 text-[11px] hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-12"
+                           onClick={() => handleAddCropStageDetails(index)}
+                          >
+                            Add
+                          </button>
+                          <button
+                            type="button"
+                            className="inline-flex justify-center text-white rounded-md border border-transparent bg-red-400 px-2 py-1 text-[11px] hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 whitespace-nowrap w-12"
+                             onClick={() => {
+                              setStageDetails(
+                                stageDetails
+                                  .filter((item) => item.idx !== index)
+                                  .map((crop, index) => ({
+                                    ...crop,
+                                    idx: index,
+                                  }))
+                              );
+                            }}
+                          >
+                            Delete 
+                          </button>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+
+
+
+
+
+
+
+                 
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="mb-8">
+            <h2 className="text-md font-bold mb-4">
+              Crop Segmentation 
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="border-collapse border border-gray-400 w-full text-[11px]">
+              <colgroup>
+              <col style={{ width: "18%" }} />   
+              <col style={{ width: "14%" }} />   
+              <col style={{ width: "8%" }} />   
+              <col style={{ width: "6%" }} />   
+              <col style={{ width: "6%" }} />   
+              <col style={{ width: "6%" }} />   
+              <col style={{ width: "12%" }} />   
+              <col style={{ width: "12%" }} />  
+              <col style={{ width: "12%" }} />  
+              <col style={{ width: "6%" }} />   
+              <col style={{ width: "10%" }} />   
+              <col style={{ width: "10%" }} />   
+              </colgroup>
+                <thead>
+                  <tr className="bg-blue-500 text-white">               
                     <th className="border border-gray-400 px-4 py-2">
                       Segment
                     </th>
@@ -1084,18 +1230,18 @@ const AdditionalInfo = (props) => {
                       Product / Brand
                     </th>
 
+                    <th className="border border-gray-400 px-4 py-2 whitespace-nowrap">
+                      Dose/Acre (ml / gm) 
+                    </th>
                     <th className="border border-gray-400 px-4 py-2">
-                      Dose/Acre (kg/ltr) 
+                      Water / ltr
                     </th>
                     <th className="border border-gray-400 px-4 py-2">
                       Cost kg/Ltr 
                     </th>
                     <th className="border border-gray-400 px-4 py-2">
-                      Cost/Acre (INR) 
-                    </th>
-                    <th className="border border-gray-400 px-4 py-2">
-                      Average Cost/Acre (INR) 
-                    </th>
+                      Total Cost 
+                    </th>                  
                     <th className="border border-gray-400 px-4 py-2">
                       Start Date
                     </th>
@@ -1116,30 +1262,9 @@ const AdditionalInfo = (props) => {
                   </tr>
                 </thead>
                 <tbody>
+               
                   {segmentDetails.map((item, index) => (
-                    <tr key={index} className="w-full">
-                      <td className="border border-gray-400 px-4 py-2">
-                        <input
-                          type="text"
-                          className="w-full px-2 py-1 border border-gray-300 rounded "
-                          value={item.stage}
-                          disabled={router.query.type === "View"}
-                          onChange={(e) =>
-                            setSegmentDetails(
-                              segmentDetails.map((el) => {
-                                if (el.idx === index) {
-                                  return {
-                                    ...el,
-                                    stage: e.target.value,
-                                  };
-                                } else {
-                                  return el;
-                                }
-                              })
-                            )
-                          }
-                        />
-                      </td>
+                    <tr key={index} className="w-full">   
                       <td className="border border-gray-400 px-4 py-2">
                         <select
                           className="w-full px-2 py-1 border border-gray-300 rounded "
@@ -1198,9 +1323,8 @@ const AdditionalInfo = (props) => {
                       </td>
 
                       <td className="border border-gray-400 px-4 py-2">
-                        <input
-                          type="number"
-                           className="w-full px-2 py-1 border border-gray-300 rounded "
+                        <input         
+                          className="w-full px-2 py-1 border border-gray-300 rounded "
                           disabled={router.query.type === "View"}
                           value={item.dose}
                           onChange={(e) =>
@@ -1224,17 +1348,15 @@ const AdditionalInfo = (props) => {
                           type="number"
                           className="w-full px-2 py-1 border border-gray-300 rounded text-right"
                           disabled={router.query.type === "View"}
-                          value={item.share}
+                          value={item.wtaerLt}
                           onChange={(e) =>
                             setSegmentDetails(
                               segmentDetails.map((el) => {
                                 if (el.idx === index) {
                                   return {
                                     ...el,
-                                    share: e.target.value,
-                                    cost: (e.target.value * item.dose).toFixed(
-                                      2
-                                    ),
+                                    wtaerLt: e.target.value,
+                                   
                                   };
                                 } else {
                                   return el;
@@ -1244,41 +1366,41 @@ const AdditionalInfo = (props) => {
                           }
                         />
                       </td>
-                      <td className="border border-gray-400 px-4 py-2">
-                        <input
-                          type="number"
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                          disabled
-                          value={item.cost}
-                          onChange={(e) =>
-                            setSegmentDetails(
-                              segmentDetails.map((el) => {
-                                if (el.idx === index) {
-                                  return {
-                                    ...el,
-                                    cost: e.target.value,
-                                  };
-                                } else {
-                                  return el;
-                                }
-                              })
-                            )
-                          }
-                        />
-                      </td>
+                     
                       <td className="border border-gray-400 px-4 py-2">
                         <input
                           type="number"
                           className="w-full px-2 py-1 border border-gray-300 rounded text-right"
                           disabled={router.query.type === "View"}
-                          value={item.avCost}
+                          value={item.costLt}
                           onChange={(e) =>
                             setSegmentDetails(
                               segmentDetails.map((el) => {
                                 if (el.idx === index) {
                                   return {
                                     ...el,
-                                    avCost: e.target.value,
+                                    costLt: e.target.value,
+                                  };
+                                } else {
+                                  return el;
+                                }
+                              })
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border border-gray-400 px-4 py-2">
+                        <input
+                          type="number"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"            
+                          value={item.totalCost}
+                          onChange={(e) =>
+                            setSegmentDetails(
+                              segmentDetails.map((el) => {
+                                if (el.idx === index) {
+                                  return {
+                                    ...el,
+                                    totalCost: e.target.value,
                                   };
                                 } else {
                                   return el;
@@ -1405,119 +1527,7 @@ const AdditionalInfo = (props) => {
                     </tr>
                   ))}
 
-<tr  className="w-full">
-                      <td className="border border-gray-400 px-4 py-2">
-                        <input
-                          type="text"
-                          className="w-full px-2 py-1 border border-gray-300 rounded "
-                          value={"Total"}
-                          disabled
-                         
-                        />
-                      </td>
-                      <td className="border border-gray-400 px-4 py-2">
-                      <input
-                          type="text"
-                          className="w-full px-2 py-1 border border-gray-300 rounded "
-                          value={"-"}
-                          disabled
-                         
-                        />
-                      </td>
-                      <td className="border border-gray-400 px-4 py-2">
-                      <input
-                          type="text"
-                          className="w-full px-2 py-1 border border-gray-300 rounded "
-                          value={"-"}
-                          disabled
-                         
-                        />
-                      </td>
 
-                      <td className="border border-gray-400 px-4 py-2">
-                        <input
-                          type="number"
-                           className="w-full px-2 py-1 border border-gray-300 rounded "
-                          disabled
-                          value={segmentDetails
-                            .map((item) => item.dose)
-                            .reduce((acc, current) => {
-                              // Check if the current element is a number
-    
-                              return Number(acc) + Number(current);
-                            }, 0).toFixed(2)}
-                        
-                        />
-                      </td>
-                      <td className="border border-gray-400 px-4 py-2">
-                        <input
-                           type="number"
-                           className="w-full px-2 py-1 border border-gray-300 rounded "
-                          disabled
-                          value= {segmentDetails
-                            .map((item) => item.share)
-                            .reduce((acc, current) => {
-                              // Check if the current element is a number
-    
-                              return Number(acc) + Number(current);
-                            }, 0)}
-                        />
-                      </td>
-                      <td className="border border-gray-400 px-4 py-2">
-                        <input
-                          type="number"
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                          disabled
-                          value={segmentDetails
-                            .map((item) => item.cost)
-                            .reduce((acc, current) => {
-                              // Check if the current element is a number
-    
-                              return Number(acc) + Number(current);
-                            }, 0)}
-                         
-                        />
-                      </td>
-                      <td className="border border-gray-400 px-4 py-2">
-                        <input
-                          type="number"
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-right"
-                          disabled={router.query.type === "View"}
-                          value={segmentDetails
-                            .map((item) => item.avCost)
-                            .reduce((acc, current) => {
-                              // Check if the current element is a number
-    
-                              return Number(acc) + Number(current);
-                            }, 0)}
-                         
-                        />
-                      </td>
-                      <td className="border border-gray-400 px-4 py-2">
-                       -
-                      </td>
-                      <td className="border border-gray-400 px-4 py-2">
-                        -
-                      </td>
-                     
-                      <td className="border border-gray-400 px-4 py-2">
-                        <input
-                          className="w-full px-2 py-1 border border-gray-300 rounded "
-                          value={segmentDetails
-                            .map((item) => item.totalDay)
-                            .reduce((acc, current) => {
-                              // Check if the current element is a number
-    
-                              return Number(acc) + Number(current);
-                            }, 0)}
-                          disabled
-                          
-                        />
-                      </td>
-
-                      <td className="border border-gray-400 px-4 py-2">-</td>
-                      <td className="border border-gray-400 px-4 py-2">-</td>
-                    </tr>
 
 
 
@@ -1525,59 +1535,33 @@ const AdditionalInfo = (props) => {
 
                   <tr className="bg-gray-900 text-white">
                     <td className="border border-gray-400 px-4 py-2">Total</td>
-                    <td className="border border-gray-400 px-4 py-2">-</td>
+                  
                     <td className="border border-gray-400 px-4 py-2">-</td>
 
                     <td className="border border-gray-400 px-4 py-2">
-                      {" "}
-                      {segmentDetails
-                        .map((item) => item.dose)
-                        .reduce((acc, current) => {
-                          // Check if the current element is a number
-
-                          return Number(acc) + Number(current);
-                        }, 0).toFixed(2)}
+                      -
                     </td>
                     <td className="border border-gray-400 px-4 py-2">
-                      {segmentDetails
-                        .map((item) => item.share)
+-
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                     -
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                    {segmentDetails
+                        .map((item) => item.totalCost)
                         .reduce((acc, current) => {
                           // Check if the current element is a number
 
                           return Number(acc) + Number(current);
                         }, 0)}
                     </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      {" "}
-                      {segmentDetails
-                        .map((item) => item.cost)
-                        .reduce((acc, current) => {
-                          // Check if the current element is a number
-
-                          return Number(acc) + Number(current);
-                        }, 0)}
-                    </td>
-                    <td className="border border-gray-400 px-4 py-2">
-                      {" "}
-                      {segmentDetails
-                        .map((item) => item.avCost)
-                        .reduce((acc, current) => {
-                          // Check if the current element is a number
-
-                          return Number(acc) + Number(current);
-                        }, 0)}
-                    </td>
+                    
                     <td className="border border-gray-400 px-4 py-2">-</td>
                     <td className="border border-gray-400 px-4 py-2">-</td>
                     <td className="border border-gray-400 px-4 py-2">
                       {" "}
-                      {segmentDetails
-                        .map((item) => item.totalDay)
-                        .reduce((acc, current) => {
-                          // Check if the current element is a number
-
-                          return Number(acc) + Number(current);
-                        }, 0)}
+                     -
                     </td>
                     <td className="border border-gray-400 px-4 py-2">-</td>
                     <td className="border border-gray-400 px-4 py-2">-</td>
@@ -1589,7 +1573,7 @@ const AdditionalInfo = (props) => {
 
           <div className="mb-8">
             <h2 className="text-md font-bold mb-4">
-              Crop Market Share (District Level)
+              Crop Market Share 
             </h2>
             <div className="overflow-x-auto">
               <table className="border-collapse border border-gray-400 w-full text-sm">
@@ -1769,7 +1753,7 @@ const AdditionalInfo = (props) => {
                         }, 0)}
                     </td>
                     <td className="border border-gray-400 px-4 py-2">
-                      {" "}
+                     
                       {marketShare
                         .map((item) => item.share)
                         .reduce((acc, current) => {

@@ -42,7 +42,7 @@ const AdditionalInfo = (props) => {
   );
   const router = useRouter();
   const [formData, setFormData] = useState({
-    purposeDemo: "Product Demo",
+    purposeDemo: "SOLO Demo",
     dealer: "",
     farmerMobile: "",
     farmerId: "",
@@ -66,6 +66,7 @@ const AdditionalInfo = (props) => {
     acre: "",
     segment: "",
     productBrand: "",
+    upperWater:"",
     water: "",
     dose: "",
     recDose:""
@@ -119,7 +120,9 @@ const AdditionalInfo = (props) => {
           headers: headers,
           params: {
             c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            type:"stage"
           },
+          
         });
         const apires = await respond.data.data;
         setNewCropData(apires);  
@@ -128,11 +131,35 @@ const AdditionalInfo = (props) => {
       }
   };
   
-
+const getSegmentInfo = async (cropId) => {
+    if (new Date())
+      try {
+        const respond = await axios.get(`${url}/api/get_crop_profile`, {
+          headers: headers,
+          params: {
+            c_id:  JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            cr_id: cropId,
+            type:   "stage"
+          },
+          
+        });
+        const apires = await respond.data.data;
+        setAllStageData([
+          ...new Set(apires.map((item) => String(item.stage_name))),
+        ]);
+        
+      
+      } catch (error) {
+        console.log(error);
+      }
+  };
+  
+ useEffect(()=>{
+  getSegmentInfo(productDemoState.crop,)
+ },[  productDemoState.crop])
   useEffect(() => {
     getDelaerData();
     getCropInfo();
-  
     getNewCropInfo();
   }, []);
 
@@ -146,30 +173,28 @@ const AdditionalInfo = (props) => {
         },
       });
       const apires = await respond.data.data;
-      setAllStageData([
-        ...new Set(apires.map((item) => String(item.crop_stage))),
-      ]);
+   
       setAllSegmentData([
         ...new Set(
           apires
-            .filter((item) => item.crop_stage === cropStage)
             .map((item) => String(item.crop_segment))
         ),
       ]);
       setAllBrandData([
         ...new Set(
-          apires
-            .filter((item) => item.crop_stage === cropStage)
-            .filter((item) => item.crop_segment === cropSegment)
+          apires .filter((item) => item.crop_segment === cropSegment)
             .map((item) => String(item.product_brand))
         ),
       ]);
+     
       setProductDemoState({
         ...productDemoState,
         dose: apires
-          .filter((item) => item.crop_stage === cropStage)
           .filter((item) => item.crop_segment === cropSegment)
           .filter((item) => item.product_brand === productBrand)[0].dose_acre,
+        upperWater: apires
+          .filter((item) => item.crop_segment === cropSegment)
+          .filter((item) => item.product_brand === productBrand)[0].average_cost_acre,
       });
     } catch (error) {
       console.log(error);
@@ -282,6 +307,7 @@ const AdditionalInfo = (props) => {
             acre: "",
             segment: "",
             productBrand: "",
+            upperWater:"",
             water: "",
             dose: "",
             recDose:""
@@ -520,51 +546,164 @@ const AdditionalInfo = (props) => {
   
    
   const handleAddProductDemo = async () => {
-   
-    try {
-      const data = {
-        f_demo_code: fDemoCode,
-        cr_id: Number(productDemoState.crop),
-        crop: productDemoState.crop ? newCropData.filter(          
-          (item) => item.cr_id === Number(productDemoState.crop)
-        )[0].crop_name : null,
-        stage: productDemoState.stage,
-        acre_plot: productDemoState.acre,
-        rec_dose: productDemoState.recDose ? Number(productDemoState.recDose) :null,
-        segment: productDemoState.segment,
-        product_brand: productDemoState.productBrand,
-        
-        dose_acre_tank: Number(productDemoState.dose),
-        water_val: Number(productDemoState.water),
-        emp_code: window.localStorage.getItem("emp_code"),
-      };
-
-      const respond = await axios
-        .post(`${url}/api/add_mr_form_demo_crop`, JSON.stringify(data), {
-          headers: headers,
-        })
-        .then((res) => {
-          if (!res) return;
-       
-
-          getProductDemoTable(fDemoCode);
-          setProductDemoState({
-            crop: "",
-            cropName: "",
-            stage: "",
-            acre: "",
-            recDose:"",
-            segment: "",
-            productBrand: "",
-            water: "",
-            dose: "",
-          });
-        });
-    } catch (errors) {
-      console.log("qaz",errors);
-
-      toast.error(errors.response?.data.message);
+    console.log("nop",formData.length,formData.purposeDemo)
+    if(formData.purposeDemo === "SOLO Demo"){
+      if(productDemoTableData.length >= 1){
+      toast.error("Can not add more than 1 Product demo for SOLO Demo type")
+      }
+      else {
+        try {
+          const data = {
+            f_demo_code: fDemoCode,
+            cr_id: Number(productDemoState.crop),
+            crop: productDemoState.crop ? newCropData.filter(          
+              (item) => item.cr_id === Number(productDemoState.crop)
+            )[0].crop_name : null,
+            stage: productDemoState.stage,
+            acre_plot: productDemoState.acre,
+            rec_dose: productDemoState.recDose ? Number(productDemoState.recDose) :null,
+            segment: productDemoState.segment,
+            product_brand: productDemoState.productBrand,
+            dose_acre_tank: productDemoState.dose,
+            water_val: Number(productDemoState.water),
+            emp_code: window.localStorage.getItem("emp_code"),
+          };
+    
+          const respond = await axios
+            .post(`${url}/api/add_mr_form_demo_crop`, JSON.stringify(data), {
+              headers: headers,
+            })
+            .then((res) => {
+              if (!res) return;
+           
+    
+              getProductDemoTable(fDemoCode);
+              setProductDemoState({
+                crop: "",
+                cropName: "",
+                stage: "",
+                acre: "",
+                recDose:"",
+                segment: "",
+                productBrand: "",
+                upperWater:"",
+                water: "",
+                dose: "",
+              });
+            });
+        } catch (errors) {
+          console.log("qaz",errors);
+    
+          toast.error(errors.response?.data.message);
+        }
+      }
     }
+    else if(formData.purposeDemo === "Tank Mix Demo"){
+
+      if(productDemoTableData.length >= 4){
+        toast.error("Can not add more than 4 Product demo for Tank Mix Demo")
+        }
+        else {
+          try {
+            const data = {
+              f_demo_code: fDemoCode,
+              cr_id: Number(productDemoState.crop),
+              crop: productDemoState.crop ? newCropData.filter(          
+                (item) => item.cr_id === Number(productDemoState.crop)
+              )[0].crop_name : null,
+              stage: productDemoState.stage,
+              acre_plot: productDemoState.acre,
+              rec_dose: productDemoState.recDose ? Number(productDemoState.recDose) :null,
+              segment: productDemoState.segment,
+              product_brand: productDemoState.productBrand,
+              dose_acre_tank: productDemoState.dose,
+              water_val: Number(productDemoState.water),
+              emp_code: window.localStorage.getItem("emp_code"),
+            };
+      
+            const respond = await axios
+              .post(`${url}/api/add_mr_form_demo_crop`, JSON.stringify(data), {
+                headers: headers,
+              })
+              .then((res) => {
+                if (!res) return;
+             
+      
+                getProductDemoTable(fDemoCode);
+                setProductDemoState({
+                  crop: "",
+                  cropName: "",
+                  stage: "",
+                  acre: "",
+                  recDose:"",
+                  segment: "",
+                  productBrand: "",
+                  upperWater:"",
+                  water: "",
+                  dose: "",
+                });
+              });
+          } catch (errors) {
+            console.log("qaz",errors);
+      
+            toast.error(errors.response?.data.message);
+          }
+        }
+
+
+
+
+
+
+    }
+    else {
+      try {
+        const data = {
+          f_demo_code: fDemoCode,
+          cr_id: Number(productDemoState.crop),
+          crop: productDemoState.crop ? newCropData.filter(          
+            (item) => item.cr_id === Number(productDemoState.crop)
+          )[0].crop_name : null,
+          stage: productDemoState.stage,
+          acre_plot: productDemoState.acre,
+          rec_dose: productDemoState.recDose ? Number(productDemoState.recDose) :null,
+          segment: productDemoState.segment,
+          product_brand: productDemoState.productBrand,
+          dose_acre_tank: productDemoState.dose,
+          water_val: Number(productDemoState.water),
+          emp_code: window.localStorage.getItem("emp_code"),
+        };
+  
+        const respond = await axios
+          .post(`${url}/api/add_mr_form_demo_crop`, JSON.stringify(data), {
+            headers: headers,
+          })
+          .then((res) => {
+            if (!res) return;
+         
+  
+            getProductDemoTable(fDemoCode);
+            setProductDemoState({
+              crop: "",
+              cropName: "",
+              stage: "",
+              acre: "",
+              recDose:"",
+              segment: "",
+              productBrand: "",
+              upperWater:"",
+              water: "",
+              dose: "",
+            });
+          });
+      } catch (errors) {
+        console.log("qaz",errors);
+  
+        toast.error(errors.response?.data.message);
+      }
+    }
+
+   
   };
 
   const [allState, setAllState] = useState([]);
@@ -1007,16 +1146,16 @@ useEffect(()=>{
               Select
             </option>
             <option
-              value="Product Demo"
+              value="SOLO Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-              Product Demo
+              SOLO Demo
             </option>
             <option
-              value="Tulsi Demo"
+              value="Tank Mix Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-            Tulsi Demo
+            Tank Mix Demo
             </option>
             <option
               value="Pin Demo"
@@ -1313,7 +1452,19 @@ useEffect(()=>{
             disabled={formActive}
             value={productDemoState.crop}
             onChange={(e) =>
-              setProductDemoState({ ...productDemoState, crop: e.target.value })
+              setProductDemoState({ 
+                ...productDemoState, 
+                crop: e.target.value,
+                cropName: "",
+                stage: "",
+                acre: "",
+                segment: "",
+                productBrand: "",
+                upperWater:"",
+                water: "",
+                dose: "",
+                recDose:""
+                })
             }
           >
             <option
@@ -1424,14 +1575,25 @@ useEffect(()=>{
           </select>
         </div>
       </div>
+
+
+      <hr className="bg-blue-800 h-1 w-full  mt-4" />
+<h1 className="flex justify-center px-4">Recomended (Per Acre)</h1>
+      <hr className="bg-blue-800 h-1 w-full  " />
+
       <div className="flex flex-row my-2 mb-2 ">
-    <div className="w-full px-2 mt-2">      
+   
+
+        <div className="flex flex-col gap-2  w-full px-2 text-sm ">
+          <label className="ml-3">Dose(ml/gm)</label>
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="number"
+            className="w-full px-3  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+           
             id="inputField"
-            placeholder="Standard Dose / Acre"
+            disabled
+            placeholder="Recomended Dose / Acre"
             value={productDemoState.dose}
+            disbaled
             onChange={(e) =>
               setProductDemoState({
                 ...productDemoState,
@@ -1439,14 +1601,59 @@ useEffect(()=>{
               })
             }
           />      
-        </div>
-        <div className="w-full px-2 mt-2">      
+
+
+
+          </div> 
+          <div className="flex flex-col gap-2  w-full px-2 text-sm ">
+          <label className="ml-3">Water(ltr)</label>
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full px-3  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="number"
             id="inputField"
-            placeholder="Recom. Dose / Acre"
+            value={productDemoState.upperWater}
+            disabled
+          
+          />      
+
+
+          
+          </div> 
+          <div className="flex flex-col gap-2  w-full px-2 text-sm ">
+          <label className="ml-3">Sq.MTR</label>
+          <input
+            className="w-full px-3  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="number"
+            id="inputField"
+            value={4000}
+            disabled
+            
+          />      
+
+
+          
+          </div> 
+
+
+          
+      
+      </div>
+      <hr className="bg-blue-800 h-1 w-full  mt-4" />
+<h1 className="flex justify-center px-4">Applied qty</h1>
+      <hr className="bg-blue-800 h-1 w-full  " />
+      <div className="flex flex-row my-2 mb-2 ">
+   
+
+     
+      <div className="flex flex-col gap-2  w-full px-2 text-sm ">
+      <label className="ml-3">Qty(ml/gm)</label>    
+          <input
+            className="w-full px-3  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="number"
+            id="inputField"
+            placeholder="Apply Dose / Acre"
             value={productDemoState.recDose}
+         
             onChange={(e) =>
               setProductDemoState({
                 ...productDemoState,
@@ -1456,12 +1663,31 @@ useEffect(()=>{
           />
           
         </div>
-        <div className="w-full px-2 mt-2">
-        
+        <div className="flex flex-col gap-2  w-full px-2 text-sm ">
+        <label className="ml-3">Water(ltr)</label>
+           <input
+            className="w-full px-3  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="number"
+            id="inputField"
+            placeholder="Water"
+           
+            value={productDemoState.water}
+            onChange={(e) =>
+              setProductDemoState({
+                ...productDemoState,
+                water: e.target.value,
+              })
+            }
+           
+          />
+        </div>
+        <div className="flex flex-col gap-2  w-full px-2 text-sm ">
+        <label className="ml-3">Sq.MTR</label>     
           <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            className="w-full px-3  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             id="inputField"
             placeholder="Demo Area"
+           
             value={productDemoState.acre}
             onChange={(e) => {
               setProductDemoState({
@@ -1472,27 +1698,13 @@ useEffect(()=>{
           />
         </div> 
 
-        <div className="w-full px-2 mt-2">
-        <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="number"
-            id="inputField"
-            placeholder="Water"
-            value={productDemoState.water}
-            onChange={(e) =>
-              setProductDemoState({
-                ...productDemoState,
-                water: e.target.value,
-              })
-            }
-          />
-          </div> 
-      
-      </div>
-      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
-      <div className="flex flex-row my-2 mb-2 ">
      
  
+ </div>
+
+ 
+      <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
+      <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2 flex items-end justify-center">
           <button
             onClick={() => {
@@ -1538,26 +1750,26 @@ useEffect(()=>{
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-              St.Dose/Acre
-              </th>
-              <th
-                scope="col"
-                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
-              >
               Rec.Dose/Acre
               </th>
               <th
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-               Plot Size
+              Apply Dose/Acre
+              </th>
+              <th
+                scope="col"
+                className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+              >
+             Demo Area
               </th>
              
               <th
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-                Water
+                Water (LT)
               </th>
               
               <th

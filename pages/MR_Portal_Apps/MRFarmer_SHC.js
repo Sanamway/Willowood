@@ -977,7 +977,7 @@ getCropInfo()
             disabled
           />
         </div>
-        <div className="w-full px-2 mt-2 flex flex-row gap-1">
+        {/* <div className="w-full px-2 mt-2 flex flex-row gap-1">
           <h2 className="whitespace-nowrap w-48 self-center font-bold">
             Sulphur:{" "}
           </h2>
@@ -1120,7 +1120,7 @@ getCropInfo()
             value="PPM"
             disabled
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="flex w-full justify-center gap-4 mt-4 ">
