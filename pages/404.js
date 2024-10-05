@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import Profile from "../../public/userimg.jpg";
-const Error = (props) => {
+
+const ErrorPage = (props) => {
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
@@ -53,50 +53,12 @@ const Error = (props) => {
   return (
     <div>
       <Head>
-        <title>Coming Soon</title>
+        <title>404</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <div className="">
         
-        <div className="flex mb-4 mt-2 pb-4  shadow-md ">
-          <div className="w-40 h-30 flex justify-center items-center">
-            <Image
-              className="h-[5.1rem] w-[5.1rem] rounded-full mt-2"
-              src={Profile}
-              alt="img"
-            />
-          </div>
-
-          <div className="flex  flex-col  w-full mt-4 md:hidden">
-            <div className="flex w-full  w-28">
-              <div className="flex">
-                <p className=" font-bold text-sm text-blue-800 w-28">
-                  Emp Code
-                </p>
-                <span>:</span>
-              </div>
-              <span className="w-28 ml-3">{localStorageItems.empCode}</span>
-            </div>
-            <div className="flex   w-full  w-28 ">
-              <div className="flex">
-                <p className=" font-bold text-sm text-blue-800 w-28">Name</p>
-                <span>:</span>
-              </div>
-              <span className="w-28 ml-3 whitespace-nowrap"> {localStorageItems.clName}</span>
-            </div>
-
-            <div className="flex w-full  w-28">
-              <div className="flex">
-                <p className=" font-bold text-sm text-blue-800 w-28">
-                  Reporting HQ
-                </p>
-                <span>:</span>
-              </div>
-              <span className="w-28 ml-3">{localStorageItems.reportingHQ}</span>
-            </div>
-
-          </div>
-        </div>
+      
       </div>
       <div className="h-screen bg-gradient-to-br  flex items-start justify-start relative">
         
@@ -105,9 +67,9 @@ const Error = (props) => {
 
         
         <div className="relative z-10 text-center p-8 space-y-8 md:hidden">
-          <h1 className="text-5xl font-bold text-green-900 animate-pulse">Coming Soon</h1>
+          <h1 className="text-5xl font-bold text-green-900 animate-pulse">404 Error!</h1>
           <p className="text-lg  font-medium">
-            We're working on this page! Stay tuned for updates.
+          "Oops! Looks like you've wandered off the map. Let's get you back on track!"
           </p>
           <div onClick={() =>
               router.push({
@@ -124,6 +86,6 @@ const Error = (props) => {
   );
 };
 
-export default Error;
+export default ErrorPage;
 
 // Hydration  Issue

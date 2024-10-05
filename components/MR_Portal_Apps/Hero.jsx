@@ -22,7 +22,18 @@ const Hero = () => {
   
  
   const [error, setError] = useState(null);
-
+  // 404 error handlling Function
+  const ab= new Promise((res, rej)=>
+    {
+      setTimeout(()=> {
+        res("! ")
+      },404)
+    
+     
+    }
+   )
+   ab.then((res, rej)=>console.log("promises", res, rej))
+   
   const handleRequestLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(

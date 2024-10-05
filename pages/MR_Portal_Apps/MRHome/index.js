@@ -7,7 +7,7 @@ const index = () => {
   const router = useRouter()
   const [mode, setMode] = useState(null)
 
-  useEffect(() => {
+   useEffect(() => {
     if(window.localStorage){
       const mode = localStorage.getItem("mode");
       const uid = localStorage.getItem("uid");
@@ -23,6 +23,17 @@ const index = () => {
       }  
     }
   }, []);
+  const ab= new Promise((res, rej)=>
+  {
+    setTimeout(()=> {
+      res("! ")
+    },404)
+  
+   
+  }
+ )
+ ab.then((res, rej)=>console.log("promises", res, rej))
+ 
 
   return (
     <>

@@ -13,7 +13,7 @@ import toast, { Toaster } from "react-hot-toast";
 import moment from "moment";
 import ReactPaginate from "react-paginate";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+ import "react-datepicker/dist/react-datepicker.css";
 const NewDealer = () => {
   const csvHeaders = [
     { label: "Id", key: "ds_id" },
@@ -103,7 +103,9 @@ const NewDealer = () => {
   });
 
   // All Filters
-  const [filterState, setFilterState] = useState({
+
+   // All Filters
+   const [filterState, setFilterState] = useState({
     bgId: null,
     buId: null,
     zId: null,
@@ -115,7 +117,6 @@ const NewDealer = () => {
     buDes: null,
     bgDes: null,
     startDate: new Date(),
-  
   });
 
   const [bgData, setBgData] = useState([]);
@@ -286,18 +287,15 @@ const NewDealer = () => {
     // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     const roleId = 6;
     let filterState = {
-      cId: "All",
       bgId: "All",
       buId: "All",
+      zId: "All",
+      rId: "All",
+      tId: "All",
     };
     switch (roleId) {
       case 6:
         filterState = {
-          empCode: null,
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -306,14 +304,21 @@ const NewDealer = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId:
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           startDate: new Date(),
         };
         setLocalStorageItems({
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -342,11 +347,6 @@ const NewDealer = () => {
         break;
       case 5:
         filterState = {
-          empCode: null,
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -355,14 +355,19 @@ const NewDealer = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
 
+          tId: "All",
           startDate: new Date(),
         };
         setLocalStorageItems({
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -392,11 +397,6 @@ const NewDealer = () => {
         break;
       case 4:
         filterState = {
-          empCode: null,
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -406,13 +406,16 @@ const NewDealer = () => {
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
 
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
+          rId: "All",
+          tId: "All",
           startDate: new Date(),
         };
         setLocalStorageItems({
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -445,11 +448,6 @@ const NewDealer = () => {
         break;
       case 3:
         filterState = {
-          empCode: null,
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -459,13 +457,15 @@ const NewDealer = () => {
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
 
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          rId: "All",
+          tId: "All",
           startDate: new Date(),
         };
         setLocalStorageItems({
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -498,21 +498,14 @@ const NewDealer = () => {
         break;
       case 10:
         filterState = {
-          empCode: null,
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          rId: "All",
+          tId: "All",
           startDate: new Date(),
         };
         setLocalStorageItems({
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -554,13 +547,11 @@ const NewDealer = () => {
         });
 
         setFilterState({
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           startDate: new Date(),
         });
         setFilterState(filterState);
@@ -568,7 +559,7 @@ const NewDealer = () => {
         break;
     }
   }, []);
-  const { name } = router.query;
+
   useEffect(() => {
     getData(
      
@@ -581,7 +572,7 @@ const NewDealer = () => {
       filterState.empCode
     );
   }, [
-   
+  
     filterState.bgId,
     filterState.buId,
     filterState.zId,
@@ -590,6 +581,8 @@ const NewDealer = () => {
     filterState.startDate,
     filterState.empCode,
   ]);
+
+  const { name } = router.query;
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -719,7 +712,7 @@ const NewDealer = () => {
             value={filterState.zId}
             onChange={(e) => {
               if (e.target.value === "All") {
-                 setFilterState({
+                setFilterState({
                   ...filterState,
                   zId: e.target.value,
                   rId: "All",
@@ -815,7 +808,7 @@ const NewDealer = () => {
           </select>
 
           <div className="flex flex-row gap-2  items-center w-1/4">
-          <DatePicker
+            <DatePicker
               className="border p-1 rounded w-28 "
               dateFormat="yyyy"
               selected={filterState.startDate}
@@ -827,7 +820,6 @@ const NewDealer = () => {
               }
               hand
             />
-           
           </div>
         </div>
 

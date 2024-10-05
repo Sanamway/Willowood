@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment, useMemo } from "react";
 
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
-import { useRouter } from "next/router";
+ import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
@@ -34,17 +34,6 @@ const DealerTarget = () => {
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
  
-  const [filterState, setFilterState] = useState({
-    bgId: null,
-    buId: null,
-    rId: null,
-    zId: null,
-    tId: null,
-    dId: null,
-    yr: null,
-    empCode: null,
-    roleId: null,
-  });
   const [localStorageItems, setLocalStorageItems] = useState({
     cId: null,
     bgId: null,
@@ -55,24 +44,33 @@ const DealerTarget = () => {
     roleId: null,
   });
 
-  
-
+  // All Filters
+  const [filterState, setFilterState] = useState({
+    bgId: null,
+    buId: null,
+    zId: null,
+    rId: null,
+    tId: null,
+    tDes: null,
+    rDes: null,
+    zDes: null,
+    buDes: null,
+    bgDes: null,
+    empCode: null,
+  });
   useEffect(() => {
     // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     const roleId = 6;
     let filterState = {
-      cId: "All",
       bgId: "All",
       buId: "All",
+      zId: "All",
+      rId: "All",
+      tId: "All",
     };
     switch (roleId) {
       case 6:
         filterState = {
-          empCode: null,
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -81,14 +79,21 @@ const DealerTarget = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId:
+            JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           startDate: new Date(),
         };
         setLocalStorageItems({
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -117,11 +122,6 @@ const DealerTarget = () => {
         break;
       case 5:
         filterState = {
-          empCode: null,
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -130,14 +130,19 @@ const DealerTarget = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
+          rId:
+            JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
 
+          tId: "All",
           startDate: new Date(),
         };
         setLocalStorageItems({
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -167,11 +172,6 @@ const DealerTarget = () => {
         break;
       case 4:
         filterState = {
-          empCode: null,
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -181,13 +181,16 @@ const DealerTarget = () => {
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
 
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+
+          rId: "All",
+          tId: "All",
           startDate: new Date(),
         };
         setLocalStorageItems({
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -220,11 +223,6 @@ const DealerTarget = () => {
         break;
       case 3:
         filterState = {
-          empCode: null,
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -234,13 +232,15 @@ const DealerTarget = () => {
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
 
+          zId:
+            JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
+              ? "All"
+              : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          rId: "All",
+          tId: "All",
           startDate: new Date(),
         };
         setLocalStorageItems({
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -273,21 +273,14 @@ const DealerTarget = () => {
         break;
       case 10:
         filterState = {
-          empCode: null,
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          rId: "All",
+          tId: "All",
           startDate: new Date(),
         };
         setLocalStorageItems({
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -318,55 +311,6 @@ const DealerTarget = () => {
         setFilterState(filterState);
 
         break;
-
-        case 1:
-          filterState = {
-            empCode: null,
-            cId:
-              JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-                ? "All"
-                : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-            bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-            buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-  
-            startDate: new Date(),
-          };
-          setLocalStorageItems({
-            cId:
-              JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-                ? "All"
-                : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-            bgId:
-              JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
-                ? "All"
-                : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
-            buId:
-              JSON.parse(window.localStorage.getItem("userinfo")).bu_id === 0
-                ? "All"
-                : JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-  
-            zId:
-              JSON.parse(window.localStorage.getItem("userinfo")).z_id === 0
-                ? "All"
-                : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-  
-            rId:
-              JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
-                ? "All"
-                : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                  "All",
-            tId:
-              JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
-                ? "All"
-                : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                  "All",
-            roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
-          });
-  
-          setFilterState(filterState);
-  
-          break;
-
       default:
         setLocalStorageItems({
           cId: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
@@ -378,13 +322,11 @@ const DealerTarget = () => {
         });
 
         setFilterState({
-          cId:
-            JSON.parse(window.localStorage.getItem("userinfo")).c_id === 0
-              ? "All"
-              : JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
-
+          rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
+          zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
+          tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           startDate: new Date(),
         });
         setFilterState(filterState);
@@ -493,9 +435,7 @@ const DealerTarget = () => {
       const respond = await axios.get(`${url}/api/get_territory`, {
         headers: headers,
       });
-
       const apires = await respond.data.data;
-
       setAllTerritoryData(
         apires
           .filter((item) => Number(item.bg_id) === Number(segmentId))
@@ -521,11 +461,7 @@ const DealerTarget = () => {
       filterState.rId
     );
   }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
-
   const [allEmployee, setAllEmployee] = useState([]);
-  
-
-
   const getAllEmployeeData = async (bg, bu, z, r, t) => {
     try {
       const respond = await axios.get(`${url}/api/get_employee`, {
@@ -623,7 +559,7 @@ const DealerTarget = () => {
         customer_code: dId ? dId : null,
       };
     }
-    console.log("mkjl", paramsData)
+ 
     try {
       const respond = await axios.get(`${url}/api/mr_sales_target`, {
         headers: headers,
@@ -727,12 +663,12 @@ const DealerTarget = () => {
   }, [allMRSalesTarget]);
 
   useEffect(() => {
-    console.log("zopo",router.query.yr)
+  
     if (router.query.type === "Add") {
       setSelectedYr(null);
       getAllMRSalesTarget();
     }
-    else if (router.query.type === "Edit") {
+    else  {
       setSelectedYr(new Date(router.query.yr));
       getAllMRSalesTarget();
     }
@@ -1400,16 +1336,16 @@ const DealerTarget = () => {
                       </li>
                     </ul>
                   </td>
-                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-green-200 font-bold">
                     <ul>
                       {item.category_result.map((catItem, idx) => (
                         <li className="border-b-2 border-black  flex justify-center text-black   p-1">
                           <input
                             className="p-0 w-16  h-6 text-right  "
                             value={
-                              Number(catItem[Object.keys(catItem)[5]]) +
+                              (Number(catItem[Object.keys(catItem)[5]]) +
                               Number(catItem[Object.keys(catItem)[4]]) +
-                              Number(catItem[Object.keys(catItem)[3]])
+                              Number(catItem[Object.keys(catItem)[3]])).toFixed(2)
                             }
                             disabled
                           />
@@ -1599,16 +1535,16 @@ const DealerTarget = () => {
                       </li>
                     </ul>
                   </td>
-                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-green-200 font-bold">
                   <ul>
                       {item.category_result.map((catItem, idx) => (
                         <li className="border-b-2 border-black  flex justify-center text-black   p-1">
                           <input
                             className="p-0 w-16  h-6 text-right  "
                             value={
-                              Number(catItem[Object.keys(catItem)[6]]) +
+                              (Number(catItem[Object.keys(catItem)[6]]) +
                               Number(catItem[Object.keys(catItem)[7]]) +
-                              Number(catItem[Object.keys(catItem)[8]])
+                              Number(catItem[Object.keys(catItem)[8]])).toFixed(2)
                             }
                             disabled
                           />
@@ -1799,7 +1735,7 @@ const DealerTarget = () => {
                       </li>
                     </ul>
                   </td>
-                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-green-200 font-bold">
                   
 
                     <ul>
@@ -1808,9 +1744,9 @@ const DealerTarget = () => {
                           <input
                             className="p-0 w-16  h-6 text-right  "
                             value={
-                              Number(catItem[Object.keys(catItem)[9]]) +
+                              (Number(catItem[Object.keys(catItem)[9]]) +
                               Number(catItem[Object.keys(catItem)[10]]) +
-                              Number(catItem[Object.keys(catItem)[11]])
+                              Number(catItem[Object.keys(catItem)[11]])).toFixed(2)
                             }
                             disabled
                           />
@@ -1999,16 +1935,16 @@ const DealerTarget = () => {
                       </li>
                     </ul>
                   </td>
-                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-gray-300 font-bold">
+                  <td className="  border-2 border-black  whitespace-nowrap  p-0 bg-green-300 font-bold">
                     <ul>
                       {item.category_result.map((item, idx) => (
                         <li className="border-b-2 border-black  flex justify-center text-black   p-1">
                           <input
                             className="p-0 w-16  h-6 text-right  "
                             value={
-                              Number(item[Object.keys(item)[14]]) +
-                              Number(item[Object.keys(item)[13]]) +
-                              Number(item[Object.keys(item)[12]])
+                             (Number(item[Object.keys(item)[14]]) +
+                             Number(item[Object.keys(item)[13]]) +
+                             Number(item[Object.keys(item)[12]])).toFixed(2) 
                             }
                             disabled
                           />
@@ -2040,7 +1976,7 @@ const DealerTarget = () => {
                           <input
                             className="p-0 w-16  h-6 text-right  "
                             value={
-                              Number(catItem[Object.keys(catItem)[5]]) +
+                              (Number(catItem[Object.keys(catItem)[5]]) +
                               Number(catItem[Object.keys(catItem)[4]]) +
                               Number(catItem[Object.keys(catItem)[3]]) +
                               Number(catItem[Object.keys(catItem)[6]]) +
@@ -2051,7 +1987,7 @@ const DealerTarget = () => {
                               Number(catItem[Object.keys(catItem)[11]]) +
                               Number(catItem[Object.keys(catItem)[14]]) +
                               Number(catItem[Object.keys(catItem)[13]]) +
-                              Number(catItem[Object.keys(catItem)[12]])
+                              Number(catItem[Object.keys(catItem)[12]])).toFixed(2)
                             }
                             disabled
                           />

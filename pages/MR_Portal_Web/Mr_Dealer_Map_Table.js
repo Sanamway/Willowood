@@ -625,7 +625,7 @@ const NewDealer = () => {
             </button>
           </div>
         </div>
-        <div className="flex flex-row gap-4  px-4 pr-8 pb-2">
+         <div className="flex flex-row gap-4  px-4 pr-8 pb-2">
           <select
             className="border rounded px-2 py-1  w-1/2 h-8"
             id="stateSelect"

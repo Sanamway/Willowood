@@ -42,6 +42,7 @@ const AdditionalInfo = (props) => {
     roleId: "",
     empCode: "",
   });
+  
   useEffect(() => {
     setLocalStorageItems({
       uId: JSON.parse(window.localStorage.getItem("uid")),
@@ -82,121 +83,125 @@ const AdditionalInfo = (props) => {
       setTableData([]);
     }
   };
-//   const [targetData, setTargetData] = useState([]);
-//   const getTargetData = async () => {
-//     try {
-//       const respond = await axios.get(`${url}/api/mr_dealer_sale_target`, {
-//         headers: headers,
-//         params: {
-//           emp_code: localStorageItems.empCode,
-//           t_id: localStorageItems.tId,
-//           c_id: localStorageItems.cId,
-//           year: moment().year(),
-//           count_type: "year",
-//         },
-//       });
-//       const apires = await respond.data.data;  
+  const [targetData, setTargetData] = useState([]);
+  const getTargetData = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/mr_dealer_sale_target`, {
+        headers: headers,
+        params: {
+          emp_code: localStorageItems.empCode,
+          t_id: localStorageItems.tId,
+          c_id: localStorageItems.cId,
+          year: moment().year(),
+          count_type: "year",
+        },
+      });
+      const apires = await respond.data.data;  
    
-//       const sumByMonth = {
-//         apr : 0,
-//         may : 0,
-//         june: 0,
-//         july: 0,
-//         aug: 0,
-//         sep: 0,
-//         oct: 0,
-//         nov: 0,
-//         dec: 0,
-//         jan: 0,
-//         feb: 0,
-//         march: 0,
-//     };
+      const sumByMonth = {
+        apr : 0,
+        may : 0,
+        june: 0,
+        july: 0,
+        aug: 0,
+        sep: 0,
+        oct: 0,
+        nov: 0,
+        dec: 0,
+        jan: 0,
+        feb: 0,
+        march: 0,
+    };
     
-//     // Iterate through each object in the array and sum up the values for each month
-//     apires.forEach(item => {
-//         sumByMonth.apr += item.apr;
-//         sumByMonth.may += item.may;
-//         sumByMonth.june += item.june;
-//         sumByMonth.july += item.july;
-//         sumByMonth.aug += item.aug;
-//         sumByMonth.sep += item.sep;
-//         sumByMonth.oct += item.oct;
-//         sumByMonth.nov += item.nov;
-//         sumByMonth.dec += item.dec;
-//         sumByMonth.jan += item.jan;
-//         sumByMonth.feb += item.feb;
-//         sumByMonth.march += item.march;
-//     });
-//     setTargetData(sumByMonth);
+    // Iterate through each object in the array and sum up the values for each month
+    apires.forEach(item => {
+        
+         sumByMonth.apr += item.apr;
+         sumByMonth.may += item.may;
+         sumByMonth.june += item.june;
+         sumByMonth.july += item.july;
+         sumByMonth.aug += item.aug;
+         sumByMonth.sep += item.sep;
+         sumByMonth.oct += item.oct;
+         sumByMonth.nov += item.nov;
+         sumByMonth.dec += item.dec;
+         sumByMonth.jan += item.jan;
+         sumByMonth.feb += item.feb;
+         sumByMonth.march += item.march;
+
+    });
+    setTargetData(sumByMonth);
    
-//   console.log("qaz",sumByMonth)
-//     } catch (error) {
-//       setTargetData([]);
-//     }
-//   };
+  console.log("qaz",sumByMonth)
+    } catch (error) {
+      setTargetData([]);
+    }
+  };
 
-//   const [saleData, setSaleData] = useState([]);
-//   const getSaleData = async () => {
-//     try {
-//       const respond = await axios.get(`${url}/api/target_sale_mr`, {
-//         headers: headers,
-//         params: {
-//           emp_code: localStorageItems.empCode,
-//           t_id: localStorageItems.tId,
-//           c_id: localStorageItems.cId,
-//           year: moment().year(),
-//           count_type: "year",
-//         },
-//       });
-//       const apires = await respond.data.data;
+  const [saleData, setSaleData] = useState([]);
+  const getSaleData = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/target_sale_mr`, {
+        headers: headers,
+        params: {
+          emp_code: localStorageItems.empCode,
+          t_id: localStorageItems.tId,
+          c_id: localStorageItems.cId,
+          year: moment().year(),
+          count_type: "year",
+        },
+      });
+      const apires = await respond.data.data;
    
-//       let sortedData = apires.map(item => item.category_result)
-  
-//     // Initialize an object to store the sum of each month
-//     const sumByMonth = {
-//       apr: 0,
-//       may: 0,
-//       june: 0,
-//       july: 0,
-//       aug: 0,
-//       sep: 0,
-//       oct: 0,
-//       nov: 0,
-//       dec: 0,
-//       jan: 0,
-//       feb: 0,
-//       march: 0,
-//     };
+      let sortedData = apires.map(item => item.category_result)
+      console.log("zplo", sortedData)
+    // Initialize an object to store the sum of each month
+    const sumByMonth = {
+      apr: 0,
+      may: 0,
+      june: 0,
+      july: 0,
+      aug: 0,
+      sep: 0,
+      oct: 0,
+      nov: 0,
+      dec: 0,
+      jan: 0,
+      feb: 0,
+      march: 0,
+    };
 
-//     // Iterate through each array and sum up the values for each month
-//     sortedData.forEach(categoryArray => {
-//       categoryArray.forEach(item => {
-//           sumByMonth.apr += item.apr;
-//           sumByMonth.may += item.may;
-//           sumByMonth.june += item.june;
-//           sumByMonth.july += item.july;
-//           sumByMonth.aug += item.aug;
-//           sumByMonth.sep += item.sep;
-//           sumByMonth.oct += item.oct;
-//           sumByMonth.nov += item.nov;
-//           sumByMonth.dec += item.dec;
-//           sumByMonth.jan += item.jan;
-//           sumByMonth.feb += item.feb;
-//           sumByMonth.march += item.march;
-//       });
-//     })
-//     setSaleData(sumByMonth)
+    // Iterate through each array and sum up the values for each month
+    sortedData.forEach(categoryArray => {
+      categoryArray.forEach(item => {
+          sumByMonth.apr += item.apr;
+          sumByMonth.may += item.may;
+          sumByMonth.june += item.june;
+          sumByMonth.july += item.july;
+          sumByMonth.aug += item.aug;
+          sumByMonth.sep += item.sep;
+          sumByMonth.oct += item.oct;
+          sumByMonth.nov += item.nov;
+          sumByMonth.dec += item.dec;
+          sumByMonth.jan += item.jan;
+          sumByMonth.feb += item.feb;
+          sumByMonth.march += item.march;
+      });
+    })
 
-//     } catch (error) {
-//       setSaleData([]);
-//     }
-//   };
-//   console.log("pop", saleData , targetData, tableData)
+
+    setSaleData(sumByMonth)
+
+    } catch (error) {
+      setSaleData([]);
+    }
+  };
+  console.log("pop", saleData , targetData, tableData)
   
   useEffect(() => {
-    // getTargetData();
+    getTargetData();
     getTableData()
-    // getSaleData()
+    getSaleData()
   }, [localStorageItems]);
 
 // useEffect(()=>{

@@ -11,6 +11,7 @@ import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+
 const HolidayCalender = () => {
   const router = useRouter();
 
@@ -23,9 +24,12 @@ const HolidayCalender = () => {
   const [weekType, setWeekType] = useState("");
   const [filterState, setFilterState] = useState({
     year: "",
-    buId: "",
-    bgId: "",
-    cId: "",
+    cId: null,
+    bgId: null,
+    buId: null,
+    rId: null,
+    zId: null,
+  
   });
   const [allCompanyInfo, setAllCompanyInfo] = useState([]);
   const getCompanyInfo = async () => {
@@ -87,6 +91,53 @@ const HolidayCalender = () => {
     if (!filterState.bgId) return;
     getBusinessUnitInfo(filterState.bgId);
   }, [filterState.bgId]);
+
+  const [allZoneData, setAllZoneData] = useState([]);
+  const getAllZoneData = async (segmentId, businessUnitId) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_zone`, {
+        headers: headers,
+      });
+
+      const apires = await respond.data.data;
+
+      setAllZoneData(
+        apires
+          .filter((item) => Number(item.bg_id) === Number(segmentId))
+          .filter((item) => Number(item.bu_id) === Number(businessUnitId))
+      );
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (!filterState.bgId || !filterState.buId) return;
+    getAllZoneData(filterState.bgId, filterState.buId);
+  }, [filterState.bgId, filterState.buId]);
+
+  const [allRegionData, setAllRegionData] = useState([]);
+
+  const getAllRegionData = async (segmentId, businessUnitId, zoneId) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_region`, {
+        headers: headers,
+      });
+
+      const apires = await respond.data.data;
+
+      setAllRegionData(apires);
+      setAllRegionData(
+        apires
+          .filter((item) => Number(item.bg_id) === Number(segmentId))
+          .filter((item) => Number(item.bu_id) === Number(businessUnitId))
+          .filter((item) => Number(item.z_id) === Number(zoneId))
+      );
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (!filterState.bgId || !filterState.buId || !filterState.zId) return;
+    getAllRegionData(filterState.bgId, filterState.buId, filterState.zId);
+  }, [filterState.bgId, filterState.buId, filterState.zId]);
 
   const getAllHoliday = async (year, cId, bgId, buId) => {
     try {
@@ -158,20 +209,26 @@ const HolidayCalender = () => {
       !filterState.year ||
       !filterState.cId ||
       !filterState.bgId ||
-      !filterState.buId
+      !filterState.buId || 
+      !filterState.zId ||
+      !filterState.rId
     )
       return;
     getAllHoliday(
       filterState.year,
       filterState.cId,
       filterState.bgId,
-      filterState.buId
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
     );
     getWeeklyOff(
       filterState.year,
-      filterState.cId,
-      filterState.bgId,
-      filterState.buId,
+    filterState.cId,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
       weekType
     );
   }, [
@@ -179,6 +236,8 @@ const HolidayCalender = () => {
     filterState.cId,
     filterState.bgId,
     filterState.buId,
+    filterState.zId,
+    filterState.rId,
     weekType,
   ]);
 
@@ -212,6 +271,9 @@ const HolidayCalender = () => {
         buId: Number(filterState.buId),
         bgId: Number(filterState.bgId),
         cId: Number(filterState.cId),
+        zId: Number(filterState.zId),
+        rId: Number(filterState.rId)
+      
       },
     ]);
   };
@@ -425,6 +487,37 @@ const HolidayCalender = () => {
               {buData.map((item, idx) => (
                 <option value={item.bu_id} key={idx}>
                   {item.business_unit_name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              name="type"
+              className="border rounded px-2 py-1 w-full h-8"
+              value={filterState.zId}
+              onChange={(e) =>
+                setFilterState({ ...filterState, zId: e.target.value })
+              }
+            >
+              <option value="">Zone</option>
+              {allZoneData.map((item, idx) => (
+                <option value={item.z_id} key={idx}>
+                  {item.zone_name}
+                </option>
+              ))}
+            </select>
+            <select
+              name="type"
+              className="border rounded px-2 py-1 w-full h-8"
+              value={filterState.rId}
+              onChange={(e) =>
+                setFilterState({ ...filterState, rId: e.target.value })
+              }
+            >
+              <option value="">Region</option>
+              {allRegionData.map((item, idx) => (
+                <option value={item.r_id} key={idx}>
+                  {item.region_name}
                 </option>
               ))}
             </select>
