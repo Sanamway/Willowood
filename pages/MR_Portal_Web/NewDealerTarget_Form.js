@@ -59,7 +59,7 @@ const DealerTarget = () => {
     empCode: null,
   });
   useEffect(() => {
-    // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
+    
     const roleId = 6;
     let filterState = {
       bgId: "All",
@@ -527,26 +527,21 @@ const DealerTarget = () => {
  
   const [allMRSalesTarget, setAllMRSalesTarget] = useState([]);
   const [editviewFilter, setEditviewFilter] = useState({
+    bg:"",
+    bu:"",
+    z:"",
+    r:"",
+    t:"",
     disName: "",
     empName: "",
     empCode: "",
   });
-  const getAllMRSalesTarget = async () => {
+  const getAllMRSalesTargetNew = async () => {
     if (!selectedYr) return;
-    const { tId, yr, empCode, dId } = filterState;
+    const { tId, empCode, dId } = filterState;
     let tDes;
     let paramsData = {};
-    if (router.query.type !== "Add") {
-      tDes = router.query.tDes;
-      paramsData = {
-        t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-        c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-        t_des: tDes,
-        year: router.query.yr,
-        empcode: router.query.empId,
-        // customer_code: router.query.custCode,
-      };
-    } else {
+  
       tDes =allTerritoryData.filter((item) => Number(item.t_id) === Number(tId))[0]
         ?.territory_name ?allTerritoryData.filter((item) => Number(item.t_id) === Number(tId))[0]
         .territory_name :"";
@@ -557,8 +552,33 @@ const DealerTarget = () => {
         year: selectedYr.getFullYear(),
         empcode: empCode ? empCode : null,
         customer_code: dId ? dId : null,
+      };    
+    try {
+      const respond = await axios.get(`${url}/api/mr_sales_target`, {
+        headers: headers,
+        params: paramsData,
+      });
+
+      const apires = await respond.data.data;
+      setAllMRSalesTarget(apires);
+      
+    } catch (error) {}
+  };
+  const getAllMRSalesTargetView = async () => {
+   
+    console.log("zol",router.query)
+    let tDes=router.query.tDes
+    let tId=router.query.tId
+     let paramsData = {};
+      paramsData = {
+        c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        t_des: tDes,
+        t_id: tId,
+        year: router.query.yr,
+        empcode: router.query.empId,
+        // customer_code: router.query.custCode,
       };
-    }
+    
  
     try {
       const respond = await axios.get(`${url}/api/mr_sales_target`, {
@@ -568,7 +588,7 @@ const DealerTarget = () => {
 
       const apires = await respond.data.data;
       setAllMRSalesTarget(apires);
-      if (router.query.type !== "Add") {
+      
         if (apires.length > 1) {
           setEditviewFilter({
             disName: "All Dealer",
@@ -582,12 +602,13 @@ const DealerTarget = () => {
             empCode: apires[0].emp_code,
           });
         }
-      }
+      
     } catch (error) {}
   };
 
   useEffect(() => {
-    getAllMRSalesTarget();
+    if(router.query.type === "Add")
+    getAllMRSalesTargetNew();
   }, [filterState.empCode, filterState.dId]);
 
   const [selectedYr, setSelectedYr] = useState(null);
@@ -596,11 +617,7 @@ const DealerTarget = () => {
     console.log("kiol", filterState)
     try {
       let endPoint = "api/add_mr_sales_target";
-      if (router.query.type === "Add") {
-        endPoint = "api/add_mr_sales_target";
-      } else {
-        endPoint = "api/update_mr_target";
-      }
+    
 
       const data = allMRSalesTarget
         ?.map((item, idx) => {
@@ -641,7 +658,57 @@ const DealerTarget = () => {
       console.log("koi", errors);
       toast.error(errorMessage);
       if (!errorMessage) return;
-      getAllMRSalesTarget();
+      getAllMRSalesTargetNew();
+    }
+  };
+  const handleEdit = async () => {
+  
+    try {
+       
+    
+       let  endPoint = "api/update_mr_target";
+      
+
+      const data = allMRSalesTarget
+        ?.map((item, idx) => {
+          let { category_result } = item;
+          return category_result.map((el) => {
+            return {
+              ...el,
+              t_id: router.query.tId,
+              c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+              bg_id: router.query.bgId,
+              bu_id: router.query.buId,
+              r_id: router.query.rId,
+              z_id:router.query.zId,
+              year: selectedYr.getFullYear(),
+              product_category: el.category_name,
+
+              emp_code: item.emp_code,
+              customer_code: item.party_code,
+              distribution_name: item.distribution_name,
+            };
+          });
+        })
+        .flatMap((innerArray) => innerArray);
+
+      const respond = await axios
+        .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
+          headers: headers,
+        })
+        .then((res) => {
+          if (!res) return;
+          toast.success(res.data.message);
+          router.push({
+            pathname: "/MR_Portal_Web/NewDealerTarget_Table",
+          });
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.message;
+      console.log("koi", errors);
+      toast.error(errorMessage);
+      if (!errorMessage) return;
+      getAllMRSalesTargetNew();
     }
   };
 
@@ -664,15 +731,13 @@ const DealerTarget = () => {
 
   useEffect(() => {
   
-    if (router.query.type === "Add") {
-      setSelectedYr(null);
-      getAllMRSalesTarget();
-    }
-    else  {
+    if (router.query.type !== "Add") {
+     
+     
+      getAllMRSalesTargetView();
       setSelectedYr(new Date(router.query.yr));
-      getAllMRSalesTarget();
     }
-  }, [router.query.type]);
+  }, [router.query.type, router.query.tDes , router.query.tId]);
  
 
   return (
@@ -694,7 +759,78 @@ const DealerTarget = () => {
           </span>
         </div>
        
-         
+         {
+          router.query.type !== "Add" ?  
+          <div className="flex flex-row gap-2  px-4 pr-8 pb-2">
+
+          <DatePicker
+              className="border p-1 rounded ml-2 w-20 "
+              showYearDropdown
+              dateFormat="yyyy"
+              placeholderText="Enter Year"
+              yearDropdownItemNumber={15} // Uncommented and provided a value
+              selected={selectedYr}
+              onChange={(date) => setSelectedYr(date)}
+              hand
+              showYearPicker
+              minDate={new Date(new Date().getFullYear(), 0, 1)}
+              disabled={router.query.type !== "Add"}
+            />
+        <input
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={router.query.bgDes}
+          
+            disabled
+          />
+           
+           <input
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={router.query.buDes}
+          
+            disabled
+          />
+
+<input
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={router.query.zDes}
+          
+            disabled
+          />
+
+<input
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={router.query.rDes}
+          
+            disabled
+          />
+ 
+ <input
+            className="border rounded px-2 py-1  w-1/2 h-8"
+            id="stateSelect"
+            value={router.query.tDes}
+          
+            disabled
+          />
+        
+           
+                <input
+                  className=" w-20 border p-1"
+                  value={editviewFilter.empCode}
+                  disabled
+                />
+                <input
+                  className="border p-1 rounded  "
+                  value={editviewFilter.empName}
+                  disabled
+                />
+
+              
+           
+          </div> :
           <div className="flex flex-row gap-2  px-4 pr-8 pb-2">
 
           <DatePicker
@@ -870,7 +1006,7 @@ const DealerTarget = () => {
               </option>
             ))}
           </select>
-          {router.query.type === "Add" ? (
+       
               <div className="flex flex-row gap-2 ">
                 <input
                   className="w-16 border p-1 rounded "
@@ -893,21 +1029,8 @@ const DealerTarget = () => {
                   ))}
                 </select>
               </div>
-            ) : (
-              <div className=" flex flex-row gap-2 ">
-                <input
-                  className=" w-20 border p-1"
-                  value={editviewFilter.empCode}
-                  disabled
-                />
-                <input
-                  className="border p-1 rounded w-full "
-                  value={editviewFilter.empName}
-                  disabled22
-                />
-              </div>
-            )}
-            {router.query.type === "Add" ? (
+           
+           
               <div className=" flex flex-row gap-2">
                 <input
                   className=" w-16 border p-1 rounded "
@@ -943,21 +1066,10 @@ const DealerTarget = () => {
                   ))}
                 </select>
               </div>
-            ) : (
-              <div className=" flex flex-row gap-2 ">
-                <input
-                  className="w-16 border p-1 rounded w-[40%]"
-                  value={editviewFilter.empCode}
-                  disabled
-                />
-                <input
-                  className="border p-1 rounded w-full "
-                  value={editviewFilter.disName}
-                  disabled
-                />
-              </div>
-            )}
+            
           </div>
+         }
+          
           
          
       
@@ -3701,7 +3813,12 @@ const DealerTarget = () => {
             <div className="flex w-full h-12 gap-4 m-2 ">
               <button
                 className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm h-8 w-16"
-                onClick={() => handleSave()}
+                onClick={() => 
+                {
+                  router.query.type==="Add" ? handleSave():handleEdit()
+                }
+                  
+                  }
               >
                 Submit
               </button>

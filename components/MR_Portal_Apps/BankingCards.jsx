@@ -134,7 +134,7 @@ const BankingCards = () => {
         <section key={item.label} className="w-[98%] rounded-lg border-[0.08rem] border-gray-300  my-2">
           <>
             <div className="flex items-center justify-between w-full px-2 my-3">
-              <h2 className="font-arial  font-semibold text-[0.85rem]">{item.label}</h2>
+              <h2 className="font-arial  font-semibold text-[0.9rem]">{item.label}</h2>
               <h2 className="font-semibold text-[0.85rem]"></h2>
             </div>
             <div className="flex  items-center mrhome justify-start w-full px-2 mt-1 overflow-x-auto overflow-y-hidden my-1.5">
@@ -175,7 +175,7 @@ const BankingCards = () => {
                           : null}
                       </button>
                       <div className="h-12 cursor-pointer">
-                        <h2 className="text-[0.6rem] text-center text-black font-semibold font-arial px-1 py-2">
+                        <h2 className="text-[0.8rem] text-center text-black font-semibold font-arial px-1 py-2">
                           {sub.umenu_Name.substring(0)}
                         </h2>
                       </div>

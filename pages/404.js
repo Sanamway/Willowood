@@ -53,7 +53,7 @@ const ErrorPage = (props) => {
   return (
     <div>
       <Head>
-        <title>404</title>
+        <title>Unexpected Result!</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <div className="">
@@ -67,7 +67,7 @@ const ErrorPage = (props) => {
 
         
         <div className="relative z-10 text-center p-8 space-y-8 md:hidden">
-          <h1 className="text-5xl font-bold text-green-900 animate-pulse">404 Error!</h1>
+          <h1 className="text-5xl font-bold text-green-900 animate-pulse">Unexpected Result!</h1>
           <p className="text-lg  font-medium">
           "Oops! Looks like you've wandered off the map. Let's get you back on track!"
           </p>

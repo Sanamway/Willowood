@@ -34,7 +34,7 @@ const NewDealer = () => {
   const router = useRouter();
 
   const [data, setData] = useState([]);
-  const getData = async ( bg, bu, z, r, t, from, empCode) => {
+  const getData = async (currentPage, bg, bu, z, r, t, from, empCode) => {
     try {
       const respond = await axios.get(`${url}/api/get_mr_target_grid`, {
         params: {
@@ -46,14 +46,17 @@ const NewDealer = () => {
           year: moment(from).format("YYYY"),
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           emp_code: empCode,
+          paging: true,
+          page: currentPage,
+          size: 50,
       
         },
         headers: headers,
       });
-      const apires = await respond.data.data;
+      const apires = await respond.data.data.data;
       setData(apires);
-      const count = await respond.data.data.length;
-      setPageCount(Math.ceil(count / 50));
+      const count = await respond.data.data.data.length;
+      setPageCount(respond.data.data.count/50);
     } catch (error) {
       setData([]);
     }
@@ -61,7 +64,8 @@ const NewDealer = () => {
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber + 1);
+    console.log("zol", pageNumber)
+    setCurrentPage(pageNumber);
   };
  
 
@@ -83,7 +87,16 @@ const NewDealer = () => {
       console.log("pop", apires);
       toast.success(apires.data.message);
       setDeleteOpen({ open: false, data: {} });
-      getData();
+      getData(
+        currentPage,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.empCode,
+      );
     } catch (error) {
       console.log("nop", error.message);
       toast.error(error.message);
@@ -561,8 +574,9 @@ const NewDealer = () => {
   }, []);
 
   useEffect(() => {
+    if( filterState.buId)
     getData(
-     
+      currentPage.selected + 1,
       filterState.bgId,
       filterState.buId,
       filterState.zId,
@@ -572,7 +586,7 @@ const NewDealer = () => {
       filterState.empCode
     );
   }, [
-  
+    currentPage.selected + 1,
     filterState.bgId,
     filterState.buId,
     filterState.zId,
@@ -581,6 +595,7 @@ const NewDealer = () => {
     filterState.startDate,
     filterState.empCode,
   ]);
+
 
   const { name } = router.query;
   return (
@@ -823,9 +838,9 @@ const NewDealer = () => {
           </div>
         </div>
 
-        <div className="bg-white h-screen flex flex-col gap-2  select-none items-start justify-between w-full absolute p-2 overflow-x-auto">
-          <table className="min-w-full divide-y border- divide-gray-200 mb-20">
-            <thead className="border-b">
+        <div className=" overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
+          <table className="min-w-full divide-y border- divide-gray-200 ">
+            <thead className="border-b w-max">
               <tr className="bg-gray-50 font-arial w-max">
                 <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider ">
                   Action
@@ -928,7 +943,8 @@ const NewDealer = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs ">
-              {data.map((item, idx) => (
+              {console.log("zop", data)}
+              {data?.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
                   <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                     <button
@@ -940,6 +956,15 @@ const NewDealer = () => {
                             yr: item.year,
                             custCode: item.customer_code,
                             tDes: item.territory_name,
+                            tId:item.t_id,
+                            bgDes: item.business_segment,
+                            bgId:item.bg_id,
+                            buDes: item.business_unit_name,
+                            buId:item.bu_id,
+                            zDes: item.zone_name,
+                            zId:item.z_id,
+                            rDes: item.region_name,
+                            rId:item.r_id,
                             type: "View",
                           },
                         });
@@ -957,6 +982,16 @@ const NewDealer = () => {
                             yr: item.year,
                             custCode: item.customer_code,
                             tDes: item.territory_name,
+                            tId:item.t_id,
+                            bgDes: item.business_segment,
+                            bgId:item.bg_id,
+                            buDes: item.business_unit_name,
+                            buId:item.bu_id,
+                            zDes: item.zone_name,
+                            zId:item.z_id,
+                            rDes: item.region_name,
+                            rId:item.r_id,
+                           
                             type: "Edit",
                           },
                         });
@@ -1018,8 +1053,8 @@ const NewDealer = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.june}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {Number(item.apr + item.may + item.june)}
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap  bg-green-200">
+                    {Number(item.apr + item.may + item.june).toFixed(2)}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.july}
@@ -1031,8 +1066,8 @@ const NewDealer = () => {
                     {item.sep}
                   </td>
 
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {Number(item.july + item.aug + item.sep)}
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap  bg-green-200">
+                    {Number(item.july + item.aug + item.sep).toFixed(2)}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.oct}
@@ -1043,8 +1078,8 @@ const NewDealer = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.dec}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {Number(item.oct + item.nov + item.dec)}
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap  bg-green-200">
+                    {Number(item.oct + item.nov + item.dec).toFixed(2)}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.jan}
@@ -1055,14 +1090,14 @@ const NewDealer = () => {
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.march}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {Number(item.jan + item.feb + item.march)}
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap  bg-green-200">
+                    {Number(item.jan + item.feb + item.march).toFixed(2)}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {Number(item.apr + item.may + item.june) +
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap ">
+                    {(Number(item.apr + item.may + item.june) +
                       Number(item.july + item.aug + item.sep) +
                       Number(item.oct + item.nov + item.dec) +
-                      Number(item.jan + item.feb + item.march)}
+                      Number(item.jan + item.feb + item.march)).toFixed(2)}
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
@@ -1088,7 +1123,23 @@ const NewDealer = () => {
               ))}
             </tbody>
           </table>
-          <div className="h-12"></div>
+          <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
+  <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
+      Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
+      <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
+      <small className="font-bold px-2 self-center text-black">{currentPage.selected+1}</small> results
+    </div>
+    <ReactPaginate
+      previousLabel={"Previous"}
+      nextLabel={"Next"}
+      breakLabel={"..."}
+      pageCount={pageCount}
+      onPageChange={handlePageChange}
+      containerClassName={"pagination"}
+      activeClassName={"active"}
+      className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
+    />
+  </div>
         </div>
       </div>
 
