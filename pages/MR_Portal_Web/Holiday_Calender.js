@@ -139,14 +139,16 @@ const HolidayCalender = () => {
     getAllRegionData(filterState.bgId, filterState.buId, filterState.zId);
   }, [filterState.bgId, filterState.buId, filterState.zId]);
 
-  const getAllHoliday = async (year, cId, bgId, buId) => {
+  const getAllHoliday = async (year, cId, bgId, buId, zId, rId) => {
     try {
       const respond = await axios.get(`${url}/api/holiday_list`, {
         headers: headers,
         params: {
           bu_id: buId,
-          c_id: cId,
+          c_id:  cId,
           bg_id: bgId,
+          z_id:  zId,
+          r_id:  rId,
           year: year,
           type: "Holiday",
         },
@@ -164,6 +166,8 @@ const HolidayCalender = () => {
             type: item.holiday_type,
             buId: item.bu_id,
             bgId: item.bg_id,
+            zId:item.z_id,
+            rId:item.r_id,
             cId: item.c_id,
           };
         })
@@ -171,7 +175,7 @@ const HolidayCalender = () => {
     } catch (error) {}
   };
 
-  const getWeeklyOff = async (year, cId, bgId, buId, woType) => {
+  const getWeeklyOff = async (year, cId, bgId, buId,zId,rId, woType) => {
     try {
       const respond = await axios.get(`${url}/api/holiday_list`, {
         headers: headers,
@@ -179,6 +183,8 @@ const HolidayCalender = () => {
           bu_id: buId,
           c_id: cId,
           bg_id: bgId,
+          z_id:zId,
+          r_id:rId,          
           year: year,
           type: "WO",
           wotype: woType,
@@ -196,12 +202,48 @@ const HolidayCalender = () => {
             type: item.holiday_type,
             buId: item.bu_id,
             bgId: item.bg_id,
+            zId:item.z_id,
+            rId:item.r_id,
             cId: item.c_id,
+            type:"WO"
           };
         })
       );
     } catch (error) {}
   };
+
+  useEffect(() => {
+    if (!weekType) setWoData([]);
+    if (
+      !filterState.year ||
+      !filterState.cId ||
+      !filterState.bgId ||
+      !filterState.buId || 
+      !filterState.zId ||
+      !filterState.rId
+    )
+      return;
+   
+    getWeeklyOff(
+    filterState.year,
+    filterState.cId,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    weekType,
+    );
+  }, [
+    filterState.year,
+    filterState.cId,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    weekType,
+  ]);
+
+
 
   useEffect(() => {
     if (!weekType) setWoData([]);
@@ -222,15 +264,7 @@ const HolidayCalender = () => {
       filterState.zId,
       filterState.rId,
     );
-    getWeeklyOff(
-      filterState.year,
-    filterState.cId,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-      weekType
-    );
+   
   }, [
     filterState.year,
     filterState.cId,
@@ -238,7 +272,7 @@ const HolidayCalender = () => {
     filterState.buId,
     filterState.zId,
     filterState.rId,
-    weekType,
+    
   ]);
 
   const [tableData, setTableData] = useState([]);
@@ -248,8 +282,18 @@ const HolidayCalender = () => {
   const handleInputChange = (index, event) => {
     const { name, value } = event.target;
     const updatedData = [...tableData];
+    console.log("jhui",[...tableData],name , value,event )
     updatedData[index][name] = value;
+  
     setTableData(updatedData);
+  };
+  const handleNewInputChange = (index, event) => {
+    const { name, value } = event.target;
+    const updatedData = [...woData];
+    console.log("jhui",[...woData],name , value,event )
+    updatedData[index][name] = value;
+  
+    setWoData(updatedData);
   };
 
   const handleDateChange = (index, date) => {
@@ -296,6 +340,8 @@ const HolidayCalender = () => {
           holiday_date: item.date,
           day: moment(item.date).format("dddd"),
           holiday_type: item.type,
+          r_id: item.rId,
+          z_id: item.zId,
           bu_id: item.buId,
           bg_id: item.bgId,
           c_id: item.cId,
@@ -311,6 +357,8 @@ const HolidayCalender = () => {
             bu_id: filterState.buId,
             c_id: filterState.cId,
             bg_id: filterState.bgId,
+            r_id: filterState.rId,
+            z_id: filterState.zId,
             year: filterState.year,
             type: "Holiday",
             update: true,
@@ -322,7 +370,10 @@ const HolidayCalender = () => {
             filterState.year,
             filterState.cId,
             filterState.bgId,
-            filterState.buId
+            filterState.buId,
+            filterState.zId,
+            filterState.rId,
+           
           );
         });
 
@@ -344,6 +395,9 @@ const HolidayCalender = () => {
           type: item.type,
           bu_id: item.buId,
           bg_id: item.bgId,
+          z_id: item.zId,
+          r_id: item.rId,
+
           c_id: item.cId,
           year: Number(filterState.year),
         };
@@ -356,6 +410,8 @@ const HolidayCalender = () => {
             bu_id: filterState.buId,
             c_id: filterState.cId,
             bg_id: filterState.bgId,
+            z_id:filterState.zId,
+            r_id:filterState.rId,
             year: filterState.year,
             type: "WO",
             update: true,
@@ -365,11 +421,13 @@ const HolidayCalender = () => {
         .then((res) => {
           toast.success("Weekly Off Saved");
           getWeeklyOff(
-            filterState.year,
-            filterState.cId,
-            filterState.bgId,
-            filterState.buId,
-            weekType
+             filterState.year,
+    filterState.cId,
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+     weekType
           );
         });
 
@@ -430,7 +488,7 @@ const HolidayCalender = () => {
           </div>
         </div>
 
-        <div className="bg-white h-screen flex flex-col select-none items-start mx-4 max-w-full">
+        <div className="bg-white h-screen flex flex-col select-none items-start mx-4  max-w-full">
           <div className="flex items-center gap-4 w-full mb-1">
             <select
               name="type"
@@ -539,7 +597,8 @@ const HolidayCalender = () => {
               onClick={() => setCalenderType("Holiday")}
             >
               Holiday Calender ({tableData.length})
-            </button>{" "}
+            </button>
+            {" "}
             <button
               className={`${
                 calenderType === "Weekly"
@@ -550,6 +609,7 @@ const HolidayCalender = () => {
             >
               Weekly Off
             </button>
+
           </div>
 
           {calenderType === "Holiday" ? (
@@ -662,7 +722,7 @@ const HolidayCalender = () => {
                 </select>
               </div>
 
-              <table className="min-w-full divide-y border divide-gray-200 mt-4">
+              <table className="min-w-full divide-y border divide-gray-200 mt-4 mb-40">
                 <thead className="border-b">
                   <tr className="bg-gray-50 font-arial">
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">
@@ -688,6 +748,7 @@ const HolidayCalender = () => {
                           onChange={(date) => handleDateChange(idx, date)}
                           className="border rounded px-2 py-1 w-full"
                           dateFormat="dd/MM/yyyy"
+                          disabled
                         />
                       </td>
                       <td className="px-4 py-2">
@@ -698,7 +759,7 @@ const HolidayCalender = () => {
                             item.day ? moment(item.day).format("dddd") : ""
                           }
                           disabled
-                          onChange={(e) => handleInputChange(idx, e)}
+                          onChange={(e) => handleNewInputChange(idx, e)}
                           className="border rounded px-2 py-1 w-full"
                         />
                       </td>
@@ -706,11 +767,10 @@ const HolidayCalender = () => {
                         <select
                           name="type"
                           value={item.type}
-                          onChange={(e) => handleInputChange(idx, e)}
+                          onChange={(e) => handleNewInputChange(idx, e)}
                           className="border rounded px-2 py-1 w-full"
                         >
                           <option value="">Select Type</option>
-
                           <option value="WO">Weekly Off</option>
                           <option value="Comp Off">Comp Off</option>
                         </select>
