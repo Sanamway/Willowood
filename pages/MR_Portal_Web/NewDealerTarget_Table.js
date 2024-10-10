@@ -3,12 +3,10 @@ import Layout from "@/components/Layout1";
 import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
-import { AiOutlineSearch } from "react-icons/ai";
+
 import axios from "axios";
 import { Dialog, Transition } from "@headlessui/react";
-// import ConfirmationModal from "../modals/ConfirmationModal";
-import { CSVLink } from "react-csv";
-import { TbFileDownload } from "react-icons/tb";
+
 import toast, { Toaster } from "react-hot-toast";
 import moment from "moment";
 import ReactPaginate from "react-paginate";
@@ -88,7 +86,7 @@ const NewDealer = () => {
       toast.success(apires.data.message);
       setDeleteOpen({ open: false, data: {} });
       getData(
-        currentPage,
+        currentPage.selected + 1,
         filterState.bgId,
         filterState.buId,
         filterState.zId,

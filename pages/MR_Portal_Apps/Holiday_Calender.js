@@ -84,8 +84,10 @@ const AdditionalInfo = (props) => {
         headers: headers,
         params: {
           bu_id: localStorageItems.buId,
-          c_id: localStorageItems.cId,
           bg_id: localStorageItems.bgId,
+          c_id:  localStorageItems.cId,
+          r_id:  localStorageItems.rId,
+          z_id:  localStorageItems.zId,
           year: year,
           type: "Holiday",
         },
@@ -100,9 +102,11 @@ const AdditionalInfo = (props) => {
             day: item.holiday_date,
             date: item.holiday_date,
             type: item.holiday_type,
-            buId: item.bu_id,
-            bgId: item.bg_id,
-            cId: item.c_id,
+            bu_id: localStorageItems.buId,
+            bg_id: localStorageItems.bgId,
+            c_id:  localStorageItems.cId,
+            r_id:  localStorageItems.rId,
+            z_id:  localStorageItems.zId,
           };
         })
       );

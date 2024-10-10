@@ -190,7 +190,6 @@ return
             })
             if (!res) return;      
             toast.success(res.data.message);
-          
             getAttandenceStatus();
           });
       }
