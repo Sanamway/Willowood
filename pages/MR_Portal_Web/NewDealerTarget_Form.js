@@ -12,9 +12,7 @@ import { CSVLink } from "react-csv";
 import { TbFileDownload } from "react-icons/tb";
 import toast, { Toaster } from "react-hot-toast";
 import Layout from "@/components/Layout1";
-import Navbar from "@/components/MR_Portal_Apps/Navbar";
-import moment from "moment";
-import { data } from "autoprefixer";
+
 
 const DealerTarget = () => {
   

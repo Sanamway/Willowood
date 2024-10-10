@@ -34,6 +34,7 @@ const index = () => {
  )
  ab.then((res, rej)=>console.log("promises", res, rej))
  
+ 
 
   return (
     <>
