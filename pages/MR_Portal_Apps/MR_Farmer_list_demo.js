@@ -439,7 +439,7 @@ const AdditionalInfo = () => {
             {" "}
             View Farmer Demo Image
           </button>
-          <hr className="bg-gray-200 border-1 w-full" />
+           <hr className="bg-gray-200 border-1 w-full" />
         </div>
       ))}
       <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">

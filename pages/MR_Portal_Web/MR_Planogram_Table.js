@@ -26,6 +26,7 @@ const FarmerSHC = () => {
   };
 
   const [pageCount, setPageCount] = useState(0);
+  const [dataCount, setDataCount] = useState([]);
   const getFarmerDemo = async (
     currentPage,
     bg,
@@ -59,7 +60,7 @@ const FarmerSHC = () => {
       const apires = await respond.data.data.MRPlanogramData;
       const count = await respond.data.data.MRPlanogramcount;
       setPageCount(Math.ceil(count / 50));
-
+      setDataCount(count)
       setData(apires);
     } catch (error) {
       setData([]);
@@ -1319,7 +1320,7 @@ Verify
         <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
       Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
       <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
-      <small className="font-bold px-2 self-center text-black">{currentPage.selected+1}</small> results
+      <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
     </div>
     <ReactPaginate
       previousLabel={"Previous"}

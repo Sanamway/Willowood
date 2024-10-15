@@ -1289,13 +1289,17 @@ useEffect(()=>{
                       Submit
                     </button>
 
-                    {/* <button
+                    <button
                       type="button"
                       className="inline-flex justify-center text-white rounded-md border border-transparent bg-green-400 px-4 py-2 text-sm font-medium  hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={() => setAddFarmerModal(false)}
+                      onClick={() =>
+                        router.push({
+                          pathname: "/MR_Portal_Apps/MRHome",
+                        })
+                      }
                     >
                       Close
-                    </button> */}
+                    </button>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

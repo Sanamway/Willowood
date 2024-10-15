@@ -26,6 +26,7 @@ const MaterialIndent_Table = () => {
   };
 
   const [pageCount, setPageCount] = useState(0);
+  const [dataCount, setDataCount] = useState([]);
   const getFarmerDemo = async (
     currentPage,
     bg,
@@ -59,7 +60,7 @@ const MaterialIndent_Table = () => {
       const apires = await respond.data.data.miData;
       const count = await respond.data.data.miDataCount;
       setPageCount(Math.ceil(count / 50));
-
+      setDataCount(count)
       setData(apires);
     } catch (error) {
       setData([]);
@@ -1288,7 +1289,7 @@ delivery_date
         <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
       Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
       <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
-      <small className="font-bold px-2 self-center text-black">{currentPage.selected+1}</small> results
+      <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
     </div>
     <ReactPaginate
       previousLabel={"Previous"}

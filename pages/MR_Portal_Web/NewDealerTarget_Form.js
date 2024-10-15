@@ -1,15 +1,10 @@
 import React, { useState, useEffect, Fragment, useMemo } from "react";
-
 import { AiTwotoneHome } from "react-icons/ai";
-import { TiArrowBack } from "react-icons/ti";
- import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { url } from "@/constants/url";
-import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { CSVLink } from "react-csv";
-import { TbFileDownload } from "react-icons/tb";
 import toast, { Toaster } from "react-hot-toast";
 import Layout from "@/components/Layout1";
 
@@ -18,7 +13,7 @@ const DealerTarget = () => {
   
   const csvHeaders = [
     { label: "Id", key: "bg_id" },
-    { label: "Business Segment", key: "business_segment" },
+    { label: "Business Segment", key: "busiWness_segment" },
     { label: "Company", key: "cmpny_name" },
     { label: "Email", key: "email_id" },
     { label: "H.O.D.", key: "hod_name" },
@@ -3400,7 +3395,7 @@ const DealerTarget = () => {
                             acc1 = acc1 + curr1;
                             return acc1;
                           }, 0)
-                          ?.toFixed(2)}
+                           ?.toFixed(2)}
                         disabled
                       />
                     </li>
@@ -3444,7 +3439,7 @@ const DealerTarget = () => {
                               acc1 = acc1 + curr1;
                               return acc1;
                             }, 0) +
-                          allMRSalesTarget
+                            allMRSalesTarget
                             .map((item) => {
                               return item.category_result.reduce(
                                 (acc, curr) => {
