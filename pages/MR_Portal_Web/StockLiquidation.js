@@ -26,6 +26,7 @@ const StockLiquidation = () => {
   };
 
   const [pageCount, setPageCount] = useState(0);
+  
   const getFarmerDemo = async (
     currentPage,
     bg,

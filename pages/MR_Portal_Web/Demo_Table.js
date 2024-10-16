@@ -723,6 +723,28 @@ const DemoTable = () => {
 
   useEffect(() => {
     getFarmerDemo(
+      1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
+  }, [
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+    filterState.startDate,
+    filterState.endDate,
+    filterState.empCode,
+  ]);
+  useEffect(() => {
+    getFarmerDemo(
       currentPage.selected + 1,
       filterState.bgId,
       filterState.buId,
@@ -735,14 +757,6 @@ const DemoTable = () => {
     );
   }, [
     currentPage.selected,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    filterState.tId,
-    filterState.startDate,
-    filterState.endDate,
-    filterState.empCode,
   ]);
   const { name } = router.query;
 
@@ -1344,9 +1358,10 @@ Verify
       breakLabel={"..."}
       pageCount={pageCount}
       onPageChange={handlePageChange}
-      containerClassName={"pagination"}
-      activeClassName={"active"}
+      containerClassName={"pagination flex flex-row gap-2"} // Container styling
+      activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
       className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
+      forcePage={currentPage.selected} // Set the current page
     />
   </div>
       </div>

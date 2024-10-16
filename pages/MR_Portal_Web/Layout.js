@@ -50,7 +50,7 @@ const Layout = ({ children }) => {
     };
   }, []);
 
-  const [email_id, setEmailId] = useState("");
+  const [emailId, setEmailId] = useState("");
   const [user_name, setUsername] = useState("");
   const [uid, setUid] = useState("");
   const [userinfo, setUserInfo] = useState("");

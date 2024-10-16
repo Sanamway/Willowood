@@ -16,7 +16,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const Timesheet = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
-   const [dataCount, setDataCount] = useState([]);
+  const [dataCount, setDataCount] = useState([]);
   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -719,7 +719,33 @@ const Timesheet = () => {
         break;
     }
   }, []);
-
+ 
+  useEffect(() => {
+    console.log("runrun")
+    handlePageChange({selected: 0})
+   
+    getTimesheet(
+      1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
+  }, [
+   
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+    filterState.startDate,
+    filterState.endDate,
+    filterState.empCode,
+  ]);
   useEffect(() => {
     getTimesheet(
       currentPage.selected + 1,
@@ -734,14 +760,7 @@ const Timesheet = () => {
     );
   }, [
     currentPage.selected,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    filterState.tId,
-    filterState.startDate,
-    filterState.endDate,
-    filterState.empCode,
+   
   ]);
     
   const getAllActionButton = (item) =>{
@@ -1304,9 +1323,10 @@ Verify
       breakLabel={"..."}
       pageCount={pageCount}
       onPageChange={handlePageChange}
-      containerClassName={"pagination"}
-      activeClassName={"active"}
+      containerClassName={"pagination flex flex-row gap-2"} // Container styling
+      activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
       className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
+      forcePage={currentPage.selected} // Set the current page
     />
   </div>
       </div>
