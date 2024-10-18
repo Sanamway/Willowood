@@ -14,6 +14,7 @@ import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 const FarmerSHC = () => {
+  
   const router = useRouter();
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
@@ -713,9 +714,10 @@ const FarmerSHC = () => {
         break;
     }
   }, []);
-  useEffect(() => {
+ useEffect(() => {
+    handlePageChange({selected: 0})
     getFarmerDemo(
-      currentPage.selected + 1,
+      1,
       filterState.bgId,
       filterState.buId,
       filterState.zId,
@@ -726,7 +728,6 @@ const FarmerSHC = () => {
       filterState.empCode
     );
   }, [
-    currentPage.selected,
     filterState.bgId,
     filterState.buId,
     filterState.zId,
@@ -735,6 +736,21 @@ const FarmerSHC = () => {
     filterState.startDate,
     filterState.endDate,
     filterState.empCode,
+  ]);
+  useEffect(() => {
+    getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+       filterState.empCode
+    );
+  }, [
+    currentPage.selected,
   ]);
   const { name } = router.query;
 
@@ -1328,10 +1344,11 @@ Verify
       breakLabel={"..."}
       pageCount={pageCount}
       onPageChange={handlePageChange}
-      containerClassName={"pagination"}
-      activeClassName={"active"}
+      containerClassName={"pagination flex flex-row gap-2"} // Container styling
+      activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
       className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
-    />
+      forcePage={currentPage.selected} // Set the current page
+     />
   </div>
       </div>
 
@@ -1601,4 +1618,4 @@ Verify
   );
 };
 
-export default FarmerSHC;
+ export default FarmerSHC;

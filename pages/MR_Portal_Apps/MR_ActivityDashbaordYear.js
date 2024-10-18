@@ -137,7 +137,7 @@ const AdditionalInfo = (props) => {
       setTargetData([]);
     }
   };
-
+  
   const [saleData, setSaleData] = useState([]);
   const getSaleData = async () => {
     try {
@@ -405,13 +405,15 @@ const AdditionalInfo = (props) => {
                 </td>
                 <td className="border border-gray-200 py-2 px-2">- </td>
                 <td className="border border-gray-200 py-2 px-2 font-bold">
-                  {Number(item.demo) +
+                  {  
+                    Number(item.demo) +
                     Number(item.f_day) +
                     Number(item.ifc) +
                     Number(item.fgm) +
                     Number(item.ofm) +
                     Number(item.mfm) +
-                    Number(item.rtp)}{" "}
+                    Number(item.rtp)
+                    }{" "}
                 </td>
                 <td className="border border-gray-200 py-2 px-2">- </td>
                 <td className="border border-gray-200 py-2 px-2">

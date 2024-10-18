@@ -722,6 +722,7 @@ const DemoTable = () => {
   }, []);
 
   useEffect(() => {
+    handlePageChange({selected: 0})
     getFarmerDemo(
       1,
       filterState.bgId,
@@ -1244,7 +1245,7 @@ Verify
                 <tr className="dark:border-2" key={idx}>
                  
 
-<td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
+               <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
                     {getAllActionButton(item)}             
                 </td>
                 <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
@@ -1258,7 +1259,8 @@ Verify
                     {item.emp_name}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    Demo type
+                    {item.purpose_of_demo
+                    }
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.dealer_des}
@@ -1362,7 +1364,7 @@ Verify
       activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
       className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
       forcePage={currentPage.selected} // Set the current page
-    />
+     />
   </div>
       </div>
 

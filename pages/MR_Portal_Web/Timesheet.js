@@ -923,17 +923,23 @@ Verify
 }
     }
 
-    const getTimeDiff = (item) =>{
-      if(item.punch_out_time &&item.punch_in_time ){
-        const time1 = moment(moment(item.punch_in_time).subtract(5, 'hours')
-        .subtract(30, 'minutes'));
-        const time2 = moment(item.punch_out_time);
-        return String(`${moment.duration(moment(time2).diff(time2)).hours() }`+"." + `${moment.duration(moment(time2).diff(time1)).minutes() }`)     
-      }
-      else {
-        return "-"
-      }
+    const getTimeDiff = (item) => {
+      console.log("zxc", item);
       
+      if(item.punch_out_time && item.punch_in_time) {
+        const time1 = moment(item.punch_in_time).subtract(5, 'hours').subtract(30, 'minutes');
+        const time2 = moment(item.punch_out_time);
+        
+        const diffDuration = moment.duration(time2.diff(time1));
+        
+        // Calculate hours and minutes from the difference
+        const hours = Math.floor(diffDuration.asHours()); // total hours
+        const minutes = diffDuration.minutes(); // remaining minutes
+        
+        return `${hours}.${minutes < 10 ? '0' : ''}${minutes}`;
+      } else {
+        return "-";
+      }
     }
   return (
     <Layout>
@@ -1203,10 +1209,19 @@ Verify
                   Punch In Time
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Opening KM
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Punch Out Time
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Closing KM
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Total Hour
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Total KM
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
@@ -1260,9 +1275,15 @@ Verify
             .subtract(30, 'minutes').format("hh:mm A")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.opening_km}
+                  </td>
+                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.punch_out_time
                       ? moment(item.punch_out_time).format("hh:mm A")
                       : "-"}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  {item.closing_km}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {getTimeDiff(item)}
@@ -1270,7 +1291,13 @@ Verify
                    
                    
                   </td>
-                  {console.log("klo", item.punch_in_time)}
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.opening_km && item.closing_km ?  item.closing_km -item.opening_km : "-"}
+                   
+                   
+                   
+                  </td>
+                 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.status}
                   </td>

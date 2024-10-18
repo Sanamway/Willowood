@@ -715,9 +715,12 @@ const FarmerMeet = () => {
         break;
     }
   }, []);
+
+
   useEffect(() => {
+    handlePageChange({selected: 0})
     getFarmerDemo(
-      currentPage.selected + 1,
+      1,
       filterState.bgId,
       filterState.buId,
       filterState.zId,
@@ -728,7 +731,6 @@ const FarmerMeet = () => {
       filterState.empCode
     );
   }, [
-    currentPage.selected,
     filterState.bgId,
     filterState.buId,
     filterState.zId,
@@ -737,6 +739,21 @@ const FarmerMeet = () => {
     filterState.startDate,
     filterState.endDate,
     filterState.empCode,
+  ]);
+  useEffect(() => {
+    getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+       filterState.empCode
+    );
+  }, [
+    currentPage.selected,
   ]);
   const { name } = router.query;
   const getAllActionButton = (item) =>{
@@ -1145,6 +1162,9 @@ Verify
                   Action
                 </th>
                 <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                  F Meet Date
+                </th>
+                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   F Meet Code
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
@@ -1155,6 +1175,9 @@ Verify
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Purpose of Meet
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Meet Type
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Farmer Mobile No
@@ -1313,6 +1336,11 @@ Verify
                       Delete
                     </button>
                   </td> */}
+                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {moment(item.
+meeting_date
+).format("DD-MM-YYYY")}
+                  </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.f_meet_no}
                   </td>
@@ -1328,6 +1356,10 @@ Verify
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.purpose_of_meeting}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.
+meeting_type}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.farmer_mob_no}
@@ -1398,7 +1430,7 @@ Verify
                     {item.potential_farmer}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.next_visit_date).format("MM/DD/YYYY")}
+                     {moment(item.next_visit_date).format("DD-MM-YYYY")}
                   </td>
                  
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
@@ -1464,10 +1496,11 @@ Verify
       breakLabel={"..."}
       pageCount={pageCount}
       onPageChange={handlePageChange}
-      containerClassName={"pagination"}
-      activeClassName={"active"}
+      containerClassName={"pagination flex flex-row gap-2"} // Container styling
+      activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
       className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
-    />
+      forcePage={currentPage.selected} // Set the current page
+     />
   </div>
       </div>
 

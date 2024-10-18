@@ -26,7 +26,7 @@ const StockLiquidation = () => {
   };
 
   const [pageCount, setPageCount] = useState(0);
-  
+  const [dataCount, setDataCount] = useState([]);
   const getFarmerDemo = async (
     currentPage,
     bg,
@@ -60,7 +60,7 @@ const StockLiquidation = () => {
       const apires = await respond.data.data.miData;
       const count = await respond.data.data.miDataCount;
       setPageCount(Math.ceil(count / 50));
-
+      setDataCount(count)
       setData(apires);
     } catch (error) {
       setData([]);
@@ -313,6 +313,9 @@ const StockLiquidation = () => {
     filterState.rId,
     filterState.tId,
   ]);
+
+
+  
   useEffect(() => {
     // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     const roleId = 6;
@@ -643,6 +646,31 @@ const StockLiquidation = () => {
         break;
     }
   }, []);
+ 
+
+  useEffect(() => {
+    handlePageChange({selected: 0})
+    getFarmerDemo(
+      1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
+  }, [
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+    filterState.startDate,
+    filterState.endDate,
+    filterState.empCode,
+  ]);
   useEffect(() => {
     getFarmerDemo(
       currentPage.selected + 1,
@@ -657,14 +685,6 @@ const StockLiquidation = () => {
     );
   }, [
     currentPage.selected,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    filterState.tId,
-    filterState.startDate,
-    filterState.endDate,
-    filterState.empCode,
   ]);
   const { name } = router.query;
 
@@ -1030,9 +1050,9 @@ material_pop_require
         </div>
         <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
         <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
-      Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
+      Showing <small className="font-bold px-2 self-center text-black">{data.length ? "1" : "0"}</small> to{" "}
       <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
-      <small className="font-bold px-2 self-center text-black">{currentPage.selected+1}</small> results
+      <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
     </div>
     <ReactPaginate
       previousLabel={"Previous"}
@@ -1040,10 +1060,11 @@ material_pop_require
       breakLabel={"..."}
       pageCount={pageCount}
       onPageChange={handlePageChange}
-      containerClassName={"pagination"}
-      activeClassName={"active"}
+      containerClassName={"pagination flex flex-row gap-2"} // Container styling
+      activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
       className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
-    />
+      forcePage={currentPage.selected} // Set the current page
+     />
   </div>
       </div>
 

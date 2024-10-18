@@ -14,6 +14,7 @@ import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 const MaterialIndent_Table = () => {
+
   const router = useRouter();
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
@@ -138,8 +139,8 @@ const MaterialIndent_Table = () => {
       filterState.tId,
       filterState.startDate,
       filterState.endDate,
-      filterState.empCode
-    );
+       filterState.empCode
+     );
     } catch (error) {}
   };
 
@@ -712,6 +713,29 @@ const MaterialIndent_Table = () => {
     }
   }, []);
   useEffect(() => {
+    handlePageChange({selected: 0})
+    getFarmerDemo(
+      1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
+  }, [
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+    filterState.startDate,
+    filterState.endDate,
+    filterState.empCode,
+  ]);
+  useEffect(() => {
     getFarmerDemo(
       currentPage.selected + 1,
       filterState.bgId,
@@ -725,14 +749,6 @@ const MaterialIndent_Table = () => {
     );
   }, [
     currentPage.selected,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    filterState.tId,
-    filterState.startDate,
-    filterState.endDate,
-    filterState.empCode,
   ]);
   const { name } = router.query;
 
@@ -1297,10 +1313,11 @@ delivery_date
       breakLabel={"..."}
       pageCount={pageCount}
       onPageChange={handlePageChange}
-      containerClassName={"pagination"}
-      activeClassName={"active"}
+      containerClassName={"pagination flex flex-row gap-2"} // Container styling
+      activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
       className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
-    />
+      forcePage={currentPage.selected} // Set the current page
+     />
   </div>
       </div>
 
