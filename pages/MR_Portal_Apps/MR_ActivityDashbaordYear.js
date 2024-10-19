@@ -31,7 +31,9 @@ const AdditionalInfo = (props) => {
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
-  const [localStorageItems, setLocalStorageItems] = useState({
+ 
+
+ const [localStorageItems, setLocalStorageItems] = useState({
     uId: "",
     cId: "",
     bgId: "",
@@ -41,8 +43,8 @@ const AdditionalInfo = (props) => {
     tId: "",
     roleId: "",
     empCode: "",
+    tDes:""
   });
-  
   useEffect(() => {
     setLocalStorageItems({
       uId: JSON.parse(window.localStorage.getItem("uid")),
@@ -52,6 +54,7 @@ const AdditionalInfo = (props) => {
       rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
       zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
       tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+      tDes:JSON.parse(window.localStorage.getItem("userinfo")).territory_name,
       clName: window.localStorage.getItem("user_name"),
       ulName: window.localStorage.getItem("phone_number"),
       empCode: window.localStorage.getItem("emp_code"),
@@ -59,9 +62,96 @@ const AdditionalInfo = (props) => {
       reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
       developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
       hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
-      reportingHQ: JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
+      reportingHQ:JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
     });
   }, []);
+
+
+
+  function sumCategoryResults(data) {
+    const monthTotals = {
+       "Apr-24": 0,
+        "May-24": 0,
+        "Jun-24": 0,
+        "Jul-24": 0,
+        "Aug-24": 0,
+        "Sep-24": 0,
+        "Oct-24": 0,
+        "Nov-24": 0,
+        "Dec-24": 0,
+        "Jan-25": 0,  // Assuming the fiscal year crosses into the next year
+        "Feb-25": 0,
+        "Mar-25": 0
+      
+    };
+
+    data.forEach(entry => {
+        entry.category_result.forEach(category => {
+          monthTotals["Apr-24"] += category.apr;
+          monthTotals["May-24"] += category.may;
+          monthTotals["Jun-24"] += category.june;
+          monthTotals["Jul-24"] += category.july;
+          monthTotals["Aug-24"] += category.aug;
+          monthTotals["Sep-24"] += category.sep;
+          monthTotals["Oct-24"] += category.oct;
+          monthTotals["Nov-24"] += category.nov;
+          monthTotals["Dec-24"] += category.dec;
+          monthTotals["Jan-25"] += category.jan;
+          monthTotals["Feb-25"] += category.feb;
+          monthTotals["Mar-25"] += category.march;
+          
+        });
+    });
+
+    return monthTotals;
+}
+
+function sumDealerMapData(data) {
+  const monthTotals = {
+      "Apr-24": 0,
+      "May-24": 0,
+      "Jun-24": 0,
+      "Jul-24": 0,
+      "Aug-24": 0,
+      "Sep-24": 0,
+      "Oct-24": 0,
+      "Nov-24": 0,
+      "Dec-24": 0,
+      "Jan-25": 0,  // Next year months
+      "Feb-25": 0,
+      "Mar-25": 0
+  };
+
+  data.forEach(entry => {
+      monthTotals["Apr-24"] += entry.apr || 0;
+      monthTotals["May-24"] += entry.may || 0;
+      monthTotals["Jun-24"] += entry.june || 0;
+      monthTotals["Jul-24"] += entry.july || 0;
+      monthTotals["Aug-24"] += entry.aug || 0;
+      monthTotals["Sep-24"] += entry.sep || 0;
+      monthTotals["Oct-24"] += entry.oct || 0;
+      monthTotals["Nov-24"] += entry.nov || 0;
+      monthTotals["Dec-24"] += entry.dec || 0;
+      monthTotals["Jan-25"] += entry.jan || 0;
+      monthTotals["Feb-25"] += entry.feb || 0;
+      monthTotals["Mar-25"] += entry.march || 0;
+  });
+
+  return monthTotals;
+}
+
+const totalRow =(data) =>{
+  let total = 0;
+
+for (let key in data) {
+total += data[key];
+}
+return total
+}
+
+
+
+
 
   const [tableData, setTableData] = useState([]);
   const getTableData = async () => {
@@ -84,6 +174,7 @@ const AdditionalInfo = (props) => {
     }
   };
   const [targetData, setTargetData] = useState([]);
+ 
   const getTargetData = async () => {
     try {
       const respond = await axios.get(`${url}/api/mr_dealer_sale_target`, {
@@ -96,156 +187,49 @@ const AdditionalInfo = (props) => {
           count_type: "year",
         },
       });
-      const apires = await respond.data.data;  
+      const apires = await respond.data.data;   
+      setTargetData(sumDealerMapData(apires));
    
-      const sumByMonth = {
-        apr : 0,
-        may : 0,
-        june: 0,
-        july: 0,
-        aug: 0,
-        sep: 0,
-        oct: 0,
-        nov: 0,
-        dec: 0,
-        jan: 0,
-        feb: 0,
-        march: 0,
-    };
-    
-    // Iterate through each object in the array and sum up the values for each month
-    apires.forEach(item => {
-        
-         sumByMonth.apr += item.apr;
-         sumByMonth.may += item.may;
-         sumByMonth.june += item.june;
-         sumByMonth.july += item.july;
-         sumByMonth.aug += item.aug;
-         sumByMonth.sep += item.sep;
-         sumByMonth.oct += item.oct;
-         sumByMonth.nov += item.nov;
-         sumByMonth.dec += item.dec;
-         sumByMonth.jan += item.jan;
-         sumByMonth.feb += item.feb;
-         sumByMonth.march += item.march;
-
-    });
-    setTargetData(sumByMonth);
-   
-  console.log("qaz",sumByMonth)
+  
     } catch (error) {
       setTargetData([]);
     }
   };
-  
+
   const [saleData, setSaleData] = useState([]);
   const getSaleData = async () => {
+    console.log("opo", localStorageItems.territory_name)
     try {
       const respond = await axios.get(`${url}/api/target_sale_mr`, {
         headers: headers,
         params: {
           emp_code: localStorageItems.empCode,
           t_id: localStorageItems.tId,
+          t_des: localStorageItems.tDes,
           c_id: localStorageItems.cId,
           year: moment().year(),
           count_type: "year",
         },
       });
       const apires = await respond.data.data;
-   
-      let sortedData = apires.map(item => item.category_result)
-      console.log("zplo", sortedData)
-    // Initialize an object to store the sum of each month
-    const sumByMonth = {
-      apr: 0,
-      may: 0,
-      june: 0,
-      july: 0,
-      aug: 0,
-      sep: 0,
-      oct: 0,
-      nov: 0,
-      dec: 0,
-      jan: 0,
-      feb: 0,
-      march: 0,
-    };
-
-    // Iterate through each array and sum up the values for each month
-    sortedData.forEach(categoryArray => {
-      categoryArray.forEach(item => {
-          sumByMonth.apr += item.apr;
-          sumByMonth.may += item.may;
-          sumByMonth.june += item.june;
-          sumByMonth.july += item.july;
-          sumByMonth.aug += item.aug;
-          sumByMonth.sep += item.sep;
-          sumByMonth.oct += item.oct;
-          sumByMonth.nov += item.nov;
-          sumByMonth.dec += item.dec;
-          sumByMonth.jan += item.jan;
-          sumByMonth.feb += item.feb;
-          sumByMonth.march += item.march;
-      });
-    })
-
-
-    setSaleData(sumByMonth)
-
+     setSaleData(sumCategoryResults(apires))
     } catch (error) {
       setSaleData([]);
     }
   };
-  console.log("pop", saleData , targetData, tableData)
-  
-  useEffect(() => {
-    getTargetData();
-    getTableData()
-    getSaleData()
-  }, [localStorageItems]);
-
-// useEffect(()=>{
-//   if(targetData && saleData && tableData.length){
-
-//     const monthMap = {
-//       'Apr-24': 'Apr',
-//       'May-24': 'May',
-//       'Jun-24': 'June',
-//       'Jul-24': 'July',
-//       'Aug-24': 'Aug',
-//       'Sep-24': 'Sep',
-//       'Oct-24': 'Oct',
-//       'Nov-24': 'Nov',
-//       'Dec-24': 'Dec',
-//       'Jan-25': 'Jan',
-//       'Feb-25': 'Feb',
-//       'Mar-25': 'March'
-//     };
-    
-//     // Merge function
-//     const mergeData = (table, sales, targets) => {
-//       return table.map((item) => {
-//         const monthYear = item.month_year.split('-')[0]; // Removes the year part (e.g., 'Nov-24' -> 'Nov')
-//         const monthKey = monthMap[item.month_year.toLowerCase()]; // Find corresponding month key in sales and targets
-//           console.log("qap",  monthKey, monthYear)
-//         return {
-//           ...item,
-//           month_year: monthYear,  // Update the month_year to exclude '-24'
-//           sale: sales[monthKey],
-//           target: targets[monthKey]
-//         };
-//       });
-//     };
-    
-//     // Merged Data
-//     const mergedData = mergeData(tableData, saleData, targetData);
-
-//     console.log("qwa", mergedData, saleData, targetData)
-//   }
-  
-
-// },[targetData, saleData, tableData.length])
  
+
+  useEffect(() => {
+    getTableData();
+  
+  }, [localStorageItems]);
+  useEffect(()=>{
+    getTargetData()
+    getSaleData();
+  },[
+    tableData
+    
+  ])
 
   return (
     <form
@@ -403,19 +387,12 @@ const AdditionalInfo = (props) => {
                 >
                   {item.month_year ? item.month_year : "-"}{" "}
                 </td>
-                <td className="border border-gray-200 py-2 px-2">- </td>
-                <td className="border border-gray-200 py-2 px-2 font-bold">
-                  {  
-                    Number(item.demo) +
-                    Number(item.f_day) +
-                    Number(item.ifc) +
-                    Number(item.fgm) +
-                    Number(item.ofm) +
-                    Number(item.mfm) +
-                    Number(item.rtp)
-                    }{" "}
-                </td>
-                <td className="border border-gray-200 py-2 px-2">- </td>
+                <td className="border border-gray-200  px-2 py-2">{Number(targetData[item.month_year]).toFixed(2)}</td>
+              <td className="border border-gray-200  px-2 py-2">{Number(saleData[item.month_year]).toFixed(2)}</td>
+              <td className="border border-gray-200  px-2 py-2">{
+             Number(Number(saleData[item.month_year]) /  Number(targetData[item.month_year]) * 100).toFixed(2)  
+                
+                }</td>
                 <td className="border border-gray-200 py-2 px-2">
                   {item.scr ? item.scr : "-"}{" "}
                 </td>
@@ -450,95 +427,12 @@ const AdditionalInfo = (props) => {
             ))}
             <tr className="bg-white whitespace-nowrap font-bold">
               <td className="border border-gray-200 py-2 px-2 ">Total</td>
-              <td className="border border-gray-200 py-2 px-2">- </td>
+              <td className="border border-gray-200 py-2 px-2">   {Number(totalRow(targetData)).toFixed(2)} </td>
               <td className="border border-gray-200 py-2 px-2">
-                {tableData
-                  .map((item) => item.demo)
-                  .reduce((acc, current) => {
-                    // Check if the current element is a number
-
-                    return Number(acc) + Number(current);
-                  }, 0) +
-                  tableData
-                    .map((item) => item.f_day)
-                    .reduce((acc, current) => {
-                      // Check if the current element is a number
-
-                      return Number(acc) + Number(current);
-                    }, 0) +
-                  tableData
-                    .map((item) => item.ifc)
-                    .reduce((acc, current) => {
-                      // Check if the current element is a number
-
-                      return Number(acc) + Number(current);
-                    }, 0) +
-                  tableData
-                    .map((item) => item.fgm)
-                    .reduce((acc, current) => {
-                      // Check if the current element is a number
-
-                      return Number(acc) + Number(current);
-                    }, 0) +
-                  tableData
-                    .map((item) => item.ofm)
-                    .reduce((acc, current) => {
-                      // Check if the current element is a number
-
-                      return Number(acc) + Number(current);
-                    }, 0) +
-                  tableData
-                    .map((item) => item.mfm)
-                    .reduce((acc, current) => {
-                      // Check if the current element is a number
-
-                      return Number(acc) + Number(current);
-                    }, 0) +
-                  tableData
-                    .map((item) => item.rtp)
-                    .reduce((acc, current) => {
-                      // Check if the current element is a number
-
-                      return Number(acc) + Number(current);
-                    }, 0)}
-              </td>
-              <td className="border border-gray-200 py-2 px-2">- </td>
-              <td className="border border-gray-200 py-2 px-2">-</td>
-              <td className="border border-gray-200 py-2 px-2">
-                {tableData
-                  .map((item) => item.demo)
-                  .reduce((acc, current) => {
-                    // Check if the current element is a number
-
-                    return Number(acc) + Number(current);
-                  }, 0)}
+              {Number(totalRow(saleData)).toFixed(2)}
               </td>
               <td className="border border-gray-200 py-2 px-2">
-                {tableData
-                  .map((item) => item.f_day)
-                  .reduce((acc, current) => {
-                    // Check if the current element is a number
-
-                    return Number(acc) + Number(current);
-                  }, 0)}
-              </td>
-              <td className="border border-gray-200 py-2 px-2">
-                {tableData
-                  .map((item) => item.ifc)
-                  .reduce((acc, current) => {
-                    // Check if the current element is a number
-
-                    return Number(acc) + Number(current);
-                  }, 0)}
-              </td>
-              <td className="border border-gray-200 py-2 px-2">
-                {tableData
-                  .map((item) => item.fgm)
-                  .reduce((acc, current) => {
-                    // Check if the current element is a number
-
-                    return Number(acc) + Number(current);
-                  }, 0)}
+               -
               </td>
               <td className="border border-gray-200 py-2 px-2">
                 {tableData

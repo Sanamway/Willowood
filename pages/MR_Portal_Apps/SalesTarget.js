@@ -45,6 +45,7 @@ const AdditionalInfo = (props) => {
     tId: "",
     roleId: "",
     empCode: "",
+    tDes:""
   });
   useEffect(() => {
     setLocalStorageItems({
@@ -55,6 +56,7 @@ const AdditionalInfo = (props) => {
       rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
       zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
       tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+      tDes:JSON.parse(window.localStorage.getItem("userinfo")).territory_name,
       clName: window.localStorage.getItem("user_name"),
       ulName: window.localStorage.getItem("phone_number"),
       empCode: window.localStorage.getItem("emp_code"),
@@ -174,6 +176,7 @@ return total
     }
   };
   const [targetData, setTargetData] = useState([]);
+  const [partySaleData, setPartySaleData] = useState([]);
   const getTargetData = async () => {
     try {
       const respond = await axios.get(`${url}/api/mr_dealer_sale_target`, {
@@ -203,6 +206,7 @@ return total
         params: {
           emp_code: localStorageItems.empCode,
           t_id: localStorageItems.tId,
+          t_des: localStorageItems.tDes,
           c_id: localStorageItems.cId,
           year: moment().year(),
           count_type: "year",
@@ -210,16 +214,18 @@ return total
       });
       const apires = await respond.data.data;
      setSaleData(sumCategoryResults(apires))
+     setPartySaleData(apires)
     } catch (error) {
       setSaleData([]);
     }
   };
+  
 
 
   
   useEffect(() => {
     getTableData();
-  
+    
   }, [localStorageItems]);
   useEffect(()=>{
     getTargetData()
@@ -380,7 +386,7 @@ targetData, saleData
         <h1 className=" font-bold text-center bg-yellow-300 ">
          Target VS Sales
         </h1>
-       <table className="w-full  border-collapse border border-gray-200 text-[10px] font-bold">
+       <table className="w-full   border-collapse border border-gray-200 text-[10px] font-bold">
         <thead>
           <tr className="bg-blue-800 text-white">
             <th className="border border-gray-200  px-2 py-2 whitespace-nowrap font-bold">
@@ -441,7 +447,8 @@ targetData, saleData
       <h1 className=" font-bold text-center  bg-yellow-300">
         My Party
       </h1>
-      <table className="w-full  border-collapse border border-gray-200 text-[10px] font-bold">
+      <div className="wrapper w-full overflow-hidden overflow-x-auto">
+      <table className="  border-collapse border border-gray-200 text-[10px] font-bold">
         <thead>
           <tr className="bg-blue-800 text-white">
             <th className="border border-gray-200  px-2 py-2 whitespace-nowrap font-bold">
@@ -457,65 +464,217 @@ targetData, saleData
             <th className="border border-gray-200  px-2 py-2">ACH%</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody> 
+{partySaleData?.map((item, idx)=> 
+   <tr className="font-bold">
+   <td className="border border-gray-200   ">
+   {item.distribution_name}
+   </td>
+   <td className="border border-gray-200  ">
+             <ul>
+              {item.category_result?.map((item) =>
+               <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+               <input
+                 className="p-0 w-28 text-white h-6 bg-sky-800 "
+                 value={item.category_name}
+                 disabled
+               />
+             </li> )
+              }
+              
+               
+             </ul>
+           </td>
+           <td className="border border-gray-200  ">
+           {item.category_result?.map((categoryItem, index) =>
+         <li key={index} className="border-b-2 border-black flex justify-left text-black bg-sky-800 p-1">
+            <input
+               className="p-0 w-28 text-white h-6 bg-sky-800"
+               value={
+                  ["apr_target", "may_target", "june_target", "july_target", "aug_target", "sep_target", "oct_target", "nov_target", "dec_target", "jan_target", "feb_target", "march_target"]
+                  .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0).toFixed(2)
+               }
+               disabled
+            />
+         </li>
+      )}
+           </td>
+           <td className="border border-gray-200  ">
+           {item.category_result?.map((categoryItem, index) =>
+         <li key={index} className="border-b-2 border-black flex justify-left text-black bg-sky-800 p-1">
+            <input
+               className="p-0 w-28 text-white h-6 bg-sky-800"
+               value={
+                  ["apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec", "jan", "feb", "march"]
+                  .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0).toFixed(2)
+               }
+               disabled
+            />
+         </li>
+      )}
+           </td>
+         
+           <td className="border border-gray-200  ">
+           {item.category_result?.map((categoryItem, index) =>
+         <li key={index} className="border-b-2 border-black flex justify-left text-black bg-sky-800 p-1">
+            <input
+               className="p-0 w-28 text-white h-6 bg-sky-800"
+               value={
+                Number( ["apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec", "jan", "feb", "march"]
+                  .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0) /  Number(["apr_target", "may_target", "june_target", "july_target", "aug_target", "sep_target", "oct_target", "nov_target", "dec_target", "jan_target", "feb_target", "march_target"]
+                    .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0)) * 100).toFixed(2)  
+               }
+               disabled
+            />
+         </li>
+      )}
+           </td>
+               
+ </tr>   
 
-          <tr className="font-bold">
+
+)}
+          {/* <tr className="font-bold">
             <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
              Party Name 1
             </td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>                  
-          </tr>   
-          <tr className="text-white font-bold bg-blue-800">
-            <td className="border border-gray-200  px-2 py-2 whitespace-nowrap">
-              Total
-            </td>
-            <td className="border border-gray-200  px-2 py-2">
-              {" "}
-              {tableData
-                .map((item) => item.demo)
-                .reduce((acc, current) => {
-                  // Check if the current element is a number
-
-                  return Number(acc) + Number(current);
-                }, 0)}
-            </td>
-            <td className="border border-gray-200  px-2 py-2">
-              {" "}
-              {tableData
-                .map((item) => item.f_day)
-                .reduce((acc, current) => {
-                  // Check if the current element is a number
-
-                  return Number(acc) + Number(current);
-                }, 0)}
-            </td>
-            <td className="border border-gray-200  px-2 py-2">
-              {tableData
-                .map((item) => item.ifc)
-                .reduce((acc, current) => {
-                  // Check if the current element is a number
-
-                  return Number(acc) + Number(current);
-                }, 0)}
-            </td>
-            <td className="border border-gray-200  px-2 py-2">
-              {tableData
-                .map((item) => item.ifc)
-                .reduce((acc, current) => {
-                  // Check if the current element is a number
-
-                  return Number(acc) + Number(current);
-                }, 0)}
-            </td>
-            
+            <td className="border border-gray-200  ">
+                      <ul>
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+                          <input
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="HR Expect Target"
+                            disabled
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+                          <input
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="HR Min Ach."
+                            disabled
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+                          <input
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="Weightage %"
+                            disabled
+                          />
+                        </li>
+                        <li className="  flex justify-left bg-green-400  text-black   p-1  ">
+                          <input
+                            className="p-0 w-28 h-6   text-white bg-green-400"
+                            value="Activity Score"
+                            disabled
+                          />
+                        </li>
+                      </ul>
+                    </td>
            
-          </tr>
+                    <td className="border border-gray-200  ">
+                      <ul>
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+                          <input
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="HR Expect Target"
+                            disabled
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+                          <input
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="HR Min Ach."
+                            disabled
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+                          <input
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="Weightage %"
+                            disabled
+                          />
+                        </li>
+                        <li className="  flex justify-left bg-green-400  text-black   p-1  ">
+                          <input
+                            className="p-0 w-28 h-6   text-white bg-green-400"
+                            value="Activity Score"
+                            disabled
+                          />
+                        </li>
+                      </ul>
+                    </td>
+                    <td className="border border-gray-200  ">
+                      <ul>
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+                          <input
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="HR Expect Target"
+                            disabled
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+                          <input
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="HR Min Ach."
+                            disabled
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+                          <input
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="Weightage %"
+                            disabled
+                          />
+                        </li>
+                        <li className="  flex justify-left bg-green-400  text-black   p-1  ">
+                          <input
+                            className="p-0 w-28 h-6   text-white bg-green-400"
+                            value="Activity Score"
+                            disabled
+                          />
+                        </li>
+                      </ul>
+                    </td>
+                    <td className="border border-gray-200  ">
+                      <ul>
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+                          <input
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="HR Expect Target"
+                            disabled
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+                          <input
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="HR Min Ach."
+                            disabled
+                          />
+                        </li>
+                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+                          <input
+                            className="p-0 w-28 text-white h-6 bg-sky-800 "
+                            value="Weightage %"
+                            disabled
+                          />
+                        </li>
+                        <li className="  flex justify-left bg-green-400  text-black   p-1  ">
+                          <input
+                            className="p-0 w-28 h-6   text-white bg-green-400"
+                            value="Activity Score"
+                            disabled
+                          />
+                        </li>
+                      </ul>
+                    </td>
+                        
+          </tr>    */}
+    
         </tbody>
       </table>
-      <h1 className=" font-bold text-center  bg-yellow-300">
+      </div>
+     
+       <h1 className=" font-bold text-center  bg-yellow-300">
         Monthly Graph
       </h1>
 
