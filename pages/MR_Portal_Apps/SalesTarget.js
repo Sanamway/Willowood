@@ -287,6 +287,11 @@ setBsGraphData(
 targetData, saleData
   ])
 
+  const totalOverall = {
+    target: 0,
+    achievement: 0,
+    percentage: 0
+  };
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -352,7 +357,7 @@ targetData, saleData
               />
             </div>
 
-        <div className="flex  flex-col  w-full mt-4 md:hidden">
+            <div className="flex  flex-col  w-full mt-4 md:hidden">
               <div className="flex w-full  w-28">
                 <div className="flex">
                   <p className=" font-bold text-sm text-blue-800 w-28">
@@ -388,7 +393,7 @@ targetData, saleData
         </h1>
        <table className="w-full   border-collapse border border-gray-200 text-[10px] font-bold">
         <thead>
-          <tr className="bg-blue-800 text-white">
+          <tr className="bg-blue-800 text">
             <th className="border border-gray-200  px-2 py-2 whitespace-nowrap font-bold">
         Month
             </th>
@@ -417,7 +422,7 @@ targetData, saleData
        
      
           
-           <tr className="text-white font-bold bg-blue-800">
+           <tr className="text font-bold bg-blue-800">
             <td className="border border-gray-200  px-2 py-2 whitespace-nowrap">
               Total
             </td>
@@ -444,7 +449,7 @@ targetData, saleData
       <div className="wrapper w-full overflow-hidden overflow-x-auto">
       <table className="  border-collapse border border-gray-200 text-[10px] font-bold">
         <thead>
-          <tr className="bg-blue-800 text-white">
+          <tr className="bg-blue-800 text">
             <th className="border border-gray-200  px-2 py-2 whitespace-nowrap font-bold">
         Party Name
             </th>
@@ -459,210 +464,142 @@ targetData, saleData
           </tr>
         </thead>
         <tbody> 
-{partySaleData?.map((item, idx)=> 
-   <tr className="font-bold">
-   <td className="border border-gray-200   ">
-   {item.distribution_name}
-   </td>
-   <td className="border border-gray-200  ">
-             <ul>
-              {item.category_result?.map((item) =>
-               <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
+        {partySaleData?.map((item, idx)=> {
+   // Calculate total target and achievement for each item
+   const totalTarget = item.category_result?.reduce((acc, categoryItem) => {
+     return acc + ["apr_target", "may_target", "june_target", "july_target", "aug_target", "sep_target", "oct_target", "nov_target", "dec_target", "jan_target", "feb_target", "march_target"]
+       .reduce((sum, curr) => sum + (categoryItem[curr] || 0), 0);
+   }, 0);
+
+   const totalAchievement = item.category_result?.reduce((acc, categoryItem) => {
+     return acc + ["apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec", "jan", "feb", "march"]
+       .reduce((sum, curr) => sum + (categoryItem[curr] || 0), 0);
+   }, 0);
+
+   // Add this item's total target and achievement to the overall totals
+   totalOverall.target += totalTarget;
+   totalOverall.achievement += totalAchievement;
+
+   return (
+     <tr className="font-bold">
+       <td className="border border-gray-200">{item.distribution_name}</td>
+
+       <td className="border border-gray-200">
+         <ul>
+           {item.category_result?.map((categoryItem, index) => (
+             <li key={index} className="border-b-2 border-black flex justify-left text-black p-1">
                <input
-                 className="p-0 w-28 text-white h-6 bg-sky-800 "
-                 value={item.category_name}
+                 className="p-0 w-14 text h-6"
+                 value={categoryItem.category_name}
                  disabled
                />
-             </li> )
-              }
-              
-               
-             </ul>
-           </td>
-           <td className="border border-gray-200  ">
-           {item.category_result?.map((categoryItem, index) =>
-         <li key={index} className="border-b-2 border-black flex justify-left text-black bg-sky-800 p-1">
-            <input
-               className="p-0 w-28 text-white h-6 bg-sky-800"
-               value={
-                  ["apr_target", "may_target", "june_target", "july_target", "aug_target", "sep_target", "oct_target", "nov_target", "dec_target", "jan_target", "feb_target", "march_target"]
-                  .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0).toFixed(2)
-               }
-               disabled
-            />
-         </li>
-      )}
-           </td>
-           <td className="border border-gray-200  ">
-           {item.category_result?.map((categoryItem, index) =>
-         <li key={index} className="border-b-2 border-black flex justify-left text-black bg-sky-800 p-1">
-            <input
-               className="p-0 w-28 text-white h-6 bg-sky-800"
-               value={
-                  ["apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec", "jan", "feb", "march"]
-                  .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0).toFixed(2)
-               }
-               disabled
-            />
-         </li>
-      )}
-           </td>
-         
-           <td className="border border-gray-200  ">
-           {item.category_result?.map((categoryItem, index) =>
-         <li key={index} className="border-b-2 border-black flex justify-left text-black bg-sky-800 p-1">
-            <input
-               className="p-0 w-28 text-white h-6 bg-sky-800"
-               value={
-                Number( ["apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec", "jan", "feb", "march"]
-                  .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0) /  Number(["apr_target", "may_target", "june_target", "july_target", "aug_target", "sep_target", "oct_target", "nov_target", "dec_target", "jan_target", "feb_target", "march_target"]
-                    .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0)) * 100).toFixed(2)  
-               }
-               disabled
-            />
-         </li>
-      )}
-           </td>
-               
- </tr>   
+             </li>
+           ))}
+           <li className="border-b-2 border-black flex justify-left text-black p-1">
+             <input className="p-0 w-14 text h-6" value="Total" disabled />
+           </li>
+         </ul>
+       </td>
 
+       <td className="border border-gray-200">
+         {item.category_result?.map((categoryItem, index) => (
+           <li key={index} className="border-b-2 border-black flex justify-left text-black p-1">
+             <input
+               className="p-0 w-14 text h-6"
+               value={["apr_target", "may_target", "june_target", "july_target", "aug_target", "sep_target", "oct_target", "nov_target", "dec_target", "jan_target", "feb_target", "march_target"]
+                 .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0).toFixed(2)}
+               disabled
+             />
+           </li>
+         ))}
+         <li className="border-b-2 border-black flex justify-left text-black p-1">
+           <input
+             className="p-0 w-14 text h-6"
+             value={totalTarget.toFixed(2)} // Total target value for this item
+             disabled
+           />
+         </li>
+       </td>
 
-)}
-          {/* <tr className="font-bold">
-            <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
-             Party Name 1
-            </td>
-            <td className="border border-gray-200  ">
-                      <ul>
-                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
-                          <input
-                            className="p-0 w-28 text-white h-6 bg-sky-800 "
-                            value="HR Expect Target"
-                            disabled
-                          />
-                        </li>
-                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
-                          <input
-                            className="p-0 w-28 text-white h-6 bg-sky-800 "
-                            value="HR Min Ach."
-                            disabled
-                          />
-                        </li>
-                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
-                          <input
-                            className="p-0 w-28 text-white h-6 bg-sky-800 "
-                            value="Weightage %"
-                            disabled
-                          />
-                        </li>
-                        <li className="  flex justify-left bg-green-400  text-black   p-1  ">
-                          <input
-                            className="p-0 w-28 h-6   text-white bg-green-400"
-                            value="Activity Score"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-           
-                    <td className="border border-gray-200  ">
-                      <ul>
-                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
-                          <input
-                            className="p-0 w-28 text-white h-6 bg-sky-800 "
-                            value="HR Expect Target"
-                            disabled
-                          />
-                        </li>
-                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
-                          <input
-                            className="p-0 w-28 text-white h-6 bg-sky-800 "
-                            value="HR Min Ach."
-                            disabled
-                          />
-                        </li>
-                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
-                          <input
-                            className="p-0 w-28 text-white h-6 bg-sky-800 "
-                            value="Weightage %"
-                            disabled
-                          />
-                        </li>
-                        <li className="  flex justify-left bg-green-400  text-black   p-1  ">
-                          <input
-                            className="p-0 w-28 h-6   text-white bg-green-400"
-                            value="Activity Score"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="border border-gray-200  ">
-                      <ul>
-                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
-                          <input
-                            className="p-0 w-28 text-white h-6 bg-sky-800 "
-                            value="HR Expect Target"
-                            disabled
-                          />
-                        </li>
-                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
-                          <input
-                            className="p-0 w-28 text-white h-6 bg-sky-800 "
-                            value="HR Min Ach."
-                            disabled
-                          />
-                        </li>
-                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
-                          <input
-                            className="p-0 w-28 text-white h-6 bg-sky-800 "
-                            value="Weightage %"
-                            disabled
-                          />
-                        </li>
-                        <li className="  flex justify-left bg-green-400  text-black   p-1  ">
-                          <input
-                            className="p-0 w-28 h-6   text-white bg-green-400"
-                            value="Activity Score"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                    <td className="border border-gray-200  ">
-                      <ul>
-                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
-                          <input
-                            className="p-0 w-28 text-white h-6 bg-sky-800 "
-                            value="HR Expect Target"
-                            disabled
-                          />
-                        </li>
-                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
-                          <input
-                            className="p-0 w-28 text-white h-6 bg-sky-800 "
-                            value="HR Min Ach."
-                            disabled
-                          />
-                        </li>
-                        <li className="border-b-2 border-black  flex justify-left text-black bg-sky-800  p-1">
-                          <input
-                            className="p-0 w-28 text-white h-6 bg-sky-800 "
-                            value="Weightage %"
-                            disabled
-                          />
-                        </li>
-                        <li className="  flex justify-left bg-green-400  text-black   p-1  ">
-                          <input
-                            className="p-0 w-28 h-6   text-white bg-green-400"
-                            value="Activity Score"
-                            disabled
-                          />
-                        </li>
-                      </ul>
-                    </td>
-                        
-          </tr>    */}
+       <td className="border border-gray-200">
+         {item.category_result?.map((categoryItem, index) => (
+           <li key={index} className="border-b-2 border-black flex justify-left text-black p-1">
+             <input
+               className="p-0 w-14 text h-6"
+               value={["apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec", "jan", "feb", "march"]
+                 .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0).toFixed(2)}
+               disabled
+             />
+           </li>
+         ))}
+         <li className="border-b-2 border-black flex justify-left text-black p-1">
+           <input
+             className="p-0 w-14 text h-6"
+             value={totalAchievement.toFixed(2)} // Total achievement value for this item
+             disabled
+           />
+         </li>
+       </td>
+
+       <td className="border border-gray-200">
+         {item.category_result?.map((categoryItem, index) => (
+           <li key={index} className="border-b-2 border-black flex justify-left text-black p-1">
+             <input
+               className="p-0 w-14 text h-6"
+               value={Number(["apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec", "jan", "feb", "march"]
+                 .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0) / 
+                 Number(["apr_target", "may_target", "june_target", "july_target", "aug_target", "sep_target", "oct_target", "nov_target", "dec_target", "jan_target", "feb_target", "march_target"]
+                   .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0)) * 100).toFixed(2)}
+               disabled
+             />
+           </li>
+         ))}
+         <li className="border-b-2 border-black flex justify-left text-black p-1">
+           <input
+             className="p-0 w-14 text h-6"
+             value={Number(totalAchievement / totalTarget * 100).toFixed(2)} // Total percentage for this item
+             disabled
+           />
+         </li>
+       </td>
+     </tr>
+   );
+})}
+
+{/* Add the final row that shows the grand total */}
+<tr className="font-bold bg-gray-100">
+  <td className="border border-gray-200">Grand Total</td>
+
+  <td className="border border-gray-200">
+    {/* Empty because category names don't have a total */}
+  </td>
+
+  <td className="border border-gray-200">
+    <input
+      className="p-0 w-14 text h-6"
+      value={totalOverall.target.toFixed(2)} // Grand total for target
+      disabled
+    />
+  </td>
+
+  <td className="border border-gray-200">
+    <input
+      className="p-0 w-14 text h-6"
+      value={totalOverall.achievement.toFixed(2)} // Grand total for achievement
+      disabled
+    />
+  </td>
+
+  <td className="border border-gray-200">
+    <input
+      className="p-0 w-14 text h-6"
+      value={Number(totalOverall.achievement / totalOverall.target * 100).toFixed(2)} // Grand total percentage
+      disabled
+    />
+  </td>
+</tr>
+
+          
     
         </tbody>
       </table>
