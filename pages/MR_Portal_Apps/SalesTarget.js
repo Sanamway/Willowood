@@ -249,7 +249,7 @@ return total
 "Mar-25"];
 
   console.log("zoz",  Object.values(targetData).join(", "))
-
+  
   const [bsGraphData , setBsGraphData] = useState([
     {
       label: "Total Target",
@@ -417,7 +417,7 @@ targetData, saleData
        
      
           
-          <tr className="text-white font-bold bg-blue-800">
+           <tr className="text-white font-bold bg-blue-800">
             <td className="border border-gray-200  px-2 py-2 whitespace-nowrap">
               Total
             </td>
@@ -430,14 +430,8 @@ targetData, saleData
               {Number(totalRow(saleData)).toFixed(2)}
             </td>
             <td className="border border-gray-200  px-2 py-2">
-              {tableData
-                .map((item) => item.ifc)
-                .reduce((acc, current) => {
-                  // Check if the current element is a number
-
-                  return Number(acc) + Number(current);
-                }, 0)}
-            </td>
+               -
+             </td>
             
            
           </tr>
