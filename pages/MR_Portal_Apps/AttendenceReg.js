@@ -4,7 +4,21 @@ import "react-datepicker/dist/react-datepicker.css";
 import { BsCheck2Circle } from "react-icons/bs";
 import Profile from "../../public/userimg.jpg";
 import Image from "next/image";
+import { FaArrowAltCircleUp } from "react-icons/fa";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { Popover, Switch } from "@headlessui/react";
+import { FaHandsHelping } from "react-icons/fa";
+import { IoSettingsOutline } from "react-icons/io5";
+import { url } from "@/constants/url";
+import { useRouter } from "next/router";
+import axios, { formToJSON } from "axios";
 const AtReg = () => {
+    const router = useRouter();
+    const headers = {
+      "Content-Type": "application/json",
+      secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+    };
+    
     const [localStorageItems, setLocalStorageItems] = useState({
         uId: "",
         cId: "",
@@ -55,50 +69,154 @@ const AtReg = () => {
       [name]: value,
     }));
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  console.log("pop", formData)
+  const handleSubmit = async() => {
+  
     // You can add your submit logic here
     console.log("Submitted data: ", formData);
+    try {
+        let dataUrl = "add_mr_ar";
+        let fileData ={
+            t_id: formData.tId,
+          
+            c_id:  formData.cId,
+            from_date:  formData.fromDate,
+            to_date:  formData.toDate,
+            start_time: `${formData.startHours}:${formData.startMinutes}`,
+            end_time: `${formData.endHours}:${formData.endMinutes}`,
+            emp_code: localStorageItems.empCode,
+            t_id: localStorageItems.tId,
+            regularization_type: formData.optionSelected,
+            remarks:formData.remarks,
+        
+    
+        }
+
+      
+        const respond = await axios
+          .post(`${url}/api/${dataUrl}`, JSON.stringify({ data: fileData }), {
+            headers: headers,
+          })
+          .then((res) => {
+          toast.success("AR added successfully!");
+          });
+      } catch (errors) {}
+  };
+  
+  
+
+ const [attendanceData , setAttendanceData] = useState({
+
+ })
+  const getAttendanceData = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_mr_ar`, {
+        headers: headers,
+        params: {
+          emp_code: localStorageItems.empCode,
+          t_id: localStorageItems.tId,
+          c_id: localStorageItems.cId,
+        
+        },
+      });
+      const apires = await respond.data.data;   
+      console.log("zoz", respond)
+      setAttendanceData(apires);
+   
+  
+    } catch (error) {
+     setAttendanceData([]);
+    }
   };
 
+  useEffect(()=>{
+    getAttendanceData()
+  },[localStorageItems])
+//   console.log("zoz", attendanceData)
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <form
-        className="bg-white rounded-lg p-4 shadow-lg max-w-md mx-auto"
-        onSubmit={handleSubmit}
-      >
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          Attendance Regularization
-        </h2>
-        <div className="flex mb-4 mt-2 mb-8">
-        <div className="w-40 h-2  ">
-          <Image
-            className="  h-[7.1rem] w-[7.1rem] rounded-full   "
-            src={Profile}
-            alt="img"
+    <form
+      className=" bg-white rounded  w-full  overflow-auto pb-4"
+      onSubmit={(e) => e.preventDefault()}
+    >
+      <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
+        <span className="text-black flex flex-row gap-4 font-bold   ">
+          <FaArrowLeftLong
+            className="self-center "
+            onClick={() =>
+              router.push({
+                pathname: "/MR_Portal_Apps/MRHome",
+              })
+            }
           />
-        </div>
+          <span>Attendance Regularization</span>
+        </span>{" "}
+        <span className="text-white self-center">
+          <Popover as="div" className="relative border-none outline-none mt-2">
+            {({ open }) => (
+              <>
+                <Popover.Button className="focus:outline-none">
+                  {/* <PiDotsThreeOutlineVerticalFill
+                    className="text-[#626364] cursor-pointer"
+                    size={20}
+                  /> */}
+                </Popover.Button>
 
-        <div className="flex  flex-col px-4 w-full mt-4">
-          <div className="flex   w-full  w-28">
-            <div className="flex">
-              <p className=" font-bold text-sm text-blue-800 w-20 whitespace-nowrap">
-                Emp Code
-              </p>
-              <span>:</span>
+                <Popover.Panel
+                  as="div"
+                  className={`${
+                    open ? "block" : "hidden"
+                  } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
+                >
+                  <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
+                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
+                      <FaHandsHelping
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      Help
+                    </li>
+                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:flex-col ">
+                      <IoSettingsOutline
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      Setting
+                    </li>
+                  </ul>
+                </Popover.Panel>
+              </>
+            )}
+           </Popover>
+        </span>
+      </div>
+      <div className="flex mb-4 mt-2 mb-8">
+      <div className="w-40 h-30 flex justify-center items-center">
+              <Image
+                className="h-[5.1rem] w-[5.1rem] rounded-full mt-2"
+                src={Profile}
+                alt="img"
+              />
             </div>
-            <span className="text-wrap ml-4">{localStorageItems.empCode}</span>
-          </div>
-          <div className="flex  w-full  w-28 ">
-            <div className="flex">
-              <p className=" font-bold text-sm text-blue-800  w-20">Name</p>
-              <span>:</span>
-            </div>
-            <span className="text-wrap ml-4"> {localStorageItems.clName}</span>
-          </div>
 
-          <div className="flex w-full  w-28">
+            <div className="flex  flex-col  w-full mt-4 md:hidden">
+              <div className="flex w-full  w-28">
+                <div className="flex">
+                  <p className=" font-bold text-sm text-blue-800 w-28">
+                    Emp Code
+                  </p>
+                  <span>:</span>
+                </div>
+                <span className="w-28 ml-3">{localStorageItems.empCode}</span>
+              </div>
+              <div className="flex   w-full  w-28 ">
+                <div className="flex">
+                  <p className=" font-bold text-sm text-blue-800 w-28">Name</p>
+                  <span>:</span>
+                </div>
+                <span className="w-28 ml-3 whitespace-nowrap"> {localStorageItems.clName}</span>
+              </div>
+
+              <div className="flex w-full  w-28">
                 <div className="flex">
                   <p className=" font-bold text-sm text-blue-800 w-28">
                     Reporting HQ
@@ -107,10 +225,14 @@ const AtReg = () => {
                 </div>
                 <span className="w-28 ml-3">{localStorageItems.reportingHQ}</span>
               </div>
-        </div>
+
+            </div>
       </div>
-        {/* Radio Buttons for Options */}
-        <div className="mb-4">
+    <div className="w-full bg-yellow-200 px-2 text-bold">
+AR Count: {attendanceData.arcount}
+    </div>
+     <div className="w-full p-4">
+     <div className="mb-4">
           <label className="block text-gray-700 text-sm font-semibold mb-2">
             Select Option
           </label>
@@ -167,6 +289,8 @@ const AtReg = () => {
             onChange={(date) => setFormData({ ...formData, fromDate: date })}
             dateFormat="dd/MM/yyyy"
             className="w-full px-4 py-2 border rounded-md focus:ring focus:border-blue-300"
+            minDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
+            maxDate={new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)}
           />
         </div>
 
@@ -185,7 +309,7 @@ const AtReg = () => {
      </div>
        
 
-        {/* Start Time */}
+         {/* Start Time */}
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-semibold mb-2">
             Start Time
@@ -255,16 +379,20 @@ const AtReg = () => {
             placeholder="Enter comments"
           ></textarea>
         </div>
+     </div>
+        {/* Radio Buttons for Options */}
+       
 
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition duration-300"
-        >
+          className="w-full p-4 bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition duration-300"
+         onClick={()=> handleSubmit()}
+       >
           Submit 
         </button>
       </form>
-    </div>
+    
   );
 };
 
