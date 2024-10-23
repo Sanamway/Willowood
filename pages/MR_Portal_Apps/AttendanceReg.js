@@ -78,7 +78,6 @@ const AtReg = () => {
         let dataUrl = "add_mr_ar";
         let fileData ={
             t_id: formData.tId,
-          
             c_id:  formData.cId,
             from_date:  formData.fromDate,
             to_date:  formData.toDate,
@@ -87,9 +86,7 @@ const AtReg = () => {
             emp_code: localStorageItems.empCode,
             t_id: localStorageItems.tId,
             regularization_type: formData.optionSelected,
-            remarks:formData.remarks,
-        
-    
+            remarks:formData.remarks
         }
 
       
