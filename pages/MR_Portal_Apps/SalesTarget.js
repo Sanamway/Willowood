@@ -14,9 +14,8 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 import Navbar from "@/components/MR_Portal_Apps/Navbar";
-
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { Popover, Switch } from "@headlessui/react";
+import { Popover } from "@headlessui/react";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { BsCalendar2Month } from "react-icons/bs";
 import { IoTodayOutline } from "react-icons/io5";

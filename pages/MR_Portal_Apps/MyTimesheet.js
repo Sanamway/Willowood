@@ -169,20 +169,95 @@ const AdditionalInfo = (props) => {
       className=" bg-white rounded  w-full  overflow-auto pb-4"
       onSubmit={(e) => e.preventDefault()}
     >
-      <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
-        <span className="text-black flex flex-row gap-4 font-bold   ">
-          <FaArrowLeftLong
-            className="self-center "
-            onClick={() =>
-              router.push({
-                pathname: "/MR_Portal_Apps/MRHome",
-              })
-            }
-          />
-          <span>Employee Timesheet</span>
-        </span>{" "}
-        
-      </div>
+     <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
+      <span className="text-black flex flex-row gap-4 font-bold  md:flex-col lg:flex-col ">
+        <FaArrowLeftLong
+          className="self-center "
+          onClick={() =>
+            router.push({
+              pathname: "/MR_Portal_Apps/MRHome",
+            })
+          }
+        />
+        <span>Timesheet</span>
+      </span>{" "}
+      <span className="text-white self-center">
+        <Popover as="div" className="relative border-none outline-none mt-2">
+          {({ open }) => (
+            <>
+              <Popover.Button className="focus:outline-none">
+                <PiDotsThreeOutlineVerticalFill
+                  className="text-[#626364] cursor-pointer"
+                  size={20}
+                />
+              </Popover.Button>
+
+              <Popover.Panel
+                as="div"
+                className={`${
+                  open ? "block" : "hidden"
+                } absolute z-40 top-1 right-0 mt-2 w-86 bg-white  text-black border rounded-md shadow-md`}
+              >
+                <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
+                  <li
+                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap  "
+                    onClick={() =>
+                      router.push({
+                        pathname: "AttendanceReg",
+                      })
+                    }
+                  >
+                    <IoTodayOutline
+                      className="text-[#626364] cursor-pointer"
+                      size={20}
+                    />{" "}
+                   Attendance Regularization
+                  </li>
+                  <li
+                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                    onClick={() =>
+                      router.push({
+                        pathname: "MR_Farmer_list",
+                      })
+                    }
+                  >
+                    <IoTodayOutline
+                      className="text-[#626364] cursor-pointer"
+                      size={20}
+                    />{" "}
+                    List of Farmer
+                  </li>
+                  <li
+                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                    onClick={() => setAddFarmerModal(true)}
+                  >
+                    <GiFarmer
+                      className="text-[#626364] cursor-pointer"
+                      size={20}
+                    />{" "}
+                    New Farmer
+                  </li>
+                  <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
+                    <FaHandsHelping
+                      className="text-[#626364] cursor-pointer"
+                      size={20}
+                    />{" "}
+                    Help
+                  </li>
+                  <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:flex-col ">
+                    <IoSettingsOutline
+                      className="text-[#626364] cursor-pointer"
+                      size={20}
+                    />{" "}
+                    Setting
+                  </li>
+                </ul>
+              </Popover.Panel>
+            </>
+          )}
+        </Popover>
+      </span>
+    </div>
       <div className="flex mb-4 mt-2 mb-8">
       <div className="w-40 h-30 flex justify-center items-center">
               <Image

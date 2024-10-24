@@ -191,28 +191,18 @@ const getSegmentInfo = async (cropId) => {
             })
         ),
       ]);
-      // setAllBrandData([
-      //   ...new Set(
-      //       apires.filter((item) => item.crop_segment === cropSegment)
-      //       .map((item) => String(item.product_brand))
-      //   ),
-      // ]);
      
-      setProductDemoState({
-        ...productDemoState,
-        dose: apires
-          .filter((item) => item.crop_segment === cropSegment)
-          .filter((item) => item.product_brand === productBrand)[0].dose_acre,
-        upperWater: apires
-          .filter((item) => item.crop_segment === cropSegment)
-          .filter((item) => item.product_brand === productBrand)[0].average_cost_acre,
-      });
     } catch (error) {
-      console.log(error);
+      console.log("zop", error);
     }
   };
+
+
+  useEffect(()=>{getStageInfo(productDemoState.crop)},[
+    productDemoState.crop
+  ])
   const getProductBrandInfo = async (segmentId) => {
-    console.log("pop",segmentId)
+   
     try {
       
       const respond = await axios.get(`${url}/api/get_product_brand`, {
@@ -227,15 +217,7 @@ const getSegmentInfo = async (cropId) => {
      
       setAllBrandData(apires);
      
-      // setProductDemoState({
-      //   ...productDemoState,
-      //   dose: apires
-      //     .filter((item) => item.crop_segment === cropSegment)
-      //     .filter((item) => item.product_brand === productBrand)[0].dose_acre,
-      //   upperWater: apires
-      //     .filter((item) => item.crop_segment === cropSegment)
-      //     .filter((item) => item.product_brand === productBrand)[0].average_cost_acre,
-      // });
+      
     } catch (error) {
       console.log(error);
     }
@@ -403,13 +385,13 @@ const getSegmentInfo = async (cropId) => {
       const errorMessage = errors?.response?.data?.message;
       uploadImage();
       generateEmpCode();
-      toast.error(errorMessage);
+       toast.error(errorMessage);
       setSubmitFormLoading(false);
     }
     }
  else {
-  toast.error("Product Demo Data Required")
-     } 
+        toast.error("Require to Please Click on Orange Add Product Demo Button for final submit the record")
+      } 
   };
 
   const [addFarmerModal, setAddFarmerModal] = useState(false);
@@ -700,7 +682,7 @@ const getSegmentInfo = async (cropId) => {
               stage: productDemoState.stage,
               acre_plot: productDemoState.acre,
               rec_dose: productDemoState.recDose ? Number(productDemoState.recDose) :null,
-              segment: productDemoState.segment,
+              segment: productDemoState.segment.name,
               product_brand: productDemoState.productBrand,
               dose_acre_tank: productDemoState.dose,
               water_val: Number(productDemoState.water),
@@ -753,7 +735,7 @@ const getSegmentInfo = async (cropId) => {
           stage: productDemoState.stage,
           acre_plot: productDemoState.acre,
           rec_dose: productDemoState.recDose ? Number(productDemoState.recDose) :null,
-          segment: productDemoState.segment,
+          segment: productDemoState.segment.name,
           product_brand: productDemoState.productBrand,
           dose_acre_tank: productDemoState.dose,
           water_val: Number(productDemoState.water),
@@ -1255,12 +1237,7 @@ useEffect(()=>{
             >
              Tray Demo
             </option>
-            <option
-              value="Leaf Demo"
-              className="focus:outline-none focus:border-b bg-white"
-            >
-            Leaf Demo
-            </option>
+        
           </select>
         </div>
         <div className="w-full px-2 mt-2">

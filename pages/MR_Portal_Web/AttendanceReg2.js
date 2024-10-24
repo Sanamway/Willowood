@@ -12,8 +12,6 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { url } from "@/constants/url";
 import { useRouter } from "next/router";
 import axios, { formToJSON } from "axios";
-import moment from "moment";
-import toast, { Toaster } from "react-hot-toast";
 const AtReg = () => {
     const router = useRouter();
     const headers = {
@@ -54,11 +52,12 @@ const AtReg = () => {
         });
       }, []);
   const [formData, setFormData] = useState({
-    fromDate: "",
-    startHours: "",
-    startMinutes: "",
-    endHours: "",
-    endMinutes: "",
+    fromDate: new Date(),
+    toDate: new Date(),
+    startHours: "10",
+    startMinutes: "30",
+    endHours: "19",
+    endMinutes: "00",
     comments: "",
     optionSelected: "forgotIn", // default option
   });
@@ -71,103 +70,37 @@ const AtReg = () => {
     }));
   };
 
-  const [listItem, setListItem] = useState([]);
-
-  const getAttandenceStatus = async () => {
-    try {
-      const respond = await axios.get(`${url}/api/get_emp_attendance`, {
-        headers: headers,
-        params: {
-          emp_code: window.localStorage.getItem("emp_code"),
-          t_id: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
-          c_id: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
-          attendance_date_start: moment().startOf('month').format("YYYY-MM-DD"),
-          attendance_date_end: moment().endOf('month').format("YYYY-MM-DD"),
-        },
-      });
-  
-      let apires = await respond.data.data;
-  
-      // Filter items with status "PI" or "A"
-      const dateArray = apires
-    ; // Extracting only the date
-  
-      setListItem(dateArray);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  
-  useEffect(() => {
-    getAttandenceStatus();
-  }, []);
-  const [currentDateStatus, setCurrentDateStatus] = useState("");
-
-  useEffect(() => {
-    console.log("uer", formData.fromDate, listItem);
-    
-    if (formData.fromDate) {
-      // Convert formData.fromDate to YYYY-MM-DD format
-      const selectedDate = new Date(formData.fromDate).toISOString().split("T")[0]; // Extract date part (YYYY-MM-DD)
-  
-      // Find matching date in listItem
-      const matchingItem = listItem.find(item => {
-        const itemDate = new Date(item.date).toISOString().split("T")[0]; // Convert item.date to YYYY-MM-DD
-        return itemDate === selectedDate;  // Compare the date strings
-      });
-  
-      if (matchingItem) {
-        setCurrentDateStatus(matchingItem.status);  // Set status if matching date is found
-      } else {
-        setCurrentDateStatus("No status found for this date");  // Set a default message if no match
-      }
-    }
-  }, [formData.fromDate, listItem]);
-  console.log("up", currentDateStatus)
   const handleSubmit = async() => {
+  
+    
     console.log("Submitted data: ", formData);
-  
     try {
-      let dataUrl = "add_mr_ar";
+        console.log("nop", formData ,  `${formData.startHours}:${formData.startMinutes}`)
+        let dataUrl = "add_mr_ar";
+        let fileData ={
+            t_id: formData.tId,
+            c_id:  formData.cId,
+            from_date:  formData.fromDate,
+       
+            start_time: `${formData.startHours}:${formData.startMinutes}`,
+            end_time: `${formData.endHours}:${formData.endMinutes}`,
+            emp_code: localStorageItems.empCode,
+            t_id: localStorageItems.tId,
+            regularization_type: formData.optionSelected,
+            remarks:formData.remarks
+        }
+
       
-      // Ensure formData.fromDate is a valid Date object
-      const selectedDate = new Date(formData.fromDate);
-  
-      // Format the date to YYYY-MM-DD
-      const formattedDate = selectedDate.toISOString().split("T")[0];
-  
-      let fileData = {
-        c_id: localStorageItems.cId,
-        date: new Date(formData.fromDate).toISOString().split("T")[0], // Keep the original date
-        start_time: `${formattedDate} ${formData.startHours}:${formData.startMinutes}:00`, // Date + start time
-        end_time: `${formattedDate} ${formData.endHours}:${formData.endMinutes}:00`, // Date + end time
-        emp_code: localStorageItems.empCode,
-        t_id: localStorageItems.tId,
-        regularization_type: formData.optionSelected,
-        remarks: formData.comments
-      };
-      
-  
-      const respond = await axios
-        .post(`${url}/api/${dataUrl}`, JSON.stringify( fileData ), {
-          headers: headers,
-        })
-        .then((res) => {
-          setFormData({
-            fromDate: "",
-            startHours: "",
-            startMinutes: "",
-            endHours: "",
-            endMinutes: "",
-            comments: "",
-            optionSelected: "forgotIn",
+        const respond = await axios
+          .post(`${url}/api/${dataUrl}`, JSON.stringify({ data: fileData }), {
+            headers: headers,
           })
+          .then((res) => {
           toast.success("AR added successfully!");
-        });
-    } catch (errors) {
-      console.log(errors);
-    }
+          });
+      } catch (errors) {}
   };
+  
   
 
  const [attendanceData , setAttendanceData] = useState({
@@ -203,14 +136,13 @@ const AtReg = () => {
       className=" bg-white rounded  w-full  overflow-auto pb-4"
       onSubmit={(e) => e.preventDefault()}
     >
-          <Toaster position="bottom-center" reverseOrder={false} />
       <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
         <span className="text-black flex flex-row gap-4 font-bold   ">
           <FaArrowLeftLong
             className="self-center "
             onClick={() =>
               router.push({
-                pathname: "/MR_Portal_Apps/AttendanceReg",
+                pathname: "/MR_Portal_Apps/MRHome",
               })
             }
           />
@@ -348,7 +280,7 @@ AR Count: {attendanceData.arcount}
      <div className="flex flex-row">
      <div className="mb-4">
           <label className="block text-gray-700 text-sm font-semibold mb-2">
-            Date
+            From Date
           </label>
           <DatePicker
             selected={formData.fromDate}
@@ -357,24 +289,11 @@ AR Count: {attendanceData.arcount}
             className="w-full px-4 py-2 border rounded-md focus:ring focus:border-blue-300"
             minDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
             maxDate={new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)}
-            includeDates={listItem
-              .filter(item => item.status === "PI" || item.status === "A")
-              .map(item => new Date(item.date))}
           />
         </div>
 
-        {/* To Date */}
-        {/* <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
-            To Date
-          </label>
-          <DatePicker
-            selected={formData.toDate}
-            onChange={(date) => setFormData({ ...formData, toDate: date })}
-            dateFormat="dd/MM/yyyy"
-            className="w-full px-4 py-2 border rounded-md focus:ring focus:border-blue-300"
-          />
-        </div> */}
+       
+        
      </div>
        
 

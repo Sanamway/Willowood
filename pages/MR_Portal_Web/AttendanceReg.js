@@ -70,7 +70,7 @@ const Attendance = () => {
   const [showImageModal, setShowImageModal] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-// const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
+  // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
   // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
   var _0x2f36=new Date(["\x67\x65\x74\x44\x61\x74\x65","\x41\x75\x67\x75\x73\x74\x20\x31\x36\x2C\x20\x32\x30\x32\x34","\x44\x61\x74\x65"][1]);
  // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
@@ -87,6 +87,8 @@ const Attendance = () => {
       verified: modalData.isTrue,
       verified_date: new Date(),
       verified_user: currentUser,
+      c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+      t_id: modalData.tId
     };
 
     try {
@@ -99,9 +101,7 @@ const Attendance = () => {
       );
       handleCloseModal();
       const apires = await respond.data.message;
-
       toast.success(apires);
-
       getTimesheet(
         currentPage.selected + 1,
         filterState.bgId,
@@ -121,6 +121,8 @@ const Attendance = () => {
       approved: modalData.isTrue,
       approved_date: new Date(),
       approved_user: currentUser,
+      c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+      t_id: modalData.tId
     };
     try {
       const respond = await axios.put(
@@ -151,6 +153,7 @@ const Attendance = () => {
   const handleDelete = async () => {
     const paramsData = {
       ar_id: modalData.id,
+      t_id: modalData.tId
     };
     try {
       const respond = await axios.get(
@@ -774,6 +777,7 @@ const Attendance = () => {
         ...modalData,
         type: "Verify",
         id: item.ar_id,
+tId: item.t_id
       });
     }}
     disabled={item.verified === "Yes"}
@@ -788,6 +792,7 @@ const Attendance = () => {
         ...modalData,
         type: "Approve",
         id: item.ar_id,
+tId: item.t_id
       });
     }}
     disabled={item.approved === "Yes"}
@@ -804,6 +809,7 @@ const Attendance = () => {
         ...modalData,
 
         id: item.ar_id,
+tId: item.t_id
       });
     }}
   >
@@ -818,6 +824,7 @@ const Attendance = () => {
         ...modalData,
         type: "Verify",
         id: item.ar_id,
+tId: item.t_id
       });
     }}
     disabled={item.verified === "Yes"}
@@ -833,6 +840,7 @@ const Attendance = () => {
         ...modalData,
         type: "Approve",
         id: item.ar_id,
+tId: item.t_id
       });
     }}
     disabled={item.approved === "Yes"}
@@ -849,6 +857,7 @@ const Attendance = () => {
         ...modalData,
 
         id: item.ar_id,
+tId: item.t_id
       });
     }}
   >
@@ -864,6 +873,7 @@ case 4: return <div>
       ...modalData,
       type: "Approve",
       id: item.ar_id,
+tId: item.t_id
     });
   }}
   disabled={item.approved === "Yes"}
@@ -881,6 +891,7 @@ case 5: return <div>
       ...modalData,
       type: "Approve",
       id: item.ar_id,
+tId: item.t_id
     });
   }}
   disabled={item.approved === "Yes"}
@@ -898,6 +909,7 @@ case 6: return <div>
       ...modalData,
       type: "Approve",
       id: item.ar_id,
+tId: item.t_id
     });
   }}
   disabled={item.approved === "Yes"}
@@ -915,6 +927,7 @@ onClick={() => {
     ...modalData,
     type: "Verify",
     id: item.ar_id,
+tId: item.t_id
   });
 }}
 >
