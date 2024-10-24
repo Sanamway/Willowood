@@ -54,7 +54,6 @@ const AdditionalInfo = (props) => {
     district:"",
     subDis:"",
     state:"",
-
     potentialFarmer: "Yes",
     nextVisitDate: new Date(),
     status: "Open",
@@ -64,7 +63,7 @@ const AdditionalInfo = (props) => {
     cropName: "",
     stage: "",
     acre: "",
-    segment: "",
+    segment: {id:"" , name:""},
     productBrand: "",
     upperWater:"",
     water: "",
@@ -165,7 +164,14 @@ const getSegmentInfo = async (cropId) => {
 
   const getStageInfo = async (cropId, cropStage, cropSegment, productBrand) => {
     try {
-      const respond = await axios.get(`${url}/api/get_crop_segment`, {
+      // const respond = await axios.get(`${url}/api/get_crop_segment`, {
+      //   headers: headers,
+      //   params: {
+      //     cr_id: cropId, 
+      //     c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+      //   },
+      // });
+      const respond = await axios.get(`${url}/api/get_product_segment`, {
         headers: headers,
         params: {
           cr_id: cropId, 
@@ -177,15 +183,20 @@ const getSegmentInfo = async (cropId) => {
       setAllSegmentData([
         ...new Set(
           apires
-            .map((item) => String(item.crop_segment))
+            .map((item) => {
+             return {
+              id: item.pseg_id,
+              name: String(item.pseg_name)
+             } 
+            })
         ),
       ]);
-      setAllBrandData([
-        ...new Set(
-          apires .filter((item) => item.crop_segment === cropSegment)
-            .map((item) => String(item.product_brand))
-        ),
-      ]);
+      // setAllBrandData([
+      //   ...new Set(
+      //       apires.filter((item) => item.crop_segment === cropSegment)
+      //       .map((item) => String(item.product_brand))
+      //   ),
+      // ]);
      
       setProductDemoState({
         ...productDemoState,
@@ -200,9 +211,85 @@ const getSegmentInfo = async (cropId) => {
       console.log(error);
     }
   };
+  const getProductBrandInfo = async (segmentId) => {
+    console.log("pop",segmentId)
+    try {
+      
+      const respond = await axios.get(`${url}/api/get_product_brand`, {
+        headers: headers,
+        params: {
+          pseg_id: Number(segmentId), 
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        },
+      });
+      const apires = await respond.data.data;
+   
+     
+      setAllBrandData(apires);
+     
+      // setProductDemoState({
+      //   ...productDemoState,
+      //   dose: apires
+      //     .filter((item) => item.crop_segment === cropSegment)
+      //     .filter((item) => item.product_brand === productBrand)[0].dose_acre,
+      //   upperWater: apires
+      //     .filter((item) => item.crop_segment === cropSegment)
+      //     .filter((item) => item.product_brand === productBrand)[0].average_cost_acre,
+      // });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  useEffect(()=>{
+
+    getProductBrandInfo(
+      productDemoState.segment.id
+    )
+
+  },[
+    productDemoState.segment.id , 
+  ])
+
+
+
+  const getRecomInfo = async (   crop,
+    stage,
+    segment,
+    productBrand) => {
+   
+    try {
+      
+      const respond = await axios.get(`${url}/api/get_crop_segment`, {
+        headers: headers,
+        params: {
+          cr_id: crop,
+          segment: segment.name,
+          product_brand:productBrand,
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+        },
+      });
+      const apires = await respond.data.data;
+   
+     
+     
+     
+      setProductDemoState({
+        ...productDemoState,
+        dose: apires[0].dose_acre || "",
+        upperWater: apires[0].average_cost_acre ||"",
+      });
+    } catch (error) {
+      console.log(error);
+      setProductDemoState({
+        ...productDemoState,
+        dose:"",
+        upperWater: "",
+      });
+    }
+  };
   useEffect(() => {
-    getStageInfo(
+    getRecomInfo(
       productDemoState.crop,
       productDemoState.stage,
       productDemoState.segment,
@@ -284,8 +371,7 @@ const getSegmentInfo = async (cropId) => {
             purposeDemo: "",
             dealer: "",
             dealerName:"",
-            farmerMobile: "",
-          
+            farmerMobile: "",    
     farmerId: "",
     farmerName: "",
     farmerFatherName: "",
@@ -562,7 +648,7 @@ const getSegmentInfo = async (cropId) => {
             stage: productDemoState.stage,
             acre_plot: productDemoState.acre,
             rec_dose: productDemoState.recDose ? Number(productDemoState.recDose) :null,
-            segment: productDemoState.segment,
+            segment: productDemoState.segment.name,
             product_brand: productDemoState.productBrand,
             dose_acre_tank: productDemoState.dose,
             water_val: Number(productDemoState.water),
@@ -1520,27 +1606,30 @@ useEffect(()=>{
             <small className="text-red-600 ">*</small> Segment
           </label>
           <select
-            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-            disabled={formActive}
-            value={productDemoState.segment}
-            onChange={(e) =>
-              setProductDemoState({
-                ...productDemoState,
-                segment: e.target.value,
-              })
-            }
-          >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
-              Option
-            </option>
-            {allSegmentData.map((item) => (
-              <option value={item}>{item}</option>
-            ))}
-          </select>
+  className="w-full px-3 py-2 border-b border-gray-500 bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+  id="stateSelect"
+  disabled={formActive}
+  value={productDemoState.segment?.id || ""}
+  onChange={(e) => {
+    console.log("nop", parseInt(e.target.value, 10), allSegmentData.find(item => item.id === parseInt(e.target.value, 10)))
+    const selectedSegment = allSegmentData.find(item => item.id === parseInt(e.target.value, 10));
+    console.log("Selected Segment:", selectedSegment);
+    
+    setProductDemoState({
+      ...productDemoState,
+      segment: selectedSegment, // Storing both id and name
+    });
+  }}
+>
+  <option value="" className="focus:outline-none focus:border-b bg-white">
+    Option
+  </option>
+  {allSegmentData.map((item) => (
+    <option key={item.id} value={item.id}>
+      {item.name}
+    </option>
+  ))}
+</select>
         </div>
        
         <div className="w-full px-2 mt-2">
@@ -1570,7 +1659,9 @@ useEffect(()=>{
             </option>
 
             {allBrandData.map((item) => (
-              <option value={item}>{item}</option>
+              <option value={item.brand_name
+              }>{item.brand_name
+}</option>
             ))}
           </select>
         </div>
