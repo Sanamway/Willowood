@@ -13,6 +13,8 @@ import ReactPaginate from "react-paginate";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { TbFileDownload } from "react-icons/tb";
+  import * as XLSX from "xlsx";
 const FarmerSHC = () => {
   
   const router = useRouter();
@@ -925,6 +927,72 @@ Verify
 
 }
     }
+
+
+    const getExcelsheet = async (
+      bg,
+      bu,
+      z,
+      r,
+      t,
+      from,
+      to,
+      empCode
+      ) => {
+      try {
+        const respond = await axios.get(`${url}/api/get_mr_planogram`, {
+          headers: headers,
+          params: {
+            t_id: t === "All" ?    null : t,
+            bg_id: bg === "All" ?  null : bg,
+            bu_id: bu === "All" ?  null : bu,
+            z_id: z === "All" ?    null : z,
+            r_id: r === "All" ?    null : r,
+            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            to:   moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            emp_code: empCode,
+            excel: true, 
+          },
+        });
+        const apires = await respond.data.data;
+        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
+          DPL_Visit_No :item.f_planogram_no,
+         Date: moment(item.f_planogram_date).format("DD/MM/YYYY"),
+         Dealer: item.dealer_des,
+        Emp_Code: item.emp_code,
+        Emp_Name: item.emp_name,
+        
+        Dealer_Address: item.dealer_address,   
+        Contact_Person: item.dealer_contact,
+        Product_Brand: item.product_brand,
+        Product_Positioning: item.product_positioning ,
+        Promotional_Material: item.promotional_material,
+        Damage_Condition : item.damage_condition,
+        Category_Placement: item.category_placement,
+        Current_Stock: item.current_stock,
+        Actual_Share_of_Life: item.actual_share_of_life,
+        Compititor_Brand: item.compitor_brand,
+        Compititor_Price: item.compitor_price,
+             
+
+       Territory: item.territory_name,
+        Region: item.region_name,
+       Zone: item.zone_name,
+        Business_Unit: item.zone_name,
+       Company: item.cmpny_name,
+     
+       
+
+        }
+       } ));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, `new.xlsx`);
+      } catch (error) {
+        
+      }
+    };
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -934,6 +1002,28 @@ Verify
             {name ? name : "Planogram"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer pr-4">
+          <div className="flex flex-row gap-2 ">
+            {" "}
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={32}
+              onClick={() => getExcelsheet(
+                filterState.bgId,
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.startDate,
+                  filterState.endDate,
+                  filterState.empCode
+              )
+
+
+                
+              }
+            ></TbFileDownload>
+            
+          </div>
             <h2>
               <AiTwotoneHome
                 className="text-black-500"
@@ -1240,7 +1330,7 @@ Verify
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-              {data.map((item, idx) => (
+              {data?.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
                   <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
                     {getAllActionButton(item)}             
@@ -1335,7 +1425,7 @@ Verify
         <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
         <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
       Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
-      <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
+      <small className="font-bold px-2 self-center text-black">{data?.length}</small> of{" "}
       <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
     </div>
     <ReactPaginate

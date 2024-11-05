@@ -750,7 +750,7 @@ useEffect(()=>{
           .delete(`${url}/api/delete_farmer_cropinfo`, {
             headers: headers,
             params: { c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id, 
-              fr_id: autoFarmer, 
+           fr_id: autoFarmer, 
             cr_id: cropId},
           })
           .then((res) => {
@@ -770,16 +770,7 @@ useEffect(()=>{
     >
       <Toaster position="bottom-center" reverseOrder={false} />
 
-      
-
-     
-
-
-     
-     
-      
-      
-     
+ 
       <Transition appear show={addFarmerModal} as={Fragment}>
         <Dialog
           as="div"

@@ -55,10 +55,10 @@ const AtReg = () => {
       }, []);
   const [formData, setFormData] = useState({
     fromDate: "",
-    startHours: "",
-    startMinutes: "",
-    endHours: "",
-    endMinutes: "",
+    startHours:   "06",
+    startMinutes: "00",
+    endHours: "23",
+    endMinutes: "59",
     comments: "",
     optionSelected: "forgotIn", // default option
   });
@@ -102,32 +102,54 @@ const AtReg = () => {
     getAttandenceStatus();
   }, []);
   const [currentDateStatus, setCurrentDateStatus] = useState("");
-
-  useEffect(() => {
-    console.log("uer", formData.fromDate, listItem);
-    
+  const [mrTimings, setMrTimings] = useState({
+    punchIn:  "",
+    punchOut: ""
+  });
+  useEffect(() => {   
     if (formData.fromDate) {
       // Convert formData.fromDate to YYYY-MM-DD format
+      formData.fromDate.setHours(formData.fromDate.getHours() + 5);
+      formData.fromDate.setMinutes(formData.fromDate.getMinutes() + 30);
       const selectedDate = new Date(formData.fromDate).toISOString().split("T")[0]; // Extract date part (YYYY-MM-DD)
   
       // Find matching date in listItem
       const matchingItem = listItem.find(item => {
-        const itemDate = new Date(item.date).toISOString().split("T")[0]; // Convert item.date to YYYY-MM-DD
+
+        const itemDate = new Date(item.date).toISOString().split("T")[0];
+         // Convert item.date to YYYY-MM-DD   
         return itemDate === selectedDate;  // Compare the date strings
       });
-  
+      console.log("zas", matchingItem)
       if (matchingItem) {
+        setMrTimings({
+          punchIn: matchingItem.punch_in_time,
+          punchOut:  matchingItem.punch_out_time
+        })
         setCurrentDateStatus(matchingItem.status);  // Set status if matching date is found
       } else {
         setCurrentDateStatus("No status found for this date");  // Set a default message if no match
       }
     }
-  }, [formData.fromDate, listItem]);
-  console.log("up", currentDateStatus)
+  }, [formData.fromDate]);
+  useEffect(()=>{
+    if(!currentDateStatus) return
+    if(currentDateStatus === "A"){
+      setFormData({...formData, optionSelected: "both"})
+    }
+    else {
+      setFormData({...formData, optionSelected: "forgotOut"})
+    }
+
+  },[
+    currentDateStatus
+  ])
+ 
   const handleSubmit = async() => {
-    console.log("Submitted data: ", formData);
-  
+   
+    
     try {
+      
       let dataUrl = "add_mr_ar";
       
       // Ensure formData.fromDate is a valid Date object
@@ -135,17 +157,27 @@ const AtReg = () => {
   
       // Format the date to YYYY-MM-DD
       const formattedDate = selectedDate.toISOString().split("T")[0];
-  
+      let startDate = new Date(`${formattedDate} ${formData.startHours}:${formData.startMinutes}:00`);
+      let endDate = new Date(`${formattedDate} ${formData.endHours}:${formData.endMinutes}:00`);
+      
+      // Define the offset in milliseconds (5 hours 30 minutes)
+      const offsetMilliseconds = (5 * 60 + 30) * 60 * 1000; // 5 hrs and 30 mins in milliseconds
+      
+      // Add offset to start and end times
+      startDate = new Date(startDate.getTime() + offsetMilliseconds);
+      endDate = new Date(endDate.getTime() + offsetMilliseconds);
       let fileData = {
-        c_id: localStorageItems.cId,
-        date: new Date(formData.fromDate).toISOString().split("T")[0], // Keep the original date
-        start_time: `${formattedDate} ${formData.startHours}:${formData.startMinutes}:00`, // Date + start time
-        end_time: `${formattedDate} ${formData.endHours}:${formData.endMinutes}:00`, // Date + end time
-        emp_code: localStorageItems.empCode,
-        t_id: localStorageItems.tId,
-        regularization_type: formData.optionSelected,
-        remarks: formData.comments
-      };
+                  c_id: localStorageItems.cId,
+                  date: new Date(formData.fromDate).toISOString().split("T")[0], // Keep the original date
+                  start_time: startDate, // Date + start time
+                  end_time:endDate, // Date + end time
+                  emp_code: localStorageItems.empCode,
+                  t_id: localStorageItems.tId,
+                  regularization_type: formData.optionSelected,
+                  remarks: formData.comments
+                     };
+
+     
       
   
       const respond = await axios
@@ -155,16 +187,25 @@ const AtReg = () => {
         .then((res) => {
           setFormData({
             fromDate: "",
-            startHours: "",
-            startMinutes: "",
-            endHours: "",
-            endMinutes: "",
+            startHours:   "06",
+            startMinutes: "00",
+            endHours: "23",
+            endMinutes: "59",
             comments: "",
             optionSelected: "forgotIn",
           })
-          toast.success("AR added successfully!");
+          setMrTimings({
+            punchIn:   "",
+            punchOut:  ""
+          })
+          setCurrentDateStatus("");
+          getAttendanceData()
+          toast.success(res.data.message);
         });
     } catch (errors) {
+      console.log("pop", errors)
+      errors?.message&& toast.error(errors?.response?.data?.message);
+      errors?.data?.message && toast.error(errors?.data?.message);
       console.log(errors);
     }
   };
@@ -190,6 +231,7 @@ const AtReg = () => {
    
   
     } catch (error) {
+
      setAttendanceData([]);
     }
   };
@@ -294,14 +336,21 @@ const AtReg = () => {
 
             </div>
       </div>
-    <div className="w-full bg-yellow-200 px-2 text-bold">
-AR Count: {attendanceData.arcount}
+      <hr className="bg-blue-600 h-2"/>
+    <div className="w-full bg-yellow-200 px-2 text-bold flex flex-row justify-between w-full ">
+    <div className="text-sm"><span className="font-bold">Punch In:</span>  {mrTimings.punchIn ? moment(mrTimings.punchIn).local().subtract(5, 'hours').subtract(30, 'minutes').format('hh:mm A') : "-"}</div>
+    <div className="text-sm"><span className="font-bold">Punch Out:</span> {mrTimings.punchOut ? moment(mrTimings.punchOut).local().subtract(5, 'hours').subtract(30, 'minutes').format('hh:mm A') : "-"}</div>
+   
     </div>
+    <hr className="bg-blue-600 h-2"/>
+
+  
+    
+    
+
      <div className="w-full p-4">
      <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
-            Select Option
-          </label>
+         
           <div className="flex justify-between">
             <div>
               <input
@@ -311,6 +360,7 @@ AR Count: {attendanceData.arcount}
                 value="forgotIn"
                 checked={formData.optionSelected === "forgotIn"}
                 onChange={handleChange}
+             
               />
               <label htmlFor="forgotIn" className="ml-2">
                 Punch In
@@ -324,6 +374,7 @@ AR Count: {attendanceData.arcount}
                 value="forgotOut"
                 checked={formData.optionSelected === "forgotOut"}
                 onChange={handleChange}
+             
               />
               <label htmlFor="forgotOut" className="ml-2">
                 Punch Out
@@ -337,6 +388,7 @@ AR Count: {attendanceData.arcount}
                 value="both"
                 checked={formData.optionSelected === "both"}
                 onChange={handleChange}
+               
               />
               <label htmlFor="both" className="ml-2">
                 Both
@@ -345,48 +397,37 @@ AR Count: {attendanceData.arcount}
           </div>
         </div>
 
-     <div className="flex flex-row">
-     <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+     <div className="flex flex-row items-center mb-2">
+ 
+          <label className="block text-gray-700 text-sm font-semibold  ">
             Date
           </label>
           <DatePicker
             selected={formData.fromDate}
             onChange={(date) => setFormData({ ...formData, fromDate: date })}
             dateFormat="dd/MM/yyyy"
-            className="w-full px-4 py-2 border rounded-md focus:ring focus:border-blue-300"
+            className="w-1/2 px-2 border rounded-md focus:ring focus:border-blue-300 ml-2"
             minDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
             maxDate={new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)}
             includeDates={listItem
-              .filter(item => item.status === "PI" || item.status === "A")
+              .filter(item => item.status === "PI" || item.status === "A" || item.status === "HD")
               .map(item => new Date(item.date))}
           />
-        </div>
+       
 
-        {/* To Date */}
-        {/* <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
-            To Date
-          </label>
-          <DatePicker
-            selected={formData.toDate}
-            onChange={(date) => setFormData({ ...formData, toDate: date })}
-            dateFormat="dd/MM/yyyy"
-            className="w-full px-4 py-2 border rounded-md focus:ring focus:border-blue-300"
-          />
-        </div> */}
+      
      </div>
        
 
-         {/* Start Time */}
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+           <div className="flex flex-row gap-4" >
+            <div className="mb-4">
+           <label className="block text-gray-700 text-sm font-semibold mb-2">
             Start Time
-          </label>
+           </label>
           <div className="flex space-x-2">
             <input
               type="number"
-              name="startHours"
+               name="startHours"
               value={formData.startHours}
               onChange={handleChange}
               min="0"
@@ -406,9 +447,9 @@ AR Count: {attendanceData.arcount}
             />
           </div>
         </div>
-        
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+        <div>
+
+        <label className="block text-gray-700 text-sm font-semibold mb-2">
             End Time
           </label>
           <div className="flex space-x-2">
@@ -432,11 +473,20 @@ AR Count: {attendanceData.arcount}
               className="w-1/2 px-4 py-2 border rounded-md focus:ring focus:border-blue-300"
               placeholder="Minutes"
             />
-          </div>
         </div>
+        </div>
+   
+      
+        
+        
+        
+           </div>
+     
+        
 
-        {/* Comments */}
+     
         <div className="mb-4">
+
           <label className="block text-gray-700 text-sm font-semibold mb-2">
             Comments
           </label>
@@ -444,19 +494,21 @@ AR Count: {attendanceData.arcount}
             name="comments"
             value={formData.comments}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:ring focus:border-blue-300"
+            className="w-full px-4 border rounded-md focus:ring focus:border-blue-300"
             placeholder="Enter comments"
-          ></textarea>
+          >
+            
+          </textarea>
         </div>
-     </div>
-        {/* Radio Buttons for Options */}
-       
+        <div className="flex justify-end">
 
-        {/* Submit Button */}
+        <div className="text-sm font-bold"><span className="font-bold">AR Balance:</span> {attendanceData.arcount}/Monthly</div>
+</div>
+     </div>
         <button
           type="submit"
           className="w-full p-4 bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition duration-300"
-         onClick={()=> handleSubmit()}
+          onClick={()=> handleSubmit()}
        >
           Submit 
         </button>

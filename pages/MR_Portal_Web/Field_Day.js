@@ -13,6 +13,8 @@ import ReactPaginate from "react-paginate";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { TbFileDownload } from "react-icons/tb";
+  import * as XLSX from "xlsx";
 const FieldDay = () => {
    const router = useRouter();
    const [data, setData] = useState([]);
@@ -884,6 +886,75 @@ Verify
 
 }
     }
+
+    const getExcelsheet = async (
+      bg,
+      bu,
+      z,
+      r,
+      t,
+      from,
+      to,
+      empCode
+      ) => {
+      try {
+        const respond = await axios.get(`${url}/api/get_farmer_demo_fields`, {
+          headers: headers,
+          params: {
+            t_id: t === "All" ?    null : t,
+            bg_id: bg === "All" ?  null : bg,
+            bu_id: bu === "All" ?  null : bu,
+            z_id: z === "All" ?    null : z,
+            r_id: r === "All" ?    null : r,
+            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            to:   moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            emp_code: empCode,
+            excel: true, 
+          },
+        });
+        const apires = await respond.data.data;
+        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
+          F_Field_Code : item.f_demo_field_no ,
+          Field_Date: moment(item.demo_field_date
+          ).format("DD/MM/YYYY"),
+         Emp_Code:item.emp_code,
+         Emp_Name:item.emp_name,
+     
+         Dealer:item.dealer_des,
+         Farmer_Demo_No:item.f_demo_code,
+        Farmer_Mobile_No:item.farmer_mob_no,
+        Farmer_Id:item.farmer_id,
+       Farmer_Name:item.farmer_name,
+       Farmer_Father_Name:item.farmer_father_name,
+         Farmer_Type:item.farmer_type,
+        Plot_Size:item.plot_size,
+        Farmer_Observation:item.farmer_observation,
+        Product_Rating:item.product_rating,
+        Remarks:item.follow_up_remarks,
+        Potential_Farmer:item.potential_farmer,
+          Next_Follow_Up_Date:moment(item.next_followup_date).format("DD/MM/YYYY"),
+
+         Status:item.status,
+          
+      Territory:item.territory_name,
+       Region:item.region_name,
+         Zone:item.zone_name,
+         Business_Unit:item.business_unit_name,
+       Company:item.cmpny_name,
+        Deleted:item.isDeleted ? "Yes" : "No" ,
+  
+       
+
+        }
+       } ));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, `new.xlsx`);
+      } catch (error) {
+        
+      }
+    };
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -893,6 +964,28 @@ Verify
             {name ? name : "Farmer Field Day Table"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer pr-4">
+          <div className="flex flex-row gap-2 ">
+            {" "}
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={32}
+              onClick={() => getExcelsheet(
+                filterState.bgId,
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.startDate,
+                  filterState.endDate,
+                  filterState.empCode
+              )
+
+
+                
+              }
+            ></TbFileDownload>
+            
+          </div>
             <h2>
               <AiTwotoneHome
                 className="text-black-500"

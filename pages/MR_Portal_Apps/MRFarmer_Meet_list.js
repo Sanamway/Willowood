@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+  import React, { useState, useEffect } from "react";
 import { FaArrowDown } from "react-icons/fa";
 import { FaArrowUp } from "react-icons/fa";
 import Image from "next/image";
@@ -11,7 +11,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { GiFarmer } from "react-icons/gi";
 import { FaMobileAlt } from "react-icons/fa";
-import moment from "moment";
+ import moment from "moment";
 import { FaArrowAltCircleUp } from "react-icons/fa";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
@@ -26,8 +26,8 @@ const AdditionalInfo = () => {
 
   const [allfilterState, setAllFilterState] = useState({
     number: null,
-    from: null,
-    to: null,
+    from:  new Date(moment().startOf("month").format("YYYY-MM-DD")),
+    to: new Date(moment().endOf("month").format("YYYY-MM-DD")),
     dateShortDecend: "desc",
     mobShortDecend: "",
     nameShortDecend: "",
@@ -54,7 +54,7 @@ const AdditionalInfo = () => {
     allfilterState.villShortDecend,
   ]);
 
-  const getFarmerDetailsByNumber = async (
+   const getFarmerDetailsByNumber = async (
     mobile,
     from,
     to,
@@ -130,7 +130,6 @@ const AdditionalInfo = () => {
         </div>
         <div className="relative">
           <span className="absolute inset-y-0 left-0 top-2 pl-3 flex items-center md:relative flex-col lg:hidden ">
-            {/* Your icon component goes here */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5 text-gray-400"

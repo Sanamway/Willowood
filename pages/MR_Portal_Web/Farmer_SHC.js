@@ -13,6 +13,8 @@ import ReactPaginate from "react-paginate";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { TbFileDownload } from "react-icons/tb";
+  import * as XLSX from "xlsx";
 const FarmerSHC = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
@@ -906,15 +908,105 @@ Verify
 
 }
     }
+
+
+    const getExcelsheet = async (
+      bg,
+      bu,
+      z,
+      r,
+      t,
+      from,
+      to,
+      empCode
+      ) => {
+      try {
+        const respond = await axios.get(`${url}/api/get_mr_shc`, {
+          headers: headers,
+          params: {
+            t_id: t === "All" ?    null : t,
+            bg_id: bg === "All" ?  null : bg,
+            bu_id: bu === "All" ?  null : bu,
+            z_id: z === "All" ?    null : z,
+            r_id: r === "All" ?    null : r,
+            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            to:   moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            emp_code: empCode,
+            excel: true, 
+          },
+        });
+        const apires = await respond.data.data;
+        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
+        F_SHC_No :item.f_shc_no,                                        
+        SHC_Date: moment(item.shc_date).format("DD-MM-YYYY"),
+        Emp_Code: item.emp_code,
+        Emp_Name: item.emp_name,   
+        Farmer_Mobile_No:item.farmer_mob_no ,
+        Farmer_Id: item.farmer_id,
+        Farmer_Name: item.farmer_name,
+        Farmer_Father_Name: item.farmer_father_name,
+        Farmer_Type: item.farmer_type,
+        Plot_Size: item.plot_size,
+        Village: item.village,
+        Nitrogen: item.nitrogen,
+        Phosphorus: item.phosphorus,
+        Potassium: item.potassium,
+        PH: item.ph,
+        EC: item.ec,
+        Organic_Carbon: item.organic_carbon,
+        Sulphur: item.sulphur,
+        Zinc: item.zinc,
+        Boron: item.boron,
+        Iron: item.iron,
+        Magnese: item.manganese,
+        Copper: item.copper,
+        Deleted: item.isDeleted ? "Yes" : "No",
+       Territory: item.territory_name,
+        Region: item.region_name,
+       Zone: item.zone_name,
+        Business_Unit: item.zone_name,
+       Company: item.cmpny_name,            
+        }
+       } ));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, `new.xlsx`);
+      } catch (error) {
+        
+      }
+    };
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
         <Toaster position="bottom-center" reverseOrder={false} />
-        <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
+        <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5 whitespace-nowrap">
           <h2 className="font-arial font-normal text-3xl  py-2">
             {name ? name : "Farmer Soil Health Card"}
           </h2>
-          <div className="flex items-center gap-2 cursor-pointer pr-4">
+          <div className="status xls download flex items-center justify-end w-full gap-8">
+          <div className="flex flex-row gap-2 ">
+            {" "}
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={32}
+              onClick={() => getExcelsheet(
+                filterState.bgId,
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.startDate,
+                  filterState.endDate,
+                  filterState.empCode
+              )
+
+
+                
+              }
+            ></TbFileDownload>
+            
+          </div>
             <h2>
               <AiTwotoneHome
                 className="text-black-500"
@@ -1249,7 +1341,7 @@ Verify
                     </td> */}
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.shc_date).format("MM/DD/YYYY")}
+                    {moment(item.shc_date).format("DD-MM-YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.emp_code}

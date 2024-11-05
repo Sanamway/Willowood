@@ -155,7 +155,7 @@ return
           branchCode: 1231,
           date: moment(new Date()).format("YYYY-MM-DD"),
           attendance_type: userDetails.attendanceType,
-          punch_out_time:moment().format('YYYY-MM-DD HH:mm:ss'),
+          punch_out_time: moment().format('YYYY-MM-DD HH:mm:ss'),
           punch_out_image: "https://picsum.photos/200/300",
           status: "PO",
           closing_km: userDetails.closingKm,

@@ -813,7 +813,7 @@ tId: item.t_id
       });
     }}
   >
-    Delete
+    
   </button>
   </div>
   case 8: return  <div>
@@ -861,7 +861,7 @@ tId: item.t_id
       });
     }}
   >
-    Delete
+    
   </button>
   </div>
 
@@ -939,9 +939,9 @@ Verify
     const getTimeDiff = (item) => {
       console.log("zxc", item);
       
-      if(item.punch_out_time && item.punch_in_time) {
-        const time1 = moment(item.punch_in_time).subtract(5, 'hours').subtract(30, 'minutes');
-        const time2 = moment(item.punch_out_time);
+      if(item.end_time && item.start_time) {
+        const time1 = moment(item.start_time);
+        const time2 = moment(item.end_time);
         
         const diffDuration = moment.duration(time2.diff(time1));
         
@@ -1216,26 +1216,23 @@ Verify
                   Attendence Type
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Date
+              Req.  Date
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+               Attendance   Date
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Punch In Time
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Opening KM
-                </th>
+                
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Punch Out Time
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Closing KM
-                </th>
+                
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Total Hour
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Total KM
-                </th>
+              
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Status
@@ -1278,41 +1275,34 @@ Verify
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.attendance_type}
+                   RG
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {moment(item.createdAt).format("DD MMM YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {moment(item.date).format("DD MMM YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.punch_in_time).subtract(5, 'hours')
+                    {moment(item.start_time).subtract(5, 'hours')
             .subtract(30, 'minutes').format("hh:mm A")}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.opening_km}
-                  </td>
+               
                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.punch_out_time
-                      ? moment(item.punch_out_time).format("hh:mm A")
-                      : "-"}
+                   {moment(item.end_time).subtract(5, 'hours')
+            .subtract(30, 'minutes').format("hh:mm A")}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {item.closing_km}
-                  </td>
+                
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {getTimeDiff(item)}
                    
                    
                    
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.opening_km && item.closing_km ?  item.closing_km -item.opening_km : "-"}
-                   
-                   
-                   
-                  </td>
+                 
                  
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.status}
+                    {item.process_status}
                   </td>
                  
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
@@ -1626,7 +1616,7 @@ Verify
                         handleDelete();
                       }}
                     >
-                      Delete
+                      
                     </button>
                   </div>
                 </Dialog.Panel>
