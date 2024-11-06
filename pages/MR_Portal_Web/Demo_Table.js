@@ -967,39 +967,33 @@ Verify
           },
         });
         const apires = await respond.data.data;
-        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
-      
-          Date:moment(item.demo_date).format("DD-MM-YYYY")                ,
-         Emp_Code:item.emp_code,
-         Emp_Name:item.emp_name,
-        Demo_Type:item.purpose_of_demo,
-         Dealer:item.dealer_des,
-      Farmer_Mobile_No:item.farmer_mob_no,
-      Farmer_Name:item.farmer_name,
-        Farmer_Father_Name:item.farmer_father_name,
-         Farmer_Type:item.farmer_type,
-        Plot_Size:item.plot_size,
-        Potential:item.potential_farmer,
-          Village:item.village,
-        Next_Visit_Follow_up:moment(item.next_visit_date).format("DD-MM-YYYY"),
-
-         Status:item.status,
-       Field_Demo_No :item.f_demo_code     ,      
-      Territory:item.territory_name,
-       Region:item.region_name,
-         Zone:item.zone_name,
-         Business_Unit:item.business_unit_name,
-       Company:item.cmpny_name,
-        Deleted:item.isDeleted ? "Yes" : "No" ,
-  
-       
-
-
+        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {     
+         ["Date"]:moment(item.demo_date).format("DD-MM-YYYY")                ,
+         ["Emp Code"]:item.emp_code,
+         ["Emp Name"]:item.emp_name,
+         ["Demo Type"]:item.purpose_of_demo,
+         ["Dealer"]:item.dealer_des,
+         ["Farmer_Mobile No"]:item.farmer_mob_no,
+         ["Farmer Name"]:item.farmer_name,
+         ["Farmer Father Name"]:item.farmer_father_name,
+         ["Farmer Type"]:item.farmer_type,
+         ["Plot Size"]:item.plot_size,
+         ["Potential"]:item.potential_farmer,
+         ["Village"]:item.village,
+         ["Next Visit Follow up"]:moment(item.next_visit_date).format("DD-MM-YYYY"),
+         ["Status"]:item.status,
+         ["Field Demo No"] :item.f_demo_code     ,      
+         ["Territory"]:item.territory_name,
+         ["Region"]:item.region_name,
+         ["Zone"]:item.zone_name,
+         ["Business Unit"]:item.business_unit_name,
+         ["Company"]:item.cmpny_name,
+         ["Deleted"]:item.isDeleted ? "Yes" : "No" ,         
         }
        } ));
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, `new.xlsx`);
+        XLSX.writeFile(wb, `Farmer_Demo.xlsx`);
       } catch (error) {
         
       }

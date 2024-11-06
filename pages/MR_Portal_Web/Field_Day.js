@@ -915,34 +915,31 @@ Verify
         });
         const apires = await respond.data.data;
         const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
-          F_Field_Code : item.f_demo_field_no ,
-          Field_Date: moment(item.demo_field_date
+          ["F Field Code"] : item.f_demo_field_no ,
+          ["Field Date"]: moment(item.demo_field_date
           ).format("DD/MM/YYYY"),
-         Emp_Code:item.emp_code,
-         Emp_Name:item.emp_name,
-     
-         Dealer:item.dealer_des,
-         Farmer_Demo_No:item.f_demo_code,
-        Farmer_Mobile_No:item.farmer_mob_no,
-        Farmer_Id:item.farmer_id,
-       Farmer_Name:item.farmer_name,
-       Farmer_Father_Name:item.farmer_father_name,
-         Farmer_Type:item.farmer_type,
-        Plot_Size:item.plot_size,
-        Farmer_Observation:item.farmer_observation,
-        Product_Rating:item.product_rating,
-        Remarks:item.follow_up_remarks,
-        Potential_Farmer:item.potential_farmer,
-          Next_Follow_Up_Date:moment(item.next_followup_date).format("DD/MM/YYYY"),
-
-         Status:item.status,
-          
-      Territory:item.territory_name,
-       Region:item.region_name,
-         Zone:item.zone_name,
-         Business_Unit:item.business_unit_name,
-       Company:item.cmpny_name,
-        Deleted:item.isDeleted ? "Yes" : "No" ,
+        ["Emp Code"]:item.emp_code,
+        ["Emp Name"]:item.emp_name,
+        ["Dealer"]:item.dealer_des,
+        ["Farmer Demo No"]:item.f_demo_code,
+        ["Farmer Mobile No"]:item.farmer_mob_no,
+        ["Farmer Id"]:item.farmer_id,
+        ["Farmer Name"]:item.farmer_name,
+        ["Farmer Father Name"]:item.farmer_father_name,
+        ["Farmer Type"]:item.farmer_type,
+        ["Plot Size"]:item.plot_size,
+        ["Farmer Observation"]:item.farmer_observation,
+        ["Product Rating"]:item.product_rating,
+        ["Remarks"]:item.follow_up_remarks,
+        ["Potential Farmer"]:item.potential_farmer,
+        ["Next Follow Up Date"]:moment(item.next_followup_date).format("DD/MM/YYYY"),
+        ["Status"]:item.status,    
+       ["Territory"]:item.territory_name,
+       ["Region"]:item.region_name,
+       ["Zone"]:item.zone_name,
+       ["Business_Unit"]:item.business_unit_name,
+       ["Company"]:item.cmpny_name,
+       ["Deleted"]:item.isDeleted ? "Yes" : "No" ,
   
        
 
@@ -950,7 +947,7 @@ Verify
        } ));
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, `new.xlsx`);
+        XLSX.writeFile(wb, `Field Day.xlsx`);
       } catch (error) {
         
       }

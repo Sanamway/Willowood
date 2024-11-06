@@ -3,7 +3,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
-
 import axios from "axios";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
@@ -13,6 +12,8 @@ import ReactPaginate from "react-paginate";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { TbFileDownload } from "react-icons/tb";
+  import * as XLSX from "xlsx";
 const StockLiquidation = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
@@ -85,9 +86,7 @@ const StockLiquidation = () => {
                 t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
                 product_brand: item.product_brand, 
                 crop: item.crop ,
-                dealer_id: item.dealer_id
-
-                
+                dealer_id: item.dealer_id         
             }
           })
           .then((res) => {
@@ -688,7 +687,56 @@ const StockLiquidation = () => {
   ]);
   const { name } = router.query;
 
-  
+  const getExcelsheet = async (
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    from,
+    to,
+    empCode
+    ) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_dealer_stock_liq`, {
+        headers: headers,
+        params: {
+          t_id: t === "All" ?    null : t,
+          bg_id: bg === "All" ?  null : bg,
+          bu_id: bu === "All" ?  null : bu,
+          z_id: z === "All" ?    null : z,
+          r_id: r === "All" ?    null : r,
+          from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+          to:   moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          emp_code: empCode,
+          excel: true, 
+        },
+      });
+      const apires = await respond.data.data;
+      const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
+     ["SA Code"]: item.sa_code,
+     ["Employee Code"]: item.emp_code,
+     ["Employee Name"]: item.emp_name,
+     ["Inventory Date"]: moment(item.inventory_date
+     ).format("DD/MM/YYYY"),
+     ["Dealer Code"]: item.dealer_id,
+     ["Dealer Name"]: item.dealer_des,
+     ["Product Brand"]: item.product_brand,
+     ["Crop Name"]: item.crop,
+     ["Stock Qty"]: item.stock_sale_qty,
+      ["Territory"]: item.territory_name,
+      ["Company"]: item.cmpny_name,
+      ["Deleted"]: item.isDeleted ? "Yes" : "No",
+      }
+     } ));
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+      XLSX.writeFile(wb, `StockLiquidation.xlsx`);
+    } catch (error) {
+      
+    }
+  };
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -698,6 +746,25 @@ const StockLiquidation = () => {
             {name ? name : "Stock Liquidation"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer pr-4">
+          {" "}
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={32}
+              onClick={() => getExcelsheet(
+                filterState.bgId,
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.startDate,
+                  filterState.endDate,
+                  filterState.empCode
+              )
+
+
+                
+              }
+            ></TbFileDownload>
             <h2>
               <AiTwotoneHome
                 className="text-black-500"
@@ -1013,11 +1080,13 @@ emp_name
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {/* {item.
 material_pop_require
-}  */}  Delaer Code
+}  */}{
+item.dealer_id}
                   </td>
                  
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  Delaer Name
+                  {
+item.dealer_des}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.product_brand

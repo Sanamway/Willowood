@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { AiTwotoneHome } from "react-icons/ai";
+ import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 
@@ -13,6 +13,8 @@ import ReactPaginate from "react-paginate";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { TbFileDownload } from "react-icons/tb";
+  import * as XLSX from "xlsx";
 const MaterialIndent_Table = () => {
 
   const router = useRouter();
@@ -922,6 +924,61 @@ Verify
 
 }
     }
+
+    const getExcelsheet = async (
+      bg,
+      bu,
+      z,
+      r,
+      t,
+      from,
+      to,
+      empCode
+      ) => {
+      try {
+        const respond = await axios.get(`${url}/api/get_material_indent`, {
+          headers: headers,
+          params: {
+            t_id: t === "All" ?    null : t,
+            bg_id: bg === "All" ?  null : bg,
+            bu_id: bu === "All" ?  null : bu,
+            z_id: z === "All" ?    null : z,
+            r_id: r === "All" ?    null : r,
+            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            to:   moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            emp_code: empCode,
+            excel: true, 
+          },
+        });
+        const apires = await respond.data.data;
+        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
+        ["Indent Code"]: item.mi_no,
+        ["Employee Code"]: item.emp_code,
+        ["Employee Name"]: item.emp_name,
+        ["Rquest Date"]: moment(item.indent_req_date).format("DD/MM/YYYY"),
+        ["Material POP Required"]: item.material_pop_require,
+        ["Any Specification of Material"]: item.any_specification_of_material,
+        ["Purpose of Material"]: item.purpose_of_material,
+        ["Priority DP"]: item.priority,
+        ["Current Stock Qty"]: item.current_stock_qty,
+        ["Required Qty"]: item.required_qty,
+        ["Delivery date"]: moment(item.
+          delivery_date
+          ).format("DD/MM/YYYY"),
+        ["Current_Status"]: item.status,
+        ["Territory"]: item.territory_name,
+        ["Company"]: item.cmpny_name,
+        ["Deleted"]: item.isDeleted ? "Yes" : "No",
+        }
+       } ));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, `Indent.xlsx`);
+      } catch (error) {
+        
+      }
+    };
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -931,6 +988,28 @@ Verify
             {name ? name : "MR Indent  "}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer pr-4">
+         
+            {" "}
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={32}
+              onClick={() => getExcelsheet(
+                filterState.bgId,
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.startDate,
+                  filterState.endDate,
+                  filterState.empCode
+              )
+
+
+                
+              }
+            ></TbFileDownload>
+            
+          
             <h2>
               <AiTwotoneHome
                 className="text-black-500"

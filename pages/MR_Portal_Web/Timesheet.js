@@ -972,34 +972,31 @@ Verify
         });
         const apires = await respond.data.data;
         const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
-      Emp_Code:  item.emp_code   ,  
-       Emp_Name: item.emp_name ,
-       Attendence_Type: item.attendance_type ,
-       Date: moment(item.date).format("DD MMM YYYY"),
-       Punch_In_Time: moment(item.punch_in_time).subtract(5, 'hours')
+       ["Emp Code"]:  item.emp_code   ,  
+       ["Emp Name"]: item.emp_name ,
+       ["Attendence Type"]: item.attendance_type ,
+       ["Date"]: moment(item.date).format("DD MMM YYYY"),
+       ["Punch In Time"]: moment(item.punch_in_time).subtract(5, 'hours')
        .subtract(30, 'minutes').format("hh:mm A"),
-       Opening_KM: item.opening_km,
-       Punch_Out_Time: item.punch_out_time
+       ["Opening KM"]: item.opening_km,
+       ["Punch Out Time"]: item.punch_out_time
        ? moment(item.punch_out_time).format("hh:mm A")
        : "-",
-       Closing_KM: item.closing_km,
-       Total_Hour: getTimeDiff(item),
-       Total_KM: item.opening_km && item.closing_km ?  item.closing_km -item.opening_km : "-",
-       Status: item.status,
-       Territory: item.territory_name,
-       Region:item.region_name ,
-       Zone: item.zone_name,
-       Business_Unit: item.business_unit_name,
-       Company: item.cmpny_name,
-       Deleted: item.isDeleted ? "Enable" : "Disable"
-       
-
-
+       ["Closing KM"]: item.closing_km,
+       ["Total Hour"]: getTimeDiff(item),
+       ["Total KM"]: item.opening_km && item.closing_km ?  item.closing_km -item.opening_km : "-",
+       ["Status"]: item.status,
+       ["Territory"]: item.territory_name,
+       ["Region"]:item.region_name ,
+       ["Zone"]: item.zone_name,
+       ["Business Unit"]: item.business_unit_name,
+       ["Company"]: item.cmpny_name,
+       ["Deleted"]: item.isDeleted ? "Enable" : "Disable"
         }
        } ));
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, `new.xlsx`);
+        XLSX.writeFile(wb, `Timesheet.xlsx`);
       } catch (error) {
         
       }

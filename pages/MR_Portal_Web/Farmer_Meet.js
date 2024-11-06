@@ -958,53 +958,51 @@ Verify
         });
         const apires = await respond.data.data;
         const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
-        F_Meet_Date : moment(item.
+        ["F Meet Date"] : moment(item.
           meeting_date
           ).format("DD-MM-YYYY"),                                        
-        F_Meet_Code: item.f_meet_no,
-        Emp_Code: item.emp_code,
-        Emp_Name: item.emp_name,
-        Purpose_of_Meet: item.purpose_of_meeting,
-        MeetType: item.
-        meeting_type,
-        Farmer_Mobile_No:item.farmer_mob_no ,
-        Farmer_Id: item.farmer_id,
-        Farmer_Name: item.farmer_name,
-        Farmer_Father_Name: item.farmer_father_name,
-        Farmer_Type: item.farmer_type,
-        Plot_Size: item.plot_size,
-        Village: item.village,
-        Farmer_Crop_Focus: item.farmer_crop_focus.map((item) => item).join(","),
-       Farmer_Problems_Challenge_Face: item.farmer_problem_or_challange_face,
-        Cause: item.cause,
-       Possible_Soln: item.possible_sol,
-       Teach_to_Farmer: item.tech_the_techniques_to_farmer,
-         Push_Product_Brand: item.push_product_brand.map((item) => item).join(","),
-        Farmer_Suggestion_Opinion_Idea: item.farmer_suggestion_opinion_idea,
-       How_Many_Farmer_Available: item.how_many_farmer,
-        Venue_Address: item.meeting_address,
-      Territory_Presence: item.t_presence,
-       Dev_Manager_Presence: item.dm_presence,
-       Zone_Dev_Manager: item.zdm_presence,
-       Expenses_Occurred_during_Meeting: item.expenses_occured_during_meeting,
-     Remarks: item.remarks,
-       Potential_Farmer: item.potential_farmer,
-        Next_Visit_Date: moment(item.next_visit_date).format("DD-MM-YYYY"),
-     
-       Status:item.status ,
-       Territory: item.territory_name,
-        Region: item.region_name,
-       Zone: item.zone_name,
-        Business_Unit: item.zone_name,
-       Company: item.cmpny_name,
-       Deleted: item.isDeleted ? "Yes" : "No",
+        ["F Meet Code"]: item.f_meet_no,
+        ["Emp Code"]: item.emp_code,
+        ["Emp Name"]: item.emp_name,
+        ["Purpose of Meet"]: item.purpose_of_meeting,
+        ["MeetType"]: item.meeting_type,
+        ["Farmer Mobile No"]:item.farmer_mob_no ,
+        ["Farmer Id"]: item.farmer_id,
+        ["Farmer Name"]: item.farmer_name,
+        ["Farmer Father_Name"]: item.farmer_father_name,
+        ["Farmer Type"]: item.farmer_type,
+        ["Plot_Size"]: item.plot_size,
+        ["Village"]: item.village,
+        ["Farmer Crop Focus"]: item.farmer_crop_focus.map((item) => item).join(","),
+        ["Farmer Problems Challenge Face"]: item.farmer_problem_or_challange_face,
+        ["Cause"]: item.cause,
+        ["Possible Soln"]: item.possible_sol,
+        ["Teach to Farmer"]: item.tech_the_techniques_to_farmer,
+        ["Push Product Brand"]: item.push_product_brand.map((item) => item).join(","),
+        ["Farmer Suggestion Opinion Idea"]: item.farmer_suggestion_opinion_idea,
+        ["How Many Farmer Available"]: item.how_many_farmer,
+        ["Venue Address"]: item.meeting_address,
+        ["Territory Presence"]: item.t_presence,
+        ["Dev Manager Presence"]: item.dm_presence,
+        ["Zone Dev Manager"]: item.zdm_presence,
+        ["Expenses Occurred during Meeting"]: item.expenses_occured_during_meeting,
+        ["Remarks"]: item.remarks,
+        ["Potential Farmer"]: item.potential_farmer,
+        ["Next Visit Date"]: moment(item.next_visit_date).format("DD-MM-YYYY"),
+        ["Status"]:item.status ,
+        ["Territory"]: item.territory_name,
+        ["Region"]: item.region_name,
+        ["Zone"]: item.zone_name,
+        ["Business Unit"]: item.zone_name,
+        ["Company"]: item.cmpny_name,
+        ["Deleted"]: item.isDeleted ? "Yes" : "No",
        
 
         }
        } ));
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, `new.xlsx`);
+        XLSX.writeFile(wb, `Meet.xlsx`);
       } catch (error) {
         
       }
