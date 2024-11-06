@@ -15,7 +15,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { TbFileDownload } from "react-icons/tb";
   import * as XLSX from "xlsx";
-const FarmerSHC = () => {
+const FeePayout = () => {
   
   const router = useRouter();
   const [data, setData] = useState([]);
@@ -30,15 +30,16 @@ const FarmerSHC = () => {
 
   const [pageCount, setPageCount] = useState(0);
   const [dataCount, setDataCount] = useState([]);
-  const getFarmerDemo = async (
+  const getFeeData = async (
     currentPage,
+    month,
+     yr,
     bg,
     bu,
     z,
     r,
     t,
-    from,
-    to,
+    
     empCode
   ) => {
     try {
@@ -50,14 +51,13 @@ const FarmerSHC = () => {
           bu_id: bu === "All" ? null : bu,
           z_id: z === "All" ? null : z,
           r_id: r === "All" ? null : r,
-          from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
-          to: moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           emp_code: empCode,
           paging: true,
           page: currentPage,
           size: 50,
           zrt:true
+
         },
       });
       const apires = await respond.data.data.MRPlanogramData;
@@ -102,100 +102,30 @@ const FarmerSHC = () => {
 
       toast.success(apires);
 
-      getFarmerDemo(
+      getFeeData(
       currentPage.selected + 1,
+      filterState.yr,
+      filterState.month,
       filterState.bgId,
       filterState.buId,
       filterState.zId,
       filterState.rId,
       filterState.tId,
-      filterState.startDate,
-      filterState.endDate,
+  
       filterState.empCode
     );
     } catch (error) {}
   };
 
-  const handleApprove = async () => {
-    const data = {
-      approved: modalData.isTrue,
-      approved_date: new Date(),
-      approved_user: currentUser,
-    };
-    try {
-      const respond = await axios.put(
-        `${url}/api/update_planogram/${modalData.id}`,
-        JSON.stringify(data),
-        {
-          headers: headers,
-        }
-      );
-      const apires = await respond.data.message;
+  
 
-      handleCloseModal();
-      toast.success(apires);
-      getFarmerDemo(
-      currentPage.selected + 1,
-      filterState.bgId,
-      filterState.buId,
-      filterState.zId,
-      filterState.rId,
-      filterState.tId,
-      filterState.startDate,
-      filterState.endDate,
-      filterState.empCode
-    );
-    } catch (error) {}
-  };
-
-  const handleDelete = async () => {
-    const paramsData = {
-      f_planogram_id: modalData.id,
-    };
-    try {
-      const respond = await axios.get(
-        `${url}/api/delete_mr_planogram`,
-        {
-          headers: headers,
-          params: paramsData,
-        }
-      );
-      const apires = await respond.data.message;
-      toast.success(apires);
-
-      getFarmerDemo(
-      currentPage.selected + 1,
-      filterState.bgId,
-      filterState.buId,
-      filterState.zId,
-      filterState.rId,
-      filterState.tId,
-      filterState.startDate,
-      filterState.endDate,
-      filterState.empCode
-    );
-      handleCloseModal();
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
+  
   const [currentUser, setCurrentUser] = useState("");
   useEffect(() => {
     setCurrentUser(window.localStorage.getItem("user_name"));
   }, []);
 
-  const handleCloseModal = () => {
-    setModalData({
-      ...modalData,
-     
-      isTrue: "Yes",
-      date: "",
-      user: "",
-    });
-    setShowVerifyModal(false);
-    setShowDeleteModal(false);
-  };
+  
   const [localStorageItems, setLocalStorageItems] = useState({
     cId: null,
     bgId: null,
@@ -208,6 +138,8 @@ const FarmerSHC = () => {
 
   // All Filters
   const [filterState, setFilterState] = useState({
+    yr: moment().year(),
+    month: null,
     bgId: null,
     buId: null,
     zId: null,
@@ -218,8 +150,9 @@ const FarmerSHC = () => {
     zDes: null,
     buDes: null,
     bgDes: null,
-    startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-    endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
+    newFil:null
+  
+   
   });
 
   const [bgData, setBgData] = useState([]);
@@ -399,6 +332,8 @@ const FarmerSHC = () => {
     switch (roleId) {
       case 6:
         filterState = {
+yr: moment().year(),
+    month: null,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -419,16 +354,7 @@ const FarmerSHC = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          startDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            1
-          ),
-          endDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth() + 1,
-            0
-          ),
+        
         };
         setLocalStorageItems({
           bgId:
@@ -459,6 +385,8 @@ const FarmerSHC = () => {
         break;
       case 5:
         filterState = {
+yr: moment().year(),
+    month: null,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -477,16 +405,7 @@ const FarmerSHC = () => {
               : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
 
           tId: "All",
-          startDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            1
-          ),
-          endDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth() + 1,
-            0
-          ),
+         
         };
         setLocalStorageItems({
           bgId:
@@ -518,6 +437,8 @@ const FarmerSHC = () => {
         break;
       case 4:
         filterState = {
+yr: moment().year(),
+    month: null,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -534,16 +455,7 @@ const FarmerSHC = () => {
 
           rId: "All",
           tId: "All",
-          startDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            1
-          ),
-          endDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth() + 1,
-            0
-          ),
+        
         };
         setLocalStorageItems({
           bgId:
@@ -578,6 +490,8 @@ const FarmerSHC = () => {
         break;
       case 3:
         filterState = {
+yr: moment().year(),
+    month: null,
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -593,16 +507,7 @@ const FarmerSHC = () => {
               : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: "All",
           tId: "All",
-          startDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            1
-          ),
-          endDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth() + 1,
-            0
-          ),
+        
         };
         setLocalStorageItems({
           bgId:
@@ -637,21 +542,14 @@ const FarmerSHC = () => {
         break;
       case 10:
         filterState = {
+            yr: moment().year(),
+    month: null,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: "All",
           tId: "All",
-          startDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            1
-          ),
-          endDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth() + 1,
-            0
-          ),
+         
         };
         setLocalStorageItems({
           bgId:
@@ -695,21 +593,14 @@ const FarmerSHC = () => {
         });
 
         setFilterState({
+            yr: moment().year(),
+    month: null,
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          startDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth(),
-            1
-          ),
-          endDate: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth() + 1,
-            0
-          ),
+      
         });
         setFilterState(filterState);
 
@@ -718,37 +609,37 @@ const FarmerSHC = () => {
   }, []);
  useEffect(() => {
     handlePageChange({selected: 0})
-    getFarmerDemo(
+    getFeeData(
       1,
+      filterState.yr,
+      filterState.month,
       filterState.bgId,
       filterState.buId,
       filterState.zId,
       filterState.rId,
       filterState.tId,
-      filterState.startDate,
-      filterState.endDate,
+     
       filterState.empCode
     );
   }, [
+    filterState.yr,
+      filterState.month,
     filterState.bgId,
     filterState.buId,
     filterState.zId,
     filterState.rId,
     filterState.tId,
-    filterState.startDate,
-    filterState.endDate,
+  
     filterState.empCode,
   ]);
   useEffect(() => {
-    getFarmerDemo(
+    getFeeData(
       currentPage.selected + 1,
       filterState.bgId,
       filterState.buId,
       filterState.zId,
       filterState.rId,
       filterState.tId,
-      filterState.startDate,
-      filterState.endDate,
        filterState.empCode
     );
   }, [
@@ -756,187 +647,18 @@ const FarmerSHC = () => {
   ]);
   const { name } = router.query;
 
-  const getAllActionButton = (item) =>{
-    let role = localStorageItems.roleId
- switch(role){
-  case 1: return <div>
-    
- 
-  <button
-    onClick={() => {
-      setShowVerifyModal(true);
-      setModalData({
-        ...modalData,
-        type: "Verify",
-        id:  item.f_planogram_id,
-      });
-    }}
-    disabled={item.verified === "Yes"}
-
-  >
-    Verify
-  </button>
-  <button
-    onClick={() => {
-      setShowVerifyModal(true);
-      setModalData({
-        ...modalData,
-        type: "Approve",
-        id:  item.f_planogram_id,
-      });
-    }}
-    disabled={item.approved === "Yes"}
-    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
-    
-  >
-    Approve
-  </button>
-  <button
-    className="b text-black hover:text-red-500 ml-2"
-    onClick={() => {
-      setShowDeleteModal(true);
-      setModalData({
-        ...modalData,
-
-        id:  item.f_planogram_id,
-      });
-    }}
-  >
-    Delete
-  </button>
-  </div>
-  case 8: return  <div>
-    
   
-  <button
-    onClick={() => {
-      setShowVerifyModal(true);
-      setModalData({
-        ...modalData,
-        type: "Verify",
-        id:  item.f_planogram_id,
-      });
-    }}
-    disabled={item.verified === "Yes"}
-    
-
-  >
-    Verify
-  </button>
-  <button
-    onClick={() => {
-      setShowVerifyModal(true);
-      setModalData({
-        ...modalData,
-        type: "Approve",
-        id:  item.f_planogram_id,
-      });
-    }}
-    disabled={item.approved === "Yes"}
-    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
-    
-  >
-    Approve
-  </button>
-  <button
-    className="b text-black hover:text-red-500 ml-2"
-    onClick={() => {
-      setShowDeleteModal(true);
-      setModalData({
-        ...modalData,
-
-        id:  item.f_planogram_id,
-      });
-    }}
-  >
-    Delete
-  </button>
-  </div>
-
-case 4: return <div>
-  
-  
-<button
-  onClick={() => {
-    setShowVerifyModal(true);
-    setModalData({
-      ...modalData,
-      type: "Approve",
-      id:  item.f_planogram_id,
-    });
-  }}
-  disabled={item.approved === "Yes"}
-  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
->
-  Approve
-</button>
-</div>
-
-case 5: return <div>
-  
-<button
-  onClick={() => {
-    setShowVerifyModal(true);
-    setModalData({
-      ...modalData,
-      type: "Approve",
-      id:  item.f_planogram_id,
-    });
-  }}
-  disabled={item.approved === "Yes"}
-  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
->
-  Approve
-</button>
-</div>
-
-case 6: return <div>
-  
-  
-<button
-  onClick={() => {
-    setShowVerifyModal(true);
-    setModalData({
-      ...modalData,
-      type: "Approve",
-      id:  item.f_planogram_id,
-    });
-  }}
-  disabled={item.approved === "Yes"}
-  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
->
-  Approve
-</button>
-</div>
-
-case 9: return <div>
-<button
-disabled={item.verified === "Yes"}
-onClick={() => {
-  setShowVerifyModal(true);
-  setModalData({
-    ...modalData,
-    type: "Verify",
-    id:  item.f_planogram_id,
-  });
-}}
->
-Verify
-</button>
-</div> 
-
-}
-    }
 
 
     const getExcelsheet = async (
+     yr,
+     month,
       bg,
       bu,
       z,
       r,
       t,
-      from,
-      to,
+      
       empCode
       ) => {
       try {
@@ -993,7 +715,7 @@ Verify
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
-            {name ? name : "Planogram"}
+            {name ? name : "Fee Payout"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer pr-4">
           <div className="flex flex-row gap-2 ">
@@ -1002,13 +724,14 @@ Verify
               className="text-green-600 cursor-pointer "
               size={32}
               onClick={() => getExcelsheet(
+                filterState.yr,
+filterState.month,
                 filterState.bgId,
                   filterState.buId,
                   filterState.zId,
                   filterState.rId,
                   filterState.tId,
-                  filterState.startDate,
-                  filterState.endDate,
+                  
                   filterState.empCode
               )
 
@@ -1031,6 +754,58 @@ Verify
         </div>
 
         <div className="flex flex-row gap-4  px-4 pr-8 pb-2">
+        <select
+              className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              id="stateSelect"
+              value={filterState.yr}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  yr: e.target.value,
+                })
+              }
+            
+            >
+              <option value="All" className="font-bold" disabled={true}>
+                -- Select --
+              </option>
+              <option value="All" className="font-bold" disabled={true}>
+               2021
+              </option>
+              <option value="All" className="font-bold" disabled={true}>
+               2022
+              </option>
+              <option value="All" className="font-bold" disabled={true}>
+                2023
+              </option>
+              <option value="All" className="font-bold" disabled={true}>
+                2024
+              </option>
+             
+            </select>
+            <select
+              className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              id="stateSelect"
+              value={filterState.month}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  month: e.target.value,
+                })
+              }
+              disabled={!filterState.yr}
+            >
+              <option value="All" className="font-bold">
+                All
+              </option>
+
+              {/* {allMonthData.map((item, idx) => (
+                <option value={item} key={idx}>
+                  {moment(item).format("MMM YYYY")}
+                </option>
+              ))} */}
+            </select>
+       
           <select
             className="border rounded px-2 py-1  w-1/2 h-8"
             id="stateSelect"
@@ -1207,35 +982,24 @@ Verify
               </option>
             ))}
           </select>
+          <select
+            id="attendanceType"
+            className="border rounded px-2 py-1 w-full h-8"
+            value={filterState.empCode}
+            onChange={(e) =>
+              setFilterState({ ...filterState, newFil: e.target.value })
+            }
+          >
+            <option value={"Verify"}>Verify</option>
+            <option value={"Approve"}>Approve</option>
+            <option value={"All"}>All</option>
 
-          <div className="flex flex-row gap-2  items-center w-1/4">
-            <DatePicker
-              className="border p-1 rounded w-28 "
-              dateFormat="dd-MM-yyyy"
-              selected={filterState.startDate}
-              placeholderText="Enter Date"
-              scrollableYearDropdown
-              onChange={(date) =>
-                setFilterState({ ...filterState, startDate: date })
-              }
-              hand
-            />
-            <small>TO</small>
-            <DatePicker
-              className="border p-1 rounded w-28  "
-              dateFormat="dd-MM-yyyy"
-              selected={filterState.endDate}
-              placeholderText="Enter Date"
-              scrollableYearDropdown
-              onChange={(date) =>
-                setFilterState({ ...filterState, endDate: date })
-              }
-              hand
-            />
-          </div>
+          </select>
+
+         
         </div>
 
-        <div className="overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
+        {/* <div className="overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
           <table className="min-w-full divide-y border- divide-gray-200 ">
             <thead className="border-b w-max">
               <tr className="bg-gray-50 font-arial w-max">
@@ -1258,7 +1022,6 @@ Verify
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                  Emp Name
                 </th>
-
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                  Dealer Address
                 </th>
@@ -1270,25 +1033,16 @@ Verify
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                 Product Positioning
-                </th>
-               
-
+                </th>               
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-              Promotional Material
-                </th>
-              
-
-              
-
-               
+                Promotional Material
+                </th>               
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-               Damage Condition 
+                Damage Condition 
                 </th>
-              
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Category Placement
-                </th>
-               
+                </th> 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                  Current Stock
                 </th>
@@ -1415,7 +1169,7 @@ Verify
             </tbody>
           </table>
           
-        </div>
+        </div> */}
         <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
         <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
       Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
@@ -1702,4 +1456,4 @@ Verify
   );
 };
 
- export default FarmerSHC;
+ export default FeePayout;
