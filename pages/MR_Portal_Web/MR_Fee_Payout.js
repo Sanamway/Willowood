@@ -28,22 +28,37 @@ const FeePayout = () => {
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
-  const [pageCount, setPageCount] = useState(0);
-  const [dataCount, setDataCount] = useState([]);
+  
+ 
   const getFeeData = async (
-    currentPage,
+    yr,
     month,
-     yr,
     bg,
     bu,
     z,
     r,
     t,
-    
-    empCode
+    empCode,
+    status
   ) => {
     try {
-      const respond = await axios.get(`${url}/api/get_mr_planogram`, {
+        const allMonths = [
+            { month: "January", number: 1 },
+            { month: "February", number: 2 },
+            { month: "March", number: 3 },
+            { month: "April", number: 4 },
+            { month: "May", number: 5 },
+            { month: "June", number: 6 },
+            { month: "July", number: 7 },
+            { month: "August", number: 8 },
+            { month: "September", number: 9 },
+            { month: "October", number: 10 },
+            { month: "November", number: 11 },
+            { month: "December", number: 12 }
+          ];
+
+          console.log("nop",month, allMonths.filter((item)=> item.month === month))
+      const respond = await axios.get(`${url}/api/get_employee_payout`, {
         headers: headers,
         params: {
           t_id: t === "All" ? null : t,
@@ -53,77 +68,31 @@ const FeePayout = () => {
           r_id: r === "All" ? null : r,
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           emp_code: empCode,
-          paging: true,
-          page: currentPage,
-          size: 50,
+          year: yr,
+          month: month? allMonths.filter((item)=> item.month === month)[0].number : "",
+          status: status,
           zrt:true
 
         },
       });
-      const apires = await respond.data.data.MRPlanogramData;
-      const count = await respond.data.data.MRPlanogramcount;
-      setPageCount(Math.ceil(count / 50));
-      setDataCount(count)
+      const apires = await respond.data.data.employeeData;
+
+      console.log("pop",apires)
       setData(apires);
     } catch (error) {
       setData([]);
     }
   };
 
-   const [showImageModal, setShowImageModal] = useState(false);
-  const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+   
+ 
 
-  const [modalData, setModalData] = useState({
-    id: "",
-    type: "",
-    isTrue: "Yes",
-    date: new Date(),
-    user: "",
-  });
 
-  const handleVerify = async () => {
-    const data = {
-      verified: modalData.isTrue,
-      verified_date: new Date(),
-      verified_user: currentUser,
-    };
-
-    try {
-      const respond = await axios.put(
-        `${url}/api/update_planogram/${modalData.id}`,
-        JSON.stringify(data),
-        {
-          headers: headers,
-        }
-      );
-      handleCloseModal();
-      const apires = await respond.data.message;
-
-      toast.success(apires);
-
-      getFeeData(
-      currentPage.selected + 1,
-      filterState.yr,
-      filterState.month,
-      filterState.bgId,
-      filterState.buId,
-      filterState.zId,
-      filterState.rId,
-      filterState.tId,
-  
-      filterState.empCode
-    );
-    } catch (error) {}
-  };
 
   
 
   
-  const [currentUser, setCurrentUser] = useState("");
-  useEffect(() => {
-    setCurrentUser(window.localStorage.getItem("user_name"));
-  }, []);
+ 
 
   
   const [localStorageItems, setLocalStorageItems] = useState({
@@ -139,7 +108,8 @@ const FeePayout = () => {
   // All Filters
   const [filterState, setFilterState] = useState({
     yr: moment().year(),
-    month: null,
+    month:"",
+    newFil:"",
     bgId: null,
     buId: null,
     zId: null,
@@ -255,9 +225,7 @@ const FeePayout = () => {
       const respond = await axios.get(`${url}/api/get_territory`, {
         headers: headers,
       });
-
       const apires = await respond.data.data;
-
       setAllTerritoryData(
         apires
           .filter((item) => Number(item.bg_id) === Number(segmentId))
@@ -320,7 +288,6 @@ const FeePayout = () => {
     filterState.tId,
   ]);
   useEffect(() => {
-    // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     const roleId = 6;
     let filterState = {
       bgId: "All",
@@ -332,9 +299,10 @@ const FeePayout = () => {
     switch (roleId) {
       case 6:
         filterState = {
-yr: moment().year(),
-    month: null,
-          bgId:
+         yr: moment().year(),
+         month:"",
+newFil:"",
+         bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
@@ -386,7 +354,8 @@ yr: moment().year(),
       case 5:
         filterState = {
 yr: moment().year(),
-    month: null,
+    month:"",
+newFil:"",
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -438,7 +407,8 @@ yr: moment().year(),
       case 4:
         filterState = {
 yr: moment().year(),
-    month: null,
+          month:"",
+          newFil:"",
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -491,7 +461,8 @@ yr: moment().year(),
       case 3:
         filterState = {
 yr: moment().year(),
-    month: null,
+          month:"",
+          newFil:"",
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -543,7 +514,8 @@ yr: moment().year(),
       case 10:
         filterState = {
             yr: moment().year(),
-    month: null,
+           month:"",
+newFil:"",
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
@@ -594,7 +566,8 @@ yr: moment().year(),
 
         setFilterState({
             yr: moment().year(),
-    month: null,
+    month:"",
+newFil:"",
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
@@ -608,98 +581,115 @@ yr: moment().year(),
     }
   }, []);
  useEffect(() => {
-    handlePageChange({selected: 0})
-    getFeeData(
-      1,
+   
+    getFeeData( 
       filterState.yr,
       filterState.month,
       filterState.bgId,
       filterState.buId,
       filterState.zId,
       filterState.rId,
-      filterState.tId,
-     
-      filterState.empCode
+      filterState.tId,   
+      filterState.empCode,
+      filterState.newFil
     );
   }, [
     filterState.yr,
-      filterState.month,
+    filterState.month,
     filterState.bgId,
     filterState.buId,
     filterState.zId,
     filterState.rId,
     filterState.tId,
-  
     filterState.empCode,
+    filterState.newFil
   ]);
-  useEffect(() => {
-    getFeeData(
-      currentPage.selected + 1,
-      filterState.bgId,
-      filterState.buId,
-      filterState.zId,
-      filterState.rId,
-      filterState.tId,
-       filterState.empCode
-    );
-  }, [
-    currentPage.selected,
-  ]);
+  
   const { name } = router.query;
 
   
 
 
     const getExcelsheet = async (
-     yr,
-     month,
+      yr,
+      month,
       bg,
       bu,
       z,
       r,
       t,
-      
-      empCode
+      empCode,
+      status
       ) => {
+        const allMonths = [
+            { month: "January", number: 1 },
+            { month: "February", number: 2 },
+            { month: "March", number: 3 },
+            { month: "April", number: 4 },
+            { month: "May", number: 5 },
+            { month: "June", number: 6 },
+            { month: "July", number: 7 },
+            { month: "August", number: 8 },
+            { month: "September", number: 9 },
+            { month: "October", number: 10 },
+            { month: "November", number: 11 },
+            { month: "December", number: 12 }
+          ];
       try {
-        const respond = await axios.get(`${url}/api/get_mr_planogram`, {
+        const respond = await axios.get(`${url}/api/get_employee_payout`, {
           headers: headers,
           params: {
-            t_id: t === "All" ?    null : t,
-            bg_id: bg === "All" ?  null : bg,
-            bu_id: bu === "All" ?  null : bu,
-            z_id: z === "All" ?    null : z,
-            r_id: r === "All" ?    null : r,
-            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
-            to:   moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            t_id: t === "All" ? null : t,
+            bg_id: bg === "All" ? null : bg,
+            bu_id: bu === "All" ? null : bu,
+            z_id: z === "All" ? null : z,
+            r_id: r === "All" ? null : r,
             c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
             emp_code: empCode,
-            excel: true, 
+            year: yr,
+            month: month? allMonths.filter((item)=> item.month === month)[0].number : "",
+            status: status,
+            zrt:true
           },
         });
         const apires = await respond.data.data;
-        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
-        ["DPL Visit No"] :item.f_planogram_no,
-        ["Date"]: moment(item.f_planogram_date).format("DD/MM/YYYY"),
-        ["Dealer"]: item.dealer_des,
-        ["Emp Code"]: item.emp_code,
-        ["Emp Name"]: item.emp_name,      
-        ["Dealer Address"]: item.dealer_address,   
-        ["Contact Person"]: item.dealer_contact,
-        ["Product Brand"]: item.product_brand,
-        ["Product Positioning"]: item.product_positioning ,
-        ["Promotional Material"]: item.promotional_material,
-        ["Damage Condition"] : item.damage_condition,
-        ["Category Placement"]: item.category_placement,
-        ["Current Stock"]: item.current_stock,
-        ["Actual Share of Life"]: item.actual_share_of_life,
-        ["Compititor Brand"]: item.compitor_brand,
-        ["Compititor Price"]: item.compitor_price,
-        ["Territory"]: item.territory_name,
-        ["Region"]: item.region_name,
-        ["Zone"]: item.zone_name,
-        ["Business_Unit"]: item.zone_name,
-        ["Company"]: item.cmpny_name,
+        const ws = XLSX.utils.json_to_sheet(apires.map((item, idx)=> {return {
+
+          ["Sr. No"]:  idx+1 ,
+          ["Employee Name"]:  item.emp_name,
+          ["Reporting HQ"]:  item.reporting_hq ,
+          ["Territory"]:  item.territory_name ,
+          ["Application Fee Amount"]:  item.in_appl_amt ,
+          ["Festival Amt"]:  item.in_fest_amount_e ,
+          ["Incentive Amt"]:  item.in_special_allowance_e ,
+          ["Other Amount"]:  item.in_other_amt_e ,
+          ["Gross Salary"]:  item.grass_salary ,
+          ["Calendar WD"]:  item.calender_w_d ,
+          ["Present Day"]:  item.total_mr_present ,
+          ["Mannual Attendance"]:  item.manual_attendance ,
+          ["Total Working Days"]:  item.total_working_day ,
+          ["Earning Salary"]:  item.earning_salary ,
+          ["Bonus Amount"]:  item.bonus_amt ,
+          ["Other Amount"]:  item.other_amt ,
+          ["Total Deduction"]:  item.total_deduc ,
+          ["Net Salary"]:  item.net_salary ,
+          ["Total Demo"]:  item.total_mr_demo_present ,
+          ["Total Field_Day"]:  item.mr_field_present ,
+          ["Total Group_Meet"]:  item.mr_meet_1,
+          ["Total OFM"]:  item.mr_meet_2 ,
+          ["Activity Score"]:  item.total_activity_score ,
+          ["Total Accumulateri ve Salary"]:  item.total_accumulative_vs_salary ,
+          ["TDs %"]:  item.tds_percent ,
+          ["Tds Amt"]:  item.tds_amount ,
+          ["Incentive Disincentive"]:  item.incentive_or_disincemtive ,
+          ["Status"]:  item.emp_status ,
+          ["Reporting Person"]:  item.rp_manager ,
+          ["Region"]:  item.region_name,
+          ["Zone"]:  item.zone_name ,
+          ["Resignsstion Fee"]:   moment(item.resignation_request_date).format("DD-MM-YYYY"),
+          
+
+       
         }
        } ));
         const wb = XLSX.utils.book_new();
@@ -725,14 +715,14 @@ yr: moment().year(),
               size={32}
               onClick={() => getExcelsheet(
                 filterState.yr,
-filterState.month,
+                filterState.month,
                 filterState.bgId,
-                  filterState.buId,
-                  filterState.zId,
-                  filterState.rId,
-                  filterState.tId,
-                  
-                  filterState.empCode
+                filterState.buId,
+                filterState.zId,
+                filterState.rId,
+                filterState.tId,   
+                filterState.empCode,
+                filterState.newFil
               )
 
 
@@ -766,19 +756,19 @@ filterState.month,
               }
             
             >
-              <option value="All" className="font-bold" disabled={true}>
+              <option value="" className="font-bold" >
                 -- Select --
               </option>
-              <option value="All" className="font-bold" disabled={true}>
+              <option value="2021" className="font-bold" >
                2021
               </option>
-              <option value="All" className="font-bold" disabled={true}>
+              <option value="2022" className="font-bold" >
                2022
               </option>
-              <option value="All" className="font-bold" disabled={true}>
+              <option value="2023" className="font-bold" >
                 2023
               </option>
-              <option value="All" className="font-bold" disabled={true}>
+              <option value="2024" className="font-bold" >
                 2024
               </option>
              
@@ -795,15 +785,15 @@ filterState.month,
               }
               disabled={!filterState.yr}
             >
-              <option value="All" className="font-bold">
-                All
+              <option value="" className="font-bold">
+              Select Month
               </option>
 
-              {/* {allMonthData.map((item, idx) => (
+              { ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((item, idx) => (
                 <option value={item} key={idx}>
-                  {moment(item).format("MMM YYYY")}
+                  {item}
                 </option>
-              ))} */}
+              ))}
             </select>
        
           <select
@@ -985,11 +975,12 @@ filterState.month,
           <select
             id="attendanceType"
             className="border rounded px-2 py-1 w-full h-8"
-            value={filterState.empCode}
+            value={filterState.newFil}
             onChange={(e) =>
               setFilterState({ ...filterState, newFil: e.target.value })
             }
           >
+            <option value={"Option"}>Select Status</option>
             <option value={"Verify"}>Verify</option>
             <option value={"Approve"}>Approve</option>
             <option value={"All"}>All</option>
@@ -999,459 +990,255 @@ filterState.month,
          
         </div>
 
-        {/* <div className="overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
+        <div className="overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
           <table className="min-w-full divide-y border- divide-gray-200 ">
             <thead className="border-b w-max">
               <tr className="bg-gray-50 font-arial w-max">
                 <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  Action
+                  Sr. No
                 </th>
                 <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                 D.PL Visit No
+                 Employee Name
                 </th>
-
+                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                 Reporting HQ
+                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Date
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Dealer
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Emp Code
+                 Territory
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Emp Name
+                 Application Fee Amount
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Dealer Address
+                 Festival Amt.
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Contact Person
+                 Incentive Amt
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Product Brand
+               Other Amount
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Product Positioning
+                Gross Salary
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                Calendar W.D.
                 </th>               
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Promotional Material
+                Present Day
                 </th>               
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Damage Condition 
+                Mannual Attendance
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Category Placement
+                  Total Working Days
                 </th> 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Current Stock
+                 Earning Salary
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Actual Share of Life
+                  Bonus Amount
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Compititor Brand
+                 Other Amount
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Compititor Price
-                </th>
-                
-              
+                Total Deduction
+                </th>        
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Territory
+                  Net Salary
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Region
+                  Total Demo
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Zone
+                  Total Field Day
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Business Unit
+                  Total Group Meet
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Company
+                  Total OFM
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Deleted
+                  Activity Score
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Total Accumulateri ve Salart
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  TDs %
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Tds Amt
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                 Incentive Disincentive
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                 Status
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                 Reporting Person
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                 Region
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                 Zone
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                 Resignsstion Date
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
               {data?.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
-                  <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
-                    {getAllActionButton(item)}             
+                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs">
+                    {idx +1}             
                 </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.f_planogram_no}
+                    {item.emp_name}
                   </td>
                
-
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                  
-                    {moment(item.f_planogram_date).format("DD/MM/YYYY")}
+                    {item.reporting_hq}
                   </td>
                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.dealer_des} 
+                   {item.territory_name}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.emp_code} 
+                  {item.in_appl_amt
+                  }
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.emp_name} 
+                  {item.in_fest_amount_e}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {item.dealer_address} 
+                {item.in_special_allowance_e}
+                  </td> 
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  {item.
+in_other_amt_e
+}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {item.dealer_contact}
+                    {item.grass_salary}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.product_brand}
-                  </td>
+                    {item.calender_w_d}
+                  </td>           
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.product_positioning}
-                  </td>
-                
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.promotional_material}
+                  {item.total_mr_present}
                   </td>
                 
                   
 
                  
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.damage_condition}
+                    {item.manual_attendance}
                   </td>
                  
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.category_placement}
+                    {item.total_working_day}
                   </td>
                 
                  
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.current_stock}
+                    {item.earning_salary}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.actual_share_of_life}
+                    {item.bonus_amt}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.compitor_brand}
+                    {item.other_amt
+                    }
                   </td>
                   
                 
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.compitor_price}
+                    {item.total_deduc}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.territory_name}
+                    {item.net_salary
+                    }
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.region_name}
+                {item.
+total_mr_demo_present}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.zone_name}
+                    {item.mr_field_present}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.business_unit_name}
+                    {item.mr_meet_1
+                    }
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.cmpny_name}
+                    {item.
+mr_meet_2
+}
                   </td>
                   
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.isDeleted ? "Yes" : "No"}
+                    {item.total_activity_score}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.
+total_accumulative_vs_salary
+}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  {item.
+tds_percent
+}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  {item.
+
+tds_amount
+}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+               {item.incentive_or_disincemtive}
+
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                {item.emp_status}
+
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+              {item.rp_manager}
+
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                {item.region_name}
+
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                 {item.zone_name}
+
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                {moment(item.resignation_request_date).format("DD-MM-YYYY")}
+
                   </td>
                                   </tr>
               ))}
             </tbody>
           </table>
           
-        </div> */}
-        <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
-        <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
-      Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
-      <small className="font-bold px-2 self-center text-black">{data?.length}</small> of{" "}
-      <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
-    </div>
-    <ReactPaginate
-      previousLabel={"Previous"}
-      nextLabel={"Next"}
-      breakLabel={"..."}
-      pageCount={pageCount}
-      onPageChange={handlePageChange}
-      containerClassName={"pagination flex flex-row gap-2"} // Container styling
-      activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
-      className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
-      forcePage={currentPage.selected} // Set the current page
-     />
-  </div>
+        </div>
+      
       </div>
 
-      <Transition appear show={showImageModal} as={Fragment}>
-        <Dialog
-          as="div"
-          className="z-10"
-          onClose={() => setShowImageModal(false)}
-        >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black/25" />
-          </Transition.Child>
+   
 
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
-                  >
-                    Image
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <Image
-                      src={nmg}
-                      className=" rounded bg-gray-200"
-                      width={300}
-                      height={200}
-                    />
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-
-      <Transition appear show={showVerifyModal} as={Fragment}>
-        <Dialog
-          as="div"
-          className="z-10"
-          onClose={() => setShowVerifyModal(false)}
-        >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black/25" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center ">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
-                  >
-                    {modalData.type === "Verify"
-                      ? " Verify Demo"
-                      : "Approve Demo"}
-                  </Dialog.Title>
-                  <div className="mt-8 w-100">
-                    <div className="flex flex-row gap-4 items-center ">
-                      {" "}
-                      <label
-                        htmlFor="verification"
-                        className="block mb-2 text-gray-700 w-52"
-                      >
-                        {modalData.type === "Verify" ? " Verify " : "Approve "}
-                      </label>
-                      <select
-                        id="verification"
-                        name="verification"
-                        className="block w-full px-4 py-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-blue-300"
-                        value={modalData.isTrue}
-                        onChange={(e) =>
-                          setModalData({
-                            ...modalData,
-                            isTrue: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                      </select>
-                    </div>
-
-                    <div className="flex flex-row gap-4 mt-2 items-center">
-                      <label
-                        htmlFor="verificationDate"
-                        className="block mt-4 mb-2 text-gray-700 whitespace-nowrap  w-52"
-                      >
-                        {modalData.type === "Verify"
-                          ? "Verification Date:"
-                          : "Approval Date:"}
-                      </label>
-                      <input
-                        id="verificationDate"
-                        name="verificationDate"
-                        type="text"
-                        value={moment().format("DD-MM-YYYY")}  // Assuming you want the current date
-                        disabled
-                        className="block w-full px-4 py-2 h-10 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-blue-300"
-                      />
-                    </div>
-
-                    <div className="flex flex-row gap-4 mt-2 items-center">
-                      <label
-                        htmlFor="userName"
-                        className="block mt-4 mb-2 text-gray-700 whitespace-nowrap w-52"
-                      >
-                        {modalData.type === "Verify"
-                          ? "Verify User:"
-                          : "Approve User:"}
-                      </label>
-                      <input
-                        id="userName"
-                        name="userName"
-                        type="text"
-                        placeholder="Enter username"
-                        className="block w-full px-4 py-2 h-10 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-blue-300"
-                        value={currentUser}
-                        disabled
-                      />
-                    </div>
-
-                    {modalData.type === "Verify" ? (
-                     <div className="mt-6 flex justify-center gap-1">
-                        {" "}
-                        <button
-                          className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-                          onClick={() => handleVerify()} // Replace handleVerify with your verification function
-                        >
-                          Verify
-                        </button>
-                        <button
-                          className="px-4 py-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:bg-gray-300"
-                          onClick={() => handleCloseModal()}
-                        >
-                          Close
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="mt-6 flex justify-center gap-1">
-                        {" "}
-                        <button
-                          className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-                          onClick={() => handleApprove()} // Replace handleVerify with your verification function
-                        >
-                          Approve
-                        </button>
-                        <button
-                          className="px-4 py-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:bg-gray-300"
-                          onClick={() => handleCloseModal()}
-                        >
-                          Close
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-
-      <Transition appear show={showDeleteModal} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          onClose={() => setShowDeleteModal(false)}
-        >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black/25" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
-                  >
-                    Are you sure ?
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-center text-gray-500">
-                      Do you really want to delete this ?
-                    </p>
-                  </div>
-
-                  <div className="mt-4 flex items-center justify-between">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={() => handleCloseModal()}
-                    >
-                      Cancel
-                    </button>
-
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={() => {
-                        handleDelete();
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
+    
+   
     </Layout>
   );
 };
