@@ -29,7 +29,7 @@ const FeePayout = () => {
   };
 
   
- 
+ const [downloadLoading , setDownloadLoading]= useState(false)
   const getFeeData = async (
     yr,
     month,
@@ -41,7 +41,10 @@ const FeePayout = () => {
     empCode,
     status
   ) => {
+ 
     try {
+        setDownloadLoading(true)
+        
         const allMonths = [
             { month: "January", number: 1 },
             { month: "February", number: 2 },
@@ -76,10 +79,11 @@ const FeePayout = () => {
         },
       });
       const apires = await respond.data.data.employeeData;
-
-      console.log("pop",apires)
+    
       setData(apires);
+      setDownloadLoading(false)
     } catch (error) {
+        setDownloadLoading(false)
       setData([]);
     }
   };
@@ -109,7 +113,7 @@ const FeePayout = () => {
   const [filterState, setFilterState] = useState({
     yr: moment().year(),
     month:"",
-    newFil:"",
+    newFil:"All",
     bgId: null,
     buId: null,
     zId: null,
@@ -120,7 +124,7 @@ const FeePayout = () => {
     zDes: null,
     buDes: null,
     bgDes: null,
-    newFil:null
+    newFil:"All"
   
    
   });
@@ -301,7 +305,7 @@ const FeePayout = () => {
         filterState = {
          yr: moment().year(),
          month:"",
-newFil:"",
+newFil:"All",
          bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -355,7 +359,7 @@ newFil:"",
         filterState = {
 yr: moment().year(),
     month:"",
-newFil:"",
+newFil:"All",
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -408,7 +412,7 @@ newFil:"",
         filterState = {
 yr: moment().year(),
           month:"",
-          newFil:"",
+          newFil:"All",
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -462,7 +466,7 @@ yr: moment().year(),
         filterState = {
 yr: moment().year(),
           month:"",
-          newFil:"",
+          newFil:"All",
           bgId:
             JSON.parse(window.localStorage.getItem("userinfo")).bg_id === 0
               ? "All"
@@ -515,7 +519,7 @@ yr: moment().year(),
         filterState = {
             yr: moment().year(),
            month:"",
-newFil:"",
+newFil:"All",
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
@@ -567,7 +571,7 @@ newFil:"",
         setFilterState({
             yr: moment().year(),
     month:"",
-newFil:"",
+newFil:"All",
           bgId: JSON.parse(window.localStorage.getItem("userinfo")).bg_id,
           buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
@@ -699,6 +703,47 @@ newFil:"",
         
       }
     };
+    const [total , setTotal]= useState({})
+    useEffect(()=>{
+        const totals = data.reduce(
+            (acc, item) => {
+              acc.applicationFeeAmount += parseFloat(item.in_appl_amt) || 0;
+              acc.festivalAmount += parseFloat(item.in_fest_amount_e) || 0;
+              acc.incentiveAmount += parseFloat(item.in_special_allowance_e) || 0;
+              acc.otherAmount += parseFloat(item.in_other_amt_e) || 0;
+              acc.grossSalary += parseFloat(item.grass_salary) || 0;
+              acc.earningSalary += parseFloat(item.earning_salary) || 0;
+              acc.bonusAmount += parseFloat(item.bonus_amt) || 0;
+              acc.totalDeduction += parseFloat(item.total_deduc) || 0;
+              acc.netSalary += parseFloat(item.net_salary) || 0;
+              return acc;
+            },
+            {
+              applicationFeeAmount: 0,
+              festivalAmount: 0,
+              incentiveAmount: 0,
+              otherAmount: 0,
+              grossSalary: 0,
+              earningSalary: 0,
+              bonusAmount: 0,
+              totalDeduction: 0,
+              netSalary: 0
+            }
+          );
+          setTotal(totals)
+    },[data])
+   
+    const Loader = () => {
+        return (
+            <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+            <img
+              className="w-20 h-20 animate-spin"
+              src="https://www.svgrepo.com/show/448500/loading.svg"
+              alt="Loading icon"
+            />
+          </div>
+        );
+      };
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -723,10 +768,7 @@ newFil:"",
                 filterState.tId,   
                 filterState.empCode,
                 filterState.newFil
-              )
-
-
-                
+              ) 
               }
             ></TbFileDownload>
             
@@ -771,6 +813,12 @@ newFil:"",
               <option value="2024" className="font-bold" >
                 2024
               </option>
+              <option value="2025" className="font-bold" >
+                2025
+              </option>
+              <option value="2026" className="font-bold" >
+                2026
+              </option>
              
             </select>
             <select
@@ -789,7 +837,8 @@ newFil:"",
               Select Month
               </option>
 
-              { ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((item, idx) => (
+              { 
+              ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map((item, idx) => (
                 <option value={item} key={idx}>
                   {item}
                 </option>
@@ -980,7 +1029,7 @@ newFil:"",
               setFilterState({ ...filterState, newFil: e.target.value })
             }
           >
-            <option value={"Option"}>Select Status</option>
+            
             <option value={"Verify"}>Verify</option>
             <option value={"Approve"}>Approve</option>
             <option value={"All"}>All</option>
@@ -990,248 +1039,195 @@ newFil:"",
          
         </div>
 
-        <div className="overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
-          <table className="min-w-full divide-y border- divide-gray-200 ">
-            <thead className="border-b w-max">
-              <tr className="bg-gray-50 font-arial w-max">
-                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                  Sr. No
-                </th>
-                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                 Employee Name
-                </th>
-                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Reporting HQ
-                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Territory
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Application Fee Amount
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Festival Amt.
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Incentive Amt
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-               Other Amount
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Gross Salary
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Calendar W.D.
-                </th>               
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Present Day
-                </th>               
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Mannual Attendance
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Total Working Days
-                </th> 
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Earning Salary
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Bonus Amount
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Other Amount
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Total Deduction
-                </th>        
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Net Salary
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Total Demo
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Total Field Day
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Total Group Meet
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Total OFM
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Activity Score
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Total Accumulateri ve Salart
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  TDs %
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Tds Amt
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Incentive Disincentive
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Status
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Reporting Person
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Region
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Zone
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Resignsstion Date
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-              {data?.map((item, idx) => (
-                <tr className="dark:border-2" key={idx}>
-                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs">
-                    {idx +1}             
-                </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.emp_name}
-                  </td>
-               
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                 
-                    {item.reporting_hq}
-                  </td>
-                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                   {item.territory_name}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {item.in_appl_amt
-                  }
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {item.in_fest_amount_e}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                {item.in_special_allowance_e}
-                  </td> 
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {item.
-in_other_amt_e
-}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.grass_salary}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.calender_w_d}
-                  </td>           
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {item.total_mr_present}
-                  </td>
+        <div className="overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2 select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
+        {downloadLoading ? (
+                  <Loader />
+                ) : (
+                    <table className="min-w-full divide-y border divide-gray-200">
+                    <thead className="border-b">
+                      <tr className="bg-gray-50 font-arial">
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Sr. No</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Code</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Name</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Reporting HQ</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Territory</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Application Fee Amount</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Festival Amt.</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Incentive Amt</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Other Amount</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Gross Salary</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Calendar W.D.</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Present Day</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Manual Attendance</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Total Working Days</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Earning Salary</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Bonus Amount</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Other Amount</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Total Deduction</th>
+                        <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                            Net Salary
+                            </th>
+                        <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                              Total Demo
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                              Total Field Day
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                              Total Group Meet
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                              Total OFM
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                              Activity Score
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                              Total Accumulateri ve Salart
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                              TDs %
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                              Tds Amt
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                             Incentive Disincentive
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                             Status
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                             Reporting Person
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                             Region
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                             Zone
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                             Business Unit
+                            </th>
+                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                             Resignsstion Date
+                            </th>  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">App Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200 text-xs">
+                      {data?.map((item, idx) => (
+                        <tr className="dark:border-2" key={idx}>
+                          <td className="px-4 py-2 text-left">{idx + 1}</td>
+                          <td className="px-4 py-2">{item.empcode}</td>
+                          <td className="px-4 py-2">{item.emp_name}</td>
+                         
+                          <td className="px-4 py-2">{item.reporting_hq}</td>
+                          <td className="px-4 py-2">{item.territory_name}</td>
+                          <td className="px-4 py-2 text-right">{parseFloat(item.in_appl_amt) ? parseFloat(item.in_appl_amt)?.toFixed(2):"-"}</td>
+                          <td className="px-4 py-2 text-right">{parseFloat(item.in_fest_amount_e) ? parseFloat(item.in_fest_amount_e)?.toFixed(2):"-"}</td>
+                          <td className="px-4 py-2 text-right">{parseFloat(item.in_special_allowance_e) ? parseFloat(item.in_special_allowance_e)?.toFixed(2):"-"}</td>
+                          <td className="px-4 py-2 text-right">{parseFloat(item.in_other_amt_e) ? parseFloat(item.in_other_amt_e)?.toFixed(2):"-"}</td>
+                          <td className="px-4 py-2 text-right">{parseFloat(item.grass_salary) ? parseFloat(item.grass_salary)?.toFixed(2):"-"}</td>
+                          <td className="px-4 py-2 text-right">{item.calender_w_d}</td>
+                          <td className="px-4 py-2 text-right">{item.total_mr_present}</td>
+                          <td className="px-4 py-2 text-right">{item.manual_attendance}</td>
+                          <td className="px-4 py-2 text-right">{item.total_working_day}</td>
+                          <td className="px-4 py-2 text-right">{parseFloat(item.earning_salary) ?parseFloat(item.earning_salary)?.toFixed(2):"-"}</td>
+                          <td className="px-4 py-2 text-right">{parseFloat(item.bonus_amt) ?parseFloat(item.bonus_amt)?.toFixed(2):"-"}</td>
+                          <td className="px-4 py-2 text-right">{parseFloat(item.other_amt) ?parseFloat(item.other_amt)?.toFixed(2):"-"}</td>
+                          <td className="px-4 py-2 text-right">{parseFloat(item.total_deduc) ?parseFloat(item.total_deduc)?.toFixed(2):"-"}</td>
+                          <td className="px-4 py-2 text-right">{parseFloat(item.net_salary) ?parseFloat(item.net_salary)?.toFixed(2):"-"}</td>
+                         
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                            {item.total_mr_demo_present}
+                              </td>
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                                {item.mr_field_present}
+                              </td>
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                                {item.mr_meet_1
+                                }
+                              </td>
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                                {item.
+            mr_meet_2
+            }
+                              </td>
+                              
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                                {item.total_activity_score}
+                              </td>
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                              {parseFloat(item.
+            total_accumulative_vs_salary) ?parseFloat(item.
+                total_accumulative_vs_salary)?.toFixed(2):"-"}
+                       
+                              </td>
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                              {item.
+            tds_percent
+            }
+                              </td>
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                              
+                              {parseFloat(item.tds_amount) ?parseFloat(item.tds_amount)?.toFixed(2):"-"}
                 
-                  
-
-                 
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.manual_attendance}
-                  </td>
-                 
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.total_working_day}
-                  </td>
-                
-                 
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.earning_salary}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.bonus_amt}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.other_amt
-                    }
-                  </td>
-                  
-                
-
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.total_deduc}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.net_salary
-                    }
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                {item.
-total_mr_demo_present}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.mr_field_present}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.mr_meet_1
-                    }
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.
-mr_meet_2
-}
-                  </td>
-                  
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.total_activity_score}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.
-total_accumulative_vs_salary
-}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {item.
-tds_percent
-}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {item.
-
-tds_amount
-}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-               {item.incentive_or_disincemtive}
-
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                {item.emp_status}
-
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-              {item.rp_manager}
-
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                {item.region_name}
-
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                 {item.zone_name}
-
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                {moment(item.resignation_request_date).format("DD-MM-YYYY")}
-
-                  </td>
-                                  </tr>
-              ))}
-            </tbody>
-          </table>
-          
-        </div>
+                              </td>
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                           {item.incentive_or_disincemtive}
+            
+                              </td>
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                            {item.emp_status}
+            
+                              </td>
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                          {item.rp_manager}
+            
+                              </td>
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                            {item.region_name}
+            
+                              </td>
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                             {item.zone_name}
+            
+                              </td>
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                             {item.business_unit_name}
+            
+                              </td>
+                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                            {item.resignation_request_date ? moment(item.resignation_request_date).format("DD-MM-YYYY"): "-"}
+            
+                              </td>
+            
+                          <td className="px-4 py-2">{item.app_status}</td>
+                        </tr>
+                      ))}
+                      <tr className="bg-gray-200 font-semibold">
+                        <td className="px-4 py-2 text-right" colSpan="5">Total</td>
+                        <td className="px-4 py-2 text-right">{total.applicationFeeAmount ? total.applicationFeeAmount?.toFixed(2): "-"}</td>
+                        <td className="px-4 py-2 text-right">{total.festivalAmount ? total.festivalAmount?.toFixed(2): "-"}</td>
+                        <td className="px-4 py-2 text-right">{total.incentiveAmount ? total.incentiveAmount?.toFixed(2): "-"}</td>
+                        <td className="px-4 py-2 text-right">{total.otherAmount ? total.otherAmount?.toFixed(2): "-"}</td>
+                        <td className="px-4 py-2 text-right">{total.grossSalary ? total.grossSalary?.toFixed(2): "-"}</td>
+                        <td className="px-4 py-2 text-right" colSpan="4"></td>
+                        <td className="px-4 py-2 text-right">{total.earningSalary? total.earningSalary?.toFixed(2): "-"}</td>
+                        <td className="px-4 py-2 text-right">{total.bonusAmount? total.bonusAmount?.toFixed(2): "-"}</td>
+                        <td className="px-4 py-2 text-right"></td>
+                        <td className="px-4 py-2 text-right">{total.totalDeduction ? total.totalDeduction?.toFixed(2): "-"}</td>
+                        <td className="px-4 py-2 text-right">{total.netSalary ? total.netSalary?.toFixed(2): "-"}</td>
+                        
+                        <td className="px-4 py-2 text-right" colSpan="5"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                )}{" "}
+      
+      
+      <div className="text-right font-semibold mt-2">Total Rows: {data.length}</div>
+    </div>
       
       </div>
 
