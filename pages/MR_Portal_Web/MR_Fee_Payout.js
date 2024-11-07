@@ -1139,23 +1139,24 @@ newFil:"All",
                           <td className="px-4 py-2 text-right">{parseFloat(item.net_salary) ?parseFloat(item.net_salary)?.toFixed(2):"-"}</td>
                          
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                            {item.total_mr_demo_present}
+                            {item.total_mr_demo_present? item.total_mr_demo_present: "-"}
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                                {item.mr_field_present}
+                                {item.mr_field_present ? item.mr_field_present : "-"}
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                                {item.mr_meet_1
+                                {item.mr_meet_1 ? item.mr_meet_1 : "-"
                                 }
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                                 {item.
-            mr_meet_2
+            mr_meet_2 ?item.
+            mr_meet_2 : '-'
             }
                               </td>
                               
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                                {item.total_activity_score}
+                                {item.total_activity_score ? item.total_activity_score : "-"}
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                               {parseFloat(item.
@@ -1165,7 +1166,8 @@ newFil:"All",
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                               {item.
-            tds_percent
+            tds_percent ? item.
+            tds_percent: "-"
             }
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
@@ -1174,7 +1176,7 @@ newFil:"All",
                 
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                           {item.incentive_or_disincemtive}
+                           {item.incentive_or_disincemtive ? item.incentive_or_disincemtive : "-"}
             
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
