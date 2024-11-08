@@ -213,30 +213,7 @@ const AdditionalInfo = (props) => {
                     />{" "}
                    Attendance Regularization
                   </li>
-                  <li
-                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                    onClick={() =>
-                      router.push({
-                        pathname: "MR_Farmer_list",
-                      })
-                    }
-                  >
-                    <IoTodayOutline
-                      className="text-[#626364] cursor-pointer"
-                      size={20}
-                    />{" "}
-                    List of Farmer
-                  </li>
-                  <li
-                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                    onClick={() => setAddFarmerModal(true)}
-                  >
-                    <GiFarmer
-                      className="text-[#626364] cursor-pointer"
-                      size={20}
-                    />{" "}
-                    New Farmer
-                  </li>
+                 
                   <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
                     <FaHandsHelping
                       className="text-[#626364] cursor-pointer"
@@ -244,13 +221,7 @@ const AdditionalInfo = (props) => {
                     />{" "}
                     Help
                   </li>
-                  <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:flex-col ">
-                    <IoSettingsOutline
-                      className="text-[#626364] cursor-pointer"
-                      size={20}
-                    />{" "}
-                    Setting
-                  </li>
+              
                 </ul>
               </Popover.Panel>
             </>

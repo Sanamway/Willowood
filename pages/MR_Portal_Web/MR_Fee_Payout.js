@@ -15,6 +15,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { TbFileDownload } from "react-icons/tb";
   import * as XLSX from "xlsx";
+import { IoTerminal } from "react-icons/io5";
 const FeePayout = () => {
   
   const router = useRouter();
@@ -1119,7 +1120,7 @@ newFil:"All",
                         <tr className="dark:border-2" key={idx}>
                           <td className="px-4 py-2 text-left">{idx + 1}</td>
                           <td className="px-4 py-2">{item.empcode}</td>
-                          <td className="px-4 py-2">{item.emp_name}</td>
+                          <td className="px-4 py-2 whitespace-nowrap">{item.emp_name}</td>
                          
                           <td className="px-4 py-2">{item.reporting_hq}</td>
                           <td className="px-4 py-2">{item.territory_name}</td>
@@ -1155,12 +1156,13 @@ newFil:"All",
             }
                               </td>
                               
-                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                                {item.total_activity_score ? item.total_activity_score : "-"}
-                              </td>
-                              <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                                <td className={`px-4 py-2 dark:border-2 whitespace-nowrap ${item.total_activity_score <5 ?"text-red-400":""}`}>
+                                {parseFloat(item.total_activity_score) ?parseFloat(item.total_activity_score)?.toFixed(2):"-"}
+                               
+                               </td>
+                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                               {parseFloat(item.
-            total_accumulative_vs_salary) ?parseFloat(item.
+                 total_accumulative_vs_salary) ?parseFloat(item.
                 total_accumulative_vs_salary)?.toFixed(2):"-"}
                        
                               </td>
@@ -1176,7 +1178,7 @@ newFil:"All",
                 
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                           {item.incentive_or_disincemtive ? item.incentive_or_disincemtive : "-"}
+                                {item.incentive_or_disincemtive ? item.incentive_or_disincemtive : "-"}
             
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
@@ -1184,27 +1186,24 @@ newFil:"All",
             
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                          {item.rp_manager}
+                              {item.rp_manager}
             
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                            {item.region_name}
+                             {item.region_name}
             
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                              {item.zone_name}
-            
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                             {item.business_unit_name}
-            
+                              {item.business_unit_name}
                               </td>
                               <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                            {item.resignation_request_date ? moment(item.resignation_request_date).format("DD-MM-YYYY"): "-"}
-            
+                               {item.resignation_request_date ? moment(item.resignation_request_date).format("DD-MM-YYYY"): "-"}        
                               </td>
-            
-                          <td className="px-4 py-2">{item.app_status}</td>
+    
+                          <td className="px-4 py-2 whitespace-nowrap">{item.app_status}</td>
                         </tr>
                       ))}
                       <tr className="bg-gray-200 font-semibold">
