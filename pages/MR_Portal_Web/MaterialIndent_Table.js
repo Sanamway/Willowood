@@ -888,24 +888,20 @@ case 5: return <div>
 </div>
 
 case 6: return <div>
-  
-  
 <button
-  onClick={() => {
-    setShowVerifyModal(true);
-    setModalData({
-      ...modalData,
-      type: "Approve",
-      id:  item.mi_id,
-    });
-  }}
-  disabled={item.approved === "Yes"}
-  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+disabled={item.verified === "Yes"}
+onClick={() => {
+  setShowVerifyModal(true);
+  setModalData({
+    ...modalData,
+    type: "Verify",
+    id:  item.mi_id,
+  });
+}}
 >
-  Approve
+Verify
 </button>
-</div>
-
+</div> 
 case 9: return <div>
 <button
 disabled={item.verified === "Yes"}
