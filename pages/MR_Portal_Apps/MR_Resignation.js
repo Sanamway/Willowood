@@ -167,7 +167,7 @@ const [showSubmitButton , setShowSubmitButton] = useState(true)
     localStorageItems.cId])
   return (
     <form
-      className=" bg-white rounded  w-full   pb-4  fixed"
+      className=" bg-white rounded  w-full   pb-4 "
       onSubmit={(e) => e.preventDefault()}
     >
      <Toaster position="bottom-center" reverseOrder={false} />

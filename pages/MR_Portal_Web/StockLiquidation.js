@@ -70,12 +70,52 @@ const StockLiquidation = () => {
 
   const [showImageModal, setShowImageModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const [modalData, setModalData] = useState({});
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [modalData, setModalData] = useState({
+    id: "",
+    type: "",
+    isTrue: "Yes",
+    date: new Date(),
+    user: "",
+    productBrand: "", 
+    crop: "" ,
+    dealerId: "" 
+  });
 
   
+  const handleVerify = async () => {
+    const data = {
+      verified: modalData.isTrue,
+      verified_date: new Date(),
+      verified_user: currentUser,
+    };
 
-  const handleDelete = async(item) =>{
+    try {
+      const respond = await axios.put(
+        `${url}/api/update_dealer_stock_liq/${modalData.id}`,
+        JSON.stringify(data),
+        {
+          headers: headers,
+        }
+      );
+      handleCloseModal();
+      const apires = await respond.data.message;
+      toast.success(apires);
+      getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
+    } catch (error) {}
+  };
+
+  const handleDelete = async() =>{
     try {
         const respond = await axios
           .get(`${url}/api/delete_dealer_stock_liq`, {
@@ -84,9 +124,9 @@ const StockLiquidation = () => {
                 emp_code: window.localStorage.getItem("emp_code"),
                 c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
                 t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-                product_brand: item.product_brand, 
-                crop: item.crop ,
-                dealer_id: item.dealer_id         
+                product_brand: modalData.productBrand, 
+                crop: modalData.crop ,
+                dealer_id: modalData.dealerId         
             }
           })
           .then((res) => {
@@ -118,8 +158,17 @@ const StockLiquidation = () => {
   }, []);
 
   const handleCloseModal = () => {
-    setModalData({});
-   
+    setModalData({
+      id: "",
+      type: "",
+      isTrue: "Yes",
+      date: new Date(),
+      user: "",
+      productBrand: "", 
+      crop: "" ,
+      dealerId: "" 
+    });
+    setShowVerifyModal(false)
     setShowDeleteModal(false);
   };
   const [localStorageItems, setLocalStorageItems] = useState({
@@ -687,6 +736,89 @@ const StockLiquidation = () => {
   ]);
   const { name } = router.query;
 
+  const getAllActionButton = (item) =>{
+    let role = localStorageItems.roleId
+ switch(role){
+  
+case 6: return <div>
+<button
+disabled={item.verified === "Yes"}
+onClick={() => {
+  setShowVerifyModal(true);
+  setModalData({
+    ...modalData,
+    type: "Verify",
+    id:  item.sa_id,
+  });
+}}
+>
+Verify
+</button>
+<button
+  className="b text-black hover:text-red-500 ml-2"
+  onClick={() => {
+    setShowDeleteModal(true);
+    setModalData({
+      ...modalData,
+       productBrand: item.product_brand, 
+       crop: item.crop ,
+       dealerId: item.dealer_id 
+    });
+  }}
+>
+  Delete
+</button>
+</div> 
+case 9: return <div>
+<button
+disabled={item.verified === "Yes"}
+onClick={() => {
+  setShowVerifyModal(true);
+  setModalData({
+    ...modalData,
+    type: "Verify",
+    id:  item.sa_id,
+  });
+}}
+>
+Verify
+</button>
+<button
+  className="b text-black hover:text-red-500 ml-2"
+  onClick={() => {
+    setShowDeleteModal(true);
+    setModalData({
+      ...modalData,
+       productBrand: item.product_brand, 
+       crop: item.crop ,
+       dealerId: item.dealer_id 
+    });
+  }}
+>
+  Delete
+</button>
+</div> 
+default: return <div>
+<button
+  className="b text-black hover:text-red-500 ml-2"
+  onClick={() => {
+    setShowDeleteModal(true);
+    setModalData({
+      ...modalData,
+       productBrand: item.product_brand, 
+       crop: item.crop ,
+       dealerId: item.dealer_id 
+    });
+  }}
+>
+  Delete
+</button>
+</div> 
+
+}
+    }
+
+
   const getExcelsheet = async (
     bg,
     bu,
@@ -1038,22 +1170,7 @@ const StockLiquidation = () => {
               {data.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
                   <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
-                  <div>
-    
-  
- 
-    <button
-      className="b text-black hover:text-red-500 ml-2"
-      onClick={() => {
-        setShowDeleteModal(true);
-        setModalData({
-        ...item
-        });
-      }}
-    >
-      Delete
-    </button>
-    </div>           
+                  {getAllActionButton(item)} 
                 </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.
@@ -1187,7 +1304,149 @@ item.dealer_des}
           </div>
         </Dialog>
       </Transition>
+      <Transition appear show={showVerifyModal} as={Fragment}>
+        <Dialog
+          as="div"
+          className="z-10"
+          onClose={() => setShowVerifyModal(false)}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
 
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center ">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
+                  >
+                    {modalData.type === "Verify"
+                      ? " Verify Demo"
+                      : "Approve Demo"}
+                  </Dialog.Title>
+                  <div className="mt-8 w-100">
+                    <div className="flex flex-row gap-4 items-center ">
+                      {" "}
+                      <label
+                        htmlFor="verification"
+                        className="block mb-2 text-gray-700 w-52"
+                      >
+                        {modalData.type === "Verify" ? " Verify " : "Approve "}
+                      </label>
+                      <select
+                        id="verification"
+                        name="verification"
+                        className="block w-full px-4 py-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-blue-300"
+                        value={modalData.isTrue}
+                        onChange={(e) =>
+                          setModalData({
+                            ...modalData,
+                            isTrue: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </select>
+                    </div>
+
+                    <div className="flex flex-row gap-4 mt-2 items-center">
+                      <label
+                        htmlFor="verificationDate"
+                        className="block mt-4 mb-2 text-gray-700 whitespace-nowrap  w-52"
+                      >
+                        {modalData.type === "Verify"
+                          ? "Verification Date:"
+                          : "Approval Date:"}
+                      </label>
+                      <input
+                        id="verificationDate"
+                        name="verificationDate"
+                        type="text"
+                        value={moment().format("DD-MM-YYYY")}  // Assuming you want the current date
+                        disabled
+                        className="block w-full px-4 py-2 h-10 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-blue-300"
+                      />
+                    </div>
+
+                    <div className="flex flex-row gap-4 mt-2 items-center">
+                      <label
+                        htmlFor="userName"
+                        className="block mt-4 mb-2 text-gray-700 whitespace-nowrap w-52"
+                      >
+                        {modalData.type === "Verify"
+                          ? "Verify User:"
+                          : "Approve User:"}
+                      </label>
+                      <input
+                        id="userName"
+                        name="userName"
+                        type="text"
+                        placeholder="Enter username"
+                        className="block w-full px-4 py-2 h-10 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-blue-300"
+                        value={currentUser}
+                        disabled
+                      />
+                    </div>
+
+                    {modalData.type === "Verify" ? (
+                     <div className="mt-6 flex justify-center gap-1">
+                        {" "}
+                        <button
+                          className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                          onClick={() => handleVerify()} // Replace handleVerify with your verification function
+                        >
+                          Verify
+                        </button>
+                        <button
+                          className="px-4 py-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:bg-gray-300"
+                          onClick={() => handleCloseModal()}
+                        >
+                          Close
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="mt-6 flex justify-center gap-1">
+                        {" "}
+                        <button
+                          className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                          onClick={() => handleApprove()} // Replace handleVerify with your verification function
+                        >
+                          Approve
+                        </button>
+                        <button
+                          className="px-4 py-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:bg-gray-300"
+                          onClick={() => handleCloseModal()}
+                        >
+                          Close
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
      
       <Transition appear show={showDeleteModal} as={Fragment}>
         <Dialog
@@ -1244,7 +1503,7 @@ item.dealer_des}
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       onClick={() => {
-                        handleDelete(modalData);
+                        handleDelete();
                       }}
                     >
                       Delete
