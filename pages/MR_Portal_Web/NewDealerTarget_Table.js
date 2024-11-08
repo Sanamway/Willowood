@@ -7,8 +7,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import { Dialog, Transition } from "@headlessui/react";
 // import ConfirmationModal from "../modals/ConfirmationModal";
-import { CSVLink } from "react-csv";
-import { TbFileDownload } from "react-icons/tb";
+
 import toast, { Toaster } from "react-hot-toast";
 import moment from "moment";
 import ReactPaginate from "react-paginate";
@@ -34,6 +33,7 @@ const NewDealer = () => {
   const router = useRouter();
 
   const [data, setData] = useState([]);
+  const [dataCount, setDataCount] = useState([]);
   const getData = async (currentPage, bg, bu, z, r, t, from, empCode) => {
     try {
       const respond = await axios.get(`${url}/api/get_mr_target_grid`, {
@@ -54,9 +54,11 @@ const NewDealer = () => {
         headers: headers,
       });
       const apires = await respond.data.data.data;
+     
       setData(apires);
-      const count = await respond.data.data.data.length;
-      setPageCount(respond.data.data.count/50);
+      const count = await respond.data.data.count;
+      setDataCount(count)
+      setPageCount(Math.ceil(count / 50));
     } catch (error) {
       setData([]);
     }
@@ -88,7 +90,7 @@ const NewDealer = () => {
       toast.success(apires.data.message);
       setDeleteOpen({ open: false, data: {} });
       getData(
-        currentPage,
+        currentPage.selected + 1,
         filterState.bgId,
         filterState.buId,
         filterState.zId,
@@ -1127,7 +1129,7 @@ const NewDealer = () => {
   <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
       Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
       <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
-      <small className="font-bold px-2 self-center text-black">{currentPage.selected+1}</small> results
+      <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
     </div>
     <ReactPaginate
       previousLabel={"Previous"}

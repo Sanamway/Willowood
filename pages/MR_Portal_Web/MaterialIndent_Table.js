@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { AiTwotoneHome } from "react-icons/ai";
+ import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 
@@ -13,7 +13,10 @@ import ReactPaginate from "react-paginate";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { TbFileDownload } from "react-icons/tb";
+  import * as XLSX from "xlsx";
 const MaterialIndent_Table = () => {
+
   const router = useRouter();
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
@@ -26,6 +29,7 @@ const MaterialIndent_Table = () => {
   };
 
   const [pageCount, setPageCount] = useState(0);
+  const [dataCount, setDataCount] = useState([]);
   const getFarmerDemo = async (
     currentPage,
     bg,
@@ -59,7 +63,7 @@ const MaterialIndent_Table = () => {
       const apires = await respond.data.data.miData;
       const count = await respond.data.data.miDataCount;
       setPageCount(Math.ceil(count / 50));
-
+      setDataCount(count)
       setData(apires);
     } catch (error) {
       setData([]);
@@ -137,8 +141,8 @@ const MaterialIndent_Table = () => {
       filterState.tId,
       filterState.startDate,
       filterState.endDate,
-      filterState.empCode
-    );
+       filterState.empCode
+     );
     } catch (error) {}
   };
 
@@ -711,6 +715,29 @@ const MaterialIndent_Table = () => {
     }
   }, []);
   useEffect(() => {
+    handlePageChange({selected: 0})
+    getFarmerDemo(
+      1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
+  }, [
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+    filterState.startDate,
+    filterState.endDate,
+    filterState.empCode,
+  ]);
+  useEffect(() => {
     getFarmerDemo(
       currentPage.selected + 1,
       filterState.bgId,
@@ -724,14 +751,6 @@ const MaterialIndent_Table = () => {
     );
   }, [
     currentPage.selected,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    filterState.tId,
-    filterState.startDate,
-    filterState.endDate,
-    filterState.empCode,
   ]);
   const { name } = router.query;
 
@@ -869,24 +888,20 @@ case 5: return <div>
 </div>
 
 case 6: return <div>
-  
-  
 <button
-  onClick={() => {
-    setShowVerifyModal(true);
-    setModalData({
-      ...modalData,
-      type: "Approve",
-      id:  item.mi_id,
-    });
-  }}
-  disabled={item.approved === "Yes"}
-  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+disabled={item.verified === "Yes"}
+onClick={() => {
+  setShowVerifyModal(true);
+  setModalData({
+    ...modalData,
+    type: "Verify",
+    id:  item.mi_id,
+  });
+}}
 >
-  Approve
+Verify
 </button>
-</div>
-
+</div> 
 case 9: return <div>
 <button
 disabled={item.verified === "Yes"}
@@ -905,6 +920,61 @@ Verify
 
 }
     }
+
+    const getExcelsheet = async (
+      bg,
+      bu,
+      z,
+      r,
+      t,
+      from,
+      to,
+      empCode
+      ) => {
+      try {
+        const respond = await axios.get(`${url}/api/get_material_indent`, {
+          headers: headers,
+          params: {
+            t_id: t === "All" ?    null : t,
+            bg_id: bg === "All" ?  null : bg,
+            bu_id: bu === "All" ?  null : bu,
+            z_id: z === "All" ?    null : z,
+            r_id: r === "All" ?    null : r,
+            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            to:   moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            emp_code: empCode,
+            excel: true, 
+          },
+        });
+        const apires = await respond.data.data;
+        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
+        ["Indent Code"]: item.mi_no,
+        ["Employee Code"]: item.emp_code,
+        ["Employee Name"]: item.emp_name,
+        ["Rquest Date"]: moment(item.indent_req_date).format("DD/MM/YYYY"),
+        ["Material POP Required"]: item.material_pop_require,
+        ["Any Specification of Material"]: item.any_specification_of_material,
+        ["Purpose of Material"]: item.purpose_of_material,
+        ["Priority DP"]: item.priority,
+        ["Current Stock Qty"]: item.current_stock_qty,
+        ["Required Qty"]: item.required_qty,
+        ["Delivery date"]: moment(item.
+          delivery_date
+          ).format("DD/MM/YYYY"),
+        ["Current_Status"]: item.status,
+        ["Territory"]: item.territory_name,
+        ["Company"]: item.cmpny_name,
+        ["Deleted"]: item.isDeleted ? "Yes" : "No",
+        }
+       } ));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, `Indent.xlsx`);
+      } catch (error) {
+        
+      }
+    };
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -914,6 +984,28 @@ Verify
             {name ? name : "MR Indent  "}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer pr-4">
+         
+            {" "}
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={32}
+              onClick={() => getExcelsheet(
+                filterState.bgId,
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.startDate,
+                  filterState.endDate,
+                  filterState.empCode
+              )
+
+
+                
+              }
+            ></TbFileDownload>
+            
+          
             <h2>
               <AiTwotoneHome
                 className="text-black-500"
@@ -1288,7 +1380,7 @@ delivery_date
         <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
       Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
       <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
-      <small className="font-bold px-2 self-center text-black">{currentPage.selected+1}</small> results
+      <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
     </div>
     <ReactPaginate
       previousLabel={"Previous"}
@@ -1296,10 +1388,11 @@ delivery_date
       breakLabel={"..."}
       pageCount={pageCount}
       onPageChange={handlePageChange}
-      containerClassName={"pagination"}
-      activeClassName={"active"}
+      containerClassName={"pagination flex flex-row gap-2"} // Container styling
+      activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
       className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
-    />
+      forcePage={currentPage.selected} // Set the current page
+     />
   </div>
       </div>
 

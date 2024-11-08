@@ -14,9 +14,8 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 import Navbar from "@/components/MR_Portal_Apps/Navbar";
-
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { Popover, Switch } from "@headlessui/react";
+import { Popover } from "@headlessui/react";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { BsCalendar2Month } from "react-icons/bs";
 import { IoTodayOutline } from "react-icons/io5";
@@ -27,24 +26,14 @@ import { Dialog, Transition } from "@headlessui/react";
 import Profile from "../../public/userimg.jpg";
 import { FaArrowAltCircleUp } from "react-icons/fa";
 import ChartOne from "./MRHome/help/SalesTargetChart";
+import { string } from "yup";
 const AdditionalInfo = (props) => {
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-  const [height, setHeight] = useState(false);
-  const dayActivityData = Array.from({ length: 31 }, (_, i) => ({
-    date: `01-${i + 1}-2024`,
-    demo: Math.floor(Math.random() * 100),
-    fDay: Math.floor(Math.random() * 100),
-    o2o: Math.floor(Math.random() * 100),
-    svn: Math.floor(Math.random() * 100),
-    gvm: Math.floor(Math.random() * 100),
-    cap: Math.floor(Math.random() * 100),
-    shc: Math.floor(Math.random() * 100),
-    at: Math.floor(Math.random() * 100),
-  }));
+  
   const [localStorageItems, setLocalStorageItems] = useState({
     uId: "",
     cId: "",
@@ -55,6 +44,7 @@ const AdditionalInfo = (props) => {
     tId: "",
     roleId: "",
     empCode: "",
+    tDes:""
   });
   useEffect(() => {
     setLocalStorageItems({
@@ -65,6 +55,7 @@ const AdditionalInfo = (props) => {
       rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
       zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
       tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+      tDes:JSON.parse(window.localStorage.getItem("userinfo")).territory_name,
       clName: window.localStorage.getItem("user_name"),
       ulName: window.localStorage.getItem("phone_number"),
       empCode: window.localStorage.getItem("emp_code"),
@@ -76,59 +67,235 @@ const AdditionalInfo = (props) => {
     });
   }, []);
 
+
+
+  function sumCategoryResults(data) {
+    const monthTotals = {
+       "Apr-24": 0,
+        "May-24": 0,
+        "Jun-24": 0,
+        "Jul-24": 0,
+        "Aug-24": 0,
+        "Sep-24": 0,
+        "Oct-24": 0,
+        "Nov-24": 0,
+        "Dec-24": 0,
+        "Jan-25": 0,  // Assuming the fiscal year crosses into the next year
+        "Feb-25": 0,
+        "Mar-25": 0
+      
+    };
+
+    data.forEach(entry => {
+        entry.category_result.forEach(category => {
+          monthTotals["Apr-24"] += category.apr;
+          monthTotals["May-24"] += category.may;
+          monthTotals["Jun-24"] += category.june;
+          monthTotals["Jul-24"] += category.july;
+          monthTotals["Aug-24"] += category.aug;
+          monthTotals["Sep-24"] += category.sep;
+          monthTotals["Oct-24"] += category.oct;
+          monthTotals["Nov-24"] += category.nov;
+          monthTotals["Dec-24"] += category.dec;
+          monthTotals["Jan-25"] += category.jan;
+          monthTotals["Feb-25"] += category.feb;
+          monthTotals["Mar-25"] += category.march;
+          
+        });
+    });
+
+    return monthTotals;
+}
+
+function sumDealerMapData(data) {
+  const monthTotals = {
+      "Apr-24": 0,
+      "May-24": 0,
+      "Jun-24": 0,
+      "Jul-24": 0,
+      "Aug-24": 0,
+      "Sep-24": 0,
+      "Oct-24": 0,
+      "Nov-24": 0,
+      "Dec-24": 0,
+      "Jan-25": 0,  // Next year months
+      "Feb-25": 0,
+      "Mar-25": 0
+  };
+
+  data.forEach(entry => {
+      monthTotals["Apr-24"] += entry.apr || 0;
+      monthTotals["May-24"] += entry.may || 0;
+      monthTotals["Jun-24"] += entry.june || 0;
+      monthTotals["Jul-24"] += entry.july || 0;
+      monthTotals["Aug-24"] += entry.aug || 0;
+      monthTotals["Sep-24"] += entry.sep || 0;
+      monthTotals["Oct-24"] += entry.oct || 0;
+      monthTotals["Nov-24"] += entry.nov || 0;
+      monthTotals["Dec-24"] += entry.dec || 0;
+      monthTotals["Jan-25"] += entry.jan || 0;
+      monthTotals["Feb-25"] += entry.feb || 0;
+      monthTotals["Mar-25"] += entry.march || 0;
+  });
+
+  return monthTotals;
+}
+
+const totalRow =(data) =>{
+  let total = 0;
+
+for (let key in data) {
+total += data[key];
+}
+return total
+}
+
+
+
+
+
   const [tableData, setTableData] = useState([]);
-  const getAllHoliday = async () => {
+  const getTableData = async () => {
     try {
       const respond = await axios.get(`${url}/api/get_mr_count`, {
         headers: headers,
-
         params: {
-          month_no:
-            moment(router.query.month.replace("-24", ""), "MMMM").month() + 1,
           emp_code: localStorageItems.empCode,
           t_id: localStorageItems.tId,
           c_id: localStorageItems.cId,
           year: moment().year(),
-          count_type: "month",
+          count_type: "year",
         },
       });
       const apires = await respond.data.data;
-      console.log("pop", apires);
+
       setTableData(apires);
     } catch (error) {
       setTableData([]);
     }
   };
+  const [targetData, setTargetData] = useState([]);
+  const [partySaleData, setPartySaleData] = useState([]);
+  const getTargetData = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/mr_dealer_sale_target`, {
+        headers: headers,
+        params: {
+          emp_code: localStorageItems.empCode,
+          t_id: localStorageItems.tId,
+          c_id: localStorageItems.cId,
+          year: moment().year(),
+          count_type: "year",
+        },
+      });
+      const apires = await respond.data.data;   
+      setTargetData(sumDealerMapData(apires));
+   
+  
+    } catch (error) {
+      setTargetData([]);
+    }
+  };
 
+  const [saleData, setSaleData] = useState([]);
+  const getSaleData = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/target_sale_mr`, {
+        headers: headers,
+        params: {
+          emp_code: localStorageItems.empCode,
+          t_id: localStorageItems.tId,
+          t_des: localStorageItems.tDes,
+          c_id: localStorageItems.cId,
+          year: moment().year(),
+          count_type: "year",
+        },
+      });
+      const apires = await respond.data.data;
+     setSaleData(sumCategoryResults(apires))
+     setPartySaleData(apires)
+    } catch (error) {
+      setSaleData([]);
+    }
+  };
+  
+
+
+  
   useEffect(() => {
-    getAllHoliday();
+    getTableData();
+    
   }, [localStorageItems]);
-  const bsLabelData = ["Apr-24", "May-24", "June-24", "Jul-24"];
+  useEffect(()=>{
+    getTargetData()
+    getSaleData();
+  },[
+    tableData
+    
+  ])
 
-  const bsGraphData = [
+  const bsLabelData = [  "Apr-24",
+"May-24",
+"Jun-24",
+"Jul-24",
+"Aug-24",
+"Sep-24",
+"Oct-24",
+"Nov-24",
+"Dec-24",
+"Jan-25",
+"Feb-25",
+"Mar-25"];
+
+  console.log("zoz",  Object.values(targetData).join(", "))
+  
+  const [bsGraphData , setBsGraphData] = useState([
     {
       label: "Total Target",
       backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity
       backgroundColor: "rgba(59, 130, 246, 0.6)",
-      data: [50, 40, 30, 20],
+      data: 0,
     },
     {
       label: "Total Sales",
       backgroundColor: "rgba(249, 115, 22, 1)",  // Full opacity // Dark blue with 60% opacity
       borderColor:  "rgba(249, 115, 22, 0.6)",        // Dark blue with full opacity
-      data: [30, 20, 15, 10],
+      data: 0,
+    } 
+  ])
+ 
+  useEffect(()=>{
+    console.log("abc", Object.values(targetData))
+setBsGraphData(
+  [
+    {
+      label: "Total Target",
+      backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity
+      backgroundColor: "rgba(59, 130, 246, 0.6)",
+      data: Object.values(targetData),
     },
-  
-  ];
-  
+    {
+      label: "Total Sales",
+      backgroundColor: "rgba(249, 115, 22, 1)",  // Full opacity // Dark blue with 60% opacity
+      borderColor:  "rgba(249, 115, 22, 0.6)",        // Dark blue with full opacity
+      data: Object.values(saleData),
+    } 
+  ]
+)
+  },[
+targetData, saleData
+  ])
 
+  const totalOverall = {
+    target: 0,
+    achievement: 0,
+    percentage: 0
+  };
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
       onSubmit={(e) => e.preventDefault()}
     >
-      
-      
       <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
         <span className="text-black flex flex-row gap-4 font-bold   ">
           <FaArrowLeftLong
@@ -189,7 +356,7 @@ const AdditionalInfo = (props) => {
               />
             </div>
 
-        <div className="flex  flex-col  w-full mt-4 md:hidden">
+            <div className="flex  flex-col  w-full mt-4 md:hidden">
               <div className="flex w-full  w-28">
                 <div className="flex">
                   <p className=" font-bold text-sm text-blue-800 w-28">
@@ -220,12 +387,12 @@ const AdditionalInfo = (props) => {
             </div>
       </div>
 
-      <h1 className=" font-bold text-center bg-yellow-300 ">
-        Target VS Sales
-      </h1>
-      <table className="w-full  border-collapse border border-gray-200 text-[10px] font-bold">
+        <h1 className=" font-bold text-center bg-yellow-300 ">
+         Target VS Sales
+        </h1>
+       <table className="w-full   border-collapse border border-gray-200 text-[10px] font-bold">
         <thead>
-          <tr className="bg-blue-800 text-white">
+          <tr className="bg-blue-800 text">
             <th className="border border-gray-200  px-2 py-2 whitespace-nowrap font-bold">
         Month
             </th>
@@ -238,95 +405,37 @@ const AdditionalInfo = (props) => {
           </tr>
         </thead>
         <tbody>
-          <tr className="font-bold">
-            <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
-             Apr-24
-            </td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            
-          </tr>
-          <tr className="font-bold">
-            <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
-             May-24
-            </td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            
-          </tr>
-        
+        {tableData.map((item) => (
+            <tr className="font-bold">
+              <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
+               {item.month_year}
+              </td>
+              <td className="border border-gray-200  px-2 py-2">{Number(targetData[item.month_year]).toFixed(2)}</td>
+              <td className="border border-gray-200  px-2 py-2">{Number(saleData[item.month_year]).toFixed(2)}</td>
+              <td className="border border-gray-200  px-2 py-2">{
+             Number(Number(saleData[item.month_year]) /  Number(targetData[item.month_year]) * 100).toFixed(2)  
+                
+                }</td>
+          </tr>          
+))}
+       
      
-          <tr className="font-bold">
-            <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
-             June-24
-            </td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            
-          </tr>
-          <tr className="font-bold">
-            <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
-             July-24
-            </td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            
-          </tr>
-          <tr className="font-bold">
-            <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
-             Aug-24
-            </td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            
-          </tr>
-          <tr className="font-bold">
-            <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
-             Sep-24
-            </td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            
-          </tr>
-          <tr className="text-white font-bold bg-blue-800">
+          
+           <tr className="text font-bold bg-blue-800">
             <td className="border border-gray-200  px-2 py-2 whitespace-nowrap">
               Total
             </td>
             <td className="border border-gray-200  px-2 py-2">
               {" "}
-              {tableData
-                .map((item) => item.demo)
-                .reduce((acc, current) => {
-                  // Check if the current element is a number
-
-                  return Number(acc) + Number(current);
-                }, 0)}
+              {Number(totalRow(targetData)).toFixed(2)}
             </td>
             <td className="border border-gray-200  px-2 py-2">
               {" "}
-              {tableData
-                .map((item) => item.f_day)
-                .reduce((acc, current) => {
-                  // Check if the current element is a number
-
-                  return Number(acc) + Number(current);
-                }, 0)}
+              {Number(totalRow(saleData)).toFixed(2)}
             </td>
             <td className="border border-gray-200  px-2 py-2">
-              {tableData
-                .map((item) => item.ifc)
-                .reduce((acc, current) => {
-                  // Check if the current element is a number
-
-                  return Number(acc) + Number(current);
-                }, 0)}
-            </td>
+               -
+             </td>
             
            
           </tr>
@@ -336,9 +445,10 @@ const AdditionalInfo = (props) => {
       <h1 className=" font-bold text-center  bg-yellow-300">
         My Party
       </h1>
-      <table className="w-full  border-collapse border border-gray-200 text-[10px] font-bold">
+      <div className="wrapper w-full overflow-hidden overflow-x-auto">
+      <table className="  border-collapse border border-gray-200 text-[10px] font-bold">
         <thead>
-          <tr className="bg-blue-800 text-white">
+          <tr className="bg-blue-800 text">
             <th className="border border-gray-200  px-2 py-2 whitespace-nowrap font-bold">
         Party Name
             </th>
@@ -350,79 +460,159 @@ const AdditionalInfo = (props) => {
               Sale
             </th>
             <th className="border border-gray-200  px-2 py-2">ACH%</th>
-         
           </tr>
         </thead>
-        <tbody>
-          <tr className="font-bold">
-            <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
-           Party Name 1
-            </td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
-            <td className="border border-gray-200  px-2 py-2">-</td>
+        <tbody> 
+        {partySaleData?.map((item, idx)=> {
+   // Calculate total target and achievement for each item
+   const totalTarget = item.category_result?.reduce((acc, categoryItem) => {
+     return acc + ["apr_target", "may_target", "june_target", "july_target", "aug_target", "sep_target", "oct_target", "nov_target", "dec_target", "jan_target", "feb_target", "march_target"]
+       .reduce((sum, curr) => sum + (categoryItem[curr] || 0), 0);
+   }, 0);
+
+   const totalAchievement = item.category_result?.reduce((acc, categoryItem) => {
+     return acc + ["apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec", "jan", "feb", "march"]
+       .reduce((sum, curr) => sum + (categoryItem[curr] || 0), 0);
+   }, 0);
+
+   // Add this item's total target and achievement to the overall totals
+   totalOverall.target += totalTarget;
+   totalOverall.achievement += totalAchievement;
+
+   return (
+     <tr className="font-bold">
+       <td className="border border-gray-200">{item.distribution_name}</td>
+
+       <td className="border border-gray-200">
+         <ul>
+           {item.category_result?.map((categoryItem, index) => (
+             <li key={index} className="border-b-2 border-black flex justify-left text-black p-1">
+               <input
+                 className="p-0 w-14 text h-6"
+                 value={categoryItem.category_name}
+                 disabled
+               />
+             </li>
+           ))}
+           <li className="border-b-2 border-black flex justify-left text-black p-1">
+             <input className="p-0 w-14 text h-6" value="Total" disabled />
+           </li>
+         </ul>
+       </td>
+
+       <td className="border border-gray-200">
+         {item.category_result?.map((categoryItem, index) => (
+           <li key={index} className="border-b-2 border-black flex justify-left text-black p-1">
+             <input
+               className="p-0 w-14 text h-6"
+               value={["apr_target", "may_target", "june_target", "july_target", "aug_target", "sep_target", "oct_target", "nov_target", "dec_target", "jan_target", "feb_target", "march_target"]
+                 .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0).toFixed(2)}
+               disabled
+             />
+           </li>
+         ))}
+         <li className="border-b-2 border-black flex justify-left text-black p-1">
+           <input
+             className="p-0 w-14 text h-6"
+             value={totalTarget.toFixed(2)} // Total target value for this item
+             disabled
+           />
+         </li>
+       </td>
+
+       <td className="border border-gray-200">
+         {item.category_result?.map((categoryItem, index) => (
+           <li key={index} className="border-b-2 border-black flex justify-left text-black p-1">
+             <input
+               className="p-0 w-14 text h-6"
+               value={["apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec", "jan", "feb", "march"]
+                 .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0).toFixed(2)}
+               disabled
+             />
+           </li>
+         ))}
+         <li className="border-b-2 border-black flex justify-left text-black p-1">
+           <input
+             className="p-0 w-14 text h-6"
+             value={totalAchievement.toFixed(2)} // Total achievement value for this item
+             disabled
+           />
+         </li>
+       </td>
+
+       <td className="border border-gray-200">
+         {item.category_result?.map((categoryItem, index) => (
+           <li key={index} className="border-b-2 border-black flex justify-left text-black p-1">
+             <input
+               className="p-0 w-14 text h-6"
+               value={Number(["apr", "may", "june", "july", "aug", "sep", "oct", "nov", "dec", "jan", "feb", "march"]
+                 .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0) / 
+                 Number(["apr_target", "may_target", "june_target", "july_target", "aug_target", "sep_target", "oct_target", "nov_target", "dec_target", "jan_target", "feb_target", "march_target"]
+                   .reduce((acc, curr) => acc + (categoryItem[curr] || 0), 0)) * 100).toFixed(2)}
+               disabled
+             />
+           </li>
+         ))}
+         <li className="border-b-2 border-black flex justify-left text-black p-1">
+           <input
+             className="p-0 w-14 text h-6"
+             value={Number(totalAchievement / totalTarget * 100).toFixed(2)} // Total percentage for this item
+             disabled
+           />
+         </li>
+       </td>
+     </tr>
+   );
+})}
+
+{/* Add the final row that shows the grand total */}
+<tr className="font-bold bg-gray-100">
+  <td className="border border-gray-200">Grand Total</td>
+
+  <td className="border border-gray-200">
+    {/* Empty because category names don't have a total */}
+  </td>
+
+  <td className="border border-gray-200">
+    <input
+      className="p-0 w-14 text h-6"
+      value={totalOverall.target.toFixed(2)} // Grand total for target
+      disabled
+    />
+  </td>
+
+  <td className="border border-gray-200">
+    <input
+      className="p-0 w-14 text h-6"
+      value={totalOverall.achievement.toFixed(2)} // Grand total for achievement
+      disabled
+    />
+  </td>
+
+  <td className="border border-gray-200">
+    <input
+      className="p-0 w-14 text h-6"
+      value={Number(totalOverall.achievement / totalOverall.target * 100).toFixed(2)} // Grand total percentage
+      disabled
+    />
+  </td>
+</tr>
+
           
-            
-          </tr>
-         
-        
-          <tr className="text-white font-bold bg-blue-800">
-            <td className="border border-gray-200  px-2 py-2 whitespace-nowrap">
-              Total
-            </td>
-            <td className="border border-gray-200  px-2 py-2">
-              {" "}
-              {tableData
-                .map((item) => item.demo)
-                .reduce((acc, current) => {
-                  // Check if the current element is a number
-
-                  return Number(acc) + Number(current);
-                }, 0)}
-            </td>
-            <td className="border border-gray-200  px-2 py-2">
-              {" "}
-              {tableData
-                .map((item) => item.f_day)
-                .reduce((acc, current) => {
-                  // Check if the current element is a number
-
-                  return Number(acc) + Number(current);
-                }, 0)}
-            </td>
-            <td className="border border-gray-200  px-2 py-2">
-              {tableData
-                .map((item) => item.ifc)
-                .reduce((acc, current) => {
-                  // Check if the current element is a number
-
-                  return Number(acc) + Number(current);
-                }, 0)}
-            </td>
-            <td className="border border-gray-200  px-2 py-2">
-              {tableData
-                .map((item) => item.ifc)
-                .reduce((acc, current) => {
-                  // Check if the current element is a number
-
-                  return Number(acc) + Number(current);
-                }, 0)}
-            </td>
-            
-           
-          </tr>
+    
         </tbody>
       </table>
-      <h1 className=" font-bold text-center  bg-yellow-300">
+      </div>
+     
+       <h1 className=" font-bold text-center  bg-yellow-300">
         Monthly Graph
       </h1>
 
       <ChartOne
-                  title={"Target Vs Sales"}
-                  color={"bg-blue-800"}
-                  lab={bsLabelData}
-                  datasets={bsGraphData || []}
+        title={"Target Vs Sales"}
+        color={"bg-blue-800"}
+        lab={bsLabelData}
+        datasets={bsGraphData || []}
                 />
       <div className="flex justify-end w-full">
         <FaArrowAltCircleUp

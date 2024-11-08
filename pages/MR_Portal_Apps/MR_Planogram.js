@@ -119,7 +119,7 @@ const AdditionalInfo = (props) => {
       const data = {
         f_planogram_no:dplNo,
         f_planogram_date:new Date(),
-        dealer_id:formData.dealerData ? formData.dealerData.dealerName :"",
+        dealer_id:formData.dealerData.dealerName,
         product_brand:formData.productBrand.map(item => item.value), 
         product_positioning:formData.productPositioning? "Yes" : "No",
         distribution:formData.distribution? "Yes" : "No",
@@ -419,14 +419,19 @@ const AdditionalInfo = (props) => {
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
          
-            value={JSON.stringify(formData.dealerData)}
+            value={JSON.stringify(formData.dealerData.dealerName)}
             onChange={(e) =>
             {
-              let selectedItem= e.target.value ? JSON.parse(e.target.value) :"" ;
+              const selectedSegment = dealerData.find(item => item.d_id === parseInt(e.target.value, 10));
+            
 
               setFormData({
                 ...formData,
-                dealerData: selectedItem,
+                dealerData: {
+                  dealerName:  selectedSegment.d_id ,
+                  address:      selectedSegment.party_address,
+                 
+                },
               })
             }
               
@@ -469,7 +474,7 @@ const AdditionalInfo = (props) => {
             // disabled={!formActive}
           />
         </div>
-        <div className="fle gap-4 w-full px-2">
+        {/* <div className="fle gap-4 w-full px-2">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"
@@ -486,7 +491,7 @@ const AdditionalInfo = (props) => {
           
           />
        
-        </div>
+        </div> */}
         {console.log("zxcv",formData.dealerData)}
         <div className="fle gap-4 w-full px-2">
           <label

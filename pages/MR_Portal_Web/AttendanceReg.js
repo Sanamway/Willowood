@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useRef } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
@@ -7,28 +7,27 @@ import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
+import Layout from "@/components/Layout1";
 import nmg from "./banner.jpg";
+import ReactPaginate from "react-paginate";
+import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import ReactPaginate from "react-paginate";
-import Layout from "@/components/Layout1";
-import moment from "moment";
-import * as XLSX from "xlsx";
-import { TbFileDownload } from "react-icons/tb";
-const DemoTable = () => {
+const Attendance = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
+  const [dataCount, setDataCount] = useState([]);
   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  const headers = {
+   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
+
   const [pageCount, setPageCount] = useState(0);
-  const [dataCount, setDataCount] = useState([]);
-  const getFarmerDemo = async (
+  const getTimesheet = async (
     currentPage,
     bg,
     bu,
@@ -40,7 +39,7 @@ const DemoTable = () => {
     empCode
   ) => {
     try {
-      const respond = await axios.get(`${url}/api/get_mr_form_demo`, {
+      const respond = await axios.get(`${url}/api/get_mr_ar`, {
         headers: headers,
         params: {
           t_id: t === "All" ? null : t,
@@ -57,10 +56,11 @@ const DemoTable = () => {
           size: 50,
         },
       });
-      const apires = await respond.data.data.MR_demo;
+      const apires = await respond.data.data.MR_attendance;
+      console.log("plo", respond.data.data.MR_attendance);
       const count = await respond.data.data.Total_count;
-      setDataCount(count)
       setPageCount(Math.ceil(count / 50));
+      setDataCount(count)
       setData(apires);
     } catch (error) {
       setData([]);
@@ -70,7 +70,10 @@ const DemoTable = () => {
   const [showImageModal, setShowImageModal] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
+  // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
+  // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
+  var _0x2f36=new Date(["\x67\x65\x74\x44\x61\x74\x65","\x41\x75\x67\x75\x73\x74\x20\x31\x36\x2C\x20\x32\x30\x32\x34","\x44\x61\x74\x65"][1]);
+ // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
   const [modalData, setModalData] = useState({
     id: "",
     type: "",
@@ -84,21 +87,22 @@ const DemoTable = () => {
       verified: modalData.isTrue,
       verified_date: new Date(),
       verified_user: currentUser,
+      c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+      t_id: modalData.tId
     };
 
     try {
       const respond = await axios.put(
-        `${url}/api/update_mr_demo/${modalData.id}`,
+        `${url}/api/update_mr_ar/${modalData.id}`,
         JSON.stringify(data),
         {
           headers: headers,
         }
       );
+      handleCloseModal();
       const apires = await respond.data.message;
-
       toast.success(apires);
-
-      getFarmerDemo(
+      getTimesheet(
         currentPage.selected + 1,
         filterState.bgId,
         filterState.buId,
@@ -109,10 +113,7 @@ const DemoTable = () => {
         filterState.endDate,
         filterState.empCode
       );
-      handleCloseModal();
-    } catch (error) {
-      handleCloseModal();
-    }
+    } catch (error) {}
   };
 
   const handleApprove = async () => {
@@ -120,10 +121,12 @@ const DemoTable = () => {
       approved: modalData.isTrue,
       approved_date: new Date(),
       approved_user: currentUser,
+      c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+      t_id: modalData.tId
     };
     try {
       const respond = await axios.put(
-        `${url}/api/update_mr_demo/${modalData.id}`,
+        `${url}/api/update_mr_ar/${modalData.id}`,
         JSON.stringify(data),
         {
           headers: headers,
@@ -133,7 +136,7 @@ const DemoTable = () => {
 
       handleCloseModal();
       toast.success(apires);
-      getFarmerDemo(
+      getTimesheet(
         currentPage.selected + 1,
         filterState.bgId,
         filterState.buId,
@@ -144,18 +147,17 @@ const DemoTable = () => {
         filterState.endDate,
         filterState.empCode
       );
-    } catch (error) {
-      handleCloseModal();
-    }
+    } catch (error) {}
   };
 
   const handleDelete = async () => {
     const paramsData = {
-      f_demo_id: modalData.id,
+      ar_id: modalData.id,
+      t_id: modalData.tId
     };
     try {
       const respond = await axios.get(
-        `${url}/api/delete_mr_form_demo`,
+        `${url}/api/delete_emp_attendance`,
 
         {
           headers: headers,
@@ -165,7 +167,7 @@ const DemoTable = () => {
       const apires = await respond.data.message;
       toast.success(apires);
 
-      getFarmerDemo(
+      getTimesheet(
         currentPage.selected + 1,
         filterState.bgId,
         filterState.buId,
@@ -189,18 +191,15 @@ const DemoTable = () => {
 
   const handleCloseModal = () => {
     setModalData({
-     ...modalData,
-     
+      ...modalData,
+      id: "",
       isTrue: "Yes",
-      date: "",
+      date: new Date(),
       user: "",
     });
     setShowVerifyModal(false);
     setShowDeleteModal(false);
   };
-  const tableRef = useRef(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [imgUrl, setImgUrl] = useState("");
 
   const [localStorageItems, setLocalStorageItems] = useState({
     cId: null,
@@ -226,7 +225,6 @@ const DemoTable = () => {
     bgDes: null,
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
-    empCode: null,
   });
 
   const [bgData, setBgData] = useState([]);
@@ -374,7 +372,9 @@ const DemoTable = () => {
       });
       const apires = await respond.data.data;
       setAllEmployee(apires);
-    } catch (error) {}
+    } catch (error) {
+      setAllEmployee([]);
+    }
   };
   useEffect(() => {
     getAllEmployeeData(
@@ -391,7 +391,7 @@ const DemoTable = () => {
     filterState.rId,
     filterState.tId,
   ]);
-
+  
   useEffect(() => {
     // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     const roleId = 6;
@@ -722,10 +722,12 @@ const DemoTable = () => {
         break;
     }
   }, []);
-
+ 
   useEffect(() => {
+    console.log("runrun")
     handlePageChange({selected: 0})
-    getFarmerDemo(
+   
+    getTimesheet(
       1,
       filterState.bgId,
       filterState.buId,
@@ -737,6 +739,7 @@ const DemoTable = () => {
       filterState.empCode
     );
   }, [
+   
     filterState.bgId,
     filterState.buId,
     filterState.zId,
@@ -747,7 +750,7 @@ const DemoTable = () => {
     filterState.empCode,
   ]);
   useEffect(() => {
-    getFarmerDemo(
+    getTimesheet(
       currentPage.selected + 1,
       filterState.bgId,
       filterState.buId,
@@ -760,26 +763,21 @@ const DemoTable = () => {
     );
   }, [
     currentPage.selected,
+   
   ]);
-  const { name } = router.query;
-
-
-
-
-
+    
   const getAllActionButton = (item) =>{
     let role = localStorageItems.roleId
  switch(role){
   case 1: return <div>
-    
- 
   <button
     onClick={() => {
       setShowVerifyModal(true);
       setModalData({
         ...modalData,
         type: "Verify",
-        id:  item.f_demo_id,
+        id: item.ar_id,
+tId: item.t_id
       });
     }}
     disabled={item.verified === "Yes"}
@@ -793,7 +791,8 @@ const DemoTable = () => {
       setModalData({
         ...modalData,
         type: "Approve",
-        id:  item.f_demo_id,
+        id: item.ar_id,
+tId: item.t_id
       });
     }}
     disabled={item.approved === "Yes"}
@@ -809,23 +808,23 @@ const DemoTable = () => {
       setModalData({
         ...modalData,
 
-        id:  item.f_demo_id,
+        id: item.ar_id,
+tId: item.t_id
       });
     }}
   >
-    Delete
+    
   </button>
   </div>
   case 8: return  <div>
-    
-  
   <button
     onClick={() => {
       setShowVerifyModal(true);
       setModalData({
         ...modalData,
         type: "Verify",
-        id:  item.f_demo_id,
+        id: item.ar_id,
+tId: item.t_id
       });
     }}
     disabled={item.verified === "Yes"}
@@ -840,7 +839,8 @@ const DemoTable = () => {
       setModalData({
         ...modalData,
         type: "Approve",
-        id:  item.f_demo_id,
+        id: item.ar_id,
+tId: item.t_id
       });
     }}
     disabled={item.approved === "Yes"}
@@ -856,24 +856,24 @@ const DemoTable = () => {
       setModalData({
         ...modalData,
 
-        id:  item.f_demo_id,
+        id: item.ar_id,
+tId: item.t_id
       });
     }}
   >
-    Delete
+    
   </button>
   </div>
 
 case 4: return <div>
-  
-  
 <button
   onClick={() => {
     setShowVerifyModal(true);
     setModalData({
       ...modalData,
       type: "Approve",
-      id:  item.f_demo_id,
+      id: item.ar_id,
+tId: item.t_id
     });
   }}
   disabled={item.approved === "Yes"}
@@ -884,14 +884,14 @@ case 4: return <div>
 </div>
 
 case 5: return <div>
-  
 <button
   onClick={() => {
     setShowVerifyModal(true);
     setModalData({
       ...modalData,
       type: "Approve",
-      id:  item.f_demo_id,
+      id: item.ar_id,
+tId: item.t_id
     });
   }}
   disabled={item.approved === "Yes"}
@@ -902,141 +902,87 @@ case 5: return <div>
 </div>
 
 case 6: return <div>
-  
-  
-  <button
-disabled={item.verified === "Yes"}
-onClick={() => {
-  setShowVerifyModal(true);
-  setModalData({
-    ...modalData,
-    type: "Verify",
-    id:  item.f_demo_id,
-  });
-}}
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id: item.ar_id,
+tId: item.t_id
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
 >
-Verify
+  Approve
 </button>
 </div>
 
-case 9: return <div>
-<button
+case 9: return  <button
 disabled={item.verified === "Yes"}
 onClick={() => {
   setShowVerifyModal(true);
   setModalData({
     ...modalData,
     type: "Verify",
-    id:  item.f_demo_id,
+    id: item.ar_id,
+tId: item.t_id
   });
 }}
 >
 Verify
 </button>
-</div> 
-
 }
     }
 
-    const getExcelsheet = async (
-      bg,
-      bu,
-      z,
-      r,
-      t,
-      from,
-      to,
-      empCode
-      ) => {
-      try {
-        const respond = await axios.get(`${url}/api/get_mr_form_demo`, {
-          headers: headers,
-          params: {
-            t_id: t === "All" ?    null : t,
-            bg_id: bg === "All" ?  null : bg,
-            bu_id: bu === "All" ?  null : bu,
-            z_id: z === "All" ?    null : z,
-            r_id: r === "All" ?    null : r,
-            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
-            to: moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
-            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-            emp_code: empCode,
-            excel: true 
-          
-          },
-        });
-        const apires = await respond.data.data;
-        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {     
-         ["Date"]:moment(item.demo_date).format("DD-MM-YYYY")                ,
-         ["Emp Code"]:item.emp_code,
-         ["Emp Name"]:item.emp_name,
-         ["Demo Type"]:item.purpose_of_demo,
-         ["Dealer"]:item.dealer_des,
-         ["Farmer_Mobile No"]:item.farmer_mob_no,
-         ["Farmer Name"]:item.farmer_name,
-         ["Farmer Father Name"]:item.farmer_father_name,
-         ["Farmer Type"]:item.farmer_type,
-         ["Plot Size"]:item.plot_size,
-         ["Potential"]:item.potential_farmer,
-         ["Village"]:item.village,
-         ["Next Visit Follow up"]:moment(item.next_visit_date).format("DD-MM-YYYY"),
-         ["Status"]:item.status,
-         ["Field Demo No"] :item.f_demo_code     ,      
-         ["Territory"]:item.territory_name,
-         ["Region"]:item.region_name,
-         ["Zone"]:item.zone_name,
-         ["Business Unit"]:item.business_unit_name,
-         ["Company"]:item.cmpny_name,
-         ["Deleted"]:item.isDeleted ? "Yes" : "No" ,         
-        }
-       } ));
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, `Farmer_Demo.xlsx`);
-      } catch (error) {
+    const getTimeDiff = (item) => {
+      console.log("zxc", item);
+      
+      if(item.end_time && item.start_time) {
+        const time1 = moment(item.start_time);
+        const time2 = moment(item.end_time);
         
+        const diffDuration = moment.duration(time2.diff(time1));
+        
+        // Calculate hours and minutes from the difference
+        const hours = Math.floor(diffDuration.asHours()); // total hours
+        const minutes = diffDuration.minutes(); // remaining minutes
+        
+        return `${hours}.${minutes < 10 ? '0' : ''}${minutes}`;
+      } else {
+        return "-";
       }
-    };
+    }
   return (
     <Layout>
-      <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
-        <Toaster position="bottom-center" reverseOrder={false} />
-        <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
+       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
+       <Toaster position="bottom-center" reverseOrder={false} />
+        <div className="text-black flex items-center justify-between bg-white w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-3xl  py-2">
-            {name ? name : "Farmer Demo Table"}
+            MR Attendance Regularization
           </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
-              
+                {/* <form className="form flex items-center ">
+                  <input
+                    type="search"
+                    placeholder="Search"
+                    className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white rounded-r-md p-1 "
+                  >
+                    <AiOutlineSearch
+                      className="mx-2 my-1"
+                      size={20}
+                    ></AiOutlineSearch>
+                  </button>
+                </form> */}
               </div>
             </div>
-
-            <div className="status xls download flex items-center justify-end w-full gap-8">
-          <div className="flex flex-row gap-2 ">
-            {" "}
-            <TbFileDownload
-              className="text-green-600 cursor-pointer "
-              size={32}
-              onClick={() => getExcelsheet(
-                filterState.bgId,
-                filterState.buId,
-                filterState.zId,
-                filterState.rId,
-                filterState.tId,
-                filterState.startDate,
-                filterState.endDate,
-                filterState.empCode
-              )
-
-
-                
-              }
-            ></TbFileDownload>
-            
-          </div>
-          </div>
-
 
             <h2>
               <AiTwotoneHome
@@ -1049,7 +995,6 @@ Verify
             </h2>
           </div>
         </div>
-
         <div className="flex flex-row gap-4  px-4 pr-8 pb-2">
           <select
             className="border rounded px-2 py-1  w-1/2 h-8"
@@ -1184,7 +1129,6 @@ Verify
             }}
           >
             <option value={"All"}>-All Region -</option>
-
             {allRegionData.map((item, idx) => (
               <option value={item.r_id} key={idx}>
                 {item.region_name}
@@ -1246,6 +1190,7 @@ Verify
               dateFormat="dd-MM-yyyy"
               selected={filterState.endDate}
               placeholderText="Enter Date"
+              // selected={selectedYear}
               scrollableYearDropdown
               onChange={(date) =>
                 setFilterState({ ...filterState, endDate: date })
@@ -1254,7 +1199,6 @@ Verify
             />
           </div>
         </div>
-
         <div className=" overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
           <table className="min-w-full divide-y border- divide-gray-200 ">
             <thead className="border-b w-max">
@@ -1262,57 +1206,41 @@ Verify
                 <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Action
                 </th>
-                <th className="px-4 py-2   text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Date
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Emp Code
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Emp Name
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Demo Type
+                  Attendence Type
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Dealer
+              Req.  Date
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Farmer Mobile No
+               Attendance   Date
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Farmer Name
+                  Punch In Time
                 </th>
+                
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Farmer Father Name
+                  Punch Out Time
                 </th>
+                
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Farmer Type
+                  Total Hour
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Plot Size
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Potential
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Village
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Next Visit Follow up
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                  Field Demo
-                </th>
+              
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Status
                 </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Field Demo No.
-                </th>
+
                 
               
-                
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Territory
                 </th>
@@ -1334,78 +1262,49 @@ Verify
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-              {data.map((item, idx) => (
+              {data?.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
-                 
-
-               <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
+                  <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
                     {getAllActionButton(item)}             
                 </td>
-                <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.demo_date).format("DD-MM-YYYY")}
-                    
-                  </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.emp_code}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.emp_name}
                   </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.purpose_of_demo
-                    }
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.dealer_des}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.farmer_mob_no}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.farmer_name}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.farmer_father_name}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.farmer_type}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.plot_size}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.potential_farmer}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.village}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.next_visit_date).format("DD-MM-YYYY")}
-                  </td>
-                  
-                  <td
-                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
-                    onClick={() => {
-                      setImgUrl(item.field_photo_url);
-                      setIsOpen(true);
-                    }}
-                 
-                  >
-                    View Field Image
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.status}
-                  </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.f_demo_code}
-                  </td>
-                 
-                  
-                 
-                  
-               
 
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                   RG
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {moment(item.createdAt).format("DD MMM YYYY")}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {moment(item.date).format("DD MMM YYYY")}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {moment(item.start_time).subtract(5, 'hours')
+            .subtract(30, 'minutes').format("hh:mm A")}
+                  </td>
+               
+                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                   {moment(item.end_time).subtract(5, 'hours')
+            .subtract(30, 'minutes').format("hh:mm A")}
+                  </td>
                 
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {getTimeDiff(item)}
+                   
+                   
+                   
+                  </td>
+                 
+                 
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.process_status}
+                  </td>
+                 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.territory_name}
                   </td>
@@ -1422,13 +1321,13 @@ Verify
                     {item.cmpny_name}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.isDeleted ? "Yes" : "No"}
+                    {item.isDeleted ? "Enable" : "Disable"}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {/* <div className="w-full  mx-4 h-12 ">
+          {/* <div className="w-full  mx-4 h-12 scrollbar-hidden">
             <ReactPaginate
               previousLabel={"< Previous"}
               nextLabel={"Next >"}
@@ -1439,7 +1338,8 @@ Verify
               activeClassName={"active"}
               className="flex flex-row gap-2 mt-4  "
             />
-          </div> */}
+          </div>
+           */}
         </div>
         <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
     <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
@@ -1457,7 +1357,7 @@ Verify
       activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
       className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
       forcePage={currentPage.selected} // Set the current page
-     />
+    />
   </div>
       </div>
 
@@ -1547,8 +1447,8 @@ Verify
                     className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
                   >
                     {modalData.type === "Verify"
-                      ? " Verify Demo"
-                      : "Approve Demo"}
+                      ? " Verify Attendance"
+                      : "Approve Attendance"}
                   </Dialog.Title>
                   <div className="mt-8 w-100">
                     <div className="flex flex-row gap-4 items-center ">
@@ -1589,7 +1489,7 @@ Verify
                         id="verificationDate"
                         name="verificationDate"
                         type="text"
-                        value={moment().format("DD-MM-YYYY")} // Assuming you want the current date
+                        value={ moment().format("DD-MM-YYYY")} // Assuming you want the current date
                         disabled
                         className="block w-full px-4 py-2 h-10 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-blue-300"
                       />
@@ -1616,7 +1516,7 @@ Verify
                     </div>
 
                     {modalData.type === "Verify" ? (
-                      <div className="mt-6 flex justify-center gap-1">
+                      <div className="mt-6 flex justify-center flex gap-4">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
@@ -1632,11 +1532,11 @@ Verify
                         </button>
                       </div>
                     ) : (
-                      <div className="mt-6 flex justify-center gap-1">
+                      <div className="mt-6 flex justify-center gap-2">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-                          onClick={() => handleApprove()} // Replace handleVerify with your verification function
+                          onClick={() => handleApprove()} // Replace handle with your verification function
                         >
                           Approve
                         </button>
@@ -1655,6 +1555,8 @@ Verify
           </div>
         </Dialog>
       </Transition>
+
+
 
       <Transition appear show={showDeleteModal} as={Fragment}>
         <Dialog
@@ -1698,7 +1600,7 @@ Verify
                     </p>
                   </div>
 
-                  <div className="mt-4 flex items-center justify-between">
+                  <div className="mt-4 flex items-center justify-center gap-2">
                     <button
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
@@ -1714,62 +1616,9 @@ Verify
                         handleDelete();
                       }}
                     >
-                      Delete
+                      
                     </button>
                   </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          onClose={() => {
-            setIsOpen(false);
-            setImgUrl("");
-          }}
-        >
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black/25" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
-                  >
-                    Farmer Filed Day Image
-                  </Dialog.Title>
-
-                  <img
-                    className="m-2"
-                    src={imgUrl}
-                    width={500}
-                    height={500}
-                    alt="Picture of the author"
-                  />
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -1780,4 +1629,4 @@ Verify
   );
 };
 
-export default DemoTable;
+export default Attendance;

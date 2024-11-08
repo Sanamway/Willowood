@@ -304,7 +304,7 @@ const NewDealer = () => {
     } catch (error) {}
   };
 
-  useEffect(() => {
+   useEffect(() => {
     if (
       !filterState.bgId ||
       !filterState.buId ||

@@ -397,6 +397,7 @@ const AdditionalInfo = () => {
                 </small>
               </div>
             </div>
+            {console.log("pop", moment(new Date(item.next_visit_date)).format("DD mm yyyy hh:mm a"),  moment().format("DD mm yyyy hh:mm a"),new Date(item.next_visit_date) >= new Date() ,  new Date(item.next_visit_date))}
             {new Date(item.next_visit_date) >= new Date() && new Date(item.next_visit_date) <= new Date(new Date().setDate(new Date().getDate() + 4)) && (
               <div className="flex flex-col gap-4 self-start">
                 <button
@@ -439,7 +440,7 @@ const AdditionalInfo = () => {
             {" "}
             View Farmer Demo Image
           </button>
-          <hr className="bg-gray-200 border-1 w-full" />
+           <hr className="bg-gray-200 border-1 w-full" />
         </div>
       ))}
       <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">

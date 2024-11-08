@@ -13,14 +13,17 @@ import ReactPaginate from "react-paginate";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { TbFileDownload } from "react-icons/tb";
+import * as XLSX from "xlsx";
 const Timesheet = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
+  const [dataCount, setDataCount] = useState([]);
   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  const headers = {
+   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
@@ -59,6 +62,7 @@ const Timesheet = () => {
       console.log("plo", respond.data.data.MR_attendance);
       const count = await respond.data.data.Total_count;
       setPageCount(Math.ceil(count / 50));
+      setDataCount(count)
       setData(apires);
     } catch (error) {
       setData([]);
@@ -717,7 +721,33 @@ const Timesheet = () => {
         break;
     }
   }, []);
-
+ 
+  useEffect(() => {
+    console.log("runrun")
+    handlePageChange({selected: 0})
+   
+    getTimesheet(
+      1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
+  }, [
+   
+    filterState.bgId,
+    filterState.buId,
+    filterState.zId,
+    filterState.rId,
+    filterState.tId,
+    filterState.startDate,
+    filterState.endDate,
+    filterState.empCode,
+  ]);
   useEffect(() => {
     getTimesheet(
       currentPage.selected + 1,
@@ -732,14 +762,7 @@ const Timesheet = () => {
     );
   }, [
     currentPage.selected,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    filterState.tId,
-    filterState.startDate,
-    filterState.endDate,
-    filterState.empCode,
+   
   ]);
     
   const getAllActionButton = (item) =>{
@@ -871,18 +894,17 @@ case 5: return <div>
 
 case 6: return <div>
 <button
-  onClick={() => {
-    setShowVerifyModal(true);
-    setModalData({
-      ...modalData,
-      type: "Approve",
-      id: item.attendance_id,
-    });
-  }}
-  disabled={item.approved === "Yes"}
-  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+disabled={item.verified === "Yes"}
+onClick={() => {
+  setShowVerifyModal(true);
+  setModalData({
+    ...modalData,
+    type: "Verify",
+    id: item.attendance_id,
+  });
+}}
 >
-  Approve
+Verify
 </button>
 </div>
 
@@ -902,18 +924,83 @@ Verify
 }
     }
 
-    const getTimeDiff = (item) =>{
-      if(item.punch_out_time &&item.punch_in_time ){
-        const time1 = moment(moment(item.punch_in_time).subtract(5, 'hours')
-        .subtract(30, 'minutes'));
+    const getTimeDiff = (item) => {
+   
+      if(item.punch_out_time && item.punch_in_time) {
+        const time1 = moment(item.punch_in_time).subtract(5, 'hours').subtract(30, 'minutes');
         const time2 = moment(item.punch_out_time);
-        return String(`${moment.duration(moment(time2).diff(time2)).hours() }`+"." + `${moment.duration(moment(time2).diff(time1)).minutes() }`)     
+        
+        const diffDuration = moment.duration(time2.diff(time1));
+        
+        // Calculate hours and minutes from the difference
+        const hours = Math.floor(diffDuration.asHours()); // total hours
+        const minutes = diffDuration.minutes(); // remaining minutes
+        
+        return `${hours}.${minutes < 10 ? '0' : ''}${minutes}`;
+      } else {
+        return "-";
       }
-      else {
-        return "-"
-      }
-      
     }
+
+    const getExcelsheet = async (
+      bg,
+      bu,
+      z,
+      r,
+      t,
+      from,
+      to,
+      empCode
+      ) => {
+      try {
+        const respond = await axios.get(`${url}/api/get_emp_attendance`, {
+          headers: headers,
+          params: {
+            t_id: t === "All" ?    null : t,
+            bg_id: bg === "All" ?  null : bg,
+            bu_id: bu === "All" ?  null : bu,
+            z_id: z === "All" ?    null : z,
+            r_id: r === "All" ?    null : r,
+            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            to: moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            emp_code: empCode,
+            excel: true 
+          
+          },
+        });
+        const apires = await respond.data.data;
+        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
+       ["Emp Code"]:  item.emp_code   ,  
+       ["Emp Name"]: item.emp_name ,
+       ["Attendence Type"]: item.attendance_type ,
+       ["Date"]: moment(item.date).format("DD MMM YYYY"),
+       ["Punch In Time"]: moment(item.punch_in_time).subtract(5, 'hours')
+       .subtract(30, 'minutes').format("hh:mm A"),
+       ["Opening KM"]: item.opening_km,
+       ["Punch Out Time"]: item.punch_out_time
+       ? moment(item.punch_out_time).format("hh:mm A")
+       : "-",
+       ["Closing KM"]: item.closing_km,
+       ["Total Hour"]: getTimeDiff(item),
+       ["Total KM"]: item.opening_km && item.closing_km ?  item.closing_km -item.opening_km : "-",
+       ["Status"]: item.status,
+       ["Territory"]: item.territory_name,
+       ["Region"]:item.region_name ,
+       ["Zone"]: item.zone_name,
+       ["Business Unit"]: item.business_unit_name,
+       ["Company"]: item.cmpny_name,
+       ["Deleted"]: item.isDeleted ? "Enable" : "Disable"
+        }
+       } ));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, `Timesheet.xlsx`);
+      } catch (error) {
+        
+      }
+    };
+   
   return (
     <Layout>
        <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -925,24 +1012,35 @@ Verify
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
-                {/* <form className="form flex items-center ">
-                  <input
-                    type="search"
-                    placeholder="Search"
-                    className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
-                  />
-                  <button
-                    type="submit"
-                    className="bg-blue-500 text-white rounded-r-md p-1 "
-                  >
-                    <AiOutlineSearch
-                      className="mx-2 my-1"
-                      size={20}
-                    ></AiOutlineSearch>
-                  </button>
-                </form> */}
+              
               </div>
             </div>
+
+            <div className="status xls download flex items-center justify-end w-full gap-8">
+          <div className="flex flex-row gap-2 ">
+            {" "}
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={32}
+              onClick={() => getExcelsheet(
+                filterState.bgId,
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.startDate,
+                  filterState.endDate,
+                  filterState.empCode
+              )
+
+
+                
+              }
+            ></TbFileDownload>
+            
+          </div>
+          </div>
+
 
             <h2>
               <AiTwotoneHome
@@ -995,8 +1093,8 @@ Verify
               </option>
             ))}
           </select>
-          <select
-            className="border rounded px-2 py-1  w-1/2 h-8"
+              <select
+                className="border rounded px-2 py-1  w-1/2 h-8"
             id="stateSelect"
             value={filterState.buId}
             onChange={(e) => {
@@ -1182,10 +1280,19 @@ Verify
                   Punch In Time
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Opening KM
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Punch Out Time
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Closing KM
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Total Hour
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Total KM
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
@@ -1239,9 +1346,15 @@ Verify
             .subtract(30, 'minutes').format("hh:mm A")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.opening_km}
+                  </td>
+                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.punch_out_time
                       ? moment(item.punch_out_time).format("hh:mm A")
                       : "-"}
+                  </td>
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                  {item.closing_km}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {getTimeDiff(item)}
@@ -1249,7 +1362,13 @@ Verify
                    
                    
                   </td>
-                  {console.log("klo", item.punch_in_time)}
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.opening_km && item.closing_km ?  item.closing_km -item.opening_km : "-"}
+                   
+                   
+                   
+                  </td>
+                 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.status}
                   </td>
@@ -1294,7 +1413,7 @@ Verify
     <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
       Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
       <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
-      <small className="font-bold px-2 self-center text-black">{currentPage.selected+1}</small> results
+      <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
     </div>
     <ReactPaginate
       previousLabel={"Previous"}
@@ -1302,9 +1421,10 @@ Verify
       breakLabel={"..."}
       pageCount={pageCount}
       onPageChange={handlePageChange}
-      containerClassName={"pagination"}
-      activeClassName={"active"}
+      containerClassName={"pagination flex flex-row gap-2"} // Container styling
+      activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
       className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
+      forcePage={currentPage.selected} // Set the current page
     />
   </div>
       </div>

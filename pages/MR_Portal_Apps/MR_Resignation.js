@@ -167,12 +167,12 @@ const [showSubmitButton , setShowSubmitButton] = useState(true)
     localStorageItems.cId])
   return (
     <form
-      className=" bg-white rounded  w-full   pb-4  fixed"
+      className=" bg-white rounded  w-full   pb-4 "
       onSubmit={(e) => e.preventDefault()}
     >
      <Toaster position="bottom-center" reverseOrder={false} />
       <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
-        <span className="text-black flex flex-row gap-4 font-bold   md:hidden ">
+        <span className="text-black flex flex-row gap-4 font-bold  md:hidden ">
           <FaArrowLeftLong
             className="self-center "
             onClick={() =>
@@ -185,7 +185,7 @@ const [showSubmitButton , setShowSubmitButton] = useState(true)
         </span>{" "}
        
       </div>
-      <div className="flex mb-4 mt-2 mb-8">
+      <div className="flex mb-4 ">
       <div className="flex mb-4 mt-2">
             <div className="w-40 h-30 flex justify-center items-center">
               <Image
@@ -229,7 +229,7 @@ const [showSubmitButton , setShowSubmitButton] = useState(true)
 
       
       <div className="overflow-auto w-full px-3">
-      <div className="flex flex-col gap-1 w-full px-2 pt-2">
+      <div className="flex flex-col  w-full px-2">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"
@@ -249,7 +249,7 @@ const [showSubmitButton , setShowSubmitButton] = useState(true)
             disabled
           />
         </div>
-        <div className="flex flex-col gap-1 w-full px-2 pt-2">
+        <div className="flex flex-col gap-1 w-full px-2 ">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"
@@ -265,7 +265,7 @@ const [showSubmitButton , setShowSubmitButton] = useState(true)
             disabled
        />
         </div>
-        <div className="flex flex-col gap-1 w-full px-2 pt-2">
+        <div className="flex flex-col gap-1 w-full px-2 ">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"
@@ -285,7 +285,7 @@ const [showSubmitButton , setShowSubmitButton] = useState(true)
             disabled
          />
         </div>
-        <div className="flex flex-col gap-1 w-full px-2 pt-2">
+        <div className="flex flex-col gap-1 w-full px-2 ">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"
@@ -322,7 +322,7 @@ const [showSubmitButton , setShowSubmitButton] = useState(true)
                         </select>
           
         </div>
-        <div className="flex flex-col gap-1 w-full px-2 pt-2">
+        <div className="flex flex-col gap-1 w-full px-2 ">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
             htmlFor="inputField"
@@ -341,7 +341,7 @@ const [showSubmitButton , setShowSubmitButton] = useState(true)
             dropdownMode="select"
           />
         </div>
-        <div className="flex flex-col gap-1 w-full px-2 pt-2">
+        <div className="flex flex-col gap-1 w-full px-2 ">
          
 
           <textarea

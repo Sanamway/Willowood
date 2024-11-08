@@ -8,7 +8,8 @@ import axios from "axios";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import Layout from "@/components/Layout1";
-
+import * as XLSX from "xlsx";
+import { TbFileDownload } from "react-icons/tb";
 import ReactPaginate from "react-paginate";
 import moment from "moment";
 import DatePicker from "react-datepicker";
@@ -16,6 +17,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const DemoTable = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
+  const [dataCount, setDataCount] = useState([]);
   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -58,6 +60,7 @@ const DemoTable = () => {
       const apires = await respond.data.data.MR_demo;
       const count = await respond.data.data.Total_count;
       setPageCount(Math.ceil(count / 50));
+      setDataCount(count)
       setData(apires);
     } catch (error) {
       setData([]);
@@ -724,8 +727,9 @@ const DemoTable = () => {
   }, []);
   
   useEffect(() => {
+    handlePageChange({selected: 0})
     getFarmerDemo(
-      currentPage.selected + 1,
+      1,
       filterState.bgId,
       filterState.buId,
       filterState.zId,
@@ -736,7 +740,6 @@ const DemoTable = () => {
       filterState.empCode
     );
   }, [
-    currentPage.selected,
     filterState.bgId,
     filterState.buId,
     filterState.zId,
@@ -745,6 +748,21 @@ const DemoTable = () => {
     filterState.startDate,
     filterState.endDate,
     filterState.empCode,
+  ]);
+  useEffect(() => {
+    getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+       filterState.empCode
+    );
+  }, [
+    currentPage.selected,
   ]);
   const { name } = router.query;
   const getAllActionButton = (item) =>{
@@ -884,19 +902,18 @@ case 5: return <div>
 case 6: return <div>
   
   
-<button
-  onClick={() => {
-    setShowVerifyModal(true);
-    setModalData({
-      ...modalData,
-      type: "Approve",
-      id:  item.f_demo_followup_id,
-    });
-  }}
-  disabled={item.approved === "Yes"}
-  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+  <button
+disabled={item.verified === "Yes"}
+onClick={() => {
+  setShowVerifyModal(true);
+  setModalData({
+    ...modalData,
+    type: "Verify",
+    id:  item.f_demo_followup_id,
+  });
+}}
 >
-  Approve
+Verify
 </button>
 </div>
 
@@ -918,6 +935,71 @@ Verify
 
 }
     }
+
+
+    const getExcelsheet = async (
+      bg,
+      bu,
+      z,
+      r,
+      t,
+      from,
+      to,
+      empCode
+      ) => {
+      try {
+        const respond = await axios.get(`${url}/api/get_farmer_demo_followup`, {
+          headers: headers,
+          params: {
+            t_id: t === "All" ?    null : t,
+            bg_id: bg === "All" ?  null : bg,
+            bu_id: bu === "All" ?  null : bu,
+            z_id: z === "All" ?    null : z,
+            r_id: r === "All" ?    null : r,
+            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            to: moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            emp_code: empCode,
+            excel: true 
+          
+          },
+        });
+        const apires = await respond.data.data;
+        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
+          ["F Follow Code"] : item.f_demo_follow_no ,
+          ["FollowUp Date"]:  moment(item.
+                        demo_followup_date).format("DD-MM-YYYY"),
+         ["Emp Code"]:item.emp_code,
+         ["Emp Name"]:item.emp_name,
+         ["Dealer"]:item.dealer_des,
+         ["Demo No"]:item.f_demo_code,
+         ["Farmer Mobile No"]:item.farmer_mob_no,
+         ["Farmer Id"]:item.farmer_id,
+         ["Farmer Name"]:item.farmer_name,
+         ["Farmer Father Name"]:item.farmer_father_name,
+         ["Farmer Type"]:item.farmer_type,
+         ["Plot Size"]:item.plot_size,
+         ["Farmer Observation"]:item.farmer_observation,
+         ["Product Rating"]:item.product_rating,
+         ["Remarks"]:item.follow_up_remarks,
+         ["Potential Farmer"]:item.potential_farmer,
+         ["Next Follow Up Date"]:moment(item.next_followup_date).format("DD-MM-YYYY"),
+         ["Status"]:item.status,    
+         ["Territory"]:item.territory_name,
+         ["Region"]:item.region_name,
+         ["Zone"]:item.zone_name,
+         ["Business Unit"]:item.business_unit_name,
+         ["Company"]:item.cmpny_name,
+         ["Deleted"]:item.isDeleted ? "Yes" : "No" ,    
+        }
+       } ));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, `Followup.xlsx`);
+      } catch (error) {
+        
+      }
+    };
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -926,8 +1008,38 @@ Verify
           <h2 className="font-arial font-normal text-3xl  py-2">
             {name ? name : "Farmer Followup Table"}
           </h2>
-          <div className="flex items-center gap-2 cursor-pointer pr-4">
-            <h2>
+          <div className="flex items-center gap-2 cursor-pointer">
+            <div className="search gap-2 mx-8">
+              <div className="container">
+              
+              </div>
+            </div>
+
+            <div className="status xls download flex items-center justify-end w-full gap-8">
+          <div className="flex flex-row gap-2 ">
+            {" "}
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={32}
+              onClick={
+                () => 
+                  getExcelsheet
+                (
+                  filterState.bgId,
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.startDate,
+                  filterState.endDate,
+                  filterState.empCode
+                )
+                
+              }
+            ></TbFileDownload>
+            
+          </div>
+          </div> <h2>
               <AiTwotoneHome
                 className="text-black-500"
                 size={34}
@@ -1314,7 +1426,7 @@ product_rating
                     {item.potential_farmer}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.next_followup_date).format("DD/MM/YYYY")}
+                    {moment(item.next_followup_date).format("DD-MM-YYYY")}
                   </td>
 
                  
@@ -1368,7 +1480,7 @@ product_rating
   <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
       Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
       <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
-      <small className="font-bold px-2 self-center text-black">{currentPage.selected+1}</small> results
+      <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
     </div>
     <ReactPaginate
       previousLabel={"Previous"}
@@ -1376,10 +1488,11 @@ product_rating
       breakLabel={"..."}
       pageCount={pageCount}
       onPageChange={handlePageChange}
-      containerClassName={"pagination"}
-      activeClassName={"active"}
+      containerClassName={"pagination flex flex-row gap-2"} // Container styling
+      activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
       className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
-    />
+      forcePage={currentPage.selected} // Set the current page
+     />
   </div>
       </div>
 

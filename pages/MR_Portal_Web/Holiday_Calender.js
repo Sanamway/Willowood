@@ -12,7 +12,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 
-const HolidayCalender = () => {
+ const HolidayCalender = () => {
   const router = useRouter();
 
   const headers = {
@@ -154,8 +154,6 @@ const HolidayCalender = () => {
         },
       });
       const apires = await respond.data.data;
-      console.log("plo", apires);
-
       setTableData(
         apires.map((item, idx) => {
           return {
@@ -172,10 +170,12 @@ const HolidayCalender = () => {
           };
         })
       );
-    } catch (error) {}
+    } catch (error) {
+      setTableData([])
+    }
   };
 
-  const getWeeklyOff = async (year, cId, bgId, buId,zId,rId, woType) => {
+  const getWeeklyOff = async (year, cId, bgId, buId, zId, rId, woType) => {
     try {
       const respond = await axios.get(`${url}/api/holiday_list`, {
         headers: headers,
@@ -191,7 +191,6 @@ const HolidayCalender = () => {
         },
       });
       const apires = await respond.data.data;
-
       setWoData(
         apires.map((item, idx) => {
           return {
@@ -202,37 +201,41 @@ const HolidayCalender = () => {
             type: item.holiday_type,
             buId: item.bu_id,
             bgId: item.bg_id,
-            zId:item.z_id,
-            rId:item.r_id,
-            cId: item.c_id,
-            type:"WO"
+            zId:  item.z_id,
+            rId:  item.r_id,
+            cId:  item.c_id,
+            type:"WO",         
           };
         })
       );
-    } catch (error) {}
+      console.log("aqw",apires[0].wotype)
+      setWeekType(apires[0].wotype)
+    } catch (error) {
+      setWoData([])
+    }
   };
 
   useEffect(() => {
-    if (!weekType) setWoData([]);
-    if (
-      !filterState.year ||
-      !filterState.cId ||
-      !filterState.bgId ||
-      !filterState.buId || 
-      !filterState.zId ||
-      !filterState.rId
-    )
-      return;
    
-    getWeeklyOff(
-    filterState.year,
-    filterState.cId,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    weekType,
-    );
+   
+     setWeekType("") 
+      getWeeklyOff(
+        filterState.year,
+        filterState.cId,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+      
+        );
+        getAllHoliday(
+          filterState.year,
+          filterState.cId,
+          filterState.bgId,
+          filterState.buId,
+          filterState.zId,
+          filterState.rId,
+        );  
   }, [
     filterState.year,
     filterState.cId,
@@ -240,41 +243,25 @@ const HolidayCalender = () => {
     filterState.buId,
     filterState.zId,
     filterState.rId,
-    weekType,
   ]);
-
-
-
+  
   useEffect(() => {
-    if (!weekType) setWoData([]);
-    if (
-      !filterState.year ||
-      !filterState.cId ||
-      !filterState.bgId ||
-      !filterState.buId || 
-      !filterState.zId ||
-      !filterState.rId
-    )
-      return;
-    getAllHoliday(
+    getWeeklyOff(
       filterState.year,
       filterState.cId,
       filterState.bgId,
       filterState.buId,
       filterState.zId,
       filterState.rId,
-    );
-   
-  }, [
-    filterState.year,
-    filterState.cId,
-    filterState.bgId,
-    filterState.buId,
-    filterState.zId,
-    filterState.rId,
-    
-  ]);
+      weekType,
+      );
+}, [
+  weekType,
+]);
 
+
+
+ 
   const [tableData, setTableData] = useState([]);
 
   const [woData, setWoData] = useState([]);
@@ -340,12 +327,12 @@ const HolidayCalender = () => {
           holiday_date: item.date,
           day: moment(item.date).format("dddd"),
           holiday_type: item.type,
-          r_id: item.rId,
-          z_id: item.zId,
-          bu_id: item.buId,
-          bg_id: item.bgId,
-          c_id: item.cId,
-          type: "Holiday",
+          bu_id: filterState.buId,
+          c_id:  filterState.cId,
+          bg_id: filterState.bgId,
+          r_id:  filterState.rId,
+          z_id:  filterState.zId,
+          type:  "Holiday",
           year: Number(filterState.year),
         };
       });
@@ -355,11 +342,11 @@ const HolidayCalender = () => {
           headers: headers,
           params: {
             bu_id: filterState.buId,
-            c_id: filterState.cId,
+            c_id:  filterState.cId,
             bg_id: filterState.bgId,
-            r_id: filterState.rId,
-            z_id: filterState.zId,
-            year: filterState.year,
+            r_id:  filterState.rId,
+            z_id:  filterState.zId,
+            year:  filterState.year,
             type: "Holiday",
             update: true,
           },
@@ -372,8 +359,7 @@ const HolidayCalender = () => {
             filterState.bgId,
             filterState.buId,
             filterState.zId,
-            filterState.rId,
-           
+            filterState.rId, 
           );
         });
 
@@ -393,16 +379,15 @@ const HolidayCalender = () => {
           holiday_date: item.date,
           day: moment(item.date).format("dddd"),
           type: item.type,
-          bu_id: item.buId,
-          bg_id: item.bgId,
-          z_id: item.zId,
-          r_id: item.rId,
-
-          c_id: item.cId,
+          bu_id: filterState.buId,
+          c_id:  filterState.cId,
+          bg_id: filterState.bgId,
+          r_id:  filterState.rId,
+          z_id:  filterState.zId,
           year: Number(filterState.year),
+          wotype:weekType,
         };
       });
-
       const respond = await axios
         .post(`${url}/api/add_holiday_list`, JSON.stringify(allData), {
           headers: headers,
@@ -414,6 +399,7 @@ const HolidayCalender = () => {
             r_id:filterState.rId,
             year: filterState.year,
             type: "WO",
+            wotype:weekType,
             update: true,
           },
         })

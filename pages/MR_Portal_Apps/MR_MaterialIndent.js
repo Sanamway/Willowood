@@ -226,7 +226,7 @@ const AdditionalInfo = (props) => {
       <Toaster position="bottom-center" reverseOrder={false} />
       <div className="flex flex-col gap-2 p-1.5 ">
         <div className="">
-          <h1 className="font-bold ">Employee Details:</h1>
+          <h1 className="font-bold ">Employee Details : </h1>
           <div className="flex mb-4 mt-2">
             <div className="w-40 h-30 flex justify-center items-center">
               <Image

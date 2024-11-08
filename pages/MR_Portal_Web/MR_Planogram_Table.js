@@ -13,7 +13,10 @@ import ReactPaginate from "react-paginate";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { TbFileDownload } from "react-icons/tb";
+  import * as XLSX from "xlsx";
 const FarmerSHC = () => {
+  
   const router = useRouter();
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
@@ -26,6 +29,7 @@ const FarmerSHC = () => {
   };
 
   const [pageCount, setPageCount] = useState(0);
+  const [dataCount, setDataCount] = useState([]);
   const getFarmerDemo = async (
     currentPage,
     bg,
@@ -59,7 +63,7 @@ const FarmerSHC = () => {
       const apires = await respond.data.data.MRPlanogramData;
       const count = await respond.data.data.MRPlanogramcount;
       setPageCount(Math.ceil(count / 50));
-
+      setDataCount(count)
       setData(apires);
     } catch (error) {
       setData([]);
@@ -712,9 +716,10 @@ const FarmerSHC = () => {
         break;
     }
   }, []);
-  useEffect(() => {
+ useEffect(() => {
+    handlePageChange({selected: 0})
     getFarmerDemo(
-      currentPage.selected + 1,
+      1,
       filterState.bgId,
       filterState.buId,
       filterState.zId,
@@ -725,7 +730,6 @@ const FarmerSHC = () => {
       filterState.empCode
     );
   }, [
-    currentPage.selected,
     filterState.bgId,
     filterState.buId,
     filterState.zId,
@@ -734,6 +738,21 @@ const FarmerSHC = () => {
     filterState.startDate,
     filterState.endDate,
     filterState.empCode,
+  ]);
+  useEffect(() => {
+    getFarmerDemo(
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+       filterState.empCode
+    );
+  }, [
+    currentPage.selected,
   ]);
   const { name } = router.query;
 
@@ -874,19 +893,18 @@ case 5: return <div>
 case 6: return <div>
   
   
-<button
-  onClick={() => {
-    setShowVerifyModal(true);
-    setModalData({
-      ...modalData,
-      type: "Approve",
-      id:  item.f_planogram_id,
-    });
-  }}
-  disabled={item.approved === "Yes"}
-  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+  <button
+disabled={item.verified === "Yes"}
+onClick={() => {
+  setShowVerifyModal(true);
+  setModalData({
+    ...modalData,
+    type: "Verify",
+    id:  item.f_planogram_id,
+  });
+}}
 >
-  Approve
+Verify
 </button>
 </div>
 
@@ -908,6 +926,66 @@ Verify
 
 }
     }
+
+
+    const getExcelsheet = async (
+      bg,
+      bu,
+      z,
+      r,
+      t,
+      from,
+      to,
+      empCode
+      ) => {
+      try {
+        const respond = await axios.get(`${url}/api/get_mr_planogram`, {
+          headers: headers,
+          params: {
+            t_id: t === "All" ?    null : t,
+            bg_id: bg === "All" ?  null : bg,
+            bu_id: bu === "All" ?  null : bu,
+            z_id: z === "All" ?    null : z,
+            r_id: r === "All" ?    null : r,
+            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            to:   moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            emp_code: empCode,
+            excel: true, 
+          },
+        });
+        const apires = await respond.data.data;
+        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
+        ["DPL Visit No"] :item.f_planogram_no,
+        ["Date"]: moment(item.f_planogram_date).format("DD/MM/YYYY"),
+        ["Dealer"]: item.dealer_des,
+        ["Emp Code"]: item.emp_code,
+        ["Emp Name"]: item.emp_name,      
+        ["Dealer Address"]: item.dealer_address,   
+        ["Contact Person"]: item.dealer_contact,
+        ["Product Brand"]: item.product_brand,
+        ["Product Positioning"]: item.product_positioning ,
+        ["Promotional Material"]: item.promotional_material,
+        ["Damage Condition"] : item.damage_condition,
+        ["Category Placement"]: item.category_placement,
+        ["Current Stock"]: item.current_stock,
+        ["Actual Share of Life"]: item.actual_share_of_life,
+        ["Compititor Brand"]: item.compitor_brand,
+        ["Compititor Price"]: item.compitor_price,
+        ["Territory"]: item.territory_name,
+        ["Region"]: item.region_name,
+        ["Zone"]: item.zone_name,
+        ["Business_Unit"]: item.zone_name,
+        ["Company"]: item.cmpny_name,
+        }
+       } ));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, `Planogram.xlsx`);
+      } catch (error) {
+        
+      }
+    };
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -917,6 +995,28 @@ Verify
             {name ? name : "Planogram"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer pr-4">
+          <div className="flex flex-row gap-2 ">
+            {" "}
+            <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={32}
+              onClick={() => getExcelsheet(
+                filterState.bgId,
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.startDate,
+                  filterState.endDate,
+                  filterState.empCode
+              )
+
+
+                
+              }
+            ></TbFileDownload>
+            
+          </div>
             <h2>
               <AiTwotoneHome
                 className="text-black-500"
@@ -1223,7 +1323,7 @@ Verify
               </tr>
             </thead>
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
-              {data.map((item, idx) => (
+              {data?.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
                   <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
                     {getAllActionButton(item)}             
@@ -1318,8 +1418,8 @@ Verify
         <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
         <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
       Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
-      <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
-      <small className="font-bold px-2 self-center text-black">{currentPage.selected+1}</small> results
+      <small className="font-bold px-2 self-center text-black">{data?.length}</small> of{" "}
+      <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
     </div>
     <ReactPaginate
       previousLabel={"Previous"}
@@ -1327,10 +1427,11 @@ Verify
       breakLabel={"..."}
       pageCount={pageCount}
       onPageChange={handlePageChange}
-      containerClassName={"pagination"}
-      activeClassName={"active"}
+      containerClassName={"pagination flex flex-row gap-2"} // Container styling
+      activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
       className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
-    />
+      forcePage={currentPage.selected} // Set the current page
+     />
   </div>
       </div>
 
@@ -1600,4 +1701,4 @@ Verify
   );
 };
 
-export default FarmerSHC;
+ export default FarmerSHC;
