@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
-
+import { FaDownload } from "react-icons/fa";
 import axios from "axios";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
@@ -614,7 +614,7 @@ newFil:"All",
 
   
 
-
+const [excelLoading, setExcelLoading] = useState(false)
     const getExcelsheet = async (
       yr,
       month,
@@ -641,6 +641,7 @@ newFil:"All",
             { month: "December", number: 12 }
           ];
       try {
+        setExcelLoading(true)
         const respond = await axios.get(`${url}/api/get_employee_payout`, {
           headers: headers,
           params: {
@@ -657,11 +658,13 @@ newFil:"All",
             zrt:true
           },
         });
-        const apires = await respond.data.data;
+        const apires = await respond.data.data.employeeData;
         const ws = XLSX.utils.json_to_sheet(apires.map((item, idx)=> {return {
 
           ["Sr. No"]:  idx+1 ,
+          ["Employee Code"]:  item.empcode,
           ["Employee Name"]:  item.emp_name,
+        
           ["Reporting HQ"]:  item.reporting_hq ,
           ["Territory"]:  item.territory_name ,
           ["Application Fee Amount"]:  item.in_appl_amt ,
@@ -691,7 +694,9 @@ newFil:"All",
           ["Reporting Person"]:  item.rp_manager ,
           ["Region"]:  item.region_name,
           ["Zone"]:  item.zone_name ,
-          ["Resignsstion Fee"]:   moment(item.resignation_request_date).format("DD-MM-YYYY"),
+          ["Business Unit Name"]:item.business_unit_name,   
+          ["Resignsstion Date"]:item.resignation_request_date ? moment(item.resignation_request_date).format("DD-MM-YYYY"): "-",
+          ["App Status"]: item.app_status,
           
 
        
@@ -699,9 +704,11 @@ newFil:"All",
        } ));
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, `Planogram.xlsx`);
+        XLSX.writeFile(wb, `payout.xlsx`);
+        setExcelLoading(false)
       } catch (error) {
-        
+        setExcelLoading(false)
+        console.log("notch", error)
       }
     };
     const [total , setTotal]= useState({})
@@ -745,6 +752,15 @@ newFil:"All",
           </div>
         );
       };
+      const LoaderExcel = () => {
+        return (
+          <div class="flex space-x-1   justify-center items-center bg-white  ">
+            <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+            <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+            <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce"></div>
+          </div>
+        );
+      };
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -756,7 +772,9 @@ newFil:"All",
           <div className="flex items-center gap-2 cursor-pointer pr-4">
           <div className="flex flex-row gap-2 ">
             {" "}
-            <TbFileDownload
+
+            {excelLoading ? <LoaderExcel
+                  />   :    <TbFileDownload
               className="text-green-600 cursor-pointer "
               size={32}
               onClick={() => getExcelsheet(
@@ -771,7 +789,8 @@ newFil:"All",
                 filterState.newFil
               ) 
               }
-            ></TbFileDownload>
+            ></TbFileDownload>}
+         
             
           </div>
             <h2>

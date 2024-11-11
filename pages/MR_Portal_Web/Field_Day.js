@@ -885,7 +885,7 @@ Verify
 
 }
     }
-
+    const [excelLoading, setExcelLoading] = useState(false)
     const getExcelsheet = async (
       bg,
       bu,
@@ -897,6 +897,7 @@ Verify
       empCode
       ) => {
       try {
+        setExcelLoading(true)
         const respond = await axios.get(`${url}/api/get_farmer_demo_fields`, {
           headers: headers,
           params: {
@@ -947,9 +948,20 @@ Verify
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
         XLSX.writeFile(wb, `Field Day.xlsx`);
+        setExcelLoading(false)
       } catch (error) {
+        setExcelLoading(false)
         
       }
+    };
+    const LoaderExcel = () => {
+      return (
+        <div class="flex space-x-1   justify-center items-center bg-white  ">
+          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce"></div>
+        </div>
+      );
     };
   return (
     <Layout>
@@ -962,25 +974,24 @@ Verify
           <div className="flex items-center gap-2 cursor-pointer pr-4">
           <div className="flex flex-row gap-2 ">
             {" "}
-            <TbFileDownload
+            
+            {excelLoading ? <LoaderExcel
+                  />   :    <TbFileDownload
               className="text-green-600 cursor-pointer "
               size={32}
               onClick={() => getExcelsheet(
                 filterState.bgId,
-                  filterState.buId,
-                  filterState.zId,
-                  filterState.rId,
-                  filterState.tId,
-                  filterState.startDate,
-                  filterState.endDate,
-                  filterState.empCode
-              )
-
-
-                
+                filterState.buId,
+                filterState.zId,
+                filterState.rId,
+                filterState.tId,
+                filterState.startDate,
+                filterState.endDate,
+                filterState.empCode
+              ) 
               }
-            ></TbFileDownload>
-            
+            ></TbFileDownload>}
+           
           </div>
             <h2>
               <AiTwotoneHome

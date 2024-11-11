@@ -13,6 +13,8 @@ import ReactPaginate from "react-paginate";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { TbFileDownload } from "react-icons/tb";
+  import * as XLSX from "xlsx";
 const Attendance = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
@@ -954,6 +956,79 @@ Verify
         return "-";
       }
     }
+    const [excelLoading, setExcelLoading] = useState(false)
+    const getExcelsheet = async (
+      bg,
+      bu,
+      z,
+      r,
+      t,
+      from,
+      to,
+      empCode
+      ) => {
+      try {
+        setExcelLoading(true)
+        const respond = await axios.get(`${url}/api/get_mr_ar`, {
+          headers: headers,
+          params: {
+            t_id: t === "All" ?    null : t,
+            bg_id: bg === "All" ?  null : bg,
+            bu_id: bu === "All" ?  null : bu,
+            z_id: z === "All" ?    null : z,
+            r_id: r === "All" ?    null : r,
+            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            to:   moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            emp_code: empCode,
+            excel: true, 
+          },
+        });
+        const apires = await respond.data.data;
+        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
+                               
+            ["Emp Code"]: item.emp_code ,
+            ["Emp Name"]: item.emp_name ,
+            ["Attendence Type"]: "RG" ,
+            ["Req. Date"]:moment(item.createdAt).format("DD MMM YYYY") ,          
+            ["Attendance Date"]: moment(item.date).format("DD MMM YYYY") ,
+            ["Punch In Time"]: moment(item.start_time).subtract(5, 'hours')
+            .subtract(30, 'minutes').format("hh:mm A") ,
+            ["Punch Out Time"]: moment(item.end_time).subtract(5, 'hours')
+            .subtract(30, 'minutes').format("hh:mm A") ,
+            ["Total Hour"]: getTimeDiff(item) ,
+            ["Status"]: item.process_status ,
+            ["Territory"]: item.territory_name ,
+            ["Region"]: item.region_name ,
+            ["Zone"]: item.zone_name ,
+            ["Business Unit"]: item.business_unit_name ,
+            ["Company"]: item.cmpny_name ,
+            ["Deleted"]: item.isDeleted ? "Enable" : "Disable"
+          
+       
+  
+       
+
+        }
+       } ));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, `AttendanceRegularization.xlsx`);
+        setExcelLoading(false)
+      } catch (error) {
+        setExcelLoading(false)
+        
+      }
+    };
+    const LoaderExcel = () => {
+      return (
+        <div class="flex space-x-1   justify-center items-center bg-white  ">
+          <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+          <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+          <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce"></div>
+        </div>
+      );
+    };
   return (
     <Layout>
        <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -964,24 +1039,22 @@ Verify
           </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
-              <div className="container">
-                {/* <form className="form flex items-center ">
-                  <input
-                    type="search"
-                    placeholder="Search"
-                    className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
-                  />
-                  <button
-                    type="submit"
-                    className="bg-blue-500 text-white rounded-r-md p-1 "
-                  >
-                    <AiOutlineSearch
-                      className="mx-2 my-1"
-                      size={20}
-                    ></AiOutlineSearch>
-                  </button>
-                </form> */}
-              </div>
+            {excelLoading ? <LoaderExcel
+                  />   :    <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={32}
+              onClick={() => getExcelsheet(
+                filterState.bgId,
+                filterState.buId,
+                filterState.zId,
+                filterState.rId,
+                filterState.tId,
+                filterState.startDate,
+                filterState.endDate,
+                filterState.empCode
+              ) 
+              }
+            ></TbFileDownload>}
             </div>
 
             <h2>
