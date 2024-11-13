@@ -663,8 +663,7 @@ const [excelLoading, setExcelLoading] = useState(false)
 
           ["Sr. No"]:  idx+1 ,
           ["Employee Code"]:  item.empcode,
-          ["Employee Name"]:  item.emp_name,
-        
+          ["Employee Name"]:  item.emp_name,       
           ["Reporting HQ"]:  item.reporting_hq ,
           ["Territory"]:  item.territory_name ,
           ["Application Fee Amount"]:  item.in_appl_amt ,

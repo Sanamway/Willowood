@@ -1000,15 +1000,15 @@ Verify
         
       }
     };
-    const LoaderExcel = () => {
-      return (
-        <div class="flex space-x-1   justify-center items-center bg-white  ">
-          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce"></div>
-        </div>
-      );
-    };
+      const LoaderExcel = () => {
+    return (
+      <div class="flex space-x-1   justify-center items-center bg-white  ">
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce"></div>
+      </div>
+    );
+  };
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -1308,6 +1308,30 @@ Verify
                   Plot Size
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Crop
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Stage
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Segment
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                 Product Brand
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Applied Dose
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Water
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Area Cover (sqmt)
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Field Day
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Potential
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
@@ -1387,7 +1411,33 @@ Verify
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.plot_size}
+                  </td>             
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.crop))].join(' + ')}
+</td>
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.stage))].join(' + ')}
+</td>
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.segment))].join(' + ')}
+</td>
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.product_brand))].join(' + ')}
+</td>
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.dose_acre_tank))].join(', ')}
+</td>
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.water_val))].join(', ')}
+</td>
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.acre_plot))].join(', ')}
+</td>            
+
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.field_day}
                   </td>
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.potential_farmer}
                   </td>

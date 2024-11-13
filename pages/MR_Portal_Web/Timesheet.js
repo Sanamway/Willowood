@@ -1349,8 +1349,8 @@ Verify
                     {moment(item.date).format("DD MMM YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {moment(item.punch_in_time).subtract(5, 'hours')
-            .subtract(30, 'minutes').format("hh:mm A")}
+                    {item.punch_in_time ? moment(item.punch_in_time).subtract(5, 'hours')
+            .subtract(30, 'minutes').format("hh:mm A") :"-"}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.opening_km}

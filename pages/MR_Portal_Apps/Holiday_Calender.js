@@ -76,7 +76,7 @@ const AdditionalInfo = (props) => {
     });
   }, []);
 
-  const [filterYear, setFilterYear] = useState("");
+  const [filterYear, setFilterYear] = useState("2024");
   const [tableData, setTableData] = useState([]);
   const getAllHoliday = async (year) => {
     try {
