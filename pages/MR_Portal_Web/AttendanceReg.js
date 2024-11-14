@@ -1313,7 +1313,9 @@ Verify
 
                 
               
-
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  TM Name
+                </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Territory
                 </th>
@@ -1365,19 +1367,15 @@ Verify
                    {moment(item.end_time).subtract(5, 'hours')
             .subtract(30, 'minutes').format("hh:mm A")}
                   </td>
-                
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {getTimeDiff(item)}
-                   
-                   
-                   
+                    {getTimeDiff(item)}                                                      
                   </td>
-                 
-                 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.process_status}
                   </td>
-                 
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.tm_name}
+                  </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.territory_name}
                   </td>

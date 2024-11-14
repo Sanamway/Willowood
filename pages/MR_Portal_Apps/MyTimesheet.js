@@ -86,7 +86,6 @@ const AdditionalInfo = (props) => {
   });
 
   const [listItems, setListItems] = useState([]);
- 
   const getAttandenceStatus = async () => {
     try {
       const respond = await axios.get(`${url}/api/get_emp_attendance`, {
@@ -161,17 +160,19 @@ const AdditionalInfo = (props) => {
         break;
     }
   };
-  const [payoutItems, setPayoutItems] = useState([]);
-  const getFeeData = async (
+  const [payoutItems, setPayoutItems] = useState(
+    {
+mark:{},
+verify: {},
+approve:{}
+    }
+    
+   );
+  const getMarkData = async (
     yr,
     month,  
-    empCode,
-  
-  ) => {
- 
-    try {
-      
-        
+    empCode) => {
+    try {          
         const allMonths = [
             { month: "January", number: 1 },
             { month: "February", number: 2 },
@@ -187,37 +188,138 @@ const AdditionalInfo = (props) => {
             { month: "December", number: 12 }
           ];
 
-          console.log("nop",month, allMonths.filter((item)=> item.month === month))
-       const respond = await axios.get(`${url}/api/get_employee_payout`, {
+        console.log("nop",month, allMonths.filter((item)=> item.month === month))
+        const respond = await axios.get(`${url}/api/get_employee_payout`, {
         headers: headers,
         params: {
-   
           emp_code: empCode,
           year: yr,
           month: month? allMonths.filter((item)=> item.month === month)[0].number : "",
-          c_id: 1
-          
-
+          c_id: 1  
         },
       });
-      // const apires = await respond.data.data.employeeData;
-    
-      // setPayoutItems(apires);
-      
+      const apires = await respond.data.data.employeeData;
+      console.log("nos", apires)
+      setPayoutItems((prevItems) => ({
+        ...prevItems,
+        mark: apires.length? apires[0]: {}
+      }));
+          
     } catch (error) {
+         setPayoutItems((prevItems) => ({
+      ...prevItems
+    }));;
+    }
+  };
+  const getVerifyData = async (
+    yr,
+    month,  
+    empCode) => {
+    try {          
+        const allMonths = [
+            { month: "January", number: 1 },
+            { month: "February", number: 2 },
+            { month: "March", number: 3 },
+            { month: "April", number: 4 },
+            { month: "May", number: 5 },
+            { month: "June", number: 6 },
+            { month: "July", number: 7 },
+            { month: "August", number: 8 },
+            { month: "September", number: 9 },
+            { month: "October", number: 10 },
+            { month: "November", number: 11 },
+            { month: "December", number: 12 }
+          ];
+
         
-        setPayoutItems([]);
+        const respond = await axios.get(`${url}/api/get_employee_payout`, {
+        headers: headers,
+        params: {
+          emp_code: empCode,
+          year: yr,
+          month: month? allMonths.filter((item)=> item.month === month)[0].number : "",
+          c_id: 1,  
+          status:"verify"
+        },
+      });
+      const apires = await respond.data.data.employeeData;
+      console.log("nop", apires)
+    
+      setPayoutItems((prevItems) => ({
+        ...prevItems,
+        verify: apires.length? apires[0]: {}
+      }));
+          
+    } catch (error) {
+      setPayoutItems((prevItems) => ({
+      ...prevItems
+    }));;
     }
   };
 
+  const getApproveData = async (
+    yr,
+    month,  
+    empCode) => {
+    try {          
+        const allMonths = [
+            { month: "January", number: 1 },
+            { month: "February", number: 2 },
+            { month: "March", number: 3 },
+            { month: "April", number: 4 },
+            { month: "May", number: 5 },
+            { month: "June", number: 6 },
+            { month: "July", number: 7 },
+            { month: "August", number: 8 },
+            { month: "September", number: 9 },
+            { month: "October", number: 10 },
+            { month: "November", number: 11 },
+            { month: "December", number: 12 }
+          ];
+
+        console.log("nop",month, allMonths.filter((item)=> item.month === month))
+        const respond = await axios.get(`${url}/api/get_employee_payout`, {
+        headers: headers,
+        params: {
+          emp_code: empCode,
+          year: yr,
+          month: month? allMonths.filter((item)=> item.month === month)[0].number : "",
+          c_id: 1,
+          status:"approve"  
+        },
+      });
+      const apires = await respond.data.data.employeeData;
+      console.log("noa", apires)
+      setPayoutItems((prevItems) => ({
+        ...prevItems,
+        approve: apires.length? apires[0]: {}
+      }));
+          
+    } catch (error) {
+       setPayoutItems((prevItems) => ({
+      ...prevItems
+    }));;
+    }
+  };
 
   useEffect(()=>{
-    getFeeData(
-      2024,
-      "January",
+    getMarkData(
+      moment().format("YYYY"),
+       moment().format("MMMM"),
+      window.localStorage.getItem("emp_code")
+    ),
+    getVerifyData(
+      moment().format('YYYY'),
+      moment().format("MMMM"),
+      window.localStorage.getItem("emp_code")
+    ),
+    getApproveData(
+      moment().format('YYYY'),
+      moment().format("MMMM"),
       window.localStorage.getItem("emp_code")
     )
   },[])
+ console.log("payoutItems", payoutItems)
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -386,27 +488,27 @@ const AdditionalInfo = (props) => {
       {/* Example data row */}
       <tr className="border-t">
       <td className="px-4 py-2">Mark</td>
-        <td className="px-4 py-2">PO123</td>
-        <td className="px-4 py-2">WO456</td>
-        <td className="px-4 py-2">8</td>
-        <td className="px-4 py-2">5</td>
-        <td className="px-4 py-2">2</td>
+        <td className="px-4 py-2">{payoutItems.mark.pd}</td>
+        <td className="px-4 py-2">{payoutItems.mark.wo}</td>
+        <td className="px-4 py-2">{payoutItems.mark.h}</td>
+        <td className="px-4 py-2">{payoutItems.mark.hd}</td>
+        <td className="px-4 py-2">{payoutItems.mark.a}</td>
       </tr>
       <tr className="border-t">
       <td className="px-4 py-2">Verify</td>
-        <td className="px-4 py-2">PO124</td>
-        <td className="px-4 py-2">WO457</td>
-        <td className="px-4 py-2">7</td>
-        <td className="px-4 py-2">6</td>
-        <td className="px-4 py-2">1</td>
+        <td className="px-4 py-2">{payoutItems.verify.pd}</td>
+        <td className="px-4 py-2">{payoutItems.verify.wo}</td>
+        <td className="px-4 py-2">{payoutItems.verify.h}</td>
+        <td className="px-4 py-2">{payoutItems.verify.hd}</td>
+        <td className="px-4 py-2">{payoutItems.verify.a}</td>
       </tr>
       <tr className="border-t">
       <td className="px-4 py-2">Approve</td>
-        <td className="px-4 py-2">PO124</td>
-        <td className="px-4 py-2">WO457</td>
-        <td className="px-4 py-2">7</td>
-        <td className="px-4 py-2">6</td>
-        <td className="px-4 py-2">1</td>
+        <td className="px-4 py-2">{payoutItems.approve.pd}</td>
+        <td className="px-4 py-2">{payoutItems.approve.wo}</td>
+        <td className="px-4 py-2">{payoutItems.approve.h}</td>
+        <td className="px-4 py-2">{payoutItems.approve.hd}</td>
+        <td className="px-4 py-2">{payoutItems.approve.a}</td>
       </tr>
       {/* Add more rows as needed */}
     </tbody>

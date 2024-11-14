@@ -89,17 +89,6 @@ const FeePayout = () => {
     }
   };
 
-   
- 
-
-
-
-  
-
-  
- 
-
-  
   const [localStorageItems, setLocalStorageItems] = useState({
     cId: null,
     bgId: null,
@@ -125,11 +114,174 @@ const FeePayout = () => {
     zDes: null,
     buDes: null,
     bgDes: null,
-    newFil:"All"
-  
+    newFil:"All",
+    empCode:""
    
   });
 
+
+  const [payoutItems, setPayoutItems] = useState(
+    {
+      mark  :{},
+      verify: {},
+      approve:{}
+          } 
+   );
+  const getMarkData = async (
+    yr,
+    month,  
+    empCode) => {
+    try {          
+        const allMonths = [
+            { month: "January", number: 1 },
+            { month: "February", number: 2 },
+            { month: "March", number: 3 },
+            { month: "April", number: 4 },
+            { month: "May", number: 5 },
+            { month: "June", number: 6 },
+            { month: "July", number: 7 },
+            { month: "August", number: 8 },
+            { month: "September", number: 9 },
+            { month: "October", number: 10 },
+            { month: "November", number: 11 },
+            { month: "December", number: 12 }
+          ];
+
+        console.log("nop",month, allMonths.filter((item)=> item.month === month))
+        const respond = await axios.get(`${url}/api/get_employee_payout`, {
+        headers: headers,
+        params: {
+          emp_code: empCode,
+          year: yr,
+          month: month? allMonths.filter((item)=> item.month === month)[0].number : "",
+          c_id: 1  
+        },
+      });
+      const apires = await respond.data.data.employeeData;
+      console.log("nos", apires)
+      setPayoutItems((prevItems) => ({
+        ...prevItems,
+        mark: apires.length? apires[0]: {}
+      }));
+          
+    } catch (error) {
+         setPayoutItems((prevItems) => ({
+      ...prevItems
+    }));;
+    }
+  };
+  const getVerifyData = async (
+    yr,
+    month,  
+    empCode) => {
+    try {          
+        const allMonths = [
+            { month: "January", number: 1 },
+            { month: "February", number: 2 },
+            { month: "March", number: 3 },
+            { month: "April", number: 4 },
+            { month: "May", number: 5 },
+            { month: "June", number: 6 },
+            { month: "July", number: 7 },
+            { month: "August", number: 8 },
+            { month: "September", number: 9 },
+            { month: "October", number: 10 },
+            { month: "November", number: 11 },
+            { month: "December", number: 12 }
+          ];
+
+        
+        const respond = await axios.get(`${url}/api/get_employee_payout`, {
+        headers: headers,
+        params: {
+          emp_code: empCode,
+          year: yr,
+          month: month? allMonths.filter((item)=> item.month === month)[0].number : "",
+          c_id: 1,  
+          status:"verify"
+        },
+      });
+      const apires = await respond.data.data.employeeData;
+      console.log("nop", apires)
+    
+      setPayoutItems((prevItems) => ({
+        ...prevItems,
+        verify: apires.length? apires[0]: {}
+      }));
+          
+    } catch (error) {
+      setPayoutItems((prevItems) => ({
+      ...prevItems
+    }));;
+    }
+  };
+
+  const getApproveData = async (
+    yr,
+    month,  
+    empCode
+  ) => {
+    try {          
+        const allMonths = [
+            { month: "January", number: 1 },
+            { month: "February", number: 2 },
+            { month: "March", number: 3 },
+            { month: "April", number: 4 },
+            { month: "May", number: 5 },
+            { month: "June", number: 6 },
+            { month: "July", number: 7 },
+            { month: "August", number: 8 },
+            { month: "September", number: 9 },
+            { month: "October", number: 10 },
+            { month: "November", number: 11 },
+            { month: "December", number: 12 }
+          ];
+        const respond = await axios.get(`${url}/api/get_employee_payout`, {
+        headers: headers,
+        params: {
+          emp_code: empCode,
+          year: yr,
+          month: month? allMonths.filter((item)=> item.month === month)[0].number : "",
+          c_id: 1,
+          status:"approve"  
+        },
+      });
+      const apires = await respond.data.data.employeeData;
+      console.log("noa", apires)
+      setPayoutItems((prevItems) => ({
+        ...prevItems,
+        approve: apires.length? apires[0]: {}
+      }));
+          
+    } catch (error) {
+       setPayoutItems((prevItems) => ({
+      ...prevItems
+    }));;
+    }
+  };
+
+  useEffect(()=>{
+    getMarkData(
+      moment().format("YYYY"),
+      moment().format("MMMM"),
+      filterState.empCode
+    ),
+    getVerifyData(
+      moment().format('YYYY'),
+      moment().format("MMMM"),
+      filterState.empCode
+    ),
+    getApproveData(
+      moment().format('YYYY'),
+      moment().format("MMMM"),
+      filterState.empCode
+    )
+  },[filterState.empCode])
+
+
+
+  
+  
   const [bgData, setBgData] = useState([]);
 
   const getBusinesSegmentInfo = async () => {
@@ -865,7 +1017,7 @@ const [excelLoading, setExcelLoading] = useState(false)
             </select>
        
           <select
-            className="border rounded px-2 py-1  w-1/2 h-8"
+            className="border rounde` ``d px-2 py-1  w-1/2 h-8"
             id="stateSelect"
             value={filterState.bgId}
             onChange={(e) => {
@@ -1048,10 +1200,11 @@ const [excelLoading, setExcelLoading] = useState(false)
               setFilterState({ ...filterState, newFil: e.target.value })
             }
           >
-            
-            <option value={"Verify"}>Verify</option>
-            <option value={"Approve"}>Approve</option>
-            <option value={"All"}>All</option>
+           <option value={"Verify"}>Verify</option>
+           
+           <option value={"Approve"}>Approve</option>
+           
+           <option value={"All"}>All</option>
 
           </select>
 
@@ -1242,7 +1395,51 @@ const [excelLoading, setExcelLoading] = useState(false)
                       </tr>
                     </tbody>
                   </table>
-                )}{" "}
+                )}
+                {
+                 (filterState.empCode && filterState.month) && 
+                  <table className="min-w-[50%] border-collapse table-auto">
+    <thead>
+      <tr className="bg-gray-200">
+      <th className="px-4 py-2 text-left">Attendance</th>
+        <th className="px-4 py-2 text-left">PO</th>
+        <th className="px-4 py-2 text-left">WO</th>
+        <th className="px-4 py-2 text-left">H</th>
+        <th className="px-4 py-2 text-left">HD</th>
+        <th className="px-4 py-2 text-left">A</th>
+      </tr>
+    </thead>
+    <tbody>
+      {/* Example data row */}
+      <tr className="border-t">
+      <td className="px-4 py-2">Mark</td>
+        <td className="px-4 py-2">{payoutItems.mark.pd}</td>
+        <td className="px-4 py-2">{payoutItems.mark.wo}</td>
+        <td className="px-4 py-2">{payoutItems.mark.h}</td>
+        <td className="px-4 py-2">{payoutItems.mark.hd}</td>
+        <td className="px-4 py-2">{payoutItems.mark.a}</td>
+      </tr>
+      <tr className="border-t">
+      <td className="px-4 py-2">Verify</td>
+        <td className="px-4 py-2">{payoutItems.verify.pd}</td>
+        <td className="px-4 py-2">{payoutItems.verify.wo}</td>
+        <td className="px-4 py-2">{payoutItems.verify.h}</td>
+        <td className="px-4 py-2">{payoutItems.verify.hd}</td>
+        <td className="px-4 py-2">{payoutItems.verify.a}</td>
+      </tr>
+      <tr className="border-t">
+      <td className="px-4 py-2">Approve</td>
+        <td className="px-4 py-2">{payoutItems.approve.pd}</td>
+        <td className="px-4 py-2">{payoutItems.approve.wo}</td>
+        <td className="px-4 py-2">{payoutItems.approve.h}</td>
+        <td className="px-4 py-2">{payoutItems.approve.hd}</td>
+        <td className="px-4 py-2">{payoutItems.approve.a}</td>
+      </tr>
+      {/* Add more rows as needed */}
+    </tbody>
+                  </table>
+                }
+                   
       
       
       <div className="text-right font-semibold mt-2">Total Rows: {data.length}</div>
