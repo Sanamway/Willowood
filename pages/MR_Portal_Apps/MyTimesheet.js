@@ -37,8 +37,7 @@ const AdditionalInfo = (props) => {
     const now = moment();
 
     // Get the last date of the current month
-    const lastDate = now.endOf("month").format("YYYY-MM-DD");
-
+    const lastDate = now.format("YYYY-MM-DD");
     return lastDate;
   };
   const getStartDateOfCurrentMonth = () => {
@@ -85,7 +84,9 @@ const AdditionalInfo = (props) => {
     startDate: new Date(getStartDateOfCurrentMonth()),
     endDate: new Date(getLastDateOfCurrentMonth()),
   });
+
   const [listItems, setListItems] = useState([]);
+ 
   const getAttandenceStatus = async () => {
     try {
       const respond = await axios.get(`${url}/api/get_emp_attendance`, {
@@ -94,9 +95,7 @@ const AdditionalInfo = (props) => {
           emp_code: localStorageItems.empCode,
           t_id: localStorageItems.tId,
           c_id: Number(localStorageItems.cId),
-          attendance_date_start: moment(filterDate.startDate).format(
-            "YYYY-MM-DD"
-          ),
+          attendance_date_start: moment(filterDate.startDate).format("YYYY-MM-DD"),
           attendance_date_end: moment(filterDate.endDate).format("YYYY-MM-DD"),
         },
       });
@@ -110,7 +109,6 @@ const AdditionalInfo = (props) => {
     if (localStorageItems) getAttandenceStatus();
   }, [localStorageItems]);
   const getStatus = (status) => {
-  
     switch (status) {
       case "PI":
        return <div className="relative flex w-12 h-12 rounded-full overflow-hidden justify-center items-center text-center font-bold text-2xl">
@@ -146,7 +144,6 @@ const AdditionalInfo = (props) => {
          {status}
        </div>;
           break;
-
           case "WO":
             return <div className="flex w-12 h-12 bg-purple-400 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
             {status}
@@ -164,6 +161,63 @@ const AdditionalInfo = (props) => {
         break;
     }
   };
+  const [payoutItems, setPayoutItems] = useState([]);
+  const getFeeData = async (
+    yr,
+    month,  
+    empCode,
+  
+  ) => {
+ 
+    try {
+      
+        
+        const allMonths = [
+            { month: "January", number: 1 },
+            { month: "February", number: 2 },
+            { month: "March", number: 3 },
+            { month: "April", number: 4 },
+            { month: "May", number: 5 },
+            { month: "June", number: 6 },
+            { month: "July", number: 7 },
+            { month: "August", number: 8 },
+            { month: "September", number: 9 },
+            { month: "October", number: 10 },
+            { month: "November", number: 11 },
+            { month: "December", number: 12 }
+          ];
+
+          console.log("nop",month, allMonths.filter((item)=> item.month === month))
+       const respond = await axios.get(`${url}/api/get_employee_payout`, {
+        headers: headers,
+        params: {
+   
+          emp_code: empCode,
+          year: yr,
+          month: month? allMonths.filter((item)=> item.month === month)[0].number : "",
+          c_id: 1
+          
+
+        },
+      });
+      // const apires = await respond.data.data.employeeData;
+    
+      // setPayoutItems(apires);
+      
+    } catch (error) {
+        
+        setPayoutItems([]);
+    }
+  };
+
+
+  useEffect(()=>{
+    getFeeData(
+      2024,
+      "January",
+      window.localStorage.getItem("emp_code")
+    )
+  },[])
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -316,6 +370,48 @@ const AdditionalInfo = (props) => {
           </button>
         </span>
       </div>
+      <div className="mt-4 overflow-x-auto">
+      <table className="min-w-full border-collapse table-auto">
+    <thead>
+      <tr className="bg-gray-200">
+      <th className="px-4 py-2 text-left">Attendance</th>
+        <th className="px-4 py-2 text-left">PO</th>
+        <th className="px-4 py-2 text-left">WO</th>
+        <th className="px-4 py-2 text-left">H</th>
+        <th className="px-4 py-2 text-left">HD</th>
+        <th className="px-4 py-2 text-left">A</th>
+      </tr>
+    </thead>
+    <tbody>
+      {/* Example data row */}
+      <tr className="border-t">
+      <td className="px-4 py-2">Mark</td>
+        <td className="px-4 py-2">PO123</td>
+        <td className="px-4 py-2">WO456</td>
+        <td className="px-4 py-2">8</td>
+        <td className="px-4 py-2">5</td>
+        <td className="px-4 py-2">2</td>
+      </tr>
+      <tr className="border-t">
+      <td className="px-4 py-2">Verify</td>
+        <td className="px-4 py-2">PO124</td>
+        <td className="px-4 py-2">WO457</td>
+        <td className="px-4 py-2">7</td>
+        <td className="px-4 py-2">6</td>
+        <td className="px-4 py-2">1</td>
+      </tr>
+      <tr className="border-t">
+      <td className="px-4 py-2">Approve</td>
+        <td className="px-4 py-2">PO124</td>
+        <td className="px-4 py-2">WO457</td>
+        <td className="px-4 py-2">7</td>
+        <td className="px-4 py-2">6</td>
+        <td className="px-4 py-2">1</td>
+      </tr>
+      {/* Add more rows as needed */}
+    </tbody>
+  </table>
+</div>
 
       {listItems.map((item) => (
         <div className="text-xl   flex w-full justify-around h-22   shadow-xl flex">
