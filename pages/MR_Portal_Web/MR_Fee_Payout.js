@@ -1218,35 +1218,35 @@ const [excelLoading, setExcelLoading] = useState(false)
                     <table className="min-w-full divide-y border divide-gray-200">
                     <thead className="border-b">
                       <tr className="bg-gray-50 font-arial">
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Sr. No</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Code</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Name</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Reporting HQ</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Territory</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Application Fee Amount</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Festival Amt.</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Incentive Amt</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Other Amount</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Gross Salary</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Calendar W.D.</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Present Day</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Manual Attendance</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Total Working Days</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Earning Salary</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Bonus Amount</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Other Amount</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Total Deduction</th>
+                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Sr. No</th>
+                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Code</th>
+                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Name</th>
+                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Reporting HQ</th>
+                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Territory</th>
+                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Application Fee Amount</th>
+                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Festival Amt.</th>
+                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Incentive Amt</th>
+                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Other Amount</th>
+                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Gross Salary</th>
+                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Calendar W.D.</th>
+                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Present Day</th>
+                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Manual Attendance</th>
+                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Total Working Days</th>
+                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Earning Salary</th>
+                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Bonus Amount</th>
+                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Other Amount</th>
+                         <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Total Deduction</th>
+                         <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                         Net Salary
+                         </th>
                         <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                            Net Salary
-                            </th>
+                        Total Demo
+                        </th>
                         <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                              Total Demo
-                            </th>
-                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                              Total Field Day
-                            </th>
-                            <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                              Total Group Meet
+                         Total Field Day
+                        </th>
+                        <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                        Total Group Meet
                             </th>
                             <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                               Total OFM
