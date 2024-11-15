@@ -14,6 +14,11 @@ import { useRouter } from "next/router";
 import axios, { formToJSON } from "axios";
 import moment from "moment";
 import toast, { Toaster } from "react-hot-toast";
+import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
+import { BsCalendar2Month } from "react-icons/bs";
+import { IoTodayOutline } from "react-icons/io5";
+
+import { GiFarmer } from "react-icons/gi";
 const AtReg = () => {
     const router = useRouter();
     const headers = {
@@ -263,10 +268,10 @@ const AtReg = () => {
             {({ open }) => (
               <>
                 <Popover.Button className="focus:outline-none">
-                  {/* <PiDotsThreeOutlineVerticalFill
+                  <PiDotsThreeOutlineVerticalFill
                     className="text-[#626364] cursor-pointer"
                     size={20}
-                  /> */}
+                  />
                 </Popover.Button>
 
                 <Popover.Panel
@@ -276,6 +281,21 @@ const AtReg = () => {
                   } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
                 >
                   <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
+                    <li
+                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap "
+                      onClick={() =>
+                        router.push({
+                          pathname: "/MR_Portal_Apps/MRHome",
+                        })
+                      }
+                    >
+                      <BsCalendar2Month
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      Approval Req.
+                    </li>
+                   
                     <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
                       <FaHandsHelping
                         className="text-[#626364] cursor-pointer"
@@ -294,7 +314,7 @@ const AtReg = () => {
                 </Popover.Panel>
               </>
             )}
-           </Popover>
+          </Popover>
         </span>
       </div>
       <div className="flex mb-4 mt-2 mb-8">

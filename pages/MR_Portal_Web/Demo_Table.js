@@ -937,7 +937,7 @@ Verify
 
 }
     }
-
+    const [excelLoading, setExcelLoading] = useState(false)
     const getExcelsheet = async (
       bg,
       bu,
@@ -949,6 +949,7 @@ Verify
       empCode
       ) => {
       try {
+        setExcelLoading(true)
         const respond = await axios.get(`${url}/api/get_mr_form_demo`, {
           headers: headers,
           params: {
@@ -993,10 +994,21 @@ Verify
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
         XLSX.writeFile(wb, `Farmer_Demo.xlsx`);
+        setExcelLoading(false)
       } catch (error) {
+        setExcelLoading(false)
         
       }
     };
+      const LoaderExcel = () => {
+    return (
+      <div class="flex space-x-1   justify-center items-center bg-white  ">
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce"></div>
+      </div>
+    );
+  };
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -1015,7 +1027,13 @@ Verify
             <div className="status xls download flex items-center justify-end w-full gap-8">
           <div className="flex flex-row gap-2 ">
             {" "}
-            <TbFileDownload
+          
+
+
+                
+            
+             {excelLoading ? <LoaderExcel
+                  />   :    <TbFileDownload
               className="text-green-600 cursor-pointer "
               size={32}
               onClick={() => getExcelsheet(
@@ -1027,12 +1045,9 @@ Verify
                 filterState.startDate,
                 filterState.endDate,
                 filterState.empCode
-              )
-
-
-                
+              ) 
               }
-            ></TbFileDownload>
+            ></TbFileDownload>}
             
           </div>
           </div>
@@ -1293,6 +1308,30 @@ Verify
                   Plot Size
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Crop
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Stage
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Segment
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                 Product Brand
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Applied Dose
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Water
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Area Cover (sqmt)
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Field Day
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Potential
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
@@ -1372,7 +1411,33 @@ Verify
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.plot_size}
+                  </td>             
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.crop))].join(' + ')}
+</td>
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.stage))].join(' + ')}
+</td>
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.segment))].join(' + ')}
+</td>
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.product_brand))].join(' + ')}
+</td>
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.dose_acre_tank))].join(', ')}
+</td>
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.water_val))].join(', ')}
+</td>
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+  {[...new Set(item.MRCrops.map(crop => crop.acre_plot))].join(', ')}
+</td>            
+
+<td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.field_day}
                   </td>
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.potential_farmer}
                   </td>
