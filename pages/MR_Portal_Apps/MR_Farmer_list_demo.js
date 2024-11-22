@@ -147,7 +147,7 @@ const AdditionalInfo = () => {
             placeholder="Enter Farmer Mobile Number"
             onChange={(e) => getFarmerDetailsByNumber(e.target.value)}
             maxLength={10}
-            
+
           />
         </div>
 
@@ -368,7 +368,7 @@ const AdditionalInfo = () => {
                   <span className="ml-2">{item.purpose_of_demo}</span>
                 </span>
                 <span className="text-black text-sm">
-                 
+
                 </span>
               </div>
               <div className="flex flex-col gap-0  text-gray-400">
@@ -397,8 +397,8 @@ const AdditionalInfo = () => {
                 </small>
               </div>
             </div>
-            {console.log("pop", moment(new Date(item.next_visit_date)).format("DD mm yyyy hh:mm a"),  moment().format("DD mm yyyy hh:mm a"),new Date(item.next_visit_date) >= new Date() ,  new Date(item.next_visit_date))}
-            {new Date(item.next_visit_date) >= new Date() && new Date(item.next_visit_date) <= new Date(new Date().setDate(new Date().getDate() + 4)) && (
+            {console.log("pop", moment(new Date(item.next_visit_date)).format("DD mm yyyy hh:mm a"), moment().format("DD mm yyyy hh:mm a"), new Date(item.next_visit_date) >= new Date(), new Date(item.next_visit_date))}
+            {new Date(item.next_visit_date) >= new Date().setHours(0, 0, 0, 0) && new Date(item.next_visit_date) <= new Date(new Date().setDate(new Date().getDate() + 4)) && (
               <div className="flex flex-col gap-4 self-start">
                 <button
                   className="bg-[#4285F4] text-white-400 p-2 rounded-full whitespace-nowrap"
@@ -429,7 +429,7 @@ const AdditionalInfo = () => {
               </div>
             )}
           </div>
-          
+
           <button
             className="w-full border border-black font-bold text-blue-800"
             onClick={() => {
@@ -440,7 +440,7 @@ const AdditionalInfo = () => {
             {" "}
             View Farmer Demo Image
           </button>
-           <hr className="bg-gray-200 border-1 w-full" />
+          <hr className="bg-gray-200 border-1 w-full" />
         </div>
       ))}
       <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">

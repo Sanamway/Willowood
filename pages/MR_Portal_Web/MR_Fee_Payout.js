@@ -62,7 +62,7 @@ const FeePayout = () => {
           ];
 
           console.log("nop",month, allMonths.filter((item)=> item.month === month))
-      const respond = await axios.get(`${url}/api/get_employee_payout`, {
+      const respond = await axios.get(`${url}/api/get_employee_payout_emp`, {
         headers: headers,
         params: {
           t_id: t === "All" ? null : t,
@@ -148,7 +148,7 @@ const FeePayout = () => {
           ];
 
         console.log("nop",month, allMonths.filter((item)=> item.month === month))
-        const respond = await axios.get(`${url}/api/get_employee_payout`, {
+        const respond = await axios.get(`${url}/api/get_employee_payout_emp`, {
         headers: headers,
         params: {
           emp_code: empCode,
@@ -191,7 +191,7 @@ const FeePayout = () => {
           ];
 
         
-        const respond = await axios.get(`${url}/api/get_employee_payout`, {
+        const respond = await axios.get(`${url}/api/get_employee_payout_emp`, {
         headers: headers,
         params: {
           emp_code: empCode,
@@ -236,7 +236,7 @@ const FeePayout = () => {
             { month: "November", number: 11 },
             { month: "December", number: 12 }
           ];
-        const respond = await axios.get(`${url}/api/get_employee_payout`, {
+        const respond = await axios.get(`${url}/api/get_employee_payout_emp`, {
         headers: headers,
         params: {
           emp_code: empCode,
@@ -794,7 +794,7 @@ const [excelLoading, setExcelLoading] = useState(false)
           ];
       try {
         setExcelLoading(true)
-        const respond = await axios.get(`${url}/api/get_employee_payout`, {
+        const respond = await axios.get(`${url}/api/get_employee_payout_emp`, {
           headers: headers,
           params: {
             t_id: t === "All" ? null : t,
@@ -1404,9 +1404,10 @@ const [excelLoading, setExcelLoading] = useState(false)
       <th className="px-4 py-2 text-left">Attendance</th>
         <th className="px-4 py-2 text-left">PO</th>
         <th className="px-4 py-2 text-left">WO</th>
-        <th className="px-4 py-2 text-left">H</th>
+        <th className="px-4 py-2 text-left">H </th>
         <th className="px-4 py-2 text-left">HD</th>
-        <th className="px-4 py-2 text-left">A</th>
+        <th className="px-4 py-2 text-left">A </th>
+        <th className="px-4 py-2 text-left">PR</th>
       </tr>
     </thead>
     <tbody>
@@ -1418,6 +1419,7 @@ const [excelLoading, setExcelLoading] = useState(false)
         <td className="px-4 py-2">{payoutItems.mark.h}</td>
         <td className="px-4 py-2">{payoutItems.mark.hd}</td>
         <td className="px-4 py-2">{payoutItems.mark.a}</td>
+        <td className="px-4 py-2">{payoutItems.mark.pr}</td>
       </tr>
       <tr className="border-t">
       <td className="px-4 py-2">Verify</td>
@@ -1426,6 +1428,7 @@ const [excelLoading, setExcelLoading] = useState(false)
         <td className="px-4 py-2">{payoutItems.verify.h}</td>
         <td className="px-4 py-2">{payoutItems.verify.hd}</td>
         <td className="px-4 py-2">{payoutItems.verify.a}</td>
+        <td className="px-4 py-2">{payoutItems.verify.pr}</td>
       </tr>
       <tr className="border-t">
       <td className="px-4 py-2">Approve</td>
@@ -1434,6 +1437,7 @@ const [excelLoading, setExcelLoading] = useState(false)
         <td className="px-4 py-2">{payoutItems.approve.h}</td>
         <td className="px-4 py-2">{payoutItems.approve.hd}</td>
         <td className="px-4 py-2">{payoutItems.approve.a}</td>
+        <td className="px-4 py-2">{payoutItems.approve.pr}</td>
       </tr>
       {/* Add more rows as needed */}
     </tbody>

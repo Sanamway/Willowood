@@ -76,7 +76,7 @@ const AdditionalInfo = (props) => {
       reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
       developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
       hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
-      reportingHQ:JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
+      reportingHQ: JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
     });
   }, []);
 
@@ -110,26 +110,26 @@ const AdditionalInfo = (props) => {
   const getStatus = (status) => {
     switch (status) {
       case "PI":
-       return <div className="relative flex w-12 h-12 rounded-full overflow-hidden justify-center items-center text-center font-bold text-2xl">
-         <div className="absolute inset-0" style={{background: "linear-gradient(to right, red 50%, green 50%)"}}></div>
-         <div className="relative z-10 text-white">
-           {status}
-         </div>
-       </div>
+        return <div className="relative flex w-12 h-12 rounded-full overflow-hidden justify-center items-center text-center font-bold text-2xl">
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to right, red 50%, green 50%)" }}></div>
+          <div className="relative z-10 text-white">
+            {status}
+          </div>
+        </div>
         break;
       case "P":
-       return <div className="flex w-12 h-12 bg-green-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+        return <div className="flex w-12 h-12 bg-green-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
           {status}
         </div>;
         break;
 
       case "A":
-      return  <div className="flex w-12 h-12 bg-red-400 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+        return <div className="flex w-12 h-12 bg-red-400 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
           {status}
         </div>;
         break;
       case "W":
-       return <div className="flex w-12 h-12 bg-gray-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+        return <div className="flex w-12 h-12 bg-gray-200 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
           {status}
         </div>;
         break;
@@ -138,23 +138,23 @@ const AdditionalInfo = (props) => {
           {status}
         </div>;
         break;
-        case "PO":
-         return <div className="flex w-12 h-12 bg-green-300 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
-         {status}
-       </div>;
-          break;
-          case "WO":
-            return <div className="flex w-12 h-12 bg-purple-400 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
-            {status}
-          </div>;
-             break;
-             case "H":
-              return <div className="flex w-12 h-12 bg-purple-400 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
-              {status}
-            </div>;
-               break;
+      case "PO":
+        return <div className="flex w-12 h-12 bg-green-300 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+          {status}
+        </div>;
+        break;
+      case "WO":
+        return <div className="flex w-12 h-12 bg-purple-400 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+          {status}
+        </div>;
+        break;
+      case "H":
+        return <div className="flex w-12 h-12 bg-purple-400 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+          {status}
+        </div>;
+        break;
       default:
-       return <div className="flex w-12 h-12 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
+        return <div className="flex w-12 h-12 rounded-full self-center    justify-center  items-center text-center font-bold  text-2xl">
           {status}
         </div>;
         break;
@@ -162,267 +162,269 @@ const AdditionalInfo = (props) => {
   };
   const [payoutItems, setPayoutItems] = useState(
     {
-mark:{},
-verify: {},
-approve:{}
+      mark: {},
+      verify: {},
+      approve: {}
     }
-    
-   );
+
+  );
   const getMarkData = async (
     yr,
-    month,  
+    month,
     empCode) => {
-    try {          
-        const allMonths = [
-            { month: "January", number: 1 },
-            { month: "February", number: 2 },
-            { month: "March", number: 3 },
-            { month: "April", number: 4 },
-            { month: "May", number: 5 },
-            { month: "June", number: 6 },
-            { month: "July", number: 7 },
-            { month: "August", number: 8 },
-            { month: "September", number: 9 },
-            { month: "October", number: 10 },
-            { month: "November", number: 11 },
-            { month: "December", number: 12 }
-          ];
+    try {
+      const allMonths = [
+        { month: "January", number: 1 },
+        { month: "February", number: 2 },
+        { month: "March", number: 3 },
+        { month: "April", number: 4 },
+        { month: "May", number: 5 },
+        { month: "June", number: 6 },
+        { month: "July", number: 7 },
+        { month: "August", number: 8 },
+        { month: "September", number: 9 },
+        { month: "October", number: 10 },
+        { month: "November", number: 11 },
+        { month: "December", number: 12 }
+      ];
 
-        console.log("nop",month, allMonths.filter((item)=> item.month === month))
-        const respond = await axios.get(`${url}/api/get_employee_payout`, {
+      console.log("nop", month, allMonths.filter((item) => item.month === month))
+      const respond = await axios.get(`${url}/api/get_employee_payout_emp`, {
         headers: headers,
         params: {
           emp_code: empCode,
           year: yr,
-          month: month? allMonths.filter((item)=> item.month === month)[0].number : "",
-          c_id: 1  
+          month: month ? allMonths.filter((item) => item.month === month)[0].number : "",
+          c_id: 1
         },
       });
       const apires = await respond.data.data.employeeData;
       console.log("nos", apires)
       setPayoutItems((prevItems) => ({
         ...prevItems,
-        mark: apires.length? apires[0]: {}
+        mark: apires.length ? apires[0] : {}
       }));
-          
+
     } catch (error) {
-         setPayoutItems((prevItems) => ({
-      ...prevItems
-    }));;
+      setPayoutItems((prevItems) => ({
+        ...prevItems
+      }));;
     }
-  };
+  }; 3
   const getVerifyData = async (
     yr,
-    month,  
+    month,
     empCode) => {
-    try {          
-        const allMonths = [
-            { month: "January", number: 1 },
-            { month: "February", number: 2 },
-            { month: "March", number: 3 },
-            { month: "April", number: 4 },
-            { month: "May", number: 5 },
-            { month: "June", number: 6 },
-            { month: "July", number: 7 },
-            { month: "August", number: 8 },
-            { month: "September", number: 9 },
-            { month: "October", number: 10 },
-            { month: "November", number: 11 },
-            { month: "December", number: 12 }
-          ];
+    try {
+      const allMonths = [
+        { month: "January", number: 1 },
+        { month: "February", number: 2 },
+        { month: "March", number: 3 },
+        { month: "April", number: 4 },
+        { month: "May", number: 5 },
+        { month: "June", number: 6 },
+        { month: "July", number: 7 },
+        { month: "August", number: 8 },
+        { month: "September", number: 9 },
+        { month: "October", number: 10 },
+        { month: "November", number: 11 },
+        { month: "December", number: 12 }
+      ];
 
-        
-        const respond = await axios.get(`${url}/api/get_employee_payout`, {
+
+      const respond = await axios.get(`${url}/api/get_employee_payout_emp`, {
         headers: headers,
         params: {
           emp_code: empCode,
           year: yr,
-          month: month? allMonths.filter((item)=> item.month === month)[0].number : "",
-          c_id: 1,  
-          status:"verify"
+          month: month ? allMonths.filter((item) => item.month === month)[0].number : "",
+          c_id: 1,
+          status: "verify"
         },
       });
       const apires = await respond.data.data.employeeData;
       console.log("nop", apires)
-    
+
       setPayoutItems((prevItems) => ({
         ...prevItems,
-        verify: apires.length? apires[0]: {}
+        verify: apires.length ? apires[0] : {}
       }));
-          
+
     } catch (error) {
       setPayoutItems((prevItems) => ({
-      ...prevItems
-    }));;
+        ...prevItems
+      }));;
     }
   };
 
   const getApproveData = async (
     yr,
-    month,  
+    month,
     empCode) => {
-    try {          
-        const allMonths = [
-            { month: "January", number: 1 },
-            { month: "February", number: 2 },
-            { month: "March", number: 3 },
-            { month: "April", number: 4 },
-            { month: "May", number: 5 },
-            { month: "June", number: 6 },
-            { month: "July", number: 7 },
-            { month: "August", number: 8 },
-            { month: "September", number: 9 },
-            { month: "October", number: 10 },
-            { month: "November", number: 11 },
-            { month: "December", number: 12 }
-          ];
+    try {
+      const allMonths = [
+        { month: "January", number: 1 },
+        { month: "February", number: 2 },
+        { month: "March", number: 3 },
+        { month: "April", number: 4 },
+        { month: "May", number: 5 },
+        { month: "June", number: 6 },
+        { month: "July", number: 7 },
+        { month: "August", number: 8 },
+        { month: "September", number: 9 },
+        { month: "October", number: 10 },
+        { month: "November", number: 11 },
+        { month: "December", number: 12 }
+      ];
 
-        console.log("nop",month, allMonths.filter((item)=> item.month === month))
-        const respond = await axios.get(`${url}/api/get_employee_payout`, {
+      console.log("nop", month, allMonths.filter((item) => item.month === month))
+      const respond = await axios.get(`${url}/api/get_employee_payout_emp`, {
         headers: headers,
         params: {
           emp_code: empCode,
           year: yr,
-          month: month? allMonths.filter((item)=> item.month === month)[0].number : "",
+          month: month ? allMonths.filter((item) => item.month === month)[0].number : "",
           c_id: 1,
-          status:"approve"  
+          status: "approve"
         },
       });
       const apires = await respond.data.data.employeeData;
       console.log("noa", apires)
       setPayoutItems((prevItems) => ({
         ...prevItems,
-        approve: apires.length? apires[0]: {}
+        approve: apires.length ? apires[0] : {}
       }));
-          
+
     } catch (error) {
-       setPayoutItems((prevItems) => ({
-      ...prevItems
-    }));;
+      setPayoutItems((prevItems) => ({
+        ...prevItems
+      }));;
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getMarkData(
       moment().format("YYYY"),
-       moment().format("MMMM"),
-      window.localStorage.getItem("emp_code")
-    ),
-    getVerifyData(
-      moment().format('YYYY'),
       moment().format("MMMM"),
       window.localStorage.getItem("emp_code")
     ),
-    getApproveData(
-      moment().format('YYYY'),
-      moment().format("MMMM"),
-      window.localStorage.getItem("emp_code")
-    )
-  },[])
- console.log("payoutItems", payoutItems)
+      getVerifyData(
+        moment().format('YYYY'),
+        moment().format("MMMM"),
+        window.localStorage.getItem("emp_code")
+      ),
+      getApproveData(
+        moment().format('YYYY'),
+        moment().format("MMMM"),
+        window.localStorage.getItem("emp_code")
+      )
+  }, [])
+
+
+
+  console.log("payoutItems", payoutItems)
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
       onSubmit={(e) => e.preventDefault()}
     >
-     <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
-      <span className="text-black flex flex-row gap-4 font-bold  md:flex-col lg:flex-col ">
-        <FaArrowLeftLong
-          className="self-center "
-          onClick={() =>
-            router.push({
-              pathname: "/MR_Portal_Apps/MRHome",
-            })
-          }
-        />
-        <span>Timesheet</span>
-      </span>{" "}
-      <span className="text-white self-center">
-        <Popover as="div" className="relative border-none outline-none mt-2">
-          {({ open }) => (
-            <>
-              <Popover.Button className="focus:outline-none">
-                <PiDotsThreeOutlineVerticalFill
-                  className="text-[#626364] cursor-pointer"
-                  size={20}
-                />
-              </Popover.Button>
+      <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
+        <span className="text-black flex flex-row gap-4 font-bold  md:flex-col lg:flex-col ">
+          <FaArrowLeftLong
+            className="self-center "
+            onClick={() =>
+              router.push({
+                pathname: "/MR_Portal_Apps/MRHome",
+              })
+            }
+          />
+          <span>Timesheet</span>
+        </span>{" "}
+        <span className="text-white self-center">
+          <Popover as="div" className="relative border-none outline-none mt-2">
+            {({ open }) => (
+              <>
+                <Popover.Button className="focus:outline-none">
+                  <PiDotsThreeOutlineVerticalFill
+                    className="text-[#626364] cursor-pointer"
+                    size={20}
+                  />
+                </Popover.Button>
 
-              <Popover.Panel
-                as="div"
-                className={`${
-                  open ? "block" : "hidden"
-                } absolute z-40 top-1 right-0 mt-2 w-86 bg-white  text-black border rounded-md shadow-md`}
-              >
-                <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
-                  <li
-                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap  "
-                    onClick={() =>
-                      router.push({
-                        pathname: "AttendanceReg",
-                      })
-                    }
-                  >
-                    <IoTodayOutline
-                      className="text-[#626364] cursor-pointer"
-                      size={20}
-                    />{" "}
-                   Attendance Regularization
-                  </li>
-                 
-                  <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
-                    <FaHandsHelping
-                      className="text-[#626364] cursor-pointer"
-                      size={20}
-                    />{" "}
-                    Help
-                  </li>
-              
-                </ul>
-              </Popover.Panel>
-            </>
-          )}
-        </Popover>
-      </span>
-    </div>
+                <Popover.Panel
+                  as="div"
+                  className={`${open ? "block" : "hidden"
+                    } absolute z-40 top-1 right-0 mt-2 w-86 bg-white  text-black border rounded-md shadow-md`}
+                >
+                  <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
+                    <li
+                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap  "
+                      onClick={() =>
+                        router.push({
+                          pathname: "AttendanceReg",
+                        })
+                      }
+                    >
+                      <IoTodayOutline
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      Attendance Regularization
+                    </li>
+
+                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
+                      <FaHandsHelping
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      Help
+                    </li>
+
+                  </ul>
+                </Popover.Panel>
+              </>
+            )}
+          </Popover>
+        </span>
+      </div>
       <div className="flex mb-4 mt-2 mb-8">
-      <div className="w-40 h-30 flex justify-center items-center">
-              <Image
-                className="h-[5.1rem] w-[5.1rem] rounded-full mt-2"
-                src={Profile}
-                alt="img"
-              />
-            </div>
+        <div className="w-40 h-30 flex justify-center items-center">
+          <Image
+            className="h-[5.1rem] w-[5.1rem] rounded-full mt-2"
+            src={Profile}
+            alt="img"
+          />
+        </div>
 
         <div className="flex  flex-col  w-full mt-4 md:hidden">
-              <div className="flex w-full  w-28">
-                <div className="flex">
-                  <p className=" font-bold text-sm text-blue-800 w-28">
-                    Emp Code
-                  </p>
-                  <span>:</span>
-                </div>
-                <span className="w-28 ml-3">{localStorageItems.empCode}</span>
-              </div>
-              <div className="flex   w-full  w-28 ">
-                <div className="flex">
-                  <p className=" font-bold text-sm text-blue-800 w-28">Name</p>
-                  <span>:</span>
-                </div>
-                <span className="w-28 ml-3 whitespace-nowrap"> {localStorageItems.clName}</span>
-              </div>
-
-              <div className="flex w-full  w-28">
-                <div className="flex">
-                  <p className=" font-bold text-sm text-blue-800 w-28">
-                    Reporting HQ
-                  </p>
-                  <span>:</span>
-                </div>
-                <span className="w-28 ml-3">{localStorageItems.reportingHQ}</span>
-              </div>
-
+          <div className="flex w-full  w-28">
+            <div className="flex">
+              <p className=" font-bold text-sm text-blue-800 w-28">
+                Emp Code
+              </p>
+              <span>:</span>
             </div>
+            <span className="w-28 ml-3">{localStorageItems.empCode}</span>
+          </div>
+          <div className="flex   w-full  w-28 ">
+            <div className="flex">
+              <p className=" font-bold text-sm text-blue-800 w-28">Name</p>
+              <span>:</span>
+            </div>
+            <span className="w-28 ml-3 whitespace-nowrap"> {localStorageItems.clName}</span>
+          </div>
+
+          <div className="flex w-full  w-28">
+            <div className="flex">
+              <p className=" font-bold text-sm text-blue-800 w-28">
+                Reporting HQ
+              </p>
+              <span>:</span>
+            </div>
+            <span className="w-28 ml-3">{localStorageItems.reportingHQ}</span>
+          </div>
+
+        </div>
       </div>
 
       <h1 className="text-xl font-bold  flex w-full justify-center border-t-4 border-blue-800 shadow-xl mb-4">
@@ -473,47 +475,51 @@ approve:{}
         </span>
       </div>
       <div className="mt-4 overflow-x-auto">
-      <table className="min-w-full border-collapse table-auto">
-    <thead>
-      <tr className="bg-gray-200">
-      <th className="px-4 py-2 text-left">Attendance</th>
-        <th className="px-4 py-2 text-left">PO</th>
-        <th className="px-4 py-2 text-left">WO</th>
-        <th className="px-4 py-2 text-left">H</th>
-        <th className="px-4 py-2 text-left">HD</th>
-        <th className="px-4 py-2 text-left">A</th>
-      </tr>
-    </thead>
-    <tbody>
-      {/* Example data row */}
-      <tr className="border-t">
-      <td className="px-4 py-2">Mark</td>
-        <td className="px-4 py-2">{payoutItems.mark.pd}</td>
-        <td className="px-4 py-2">{payoutItems.mark.wo}</td>
-        <td className="px-4 py-2">{payoutItems.mark.h}</td>
-        <td className="px-4 py-2">{payoutItems.mark.hd}</td>
-        <td className="px-4 py-2">{payoutItems.mark.a}</td>
-      </tr>
-      <tr className="border-t">
-      <td className="px-4 py-2">Verify</td>
-        <td className="px-4 py-2">{payoutItems.verify.pd}</td>
-        <td className="px-4 py-2">{payoutItems.verify.wo}</td>
-        <td className="px-4 py-2">{payoutItems.verify.h}</td>
-        <td className="px-4 py-2">{payoutItems.verify.hd}</td>
-        <td className="px-4 py-2">{payoutItems.verify.a}</td>
-      </tr>
-      <tr className="border-t">
-      <td className="px-4 py-2">Approve</td>
-        <td className="px-4 py-2">{payoutItems.approve.pd}</td>
-        <td className="px-4 py-2">{payoutItems.approve.wo}</td>
-        <td className="px-4 py-2">{payoutItems.approve.h}</td>
-        <td className="px-4 py-2">{payoutItems.approve.hd}</td>
-        <td className="px-4 py-2">{payoutItems.approve.a}</td>
-      </tr>
-      {/* Add more rows as needed */}
-    </tbody>
-  </table>
-</div>
+        <table className="min-w-full border-collapse table-auto">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="px-4 py-2 text-left">Activity</th>
+              <th className="px-4 py-2 text-left">PO</th>
+              <th className="px-4 py-2 text-left">WO</th>
+              <th className="px-4 py-2 text-left">H</th>
+              <th className="px-4 py-2 text-left">HD</th>
+              <th className="px-4 py-2 text-left">A</th>
+              <th className="px-4 py-2 text-left">PR</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* Example data row */}
+            <tr className="border-t">
+              <td className="px-4 py-2">Mark</td>
+              <td className="px-4 py-2">{payoutItems.mark.pd}</td>
+              <td className="px-4 py-2">{payoutItems.mark.wo}</td>
+              <td className="px-4 py-2">{payoutItems.mark.h}</td>
+              <td className="px-4 py-2">{payoutItems.mark.hd}</td>
+              <td className="px-4 py-2">{payoutItems.mark.a}</td>
+              <td className="px-4 py-2">{payoutItems.mark.pr}</td>
+            </tr>
+            <tr className="border-t">
+              <td className="px-4 py-2">Verify</td>
+              <td className="px-4 py-2">{payoutItems.verify.pd}</td>
+              <td className="px-4 py-2">{payoutItems.verify.wo}</td>
+              <td className="px-4 py-2">{payoutItems.verify.h}</td>
+              <td className="px-4 py-2">{payoutItems.verify.hd}</td>
+              <td className="px-4 py-2">{payoutItems.verify.a}</td>
+              <td className="px-4 py-2">{payoutItems.verify.pr}</td>
+            </tr>
+            <tr className="border-t">
+              <td className="px-4 py-2">Approve</td>
+              <td className="px-4 py-2">{payoutItems.approve.pd}</td>
+              <td className="px-4 py-2">{payoutItems.approve.wo}</td>
+              <td className="px-4 py-2">{payoutItems.approve.h}</td>
+              <td className="px-4 py-2">{payoutItems.approve.hd}</td>
+              <td className="px-4 py-2">{payoutItems.approve.a}</td>
+              <td className="px-4 py-2">{payoutItems.verify.pr}</td>
+            </tr>
+            {/* Add more rows as needed */}
+          </tbody>
+        </table>
+      </div>
 
       {listItems.map((item) => (
         <div className="text-xl   flex w-full justify-around h-22   shadow-xl flex">
@@ -540,8 +546,8 @@ approve:{}
             <div className="flex flex-col self-center gap-2 ">
               <span className="font-bold text-sm h-6 w-20  border-2 border-black-500  text-black-400 whitespace-nowrap px-2">
                 {item.punch_in_time ? moment(item.punch_in_time).subtract(5, 'hours')
-                   .subtract(30, 'minutes').format("hh:mm A"): "-"}
-             
+                  .subtract(30, 'minutes').format("hh:mm A") : "-"}
+
               </span>
               <span className="font-bold text-sm h-6  border-2 border-black-500 bg-sky-900 text-white whitespace-nowrap px-2">
                 {item.punch_out_time
@@ -554,7 +560,7 @@ approve:{}
           <div className="flex flex-col  text-sm gap-2"></div>
         </div>
       ))}
-        <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
+      <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
         <FaArrowAltCircleUp
           size={42}
           className="self-center size-120 text-black-400 text-blue-400 "

@@ -257,7 +257,7 @@ const AtReg = () => {
             className="self-center "
             onClick={() =>
               router.push({
-                pathname: "/MR_Portal_Apps/AttendanceReg",
+                pathname: "/MR_Portal_Apps/MRHome",
               })
             }
           />
