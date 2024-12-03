@@ -14,13 +14,13 @@ import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { TbFileDownload } from "react-icons/tb";
-  import * as XLSX from "xlsx";
+import * as XLSX from "xlsx";
 const FieldDay = () => {
-   const router = useRouter();
-   const [data, setData] = useState([]);
-   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
-   const handlePageChange = (pageNumber) => {
-     setCurrentPage(pageNumber);
+  const router = useRouter();
+  const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
   const headers = {
     "Content-Type": "application/json",
@@ -109,7 +109,7 @@ const FieldDay = () => {
         filterState.startDate,
         filterState.endDate,
         filterState.empCode);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleApprove = async () => {
@@ -139,7 +139,7 @@ const FieldDay = () => {
         filterState.startDate,
         filterState.endDate,
         filterState.empCode);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleDelete = async () => {
@@ -181,7 +181,7 @@ const FieldDay = () => {
   const handleCloseModal = () => {
     setModalData({
       ...modalData,
-     
+
       isTrue: "Yes",
       date: "",
       user: "",
@@ -214,7 +214,7 @@ const FieldDay = () => {
     buDes: null,
     bgDes: null,
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-     endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
+    endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
     empCode: null,
   });
 
@@ -273,7 +273,7 @@ const FieldDay = () => {
           .filter((item) => Number(item.bg_id) === Number(segmentId))
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -298,7 +298,7 @@ const FieldDay = () => {
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
           .filter((item) => Number(item.z_id) === Number(zoneId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -328,7 +328,7 @@ const FieldDay = () => {
           .filter((item) => Number(item.z_id) === Number(zoneId))
           .filter((item) => Number(item.r_id) === Number(regionId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -363,7 +363,7 @@ const FieldDay = () => {
       });
       const apires = await respond.data.data;
       setAllEmployee(apires);
-    } catch (error) {}
+    } catch (error) { }
   };
   useEffect(() => {
     getAllEmployeeData(
@@ -496,7 +496,7 @@ const FieldDay = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -548,12 +548,12 @@ const FieldDay = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -604,12 +604,12 @@ const FieldDay = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -650,12 +650,12 @@ const FieldDay = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -715,254 +715,361 @@ const FieldDay = () => {
     filterState.empCode,
   ]);
   const { name } = router.query;
-  const getAllActionButton = (item) =>{
+
+
+  const getAllActionButton = (item) => {
     let role = localStorageItems.roleId
- switch(role){
-  case 1: return <div>
-    
- 
-  <button
-    onClick={() => {
-      setShowVerifyModal(true);
-      setModalData({
-        ...modalData,
-        type: "Verify",
-        id:  item.f_demo_fields_id,
-      });
-    }}
-    disabled={item.verified === "Yes"}
+    switch (role) {
+      case 1: return <div>
 
-  >
-    Verify
-  </button>
-  <button
-    onClick={() => {
-      setShowVerifyModal(true);
-      setModalData({
-        ...modalData,
-        type: "Approve",
-        id:  item.f_demo_fields_id,
-      });
-    }}
-    disabled={item.approved === "Yes"}
-    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
-    
-  >
-    Approve
-  </button>
-  <button
-    className="b text-black hover:text-red-500 ml-2"
-    onClick={() => {
-      setShowDeleteModal(true);
-      setModalData({
-        ...modalData,
 
-        id:  item.f_demo_fields_id,
-      });
-    }}
-  >
-    Delete
-  </button>
-  </div>
-  case 8: return  <div>
-    
-  
-  <button
-    onClick={() => {
-      setShowVerifyModal(true);
-      setModalData({
-        ...modalData,
-        type: "Verify",
-        id:  item.f_demo_fields_id,
-      });
-    }}
-    disabled={item.verified === "Yes"}
-    
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Verify",
+              id: item.f_demo_fields_id,
+            });
+          }}
+          disabled={item.verified === "Yes"}
 
-  >
-    Verify
-  </button>
-  <button
-    onClick={() => {
-      setShowVerifyModal(true);
-      setModalData({
-        ...modalData,
-        type: "Approve",
-        id:  item.f_demo_fields_id,
-      });
-    }}
-    disabled={item.approved === "Yes"}
-    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
-    
-  >
-    Approve
-  </button>
-  <button
-    className="b text-black hover:text-red-500 ml-2"
-    onClick={() => {
-      setShowDeleteModal(true);
-      setModalData({
-        ...modalData,
+        >
+          Verify
+        </button>
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.f_demo_fields_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
 
-        id:  item.f_demo_fields_id,
-      });
-    }}
-  >
-    Delete
-  </button>
-  </div>
+        >
+          Approve
+        </button>
+        <button
+          className="b text-black hover:text-red-500 ml-2"
+          onClick={() => {
+            setShowDeleteModal(true);
+            setModalData({
+              ...modalData,
 
-case 4: return <div>
-  
-  
-<button
-  onClick={() => {
-    setShowVerifyModal(true);
-    setModalData({
-      ...modalData,
-      type: "Approve",
-      id:  item.f_demo_fields_id,
-    });
-  }}
-  disabled={item.approved === "Yes"}
-  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
->
-  Approve
-</button>
-</div>
+              id: item.f_demo_fields_id,
+            });
+          }}
+        >
+          Delete
+        </button>
+      </div>
+      case 8: return <div>
 
-case 5: return <div>
-  
-<button
-  onClick={() => {
-    setShowVerifyModal(true);
-    setModalData({
-      ...modalData,
-      type: "Approve",
-      id:  item.f_demo_fields_id,
-    });
-  }}
-  disabled={item.approved === "Yes"}
-  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
->
-  Approve
-</button>
-</div>
 
-case 6: return <div>
-  
-  
-  <button
-disabled={item.verified === "Yes"}
-onClick={() => {
-  setShowVerifyModal(true);
-  setModalData({
-    ...modalData,
-    type: "Verify",
-    id:  item.f_demo_fields_id,
-  });
-}}
->
-Verify
-</button>
-</div>
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Verify",
+              id: item.f_demo_fields_id,
+            });
+          }}
+          disabled={item.verified === "Yes"}
 
-case 9: return <div>
-<button
-disabled={item.verified === "Yes"}
-onClick={() => {
-  setShowVerifyModal(true);
-  setModalData({
-    ...modalData,
-    type: "Verify",
-    id:  item.f_demo_fields_id,
-  });
-}}
->
-Verify
-</button>
-</div> 
 
-}
+        >
+          Verify
+        </button>
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.f_demo_fields_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+
+        >
+          Approve
+        </button>
+        <button
+          className="b text-black hover:text-red-500 ml-2"
+          onClick={() => {
+            setShowDeleteModal(true);
+            setModalData({
+              ...modalData,
+
+              id: item.f_demo_fields_id,
+            });
+          }}
+        >
+          Delete
+        </button>
+      </div>
+
+      case 4: return <div>
+
+
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.f_demo_fields_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+        >
+          Approve
+        </button>
+      </div>
+
+      case 5: return <div>
+
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.f_demo_fields_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+        >
+          Approve
+        </button>
+      </div>
+
+      case 6: return <div>
+
+
+        <button
+          disabled={item.verified === "Yes"}
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Verify",
+              id: item.f_demo_fields_id,
+            });
+          }}
+        >
+          Verify
+        </button>
+      </div>
+
+      case 9: return <div>
+        <button
+          disabled={item.verified === "Yes"}
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Verify",
+              id: item.f_demo_fields_id,
+            });
+          }}
+        >
+          Verify
+        </button>
+      </div>
+
     }
-    const [excelLoading, setExcelLoading] = useState(false)
-    const getExcelsheet = async (
-      bg,
-      bu,
-      z,
-      r,
-      t,
-      from,
-      to,
-      empCode
-      ) => {
-      try {
-        setExcelLoading(true)
-        const respond = await axios.get(`${url}/api/get_farmer_demo_fields`, {
-          headers: headers,
-          params: {
-            t_id: t === "All" ?    null : t,
-            bg_id: bg === "All" ?  null : bg,
-            bu_id: bu === "All" ?  null : bu,
-            z_id: z === "All" ?    null : z,
-            r_id: r === "All" ?    null : r,
-            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
-            to:   moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
-            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-            emp_code: empCode,
-            excel: true, 
-          },
-        });
-        const apires = await respond.data.data;
-        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
-          ["F Field Code"] : item.f_demo_field_no ,
+  }
+  const [excelLoading, setExcelLoading] = useState(false)
+  const getExcelsheet = async (
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    from,
+    to,
+    empCode
+  ) => {
+    try {
+      setExcelLoading(true)
+      const respond = await axios.get(`${url}/api/get_farmer_demo_fields`, {
+        headers: headers,
+        params: {
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+          to: moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          emp_code: empCode,
+          excel: true,
+        },
+      });
+      const apires = await respond.data.data;
+      const ws = XLSX.utils.json_to_sheet(apires.map((item) => {
+        return {
+          ["F Field Code"]: item.f_demo_field_no,
           ["Field Date"]: moment(item.demo_field_date
           ).format("DD/MM/YYYY"),
-        ["Emp Code"]:item.emp_code,
-        ["Emp Name"]:item.emp_name,
-        ["Dealer"]:item.dealer_des,
-        ["Farmer Demo No"]:item.f_demo_code,
-        ["Farmer Mobile No"]:item.farmer_mob_no,
-        ["Farmer Id"]:item.farmer_id,
-        ["Farmer Name"]:item.farmer_name,
-        ["Farmer Father Name"]:item.farmer_father_name,
-        ["Farmer Type"]:item.farmer_type,
-        ["Plot Size"]:item.plot_size,
-        ["Farmer Observation"]:item.farmer_observation,
-        ["Product Rating"]:item.product_rating,
-        ["Remarks"]:item.follow_up_remarks,
-        ["Potential Farmer"]:item.potential_farmer,
-        ["Next Follow Up Date"]:moment(item.next_followup_date).format("DD/MM/YYYY"),
-        ["Status"]:item.status,    
-       ["Territory"]:item.territory_name,
-       ["Region"]:item.region_name,
-       ["Zone"]:item.zone_name,
-       ["Business_Unit"]:item.business_unit_name,
-       ["Company"]:item.cmpny_name,
-       ["Deleted"]:item.isDeleted ? "Yes" : "No" ,
-  
-       
+          ["Emp Code"]: item.emp_code,
+          ["Emp Name"]: item.emp_name,
+          ["Dealer"]: item.dealer_des,
+          ["Farmer Demo No"]: item.f_demo_code,
+          ["Farmer Mobile No"]: item.farmer_mob_no,
+          ["Farmer Id"]: item.farmer_id,
+          ["Farmer Name"]: item.farmer_name,
+          ["Farmer Father Name"]: item.farmer_father_name,
+          ["Farmer Type"]: item.farmer_type,
+          ["Plot Size"]: item.plot_size,
+          ["Farmer Observation"]: item.farmer_observation,
+          ["Product Rating"]: item.product_rating,
+          ["Remarks"]: item.follow_up_remarks,
+          ["Potential Farmer"]: item.potential_farmer,
+          ["Next Follow Up Date"]: moment(item.next_followup_date).format("DD/MM/YYYY"),
+          ["Status"]: item.status,
+          ["Territory"]: item.territory_name,
+          ["Region"]: item.region_name,
+          ["Zone"]: item.zone_name,
+          ["Business_Unit"]: item.business_unit_name,
+          ["Company"]: item.cmpny_name,
+          ["Deleted"]: item.isDeleted ? "Yes" : "No",
+
+
 
         }
-       } ));
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, `Field Day.xlsx`);
-        setExcelLoading(false)
-      } catch (error) {
-        setExcelLoading(false)
-        
+      }));
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+      XLSX.writeFile(wb, `Field Day.xlsx`);
+      setExcelLoading(false)
+    } catch (error) {
+      setExcelLoading(false)
+
+    }
+  };
+  const LoaderExcel = () => {
+    return (
+      <div class="flex space-x-1   justify-center items-center bg-white  ">
+        <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+        <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+        <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce"></div>
+      </div>
+    );
+  };
+  const filterDisableOption = (currentFilter) => {
+    function getLastAssignedKey(filterState) {
+      // Define an array of keys in the order you want to check
+      const keys = ['bgId', 'buId', 'zId', 'rId', 'tId'];
+
+      // Iterate through the keys in reverse order
+      for (let i = keys.length - 1; i >= 0; i--) {
+        const key = keys[i];
+        if (typeof filterState[key] === 'number' && !isNaN(filterState[key])) {
+          return key;
+        }
       }
-    };
-    const LoaderExcel = () => {
-      return (
-        <div class="flex space-x-1   justify-center items-center bg-white  ">
-          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce"></div>
-        </div>
-      );
-    };
+
+      // If no valid number is found, return null or undefined
+      return null;
+    }
+
+    console.log("zpo", currentFilter)
+    const role = localStorageItems.roleId
+    console.log("pop", getLastAssignedKey(filterState) === "tId")
+    if (role === 9) {
+
+      switch (currentFilter) {
+        case "Teritory": if (
+          getLastAssignedKey(filterState) === "tId") { return true }
+        else {
+          return false
+
+        }
+        case "Region": if (
+          getLastAssignedKey(filterState) === "tId" || getLastAssignedKey(filterState) === "rId") { return true }
+        else {
+          return false
+
+        }
+        case "Zone": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId") { return true }
+        else {
+          return false
+
+        }
+        case "BU": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId") { return true }
+        else {
+          return false
+
+        }
+        case "BG": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId" || getLastAssignedKey(filterState) === "bgId") { return true }
+        else {
+          return false
+
+        }
+      }
+
+    }
+    else {
+      switch (currentFilter) {
+        case "Territory": if (
+          role === 6) { return true }
+        else {
+          return false
+
+        }
+        case "Region": if (role === 6 || role === 5
+        ) { return true }
+        else { return false }
+        case "Zone": if (role === 6 ||
+          role === 5 ||
+          role === 4) {
+          return true
+        }
+        else { return false }
+        case "BU": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3) {
+          return true
+        }
+        else {
+          false
+        }
+        case "BG": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3 ||
+          role === 10) {
+          return true
+        }
+        else {
+          return false
+        }
+
+      }
+
+    }
+
+  }
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -972,27 +1079,27 @@ Verify
             {name ? name : "Farmer Field Day Table"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer pr-4">
-          <div className="flex flex-row gap-2 ">
-            {" "}
-            
-            {excelLoading ? <LoaderExcel
-                  />   :    <TbFileDownload
-              className="text-green-600 cursor-pointer "
-              size={32}
-              onClick={() => getExcelsheet(
-                filterState.bgId,
-                filterState.buId,
-                filterState.zId,
-                filterState.rId,
-                filterState.tId,
-                filterState.startDate,
-                filterState.endDate,
-                filterState.empCode
-              ) 
-              }
-            ></TbFileDownload>}
-           
-          </div>
+            <div className="flex flex-row gap-2 ">
+              {" "}
+
+              {excelLoading ? <LoaderExcel
+              /> : <TbFileDownload
+                className="text-green-600 cursor-pointer "
+                size={32}
+                onClick={() => getExcelsheet(
+                  filterState.bgId,
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.startDate,
+                  filterState.endDate,
+                  filterState.empCode
+                )
+                }
+              ></TbFileDownload>}
+
+            </div>
             <h2>
               <AiTwotoneHome
                 className="text-black-500"
@@ -1028,11 +1135,7 @@ Verify
               }
             }}
             disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4 ||
-              localStorageItems.roleId === 3 ||
-              localStorageItems.roleId === 10
+              filterDisableOption("BG")
             }
           >
             <option value={"All"} className="font-bold">
@@ -1066,11 +1169,7 @@ Verify
                 });
               }
             }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4 ||
-              localStorageItems.roleId === 3
+            disabled={filterDisableOption("BU")
             }
           >
             <option value={"All"}>- All Business Unit -</option>
@@ -1101,10 +1200,7 @@ Verify
                 });
               }
             }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4
+            disabled={filterDisableOption("Zone")
             }
           >
             <option value={"All"}>- All Zone -</option>
@@ -1121,8 +1217,7 @@ Verify
             id="stateSelect"
             value={filterState.rId}
             disabled={
-              localStorageItems.roleId === 6 || localStorageItems.roleId === 5
-            }
+              filterDisableOption("Region")}
             onChange={(e) => {
               if (e.target.value === "All") {
                 setFilterState({
@@ -1151,7 +1246,7 @@ Verify
             className="border rounded px-2 py-1 w-1/2 h-8"
             id="stateSelect"
             value={filterState.tId}
-            disabled={localStorageItems.roleId === 6}
+            disabled={filterDisableOption("Territory")}
             onChange={(e) =>
               setFilterState({
                 ...filterState,
@@ -1221,7 +1316,7 @@ Verify
                   F Field Code
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Field Date
+                  Field Date
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Emp Code
@@ -1266,9 +1361,9 @@ Verify
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Remarks
                 </th>
-            
-               
-               
+
+
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Field Day
                 </th>
@@ -1305,29 +1400,29 @@ Verify
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
               {data.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
-                   <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
-                    {getAllActionButton(item)}             
-                </td>
-                  
+                  <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
+                    {getAllActionButton(item)}
+                  </td>
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.f_demo_field_no
                     }
                   </td>
-                 
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {moment(item.demo_field_date
-).format("DD/MM/YYYY")}
+                    ).format("DD/MM/YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.emp_code}
-                   </td>
+                  </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.emp_name}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.dealer_des}
                   </td>
-                
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {"-"}
                   </td>
@@ -1359,13 +1454,13 @@ Verify
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.field_day_remarks}
                   </td>
-                 
-                
 
-                 
-                  
+
+
+
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  <button
+                    <button
                       onClick={() => {
                         setImgUrl(item.field_day_image_Url);
                         setIsOpen(true);
@@ -1377,13 +1472,13 @@ Verify
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.
-potential_farmer}
+                      potential_farmer}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  
-                  {moment(item.
-next_visit_date
-).format("DD/MM/YYYY")}  
+
+                    {moment(item.
+                      next_visit_date
+                    ).format("DD/MM/YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.status}
@@ -1424,22 +1519,22 @@ next_visit_date
           </div> */}
         </div>
         <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
-        <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
-      Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
-      <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
-      <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
-    </div>
-    <ReactPaginate
-      previousLabel={"Previous"}
-      nextLabel={"Next"}
-      breakLabel={"..."}
-      pageCount={pageCount}
-      onPageChange={handlePageChange}
-      containerClassName={"pagination"}
-      activeClassName={"active"}
-      className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
-    />
-  </div>
+          <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
+            Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
+            <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
+            <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
+          </div>
+          <ReactPaginate
+            previousLabel={"Previous"}
+            nextLabel={"Next"}
+            breakLabel={"..."}
+            pageCount={pageCount}
+            onPageChange={handlePageChange}
+            containerClassName={"pagination"}
+            activeClassName={"active"}
+            className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
+          />
+        </div>
       </div>
 
       <Transition appear show={showImageModal} as={Fragment}>
@@ -1597,7 +1692,7 @@ next_visit_date
                     </div>
 
                     {modalData.type === "Verify" ? (
-                     <div className="mt-6 flex justify-center gap-1">
+                      <div className="mt-6 flex justify-center gap-1">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"

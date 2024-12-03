@@ -63,7 +63,10 @@ const DemoTable = () => {
       setPageCount(Math.ceil(count / 50));
       setData(apires);
     } catch (error) {
+      console.log("pop", error)
       setData([]);
+      setPageCount(0);
+      setDataCount([])
     }
   };
 
@@ -724,19 +727,21 @@ const DemoTable = () => {
   }, []);
 
   useEffect(() => {
-    handlePageChange({ selected: 0 })
-    getFarmerDemo(
-      1,
-      filterState.bgId,
-      filterState.buId,
-      filterState.zId,
-      filterState.rId,
-      filterState.tId,
-      filterState.startDate,
-      filterState.endDate,
-      filterState.empCode
-    );
+    if (filterState.bgId) {
+      getFarmerDemo(
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
+    }
   }, [
+    currentPage.selected,
     filterState.bgId,
     filterState.buId,
     filterState.zId,
@@ -746,21 +751,7 @@ const DemoTable = () => {
     filterState.endDate,
     filterState.empCode,
   ]);
-  useEffect(() => {
-    getFarmerDemo(
-      currentPage.selected + 1,
-      filterState.bgId,
-      filterState.buId,
-      filterState.zId,
-      filterState.rId,
-      filterState.tId,
-      filterState.startDate,
-      filterState.endDate,
-      filterState.empCode
-    );
-  }, [
-    currentPage.selected,
-  ]);
+
   const { name } = router.query;
 
 
@@ -979,6 +970,14 @@ const DemoTable = () => {
           ["Farmer Father Name"]: item.farmer_father_name,
           ["Farmer Type"]: item.farmer_type,
           ["Plot Size"]: item.plot_size,
+          ["Crop"]: [...new Set(item.MRCrops.map(crop => crop.crop))].join(' + '),
+          ["Stage"]: [...new Set(item.MRCrops.map(crop => crop.stage))].join(' + '),
+          ["Segment"]: [...new Set(item.MRCrops.map(crop => crop.segment))].join(' + '),
+          ["Product Brand"]: [...new Set(item.MRCrops.map(crop => crop.product_brand))].join(' + '),
+          ["Applied Dose"]: item.MRCrops.map(crop => crop.rec_dose).join(', '),
+          ["Water"]: (item.MRCrops.map(crop => crop.water_val)).join(', '),
+          ["Area Cover (sqmt)"]: item.MRCrops.map(crop => crop.acre_plot).join(', '),
+          ["Field Day"]: item.field_day ? "Yes" : "No",
           ["Potential"]: item.potential_farmer,
           ["Village"]: item.village,
           ["Next Visit Follow up"]: moment(item.next_visit_date).format("DD-MM-YYYY"),
@@ -997,9 +996,14 @@ const DemoTable = () => {
       XLSX.writeFile(wb, `Farmer_Demo.xlsx`);
       setExcelLoading(false)
     } catch (error) {
+      console.log("zpi", error)
       setExcelLoading(false)
 
     }
+
+
+
+
   };
   const LoaderExcel = () => {
     return (
@@ -1010,6 +1014,110 @@ const DemoTable = () => {
       </div>
     );
   };
+  const filterDisableOption = (currentFilter) => {
+    function getLastAssignedKey(filterState) {
+      // Define an array of keys in the order you want to check
+      const keys = ['bgId', 'buId', 'zId', 'rId', 'tId'];
+
+      // Iterate through the keys in reverse order
+      for (let i = keys.length - 1; i >= 0; i--) {
+        const key = keys[i];
+        if (typeof filterState[key] === 'number' && !isNaN(filterState[key])) {
+          return key;
+        }
+      }
+
+      // If no valid number is found, return null or undefined
+      return null;
+    }
+
+    console.log("zpo", currentFilter)
+    const role = localStorageItems.roleId
+    console.log("pop", getLastAssignedKey(filterState) === "tId")
+    if (role === 9) {
+
+      switch (currentFilter) {
+        case "Teritory": if (
+          getLastAssignedKey(filterState) === "tId") { return true }
+        else {
+          return false
+
+        }
+        case "Region": if (
+          getLastAssignedKey(filterState) === "tId" || getLastAssignedKey(filterState) === "rId") { return true }
+        else {
+          return false
+
+        }
+        case "Zone": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId") { return true }
+        else {
+          return false
+
+        }
+        case "BU": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId") { return true }
+        else {
+          return false
+
+        }
+        case "BG": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId" || getLastAssignedKey(filterState) === "bgId") { return true }
+        else {
+          return false
+
+        }
+      }
+
+    }
+    else {
+      switch (currentFilter) {
+        case "Territory": if (
+          role === 6) { return true }
+        else {
+          return false
+
+        }
+        case "Region": if (role === 6 || role === 5
+        ) { return true }
+        else { return false }
+        case "Zone": if (role === 6 ||
+          role === 5 ||
+          role === 4) {
+          return true
+        }
+        else { return false }
+        case "BU": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3) {
+          return true
+        }
+        else {
+          false
+        }
+        case "BG": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3 ||
+          role === 10) {
+          return true
+        }
+        else {
+          return false
+        }
+
+      }
+
+    }
+
+  }
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -1089,11 +1197,7 @@ const DemoTable = () => {
               }
             }}
             disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4 ||
-              localStorageItems.roleId === 3 ||
-              localStorageItems.roleId === 10
+              filterDisableOption("BG")
             }
           >
             <option value={"All"} className="font-bold">
@@ -1127,11 +1231,7 @@ const DemoTable = () => {
                 });
               }
             }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4 ||
-              localStorageItems.roleId === 3
+            disabled={filterDisableOption("BU")
             }
           >
             <option value={"All"}>- All Business Unit -</option>
@@ -1162,10 +1262,7 @@ const DemoTable = () => {
                 });
               }
             }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4
+            disabled={filterDisableOption("Zone")
             }
           >
             <option value={"All"}>- All Zone -</option>
@@ -1182,8 +1279,7 @@ const DemoTable = () => {
             id="stateSelect"
             value={filterState.rId}
             disabled={
-              localStorageItems.roleId === 6 || localStorageItems.roleId === 5
-            }
+              filterDisableOption("Region")}
             onChange={(e) => {
               if (e.target.value === "All") {
                 setFilterState({
@@ -1212,7 +1308,7 @@ const DemoTable = () => {
             className="border rounded px-2 py-1 w-1/2 h-8"
             id="stateSelect"
             value={filterState.tId}
-            disabled={localStorageItems.roleId === 6}
+            disabled={filterDisableOption("Territory")}
             onChange={(e) =>
               setFilterState({
                 ...filterState,

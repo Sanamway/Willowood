@@ -14,9 +14,9 @@ import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { TbFileDownload } from "react-icons/tb";
-  import * as XLSX from "xlsx";
+import * as XLSX from "xlsx";
 const FarmerSHC = () => {
-  
+
   const router = useRouter();
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState({ selected: 0 }); // Current page number
@@ -57,7 +57,7 @@ const FarmerSHC = () => {
           paging: true,
           page: currentPage,
           size: 50,
-          zrt:true
+          zrt: true
         },
       });
       const apires = await respond.data.data.MRPlanogramData;
@@ -70,7 +70,7 @@ const FarmerSHC = () => {
     }
   };
 
-   const [showImageModal, setShowImageModal] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -103,17 +103,17 @@ const FarmerSHC = () => {
       toast.success(apires);
 
       getFarmerDemo(
-      currentPage.selected + 1,
-      filterState.bgId,
-      filterState.buId,
-      filterState.zId,
-      filterState.rId,
-      filterState.tId,
-      filterState.startDate,
-      filterState.endDate,
-      filterState.empCode
-    );
-    } catch (error) {}
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
+    } catch (error) { }
   };
 
   const handleApprove = async () => {
@@ -135,17 +135,17 @@ const FarmerSHC = () => {
       handleCloseModal();
       toast.success(apires);
       getFarmerDemo(
-      currentPage.selected + 1,
-      filterState.bgId,
-      filterState.buId,
-      filterState.zId,
-      filterState.rId,
-      filterState.tId,
-      filterState.startDate,
-      filterState.endDate,
-      filterState.empCode
-    );
-    } catch (error) {}
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
+    } catch (error) { }
   };
 
   const handleDelete = async () => {
@@ -164,16 +164,16 @@ const FarmerSHC = () => {
       toast.success(apires);
 
       getFarmerDemo(
-      currentPage.selected + 1,
-      filterState.bgId,
-      filterState.buId,
-      filterState.zId,
-      filterState.rId,
-      filterState.tId,
-      filterState.startDate,
-      filterState.endDate,
-      filterState.empCode
-    );
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
       handleCloseModal();
     } catch (error) {
       toast.error(error.message);
@@ -188,7 +188,7 @@ const FarmerSHC = () => {
   const handleCloseModal = () => {
     setModalData({
       ...modalData,
-     
+
       isTrue: "Yes",
       date: "",
       user: "",
@@ -277,7 +277,7 @@ const FarmerSHC = () => {
           .filter((item) => Number(item.bg_id) === Number(segmentId))
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -302,7 +302,7 @@ const FarmerSHC = () => {
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
           .filter((item) => Number(item.z_id) === Number(zoneId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -332,7 +332,7 @@ const FarmerSHC = () => {
           .filter((item) => Number(item.z_id) === Number(zoneId))
           .filter((item) => Number(item.r_id) === Number(regionId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -509,7 +509,7 @@ const FarmerSHC = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -564,12 +564,12 @@ const FarmerSHC = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -623,12 +623,12 @@ const FarmerSHC = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -672,12 +672,12 @@ const FarmerSHC = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -716,8 +716,8 @@ const FarmerSHC = () => {
         break;
     }
   }, []);
- useEffect(() => {
-    handlePageChange({selected: 0})
+  useEffect(() => {
+    handlePageChange({ selected: 0 })
     getFarmerDemo(
       1,
       filterState.bgId,
@@ -749,254 +749,359 @@ const FarmerSHC = () => {
       filterState.tId,
       filterState.startDate,
       filterState.endDate,
-       filterState.empCode
+      filterState.empCode
     );
   }, [
     currentPage.selected,
   ]);
   const { name } = router.query;
 
-  const getAllActionButton = (item) =>{
+  const getAllActionButton = (item) => {
     let role = localStorageItems.roleId
- switch(role){
-  case 1: return <div>
-    
- 
-  <button
-    onClick={() => {
-      setShowVerifyModal(true);
-      setModalData({
-        ...modalData,
-        type: "Verify",
-        id:  item.f_planogram_id,
+    switch (role) {
+      case 1: return <div>
+
+
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Verify",
+              id: item.f_planogram_id,
+            });
+          }}
+          disabled={item.verified === "Yes"}
+
+        >
+          Verify
+        </button>
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.f_planogram_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+
+        >
+          Approve
+        </button>
+        <button
+          className="b text-black hover:text-red-500 ml-2"
+          onClick={() => {
+            setShowDeleteModal(true);
+            setModalData({
+              ...modalData,
+
+              id: item.f_planogram_id,
+            });
+          }}
+        >
+          Delete
+        </button>
+      </div>
+      case 8: return <div>
+
+
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Verify",
+              id: item.f_planogram_id,
+            });
+          }}
+          disabled={item.verified === "Yes"}
+
+
+        >
+          Verify
+        </button>
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.f_planogram_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+
+        >
+          Approve
+        </button>
+        <button
+          className="b text-black hover:text-red-500 ml-2"
+          onClick={() => {
+            setShowDeleteModal(true);
+            setModalData({
+              ...modalData,
+
+              id: item.f_planogram_id,
+            });
+          }}
+        >
+          Delete
+        </button>
+      </div>
+
+      case 4: return <div>
+
+
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.f_planogram_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+        >
+          Approve
+        </button>
+      </div>
+
+      case 5: return <div>
+
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.f_planogram_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+        >
+          Approve
+        </button>
+      </div>
+
+      case 6: return <div>
+
+
+        <button
+          disabled={item.verified === "Yes"}
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Verify",
+              id: item.f_planogram_id,
+            });
+          }}
+        >
+          Verify
+        </button>
+      </div>
+
+      case 9: return <div>
+        <button
+          disabled={item.verified === "Yes"}
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Verify",
+              id: item.f_planogram_id,
+            });
+          }}
+        >
+          Verify
+        </button>
+      </div>
+
+    }
+  }
+
+  const [excelLoading, setExcelLoading] = useState(false)
+  const getExcelsheet = async (
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    from,
+    to,
+    empCode
+  ) => {
+    try {
+      setExcelLoading(true)
+      const respond = await axios.get(`${url}/api/get_mr_planogram`, {
+        headers: headers,
+        params: {
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+          to: moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          emp_code: empCode,
+          excel: true,
+        },
       });
-    }}
-    disabled={item.verified === "Yes"}
+      const apires = await respond.data.data;
+      const ws = XLSX.utils.json_to_sheet(apires.map((item) => {
+        return {
+          ["DPL Visit No"]: item.f_planogram_no,
+          ["Date"]: moment(item.f_planogram_date).format("DD/MM/YYYY"),
+          ["Dealer"]: item.dealer_des,
+          ["Emp Code"]: item.emp_code,
+          ["Emp Name"]: item.emp_name,
+          ["Dealer Address"]: item.dealer_address,
+          ["Contact Person"]: item.dealer_contact,
+          ["Product Brand"]: item.product_brand,
+          ["Product Positioning"]: item.product_positioning,
+          ["Promotional Material"]: item.promotional_material,
+          ["Damage Condition"]: item.damage_condition,
+          ["Category Placement"]: item.category_placement,
+          ["Current Stock"]: item.current_stock,
+          ["Actual Share of Life"]: item.actual_share_of_life,
+          ["Compititor Brand"]: item.compitor_brand,
+          ["Compititor Price"]: item.compitor_price,
+          ["Territory"]: item.territory_name,
+          ["Region"]: item.region_name,
+          ["Zone"]: item.zone_name,
+          ["Business_Unit"]: item.zone_name,
+          ["Company"]: item.cmpny_name,
+        }
+      }));
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+      XLSX.writeFile(wb, `Planogram.xlsx`);
+      setExcelLoading(false)
+    } catch (error) {
+      setExcelLoading(false)
+    }
+  };
+  const LoaderExcel = () => {
+    return (
+      <div class="flex space-x-1   justify-center items-center bg-white  ">
+        <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+        <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+        <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce"></div>
+      </div>
+    );
+  };
+  const filterDisableOption = (currentFilter) => {
+    function getLastAssignedKey(filterState) {
+      // Define an array of keys in the order you want to check
+      const keys = ['bgId', 'buId', 'zId', 'rId', 'tId'];
 
-  >
-    Verify
-  </button>
-  <button
-    onClick={() => {
-      setShowVerifyModal(true);
-      setModalData({
-        ...modalData,
-        type: "Approve",
-        id:  item.f_planogram_id,
-      });
-    }}
-    disabled={item.approved === "Yes"}
-    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
-    
-  >
-    Approve
-  </button>
-  <button
-    className="b text-black hover:text-red-500 ml-2"
-    onClick={() => {
-      setShowDeleteModal(true);
-      setModalData({
-        ...modalData,
+      // Iterate through the keys in reverse order
+      for (let i = keys.length - 1; i >= 0; i--) {
+        const key = keys[i];
+        if (typeof filterState[key] === 'number' && !isNaN(filterState[key])) {
+          return key;
+        }
+      }
 
-        id:  item.f_planogram_id,
-      });
-    }}
-  >
-    Delete
-  </button>
-  </div>
-  case 8: return  <div>
-    
-  
-  <button
-    onClick={() => {
-      setShowVerifyModal(true);
-      setModalData({
-        ...modalData,
-        type: "Verify",
-        id:  item.f_planogram_id,
-      });
-    }}
-    disabled={item.verified === "Yes"}
-    
-
-  >
-    Verify
-  </button>
-  <button
-    onClick={() => {
-      setShowVerifyModal(true);
-      setModalData({
-        ...modalData,
-        type: "Approve",
-        id:  item.f_planogram_id,
-      });
-    }}
-    disabled={item.approved === "Yes"}
-    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
-    
-  >
-    Approve
-  </button>
-  <button
-    className="b text-black hover:text-red-500 ml-2"
-    onClick={() => {
-      setShowDeleteModal(true);
-      setModalData({
-        ...modalData,
-
-        id:  item.f_planogram_id,
-      });
-    }}
-  >
-    Delete
-  </button>
-  </div>
-
-case 4: return <div>
-  
-  
-<button
-  onClick={() => {
-    setShowVerifyModal(true);
-    setModalData({
-      ...modalData,
-      type: "Approve",
-      id:  item.f_planogram_id,
-    });
-  }}
-  disabled={item.approved === "Yes"}
-  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
->
-  Approve
-</button>
-</div>
-
-case 5: return <div>
-  
-<button
-  onClick={() => {
-    setShowVerifyModal(true);
-    setModalData({
-      ...modalData,
-      type: "Approve",
-      id:  item.f_planogram_id,
-    });
-  }}
-  disabled={item.approved === "Yes"}
-  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
->
-  Approve
-</button>
-</div>
-
-case 6: return <div>
-  
-  
-  <button
-disabled={item.verified === "Yes"}
-onClick={() => {
-  setShowVerifyModal(true);
-  setModalData({
-    ...modalData,
-    type: "Verify",
-    id:  item.f_planogram_id,
-  });
-}}
->
-Verify
-</button>
-</div>
-
-case 9: return <div>
-<button
-disabled={item.verified === "Yes"}
-onClick={() => {
-  setShowVerifyModal(true);
-  setModalData({
-    ...modalData,
-    type: "Verify",
-    id:  item.f_planogram_id,
-  });
-}}
->
-Verify
-</button>
-</div> 
-
-}
+      // If no valid number is found, return null or undefined
+      return null;
     }
 
-const [excelLoading, setExcelLoading] = useState(false)
-    const getExcelsheet = async (
-      bg,
-      bu,
-      z,
-      r,
-      t,
-      from,
-      to,
-      empCode
-      ) => {
-      try {
-        setExcelLoading(true)
-        const respond = await axios.get(`${url}/api/get_mr_planogram`, {
-          headers: headers,
-          params: {
-            t_id: t === "All" ?    null : t,
-            bg_id: bg === "All" ?  null : bg,
-            bu_id: bu === "All" ?  null : bu,
-            z_id: z === "All" ?    null : z,
-            r_id: r === "All" ?    null : r,
-            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
-            to:   moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
-            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-            emp_code: empCode,
-            excel: true, 
-          },
-        });
-        const apires = await respond.data.data;
-        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
-        ["DPL Visit No"] :item.f_planogram_no,
-        ["Date"]: moment(item.f_planogram_date).format("DD/MM/YYYY"),
-        ["Dealer"]: item.dealer_des,
-        ["Emp Code"]: item.emp_code,
-        ["Emp Name"]: item.emp_name,      
-        ["Dealer Address"]: item.dealer_address,   
-        ["Contact Person"]: item.dealer_contact,
-        ["Product Brand"]: item.product_brand,
-        ["Product Positioning"]: item.product_positioning ,
-        ["Promotional Material"]: item.promotional_material,
-        ["Damage Condition"] : item.damage_condition,
-        ["Category Placement"]: item.category_placement,
-        ["Current Stock"]: item.current_stock,
-        ["Actual Share of Life"]: item.actual_share_of_life,
-        ["Compititor Brand"]: item.compitor_brand,
-        ["Compititor Price"]: item.compitor_price,
-        ["Territory"]: item.territory_name,
-        ["Region"]: item.region_name,
-        ["Zone"]: item.zone_name,
-        ["Business_Unit"]: item.zone_name,
-        ["Company"]: item.cmpny_name,
+    console.log("zpo", currentFilter)
+    const role = localStorageItems.roleId
+    console.log("pop", getLastAssignedKey(filterState) === "tId")
+    if (role === 9) {
+
+      switch (currentFilter) {
+        case "Teritory": if (
+          getLastAssignedKey(filterState) === "tId") { return true }
+        else {
+          return false
+
         }
-       } ));
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, `Planogram.xlsx`);
-        setExcelLoading(false)
-      } catch (error) {
-        setExcelLoading(false)
+        case "Region": if (
+          getLastAssignedKey(filterState) === "tId" || getLastAssignedKey(filterState) === "rId") { return true }
+        else {
+          return false
+
+        }
+        case "Zone": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId") { return true }
+        else {
+          return false
+
+        }
+        case "BU": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId") { return true }
+        else {
+          return false
+
+        }
+        case "BG": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId" || getLastAssignedKey(filterState) === "bgId") { return true }
+        else {
+          return false
+
+        }
       }
-    };
-    const LoaderExcel = () => {
-      return (
-        <div class="flex space-x-1   justify-center items-center bg-white  ">
-          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce"></div>
-        </div>
-      );
-    };
+
+    }
+    else {
+      switch (currentFilter) {
+        case "Territory": if (
+          role === 6) { return true }
+        else {
+          return false
+
+        }
+        case "Region": if (role === 6 || role === 5
+        ) { return true }
+        else { return false }
+        case "Zone": if (role === 6 ||
+          role === 5 ||
+          role === 4) {
+          return true
+        }
+        else { return false }
+        case "BU": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3) {
+          return true
+        }
+        else {
+          false
+        }
+        case "BG": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3 ||
+          role === 10) {
+          return true
+        }
+        else {
+          return false
+        }
+
+      }
+
+    }
+
+  }
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -1006,27 +1111,27 @@ const [excelLoading, setExcelLoading] = useState(false)
             {name ? name : "Planogram"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer pr-4">
-          <div className="flex flex-row gap-2 ">
-            {" "}
-            {excelLoading ? <LoaderExcel
-                  />   :    <TbFileDownload
-              className="text-green-600 cursor-pointer "
-              size={32}
-              onClick={() => getExcelsheet(
-                filterState.bgId,
-                filterState.buId,
-                filterState.zId,
-                filterState.rId,
-                filterState.tId,
-                filterState.startDate,
-                filterState.endDate,
-                filterState.empCode
-              ) 
-              }
-            ></TbFileDownload>}
-          
-            
-          </div>
+            <div className="flex flex-row gap-2 ">
+              {" "}
+              {excelLoading ? <LoaderExcel
+              /> : <TbFileDownload
+                className="text-green-600 cursor-pointer "
+                size={32}
+                onClick={() => getExcelsheet(
+                  filterState.bgId,
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.startDate,
+                  filterState.endDate,
+                  filterState.empCode
+                )
+                }
+              ></TbFileDownload>}
+
+
+            </div>
             <h2>
               <AiTwotoneHome
                 className="text-black-500"
@@ -1062,11 +1167,7 @@ const [excelLoading, setExcelLoading] = useState(false)
               }
             }}
             disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4 ||
-              localStorageItems.roleId === 3 ||
-              localStorageItems.roleId === 10
+              filterDisableOption("BG")
             }
           >
             <option value={"All"} className="font-bold">
@@ -1100,11 +1201,7 @@ const [excelLoading, setExcelLoading] = useState(false)
                 });
               }
             }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4 ||
-              localStorageItems.roleId === 3
+            disabled={filterDisableOption("BU")
             }
           >
             <option value={"All"}>- All Business Unit -</option>
@@ -1135,10 +1232,7 @@ const [excelLoading, setExcelLoading] = useState(false)
                 });
               }
             }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4
+            disabled={filterDisableOption("Zone")
             }
           >
             <option value={"All"}>- All Zone -</option>
@@ -1155,8 +1249,7 @@ const [excelLoading, setExcelLoading] = useState(false)
             id="stateSelect"
             value={filterState.rId}
             disabled={
-              localStorageItems.roleId === 6 || localStorageItems.roleId === 5
-            }
+              filterDisableOption("Region")}
             onChange={(e) => {
               if (e.target.value === "All") {
                 setFilterState({
@@ -1185,7 +1278,7 @@ const [excelLoading, setExcelLoading] = useState(false)
             className="border rounded px-2 py-1 w-1/2 h-8"
             id="stateSelect"
             value={filterState.tId}
-            disabled={localStorageItems.roleId === 6}
+            disabled={filterDisableOption("Territory")}
             onChange={(e) =>
               setFilterState({
                 ...filterState,
@@ -1252,66 +1345,66 @@ const [excelLoading, setExcelLoading] = useState(false)
                   Action
                 </th>
                 <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                 D.PL Visit No
+                  D.PL Visit No
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Date
+                  Date
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Dealer
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Emp Code
+                  Emp Code
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Emp Name
+                  Emp Name
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Dealer Address
+                  Dealer Address
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Contact Person
+                  Contact Person
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Product Brand
+                  Product Brand
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Product Positioning
+                  Product Positioning
                 </th>
-               
+
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-              Promotional Material
+                  Promotional Material
                 </th>
-              
 
-              
 
-               
+
+
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-               Damage Condition 
+                  Damage Condition
                 </th>
-              
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Category Placement
                 </th>
-               
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Current Stock
+                  Current Stock
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Actual Share of Life
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                 Compititor Brand
+                  Compititor Brand
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Compititor Price
+                  Compititor Price
                 </th>
-                
-              
+
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Territory
                 </th>
@@ -1336,31 +1429,31 @@ const [excelLoading, setExcelLoading] = useState(false)
               {data?.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
                   <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
-                    {getAllActionButton(item)}             
-                </td>
+                    {getAllActionButton(item)}
+                  </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.f_planogram_no}
                   </td>
-               
+
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                 
+
                     {moment(item.f_planogram_date).format("DD/MM/YYYY")}
                   </td>
-                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.dealer_des} 
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.dealer_des}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.emp_code} 
+                    {item.emp_code}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.emp_name} 
+                    {item.emp_name}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {item.dealer_address} 
+                    {item.dealer_address}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {item.dealer_contact}
+                    {item.dealer_contact}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.product_brand}
@@ -1368,23 +1461,23 @@ const [excelLoading, setExcelLoading] = useState(false)
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.product_positioning}
                   </td>
-                
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.promotional_material}
                   </td>
-                
-                  
 
-                 
+
+
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.damage_condition}
                   </td>
-                 
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.category_placement}
                   </td>
-                
-                 
+
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.current_stock}
                   </td>
@@ -1394,8 +1487,8 @@ const [excelLoading, setExcelLoading] = useState(false)
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.compitor_brand}
                   </td>
-                  
-                
+
+
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.compitor_price}
@@ -1415,34 +1508,34 @@ const [excelLoading, setExcelLoading] = useState(false)
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.cmpny_name}
                   </td>
-                  
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.isDeleted ? "Yes" : "No"}
                   </td>
-                                  </tr>
+                </tr>
               ))}
             </tbody>
           </table>
-          
+
         </div>
         <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
-        <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
-      Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
-      <small className="font-bold px-2 self-center text-black">{data?.length}</small> of{" "}
-      <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
-    </div>
-    <ReactPaginate
-      previousLabel={"Previous"}
-      nextLabel={"Next"}
-      breakLabel={"..."}
-      pageCount={pageCount}
-      onPageChange={handlePageChange}
-      containerClassName={"pagination flex flex-row gap-2"} // Container styling
-      activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
-      className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
-      forcePage={currentPage.selected} // Set the current page
-     />
-  </div>
+          <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
+            Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
+            <small className="font-bold px-2 self-center text-black">{data?.length}</small> of{" "}
+            <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
+          </div>
+          <ReactPaginate
+            previousLabel={"Previous"}
+            nextLabel={"Next"}
+            breakLabel={"..."}
+            pageCount={pageCount}
+            onPageChange={handlePageChange}
+            containerClassName={"pagination flex flex-row gap-2"} // Container styling
+            activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
+            className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
+            forcePage={currentPage.selected} // Set the current page
+          />
+        </div>
       </div>
 
       <Transition appear show={showImageModal} as={Fragment}>
@@ -1600,7 +1693,7 @@ const [excelLoading, setExcelLoading] = useState(false)
                     </div>
 
                     {modalData.type === "Verify" ? (
-                     <div className="mt-6 flex justify-center gap-1">
+                      <div className="mt-6 flex justify-center gap-1">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
@@ -1711,4 +1804,4 @@ const [excelLoading, setExcelLoading] = useState(false)
   );
 };
 
- export default FarmerSHC;
+export default FarmerSHC;

@@ -14,76 +14,31 @@ const ProductWiseTable = (props) => {
     const [fullScreen, setFullScreen] = useState(false);
 
     const handledownloadExcel = () => {
-        let excelData;
+        let excelData = datas.map((item) => {
+            return {
+                "Crop": item.crop,
 
-        excelData = datas.map((item, idx) => ({
-            "Product Brand": item[Object.keys(item)[0]],
-            "FY Sales Val 21-22": item[Object.keys(item)[2]],
-            "FY Sales Val 22-23": item[Object.keys(item)[4]],
-            "Annual Budget Qty": item[Object.keys(item)[5]],
-            "Annual Budget Val": item[Object.keys(item)[6]],
-            "MTD Sale Qty": "",
-            "MTD Budget Val": item[Object.keys(item)[11]],
-            "MTD RSP Value": item[Object.keys(item)[15]],
-            "MTD Actual Sale Value": item[Object.keys(item)[23]],
-            "MTD Budget Achivement %":
-                item[Object.keys(item)[11]] !== 0
-                    ? (
-                        (item[Object.keys(item)[23]] / item[Object.keys(item)[11]]) *
-                        100
-                    ).toFixed(2) + " %"
-                    : "0 %",
-            "MTD RSP Achivement %":
-                item[Object.keys(item)[15]] !== 0
-                    ? (
-                        (item[Object.keys(item)[23]] / item[Object.keys(item)[15]]) *
-                        100
-                    ).toFixed(2) + " %"
-                    : "0 %",
-            "YTD Sale Qty": item[Object.keys(item)[7]],
-            "YTD Budget Value": item[Object.keys(item)[25]],
-            "YTD Actual Sale Value": item[Object.keys(item)[8]],
-            "YTD Budget Achivement %":
-                item[Object.keys(item)[25]] !== 0
-                    ? (
-                        (item[Object.keys(item)[8]] / item[Object.keys(item)[25]]) *
-                        100
-                    ).toFixed(2) + " %"
-                    : "0 %",
-            "YTD RSP Achivement %": "0%",
-            "Anual Qty Achivement %":
-                item[Object.keys(item)[5]] !== 0
-                    ? (
-                        (item[Object.keys(item)[7]] / item[Object.keys(item)[5]]) *
-                        100
-                    ).toFixed(2) + " %"
-                    : "0 %",
-            "Anual Value Achivement %":
-                item[Object.keys(item)[6]] !== 0
-                    ? (
-                        (item[Object.keys(item)[8]] / item[Object.keys(item)[6]]) *
-                        100
-                    ).toFixed(2) + " %"
-                    : "0 %",
-        }));
-
+                // Include product-related data if needed
+                ...item.products.reduce((acc, product) => {
+                    acc[product.product] = props.title === "Month wise - Crop & Product Wise Demo ( Nos )"
+                        ? product.count
+                        : product.recDoseSum;
+                    return acc;
+                }, {}),
+            };
+        });
 
         const worksheet = XLSX.utils.json_to_sheet(excelData);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-        const excelBuffer = XLSX.write(workbook, {
-            bookType: "xlsx",
-            type: "array",
-        });
-        const excelBlob = new Blob([excelBuffer], {
-            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        });
+
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const excelBlob = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
         const filename = `${heading}.xlsx`;
+
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            // For IE
-            window.navigator.msSaveOrOpenBlob(excelBlob, filename);
+            window.navigator.msSaveOrOpenBlob(excelBlob, filename);  // For IE
         } else {
-            // For other browsers
             const url = window.URL.createObjectURL(excelBlob);
             const a = document.createElement("a");
             document.body.appendChild(a);
@@ -94,6 +49,7 @@ const ProductWiseTable = (props) => {
             document.body.removeChild(a);
         }
     };
+
     const getFirstColumn = (item) => {
         if (heading === "Month") {
             return item.month_year
@@ -102,8 +58,10 @@ const ProductWiseTable = (props) => {
             return item.territory_name.territory_name
 
         }
-        else if (heading === "Employee") { }
-        return item.emp_code
+        else if (heading === "Employee") {
+            return item.emp_code
+        }
+
     }
     return (
         <>
@@ -165,7 +123,7 @@ const ProductWiseTable = (props) => {
                         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 h-full">
                             <thead className="text-xs text-gray-900 text-center bg-gray-100">
                                 <tr>
-                                    <th className="px-4 py-1 text-center text-[0.6rem] border font-medium text-gray-800">
+                                    <th className="px-4 py-1 text-center text-[0.6rem] border font-bold text-gray-800">
                                         Crop
                                     </th>
 
@@ -180,7 +138,7 @@ const ProductWiseTable = (props) => {
                                         return maxProductsCrop?.products.map((el) => (
                                             <th
                                                 key={el.product}
-                                                className="px-2 py-1 text-center text-[0.6rem] border font-medium text-gray-800"
+                                                className="px-2 py-1 text-center text-[0.6rem] border font-bold text-gray-800"
                                             >
                                                 {el.product}
                                             </th>
@@ -192,7 +150,7 @@ const ProductWiseTable = (props) => {
                                 {datas.map((item, idx) => (
                                     <tr key={idx}>
                                         {/* Crop Name Column */}
-                                        <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                                        <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border w-12">
                                             {item.crop}
                                         </td>
 
@@ -209,15 +167,50 @@ const ProductWiseTable = (props) => {
                                                 return (
                                                     <td
                                                         key={product.product}
-                                                        className="px-2 py-1 text-center text-[0.6rem] text-gray-900 border"
+                                                        className="px-2 py-1 text-center text-[0.6rem] text-gray-900 border w-12"
                                                     >
-                                                        {matchingProduct ? props.title === "Month wise - Crop & Product Wise Demo ( Nos )" ? matchingProduct.count : matchingProduct.recDoseSum : 0}
+                                                        {matchingProduct
+                                                            ? props.title === "Month wise - Crop & Product Wise Demo ( Nos )"
+                                                                ? matchingProduct.count
+                                                                : matchingProduct.recDoseSum
+                                                            : 0}
                                                     </td>
                                                 );
                                             });
                                         })()}
                                     </tr>
                                 ))}
+
+                                {/* Last Row: Sum of all columns (except for crop) */}
+                                <tr className="font-bold">
+                                    <td className="px-2 py-1 text-center text-[0.6rem] text-gray-900 border w-12">
+                                        Total
+                                    </td>
+                                    {(() => {
+                                        const maxProductsCrop = datas.reduce((max, current) => {
+                                            return current.products.length > max.products.length ? current : max;
+                                        }, datas[0]);
+                                        const sums = maxProductsCrop?.products.map((product) => {
+                                            return datas.reduce((sum, item) => {
+                                                const matchingProduct = item.products.find(
+                                                    (prod) => prod.product === product.product
+                                                );
+                                                if (matchingProduct) {
+                                                    // Choose the correct property to sum
+                                                    return sum + (props.title === "Month wise - Crop & Product Wise Demo ( Nos )"
+                                                        ? matchingProduct.count
+                                                        : matchingProduct.recDoseSum);
+                                                }
+                                                return sum;
+                                            }, 0);
+                                        });
+                                        return sums?.map((sum, idx) => (
+                                            <td key={idx} className="px-2 py-1 text-center text-[0.6rem] text-gray-900 border w-12">
+                                                {sum}
+                                            </td>
+                                        ));
+                                    })()}
+                                </tr>
                             </tbody>
                         </table>
                     </div>

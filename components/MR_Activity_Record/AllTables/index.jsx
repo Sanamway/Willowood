@@ -6,7 +6,30 @@ import ProductWiseTable from "./ProductWiseTable";
 const AllTables = (props) => {
   const { monthlyData,
     teritoryData,
-    empData, prductWiseDemo, loading } = props
+    empData, prductWiseDemo, loading, filterState } = props
+
+
+  const getGeoHeading = () => {
+    console.log("nop", typeof filterState.bgId)
+    if (typeof filterState.bgId === "number" && filterState.buId === "All") {
+      return "Business Unit"
+
+    }
+    else if (typeof filterState.buId === "number" && filterState.zId === "All") {
+      return "Zone"
+    }
+    else if (typeof filterState.zId === "number" && filterState.rId === "All") {
+      return "Region"
+    }
+    else if (typeof filterState.rId === "number" && filterState.tId === "All") {
+      return "Territory"
+    }
+    else if (typeof filterState.tId === "number") {
+      return "Territory"
+    }
+
+
+  }
   return (
     <div className="w-full flex flex-col  md:flex w-1/2 flex-row lg:w-full flex flex-col mb-20 ">
       {loading && (
@@ -34,7 +57,7 @@ const AllTables = (props) => {
         {/* Product Brand Table  */}
 
         <MonthWiseTable
-          heading={"Geo Area"}
+          heading={getGeoHeading()}
           title={"Month wise - Area wise ( Territory to BU ) Activity Summary"}
           color={"bg-white"}
           datas={teritoryData}
@@ -48,7 +71,7 @@ const AllTables = (props) => {
         <MonthWiseTable
           heading={"Employee"}
           title={
-            "Area wise ( Territory to BU ) Activity Summary"
+            "Employee wise Activity Summary."
           }
           color={"bg-white"}
           datas={empData}

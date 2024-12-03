@@ -6,13 +6,16 @@ import { url } from "@/constants/url";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import { Dialog, Transition } from "@headlessui/react";
+import * as XLSX from "xlsx";
 // import ConfirmationModal from "../modals/ConfirmationModal";
 
 import toast, { Toaster } from "react-hot-toast";
 import moment from "moment";
 import ReactPaginate from "react-paginate";
+
+import { TbFileDownload } from "react-icons/tb";
 import DatePicker from "react-datepicker";
- import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker.css";
 const NewDealer = () => {
   const csvHeaders = [
     { label: "Id", key: "ds_id" },
@@ -49,12 +52,12 @@ const NewDealer = () => {
           paging: true,
           page: currentPage,
           size: 50,
-      
+
         },
         headers: headers,
       });
       const apires = await respond.data.data.data;
-     
+
       setData(apires);
       const count = await respond.data.data.count;
       setDataCount(count)
@@ -69,7 +72,7 @@ const NewDealer = () => {
     console.log("zol", pageNumber)
     setCurrentPage(pageNumber);
   };
- 
+
 
   const deleteHandler = (id) => {
     setisOpen(true);
@@ -119,8 +122,8 @@ const NewDealer = () => {
 
   // All Filters
 
-   // All Filters
-   const [filterState, setFilterState] = useState({
+  // All Filters
+  const [filterState, setFilterState] = useState({
     bgId: null,
     buId: null,
     zId: null,
@@ -189,7 +192,7 @@ const NewDealer = () => {
           .filter((item) => Number(item.bg_id) === Number(segmentId))
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -214,7 +217,7 @@ const NewDealer = () => {
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
           .filter((item) => Number(item.z_id) === Number(zoneId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -244,7 +247,7 @@ const NewDealer = () => {
           .filter((item) => Number(item.z_id) === Number(zoneId))
           .filter((item) => Number(item.r_id) === Number(regionId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -403,7 +406,7 @@ const NewDealer = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -449,12 +452,12 @@ const NewDealer = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -499,12 +502,12 @@ const NewDealer = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -539,12 +542,12 @@ const NewDealer = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -576,17 +579,17 @@ const NewDealer = () => {
   }, []);
 
   useEffect(() => {
-    if( filterState.buId)
-    getData(
-      currentPage.selected + 1,
-      filterState.bgId,
-      filterState.buId,
-      filterState.zId,
-      filterState.rId,
-      filterState.tId,
-      filterState.startDate,
-      filterState.empCode
-    );
+    if (filterState.buId)
+      getData(
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.empCode
+      );
   }, [
     currentPage.selected + 1,
     filterState.bgId,
@@ -598,7 +601,203 @@ const NewDealer = () => {
     filterState.empCode,
   ]);
 
+  const [excelLoading, setExcelLoading] = useState(false)
+  const getExcelsheet = async (
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    from,
 
+    empCode
+  ) => {
+    try {
+      setExcelLoading(true)
+      const respond = await axios.get(`${url}/api/get_mr_target_grid`, {
+        headers: headers,
+        params: {
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          year: moment(from).format("YYYY"),
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          emp_code: empCode,
+
+
+        },
+      });
+      const apires = await respond.data.data;
+      const ws = XLSX.utils.json_to_sheet(apires.map((item) => {
+        return {
+
+
+          ["Year"]: item.year,
+          ["Emp_Code"]: item.emp_code,
+          ["Emp_Name"]: item.emp_name,
+          ["Party_Code"]: item.customer_code,
+          ["Party_Name"]: item.party_name,
+          ["Product_Cat"]: item.product_category,
+          ["Prev_Y1_Tot"]: item.fy_1,
+          ["Prev_Y2_Tot"]: item.fy_2,
+          ["Apr"]: item.apr,
+          ["May"]: item.may,
+          ["June"]: item.june,
+          ["Q1_Plan_Tot"]: Number(item.apr + item.may + item.june).toFixed(2),
+          ["July"]: item.july,
+          ["Aug"]: item.aug,
+          ["Sept"]: item.sep,
+          ["Q2_Plan_Tot"]: Number(item.july + item.aug + item.sep).toFixed(2),
+          ["Oct"]: item.oct,
+          ["Nov"]: item.nov,
+          ["Dec"]: item.dec,
+          ["Q3_Plan_Tot"]: Number(item.oct + item.nov + item.dec).toFixed(2),
+          ["Jan"]: item.jan,
+          ["Feb"]: item.feb,
+          ["March"]: item.march,
+          ["Q4_Plan_Tot"]: Number(item.jan + item.feb + item.march).toFixed(2),
+          ["Year_total"]: (Number(item.apr + item.may + item.june) +
+            Number(item.july + item.aug + item.sep) +
+            Number(item.oct + item.nov + item.dec) +
+            Number(item.jan + item.feb + item.march)).toFixed(2),
+          ["Territory"]: item.territory_name,
+          ["Region"]: item.region_name,
+          ["Zone"]: item.zone_name,
+          ["Units"]: item.business_unit_name,
+          ["Segement"]: item.business_segment,
+          ["Company"]: item.cmpny_name,
+
+        }
+      }));
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+      XLSX.writeFile(wb, `Dealer_Target.xlsx`);
+      setExcelLoading(false)
+    } catch (error) {
+      console.log("zpi", error)
+      setExcelLoading(false)
+
+    }
+
+
+
+
+  };
+  const LoaderExcel = () => {
+    return (
+      <div class="flex space-x-1   justify-center items-center bg-white  ">
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+        <div class="h-2 w-2 bg-red-400 rounded-full animate-bounce"></div>
+      </div>
+    );
+  };
+  const filterDisableOption = (currentFilter) => {
+    function getLastAssignedKey(filterState) {
+      // Define an array of keys in the order you want to check
+      const keys = ['bgId', 'buId', 'zId', 'rId', 'tId'];
+
+      // Iterate through the keys in reverse order
+      for (let i = keys.length - 1; i >= 0; i--) {
+        const key = keys[i];
+        if (typeof filterState[key] === 'number' && !isNaN(filterState[key])) {
+          return key;
+        }
+      }
+
+      // If no valid number is found, return null or undefined
+      return null;
+    }
+
+    console.log("zpo", currentFilter)
+    const role = localStorageItems.roleId
+    console.log("pop", getLastAssignedKey(filterState) === "tId")
+    if (role === 9) {
+
+      switch (currentFilter) {
+        case "Teritory": if (
+          getLastAssignedKey(filterState) === "tId") { return true }
+        else {
+          return false
+
+        }
+        case "Region": if (
+          getLastAssignedKey(filterState) === "tId" || getLastAssignedKey(filterState) === "rId") { return true }
+        else {
+          return false
+
+        }
+        case "Zone": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId") { return true }
+        else {
+          return false
+
+        }
+        case "BU": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId") { return true }
+        else {
+          return false
+
+        }
+        case "BG": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId" || getLastAssignedKey(filterState) === "bgId") { return true }
+        else {
+          return false
+
+        }
+      }
+
+    }
+    else {
+      switch (currentFilter) {
+        case "Territory": if (
+          role === 6) { return true }
+        else {
+          return false
+
+        }
+        case "Region": if (role === 6 || role === 5
+        ) { return true }
+        else { return false }
+        case "Zone": if (role === 6 ||
+          role === 5 ||
+          role === 4) {
+          return true
+        }
+        else { return false }
+        case "BU": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3) {
+          return true
+        }
+        else {
+          false
+        }
+        case "BG": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3 ||
+          role === 10) {
+          return true
+        }
+        else {
+          return false
+        }
+
+      }
+
+    }
+
+  }
   const { name } = router.query;
   return (
     <Layout>
@@ -609,29 +808,37 @@ const NewDealer = () => {
             {name ? name : "M.R. Dealer Target"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer">
-            <div className="search gap-2 mx-8">
-              <div className="container"></div>
-            </div>
-            <h2>
-              {/* <CSVLink data={data} headers={csvHeaders}>
-          <TbFileDownload
-            className="text-green-600"
-            size={34}
-          ></TbFileDownload>
-        </CSVLink> */}
-            </h2>
+            <div className="flex items-center gap-2 cursor-pointer pr-4">
+              {" "}
+              {excelLoading ? <LoaderExcel
+              /> : <TbFileDownload
+                className="text-green-600 cursor-pointer "
+                size={32}
+                onClick={() => getExcelsheet(
 
-            <h2>
-              <AiTwotoneHome
-                className="text-black"
-                size={34}
-                onClick={() => {
-                  router.push({
-                    pathname: "/",
-                  });
-                }}
-              ></AiTwotoneHome>
-            </h2>
+                  filterState.bgId,
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.startDate,
+                  filterState.empCode
+                )
+                }
+              ></TbFileDownload>}
+
+
+              <h2>
+                <AiTwotoneHome
+                  className="text-black-500"
+                  size={34}
+                  onClick={() => {
+                    router.push("/");
+                  }}
+                ></AiTwotoneHome>
+              </h2>
+            </div>
+
             <button
               onClick={() => {
                 router.push({
@@ -669,11 +876,7 @@ const NewDealer = () => {
               }
             }}
             disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4 ||
-              localStorageItems.roleId === 3 ||
-              localStorageItems.roleId === 10
+              filterDisableOption("BG")
             }
           >
             <option value={"All"} className="font-bold">
@@ -707,11 +910,7 @@ const NewDealer = () => {
                 });
               }
             }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4 ||
-              localStorageItems.roleId === 3
+            disabled={filterDisableOption("BU")
             }
           >
             <option value={"All"}>- All Business Unit -</option>
@@ -742,10 +941,7 @@ const NewDealer = () => {
                 });
               }
             }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4
+            disabled={filterDisableOption("Zone")
             }
           >
             <option value={"All"}>- All Zone -</option>
@@ -762,8 +958,7 @@ const NewDealer = () => {
             id="stateSelect"
             value={filterState.rId}
             disabled={
-              localStorageItems.roleId === 6 || localStorageItems.roleId === 5
-            }
+              filterDisableOption("Region")}
             onChange={(e) => {
               if (e.target.value === "All") {
                 setFilterState({
@@ -792,7 +987,7 @@ const NewDealer = () => {
             className="border rounded px-2 py-1 w-1/2 h-8"
             id="stateSelect"
             value={filterState.tId}
-            disabled={localStorageItems.roleId === 6}
+            disabled={filterDisableOption("Territory")}
             onChange={(e) =>
               setFilterState({
                 ...filterState,
@@ -958,15 +1153,15 @@ const NewDealer = () => {
                             yr: item.year,
                             custCode: item.customer_code,
                             tDes: item.territory_name,
-                            tId:item.t_id,
+                            tId: item.t_id,
                             bgDes: item.business_segment,
-                            bgId:item.bg_id,
+                            bgId: item.bg_id,
                             buDes: item.business_unit_name,
-                            buId:item.bu_id,
+                            buId: item.bu_id,
                             zDes: item.zone_name,
-                            zId:item.z_id,
+                            zId: item.z_id,
                             rDes: item.region_name,
-                            rId:item.r_id,
+                            rId: item.r_id,
                             type: "View",
                           },
                         });
@@ -984,16 +1179,16 @@ const NewDealer = () => {
                             yr: item.year,
                             custCode: item.customer_code,
                             tDes: item.territory_name,
-                            tId:item.t_id,
+                            tId: item.t_id,
                             bgDes: item.business_segment,
-                            bgId:item.bg_id,
+                            bgId: item.bg_id,
                             buDes: item.business_unit_name,
-                            buId:item.bu_id,
+                            buId: item.bu_id,
                             zDes: item.zone_name,
-                            zId:item.z_id,
+                            zId: item.z_id,
                             rDes: item.region_name,
-                            rId:item.r_id,
-                           
+                            rId: item.r_id,
+
                             type: "Edit",
                           },
                         });
@@ -1126,22 +1321,22 @@ const NewDealer = () => {
             </tbody>
           </table>
           <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
-  <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
-      Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
-      <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
-      <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
-    </div>
-    <ReactPaginate
-      previousLabel={"Previous"}
-      nextLabel={"Next"}
-      breakLabel={"..."}
-      pageCount={pageCount}
-      onPageChange={handlePageChange}
-      containerClassName={"pagination"}
-      activeClassName={"active"}
-      className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
-    />
-  </div>
+            <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
+              Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
+              <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
+              <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
+            </div>
+            <ReactPaginate
+              previousLabel={"Previous"}
+              nextLabel={"Next"}
+              breakLabel={"..."}
+              pageCount={pageCount}
+              onPageChange={handlePageChange}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+              className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
+            />
+          </div>
         </div>
       </div>
 

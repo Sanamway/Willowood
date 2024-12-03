@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import moment from "moment";
 
 import { useRouter } from "next/router";
-import AllTables from "./AllTables";
-import AllCharts from "./AllCharts";
+import AllTables from "../../components/MR_Activity_Record/AllTables";
+import AllCharts from "../../components/MR_Activity_Record/AllCharts";
 import Layout from "@/components/Layout1";
 import axios from "axios";
 import { url } from "@/constants/url";
@@ -727,7 +727,111 @@ const ChartReports = () => {
 
   }
 
+  console.log("pol", filterState)
+  const filterDisableOption = (currentFilter) => {
+    function getLastAssignedKey(filterState) {
+      // Define an array of keys in the order you want to check
+      const keys = ['bgId', 'buId', 'zId', 'rId', 'tId'];
 
+      // Iterate through the keys in reverse order
+      for (let i = keys.length - 1; i >= 0; i--) {
+        const key = keys[i];
+        if (typeof filterState[key] === 'number' && !isNaN(filterState[key])) {
+          return key;
+        }
+      }
+
+      // If no valid number is found, return null or undefined
+      return null;
+    }
+
+    console.log("zpo", currentFilter)
+    const role = localStorageItems.roleId
+    console.log("pop", getLastAssignedKey(filterState) === "tId")
+    if (role === 9) {
+
+      switch (currentFilter) {
+        case "Teritory": if (
+          getLastAssignedKey(filterState) === "tId") { return true }
+        else {
+          return false
+
+        }
+        case "Region": if (
+          getLastAssignedKey(filterState) === "tId" || getLastAssignedKey(filterState) === "rId") { return true }
+        else {
+          return false
+
+        }
+        case "Zone": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId") { return true }
+        else {
+          return false
+
+        }
+        case "BU": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId") { return true }
+        else {
+          return false
+
+        }
+        case "BG": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId" || getLastAssignedKey(filterState) === "bgId") { return true }
+        else {
+          return false
+
+        }
+      }
+
+    }
+    else {
+      switch (currentFilter) {
+        case "Territory": if (
+          role === 6) { return true }
+        else {
+          return false
+
+        }
+        case "Region": if (role === 6 || role === 5
+        ) { return true }
+        else { return false }
+        case "Zone": if (role === 6 ||
+          role === 5 ||
+          role === 4) {
+          return true
+        }
+        else { return false }
+        case "BU": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3) {
+          return true
+        }
+        else {
+          false
+        }
+        case "BG": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3 ||
+          role === 10) {
+          return true
+        }
+        else {
+          return false
+        }
+
+      }
+
+    }
+
+  }
   return (
     <Layout>
       <div className="h-[100%] overflow-x-auto">
@@ -783,11 +887,15 @@ const ChartReports = () => {
                 className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                 id="stateSelect"
                 value={filterState.bgId}
+                disabled={
+                  filterDisableOption("BG")
+                }
+
                 onChange={(e) => {
                   if (e.target.value === "All") {
                     setFilterState({
                       ...filterState,
-                      bgId: e.target.value,
+                      bgId: Number(e.target.value),
                       buId: "All",
                       zId: "All",
                       rId: "All",
@@ -796,17 +904,15 @@ const ChartReports = () => {
                   } else {
                     setFilterState({
                       ...filterState,
-                      bgId: e.target.value,
+                      bgId: Number(e.target.value),
+                      buId: "All",
+                      zId: "All",
+                      rId: "All",
+                      tId: "All",
                     });
                   }
                 }}
-                disabled={
-                  localStorageItems.roleId === 6 ||
-                  localStorageItems.roleId === 5 ||
-                  localStorageItems.roleId === 4 ||
-                  localStorageItems.roleId === 3 ||
-                  localStorageItems.roleId === 10
-                }
+
               >
                 <option value={"All"} className="font-bold">
                   - All Business Segment -
@@ -829,7 +935,7 @@ const ChartReports = () => {
                   if (e.target.value === "All") {
                     setFilterState({
                       ...filterState,
-                      buId: e.target.value,
+                      buId: Number(e.target.value),
 
                       zId: "All",
                       rId: "All",
@@ -838,15 +944,15 @@ const ChartReports = () => {
                   } else {
                     setFilterState({
                       ...filterState,
-                      buId: e.target.value,
+                      buId: Number(e.target.value),
+                      zId: "All",
+                      rId: "All",
+                      tId: "All",
                     });
                   }
                 }}
                 disabled={
-                  localStorageItems.roleId === 6 ||
-                  localStorageItems.roleId === 5 ||
-                  localStorageItems.roleId === 4 ||
-                  localStorageItems.roleId === 3
+                  filterDisableOption("BU")
                 }
               >
                 <option value={"All"}>- All Business Unit -</option>
@@ -866,21 +972,21 @@ const ChartReports = () => {
                   if (e.target.value === "All") {
                     setFilterState({
                       ...filterState,
-                      zId: e.target.value,
+                      zId: Number(e.target.value),
                       rId: "All",
                       tId: "All",
                     });
                   } else {
                     setFilterState({
                       ...filterState,
-                      zId: e.target.value,
+                      zId: Number(e.target.value),
+                      rId: "All",
+                      tId: "All",
                     });
                   }
                 }}
                 disabled={
-                  localStorageItems.roleId === 6 ||
-                  localStorageItems.roleId === 5 ||
-                  localStorageItems.roleId === 4
+                  filterDisableOption("Zone")
                 }
               >
                 <option value={"All"}>- All Zone -</option>
@@ -897,20 +1003,20 @@ const ChartReports = () => {
                 id="stateSelect"
                 value={filterState.rId}
                 disabled={
-                  localStorageItems.roleId === 6 ||
-                  localStorageItems.roleId === 5
+                  filterDisableOption("Region")
                 }
                 onChange={(e) => {
                   if (e.target.value === "All") {
                     setFilterState({
                       ...filterState,
-                      rId: e.target.value,
+                      rId: Number(e.target.value),
                       tId: "All",
                     });
                   } else {
                     setFilterState({
                       ...filterState,
-                      rId: e.target.value,
+                      rId: Number(e.target.value),
+                      tId: "All",
                     });
                   }
                 }}
@@ -928,11 +1034,13 @@ const ChartReports = () => {
                 className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                 id="stateSelect"
                 value={filterState.tId}
-                disabled={localStorageItems.roleId === 6}
+                disabled={
+                  filterDisableOption("Territory")
+                }
                 onChange={(e) =>
                   setFilterState({
                     ...filterState,
-                    tId: e.target.value,
+                    tId: Number(e.target.value),
                   })
                 }
               >
@@ -1003,6 +1111,7 @@ const ChartReports = () => {
                   empData={mrActivityScoreEmp}
                   prductWiseDemo={cropWiseTable}
                   loading={tableLoading}
+                  filterState={filterState}
 
                 />
               </div>
