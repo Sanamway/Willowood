@@ -63,7 +63,7 @@ const FarmerMeet = () => {
       const count = await respond.data.data.Total_count;
       setPageCount(Math.ceil(count / 50));
       setDataCount(count)
-      setData(apires);
+      setData(apires.map((item) => { return { verified: item.verified === "Yes" ? "Yes" : false, approved: item.approved === "Yes" ? "Yes" : false, ...item } }));
     } catch (error) {
       setData([]);
     }
@@ -750,7 +750,7 @@ const FarmerMeet = () => {
   const getAllActionButton = (item) => {
     let role = localStorageItems.roleId
     switch (role) {
-      case 1: return <div>
+      case 1: return <div className="flex items-center">
 
 
         <button
@@ -767,6 +767,7 @@ const FarmerMeet = () => {
         >
           Verify
         </button>
+        <input type="Checkbox" className="ml-2" checked={item.verified} />
         <button
           onClick={() => {
             setShowVerifyModal(true);
@@ -782,6 +783,7 @@ const FarmerMeet = () => {
         >
           Approve
         </button>
+        <input type="Checkbox" className="ml-2" checked={item.approved} />
         <button
           className="b text-black hover:text-red-500 ml-2"
           onClick={() => {
@@ -796,7 +798,7 @@ const FarmerMeet = () => {
           Delete
         </button>
       </div>
-      case 8: return <div>
+      case 8: return <div className="flex items-center">
 
 
         <button
@@ -814,6 +816,7 @@ const FarmerMeet = () => {
         >
           Verify
         </button>
+        <input type="Checkbox" className="ml-2" checked={item.verified} />
         <button
           onClick={() => {
             setShowVerifyModal(true);
@@ -829,6 +832,7 @@ const FarmerMeet = () => {
         >
           Approve
         </button>
+        <input type="Checkbox" className="ml-2" checked={item.approved} />
         <button
           className="b text-black hover:text-red-500 ml-2"
           onClick={() => {
@@ -844,7 +848,7 @@ const FarmerMeet = () => {
         </button>
       </div>
 
-      case 4: return <div>
+      case 4: return <div className="flex items-center">
 
 
         <button
@@ -863,7 +867,7 @@ const FarmerMeet = () => {
         </button>
       </div>
 
-      case 5: return <div>
+      case 5: return <div className="flex items-center">
 
         <button
           onClick={() => {
@@ -881,7 +885,7 @@ const FarmerMeet = () => {
         </button>
       </div>
 
-      case 6: return <div>
+      case 6: return <div className="flex items-center">
 
 
         <button
@@ -897,9 +901,10 @@ const FarmerMeet = () => {
         >
           Verify
         </button>
+        <input type="Checkbox" className="ml-2" checked={item.verified} />
       </div>
 
-      case 9: return <div>
+      case 9: return <div className="flex items-center">
         <button
           disabled={item.verified === "Yes"}
           onClick={() => {
@@ -913,6 +918,16 @@ const FarmerMeet = () => {
         >
           Verify
         </button>
+        <input type="Checkbox" className="ml-2" checked={item.verified}
+          onClick={() => setData(data.map((el, idx) => {
+            if (el.f_meet_no === item.f_meet_no) {
+              return { ...item, verified: "Yes" }
+            }
+            else {
+              return { ...item }
+
+            }
+          }))} />
       </div>
 
     }
@@ -1110,6 +1125,67 @@ const FarmerMeet = () => {
 
     }
 
+  }
+
+  const getTopActionButton = () => {
+    let role = localStorageItems.roleId
+    switch (role) {
+      case 1: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
+          onClick={() => setData(data.map((item) => { return { ...item, verified: "Yes" } }))}
+        >Verify All</button>
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
+          onClick={() => setData(data.map((item) => { return { ...item, approved: "Yes" } }))}
+        >Approve All</button>
+      </div>
+      case 8: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
+          onClick={() => setData(data.map((item) => { return { ...item, verified: "Yes" } }))}
+        >Verify All</button>
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
+          onClick={() => setData(data.map((item) => { return { ...item, approved: "Yes" } }))}
+        >Approve All</button>
+      </div>
+
+      case 4: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
+          onClick={() => setData(data.map((item) => { return { ...item, approved: "Yes" } }))}
+        >Approve All</button>
+      </div>
+
+      case 5: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
+          onClick={() => setData(data.map((item) => { return { ...item, approved: "Yes" } }))}
+        >Approve All</button>
+      </div>
+
+      case 6: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
+          onClick={() => setData(data.map((item) => { return { ...item, verified: "Yes" } }))}
+        >Verify All</button>
+
+      </div>
+
+
+      case 9: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
+          onClick={() => setData(data.map((item) => { return { ...item, verified: "Yes" } }))}
+        >Verify All</button>
+
+      </div>
+
+
+    }
   }
   return (
     <Layout>
@@ -1345,11 +1421,12 @@ const FarmerMeet = () => {
             />
           </div>
         </div>
-
+        {getTopActionButton()}
         <div className="overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
           <table className="min-w-full divide-y border- divide-gray-200 ">
             <thead className="border-b ">
               <tr className="bg-gray-50 font-arial w-max">
+
                 <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                   Action
                 </th>
@@ -1473,6 +1550,7 @@ const FarmerMeet = () => {
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
               {data.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
+
                   <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
                     {getAllActionButton(item)}
                   </td>

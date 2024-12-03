@@ -668,7 +668,6 @@ const NewDealer = () => {
           ["Emp Name"]: item.emp_name,
           ["Party Code"]: item.customer_code,
           ["Party Name"]: item.party_name,
-
           ["Party Complete Address"]: item.party_address,
           ["Territory"]: item.territory_name,
           ["Region"]: item.region_name,
@@ -676,8 +675,6 @@ const NewDealer = () => {
           ["Business_Unit"]: item.business_unit_name,
           ["Company"]: item.cmpny_name,
           ["Deleted"]: item.isDeleted ? "Yes" : "No",
-
-
 
         }
       }));
