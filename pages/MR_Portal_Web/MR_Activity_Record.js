@@ -7,6 +7,7 @@ import AllCharts from "../../components/MR_Activity_Record/AllCharts";
 import Layout from "@/components/Layout1";
 import axios from "axios";
 import { url } from "@/constants/url";
+import { AiTwotoneHome } from "react-icons/ai";
 
 const ChartReports = () => {
   const router = useRouter();
@@ -720,6 +721,9 @@ const ChartReports = () => {
 
 
   const handleGetAllData = () => {
+    setMrActivityScoreMonthly([])
+    setMrActivityScoreTeritory([])
+    setMrActivityScoreEmp([])
     getMrActivityScoreMonthly()
     getMrActivityScoreTeritory()
     getMrActivityScoreEmp()
@@ -832,9 +836,28 @@ const ChartReports = () => {
     }
 
   }
+  const { name } = router.query;
   return (
     <Layout>
       <div className="h-[100%] overflow-x-auto">
+        <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
+          <h2 className="font-arial font-normal text-3xl  py-2 whitespace-nowrap">
+            {name ? name : "MR Summary Activity"}
+          </h2>
+
+          <div className="flex items-center gap-2 cursor-pointer pr-4">
+            {" "}
+            <h2>
+              <AiTwotoneHome
+                className="text-black-500"
+                size={34}
+                onClick={() => {
+                  router.push("/");
+                }}
+              ></AiTwotoneHome>
+            </h2>
+          </div>
+        </div>
         <section className="outer  w-full px-2  bg-black/5   ">
           <div className="flex flex-col gap-2 py-4 lg:flex-row py-4">
             <div className="flex flex-row gap-4 ">

@@ -33,6 +33,9 @@ const RegionForm = () => {
         mobile: apires[0].mobile_no,
         email: apires[0].email_id,
         region: apires[0].region_name,
+        mrkt: apires[0].rdm_name,
+        mrktMobile: apires[0].rdm_mobile_no,
+        mrktEmail: apires[0].rdm_email_id,
       });
     } catch (error) {
       console.log(error);
@@ -127,7 +130,7 @@ const RegionForm = () => {
           .filter((item) => Number(item.bg_id) === Number(segmentId))
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -156,21 +159,22 @@ const RegionForm = () => {
     region: Yup.string().required("Region is required"),
     email: Yup.string()
       .required("Email is required")
-      .email()
-      .matches(/^(?!.*@[^,]*,)/),
-    mobile: Yup.number()
-      .transform((value, originalValue) => {
-        if (originalValue === "") return undefined;
-        return Number(value);
-      })
+      .email("Please enter a valid email address")
+      .matches(/^(?!.*@[^,]*,)/, "Email cannot contain commas"),
+    mobile: Yup.string()
       .required("Mobile No is required")
-      .test("is-valid-number", "Invalid Mobile Number", (value) => {
-        if (!value) return false;
-        const stringValue = value.toString();
-        return /^[6-9]\d{9}$/.test(stringValue);
-      })
+
       .typeError("Mobile No must be a valid number"),
-    hod: Yup.string().required("hod is required"),
+    hod: Yup.string().required("HOD is required"),
+    mrkt: Yup.string().required("Market is required"),
+    mrktMobile: Yup.string()
+      .required("Market Mobile No is required")
+
+      .typeError("Mobile No must be a valid number"),
+    mrktEmail: Yup.string()
+      .required("Email is required")
+      .email("Please enter a valid email address")
+      .matches(/^(?!.*@[^,]*,)/, "Email cannot contain commas"),
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -192,6 +196,9 @@ const RegionForm = () => {
         region_name: regionState.region,
         c_name: "No Worries",
         ul_name: "No Man",
+        rdm_name: regionState.mrkt,
+        rdm_mobile_no: regionState.mrktMobile,
+        rdm_email_id: regionState.mrktEmail,
       };
       const respond = await axios
         .post(`${url}/api/add_region`, JSON.stringify(data), {
@@ -205,6 +212,7 @@ const RegionForm = () => {
           }, [3000]);
         });
     } catch (errors) {
+      console.log("nop", errors)
       const errorMessage = errors?.response?.data?.error;
       if (errorMessage?.includes("email_1")) {
         toast.error("Email already exist");
@@ -240,6 +248,9 @@ const RegionForm = () => {
         region_name: regionState.region,
         c_name: "No Worries",
         ul_name: "No Man",
+        rdm_name: regionState.mrkt,
+        rdm_mobile_no: regionState.mrktMobile,
+        rdm_email_id: regionState.mrktEmail,
       };
       const respond = await axios
         .put(
@@ -483,29 +494,32 @@ const RegionForm = () => {
                 </p>
               )}
             </div>
-            <div className="w-1/2 px-2 mt-2 relative">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="phoneField"
-              >
-                <small className="text-red-600">*</small> H.O.D Name
-              </label>
-              <input
-                className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                id="phoneField"
-                placeholder="H.O.D Name"
-                value={regionState.hod}
-                onChange={(e) =>
-                  setRegionState({ ...regionState, hod: e.target.value })
-                }
-              />
-              {formErrors.hod && (
-                <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
-                  {formErrors.hod}
-                </p>
-              )}
-            </div>
-            <div className="flex w-full justify-between gap-4 mt-4 mb-4">
+            <div className="flex flex-row w-full gap-4 px-2 relative mt-2">
+              <div className="w-full relative">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="emailField"
+                >
+                  <small className="text-red-600">*</small> Sales Person
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  id="emailField"
+                  placeholder="Sales Person Name"
+                  value={regionState.hod}
+                  onChange={(e) =>
+                    setRegionState({
+                      ...regionState,
+                      hod: e.target.value,
+                    })
+                  }
+                />
+                {formErrors.hod && (
+                  <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                    {formErrors.hod}
+                  </p>
+                )}
+              </div>
               <div className="w-full relative">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
@@ -515,12 +529,15 @@ const RegionForm = () => {
                 </label>
                 <input
                   className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                  type="text"
+                  type="number"
                   id="inputField"
                   placeholder="Mobile"
                   value={regionState.mobile}
                   onChange={(e) =>
-                    setRegionState({ ...regionState, mobile: e.target.value })
+                    setRegionState({
+                      ...regionState,
+                      mobile: e.target.value,
+                    })
                   }
                 />
                 {formErrors.mobile && (
@@ -543,12 +560,95 @@ const RegionForm = () => {
                   placeholder="Email"
                   value={regionState.email}
                   onChange={(e) =>
-                    setRegionState({ ...regionState, email: e.target.value })
+                    setRegionState({
+                      ...regionState,
+                      email: e.target.value,
+                    })
                   }
                 />
                 {formErrors.email && (
                   <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
                     {formErrors.email}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-row w-full gap-8 px-2 relative mt-2 ">
+              <div className="w-full relative">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="emailField"
+                >
+                  <small className="text-red-600">*</small> Marketing Person Name
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  id="emailField"
+                  placeholder="Marketing Person Name"
+                  value={regionState.mrkt}
+                  onChange={(e) =>
+                    setRegionState({
+                      ...regionState,
+                      mrkt: e.target.value,
+                    })
+                  }
+                />
+                {formErrors.mrkt && (
+                  <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                    {formErrors.mrkt}
+                  </p>
+                )}
+              </div>
+              <div className="w-full relative">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="inputField"
+                >
+                  <small className="text-red-600">*</small> Mobile
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  type="number"
+                  id="inputField"
+                  placeholder="Mobile"
+                  value={regionState.mrktMobile}
+                  onChange={(e) =>
+                    setRegionState({
+                      ...regionState,
+                      mrktMobile: e.target.value,
+                    })
+                  }
+                />
+                {formErrors.mrktMobile && (
+                  <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                    {formErrors.mrktMobile}
+                  </p>
+                )}
+              </div>
+              <div className="w-full relative">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="inputField"
+                >
+                  <small className="text-red-600">*</small> Email
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  type="email"
+                  id="inputField"
+                  placeholder="Email"
+                  value={regionState.mrktEmail}
+                  onChange={(e) =>
+                    setRegionState({
+                      ...regionState,
+                      mrktEmail: e.target.value,
+                    })
+                  }
+                />
+                {formErrors.mrktEmail && (
+                  <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                    {formErrors.mrktEmail}
                   </p>
                 )}
               </div>

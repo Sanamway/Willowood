@@ -117,13 +117,13 @@ const ProductWiseTable = (props) => {
                 </div>
                 {!height && (
                     <div
-                        className={`overflow-x-auto chat-scrollbar select-none ${["ab"].length > 10 ? "h-full" : "h-[16rem]"
+                        className={`overflow-x-auto chat-scrollbar select-none ${["ab"].length > 10 ? "h-full" : "h-[10rem]"
                             }`}
                     >
                         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 h-full">
                             <thead className="text-xs text-gray-900 text-center bg-gray-100">
                                 <tr>
-                                    <th className="px-4 py-1 text-center text-[0.6rem] border font-bold text-gray-800">
+                                    <th className="px-4 py-1 text-left text-[0.6rem] border font-bold text-gray-800">
                                         Crop
                                     </th>
 
@@ -150,7 +150,7 @@ const ProductWiseTable = (props) => {
                                 {datas.map((item, idx) => (
                                     <tr key={idx}>
                                         {/* Crop Name Column */}
-                                        <td className="px-2 text-center py-1 text-[0.6rem] text-gray-900 border w-12">
+                                        <td className="px-2 text-left py-1 text-[0.6rem] text-gray-900 border w-12">
                                             {item.crop}
                                         </td>
 
@@ -182,8 +182,8 @@ const ProductWiseTable = (props) => {
                                 ))}
 
                                 {/* Last Row: Sum of all columns (except for crop) */}
-                                <tr className="font-bold">
-                                    <td className="px-2 py-1 text-center text-[0.6rem] text-gray-900 border w-12">
+                                <tr className="font-bold bg-gray-300">
+                                    <td className="px-2 py-1 text-left text-[0.6rem] text-gray-900 border w-12">
                                         Total
                                     </td>
                                     {(() => {

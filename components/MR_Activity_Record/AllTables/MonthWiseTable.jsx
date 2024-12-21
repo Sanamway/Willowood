@@ -19,9 +19,8 @@ const MonthWiseTable = (props) => {
     }
 
     else if (heading === "Employee") {
-      return <div>{
-        item.emp_code}
-        <br />
+      return <div>
+
         {item.emp_name}</div>
     }
     else {
@@ -31,23 +30,46 @@ const MonthWiseTable = (props) => {
   const handledownloadExcel = () => {
     let excelData;
 
-    excelData = datas.map((item, idx) => {
-      return {
-        [props.heading]: getFirstColumn(item),
-        "Demo": item.demo,
-        "Area Cover": item.area_cover,
-        "No of Follow Up": item.no_of_followup,
-        "Field Day": item.f_day,
-        "Farmer Paric": item.farmer_participate,
-        "FGM": item.fgm,
-        "OFM": item.ofm,
-        "MFM": item.mfm,
-        "RTP": item.rtp,
-        "DV": item.dv,
-        "NFR": item.nfr,
-        "Exp": item.exp,
-      }
-    });
+    if (props.heading === "Employee") {
+      excelData = datas.map((item, idx) => {
+        return {
+          "Emp Code": item.emp_code,
+          [props.heading]: item.emp_name,
+          "Demo": item.demo,
+          "Area Cover": item.area_cover,
+          "No of Follow Up": item.no_of_followup,
+          "Field Day": item.f_day,
+          "Farmer Paric": item.farmer_participate,
+          "FGM": item.fgm,
+          "OFM": item.ofm,
+          "MFM": item.mfm,
+          "RTP": item.rtp,
+          "DV": item.dv,
+          "NFR": item.nfr,
+          "Exp": item.exp,
+        }
+      });
+    }
+    else {
+      excelData = datas.map((item, idx) => {
+        return {
+          [props.heading]: getFirstColumn(item),
+          "Demo": item.demo,
+          "Area Cover": item.area_cover,
+          "No of Follow Up": item.no_of_followup,
+          "Field Day": item.f_day,
+          "Farmer Paric": item.farmer_participate,
+          "FGM": item.fgm,
+          "OFM": item.ofm,
+          "MFM": item.mfm,
+          "RTP": item.rtp,
+          "DV": item.dv,
+          "NFR": item.nfr,
+          "Exp": item.exp,
+        }
+      });
+    }
+
 
 
     const worksheet = XLSX.utils.json_to_sheet(excelData);
@@ -137,9 +159,13 @@ const MonthWiseTable = (props) => {
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 h-full">
               <thead className="text-xs text-gray-900 text-center bg-gray-100">
                 <tr>
-                  <th className="w-12 px-4 py-1 text-center text-[0.6rem] border font-bold text-gray-800">
+                  {props.heading === "Employee" && <th className="w-12 px-4 py-1 text-left text-[0.6rem] border font-bold text-gray-800">
+                    Employee Code
+                  </th>}
+                  <th className="w-12 px-4 py-1 text-left text-[0.6rem] border font-bold text-gray-800">
                     {props.heading}
                   </th>
+
 
                   <th className="w-12 px-4 py-1 text-center text-[0.6rem] border font-bold text-gray-800">
                     Demo
@@ -193,9 +219,13 @@ const MonthWiseTable = (props) => {
               <tbody className="bg-white divide-y divide-gray-200 break-normal">
                 {datas.map((item, idx) =>
                   <tr key={idx}>
-                    <td className="w-12 px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
+                    {props.heading === "Employee" && <th className="w-12 px-4 py-1 text-left text-[0.6rem] border font-bold text-gray-800">
+                      {item.emp_code}
+                    </th>}
+                    <td className="w-12 px-2 text-left py-1 text-[0.6rem] text-gray-900 border">
                       {getFirstColumn(item)}
                     </td>
+
                     <td className="w-12 px-2 text-center py-1 text-[0.6rem] text-gray-900 border">
                       {item.demo}
                     </td>
@@ -233,10 +263,13 @@ const MonthWiseTable = (props) => {
                       {item.exp}
                     </td>
                   </tr>)}
-                {datas.length ? <tr>
+                {datas.length ? <tr className="bg-gray-300">
                   <td className="w-12 px-2 text-center py-1 text-[0.6rem] text-gray-900 border font-bold">
                     Total
                   </td>
+                  {props.heading === "Employee" && <td className="w-12 px-2 text-center py-1 text-[0.6rem] text-gray-900 border font-bold">
+                    -
+                  </td>}
                   <td className="w-12 px-2 text-center py-1 text-[0.6rem] text-gray-900 border font-bold">
                     {datas.reduce((sum, item) => sum + (item.demo || 0), 0)}
                   </td>

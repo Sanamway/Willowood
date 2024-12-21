@@ -61,7 +61,7 @@ const DemoTable = () => {
       const count = await respond.data.data.Total_count;
       setPageCount(Math.ceil(count / 50));
       setDataCount(count)
-      setData(apires);
+      setData(apires.map((item) => { return { isVerified: item.verified === "Yes" ? true : false, isApproved: item.approved === "Yes" ? true : false, ...item } }));
     } catch (error) {
       setData([]);
     }
@@ -755,12 +755,159 @@ const DemoTable = () => {
   ]);
 
   const { name } = router.query;
+  const handleApproveAll = async () => {
+
+    const approvedIds = data.filter(item => item.approved !== "Yes").filter(item => item.isApproved).map(item => item.f_demo_followup_id);
+    const newData = {
+      approved: "Yes",
+      approved_date: new Date(),
+      approved_user: window.localStorage.getItem("user_name"),
+    };
+    try {
+
+      const respond = await axios.post(`${url}/api/update_mr_demo_followup`,
+        newData,
+        {
+          headers: headers,
+          params: {
+            f_demo_followup_id: JSON.stringify(approvedIds)
+          },
+
+        });
+      const apires = await respond.data.message;
+
+      setAllApproved(false)
+      toast.success(apires);
+      getFarmerDemo(
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
+    } catch (error) { }
+  };
+
+  const handleVerifyAll = async () => {
+    const approvedIds = data.filter(item => item.verified !== "Yes").filter(item => item.isVerified).map(item => item.f_demo_followup_id);
+
+    const newData = {
+      verified: "Yes",
+      verified_date: new Date(),
+      verified_user: window.localStorage.getItem("user_name"),
+    };
+    try {
+
+      const respond = await axios.post(`${url}/api/update_mr_demo_followup`,
+        newData,
+        {
+          headers: headers,
+          params: {
+            f_demo_followup_id: JSON.stringify(approvedIds)
+          },
+
+        });
+      const apires = await respond.data.message;
+
+
+      toast.success(apires);
+      setAllVerified(false)
+
+      getFarmerDemo(
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
+    } catch (error) { }
+  };
+
+  const handleCheckboxChange = (field, value, item) => {
+    setData(prevData =>
+      prevData.map(el =>
+        el.f_demo_followup_id === item.f_demo_followup_id
+          ? { ...el, [field]: value }
+          : el
+      )
+    );
+  };
+
   const getAllActionButton = (item) => {
     let role = localStorageItems.roleId
+
     switch (role) {
-      case 1: return <div>
+      case 1:
+        return <div className="flex items-center">
+          <input type="Checkbox"
+            className="ml-1 mr-1"
+            checked={item.isVerified}
+            disabled={item.verified === "Yes"}
+            onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Verify",
+                id: item.f_demo_followup_id,
+              });
+            }}
+            disabled={item.verified === "Yes"}
 
+          >
+            Verify
+          </button>
+          <input type="Checkbox"
+            className="ml-1 mr-1"
+            checked={item.isApproved}
+            disabled={item.approved === "Yes"}
+            onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Approve",
+                id: item.f_demo_followup_id,
+              });
+            }}
+            disabled={item.approved === "Yes"}
+            className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
 
+          >
+            Approve
+          </button>
+
+          <button
+            className="b text-black hover:text-red-500 ml-2"
+            onClick={() => {
+              setShowDeleteModal(true);
+              setModalData({
+                ...modalData,
+
+                id: item.f_demo_followup_id,
+              });
+            }}
+          >
+            Delete
+          </button>
+        </div>
+
+      case 8: return <div className="flex items-center">
+        <input type="Checkbox"
+          className="ml-1 mr-1"
+          checked={item.isVerified}
+          disabled={item.verified === "Yes"}
+          onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
         <button
           onClick={() => {
             setShowVerifyModal(true);
@@ -775,6 +922,11 @@ const DemoTable = () => {
         >
           Verify
         </button>
+        <input type="Checkbox"
+          className="ml-1 mr-1"
+          checked={item.isApproved}
+          disabled={item.approved === "Yes"}
+          onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
         <button
           onClick={() => {
             setShowVerifyModal(true);
@@ -785,11 +937,12 @@ const DemoTable = () => {
             });
           }}
           disabled={item.approved === "Yes"}
-          className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+          className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
 
         >
           Approve
         </button>
+
         <button
           className="b text-black hover:text-red-500 ml-2"
           onClick={() => {
@@ -804,9 +957,65 @@ const DemoTable = () => {
           Delete
         </button>
       </div>
-      case 8: return <div>
+
+      case 4: return <div className="flex items-center">
+
+        <input type="Checkbox"
+          className="ml-1 mr-1"
+          checked={item.isApproved}
+          disabled={item.approved === "Yes"}
+          onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.f_demo_followup_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+
+        >
+          Approve
+        </button>
 
 
+      </div>
+
+      case 5: return <div className="flex items-center">
+
+        <input type="Checkbox"
+          className="ml-1 mr-1"
+          checked={item.isApproved}
+          disabled={item.approved === "Yes"}
+          onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.f_demo_followup_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+
+        >
+          Approve
+        </button>
+
+
+      </div>
+
+      case 6: return <div className="flex items-center">
+        <input type="Checkbox"
+          className="ml-1 mr-1"
+          checked={item.isVerified}
+          disabled={item.verified === "Yes"}
+          onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
         <button
           onClick={() => {
             setShowVerifyModal(true);
@@ -818,82 +1027,19 @@ const DemoTable = () => {
           }}
           disabled={item.verified === "Yes"}
 
-
         >
           Verify
         </button>
-        <button
-          onClick={() => {
-            setShowVerifyModal(true);
-            setModalData({
-              ...modalData,
-              type: "Approve",
-              id: item.f_demo_followup_id,
-            });
-          }}
-          disabled={item.approved === "Yes"}
-          className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
 
-        >
-          Approve
-        </button>
-        <button
-          className="b text-black hover:text-red-500 ml-2"
-          onClick={() => {
-            setShowDeleteModal(true);
-            setModalData({
-              ...modalData,
-
-              id: item.f_demo_followup_id,
-            });
-          }}
-        >
-          Delete
-        </button>
       </div>
 
-      case 4: return <div>
-
-
-        <button
-          onClick={() => {
-            setShowVerifyModal(true);
-            setModalData({
-              ...modalData,
-              type: "Approve",
-              id: item.f_demo_followup_id,
-            });
-          }}
-          disabled={item.approved === "Yes"}
-          className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
-        >
-          Approve
-        </button>
-      </div>
-
-      case 5: return <div>
-
-        <button
-          onClick={() => {
-            setShowVerifyModal(true);
-            setModalData({
-              ...modalData,
-              type: "Approve",
-              id: item.f_demo_followup_id,
-            });
-          }}
-          disabled={item.approved === "Yes"}
-          className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
-        >
-          Approve
-        </button>
-      </div>
-
-      case 6: return <div>
-
-
-        <button
+      case 9: return <div className="flex items-center">
+        <input type="Checkbox"
+          className="ml-1 mr-1"
+          checked={item.isVerified}
           disabled={item.verified === "Yes"}
+          onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
+        <button
           onClick={() => {
             setShowVerifyModal(true);
             setModalData({
@@ -902,25 +1048,263 @@ const DemoTable = () => {
               id: item.f_demo_followup_id,
             });
           }}
+          disabled={item.verified === "Yes"}
+
         >
           Verify
         </button>
+
       </div>
 
-      case 9: return <div>
-        <button
-          disabled={item.verified === "Yes"}
+      default:
+        return <div className="flex items-center">
+          <input type="Checkbox"
+            className="ml-1 mr-1"
+            checked={item.isVerified}
+            disabled={item.verified === "Yes"}
+            onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Verify",
+                id: item.f_demo_followup_id,
+              });
+            }}
+            disabled={item.verified === "Yes"}
+
+          >
+            Verify
+          </button>
+          <input type="Checkbox"
+            className="ml-1 mr-1"
+            checked={item.isApproved}
+            disabled={item.approved === "Yes"}
+            onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Approve",
+                id: item.f_demo_followup_id,
+              });
+            }}
+            disabled={item.approved === "Yes"}
+            className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+
+          >
+            Approve
+          </button>
+
+          <button
+            className="b text-black hover:text-red-500 ml-2"
+            onClick={() => {
+              setShowDeleteModal(true);
+              setModalData({
+                ...modalData,
+
+                id: item.f_demo_followup_id,
+              });
+            }}
+          >
+            Delete
+          </button>
+        </div>
+
+    }
+  }
+
+
+  const [allVerified, setAllVerified] = useState(false)
+  const [allApproved, setAllApproved] = useState(false)
+  const handleVerifyAllChange = (e) => {
+    const value = e.target.checked;
+    setAllVerified(value);
+    setData(prevData =>
+      prevData.map(el => ({
+        ...el,
+        isVerified: el.verified === "Yes" ? true : value
+      }))
+    );
+  };
+
+
+  const handleApproveAllChange = (e) => {
+    const value = e.target.checked;
+    setAllApproved(value);
+    setData(prevData =>
+      prevData.map(el => ({
+        ...el,
+
+        isApproved: el.verified === "Yes" ? true : value
+      }))
+    );
+  };
+
+
+  const getTopActionButton = () => {
+    let role = localStorageItems.roleId
+
+    switch (role) {
+      case 1: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+
+
+
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allVerified}
+            onChange={handleVerifyAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Verify</span>
+        </span>
+
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
           onClick={() => {
-            setShowVerifyModal(true);
-            setModalData({
-              ...modalData,
-              type: "Verify",
-              id: item.f_demo_followup_id,
-            });
+
+            handleVerifyAll()
           }}
-        >
-          Verify
-        </button>
+        >Verify All</button>
+
+
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allApproved}
+            onChange={handleApproveAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Approve</span>
+        </span>
+
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleApproveAll()
+          }}
+        >Approve All</button>
+      </div>
+      case 8: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+        <div className="inline-flex items-center">
+          <input
+            type="checkbox"
+            checked={allVerified}
+            onChange={handleVerifyAllChange}
+            className="ml-2"
+          />
+          <span className="text-xs ml-1">Select All Verify</span>
+        </div>
+
+        <div className="inline-flex items-center ml-4">
+          <input
+            type="checkbox"
+            checked={allApproved}
+            onChange={handleApproveAllChange}
+            className="ml-2"
+          />
+          <span className="text-xs ml-1">Select All Approve</span>
+        </div>
+      </div>
+
+      case 4: return <div className="flex flex-col gap-2 items-start ml-4">
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allApproved}
+            onChange={handleApproveAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Approve</span>
+        </span>
+
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleApproveAll()
+          }}
+        >Approve All</button>
+      </div>
+
+
+
+      case 5: return <div className="flex flex-col gap-2 items-start ml-4">
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allApproved}
+            onChange={handleApproveAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Approve</span>
+        </span>
+
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleApproveAll()
+          }}
+        >Approve All</button>
+      </div>
+
+
+      case 6: return <div className="flex flex-col gap-2 items-start ml-4">
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allVerified}
+            onChange={handleVerifyAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Verify</span>
+        </span>
+
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleVerifyAll()
+          }}
+        >Verify All</button>
+      </div>
+
+
+
+
+
+
+
+
+      case 9: return <div className="flex flex-col gap-2 items-start ml-4">
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allVerified}
+            onChange={handleVerifyAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Verify</span>
+        </span>
+
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleVerifyAll()
+          }}
+        >Verify All</button>
       </div>
 
     }
@@ -1351,6 +1735,7 @@ const DemoTable = () => {
             />
           </div>
         </div>
+        {getTopActionButton()}
 
         <div className="overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
           <table className="min-w-full divide-y border- divide-gray-200 ">
