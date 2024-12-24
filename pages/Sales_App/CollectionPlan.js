@@ -657,6 +657,7 @@ const AdditionalInfo = (props) => {
     };
     const [partySaleData, setPartySaleData] = useState([]);
 
+    const [allPartySaleData, setAllPartySaleData] = useState([]);
 
     const getSaleData = async (
         yr,
@@ -751,12 +752,13 @@ const AdditionalInfo = (props) => {
             const apires = await respond.data.data;
             console.log("pop", apires)
             setPartySaleData(apires)
+            setAllPartySaleData(apires.map(item => item.customer_name))
         } catch (error) {
             console.log("pp", error)
             setPartySaleData([])
         }
     };
-    console.log("zsz", partySaleData)
+
     useEffect(() => {
         if (territoryData.length &&
             zoneData.length &&
@@ -803,7 +805,7 @@ const AdditionalInfo = (props) => {
                             })
                         }
                     />
-                    <span>Rolling Plan</span>
+                    <span>Collection Plan</span>
                 </span>{" "}
                 <span className="text-white self-center">
                     <Popover as="div" className="relative border-none outline-none mt-2">
@@ -1125,8 +1127,11 @@ const AdditionalInfo = (props) => {
                                             moment(item.m_year).format('MMMM')
                                         }
                                     </td>
-                                    <td className="border border-gray-200  px-2 py-2">{item.actual}</td>
+
+
+
                                     <td className="border border-gray-200  px-2 py-2">{item.target}</td>
+                                    <td className="border border-gray-200  px-2 py-2">{item.actual}</td>
                                     <td className="border border-gray-200  px-2 py-2">
                                         {(item.actual / item.target * 100).toFixed(2)} %
 
