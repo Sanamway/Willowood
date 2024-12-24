@@ -17,6 +17,7 @@ import Profile from "../../public/userimg.jpg";
 import { FaArrowAltCircleUp } from "react-icons/fa";
 import ChartOne from "./ChartOne";
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
+
 const AdditionalInfo = (props) => {
     const router = useRouter();
     const headers = {
@@ -523,6 +524,7 @@ const AdditionalInfo = (props) => {
             setAllTableData([]);
         }
     };
+
     const [allTeamData, setAllTeamData] = useState([]);
 
     const getAllTeamStatus = async (
@@ -647,6 +649,7 @@ const AdditionalInfo = (props) => {
             filterState.rId || null,
             filterState.tId
         );
+
         getAllTeamStatus(
             filterState.yr || null,
             filterState.month || null,
@@ -690,6 +693,16 @@ const AdditionalInfo = (props) => {
     const toggleCollapse3 = () => {
         setIsCollapsed3(!isCollapsed3);
     };
+
+
+    const [isCollapsed4, setIsCollapsed4] = useState(true); // State to manage collapsibility
+
+    // Function to toggle collapsibility
+    const toggleCollapse4 = () => {
+        setIsCollapsed4(!isCollapsed4);
+    };
+
+
 
     // Calculate the total for a specific data
     const totalRow = (data) => {
@@ -806,7 +819,7 @@ const AdditionalInfo = (props) => {
                 t_id: tId === "All" || !tId ? null : tId,
                 t_des: tName,
                 c_id: 1,
-                party_name: pName
+
             };
         } else if (
             (filterState.rId && !filterState.tId)
@@ -875,7 +888,107 @@ const AdditionalInfo = (props) => {
             setPartySaleData([])
         }
     };
+    const [brandData, setBrandData] = useState([]);
+    const [categoryData, setCategoryData] = useState([]);
+    const [segmentData, setSegementData] = useState([]);
 
+    const getThreeTableData = async (
+        yr, month, bgId, buId, zId, rId, tId
+
+    ) => {
+        let endPoint = "SA_sales_Analytical";
+        let paramsData
+        const tName = territoryData.find(item => Number(item.t_id) === Number(tId))?.territory_name || '';
+        const rName = regionData.find(item => Number(item.r_id) === Number(rId))?.region_name || '';
+        const zName = zoneData.find(item => Number(item.z_id) === Number(zId))?.zone_name || '';
+        const buName = buData.find(item => Number(item.bu_id) === Number(buId))?.business_unit_name || '';
+        if (filterState.tId && filterState.tId !== "All") {
+            paramsData = {
+                year: yr || null,
+                month:
+                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                bg_id: bgId === "All" || !bgId ? null : bgId,
+                bu_id: buId === "All" || !buId ? null : buId,
+                z_id: zId === "All" || !zId ? null : zId,
+                r_id: rId === "All" || !rId ? null : rId,
+                t_id: tId === "All" || !tId ? null : tId,
+                t_des: tName,
+                c_id: 1,
+
+            };
+        } else if (
+            (filterState.rId && !filterState.tId)
+        ) {
+            paramsData = {
+                year: yr || null,
+                month:
+                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                bg_id: bgId === "All" || !bgId ? null : bgId,
+                bu_id: buId === "All" || !buId ? null : buId,
+                z_id: zId === "All" || !zId ? null : zId,
+                r_id: rId === "All" || !rId ? null : rId,
+                r_des: rName,
+                c_id: 1,
+
+            };
+        } else if ((filterState.zId && !filterState.rId)) {
+            paramsData = {
+                year: yr || null,
+                month:
+                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                bg_id: bgId === "All" || !bgId ? null : bgId,
+                bu_id: buId === "All" || !buId ? null : buId,
+                z_id: zId === "All" || !zId ? null : zId,
+                z_des: zName,
+                c_id: 1,
+
+            };
+        } else if ((filterState.buId && !filterState.zId)) {
+            paramsData = {
+                year: yr || null,
+                month:
+                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                bg_id: bgId === "All" || !bgId ? null : bgId,
+                bu_id: buId === "All" || !buId ? null : buId,
+                bu_des: buName,
+                c_id: 1,
+
+            };
+        } else {
+            paramsData = {
+                year: yr || null,
+                month:
+                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                bg_id: bgId === "All" || !bgId ? null : bgId,
+                bu_id: buId === "All" || !buId ? null : buId,
+                bu_des: buName,
+                c_id: 1,
+
+
+            };
+        }
+
+        try {
+            const respond = await axios.get(`${url}/api/${endPoint}`, {
+                headers: headers,
+
+                params: paramsData,
+            });
+
+            const apires = await respond.data.data;
+            console.log("plki", apires)
+            setBrandData(apires.combined_brand)
+            setCategoryData(apires.combined_category)
+            setSegementData(apires.combined_segment)
+
+
+        } catch (error) {
+
+            if (!error) return;
+            console.log("vbn", error)
+
+        }
+    };
     useEffect(() => {
         if (localStorageItems.roleId === 6 || localStorageItems.roleId === 5) {
 
@@ -896,10 +1009,7 @@ const AdditionalInfo = (props) => {
                 return
             }
         }
-        else {
-            return
 
-        }
 
     }, [
 
@@ -916,6 +1026,39 @@ const AdditionalInfo = (props) => {
         regionData,
         buData
     ])
+
+
+    useEffect(() => {
+
+        getThreeTableData(filterState.yr || null,
+            filterState.month || null,
+            filterState.bgId || null,
+            filterState.buId || null,
+            filterState.zId || null,
+            filterState.rId || null,
+            filterState.tId || null,
+            filterState.partyName || null);
+
+
+
+    }, [
+
+        filterState.yr,
+        filterState.month,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.partyName,
+        territoryData,
+        zoneData,
+        regionData,
+        buData
+
+    ])
+
+
     const totalTarget = totalRow(allTableData.map(item => item.target));
     const totalBudget = totalRow(allTableData.map(item => item.budget));
     const totalActual = totalRow(allTableData.map(item => item.actual));
@@ -923,6 +1066,23 @@ const AdditionalInfo = (props) => {
     const TeamTarget = totalRow(allTeamData.map(item => item.target));
     const TeamActual = totalRow(allTeamData.map(item => item.actual));
     const TeamPercentage = (TeamActual / TeamTarget * 100).toFixed(2);
+
+
+    const productYtd = totalRow(brandData.map(item => item.
+        total_ytd_new_budget_price_value
+    ));
+    const productMtd = totalRow(brandData.map(item => item.total_mtd_new_budget_price_value
+    ));
+    const productToday = totalRow(brandData.map(item => item.total_today_new_budget_price));
+
+    const brandYtd = totalRow(segmentData.map(item => item.total_ytd_new_budget_price_value));
+    const brandMtd = totalRow(segmentData.map(item => item.total_mtd_new_budget_price_value));
+    const brandToday = totalRow(segmentData.map(item => item.total_today_new_budget_price));
+
+    const segementYtd = totalRow(categoryData.map(item => item.total_ytd_new_budget_price_value));
+    const segementMtd = totalRow(categoryData.map(item => item.total_mtd_new_budget_price_value));
+    const segementToday = totalRow(categoryData.map(item => item.total_today_new_budget_price));
+
 
     return (
         <form
@@ -1409,6 +1569,196 @@ const AdditionalInfo = (props) => {
 
             </div>
 
+            <div className="overflow-x-auto">
+                <h1 className="font-bold text-center bg-yellow-300 flex justify-between items-center ">
+                    <span className="flex-grow text-center">Product Performance</span>
+
+                    {isCollapsed4 ? (
+                        <button onClick={toggleCollapse4} className="ml-auto">
+                            <FiPlus />
+                        </button>
+                    ) : (
+                        <button onClick={toggleCollapse4} className="ml-auto">
+                            <FiMinus />
+                        </button>
+                    )}
+                </h1>
+
+                {!isCollapsed4 && (
+                    <div>
+                        <table className="w-full border-collapse border border-gray-200 text-[10px] font-bold">
+                            <thead>
+                                <tr className="bg-blue-800 text-white">
+                                    <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">Category</th>
+                                    <th className="border border-gray-200 px-2 py-2">YTD Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">MTD Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">Today Sale</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {categoryData.map((item) => (
+                                    <tr className="font-bold">
+                                        <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
+                                            {item.product_category}
+
+                                        </td>
+                                        <td className="border border-gray-200  px-2 py-2">{item.total_ytd_new_budget_price_value
+                                        }</td>
+
+                                        <td className="border border-gray-200  px-2 py-2">{item.
+                                            total_mtd_new_budget_price_value}</td>
+
+
+
+                                        <td className="border border-gray-200  px-2 py-2">
+                                            {item.total_today_new_budget_price_value}
+
+                                        </td>
+                                    </tr>
+                                ))}
+
+
+
+                                {/* Row for Totals (appears at the end) */}
+                                <tr className="font-bold bg-blue-800 text-white">
+                                    <td className="border border-gray-200 px-2 py-2">Total</td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        {Number(productYtd).toFixed(2)}
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        {Number(productMtd).toFixed(2)}
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        {Number(productToday).toFixed(2)}
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+
+
+                        <h1 className="font-bold text-center bg-yellow-300 flex justify-between items-center ">
+                            <span className="flex-grow text-center">Brand</span>
+
+
+                        </h1>
+                        <table className="w-full border-collapse border border-gray-200 text-[10px] font-bold">
+                            <thead>
+                                <tr className="bg-blue-800 text-white">
+                                    <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">Brand</th>
+                                    <th className="border border-gray-200 px-2 py-2">YTD Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">MTD Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">Today Sale</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {brandData.map((item) => (
+                                    <tr className="font-bold">
+                                        <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
+                                            {item.product_brand}
+
+                                        </td>
+                                        <td className="border border-gray-200  px-2 py-2">{item.total_ytd_new_budget_price_value
+                                        }</td>
+
+                                        <td className="border border-gray-200  px-2 py-2">{item.
+                                            total_mtd_new_budget_price_value}</td>
+
+
+
+                                        <td className="border border-gray-200  px-2 py-2">
+                                            {item.total_today_new_budget_price_value}
+
+                                        </td>
+                                    </tr>
+                                ))}
+
+
+
+                                {/* Row for Totals (appears at the end) */}
+                                <tr className="font-bold bg-blue-800 text-white">
+                                    <td className="border border-gray-200 px-2 py-2">Total</td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        {Number(brandYtd).toFixed(2)}
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        {Number(brandMtd).toFixed(2)}
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        {Number(brandToday).toFixed(2)}
+                                    </td>
+
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+
+                        <h1 className="font-bold text-center bg-yellow-300 flex justify-between items-center ">
+                            <span className="flex-grow text-center">Segment</span>
+
+
+                        </h1>
+                        <table className="w-full border-collapse border border-gray-200 text-[10px] font-bold">
+                            <thead>
+                                <tr className="bg-blue-800 text-white">
+                                    <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">Segment</th>
+                                    <th className="border border-gray-200 px-2 py-2">YTD Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">MTD Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">Today Sale</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {segmentData.map((item) => (
+                                    <tr className="font-bold">
+                                        <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
+                                            {item.product_segment
+                                            }
+
+                                        </td>
+                                        <td className="border border-gray-200  px-2 py-2">{item.total_ytd_new_budget_price_value
+                                        }</td>
+
+                                        <td className="border border-gray-200  px-2 py-2">{item.
+                                            total_mtd_new_budget_price_value}</td>
+
+
+
+                                        <td className="border border-gray-200  px-2 py-2">
+                                            {item.total_today_new_budget_price_value}
+
+                                        </td>
+                                    </tr>
+                                ))}
+
+
+
+                                {/* Row for Totals (appears at the end) */}
+                                <tr className="font-bold bg-blue-800 text-white">
+                                    <td className="border border-gray-200 px-2 py-2">Total</td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        {Number(segementYtd).toFixed(2)}
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        {Number(segementMtd).toFixed(2)}
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        {Number(segementToday).toFixed(2)}
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>)}
+
+            </div>
+
             {localStorageItems.roleId === 6 || localStorageItems.roleId === 5
                 ?
                 <div>
@@ -1516,6 +1866,8 @@ const AdditionalInfo = (props) => {
                 </div>
                 : ""
             }
+
+
 
 
 
