@@ -304,17 +304,17 @@ const AdditionalInfo = (props) => {
 
   useEffect(() => {
     getMarkData(
-      moment().format("YYYY"),
+      2024,
       moment().format("MMMM"),
       window.localStorage.getItem("emp_code")
     ),
       getVerifyData(
-        moment().format('YYYY'),
+        2024,
         moment().format("MMMM"),
         window.localStorage.getItem("emp_code")
       ),
       getApproveData(
-        moment().format('YYYY'),
+        2024,
         moment().format("MMMM"),
         window.localStorage.getItem("emp_code")
       )

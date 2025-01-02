@@ -1549,21 +1549,22 @@ const Timesheet = () => {
 
   useEffect(() => {
     getMarkData(
-      moment().format("YYYY"),
-      moment().format("MMMM"),
+      2024,
+      moment(filterState.startDate).format("MMMM"),
       filterState.empCode
     ),
       getVerifyData(
-        moment().format('YYYY'),
-        moment().format("MMMM"),
+        2024,
+        moment(filterState.startDate).format("MMMM"),
         filterState.empCode
       ),
       getApproveData(
-        moment().format('YYYY'),
-        moment().format("MMMM"),
+        2024,
+        moment(filterState.startDate).format("MMMM"),
         filterState.empCode
       )
   }, [filterState.empCode])
+
   const filterDisableOption = (currentFilter) => {
     function getLastAssignedKey(filterState) {
       // Define an array of keys in the order you want to check

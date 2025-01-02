@@ -52,7 +52,7 @@ const ChartReports = () => {
     zDes: null,
     buDes: null,
     bgDes: null,
-    yr: "2024",
+    yr: "2025",
     month: "",
     empCode: "",
   });
@@ -257,7 +257,7 @@ const ChartReports = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: "2024",
+          yr: "2025",
           month: "",
           empCode: "",
         };
@@ -308,7 +308,7 @@ const ChartReports = () => {
               : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
 
           tId: "All",
-          yr: "2024",
+          yr: "2025",
           month: "",
           empCode: ""
         };
@@ -358,7 +358,7 @@ const ChartReports = () => {
 
           rId: "All",
           tId: "All",
-          yr: "2024",
+          yr: "2025",
           month: "",
           empCode: ""
         };
@@ -410,7 +410,7 @@ const ChartReports = () => {
               : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: "All",
           tId: "All",
-          yr: "2024",
+          yr: "2025",
           month: "",
           empCode: ""
         };
@@ -452,7 +452,7 @@ const ChartReports = () => {
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: "All",
           tId: "All",
-          yr: "2024",
+          yr: "2025",
           month: "",
           empCode: ""
         };
@@ -503,7 +503,7 @@ const ChartReports = () => {
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: "2024",
+          yr: "2025",
           month: "",
           empCode: ""
         });
@@ -877,7 +877,7 @@ const ChartReports = () => {
                 <option value="All" className="font-bold" disabled={true}>
                   -- Select --
                 </option>
-                {["2024", "2023"].map((item, idx) => (
+                {["2025", "2025", "2023"].map((item, idx) => (
                   <option value={item} key={idx}>
                     {item}
                   </option>
@@ -898,7 +898,7 @@ const ChartReports = () => {
                 <option value="All" className="font-bold">
                   Select
                 </option>
-                {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((item, idx) => {
+                {["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"].map((item, idx) => {
                   return (
                     <option value={item} key={idx}>
                       {item}
