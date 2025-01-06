@@ -794,7 +794,7 @@ const FeePayout = () => {
     ];
     try {
       setExcelLoading(true)
-      const respond = await axios.get(`${url}/api/get_employee_payout_emp`, {
+      const respond = await axios.get(`${url}/api/get_employee_payout`, {
         headers: headers,
         params: {
           t_id: t === "All" ? null : t,
@@ -1119,45 +1119,7 @@ const FeePayout = () => {
               ))}
           </select>
 
-          <select
-            className="border rounde` ``d px-2 py-1  w-1/2 h-8"
-            id="stateSelect"
-            value={filterState.bgId}
-            onChange={(e) => {
-              if (e.target.value === "All") {
-                setFilterState({
-                  ...filterState,
-                  bgId: e.target.value,
-                  buId: "All",
-                  zId: "All",
-                  rId: "All",
-                  tId: "All",
-                });
-              } else {
-                setFilterState({
-                  ...filterState,
-                  bgId: e.target.value,
-                });
-              }
-            }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4 ||
-              localStorageItems.roleId === 3 ||
-              localStorageItems.roleId === 10
-            }
-          >
-            <option value={"All"} className="font-bold">
-              - All Business Segment -
-            </option>
 
-            {bgData.map((item, idx) => (
-              <option value={item.bg_id} key={idx}>
-                {item.business_segment}
-              </option>
-            ))}
-          </select>
           <select
             className="border rounded px-2 py-1  w-1/2 h-8"
             id="stateSelect"

@@ -155,6 +155,12 @@ const AdditionalInfo = (props) => {
 
   const [tableData, setTableData] = useState([]);
   const getTableData = async () => {
+    let currentYear = moment().year();
+    let currentMonth = moment().month();  // 0 for January, 1 for February, etc.
+
+    if (currentMonth <= 2) {  // If the current month is January, February, or March (0, 1, 2)
+      currentYear -= 1;  // Subtract 1 from the current year
+    }
     try {
       const respond = await axios.get(`${url}/api/get_mr_count`, {
         headers: headers,
@@ -162,7 +168,7 @@ const AdditionalInfo = (props) => {
           emp_code: localStorageItems.empCode,
           t_id: localStorageItems.tId,
           c_id: localStorageItems.cId,
-          year: moment().year(),
+          year: currentYear,
           count_type: "year",
         },
       });
@@ -176,6 +182,12 @@ const AdditionalInfo = (props) => {
   const [targetData, setTargetData] = useState([]);
 
   const getTargetData = async () => {
+    let currentYear = moment().year();
+    let currentMonth = moment().month();  // 0 for January, 1 for February, etc.
+
+    if (currentMonth <= 2) {  // If the current month is January, February, or March (0, 1, 2)
+      currentYear -= 1;  // Subtract 1 from the current year
+    }
     try {
       const respond = await axios.get(`${url}/api/mr_dealer_sale_target`, {
         headers: headers,
@@ -183,7 +195,7 @@ const AdditionalInfo = (props) => {
           emp_code: localStorageItems.empCode,
           t_id: localStorageItems.tId,
           c_id: localStorageItems.cId,
-          year: moment().year(),
+          year: currentYear,
           count_type: "year",
         },
       });
@@ -199,6 +211,12 @@ const AdditionalInfo = (props) => {
   const [saleData, setSaleData] = useState([]);
   const getSaleData = async () => {
     console.log("opo", localStorageItems.territory_name)
+    let currentYear = moment().year();
+    let currentMonth = moment().month();  // 0 for January, 1 for February, etc.
+
+    if (currentMonth <= 2) {  // If the current month is January, February, or March (0, 1, 2)
+      currentYear -= 1;  // Subtract 1 from the current year
+    }
     try {
       const respond = await axios.get(`${url}/api/target_sale_mr`, {
         headers: headers,
@@ -207,7 +225,7 @@ const AdditionalInfo = (props) => {
           t_id: localStorageItems.tId,
           t_des: localStorageItems.tDes,
           c_id: localStorageItems.cId,
-          year: moment().year(),
+          year: currentYear,
           count_type: "year",
         },
       });

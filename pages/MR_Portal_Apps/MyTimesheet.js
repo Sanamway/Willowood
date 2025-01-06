@@ -302,24 +302,24 @@ const AdditionalInfo = (props) => {
     }
   };
 
+
   useEffect(() => {
     getMarkData(
-      2024,
-      moment().format("MMMM"),
+      moment(filterDate.startDate).format("YYYY"),
+      moment(filterDate.startDate).format("MMMM"),
       window.localStorage.getItem("emp_code")
     ),
       getVerifyData(
-        2024,
-        moment().format("MMMM"),
+        moment(filterDate.startDate).format("YYYY"),
+        moment(filterDate.startDate).format("MMMM"),
         window.localStorage.getItem("emp_code")
       ),
       getApproveData(
-        2024,
-        moment().format("MMMM"),
+        moment(filterDate.startDate).format("YYYY"),
+        moment(filterDate.startDate).format("MMMM"),
         window.localStorage.getItem("emp_code")
       )
   }, [])
-
 
 
   console.log("payoutItems", payoutItems)
@@ -468,7 +468,24 @@ const AdditionalInfo = (props) => {
         <span className="self-center p-2">
           <button
             className="bg-sky-900 text-white px-2 py-1"
-            onClick={() => getAttandenceStatus()}
+            onClick={() => {
+              getAttandenceStatus(),
+                getMarkData(
+                  moment(filterDate.startDate).format("YYYY"),
+                  moment(filterDate.startDate).format("MMMM"),
+                  window.localStorage.getItem("emp_code")
+                ),
+                getVerifyData(
+                  moment(filterDate.startDate).format("YYYY"),
+                  moment(filterDate.startDate).format("MMMM"),
+                  window.localStorage.getItem("emp_code")
+                ),
+                getApproveData(
+                  moment(filterDate.startDate).format("YYYY"),
+                  moment(filterDate.startDate).format("MMMM"),
+                  window.localStorage.getItem("emp_code")
+                )
+            }}
           >
             View
           </button>

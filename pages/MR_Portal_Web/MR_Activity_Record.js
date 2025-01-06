@@ -521,7 +521,6 @@ const ChartReports = () => {
 
   const [tableLoading, setTableLoading] = useState(false)
   const getMrActivityScoreMonthly = async (
-
   ) => {
     const {
       bgId,
@@ -539,6 +538,7 @@ const ChartReports = () => {
       empCode
     } = filterState
     try {
+      let adjustedYear = (monthToNumber[month] <= 3) ? yr - 1 : yr;
       setTableLoading(true)
       const respond = await axios.get(`${url}/api/mr_activity_report_monthly`, {
         headers: headers,
@@ -548,8 +548,8 @@ const ChartReports = () => {
           bu_id: buId === "All" ? null : buId,
           z_id: zId === "All" ? null : zId,
           r_id: rId === "All" ? null : rId,
-          month: monthToNumber[month],
-          year: yr,
+
+          year: adjustedYear,
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           count_type: "year",
           emp_code: empCode
@@ -792,7 +792,6 @@ const ChartReports = () => {
 
         }
       }
-
     }
     else {
       switch (currentFilter) {
@@ -877,7 +876,7 @@ const ChartReports = () => {
                 <option value="All" className="font-bold" disabled={true}>
                   -- Select --
                 </option>
-                {["2025", "2025", "2023"].map((item, idx) => (
+                {["2030", "2029", "2028", "2027", "2026", "2025", "2024", "2023"].map((item, idx) => (
                   <option value={item} key={idx}>
                     {item}
                   </option>

@@ -22,7 +22,6 @@ const AdditionalInfo = () => {
   };
   const router = useRouter();
   const [farmerListData, setFarmerListData] = useState([]);
-
   const [allfilterState, setAllFilterState] = useState({
     number: null,
     from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),

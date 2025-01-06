@@ -44,10 +44,10 @@ const AdditionalInfo = (props) => {
     tId: "",
     roleId: "",
     empCode: "",
-    reportingManager:   "",
+    reportingManager: "",
     developmentManager: "",
-    hrManager:          "",
-    reportingHQ:        ""
+    hrManager: "",
+    reportingHQ: ""
   });
   useEffect(() => {
     setLocalStorageItems({
@@ -65,7 +65,7 @@ const AdditionalInfo = (props) => {
       reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
       developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
       hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
-      reportingHQ:JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
+      reportingHQ: JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
     });
   }, []);
 
@@ -74,8 +74,8 @@ const AdditionalInfo = (props) => {
     attendanceType: "",
     reason: "",
     attendanceId: "",
-    closingKm:"",
-    openingKm:""
+    closingKm: "",
+    openingKm: ""
   });
   const [attendenceStatus, setAttendenceStatus] = useState("Punch In");
   const getAttandenceStatus = async () => {
@@ -106,17 +106,17 @@ const AdditionalInfo = (props) => {
         });
       }
     } catch (error) {
-      if(error.response?.status === 404){
+      if (error.response?.status === 404) {
         setAttendenceStatus("Punch In");
-         setUserDetails({
-         ...userDetails,
+        setUserDetails({
+          ...userDetails,
 
-        attendanceType: "Punch In",
-      });
-      }else {
-return
+          attendanceType: "Punch In",
+        });
+      } else {
+        return
       }
-      
+
     }
   };
   useEffect(() => {
@@ -124,6 +124,14 @@ return
   }, [localStorageItems]);
 
   const handlePunchIn = async (type) => {
+    function getFileExtension(filename) {
+      const parts = filename.name.split(".");
+      if (parts.length > 1) {
+        return parts[parts.length - 1];
+      } else {
+        return
+      }
+    }
     try {
       let data = {};
       let header;
@@ -138,8 +146,8 @@ return
           branchCode: 1231,
           date: moment(new Date()).format("YYYY-MM-DD"),
           attendance_type: userDetails.attendanceType,
-          punch_in_time:moment().format('YYYY-MM-DD HH:mm:ss'),
-          punch_in_image: "https://picsum.photos/200/300",
+          punch_in_time: moment().format('YYYY-MM-DD HH:mm:ss'),
+          punch_in_image: selectedNewImage.name,
           opening_km: userDetails.openingKm,
           status: "PI",
           reason: userDetails.reason,
@@ -156,13 +164,12 @@ return
           date: moment(new Date()).format("YYYY-MM-DD"),
           attendance_type: userDetails.attendanceType,
           punch_out_time: moment().format('YYYY-MM-DD HH:mm:ss'),
-          punch_out_image: "https://picsum.photos/200/300",
+          punch_out_image: selectedNewImage.name,
           status: "PO",
           closing_km: userDetails.closingKm,
           reason: userDetails.reason,
         };
       }
-      
       if (type === "PI") {
         const respond = await axios
           .post(`${url}/api/${header}`, JSON.stringify(data), {
@@ -170,7 +177,10 @@ return
           })
           .then((res) => {
             if (!res) return;
-            uploadImage("pi")
+            setTimeout(() => {
+              uploadImage("pi")
+            }, [3000])
+
             router.push({
               pathname: "/MR_Portal_Apps/MRHome",
             })
@@ -184,58 +194,87 @@ return
             headers: headers,
           })
           .then((res) => {
-            uploadImage("po")
+            setTimeout(() => {
+              uploadImage("po")
+            }, [3000])
             router.push({
               pathname: "/MR_Portal_Apps/MRHome",
             })
-            if (!res) return;      
+            if (!res) return;
             toast.success(res.data.message);
             getAttandenceStatus();
           });
       }
     } catch (errors) {
-    console.log("njkil", errors)
+      console.log("njkil", errors)
       const errorMessage = errors?.response?.data?.message;
 
       toast.error(errorMessage);
     }
   };
-  let PunchInTimeString= moment(new Date()).format("DD-MM-YYYY h:mm A") 
+  let PunchInTimeString = moment(new Date()).format("DD-MM-YYYY h:mm A")
 
 
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedNewImage, setSelectedNewImage] = useState("");
+
   const fileInputRef = useRef(null);
+
+
+
+
+
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
-
-    setSelectedNewImage(file);
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setSelectedImage(reader.result);
-    };
-
+    // Get the uploaded file
+    // Check if a file is selected
     if (file) {
-      reader.readAsDataURL(file);
+      // Define allowed MIME types
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/bmp', 'image/heif'];
+      // Validate file type
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Invalid Image");
+        return;
+      }
+      setSelectedNewImage(file);
+      const reader = new FileReader();
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+      };
+      // Proceed with handling the valid image file
+      console.log('File uploaded:', file);
     }
   };
 
+
+
   const uploadImage = async (type) => {
     function getFileExtension(filename) {
-      // if (typeof filename.name !== "string") {
-      //   console.error("Invalid input. Expected a string.");
-      //   return toast.error("Input a valid Image");
-      // }
-
       const parts = filename.name.split(".");
       if (parts.length > 1) {
         return parts[parts.length - 1];
       } else {
-        return "jpg";
+        return
       }
     }
-
+    let paramsData
+    if (type === "po") {
+      paramsData = {
+        file_path: type,
+        punch_out_image: selectedNewImage.name,
+        emp_code: localStorageItems.empCode,
+      }
+    }
+    else {
+      paramsData = {
+        file_path: type,
+        punch_in_image: selectedNewImage.name,
+        emp_code: localStorageItems.empCode,
+      }
+    }
     try {
       const renamedBlob = new Blob([selectedNewImage], {
         type: selectedNewImage?.type,
@@ -245,18 +284,12 @@ return
       fd.append(
         "myFile",
         renamedBlob,
-        `${localStorageItems.empCode}.${getFileExtension(selectedNewImage)}`
+        selectedNewImage.name  // Use the original filename from the selected file
       );
 
       const response = await axios
         .post(`${url}/api/upload_file`, fd, {
-          params: {
-            file_path: type,
-             punch_in_image: `${localStorageItems.empCode}.${getFileExtension(
-              selectedNewImage
-            )}`,
-            f_demo_field_no: localStorageItems.empCode,
-          },
+          params: paramsData
         })
         .then(() => {
           setSelectedImage("");
@@ -275,17 +308,18 @@ return
       className=" bg-white rounded  w-full  overflow-auto pb-4"
       onSubmit={(e) => e.preventDefault()}
     >
+
       <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
         <span className="text-black flex flex-row gap-4 font-bold   ">
           <FaArrowLeftLong
             className="self-center "
-            onClick={() =>{
+            onClick={() => {
               router.push({
                 pathname: "/MR_Portal_Apps/MRHome",
               })
-              
+
             }
-              
+
             }
           />
           <span>My Attendence</span>
@@ -303,9 +337,8 @@ return
 
                 <Popover.Panel
                   as="div"
-                  className={`${
-                    open ? "block" : "hidden"
-                  } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
+                  className={`${open ? "block" : "hidden"
+                    } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
                 >
                   <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
                     <li
@@ -322,7 +355,7 @@ return
                       />{" "}
                       Timesheet
                     </li>
-                    
+
                   </ul>
                 </Popover.Panel>
               </>
@@ -351,7 +384,7 @@ return
                   </p>
                   <span>:</span>
                 </div>
-                 <span className="w-28 ml-3">{localStorageItems.empCode}</span>
+                <span className="w-28 ml-3">{localStorageItems.empCode}</span>
               </div>
               <div className="flex   w-full  w-28 ">
                 <div className="flex">
@@ -387,65 +420,65 @@ return
           Last Punch In :{" "}
           {attendenceStatus === "Punch In"
             ? "Not Available"
-            :moment(userDetails.lastPunchIn).subtract(5, 'hours')
-            .subtract(30, 'minutes').format("DD-MM-YYYY h:mm A")
-            }
-            {/* :moment(userDetails.lastPunchIn).format("dddd, MMMM D, YYYY h:mm A") */}
+            : moment(userDetails.lastPunchIn).subtract(5, 'hours')
+              .subtract(30, 'minutes').format("DD-MM-YYYY h:mm A")
+          }
+          {/* :moment(userDetails.lastPunchIn).format("dddd, MMMM D, YYYY h:mm A") */}
         </h1>
-<div className="flex flex-row gap-2">
-<div className="w-full">
-          <label htmlFor="attendanceType" className="block font-bold mb-2">
-            Attendance Type:
-          </label>
-          <select
-            id="attendanceType"
-            className="w-full border p-2 rounded"
-            value={userDetails.attendanceType}
-            disabled={userDetails.attendanceType === "Punch In" || userDetails.attendanceType === "Punch Out"}
-            onChange={(e) =>
-              setUserDetails({
-                ...userDetails,
-                attendanceType: e.target.value,
-              })
-            }
-          >
-            <option value="">Select Attendance Type</option>
-            <option value="Punch In">Punch In</option>
-            <option value="Punch Out">Punch Out</option>
-            <option value="Weekly Off">Weekly Off</option>
-          </select>
-        </div>
-        {attendenceStatus === "Punch In"
-            ? <div className="w-full">
+        <div className="flex flex-row gap-2">
+          <div className="w-full">
             <label htmlFor="attendanceType" className="block font-bold mb-2">
-              Opening Km:
+              Attendance Type:
             </label>
-            <input className="w-full border p-2 rounded" type="number" value={userDetails.openingKm} onChange={(e)=> {
-              setUserDetails({
-                ...userDetails,
-                openingKm: e.target.value
-              })
-            }}/>
+            <select
+              id="attendanceType"
+              className="w-full border p-2 rounded"
+              value={userDetails.attendanceType}
+              disabled={userDetails.attendanceType === "Punch In" || userDetails.attendanceType === "Punch Out"}
+              onChange={(e) =>
+                setUserDetails({
+                  ...userDetails,
+                  attendanceType: e.target.value,
+                })
+              }
+            >
+              <option value="">Select Attendance Type</option>
+              <option value="Punch In">Punch In</option>
+              <option value="Punch Out">Punch Out</option>
+              <option value="Weekly Off">Weekly Off</option>
+            </select>
           </div>
-            :<div className="w-full">
-            <label htmlFor="attendanceType" className="block font-bold mb-2">
-              Closing Km:
-            </label>
-            <input className="w-full border p-2 rounded" type="number" value={userDetails.closingKm} onChange={(e)=> {
-              setUserDetails({
-                ...userDetails,
-                closingKm: e.target.value
-              })
-            }}/> 
-          </div>}
-</div>
-     
+          {attendenceStatus === "Punch In"
+            ? <div className="w-full">
+              <label htmlFor="attendanceType" className="block font-bold mb-2">
+                Opening Km:
+              </label>
+              <input className="w-full border p-2 rounded" type="number" value={userDetails.openingKm} onChange={(e) => {
+                setUserDetails({
+                  ...userDetails,
+                  openingKm: e.target.value
+                })
+              }} />
+            </div>
+            : <div className="w-full">
+              <label htmlFor="attendanceType" className="block font-bold mb-2">
+                Closing Km:
+              </label>
+              <input className="w-full border p-2 rounded" type="number" value={userDetails.closingKm} onChange={(e) => {
+                setUserDetails({
+                  ...userDetails,
+                  closingKm: e.target.value
+                })
+              }} />
+            </div>}
+        </div>
 
-       
+
+
 
         <div className="flex w-full  border my-2  shadow-xl">
           <button className="text-sm font-bold py-1 rounded-md   flex  flex-row w-full justify-center h-8 ">
-          Upload Odometer Image
+            Upload Odometer Image
           </button>
           <FaCameraRetro
             size={10}
@@ -453,30 +486,30 @@ return
           />
         </div>
         <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
-        <div className="wrap ">
-          <div className=" w-full px-2 pt-2 profpic relative group bo">
-            <img
-              src={selectedImage}
-              className=" rounded  bg-gray-200 w-72 h-60"
-              alt="img"
-              onClick={triggerFileInput}
-            />
-
-            {!selectedImage && (
-              <label
-                htmlFor="fileInput "
-                className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+          <div className="wrap ">
+            <div className=" w-full px-2 pt-2 profpic relative group bo">
+              <img
+                src={selectedImage}
+                className=" rounded  bg-gray-200 w-72 h-60"
+                alt="img"
                 onClick={triggerFileInput}
-              >
-                <FaCameraRetro
-                  size={50}
-                  className="mr-2  self-center size-120 text-black-400"
-                />
-              </label>
-            )}
+              />
+
+              {!selectedImage && (
+                <label
+                  htmlFor="fileInput "
+                  className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+                  onClick={triggerFileInput}
+                >
+                  <FaCameraRetro
+                    size={50}
+                    className="mr-2  self-center size-120 text-black-400"
+                  />
+                </label>
+              )}
+            </div>
           </div>
         </div>
-      </div>
         <div className="flex flex-col gap-2  md:hidden">
           <label htmlFor="reason" className="block font-bold ">
             Reason for different Punch in/out date required:
@@ -530,19 +563,20 @@ return
             <p className="text-gray-800 text-sm">{localStorageItems.reportingManager}</p>
           </div>
           <div className="flex  w-full gap-4 mt-2">
-          <p className="flex justify-between text-gray-800 font-bold text-sm w-40">
+            <p className="flex justify-between text-gray-800 font-bold text-sm w-40">
               <span>Development Manager</span> <span className="self-end">: </span>
             </p>
             <p className="text-gray-800 text-sm">{localStorageItems.developmentManager}</p>
           </div>
           <div className="flex w-full gap-4 mt-2">
-          <p className="flex justify-between text-gray-800 font-bold text-sm w-40">
+            <p className="flex justify-between text-gray-800 font-bold text-sm w-40">
               <span>H.R. Manager</span> <span className="self-end">: </span>
             </p>
             <p className="text-gray-800 text-sm">{localStorageItems.hrManager}</p>
           </div>
         </div>
       </div>
+
       <input
         type="file"
         accept="image/*"
@@ -551,6 +585,7 @@ return
         onChange={handleImageUpload}
         ref={fileInputRef}
       />
+
     </form>
   );
 };

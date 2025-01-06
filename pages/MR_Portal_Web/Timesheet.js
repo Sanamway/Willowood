@@ -200,6 +200,8 @@ const Timesheet = () => {
     setShowVerifyModal(false);
     setShowDeleteModal(false);
   };
+  const [isOpen, setIsOpen] = useState(false);
+  const [imgUrl, setImgUrl] = useState("");
 
   const [localStorageItems, setLocalStorageItems] = useState({
     cId: null,
@@ -1548,22 +1550,26 @@ const Timesheet = () => {
   };
 
   useEffect(() => {
-    getMarkData(
-      2024,
-      moment(filterState.startDate).format("MMMM"),
-      filterState.empCode
-    ),
-      getVerifyData(
-        2024,
+    if (filterState.empCode && filterState.startDate) {
+      getMarkData(
+        moment(filterState.startDate).format("YYYY"),
         moment(filterState.startDate).format("MMMM"),
         filterState.empCode
       ),
-      getApproveData(
-        2024,
-        moment(filterState.startDate).format("MMMM"),
-        filterState.empCode
-      )
-  }, [filterState.empCode])
+        getVerifyData(
+          moment(filterState.startDate).format("YYYY"),
+          moment(filterState.startDate).format("MMMM"),
+          filterState.empCode
+        ),
+        getApproveData(
+          moment(filterState.startDate).format("YYYY"),
+          moment(filterState.startDate).format("MMMM"),
+          filterState.empCode
+        )
+    }
+    else return
+
+  }, [filterState.empCode, filterState.startDate])
 
   const filterDisableOption = (currentFilter) => {
     function getLastAssignedKey(filterState) {
@@ -1954,9 +1960,9 @@ const Timesheet = () => {
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Status
                 </th>
-
-
-
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Timesheet Image
+                </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Territory
@@ -2020,13 +2026,27 @@ const Timesheet = () => {
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.opening_km && item.closing_km ? item.closing_km - item.opening_km : "-"}
-
-
-
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.status}
+                  </td>
+                  <td
+                    className="px-4 py-2 dark:border-2 whitespace-nowrap"
+
+                  >
+                    {item.punch_in_image
+                      ? (
+                        <small className="text-blue-500 hover:underline"
+                          onClick={() => {
+                            setImgUrl(item.punch_in_image);
+                            setIsOpen(true);
+                          }}>
+                          View Image
+                        </small>
+                      ) : (
+                        <span className="text-red-400">No Image</span>
+                      )}
                   </td>
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
@@ -2391,6 +2411,81 @@ const Timesheet = () => {
                       Delete
                     </button>
                   </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          onClose={() => {
+            setIsOpen(false);
+            setImgUrl("");
+          }}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="font-arial max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  {/* Close button */}  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      setImgUrl("");
+                    }}
+                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                  <Dialog.Title
+                    as="h3"
+                    className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
+                  >
+                    Timesheet Image
+                  </Dialog.Title>
+                  <img
+                    className="m-2"
+                    src={imgUrl}
+                    width={500}
+                    height={500}
+                    alt="Picture of the author"
+                  />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

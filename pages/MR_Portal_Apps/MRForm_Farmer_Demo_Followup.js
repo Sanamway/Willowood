@@ -26,7 +26,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { Dialog, Transition } from "@headlessui/react";
 
 const AdditionalInfo = (props) => {
-  
+
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
@@ -87,7 +87,7 @@ const AdditionalInfo = (props) => {
   const [formData, setFormData] = useState({
     purposeDemo: "",
     dealer: "",
-    dealerName:"",
+    dealerName: "",
     farmerMobile: "",
     farmerId: "",
     farmerName: "",
@@ -95,13 +95,13 @@ const AdditionalInfo = (props) => {
     farmerType: "",
     plotSize: "",
     village: "",
-    district:"",
-    subDis:"",
-    state:"",
+    district: "",
+    subDis: "",
+    state: "",
     village: "",
-    district:"",
-    subDis:"",
-    state:"",
+    district: "",
+    subDis: "",
+    state: "",
 
     farmerObservation: "",
     productRating: "",
@@ -125,7 +125,7 @@ const AdditionalInfo = (props) => {
 
   const [dealerData, setDealerData] = useState([]);
   const [productBrandData, setProductBrandData] = useState([]);
-  
+
   const [stageData, setStageData] = useState([]);
 
   const getDelaerData = async () => {
@@ -220,15 +220,15 @@ const AdditionalInfo = (props) => {
         farmerFatherName: apires.farmer_father_name,
         village: apires.village,
         state: apires.state,
-        district:apires.district,
-        subDis:apires.sub_district,
+        district: apires.district,
+        subDis: apires.sub_district,
 
         village: apires.village,
         farmerType: apires.farmer_type,
         plotSize: apires.plot_size,
-        potentialFarmer:apires.potential_farmer,
-        nextVisitDate:apires.next_visit_date,
-        status:apires.status,
+        potentialFarmer: apires.potential_farmer,
+        nextVisitDate: apires.next_visit_date,
+        status: apires.status,
       });
     } catch (error) {
       console.log(error);
@@ -259,8 +259,8 @@ const AdditionalInfo = (props) => {
 
 
   const handleAddDemo = async () => {
-    if(!selectedImage && !selectedVideo){
-      toast.error("Please Select Image");     
+    if (!selectedImage && !selectedVideo) {
+      toast.error("Please Select Image");
     }
     else {
       try {
@@ -284,7 +284,7 @@ const AdditionalInfo = (props) => {
           location_lat: 12,
           location_long: 21,
           potential_farmer: formData.potentialFarmer,
-           follow_up_remarks: formData.remarks,
+          follow_up_remarks: formData.remarks,
           hand_testimonials_url: "Test",
           video_testimonials_url: "Test",
           next_followup_date: formData.nextVisitDate,
@@ -295,7 +295,7 @@ const AdditionalInfo = (props) => {
           emp_code: window.localStorage.getItem("emp_code"),
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         };
-  
+
         const respond = await axios
           .post(`${url}/api/add_farmer_demo_followup`, JSON.stringify(data), {
             headers: headers,
@@ -303,13 +303,13 @@ const AdditionalInfo = (props) => {
           .then((res) => {
             if (!res) return;
             toast.success(res.data.message);
-          
+
             window.scrollTo({
               top: 0,
               behavior: "smooth", // Smooth scrolling animation
             });
-            
-          
+
+
             setFormData({
               purposeDemo: "",
               dealer: "",
@@ -319,9 +319,9 @@ const AdditionalInfo = (props) => {
               farmerType: "",
               plotSize: "",
               village: "",
-              district:"",
-              subDis:"",
-              state:"",
+              district: "",
+              subDis: "",
+              state: "",
               farmerObservation: "",
               productRating: "",
               remarks: "",
@@ -330,16 +330,14 @@ const AdditionalInfo = (props) => {
               status: "Open",
             });
 
-            if(selectedImage)
-              {
-                uploadImage(); 
-              }
-            
-            if(selectedVideo)
-              {
-                uploadVideo();
-              }
-           
+            if (selectedImage) {
+              uploadImage();
+            }
+
+            if (selectedVideo) {
+              uploadVideo();
+            }
+
             setProductDemoTableData([]);
             router.push({
               pathname: "/MR_Portal_Apps/MR_Farmer_list_demo",
@@ -347,13 +345,13 @@ const AdditionalInfo = (props) => {
           });
       } catch (errors) {
         const errorMessage = errors?.response?.data?.message;
-  
+
         toast.error(errorMessage);
       }
     }
-  
+
   };
-  
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -364,32 +362,40 @@ const AdditionalInfo = (props) => {
   };
 
 
- 
+
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedNewImage, setSelectedNewImage] = useState("");
- 
+
 
   const fileInputRef = useRef(null);
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
-
-    setSelectedNewImage(file);
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setSelectedImage(reader.result);
-    };
-
+    // Get the uploaded file
+    // Check if a file is selected
     if (file) {
-      reader.readAsDataURL(file);
+      // Define allowed MIME types
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/bmp', 'image/heif'];
+      // Validate file type
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Invalid Image");
+        return; // Stop processing if invalid
+      }
+      setSelectedNewImage(file);
+      const reader = new FileReader();
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+      };
+      // Proceed with handling the valid image file
+      console.log('File uploaded:', file);
     }
   };
 
-  
   const triggerFileInput = () => {
     fileInputRef.current.click();
   };
-
 
   const [selectedVideo, setSelectedVideo] = useState("");
   const [selectedNewVideo, setSelectedNewVideo] = useState("");
@@ -416,7 +422,7 @@ const AdditionalInfo = (props) => {
 
 
   const uploadVideo = async () => {
-    
+
     const getVideoExtension = (filename) => {
       if (typeof filename.name !== "string") {
         console.error("Invalid input. Expected a string.");
@@ -432,7 +438,7 @@ const AdditionalInfo = (props) => {
     };
 
     try {
-     
+
       const videoBlob = new Blob([selectedNewVideo], {
         type: selectedNewVideo?.type,
       });
@@ -446,7 +452,7 @@ const AdditionalInfo = (props) => {
         .post(`${url}/api/upload_video`, fd, {
           params: {
             file_path: "mr_followup",
-           
+
             video_testimonials_url: `${fFollowCode}.${getVideoExtension(
               selectedNewVideo
             )}`,
@@ -456,7 +462,7 @@ const AdditionalInfo = (props) => {
         .then(() => {
           setSelectedVideo(""), setSelectedNewVideo("");
         });
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const uploadImage = async () => {
@@ -473,42 +479,40 @@ const AdditionalInfo = (props) => {
         return "jpg";
       }
     }
-   
+
 
     try {
       const renamedBlob = new Blob([selectedNewImage], {
         type: selectedNewImage?.type,
       });
-     
+
 
       const fd = new FormData();
-      
+
       fd.append(
         "myFile",
         renamedBlob,
-        `${fFollowCode}.${getFileExtension(selectedNewImage)}`
+        selectedNewImage.name,
       );
-    
+
       const response = await axios
         .post(`${url}/api/upload_file`, fd, {
           params: {
             file_path: "mr_followup",
-            hand_testimonials_url: `${fFollowCode}.${getFileExtension(
-              selectedNewImage
-            )}`,
+            hand_testimonials_url: selectedNewImage.name,
 
-         
-          
+
+
             f_demo_follow_no: fFollowCode,
           },
         })
         .then(() => {
           setSelectedImage(""), setSelectedNewImage("");
         });
-    } catch (error) {}
+    } catch (error) { }
   };
 
-  const [allCrop , setAllCrop] = useState([])
+  const [allCrop, setAllCrop] = useState([])
   const getAllCropInfo = async () => {
     if (new Date())
       try {
@@ -524,15 +528,15 @@ const AdditionalInfo = (props) => {
         console.log(error);
       }
   };
-  useEffect(()=>{
+  useEffect(() => {
     getAllCropInfo();
-  },[])
+  }, [])
   const [addFarmerModal, setAddFarmerModal] = useState(false);
   const [farmerState, setFarmerState] = useState({
     farmerName: "",
     fatherName: "",
     farmerAddress: "",
-    email:"",
+    email: "",
     farmerTypes: "Subsistence Farming",
     farmerCategory: "Marginal-Below 1.00 hectare",
     landInfo: "",
@@ -540,17 +544,17 @@ const AdditionalInfo = (props) => {
     state: "",
     subDistrict: "",
     district: "",
-    subDistrict:"",
+    subDistrict: "",
     village: "",
     pinCode: "",
-    retailer:""
-   
+    retailer: ""
+
   });
   const handleSaveFarmer = async () => {
-    if(cropGridData.length){
+    if (cropGridData.length) {
       try {
-        const data = {   
-          fr_id: autoFarmer, 
+        const data = {
+          fr_id: autoFarmer,
           c_id: Number(localStorageItems.cId),
           bu_id: Number(localStorageItems.buId),
           bg_id: Number(localStorageItems.bgId),
@@ -564,13 +568,13 @@ const AdditionalInfo = (props) => {
           f_mobile: farmerState.mobile,
           f_type: farmerState.farmerTypes,
           ff_name: farmerState.fatherName,
-          email:  farmerState.email,
+          email: farmerState.email,
           f_address: farmerState.farmerAddress,
           f_cat: farmerState.farmerCategory,
           f_pin: farmerState.pinCode,
           retailer: farmerState.retailer,
           st_id: farmerState.state,
-          sub_district:farmerState.subDistrict,
+          sub_district: farmerState.subDistrict,
           c_name: localStorageItems.clName,
           ul_name: localStorageItems.ulName,
         };
@@ -585,17 +589,17 @@ const AdditionalInfo = (props) => {
               farmerName: "",
               fatherName: "",
               farmerAddress: "",
-              email:"",
+              email: "",
               farmerTypes: "Subsistence Farming",
               farmerCategory: "Marginal-Below 1.00 hectare",
               landInfo: "",
               mobile: "",
               state: "",
-              subDistrict:"",
+              subDistrict: "",
               district: "",
               village: "",
               pinCode: "",
-              retailer:""
+              retailer: ""
             });
             setCropGridData([])
             getAutoFarmerId()
@@ -603,7 +607,7 @@ const AdditionalInfo = (props) => {
       } catch (errors) {
         console.log("kop", errors);
         const errorMessage = errors?.response?.data?.message
-  
+
         toast.error(errorMessage);
         const newErrors = {};
         errors?.inner?.forEach((error) => {
@@ -611,173 +615,170 @@ const AdditionalInfo = (props) => {
         });
       }
     }
-    else 
-    {
+    else {
       toast.error("Please Enter atleast one Area/Crop Data to Save Farmer");
     }
-  
+
   };
- 
+
   const [allState, setAllState] = useState([]);
   const [allDist, setAllDist] = useState([]);
   const [allSubDist, setAllSubDist] = useState([]);
   const [allVillage, setAllVillage] = useState([]);
-  const getAllState = async (state, district, subDis , village) => {
+  const getAllState = async (state, district, subDis, village) => {
     try {
       const respond = await axios.get(`${url}/api/get_dist_state`, {
         headers: headers,
-        params:{
-          state:state,
-          district:district, 
-          sub_district:subDis,
-          village:village
+        params: {
+          state: state,
+          district: district,
+          sub_district: subDis,
+          village: village
         }
       });
-      const apires = await respond.data.data;   
-      if(!state && !district && !subDis){
+      const apires = await respond.data.data;
+      if (!state && !district && !subDis) {
         setAllState(apires);
       }
-      else if(state && !district && !subDis && !village)
-     {
-      console.log("pop", apires)
-      setAllDist([...new Set(apires.map((item) => item.district))])
+      else if (state && !district && !subDis && !village) {
+        console.log("pop", apires)
+        setAllDist([...new Set(apires.map((item) => item.district))])
 
-     }
-     else if(state && district && !subDis && !village)
-      {
-       console.log("pop", apires)
-       setAllSubDist([...new Set(apires.map((item) => item.sub_district))])
- 
       }
-      else if(state && district && subDis && !village )
-        {
-         console.log("pop", apires)
-         setAllVillage([...new Set(apires.map((item) => item.village))])
-   
-        }
-        else if(state && district && subDis && village )
-         
-          {
-         
-           setFarmerState({...farmerState ,  pinCode: apires[0].pin_code})
-     
-          }
+      else if (state && district && !subDis && !village) {
+        console.log("pop", apires)
+        setAllSubDist([...new Set(apires.map((item) => item.sub_district))])
+
+      }
+      else if (state && district && subDis && !village) {
+        console.log("pop", apires)
+        setAllVillage([...new Set(apires.map((item) => item.village))])
+
+      }
+      else if (state && district && subDis && village) {
+
+        setFarmerState({ ...farmerState, pinCode: apires[0].pin_code })
+
+      }
     } catch (error) {
       console.log(error);
     }
   };
- 
- 
-useEffect(()=>{
-  getAllState(farmerState.state, farmerState.district,  farmerState.subDistrict, farmerState.village)
-},[farmerState.state, farmerState.district, farmerState.subDistrict, farmerState.village])
-  
- 
 
 
-  const [autoFarmer , setAutoFarmer] = useState("")
-  const getAutoFarmerId = async() =>{
+  useEffect(() => {
+    getAllState(farmerState.state, farmerState.district, farmerState.subDistrict, farmerState.village)
+  }, [farmerState.state, farmerState.district, farmerState.subDistrict, farmerState.village])
+
+
+
+
+  const [autoFarmer, setAutoFarmer] = useState("")
+  const getAutoFarmerId = async () => {
     try {
       const respond = await axios.get(`${url}/api/get_farmer_id`, {
         headers: headers,
-        params:{
+        params: {
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          type:"Farmer",
+          type: "Farmer",
           emp_code: window.localStorage.getItem("emp_code"),
         }
       });
 
-      const apires = await respond.data.data;  
+      const apires = await respond.data.data;
       setAutoFarmer(apires)
-     
+
     } catch (error) {
       console.log(error);
     }
   }
-    useEffect(()=>{
-      if(!addFarmerModal) return
-      getAutoFarmerId()
-    },[addFarmerModal])
-    const [addFarmerCrop , setAddFarmerCrop] = useState({
-      cropId : '',
-      area : ''
-    })
+  useEffect(() => {
+    if (!addFarmerModal) return
+    getAutoFarmerId()
+  }, [addFarmerModal])
+  const [addFarmerCrop, setAddFarmerCrop] = useState({
+    cropId: '',
+    area: ''
+  })
 
-    const handleAddFarmerAreaCrop = async () => {
-      try {
-        const data = {
-          cr_id: addFarmerCrop.cropId,
-          area: addFarmerCrop.area,
-          fr_id: autoFarmer,
-          season_name:allCropData.filter((item)=> Number(item.cr_id) === Number(addFarmerCrop.cropId))[0].season_name,
-          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-        };
-  
-        const respond = await axios
-          .post(`${url}/api/add_farmer_cropinfo`, JSON.stringify(data), {
-            headers: headers,
-          })
-          .then((res) => {
-            if (!res) return;
-            toast.success(res.data.message);
-            getCropGrid(autoFarmer)
-            setAddFarmerCrop({
-              cropId : '',
-              area : ''
-            })
-          });
-      } catch (errors) {
-        const errorMessage = errors?.response?.data?.message;
-     
-        toast.error(errorMessage);
-       
-      }
-    };
-    useEffect(()=>{
+  const handleAddFarmerAreaCrop = async () => {
+    try {
+      const data = {
+        cr_id: addFarmerCrop.cropId,
+        area: addFarmerCrop.area,
+        fr_id: autoFarmer,
+        season_name: allCropData.filter((item) => Number(item.cr_id) === Number(addFarmerCrop.cropId))[0].season_name,
+        c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+      };
 
-      getCropGrid(autoFarmer)
-    },[autoFarmer])
-  const [cropGridData, setCropGridData] = useState([])
-    const getCropGrid = async (fId) => {
-      if(!fId) return
-      try {
-        const respond = await axios.get(`${url}/api/get_farmer_cropinfo`, {
+      const respond = await axios
+        .post(`${url}/api/add_farmer_cropinfo`, JSON.stringify(data), {
           headers: headers,
-          params: {  c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id, 
-            fr_id: fId,
-           },
-        });
-  
-        const apires = await respond.data.data;
-        setCropGridData(apires);
-      } catch (error) {
-        setCropGridData([]);
-        console.log(error);
-      }
-    };
-
-    const handleDeleteAreaInfo = async (cropId) => {
-      try {
-        respond = await axios
-          .delete(`${url}/api/delete_farmer_cropinfo`, {
-            headers: headers,
-            params: { c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id, 
-              fr_id: autoFarmer, 
-            cr_id: cropId},
+        })
+        .then((res) => {
+          if (!res) return;
+          toast.success(res.data.message);
+          getCropGrid(autoFarmer)
+          setAddFarmerCrop({
+            cropId: '',
+            area: ''
           })
-          .then((res) => {
-            if (!res) return;
-            toast.success(res.data.message);
-            getCropGrid(autoFarmer)
-          });
-      } catch (error) {
-        if (error.response) toast.error(error.response.data.message);
-      }
-    };
-  
+        });
+    } catch (errors) {
+      const errorMessage = errors?.response?.data?.message;
+
+      toast.error(errorMessage);
+
+    }
+  };
+  useEffect(() => {
+
+    getCropGrid(autoFarmer)
+  }, [autoFarmer])
+  const [cropGridData, setCropGridData] = useState([])
+  const getCropGrid = async (fId) => {
+    if (!fId) return
+    try {
+      const respond = await axios.get(`${url}/api/get_farmer_cropinfo`, {
+        headers: headers,
+        params: {
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          fr_id: fId,
+        },
+      });
+
+      const apires = await respond.data.data;
+      setCropGridData(apires);
+    } catch (error) {
+      setCropGridData([]);
+      console.log(error);
+    }
+  };
+
+  const handleDeleteAreaInfo = async (cropId) => {
+    try {
+      respond = await axios
+        .delete(`${url}/api/delete_farmer_cropinfo`, {
+          headers: headers,
+          params: {
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            fr_id: autoFarmer,
+            cr_id: cropId
+          },
+        })
+        .then((res) => {
+          if (!res) return;
+          toast.success(res.data.message);
+          getCropGrid(autoFarmer)
+        });
+    } catch (error) {
+      if (error.response) toast.error(error.response.data.message);
+    }
+  };
 
 
-  
+
+
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -808,9 +809,8 @@ useEffect(()=>{
 
                 <Popover.Panel
                   as="div"
-                  className={`${
-                    open ? "block" : "hidden"
-                  } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
+                  className={`${open ? "block" : "hidden"
+                    } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
                 >
                   <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
                     <li
@@ -846,7 +846,7 @@ useEffect(()=>{
                       />{" "}
                       New Farmer
                     </li>
-                    
+
                   </ul>
                 </Popover.Panel>
               </>
@@ -870,7 +870,7 @@ useEffect(()=>{
             placeholder="F Follow Code"
             disabled
             value={fFollowCode}
-            // disabled={!formActive}
+          // disabled={!formActive}
           />
         </div>
         <div className="fle gap-4 w-full px-2">
@@ -927,31 +927,31 @@ useEffect(()=>{
               value="Tank Mix Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-            Tank Mix Demo
+              Tank Mix Demo
             </option>
             <option
               value="Tulsi Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-            Tulsi Demo
+              Tulsi Demo
             </option>
             <option
               value="Pin Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-             Pin Demo
+              Pin Demo
             </option>
             <option
               value="Tray Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-             Tray Demo
+              Tray Demo
             </option>
             <option
               value="Leaf Demo"
               className="focus:outline-none focus:border-b bg-white"
             >
-            Leaf Demo
+              Leaf Demo
             </option>
           </select>
         </div>
@@ -962,14 +962,14 @@ useEffect(()=>{
           >
             <small className="text-red-600 ">*</small> Dealer
           </label>
-           {
+          {
             console.log("pol", formData, dealerData)
-           }
+          }
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
             disabled
-            value={formData.dealer ? formData.dealer :"Other"}
+            value={formData.dealer ? formData.dealer : "Other"}
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -998,23 +998,23 @@ useEffect(()=>{
               Other
             </option>
           </select>
-        
-          {(formData.dealerName &&  !formData.dealer) &&
-           <input
-           className="w-full px-3 py-2 mt-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-          disabled
-           id="inputField"
-           placeholder="Delaer Name"
-           value={formData.dealerName}
-          
-         />}
-         
+
+          {(formData.dealerName && !formData.dealer) &&
+            <input
+              className="w-full px-3 py-2 mt-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              disabled
+              id="inputField"
+              placeholder="Delaer Name"
+              value={formData.dealerName}
+
+            />}
+
 
         </div>
       </div>
-      
-      
-     
+
+
+
       <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
           <label
@@ -1034,7 +1034,7 @@ useEffect(()=>{
               value={formData.farmerMobile}
               onChange={(e) => {
                 const input = e.target.value.replace(/\D/g, "");
-                console.log("lop", input, e.target.value );
+                console.log("lop", input, e.target.value);
                 if (input.length <= 10) {
                   getFarmerDetails(input);
                 }
@@ -1048,7 +1048,7 @@ useEffect(()=>{
           </div>
         </div>
         <div className="w-full px-2 mt-2 md:w-1/2 lg:w-1/2 flex justify-end ">
-    
+
           <input
             className="w-full self-end px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="number"
@@ -1067,7 +1067,7 @@ useEffect(()=>{
       </div>
 
       <div className="flex flex-row my-2 mb-2 md:flex-col lg:flex-col ">
-        <div className="w-full px-2 mt-2 ">   
+        <div className="w-full px-2 mt-2 ">
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -1084,7 +1084,7 @@ useEffect(()=>{
           />
         </div>
         <div className="w-full px-2  mt-2">
-          
+
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -1103,7 +1103,7 @@ useEffect(()=>{
       </div>
       <div className="flex flex-row my-2 mb-2 ">
         <div className="w-full px-2 mt-2">
-          
+
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -1120,7 +1120,7 @@ useEffect(()=>{
           />
         </div>
         <div className="w-full px-2 mt-2">
-         
+
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
@@ -1136,79 +1136,79 @@ useEffect(()=>{
             }
           />
         </div>
-      
+
 
 
         <div className="w-full px-2  mt-2">
-         
-         <input
-           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-           type="text"
-           id="inputField"
-           placeholder="State"
-           value={formData.state}
-           disabled
-           
-         />
-       </div>
-     </div>
-     <div className="flex flex-row my-2 mb-2 ">
-       <div className="w-full px-2 mt-2">
-         
-         <input
-           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-           type="text"
-           id="inputField"
-           placeholder="District"
-           value={formData.district}
-           disabled
-           onChange={(e) =>
-             setFormData({
-               ...formData,
-               farmerType: e.target.value,
-             })
-           }
-         />
-       </div>
-       <div className="w-full px-2 mt-2">
-        
-         <input
-           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-           type="text"
-           id="inputField"
-           placeholder="Sub Dsitrict"
-           value={formData.subDis}
-           disabled
-           onChange={(e) =>
-             setFormData({
-               ...formData,
-               plotSize: e.target.value,
-             })
-           }
-         />
-       </div>
-       <div className="w-full px-2  mt-2">
-        
-         <input
-           className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-           type="text"
-           id="inputField"
-           placeholder="Village"
-           value={formData.village}
-           disabled
-          
-         />
-       </div>
-     
+
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="State"
+            value={formData.state}
+            disabled
+
+          />
+        </div>
       </div>
-      
-      
-     
-     
+      <div className="flex flex-row my-2 mb-2 ">
+        <div className="w-full px-2 mt-2">
+
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="District"
+            value={formData.district}
+            disabled
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                farmerType: e.target.value,
+              })
+            }
+          />
+        </div>
+        <div className="w-full px-2 mt-2">
+
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Sub Dsitrict"
+            value={formData.subDis}
+            disabled
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                plotSize: e.target.value,
+              })
+            }
+          />
+        </div>
+        <div className="w-full px-2  mt-2">
+
+          <input
+            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="text"
+            id="inputField"
+            placeholder="Village"
+            value={formData.village}
+            disabled
+
+          />
+        </div>
+
+      </div>
+
+
+
+
       <hr className="bg-blue-800 h-2 w-full my-2 mt-4" />
       <h1 className="flex justify-center font-bold mx-4">Product Demo</h1>
       <hr className="bg-blue-800 h-2 w-full my-2 " />
-     
+
       <div className="overflow-x-auto my-6 sm:over<flow-hidden w-full  lg:w-full">
         <table className="min-w-full divide-y divide-gray-200 border-2">
           <thead className="bg-gray-50 border-2">
@@ -1241,21 +1241,21 @@ useEffect(()=>{
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-              Rec.Dose/Acre
+                Rec.Dose/Acre
               </th>
               <th
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-              Apply.Dose/Acre
+                Apply.Dose/Acre
               </th>
               <th
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
               >
-               Demo Area
+                Demo Area
               </th>
-             
+
               <th
                 scope="col"
                 className="px-6  text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
@@ -1298,21 +1298,21 @@ useEffect(()=>{
                 <td className="px-6  whitespace-nowrap text-sm text-gray-500">
                   {item.water_val}
                 </td>
-                
-               
-              
-               
+
+
+
+
                 <td className="px-6  whitespace-nowrap text-sm text-gray-500">
-                 <button
-                  className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap"
-                  onClick={() => deleteProductDemoTable(item.f_demo_crop_id)}
-                >
-                  {
-                    <AiOutlineDelete className="hover:text-red-500 self-center"></AiOutlineDelete>
-                  }
-                </button>
+                  <button
+                    className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap"
+                    onClick={() => deleteProductDemoTable(item.f_demo_crop_id)}
+                  >
+                    {
+                      <AiOutlineDelete className="hover:text-red-500 self-center"></AiOutlineDelete>
+                    }
+                  </button>
                 </td>
-               
+
               </tr>
             ))}
           </tbody>
@@ -1327,7 +1327,7 @@ useEffect(()=>{
             <small className="text-red-600">*</small>Farmer Observation
           </label>
           <div className="flex flex-row gap-3 text-sm overflow-wrap ">
-          <section className="flex gap-1">
+            <section className="flex gap-1">
               <input
                 type="radio"
                 id="outstanding"
@@ -1387,10 +1387,10 @@ useEffect(()=>{
                 Fair
               </label>
             </section>
-           
-            
-            
-            
+
+
+
+
           </div>
         </div>
       </div>
@@ -1403,7 +1403,7 @@ useEffect(()=>{
             <small className="text-red-600">*</small>Product Rating
           </label>
           <div className="flex flex-row justify-between text-sm overflow-auto ">
-          <section className="flex gap-1">
+            <section className="flex gap-1">
               <input
                 type="radio"
                 id="excellentProduct"
@@ -1451,9 +1451,9 @@ useEffect(()=>{
                 Poor
               </label>
             </section>
-          
-           
-            
+
+
+
           </div>
         </div>
       </div>
@@ -1475,66 +1475,66 @@ useEffect(()=>{
       </div>
 
       <div className="wrap ">
-      <h1 className="flex justify-center font-bold ">
-            <FaUpload className="mr-2 text-blue-400 self-center" />  Video
-            Testimonials
-          </h1>
-          <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
-        <div className="wrap ">
-          <div className=" w-full px-2 pt-2 profpic relative group bo">
-        
-            <video
-              controls
-                className=" rounded  bg-gray-200 w-72 h-60"
-              src={selectedVideo}
-              onClick={() => triggerVideoFileInput(videoInputRef)}
-            />
-        
+        <h1 className="flex justify-center font-bold ">
+          <FaUpload className="mr-2 text-blue-400 self-center" />  Video
+          Testimonials
+        </h1>
+        <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
+          <div className="wrap ">
+            <div className=" w-full px-2 pt-2 profpic relative group bo">
 
-        {!selectedVideo && (  <label
+              <video
+                controls
+                className=" rounded  bg-gray-200 w-72 h-60"
+                src={selectedVideo}
+                onClick={() => triggerVideoFileInput(videoInputRef)}
+              />
+
+
+              {!selectedVideo && (<label
                 htmlFor="fileInput "
                 className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
-                onClick={ triggerVideoFileInput}
+                onClick={triggerVideoFileInput}
               >
                 <FaVideo
                   size={50}
                   className="mr-2  self-center size-120 text-black-400"
                 />
-              </label>)}           
-        </div>
-        </div>
-      </div>
-        </div>
-        <div className="wrap ">
-          <h1 className="flex justify-center font-bold ">
-            <FaUpload className="mr-2 text-blue-400 self-center" />  Handwritten
-            Testimonials
-          </h1>
-          <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
-        <div className="wrap ">
-          <div className=" w-full px-2 pt-2 profpic relative group bo">
-            <img
-              src={selectedImage}
-              className=" rounded  bg-gray-200 w-72 h-60"
-              alt="img"
-              onClick={triggerFileInput}
-            />
-            {!selectedImage && (
-              <label
-                htmlFor="fileInput "
-                className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
-                onClick={triggerFileInput}
-              >
-                <FaCameraRetro
-                  size={50}
-                  className="mr-2  self-center size-120 text-black-400"
-                />
-              </label>
-            )}
+              </label>)}
+            </div>
           </div>
         </div>
       </div>
-        </div>     
+      <div className="wrap ">
+        <h1 className="flex justify-center font-bold ">
+          <FaUpload className="mr-2 text-blue-400 self-center" />  Handwritten
+          Testimonials
+        </h1>
+        <div className="flex items-center justify-center gap-4  my-2 mb-2 lg:flex-row ">
+          <div className="wrap ">
+            <div className=" w-full px-2 pt-2 profpic relative group bo">
+              <img
+                src={selectedImage}
+                className=" rounded  bg-gray-200 w-72 h-60"
+                alt="img"
+                onClick={triggerFileInput}
+              />
+              {!selectedImage && (
+                <label
+                  htmlFor="fileInput "
+                  className={`text-black text-xs absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer  `}
+                  onClick={triggerFileInput}
+                >
+                  <FaCameraRetro
+                    size={50}
+                    className="mr-2  self-center size-120 text-black-400"
+                  />
+                </label>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
       <hr className="bg-blue-400 border-1 w-full my-2 mt-4" />
       <div className="flex  flex-row ">
         <div className="w-full px-2 mt-2">
@@ -1644,10 +1644,10 @@ useEffect(()=>{
         </div>
       </div>
 
-       <div className="flex w-full justify-center gap-4 mt-4 ">
+      <div className="flex w-full justify-center gap-4 mt-4 ">
         <button
           onClick={() => {
-           handleAddDemo()
+            handleAddDemo()
           }}
           className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
         >
@@ -1693,7 +1693,7 @@ useEffect(()=>{
         ref={fileInputRef}
       />
 
-<Transition appear show={addFarmerModal} as={Fragment}>
+      <Transition appear show={addFarmerModal} as={Fragment}>
         <Dialog
           as="div"
           className="relative z-10 "
@@ -1722,11 +1722,11 @@ useEffect(()=>{
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                    <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                <hr className="bg-blue-600 h-2"/>
-                <h3 className="font-bold w-full flex justify-center ">Farmer Registration</h3>
-                <hr className="bg-blue-600 h-2 mb-2"/>
-                
+                <Dialog.Panel className=" font-arial  max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <hr className="bg-blue-600 h-2" />
+                  <h3 className="font-bold w-full flex justify-center ">Farmer Registration</h3>
+                  <hr className="bg-blue-600 h-2 mb-2" />
+
                   <div className=" flex flex-row gap-2 w-full px-2 relative ">
                     <input
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -1734,12 +1734,12 @@ useEffect(()=>{
                       id="inputField"
                       placeholder="Auto  Gen."
                       value={autoFarmer}
-                     
+
                     />
-                   
+
                   </div>
                   <div className=" flex flex-row gap-2 w-full px-2 relative mt-2 ">
-                   
+
                     <input
                       className="w-1/2 px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
                       type="text"
@@ -1811,19 +1811,19 @@ useEffect(()=>{
                         ></textarea>
                       </div>
                       <div className="w-full px-2 ">
-                      <input
-                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                  type="text"
-                  id="inputField"
-                  placeholder="Email"
-                  value={farmerState.email}
-                  onChange={(e) =>
-                    setFarmerState({
-                      ...farmerState,
-                      email: e.target.value,
-                    })
-                  }
-                />
+                        <input
+                          className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                          type="text"
+                          id="inputField"
+                          placeholder="Email"
+                          value={farmerState.email}
+                          onChange={(e) =>
+                            setFarmerState({
+                              ...farmerState,
+                              email: e.target.value,
+                            })
+                          }
+                        />
                       </div>
                     </div>
 
@@ -1915,19 +1915,18 @@ useEffect(()=>{
                           className="w-full text-sm px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                           id="stateSelect"
                           value={farmerState.state}
-                          onChange={(e) =>
-                          {
+                          onChange={(e) => {
                             setFarmerState({
                               ...farmerState,
                               state: e.target.value,
                               district: "",
-                              subDistrict:"",
-                              village:"",
-                              pinCode:""
+                              subDistrict: "",
+                              village: "",
+                              pinCode: ""
                             })
-                          
+
                           }
-                            
+
                           }
                         >
                           <option
@@ -1957,9 +1956,9 @@ useEffect(()=>{
                             setFarmerState({
                               ...farmerState,
                               district: e.target.value,
-                              subDistrict:"",
-                              village:"",
-                              pinCode:""
+                              subDistrict: "",
+                              village: "",
+                              pinCode: ""
                             })
                           }
                         >
@@ -1991,8 +1990,8 @@ useEffect(()=>{
                             setFarmerState({
                               ...farmerState,
                               subDistrict: e.target.value,
-                              village:"",
-                              pinCode:""
+                              village: "",
+                              pinCode: ""
                             })
                           }
                         >
@@ -2023,8 +2022,8 @@ useEffect(()=>{
                             setFarmerState({
                               ...farmerState,
                               village: e.target.value,
-                              pinCode:""
-                             
+                              pinCode: ""
+
                             })
                           }
                         >
@@ -2036,7 +2035,7 @@ useEffect(()=>{
                           </option>
                           {allVillage.map((item) => (
                             <option
-                            
+
                               value={item}
                               className="focus:outline-none focus:border-b bg-white"
                             >
@@ -2048,7 +2047,7 @@ useEffect(()=>{
                     </div>
 
                     <div className="flex flex-row my-2 mb-2 ">
-                     
+
 
                       <div className="w-full px-2 ">
                         <input
@@ -2056,7 +2055,7 @@ useEffect(()=>{
                           type="number"
                           id="inputField"
                           placeholder="Pin Code"
-                          value={farmerState.pinCode  }
+                          value={farmerState.pinCode}
                           onChange={(e) =>
                             setFarmerState({
                               ...farmerState,
@@ -2082,22 +2081,22 @@ useEffect(()=>{
                       </div>
                     </div>
                     <div className="flex flex-row my-2 mb-2 ">
-                   
+
 
                       <div className="w-full px-2 ">
-                      
+
                       </div>
                     </div>
-                    <hr className="bg-gray-600 h-2"/>
+                    <hr className="bg-gray-600 h-2" />
                     <h3 className="w-full  flex justify-center items-center font-bold">Area / Crop Info</h3>
-                    <hr className="bg-gray-600 h-2"/>
+                    <hr className="bg-gray-600 h-2" />
                     <div className="flex flex-row my-2 mb-2 ">
                       <div className="w-full px-2">
-                      <select
+                        <select
                           className="w-full text-sm px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                           id="stateSelect"
                           value={addFarmerCrop.cropId}
-                          onChange={(e)=> setAddFarmerCrop({...addFarmerCrop , cropId: e.target.value})}
+                          onChange={(e) => setAddFarmerCrop({ ...addFarmerCrop, cropId: e.target.value })}
                         >
                           <option
                             value={""}
@@ -2106,10 +2105,10 @@ useEffect(()=>{
                             Select Crop
                           </option>
                           {allCropData.map((item) => (
-              <option key={item.cr_id} value={item.cr_id}>
-                {item.crop_name}
-              </option>
-            ))}
+                            <option key={item.cr_id} value={item.cr_id}>
+                              {item.crop_name}
+                            </option>
+                          ))}
                         </select>
                       </div>
 
@@ -2120,75 +2119,75 @@ useEffect(()=>{
                           id="inputField"
                           placeholder="Area"
                           value={addFarmerCrop.area}
-                          onChange={(e)=> setAddFarmerCrop({...addFarmerCrop , area: e.target.value})}
+                          onChange={(e) => setAddFarmerCrop({ ...addFarmerCrop, area: e.target.value })}
                         />
                       </div>
 
                       <div className="w-1/2  ">
                         <button type="button"
-                      className="inline-flex justify-center  text-white rounded-md border border-transparent bg-orange-400 px-4 py-2 text-sm font-medium "
-                      onClick={()=>handleAddFarmerAreaCrop()}
-                      >Add+</button>
+                          className="inline-flex justify-center  text-white rounded-md border border-transparent bg-orange-400 px-4 py-2 text-sm font-medium "
+                          onClick={() => handleAddFarmerAreaCrop()}
+                        >Add+</button>
                       </div>
                     </div>
                     <div className="overflow-x-auto my-6 sm:overflow-hidden w-full  lg:w-full">
-        <table className="min-w-full  divide-y divide-gray-200 border-2 lg:max-w-1/2">
-          <thead className="bg-gray-50 border-2">
-            <tr className="border-2">
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
-              >
-                Crop 
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
-              >
-                Season
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
-              >
-                Area
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
-              >
-                
-              </th>
-            
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200 my-2 ">
-            {cropGridData.map((item, index) => (
-              <tr className="border-2" key={index}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {item.cropName}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {item.season_name}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {item.area}
-                </td>
-                <button className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
-                  {
-                    <AiOutlineDelete
-                      className="hover:text-red-500"
-                      onClick={() =>
-                        handleDeleteAreaInfo(item.cr_id)
-                      }
-                    ></AiOutlineDelete>
-                  }
-                </button>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                      <table className="min-w-full  divide-y divide-gray-200 border-2 lg:max-w-1/2">
+                        <thead className="bg-gray-50 border-2">
+                          <tr className="border-2">
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                            >
+                              Crop
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                            >
+                              Season
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                            >
+                              Area
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider sm:tracking-wider md:tracking-wider lg:tracking-wider xl:tracking-wider"
+                            >
+
+                            </th>
+
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200 my-2 ">
+                          {cropGridData.map((item, index) => (
+                            <tr className="border-2" key={index}>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {item.cropName}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {item.season_name}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {item.area}
+                              </td>
+                              <button className="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap">
+                                {
+                                  <AiOutlineDelete
+                                    className="hover:text-red-500"
+                                    onClick={() =>
+                                      handleDeleteAreaInfo(item.cr_id)
+                                    }
+                                  ></AiOutlineDelete>
+                                }
+                              </button>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
 
 

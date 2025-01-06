@@ -534,19 +534,28 @@ const AdditionalInfo = (props) => {
   const fileInputRef = useRef(null);
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
-
-    setSelectedNewImage(file);
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setSelectedImage(reader.result);
-    };
-
+    // Get the uploaded file
+    // Check if a file is selected
     if (file) {
-      reader.readAsDataURL(file);
+      // Define allowed MIME types
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/bmp', 'image/heif'];
+      // Validate file type
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Invalid Image");
+        return; // Stop processing if invalid
+      }
+      setSelectedNewImage(file);
+      const reader = new FileReader();
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+      };
+      // Proceed with handling the valid image file
+      console.log('File uploaded:', file);
     }
   };
-
   const uploadImage = async () => {
     function getFileExtension(filename) {
       if (typeof filename.name !== "string") {
@@ -571,16 +580,14 @@ const AdditionalInfo = (props) => {
       fd.append(
         "myFile",
         renamedBlob,
-        `${fMeetCode}.${getFileExtension(selectedNewImage)}`
+        selectedNewImage.name
       );
 
       const response = await axios
         .post(`${url}/api/upload_file`, fd, {
           params: {
             file_path: "mr_meet",
-            farmer_meet_image_Url: `${fMeetCode}.${getFileExtension(
-              selectedNewImage
-            )}`,
+            farmer_meet_image_Url: selectedNewImage.name,
             f_meet_no: fMeetCode,
           },
         })
@@ -601,18 +608,29 @@ const AdditionalInfo = (props) => {
   const fileInputRefFull = useRef(null);
   const handleImageUploadFull = (event) => {
     const file = event.target.files[0];
-
-    setSelectedNewImageFull(file);
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setSelectedImageFull(reader.result);
-    };
-
+    // Get the uploaded file
+    // Check if a file is selected
     if (file) {
-      reader.readAsDataURL(file);
+      // Define allowed MIME types
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/bmp', 'image/heif'];
+      // Validate file type
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Invalid Image");
+        return; // Stop processing if invalid
+      }
+      setSelectedNewImageFull(file);
+      const reader = new FileReader();
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+      reader.onloadend = () => {
+        setSelectedImageFull(reader.result);
+      };
+      // Proceed with handling the valid image file
+      console.log('File uploaded:', file);
     }
   };
+
 
   const uploadImageFull = async () => {
     function getFileExtension(filename) {
@@ -638,16 +656,14 @@ const AdditionalInfo = (props) => {
       fd.append(
         "myFile",
         renamedBlob,
-        `${fMeetCode}.${getFileExtension(selectedNewImageFull)}`
+        selectedNewImageFull.name
       );
 
       const response = await axios
         .post(`${url}/api/upload_file`, fd, {
           params: {
             file_path: "mr_meet_attendance",
-            farmer_meet_attendance_img: `${fMeetCode}.${getFileExtension(
-              selectedNewImageFull
-            )}`,
+            farmer_meet_attendance_img: selectedNewImageFull.name,
             f_meet_no: fMeetCode,
           },
         })
