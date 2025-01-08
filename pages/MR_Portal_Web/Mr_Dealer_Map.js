@@ -78,7 +78,7 @@ const NewDealer = () => {
           })
         );
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -108,42 +108,42 @@ const NewDealer = () => {
         const data =
           router.query.type !== "Add"
             ? allDealer
-                ?.filter((el) => el.selected === true)
-                .map((item, idx) => {
-                  return {
-                    t_id: filterState.tId,
-                    c_id: JSON.parse(window.localStorage.getItem("userinfo"))
-                      .c_id,
-                    bg_id: filterState.bgId,
-                    bu_id: filterState.buId,
-                    r_id: filterState.rId,
-                    z_id: filterState.zId,
-                    year: selectedYr.getFullYear(),
-                    customer_code: Number(item.party_code),
-                    checked: item.selected,
-                    party_name: item.distribution_name,
-                    emp_code: filterState.empCode,
-                  };
-                })
+              ?.filter((el) => el.selected === true)
+              .map((item, idx) => {
+                return {
+                  t_id: filterState.tId,
+                  c_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                    .c_id,
+                  bg_id: filterState.bgId,
+                  bu_id: filterState.buId,
+                  r_id: filterState.rId,
+                  z_id: filterState.zId,
+                  year: selectedYr.getFullYear(),
+                  customer_code: Number(item.party_code),
+                  checked: item.selected,
+                  party_name: item.distribution_name,
+                  emp_code: filterState.empCode,
+                };
+              })
             : allDealer
-                ?.filter((el) => el.selected === true)
-                .map((item, idx) => {
-                  return {
-                    t_id: filterState.tId,
-                    c_id: JSON.parse(window.localStorage.getItem("userinfo"))
-                      .c_id,
-                    bg_id: filterState.bgId,
-                    bu_id: filterState.buId,
-                    r_id: filterState.rId,
-                    z_id: filterState.zId,
-                    year: selectedYr.getFullYear(),
-                    customer_code: Number(item.party_code),
-                    emp_code:
-                      router.query.type !== "Add"
-                        ? router.query.empCode
-                        : filterState.empCode,
-                  };
-                });
+              ?.filter((el) => el.selected === true)
+              .map((item, idx) => {
+                return {
+                  t_id: filterState.tId,
+                  c_id: JSON.parse(window.localStorage.getItem("userinfo"))
+                    .c_id,
+                  bg_id: filterState.bgId,
+                  bu_id: filterState.buId,
+                  r_id: filterState.rId,
+                  z_id: filterState.zId,
+                  year: selectedYr.getFullYear(),
+                  customer_code: Number(item.party_code),
+                  emp_code:
+                    router.query.type !== "Add"
+                      ? router.query.empCode
+                      : filterState.empCode,
+                };
+              });
 
         const respond = await axios
           .post(`${url}/${endPoint}`, JSON.stringify({ data: data }), {
@@ -248,7 +248,7 @@ const NewDealer = () => {
           .filter((item) => Number(item.bg_id) === Number(segmentId))
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -273,7 +273,7 @@ const NewDealer = () => {
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
           .filter((item) => Number(item.z_id) === Number(zoneId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -301,10 +301,10 @@ const NewDealer = () => {
           .filter((item) => Number(item.z_id) === Number(zoneId))
           .filter((item) => Number(item.r_id) === Number(regionId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
-   useEffect(() => {
+  useEffect(() => {
     if (
       !filterState.bgId ||
       !filterState.buId ||
@@ -459,7 +459,7 @@ const NewDealer = () => {
               JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
                 ? "All"
                 : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                  "All",
+                "All",
             roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
           });
 
@@ -504,12 +504,12 @@ const NewDealer = () => {
               JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
                 ? "All"
                 : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                  "All",
+                "All",
             tId:
               JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
                 ? "All"
                 : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                  "All",
+                "All",
             roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
           });
 
@@ -553,12 +553,12 @@ const NewDealer = () => {
               JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
                 ? "All"
                 : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                  "All",
+                "All",
             tId:
               JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
                 ? "All"
                 : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                  "All",
+                "All",
             roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
           });
 
@@ -592,12 +592,12 @@ const NewDealer = () => {
               JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
                 ? "All"
                 : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                  "All",
+                "All",
             tId:
               JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
                 ? "All"
                 : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                  "All",
+                "All",
             roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
           });
 
@@ -876,7 +876,7 @@ const NewDealer = () => {
             showYearPicker
             minDate={new Date(new Date().getFullYear(), 0, 1)}
             disabled={router.query.type !== "Add"}
-            //   disabled={router.query.type !== "Add"}
+          //   disabled={router.query.type !== "Add"}
           />
         </div>
 

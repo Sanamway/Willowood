@@ -13,7 +13,7 @@ import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { TbFileDownload } from "react-icons/tb";
-  import * as XLSX from "xlsx";
+import * as XLSX from "xlsx";
 const StockLiquidation = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
@@ -55,14 +55,14 @@ const StockLiquidation = () => {
           paging: true,
           page: currentPage,
           size: 50,
-          zrt:true
+          zrt: true
         },
       });
       const apires = await respond.data.data.miData;
       const count = await respond.data.data.miDataCount;
       setPageCount(Math.ceil(count / 50));
       setDataCount(count)
-      setData(apires);
+      setData(apires.map((item) => { return { isVerified: item.verified === "Yes" ? true : false, isApproved: item.approved === "Yes" ? true : false, ...item } }));
     } catch (error) {
       setData([]);
     }
@@ -77,12 +77,12 @@ const StockLiquidation = () => {
     isTrue: "Yes",
     date: new Date(),
     user: "",
-    productBrand: "", 
-    crop: "" ,
-    dealerId: "" 
+    productBrand: "",
+    crop: "",
+    dealerId: ""
   });
 
-  
+
   const handleVerify = async () => {
     const data = {
       verified: modalData.isTrue,
@@ -102,55 +102,55 @@ const StockLiquidation = () => {
       const apires = await respond.data.message;
       toast.success(apires);
       getFarmerDemo(
-      currentPage.selected + 1,
-      filterState.bgId,
-      filterState.buId,
-      filterState.zId,
-      filterState.rId,
-      filterState.tId,
-      filterState.startDate,
-      filterState.endDate,
-      filterState.empCode
-    );
-    } catch (error) {}
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
+    } catch (error) { }
   };
 
-  const handleDelete = async() =>{
+  const handleDelete = async () => {
     try {
-        const respond = await axios
-          .get(`${url}/api/delete_dealer_stock_liq`, {
-            headers: headers,
-            params:{
-                emp_code: window.localStorage.getItem("emp_code"),
-                c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-                t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-                product_brand: modalData.productBrand, 
-                crop: modalData.crop ,
-                dealer_id: modalData.dealerId         
-            }
-          })
-          .then((res) => {
-            if (!res) return;
-            toast.success(res.data.message);
-            getFarmerDemo(
-                currentPage.selected + 1,
-                filterState.bgId,
-                filterState.buId,
-                filterState.zId,
-                filterState.rId,
-                filterState.tId,
-                filterState.startDate,
-                filterState.endDate,
-                filterState.empCode
-              );
-              handleCloseModal()
-        
-          });
-        const apires = await respond.data.data;
-      } catch (error) {
-        if (error.response) toast.error(error.response.data.message);
-      }
-   }
+      const respond = await axios
+        .get(`${url}/api/delete_dealer_stock_liq`, {
+          headers: headers,
+          params: {
+            emp_code: window.localStorage.getItem("emp_code"),
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+            product_brand: modalData.productBrand,
+            crop: modalData.crop,
+            dealer_id: modalData.dealerId
+          }
+        })
+        .then((res) => {
+          if (!res) return;
+          toast.success(res.data.message);
+          getFarmerDemo(
+            currentPage.selected + 1,
+            filterState.bgId,
+            filterState.buId,
+            filterState.zId,
+            filterState.rId,
+            filterState.tId,
+            filterState.startDate,
+            filterState.endDate,
+            filterState.empCode
+          );
+          handleCloseModal()
+
+        });
+      const apires = await respond.data.data;
+    } catch (error) {
+      if (error.response) toast.error(error.response.data.message);
+    }
+  }
 
   const [currentUser, setCurrentUser] = useState("");
   useEffect(() => {
@@ -164,9 +164,9 @@ const StockLiquidation = () => {
       isTrue: "Yes",
       date: new Date(),
       user: "",
-      productBrand: "", 
-      crop: "" ,
-      dealerId: "" 
+      productBrand: "",
+      crop: "",
+      dealerId: ""
     });
     setShowVerifyModal(false)
     setShowDeleteModal(false);
@@ -252,7 +252,7 @@ const StockLiquidation = () => {
           .filter((item) => Number(item.bg_id) === Number(segmentId))
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -277,7 +277,7 @@ const StockLiquidation = () => {
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
           .filter((item) => Number(item.z_id) === Number(zoneId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -307,7 +307,7 @@ const StockLiquidation = () => {
           .filter((item) => Number(item.z_id) === Number(zoneId))
           .filter((item) => Number(item.r_id) === Number(regionId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -363,7 +363,7 @@ const StockLiquidation = () => {
   ]);
 
 
-  
+
   useEffect(() => {
     // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     const roleId = 6;
@@ -487,7 +487,7 @@ const StockLiquidation = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -542,12 +542,12 @@ const StockLiquidation = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -601,12 +601,12 @@ const StockLiquidation = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -650,12 +650,12 @@ const StockLiquidation = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -694,10 +694,10 @@ const StockLiquidation = () => {
         break;
     }
   }, []);
- 
+
 
   useEffect(() => {
-    handlePageChange({selected: 0})
+    handlePageChange({ selected: 0 })
     getFarmerDemo(
       1,
       filterState.bgId,
@@ -736,89 +736,558 @@ const StockLiquidation = () => {
   ]);
   const { name } = router.query;
 
-  const getAllActionButton = (item) =>{
+  const handleApproveAll = async () => {
+    const approvedIds = data.filter(item => item.approved !== "Yes").filter(item => item.isApproved).map(item => item.sa_id);
+
+    const newData = {
+      approved: "Yes",
+      approved_date: new Date(),
+      approved_user: window.localStorage.getItem("user_name"),
+    };
+    try {
+
+      const respond = await axios.post(`${url}/api/update_dealer_stock_liq`,
+        newData,
+        {
+          headers: headers,
+          params: {
+            sa_id: JSON.stringify(approvedIds)
+          },
+
+        });
+      const apires = await respond.data.message;
+
+      setAllApproved(false)
+      toast.success(apires);
+      getFarmerDemo(
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
+    } catch (error) { }
+  };
+
+  const handleVerifyAll = async () => {
+    const approvedIds = data.filter(item => item.verified !== "Yes").filter(item => item.isVerified).map(item => item.sa_id);
+
+    const newData = {
+      verified: "Yes",
+      verified_date: new Date(),
+      verified_user: window.localStorage.getItem("user_name"),
+    };
+    try {
+
+      const respond = await axios.post(`${url}/api/update_dealer_stock_liq`,
+        newData,
+        {
+          headers: headers,
+          params: {
+            sa_id: JSON.stringify(approvedIds)
+          },
+
+        });
+      const apires = await respond.data.message;
+
+      setAllVerified(false)
+      toast.success(apires);
+      getFarmerDemo(
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
+    } catch (error) { }
+  };
+
+  const handleCheckboxChange = (field, value, item) => {
+    setData(prevData =>
+      prevData.map(el =>
+        el.sa_id === item.sa_id
+          ? { ...el, [field]: value }
+          : el
+      )
+    );
+  };
+
+  const getAllActionButton = (item) => {
     let role = localStorageItems.roleId
- switch(role){
-  
-case 6: return <div>
-<button
-disabled={item.verified === "Yes"}
-onClick={() => {
-  setShowVerifyModal(true);
-  setModalData({
-    ...modalData,
-    type: "Verify",
-    id:  item.sa_id,
-  });
-}}
->
-Verify
-</button>
-<button
-  className="b text-black hover:text-red-500 ml-2"
-  onClick={() => {
-    setShowDeleteModal(true);
-    setModalData({
-      ...modalData,
-       productBrand: item.product_brand, 
-       crop: item.crop ,
-       dealerId: item.dealer_id 
-    });
-  }}
->
-  Delete
-</button>
-</div> 
-case 9: return <div>
-<button
-disabled={item.verified === "Yes"}
-onClick={() => {
-  setShowVerifyModal(true);
-  setModalData({
-    ...modalData,
-    type: "Verify",
-    id:  item.sa_id,
-  });
-}}
->
-Verify
-</button>
-<button
-  className="b text-black hover:text-red-500 ml-2"
-  onClick={() => {
-    setShowDeleteModal(true);
-    setModalData({
-      ...modalData,
-       productBrand: item.product_brand, 
-       crop: item.crop ,
-       dealerId: item.dealer_id 
-    });
-  }}
->
-  Delete
-</button>
-</div> 
-default: return <div>
-<button
-  className="b text-black hover:text-red-500 ml-2"
-  onClick={() => {
-    setShowDeleteModal(true);
-    setModalData({
-      ...modalData,
-       productBrand: item.product_brand, 
-       crop: item.crop ,
-       dealerId: item.dealer_id 
-    });
-  }}
->
-  Delete
-</button>
-</div> 
 
-}
+    switch (role) {
+      case 1:
+        return <div className="flex items-center">
+          <input type="Checkbox"
+            className="ml-1 mr-1"
+            checked={item.isVerified}
+            disabled={item.verified === "Yes"}
+            onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Verify",
+                id: item.sa_id,
+              });
+            }}
+            disabled={item.verified === "Yes"}
+
+          >
+            Verify
+          </button>
+          <input type="Checkbox"
+            className="ml-1 mr-1"
+            checked={item.isApproved}
+            disabled={item.approved === "Yes"}
+            onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Approve",
+                id: item.sa_id,
+              });
+            }}
+            disabled={item.approved === "Yes"}
+            className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+
+          >
+            Approve
+          </button>
+
+          <button
+            className="b text-black hover:text-red-500 ml-2"
+            onClick={() => {
+              setShowDeleteModal(true);
+              setModalData({
+                ...modalData,
+
+                id: item.sa_id,
+              });
+            }}
+          >
+            Delete
+          </button>
+        </div>
+
+      case 8: return <div className="flex items-center">
+        <input type="Checkbox"
+          className="ml-1 mr-1"
+          checked={item.isVerified}
+          disabled={item.verified === "Yes"}
+          onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Verify",
+              id: item.sa_id,
+            });
+          }}
+          disabled={item.verified === "Yes"}
+
+        >
+          Verify
+        </button>
+        <input type="Checkbox"
+          className="ml-1 mr-1"
+          checked={item.isApproved}
+          disabled={item.approved === "Yes"}
+          onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.sa_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+
+        >
+          Approve
+        </button>
+
+        <button
+          className="b text-black hover:text-red-500 ml-2"
+          onClick={() => {
+            setShowDeleteModal(true);
+            setModalData({
+              ...modalData,
+
+              id: item.sa_id,
+            });
+          }}
+        >
+          Delete
+        </button>
+      </div>
+
+      case 4: return <div className="flex items-center">
+
+        <input type="Checkbox"
+          className="ml-1 mr-1"
+          checked={item.isApproved}
+          disabled={item.approved === "Yes"}
+          onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.sa_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+
+        >
+          Approve
+        </button>
+
+
+      </div>
+
+      case 5: return <div className="flex items-center">
+
+        <input type="Checkbox"
+          className="ml-1 mr-1"
+          checked={item.isApproved}
+          disabled={item.approved === "Yes"}
+          onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.sa_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+
+        >
+          Approve
+        </button>
+
+
+      </div>
+
+      case 6: return <div className="flex items-center">
+        <input type="Checkbox"
+          className="ml-1 mr-1"
+          checked={item.isVerified}
+          disabled={item.verified === "Yes"}
+          onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Verify",
+              id: item.sa_id,
+            });
+          }}
+          disabled={item.verified === "Yes"}
+
+        >
+          Verify
+        </button>
+
+      </div>
+
+      case 9: return <div className="flex items-center">
+        <input type="Checkbox"
+          className="ml-1 mr-1"
+          checked={item.isVerified}
+          disabled={item.verified === "Yes"}
+          onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Verify",
+              id: item.sa_id,
+            });
+          }}
+          disabled={item.verified === "Yes"}
+
+        >
+          Verify
+        </button>
+
+      </div>
+
+      default:
+        return <div className="flex items-center">
+          <input type="Checkbox"
+            className="ml-1 mr-1"
+            checked={item.isVerified}
+            disabled={item.verified === "Yes"}
+            onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Verify",
+                id: item.sa_id,
+              });
+            }}
+            disabled={item.verified === "Yes"}
+
+          >
+            Verify
+          </button>
+          <input type="Checkbox"
+            className="ml-1 mr-1"
+            checked={item.isApproved}
+            disabled={item.approved === "Yes"}
+            onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Approve",
+                id: item.sa_id,
+              });
+            }}
+            disabled={item.approved === "Yes"}
+            className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+
+          >
+            Approve
+          </button>
+
+          <button
+            className="b text-black hover:text-red-500 ml-2"
+            onClick={() => {
+              setShowDeleteModal(true);
+              setModalData({
+                ...modalData,
+
+                id: item.sa_id,
+              });
+            }}
+          >
+            Delete
+          </button>
+        </div>
+
     }
+  }
 
-    const [excelLoading, setExcelLoading] = useState(false)
+
+  const [allVerified, setAllVerified] = useState(false)
+  const [allApproved, setAllApproved] = useState(false)
+  const handleVerifyAllChange = (e) => {
+    const value = e.target.checked;
+    setAllVerified(value);
+    setData(prevData =>
+      prevData.map(el => ({
+        ...el,
+        isVerified: value
+      }))
+    );
+  };
+
+
+  const handleApproveAllChange = (e) => {
+    const value = e.target.checked;
+    setAllApproved(value);
+    setData(prevData =>
+      prevData.map(el => ({
+        ...el,
+        isApproved: value
+      }))
+    );
+  };
+
+  const getTopActionButton = () => {
+    let role = localStorageItems.roleId
+
+    switch (role) {
+      case 1: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+
+
+
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allVerified}
+            onChange={handleVerifyAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Verify</span>
+        </span>
+
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleVerifyAll()
+          }}
+        >Verify All</button>
+
+
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allApproved}
+            onChange={handleApproveAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Approve</span>
+        </span>
+
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleApproveAll()
+          }}
+        >Approve All</button>
+      </div>
+      case 8: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+        <div className="inline-flex items-center">
+          <input
+            type="checkbox"
+            checked={allVerified}
+            onChange={handleVerifyAllChange}
+            className="ml-2"
+          />
+          <span className="text-xs ml-1">Select All Verify</span>
+        </div>
+
+        <div className="inline-flex items-center ml-4">
+          <input
+            type="checkbox"
+            checked={allApproved}
+            onChange={handleApproveAllChange}
+            className="ml-2"
+          />
+          <span className="text-xs ml-1">Select All Approve</span>
+        </div>
+      </div>
+
+      case 4: return <div className="flex flex-col gap-2 items-start ml-4">
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allApproved}
+            onChange={handleApproveAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Approve</span>
+        </span>
+
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleApproveAll()
+          }}
+        >Approve All</button>
+      </div>
+
+
+
+      case 5: return <div className="flex flex-col gap-2 items-start ml-4">
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allApproved}
+            onChange={handleApproveAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Approve</span>
+        </span>
+
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleApproveAll()
+          }}
+        >Approve All</button>
+      </div>
+
+
+      case 6: return <div className="flex flex-col gap-2 items-start ml-4">
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allVerified}
+            onChange={handleVerifyAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Verify</span>
+        </span>
+
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleVerifyAll()
+          }}
+        >Verify All</button>
+      </div>
+
+
+
+
+
+
+
+
+      case 9: return <div className="flex flex-col gap-2 items-start ml-4">
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allVerified}
+            onChange={handleVerifyAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Verify</span>
+        </span>
+
+
+        <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleVerifyAll()
+          }}
+        >Verify All</button>
+      </div>
+
+    }
+  }
+
+  const [excelLoading, setExcelLoading] = useState(false)
   const getExcelsheet = async (
     bg,
     bu,
@@ -828,41 +1297,42 @@ default: return <div>
     from,
     to,
     empCode
-    ) => {
+  ) => {
     try {
       setExcelLoading(true)
       const respond = await axios.get(`${url}/api/get_dealer_stock_liq`, {
         headers: headers,
         params: {
-          t_id: t === "All" ?    null : t,
-          bg_id: bg === "All" ?  null : bg,
-          bu_id: bu === "All" ?  null : bu,
-          z_id: z === "All" ?    null : z,
-          r_id: r === "All" ?    null : r,
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
           from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
-          to:   moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+          to: moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           emp_code: empCode,
-          excel: true, 
+          excel: true,
         },
       });
       const apires = await respond.data.data;
-      const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
-     ["SA Code"]: item.sa_code,
-     ["Employee Code"]: item.emp_code,
-     ["Employee Name"]: item.emp_name,
-     ["Inventory Date"]: moment(item.inventory_date
-     ).format("DD/MM/YYYY"),
-     ["Dealer Code"]: item.dealer_id,
-     ["Dealer Name"]: item.dealer_des,
-     ["Product Brand"]: item.product_brand,
-     ["Crop Name"]: item.crop,
-     ["Stock Qty"]: item.stock_sale_qty,
-      ["Territory"]: item.territory_name,
-      ["Company"]: item.cmpny_name,
-      ["Deleted"]: item.isDeleted ? "Yes" : "No",
-      }
-     } ));
+      const ws = XLSX.utils.json_to_sheet(apires.map((item) => {
+        return {
+          ["SA Code"]: item.sa_code,
+          ["Employee Code"]: item.emp_code,
+          ["Employee Name"]: item.emp_name,
+          ["Inventory Date"]: moment(item.inventory_date
+          ).format("DD/MM/YYYY"),
+          ["Dealer Code"]: item.dealer_id,
+          ["Dealer Name"]: item.dealer_des,
+          ["Product Brand"]: item.product_brand,
+          ["Crop Name"]: item.crop,
+          ["Stock Qty"]: item.stock_sale_qty,
+          ["Territory"]: item.territory_name,
+          ["Company"]: item.cmpny_name,
+          ["Deleted"]: item.isDeleted ? "Yes" : "No",
+        }
+      }));
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
       XLSX.writeFile(wb, `StockLiquidation.xlsx`);
@@ -880,6 +1350,110 @@ default: return <div>
       </div>
     );
   };
+  const filterDisableOption = (currentFilter) => {
+    function getLastAssignedKey(filterState) {
+      // Define an array of keys in the order you want to check
+      const keys = ['bgId', 'buId', 'zId', 'rId', 'tId'];
+
+      // Iterate through the keys in reverse order
+      for (let i = keys.length - 1; i >= 0; i--) {
+        const key = keys[i];
+        if (typeof filterState[key] === 'number' && !isNaN(filterState[key])) {
+          return key;
+        }
+      }
+
+      // If no valid number is found, return null or undefined
+      return null;
+    }
+
+    console.log("zpo", currentFilter)
+    const role = localStorageItems.roleId
+    console.log("pop", getLastAssignedKey(filterState) === "tId")
+    if (role === 9) {
+
+      switch (currentFilter) {
+        case "Teritory": if (
+          getLastAssignedKey(filterState) === "tId") { return true }
+        else {
+          return false
+
+        }
+        case "Region": if (
+          getLastAssignedKey(filterState) === "tId" || getLastAssignedKey(filterState) === "rId") { return true }
+        else {
+          return false
+
+        }
+        case "Zone": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId") { return true }
+        else {
+          return false
+
+        }
+        case "BU": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId") { return true }
+        else {
+          return false
+
+        }
+        case "BG": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId" || getLastAssignedKey(filterState) === "bgId") { return true }
+        else {
+          return false
+
+        }
+      }
+
+    }
+    else {
+      switch (currentFilter) {
+        case "Territory": if (
+          role === 6) { return true }
+        else {
+          return false
+
+        }
+        case "Region": if (role === 6 || role === 5
+        ) { return true }
+        else { return false }
+        case "Zone": if (role === 6 ||
+          role === 5 ||
+          role === 4) {
+          return true
+        }
+        else { return false }
+        case "BU": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3) {
+          return true
+        }
+        else {
+          false
+        }
+        case "BG": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3 ||
+          role === 10) {
+          return true
+        }
+        else {
+          return false
+        }
+
+      }
+
+    }
+
+  }
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -889,9 +1463,9 @@ default: return <div>
             {name ? name : "Stock Liquidation"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer pr-4">
-          {" "}
-          {excelLoading ? <LoaderExcel
-                  />   :    <TbFileDownload
+            {" "}
+            {excelLoading ? <LoaderExcel
+            /> : <TbFileDownload
               className="text-green-600 cursor-pointer "
               size={32}
               onClick={() => getExcelsheet(
@@ -903,10 +1477,10 @@ default: return <div>
                 filterState.startDate,
                 filterState.endDate,
                 filterState.empCode
-              ) 
+              )
               }
             ></TbFileDownload>}
-          
+
             <h2>
               <AiTwotoneHome
                 className="text-black-500"
@@ -942,11 +1516,7 @@ default: return <div>
               }
             }}
             disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4 ||
-              localStorageItems.roleId === 3 ||
-              localStorageItems.roleId === 10
+              filterDisableOption("BG")
             }
           >
             <option value={"All"} className="font-bold">
@@ -980,11 +1550,7 @@ default: return <div>
                 });
               }
             }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4 ||
-              localStorageItems.roleId === 3
+            disabled={filterDisableOption("BU")
             }
           >
             <option value={"All"}>- All Business Unit -</option>
@@ -995,7 +1561,7 @@ default: return <div>
               </option>
             ))}
           </select>
-{""}
+
           <select
             className="border rounded px-2 py-1  w-1/2 h-8"
             id="stateSelect"
@@ -1015,10 +1581,7 @@ default: return <div>
                 });
               }
             }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4
+            disabled={filterDisableOption("Zone")
             }
           >
             <option value={"All"}>- All Zone -</option>
@@ -1035,8 +1598,7 @@ default: return <div>
             id="stateSelect"
             value={filterState.rId}
             disabled={
-              localStorageItems.roleId === 6 || localStorageItems.roleId === 5
-            }
+              filterDisableOption("Region")}
             onChange={(e) => {
               if (e.target.value === "All") {
                 setFilterState({
@@ -1065,7 +1627,7 @@ default: return <div>
             className="border rounded px-2 py-1 w-1/2 h-8"
             id="stateSelect"
             value={filterState.tId}
-            disabled={localStorageItems.roleId === 6}
+            disabled={filterDisableOption("Territory")}
             onChange={(e) =>
               setFilterState({
                 ...filterState,
@@ -1123,6 +1685,7 @@ default: return <div>
             />
           </div>
         </div>
+        {getTopActionButton()}
 
         <div className="overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
           <table className="min-w-full divide-y border- divide-gray-200 ">
@@ -1135,42 +1698,42 @@ default: return <div>
                   SA Code
                 </th>
                 <th className="px-4 py-2  text-left w-max dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
-                Employee Code
+                  Employee Code
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Employee Name
+                  Employee Name
                 </th>
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Inventory Date
-                </th>
-              
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Dealer Code
+                  Inventory Date
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Dealer Name
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Product Brand
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Crop Name
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                Stock Qty
-                </th>
-                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-              Territory
+                  Dealer Code
                 </th>
 
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-              Company Name
+                  Dealer Name
                 </th>
-               
-              
-               
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Product Brand
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Crop Name
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Stock Qty
+                </th>
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Territory
+                </th>
+
+                <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  Company Name
+                </th>
+
+
+
                 <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Deleted
                 </th>
@@ -1180,40 +1743,40 @@ default: return <div>
               {data.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
                   <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
-                  {getAllActionButton(item)} 
-                </td>
-                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                    {item.
-sa_code
-}
+                    {getAllActionButton(item)}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.
-emp_code
-}
+                      sa_code
+                    }
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.
-emp_name
-}
+                      emp_code
+                    }
                   </td>
-               
+                  <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                    {item.
+                      emp_name
+                    }
+                  </td>
+
 
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                
+
                     {moment(item.inventory_date
-).format("DD/MM/YYYY")}
+                    ).format("DD/MM/YYYY")}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {/* {item.
 material_pop_require
 }  */}{
-item.dealer_id}
+                      item.dealer_id}
                   </td>
-                 
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                  {
-item.dealer_des}
+                    {
+                      item.dealer_des}
                   </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.product_brand
@@ -1230,38 +1793,38 @@ item.dealer_des}
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.territory_name}
                   </td>
-               
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.cmpny_name}
                   </td>
-                  
+
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.isDeleted ? "Yes" : "No"}
                   </td>
-                                  </tr>
+                </tr>
               ))}
             </tbody>
           </table>
-         
+
         </div>
         <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
-        <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
-      Showing <small className="font-bold px-2 self-center text-black">{data.length ? "1" : "0"}</small> to{" "}
-      <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
-      <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
-    </div>
-    <ReactPaginate
-      previousLabel={"Previous"}
-      nextLabel={"Next"}
-      breakLabel={"..."}
-      pageCount={pageCount}
-      onPageChange={handlePageChange}
-      containerClassName={"pagination flex flex-row gap-2"} // Container styling
-      activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
-      className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
-      forcePage={currentPage.selected} // Set the current page
-     />
-  </div>
+          <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
+            Showing <small className="font-bold px-2 self-center text-black">{data.length ? "1" : "0"}</small> to{" "}
+            <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
+            <small className="font-bold px-2 self-center text-black">{dataCount}</small> results
+          </div>
+          <ReactPaginate
+            previousLabel={"Previous"}
+            nextLabel={"Next"}
+            breakLabel={"..."}
+            pageCount={pageCount}
+            onPageChange={handlePageChange}
+            containerClassName={"pagination flex flex-row gap-2"} // Container styling
+            activeClassName={"text-white bg-blue-500 rounded px-2"} // Active page styling
+            className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
+            forcePage={currentPage.selected} // Set the current page
+          />
+        </div>
       </div>
 
       <Transition appear show={showImageModal} as={Fragment}>
@@ -1418,7 +1981,7 @@ item.dealer_des}
                     </div>
 
                     {modalData.type === "Verify" ? (
-                     <div className="mt-6 flex justify-center gap-1">
+                      <div className="mt-6 flex justify-center gap-1">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
@@ -1457,12 +2020,12 @@ item.dealer_des}
           </div>
         </Dialog>
       </Transition>
-     
+
       <Transition appear show={showDeleteModal} as={Fragment}>
         <Dialog
           as="div"
           className="relative z-10"
-          onClose={() =>handleCloseModal()}
+          onClose={() => handleCloseModal()}
         >
           <Transition.Child
             as={Fragment}

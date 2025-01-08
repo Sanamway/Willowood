@@ -74,7 +74,7 @@ const RollingPlans = () => {
       });
       const apires = await respond.data.data;
       setAllYearData([...new Set(apires.map((item) => item.t_year))]);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const RollingPlans = () => {
       const apires = await respond.data.data;
 
       setAllMonthData([...new Set(apires.map((item) => item.m_year))]);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -248,7 +248,7 @@ const RollingPlans = () => {
           (item) =>
             item.isDeleted === false &&
             Number(item.c_id) ===
-              JSON.parse(window.localStorage.getItem("userinfo")).c_id
+            JSON.parse(window.localStorage.getItem("userinfo")).c_id
         )
       );
     } catch (error) {
@@ -297,7 +297,7 @@ const RollingPlans = () => {
           .filter((item) => Number(item.bg_id) === Number(segmentId))
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -321,7 +321,7 @@ const RollingPlans = () => {
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
           .filter((item) => Number(item.z_id) === Number(zoneId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -351,7 +351,7 @@ const RollingPlans = () => {
           .filter((item) => Number(item.z_id) === Number(zoneId))
           .filter((item) => Number(item.r_id) === Number(regionId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -386,7 +386,7 @@ const RollingPlans = () => {
 
       const apires = await respond.data.data;
       setDepotData(apires);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -1250,41 +1250,41 @@ const RollingPlans = () => {
 
               {!(
                 JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
-                  4 && filterState.rId
+                4 && filterState.rId
               ) && (
-                <li
-                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                  onClick={() => {
-                    handleDownloadExcelView(
-                      mYr,
-                      planId,
-                      tranId,
-                      yr,
-                      depot,
-                      zrt,
-                      status,
-                      stage,
-                      filterState,
-                      bg,
-                      bu,
-                      z,
-                      r,
-                      t,
-                      c,
-                      w,
-                      tDes,
-                      rDes
-                    );
-                  }}
-                >
-                  {viewLoading ? (
-                    <Loader />
-                  ) : (
-                    <MdOutlinePreview className="text-slate-400" />
-                  )}{" "}
-                  View
-                </li>
-              )}
+                  <li
+                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                    onClick={() => {
+                      handleDownloadExcelView(
+                        mYr,
+                        planId,
+                        tranId,
+                        yr,
+                        depot,
+                        zrt,
+                        status,
+                        stage,
+                        filterState,
+                        bg,
+                        bu,
+                        z,
+                        r,
+                        t,
+                        c,
+                        w,
+                        tDes,
+                        rDes
+                      );
+                    }}
+                  >
+                    {viewLoading ? (
+                      <Loader />
+                    ) : (
+                      <MdOutlinePreview className="text-slate-400" />
+                    )}{" "}
+                    View
+                  </li>
+                )}
 
               {(filterState.rId || filterState.rId === "All") &&
                 localStorageItems.roleId === 4 && (
@@ -1684,9 +1684,9 @@ const RollingPlans = () => {
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
               4 &&
               JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
-                3 &&
+              3 &&
               JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
-                10 && (
+              10 && (
                 <li
                   className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
                   onClick={() => {
@@ -1824,7 +1824,7 @@ const RollingPlans = () => {
             {upload &&
               !(
                 JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
-                  4 && filterState.rId
+                4 && filterState.rId
               ) && (
                 <li
                   className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
@@ -1863,9 +1863,8 @@ const RollingPlans = () => {
                     } else {
                       setIsOpen(true);
                       setModalData({
-                        message: `Rolling Sales Plan for the Month of Apr 24 and Closing Date ${
-                          lastSubDate.split("T")[0]
-                        } .  you can not upload after Closing Date , Please Contact your Business Unit Head for Extend the Closing Date for RSP Submission .`,
+                        message: `Rolling Sales Plan for the Month of Apr 24 and Closing Date ${lastSubDate.split("T")[0]
+                          } .  you can not upload after Closing Date , Please Contact your Business Unit Head for Extend the Closing Date for RSP Submission .`,
                         type: "Upload",
                         data: {},
                       });
@@ -1933,45 +1932,45 @@ const RollingPlans = () => {
             {(JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
               4 ||
               JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
-                3 ||
+              3 ||
               JSON.parse(window.localStorage.getItem("userinfo")).role_id ===
-                10) && (
-              <li
-                className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                onClick={() => {
-                  handleDownloadExcelEdit(
-                    mYr,
-                    planId,
-                    tranId,
-                    yr,
-                    depot,
-                    zrt,
-                    status,
-                    stage,
-                    filterState,
-                    bg,
-                    bu,
-                    z,
-                    r,
-                    t,
-                    c,
-                    w,
-                    tDes,
-                    rDes,
-                    zDes,
-                    buDes,
-                    bgDes
-                  );
-                }}
-              >
-                {editLoading ? (
-                  <Loader />
-                ) : (
-                  <FcApproval className="text-green-400" />
-                )}{" "}
-                Final Approve
-              </li>
-            )}
+              10) && (
+                <li
+                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                  onClick={() => {
+                    handleDownloadExcelEdit(
+                      mYr,
+                      planId,
+                      tranId,
+                      yr,
+                      depot,
+                      zrt,
+                      status,
+                      stage,
+                      filterState,
+                      bg,
+                      bu,
+                      z,
+                      r,
+                      t,
+                      c,
+                      w,
+                      tDes,
+                      rDes,
+                      zDes,
+                      buDes,
+                      bgDes
+                    );
+                  }}
+                >
+                  {editLoading ? (
+                    <Loader />
+                  ) : (
+                    <FcApproval className="text-green-400" />
+                  )}{" "}
+                  Final Approve
+                </li>
+              )}
 
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
@@ -2062,39 +2061,39 @@ const RollingPlans = () => {
               4 ||
               (JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
                 3 && (
-                <li
-                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                  onClick={() => {
-                    handleDownloadExcelView(
-                      mYr,
-                      planId,
-                      tranId,
-                      yr,
-                      depot,
-                      zrt,
-                      status,
-                      stage,
-                      filterState,
-                      bg,
-                      bu,
-                      z,
-                      r,
-                      t,
-                      c,
-                      w,
-                      tDes,
-                      rDes
-                    );
-                  }}
-                >
-                  {viewLoading ? (
-                    <Loader />
-                  ) : (
-                    <MdOutlinePreview className="text-slate-400" />
-                  )}{" "}
-                  View
-                </li>
-              ))}
+                  <li
+                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                    onClick={() => {
+                      handleDownloadExcelView(
+                        mYr,
+                        planId,
+                        tranId,
+                        yr,
+                        depot,
+                        zrt,
+                        status,
+                        stage,
+                        filterState,
+                        bg,
+                        bu,
+                        z,
+                        r,
+                        t,
+                        c,
+                        w,
+                        tDes,
+                        rDes
+                      );
+                    }}
+                  >
+                    {viewLoading ? (
+                      <Loader />
+                    ) : (
+                      <MdOutlinePreview className="text-slate-400" />
+                    )}{" "}
+                    View
+                  </li>
+                ))}
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
               Vs. Actual
@@ -2184,39 +2183,39 @@ const RollingPlans = () => {
               4 ||
               (JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
                 3 && (
-                <li
-                  className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                  onClick={() => {
-                    handleDownloadExcelView(
-                      mYr,
-                      planId,
-                      tranId,
-                      yr,
-                      depot,
-                      zrt,
-                      status,
-                      stage,
-                      filterState,
-                      bg,
-                      bu,
-                      z,
-                      r,
-                      t,
-                      c,
-                      w,
-                      tDes,
-                      rDes
-                    );
-                  }}
-                >
-                  {viewLoading ? (
-                    <Loader />
-                  ) : (
-                    <MdOutlinePreview className="text-slate-400" />
-                  )}{" "}
-                  View
-                </li>
-              ))}
+                  <li
+                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                    onClick={() => {
+                      handleDownloadExcelView(
+                        mYr,
+                        planId,
+                        tranId,
+                        yr,
+                        depot,
+                        zrt,
+                        status,
+                        stage,
+                        filterState,
+                        bg,
+                        bu,
+                        z,
+                        r,
+                        t,
+                        c,
+                        w,
+                        tDes,
+                        rDes
+                      );
+                    }}
+                  >
+                    {viewLoading ? (
+                      <Loader />
+                    ) : (
+                      <MdOutlinePreview className="text-slate-400" />
+                    )}{" "}
+                    View
+                  </li>
+                ))}
             <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center ">
               <TbDeviceDesktopAnalytics className="text-orange-400" /> Target
               Vs. Actual
@@ -2383,7 +2382,7 @@ const RollingPlans = () => {
             {JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
               4 &&
               JSON.parse(window.localStorage.getItem("userinfo")).role_id !==
-                3 && (
+              3 && (
                 <li
                   className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
                   onClick={() => {
@@ -4061,7 +4060,6 @@ const RollingPlans = () => {
                 </option>
               ))}
             </select>
-
             <select
               className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
@@ -4088,7 +4086,6 @@ const RollingPlans = () => {
                 </option>
               ))}
             </select>
-
             <select
               className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
@@ -4112,7 +4109,6 @@ const RollingPlans = () => {
                 </option>
               ))}
             </select>
-
             <select
               className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
@@ -4308,18 +4304,18 @@ const RollingPlans = () => {
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
               {((summaryData.actual / summaryData.budget) * 100).toFixed(2) ===
                 "NaN" ||
-              (
-                (summaryData.actual.toFixed(2) /
-                  summaryData.budget.toFixed(2)) *
-                100
-              ).toFixed(2) === "Infinity"
+                (
+                  (summaryData.actual.toFixed(2) /
+                    summaryData.budget.toFixed(2)) *
+                  100
+                ).toFixed(2) === "Infinity"
                 ? 0
                 : ((summaryData.actual / summaryData.budget) * 100).toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
               {((summaryData.actual / summaryData.mTarget) * 100).toFixed(2) ===
                 "NaN" ||
-              ((summaryData.actual / summaryData.mTarget) * 100).toFixed(2) ===
+                ((summaryData.actual / summaryData.mTarget) * 100).toFixed(2) ===
                 "Infinity"
                 ? 0
                 : ((summaryData.actual / summaryData.mTarget) * 100).toFixed(2)}
@@ -4327,11 +4323,11 @@ const RollingPlans = () => {
             <span className=" flex items-center  justify-center  border-gray-300 w-20">
               {((summaryData.actual / summaryData.target) * 100).toFixed(2) ===
                 "NaN" ||
-              (
-                (summaryData.actual.toFixed(2) /
-                  summaryData.target.toFixed(2)) *
-                100
-              ).toFixed(2) === "Infinity"
+                (
+                  (summaryData.actual.toFixed(2) /
+                    summaryData.target.toFixed(2)) *
+                  100
+                ).toFixed(2) === "Infinity"
                 ? 0
                 : ((summaryData.actual / summaryData.target) * 100).toFixed(2)}
             </span>
@@ -4354,42 +4350,42 @@ const RollingPlans = () => {
               {((summaryData.actualH1 / summaryData.budgetH1) * 100).toFixed(
                 2
               ) === "NaN" ||
-              (
-                (summaryData.actualH1.toFixed(2) /
-                  summaryData.budgetH1.toFixed(2)) *
-                100
-              ).toFixed(2) === "Infinity"
+                (
+                  (summaryData.actualH1.toFixed(2) /
+                    summaryData.budgetH1.toFixed(2)) *
+                  100
+                ).toFixed(2) === "Infinity"
                 ? 0
                 : ((summaryData.actualH1 / summaryData.budgetH1) * 100).toFixed(
-                    2
-                  )}
+                  2
+                )}
             </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
               {((summaryData.actualH1 / summaryData.mTargetH1) * 100).toFixed(
                 2
               ) === "NaN" ||
-              ((summaryData.actualH1 / summaryData.mTargetH1) * 100).toFixed(
-                2
-              ) === "Infinity"
+                ((summaryData.actualH1 / summaryData.mTargetH1) * 100).toFixed(
+                  2
+                ) === "Infinity"
                 ? 0
                 : (
-                    (summaryData.actualH1 / summaryData.mTargetH1) *
-                    100
-                  ).toFixed(2)}
+                  (summaryData.actualH1 / summaryData.mTargetH1) *
+                  100
+                ).toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center  border-gray-300 w-20">
               {((summaryData.actualH1 / summaryData.targetH1) * 100).toFixed(
                 2
               ) === "NaN" ||
-              (
-                (summaryData.actualH1.toFixed(2) /
-                  summaryData.targetH1.toFixed(2)) *
-                100
-              ).toFixed(2) === "Infinity"
+                (
+                  (summaryData.actualH1.toFixed(2) /
+                    summaryData.targetH1.toFixed(2)) *
+                  100
+                ).toFixed(2) === "Infinity"
                 ? 0
                 : ((summaryData.actualH1 / summaryData.targetH1) * 100).toFixed(
-                    2
-                  )}
+                  2
+                )}
             </span>
           </div>
           <div className="border border-gray-300  flex justify-between items-center">
@@ -4410,42 +4406,42 @@ const RollingPlans = () => {
               {((summaryData.actualH2 / summaryData.budgetH2) * 100).toFixed(
                 2
               ) === "NaN" ||
-              (
-                (summaryData.actualH2.toFixed(2) /
-                  summaryData.budgetH2.toFixed(2)) *
-                100
-              ).toFixed(2) === "Infinity"
+                (
+                  (summaryData.actualH2.toFixed(2) /
+                    summaryData.budgetH2.toFixed(2)) *
+                  100
+                ).toFixed(2) === "Infinity"
                 ? 0
                 : ((summaryData.actualH2 / summaryData.budgetH2) * 100).toFixed(
-                    2
-                  )}
+                  2
+                )}
             </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
               {((summaryData.actualH2 / summaryData.mTargetH2) * 100).toFixed(
                 2
               ) === "NaN" ||
-              ((summaryData.actualH2 / summaryData.mTargetH2) * 100).toFixed(
-                2
-              ) === "Infinity"
+                ((summaryData.actualH2 / summaryData.mTargetH2) * 100).toFixed(
+                  2
+                ) === "Infinity"
                 ? 0
                 : (
-                    (summaryData.actualH2 / summaryData.mTargetH2) *
-                    100
-                  ).toFixed(2)}
+                  (summaryData.actualH2 / summaryData.mTargetH2) *
+                  100
+                ).toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center  border-gray-300 w-20">
               {((summaryData.actualH2 / summaryData.targetH2) * 100).toFixed(
                 2
               ) === "NaN" ||
-              (
-                (summaryData.actualH2.toFixed(2) /
-                  summaryData.targetH2.toFixed(2)) *
-                100
-              ).toFixed(2) === "Infinity"
+                (
+                  (summaryData.actualH2.toFixed(2) /
+                    summaryData.targetH2.toFixed(2)) *
+                  100
+                ).toFixed(2) === "Infinity"
                 ? 0
                 : ((summaryData.actualH2 / summaryData.targetH2) * 100).toFixed(
-                    2
-                  )}
+                  2
+                )}
             </span>
           </div>
           <div className="border border-gray-300  flex justify-between items-center">
@@ -4466,46 +4462,46 @@ const RollingPlans = () => {
                 (summaryData.actualCurrent / summaryData.budgetCurrent) *
                 100
               ).toFixed(2) === "NaN" ||
-              (
-                (summaryData.actualCurrent / summaryData.budgetCurrent) *
-                100
-              ).toFixed(2) === "Infinity"
+                (
+                  (summaryData.actualCurrent / summaryData.budgetCurrent) *
+                  100
+                ).toFixed(2) === "Infinity"
                 ? 0
                 : (
-                    (summaryData.actualCurrent / summaryData.budgetCurrent) *
-                    100
-                  ).toFixed(2)}
+                  (summaryData.actualCurrent / summaryData.budgetCurrent) *
+                  100
+                ).toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center border-r border-gray-300 w-20">
               {(
                 (summaryData.actualCurrent / summaryData.mTargetCurrent) *
                 100
               ).toFixed(2) === "NaN" ||
-              (
-                (summaryData.actualCurrent / summaryData.mTargetCurrent) *
-                100
-              ).toFixed(2) === "Infinity"
+                (
+                  (summaryData.actualCurrent / summaryData.mTargetCurrent) *
+                  100
+                ).toFixed(2) === "Infinity"
                 ? 0
                 : (
-                    (summaryData.actualCurrent / summaryData.mTargetCurrent) *
-                    100
-                  ).toFixed(2)}
+                  (summaryData.actualCurrent / summaryData.mTargetCurrent) *
+                  100
+                ).toFixed(2)}
             </span>
             <span className=" flex items-center  justify-center  border-gray-300 w-20">
               {(
                 (summaryData.actualCurrent / summaryData.targetCurrent) *
                 100
               ).toFixed(2) === "NaN" ||
-              (
-                (summaryData.actualCurrent.toFixed(2) /
-                  summaryData.targetCurrent.toFixed(2)) *
-                100
-              ).toFixed(2) === "Infinity"
+                (
+                  (summaryData.actualCurrent.toFixed(2) /
+                    summaryData.targetCurrent.toFixed(2)) *
+                  100
+                ).toFixed(2) === "Infinity"
                 ? 0
                 : (
-                    (summaryData.actualCurrent / summaryData.targetCurrent) *
-                    100
-                  ).toFixed(2)}
+                  (summaryData.actualCurrent / summaryData.targetCurrent) *
+                  100
+                ).toFixed(2)}
             </span>
           </div>
         </div>
@@ -4613,9 +4609,8 @@ const RollingPlans = () => {
 
                                 <Popover.Panel
                                   as="div"
-                                  className={`${
-                                    open ? "block" : "hidden"
-                                  } absolute z-40 top-1 right-0 mt-2 w-52 bg-white  text-black border rounded-md shadow-md`}
+                                  className={`${open ? "block" : "hidden"
+                                    } absolute z-40 top-1 right-0 mt-2 w-52 bg-white  text-black border rounded-md shadow-md`}
                                 >
                                   {getOptions(
                                     item.upload,
@@ -4866,7 +4861,7 @@ const RollingPlans = () => {
                     className="text-[1.99rem] font-medium leading-6 text-center text-gray-900"
                   >
                     {modalData.type === "Download" ||
-                    modalData.type === "Upload"
+                      modalData.type === "Upload"
                       ? "Rolling Plan"
                       : "Delete Rollng Plan"}
                   </Dialog.Title>

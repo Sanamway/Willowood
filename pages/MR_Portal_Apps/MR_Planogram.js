@@ -27,7 +27,7 @@ const AdditionalInfo = (props) => {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
- 
+
 
   const [productBrand, setProductBrand] = useState([]);
 
@@ -37,46 +37,49 @@ const AdditionalInfo = (props) => {
         headers: headers,
       });
       const respData = await resp.data.data;
-      setProductBrand(respData.map((item)=> {return {label: item.brand_name, value: item.brand_name
-      }}));
+      setProductBrand(respData.map((item) => {
+        return {
+          label: item.brand_name, value: item.brand_name
+        }
+      }));
     } catch (error) {
       console.log("err", error);
     }
   };
 
 
-  useEffect(()=>{
-   gettingPrdBrand()
-  },[])
+  useEffect(() => {
+    gettingPrdBrand()
+  }, [])
 
-  const [formData, setFormData] = useState({ 
-    dateTime:new Date(),
+  const [formData, setFormData] = useState({
+    dateTime: new Date(),
 
-            dealerData: {
-              dealerName:   "",
-              address:      "",
-              contactPerson:"",
-            },
-   
-    productBrand:[],
-    productPositioning:false,
+    dealerData: {
+      dealerName: "",
+      address: "",
+      contactPerson: "",
+    },
+
+    productBrand: [],
+    productPositioning: false,
     distribution: false,
-    promotionalMaterial:false,
-    outStock:false,
-    labelTagging:false,
-    productFacing:false,
-    damageCondtion:false,
-    rackConcept:false,
-    catPlacement:false,
-    displayPop:false,
-    currentStock:"",
-    shareLife:"",
-    competitorBrand:"",
-    competitorPrice:"",
-   });
+    promotionalMaterial: false,
+    outStock: false,
+    labelTagging: false,
+    productFacing: false,
+    damageCondtion: false,
+    rackConcept: false,
+    catPlacement: false,
+    displayPop: false,
+    currentStock: "",
+    shareLife: "",
+    competitorBrand: "",
+    competitorPrice: "",
+  });
 
-   const [dealerData, setDealerData] = useState([]);
-   const getDelaerData = async () => {
+  const [dealerData, setDealerData] = useState([]);
+  const getDelaerData = async () => {
     try {
       const respond = await axios.get(`${url}/api/mr_dealer_map`, {
         headers: headers,
@@ -93,53 +96,53 @@ const AdditionalInfo = (props) => {
   };
 
 
-   const [dplNo, setDplNo] = useState("");
-   const generateEmpCode = async () => {
-     try {
-       const respond = await axios.get(`${url}/api/get_demo_code`, {
-         headers: headers,
-         params: {
-           emp_code: window.localStorage.getItem("emp_code"),
-           type: "planogram",
-         },
-       });
-       const apires = await respond.data.data;
-       setDplNo(apires);
-     } catch (error) {
-       console.log(error);
-     }
-   };
-   useEffect(() => {
-     generateEmpCode();
-     getDelaerData();
-   }, []);
+  const [dplNo, setDplNo] = useState("");
+  const generateEmpCode = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_demo_code`, {
+        headers: headers,
+        params: {
+          emp_code: window.localStorage.getItem("emp_code"),
+          type: "planogram",
+        },
+      });
+      const apires = await respond.data.data;
+      setDplNo(apires);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    generateEmpCode();
+    getDelaerData();
+  }, []);
 
-   const handleSubmit = async () => {
+  const handleSubmit = async () => {
     try {
       const data = {
-        f_planogram_no:dplNo,
-        f_planogram_date:new Date(),
-        dealer_id:formData.dealerData.dealerName,
-        product_brand:formData.productBrand.map(item => item.value), 
-        product_positioning:formData.productPositioning? "Yes" : "No",
-        distribution:formData.distribution? "Yes" : "No",
-        promotional_material:formData.promotionalMaterial? "Yes" : "No",
-        out_of_stock:formData.outStock? "Yes" : "No",
-        proper_label_tagging:formData.labelTagging? "Yes" : "No",
-        product_facing:formData.productFacing? "Yes" : "No",
-        damage_condition:formData.damageCondtion? "Yes" : "No",
-        rack_unique_concept:formData.rackConcept? "Yes" : "No",
-        category_placement:formData.catPlacement? "Yes" : "No",
-        display_pop:formData.displayPop? "Yes" : "No",
-        current_stock:formData.currentStock,
-        compitor_brand:formData.competitorBrand,
-        actual_share_of_life:formData.shareLife,
-        compitor_price:formData.competitorPrice,
+        f_planogram_no: dplNo,
+        f_planogram_date: new Date(),
+        dealer_id: formData.dealerData.dealerName,
+        product_brand: formData.productBrand.map(item => item.value),
+        product_positioning: formData.productPositioning ? "Yes" : "No",
+        distribution: formData.distribution ? "Yes" : "No",
+        promotional_material: formData.promotionalMaterial ? "Yes" : "No",
+        out_of_stock: formData.outStock ? "Yes" : "No",
+        proper_label_tagging: formData.labelTagging ? "Yes" : "No",
+        product_facing: formData.productFacing ? "Yes" : "No",
+        damage_condition: formData.damageCondtion ? "Yes" : "No",
+        rack_unique_concept: formData.rackConcept ? "Yes" : "No",
+        category_placement: formData.catPlacement ? "Yes" : "No",
+        display_pop: formData.displayPop ? "Yes" : "No",
+        current_stock: formData.currentStock,
+        compitor_brand: formData.competitorBrand,
+        actual_share_of_life: formData.shareLife,
+        compitor_price: formData.competitorPrice,
         emp_code: window.localStorage.getItem("emp_code"),
         c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
       };
-      
+
       const respond = await axios
         .post(`${url}/api/add_mr_planogram`, JSON.stringify(data), {
           headers: headers,
@@ -151,33 +154,33 @@ const AdditionalInfo = (props) => {
             top: 0,
             behavior: "smooth", // Smooth scrolling animation
           });
-        
+
           generateEmpCode();
           uploadImage();
           setFormData({
-            dateTime:new Date(),
+            dateTime: new Date(),
 
             dealerData: {
-              dealerName:   "",
-              address:      "",
-              contactPerson:"",
+              dealerName: "",
+              address: "",
+              contactPerson: "",
             },
-   
-    productBrand:[],
-    productPositioning:false,
-    distribution: false,
-    promotionalMaterial:false,
-    outStock:false,
-    labelTagging:false,
-    productFacing:false,
-    damageCondtion:false,
-    rackConcept:false,
-    catPlacement:false,
-    displayPop:false,
-    currentStock:"",
-    shareLife:"",
-    competitorBrand:"",
-    competitorPrice:"",
+
+            productBrand: [],
+            productPositioning: false,
+            distribution: false,
+            promotionalMaterial: false,
+            outStock: false,
+            labelTagging: false,
+            productFacing: false,
+            damageCondtion: false,
+            rackConcept: false,
+            catPlacement: false,
+            displayPop: false,
+            currentStock: "",
+            shareLife: "",
+            competitorBrand: "",
+            competitorPrice: "",
           });
         });
     } catch (errors) {
@@ -192,20 +195,43 @@ const AdditionalInfo = (props) => {
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedNewImage, setSelectedNewImage] = useState("");
   const fileInputRef = useRef(null);
+
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
-
-    setSelectedNewImage(file);
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setSelectedImage(reader.result);
-    };
-
+    // Get the uploaded file
+    // Check if a file is selected
     if (file) {
-      reader.readAsDataURL(file);
+      // Define allowed MIME types
+      const allowedTypes = [
+        'image/jpeg',  // JPEG images
+        'image/jpg',   // JPEG images (alternative extension)
+        'image/png',   // PNG images
+        'image/webp',  // WebP images
+        'image/bmp',   // Bitmap images
+        'image/gif',   // GIF images
+        'image/tiff',  // TIFF images
+        'image/svg+xml', // SVG images (Scalable Vector Graphics)
+        'image/heif',  // HEIF (High Efficiency Image Format)
+        'image/heic',  // HEIC (High Efficiency Image Coding)
+        'image/avif'   // AVIF (AV1 Image File Format)
+      ];// Validate file type
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Invalid Image");
+        return; // Stop processing if invalid
+      }
+      setSelectedNewImage(file);
+      const reader = new FileReader();
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+      };
+      // Proceed with handling the valid image file
+      console.log('File uploaded:', file);
     }
   };
+
 
   const uploadImage = async () => {
 
@@ -233,16 +259,14 @@ const AdditionalInfo = (props) => {
       fd.append(
         "myFile",
         renamedBlob,
-        `${dplNo}.${getFileExtension(selectedNewImage)}`
+        selectedNewImage.name
       );
 
       const response = await axios
         .post(`${url}/api/upload_file`, fd, {
           params: {
             file_path: "planogram",
-            dealer_outlet_image_Url: `${dplNo}.${getFileExtension(
-              selectedNewImage
-            )}`,
+            dealer_outlet_image_Url: selectedNewImage.name,
             f_planogram_no: dplNo,
           },
         })
@@ -261,152 +285,151 @@ const AdditionalInfo = (props) => {
   };
   return (
     <form
-    className=" bg-white rounded  w-full  overflow-auto pb-4"
-    onSubmit={(e) => e.preventDefault()}
-  >
-    <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
-      <span className="text-black flex flex-row gap-4 font-bold  md:flex-col lg:flex-col ">
-        <FaArrowLeftLong
-          className="self-center "
-          onClick={() =>
-            router.push({
-              pathname: "/MR_Portal_Apps/MRHome",
-            })
-          }
-        />
-        <span>Planogram</span>
-      </span>{" "}
-      <span className="text-white self-center">
-        <Popover as="div" className="relative border-none outline-none mt-2">
-          {({ open }) => (
-            <>
-              <Popover.Button className="focus:outline-none">
-                <PiDotsThreeOutlineVerticalFill
-                  className="text-[#626364] cursor-pointer"
-                  size={20}
-                />
-              </Popover.Button>
+      className=" bg-white rounded  w-full  overflow-auto pb-4"
+      onSubmit={(e) => e.preventDefault()}
+    >
+      <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
+        <span className="text-black flex flex-row gap-4 font-bold  md:flex-col lg:flex-col ">
+          <FaArrowLeftLong
+            className="self-center "
+            onClick={() =>
+              router.push({
+                pathname: "/MR_Portal_Apps/MRHome",
+              })
+            }
+          />
+          <span>Planogram</span>
+        </span>{" "}
+        <span className="text-white self-center">
+          <Popover as="div" className="relative border-none outline-none mt-2">
+            {({ open }) => (
+              <>
+                <Popover.Button className="focus:outline-none">
+                  <PiDotsThreeOutlineVerticalFill
+                    className="text-[#626364] cursor-pointer"
+                    size={20}
+                  />
+                </Popover.Button>
 
-              <Popover.Panel
-                as="div"
-                className={`${
-                  open ? "block" : "hidden"
-                } absolute z-40 top-1 right-0 mt-2 w-86 bg-white  text-black border rounded-md shadow-md`}
-              >
-                <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
-                  <li
-                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap  "
-                    onClick={() =>
-                      router.push({
-                        pathname: "MRFarmer_Meet_list",
-                      })
-                    }
-                  >
-                    <IoTodayOutline
-                      className="text-[#626364] cursor-pointer"
-                      size={20}
-                    />{" "}
-                    List of Farmer Meet
-                  </li>
-                  <li
-                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                    onClick={() =>
-                      router.push({
-                        pathname: "MR_Farmer_list",
-                      })
-                    }
-                  >
-                    <IoTodayOutline
-                      className="text-[#626364] cursor-pointer"
-                      size={20}
-                    />{" "}
-                    List of Farmer
-                  </li>
-                  <li
-                    className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
-                    onClick={() => setAddFarmerModal(true)}
-                  >
-                    <GiFarmer
-                      className="text-[#626364] cursor-pointer"
-                      size={20}
-                    />{" "}
-                    New Farmer
-                  </li>
-                  <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
-                    <FaHandsHelping
-                      className="text-[#626364] cursor-pointer"
-                      size={20}
-                    />{" "}
-                    Help
-                  </li>
-                  <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:flex-col ">
-                    <IoSettingsOutline
-                      className="text-[#626364] cursor-pointer"
-                      size={20}
-                    />{" "}
-                    Setting
-                  </li>
-                </ul>
-              </Popover.Panel>
-            </>
-          )}
-        </Popover>
-      </span>
-    </div>
-    <Toaster position="bottom-center" reverseOrder={false} />
+                <Popover.Panel
+                  as="div"
+                  className={`${open ? "block" : "hidden"
+                    } absolute z-40 top-1 right-0 mt-2 w-86 bg-white  text-black border rounded-md shadow-md`}
+                >
+                  <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
+                    <li
+                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap  "
+                      onClick={() =>
+                        router.push({
+                          pathname: "MRFarmer_Meet_list",
+                        })
+                      }
+                    >
+                      <IoTodayOutline
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      List of Farmer Meet
+                    </li>
+                    <li
+                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                      onClick={() =>
+                        router.push({
+                          pathname: "MR_Farmer_list",
+                        })
+                      }
+                    >
+                      <IoTodayOutline
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      List of Farmer
+                    </li>
+                    <li
+                      className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center "
+                      onClick={() => setAddFarmerModal(true)}
+                    >
+                      <GiFarmer
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      New Farmer
+                    </li>
+                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
+                      <FaHandsHelping
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      Help
+                    </li>
+                    <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:flex-col ">
+                      <IoSettingsOutline
+                        className="text-[#626364] cursor-pointer"
+                        size={20}
+                      />{" "}
+                      Setting
+                    </li>
+                  </ul>
+                </Popover.Panel>
+              </>
+            )}
+          </Popover>
+        </span>
+      </div>
+      <Toaster position="bottom-center" reverseOrder={false} />
       <div className="flex my-2 flex-col gap-2">
         <div className="flex flex-row gap-2">
 
-        <div className="fle gap-4 w-full px-2 md: gap-40">
-          <label
-            className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> D.PL.Visit No
-          </label>
-          <input
-            className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-            type="text"
-            id="inputField"
-            placeholder="D.PL.Visit No"
-            value={dplNo}
-        
-          />
-        </div>
-       
+          <div className="fle gap-4 w-full px-2 md: gap-40">
+            <label
+              className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
+              htmlFor="inputField"
+            >
+              <small className="text-red-600">*</small> D.PL.Visit No
+            </label>
+            <input
+              className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+              type="text"
+              id="inputField"
+              placeholder="D.PL.Visit No"
+              value={dplNo}
+
+            />
+          </div>
+
 
           <div className="w-full px-2">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            <small className="text-red-600">*</small> Date
-          </label>
-          
-          <DatePicker
-           className="w-full px-3 py-1  border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-           dateFormat="dd-MM-yyyy"         
-            selected={
-              formData.dateTime ? new Date(formData.dateTime) : ""
-            }
-            onChange={(date) =>
-              setFormData({
-                ...formData,
-                dateTime: moment(date).format("LL"),
-              })
-            }
-            minDate={new Date()}
-            peekNextMonth
-            showMonthDropdown
-            showYearDropdown
-            dropdownMode="select"
-            disabled
-            
-          />
-         
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="inputField"
+            >
+              <small className="text-red-600">*</small> Date
+            </label>
+
+            <DatePicker
+              className="w-full px-3 py-1  border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+              dateFormat="dd-MM-yyyy"
+              selected={
+                formData.dateTime ? new Date(formData.dateTime) : ""
+              }
+              onChange={(date) =>
+                setFormData({
+                  ...formData,
+                  dateTime: moment(date).format("LL"),
+                })
+              }
+              minDate={new Date()}
+              peekNextMonth
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+              disabled
+
+            />
+
+          </div>
         </div>
-        </div>
-       
+
         <div className="w-full px-2 mt-2">
           <label
             className="block text-gray-700 text-sm font-bold mb-2  "
@@ -414,29 +437,28 @@ const AdditionalInfo = (props) => {
           >
             <small className="text-red-600 ">*</small> Dealer
           </label>
-        
+
           <select
             className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
-         
+
             value={JSON.stringify(formData.dealerData.dealerName)}
-            onChange={(e) =>
-            {
+            onChange={(e) => {
               const selectedSegment = dealerData.find(item => item.d_id === parseInt(e.target.value, 10));
-            
+
 
               setFormData({
                 ...formData,
                 dealerData: {
-                  dealerName:  selectedSegment.d_id ,
-                  address:      selectedSegment.party_address,
-                 
+                  dealerName: selectedSegment.d_id,
+                  address: selectedSegment.party_address,
+
                 },
               })
             }
-              
+
             }
-            
+
           >
             <option
               value=""
@@ -444,7 +466,7 @@ const AdditionalInfo = (props) => {
             >
               Select
             </option>
-            
+
             {dealerData?.map((item) => (
               <option
                 value={item.d_id}
@@ -468,10 +490,10 @@ const AdditionalInfo = (props) => {
             type="text"
             id="inputField"
             placeholder="Address"
-            value={formData.dealerData ? formData.dealerData.address :""}
-          disabled
-        
-            // disabled={!formActive}
+            value={formData.dealerData ? formData.dealerData.address : ""}
+            disabled
+
+          // disabled={!formActive}
           />
         </div>
         {/* <div className="fle gap-4 w-full px-2">
@@ -492,7 +514,7 @@ const AdditionalInfo = (props) => {
           />
        
         </div> */}
-        {console.log("zxcv",formData.dealerData)}
+        {console.log("zxcv", formData.dealerData)}
         <div className="fle gap-4 w-full px-2">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
@@ -500,11 +522,11 @@ const AdditionalInfo = (props) => {
           >
             <small className="text-red-600">*</small> Product Brand
           </label>
-     
+
           <Select
             className="basic-single border border-balck-100"
             classNamePrefix="select"
-          
+
             isMulti={true}
             name="color"
             options={productBrand}
@@ -514,7 +536,7 @@ const AdditionalInfo = (props) => {
         </div>
       </div>
 
-    
+
 
       <h1 className="flex justify-start font-bold m-4">
         {" "}
@@ -553,17 +575,17 @@ const AdditionalInfo = (props) => {
             <div className="flex space-x-4">
               <input
                 type="radio"
-                
-                onClick={()=>setFormData({...formData , productPositioning: true})}
-                checked={formData.productPositioning===true}
+
+                onClick={() => setFormData({ ...formData, productPositioning: true })}
+                checked={formData.productPositioning === true}
                 className="mr-2"
               />
               <label htmlFor="positioning_yes">Yes</label>
               <input
                 type="radio"
-                
-                onClick={()=>setFormData({...formData , productPositioning: false})}
-                checked={formData.productPositioning===false}
+
+                onClick={() => setFormData({ ...formData, productPositioning: false })}
+                checked={formData.productPositioning === false}
                 className="mr-2"
               />
               <label htmlFor="positioning_no">No</label>
@@ -599,19 +621,19 @@ const AdditionalInfo = (props) => {
             <div className="flex space-x-4">
               <input
                 type="radio"
-              
-               
+
+
                 className="mr-2"
-                onClick={()=>setFormData({...formData , promotionalMaterial: true})}
-                checked={formData.promotionalMaterial===true}
+                onClick={() => setFormData({ ...formData, promotionalMaterial: true })}
+                checked={formData.promotionalMaterial === true}
 
               />
               <label htmlFor="positioning_yes">Yes</label>
               <input
                 type="radio"
-                
-                onClick={()=>setFormData({...formData , promotionalMaterial: false})}
-                checked={formData.promotionalMaterial===false}
+
+                onClick={() => setFormData({ ...formData, promotionalMaterial: false })}
+                checked={formData.promotionalMaterial === false}
                 className="mr-2"
               />
               <label htmlFor="positioning_no">No</label>
@@ -688,17 +710,17 @@ const AdditionalInfo = (props) => {
             <div className="flex space-x-4">
               <input
                 type="radio"
-                
-                onClick={()=>setFormData({...formData , damageCondtion: true})}
-                checked={formData.damageCondtion===true}
+
+                onClick={() => setFormData({ ...formData, damageCondtion: true })}
+                checked={formData.damageCondtion === true}
                 className="mr-2"
               />
               <label htmlFor="positioning_yes">Yes</label>
               <input
                 type="radio"
-                
-                onClick={()=>setFormData({...formData , damageCondtion: false})}
-                checked={formData.damageCondtion===false}
+
+                onClick={() => setFormData({ ...formData, damageCondtion: false })}
+                checked={formData.damageCondtion === false}
                 className="mr-2"
               />
               <label htmlFor="positioning_no">No</label>
@@ -731,17 +753,17 @@ const AdditionalInfo = (props) => {
             <div className="flex space-x-4">
               <input
                 type="radio"
-                
-                onClick={()=>setFormData({...formData , catPlacement: true})}
-                checked={formData.catPlacement===true}
+
+                onClick={() => setFormData({ ...formData, catPlacement: true })}
+                checked={formData.catPlacement === true}
                 className="mr-2"
               />
               <label htmlFor="distribution_yes">Yes</label>
               <input
                 type="radio"
-               
-                onClick={()=>setFormData({...formData , catPlacement: false})}
-                checked={formData.catPlacement===false}
+
+                onClick={() => setFormData({ ...formData, catPlacement: false })}
+                checked={formData.catPlacement === false}
                 className="mr-2"
               />
               <label htmlFor="distribution_no">No</label>
@@ -806,7 +828,7 @@ const AdditionalInfo = (props) => {
           />
         </div>
         </div> */}
-        <div className="flex my-2 flex-row gap-2">
+      <div className="flex my-2 flex-row gap-2">
         <div className="fle gap-4 w-full px-2">
           <label
             className="text-gray-700 text-sm font-bold mb-2 whitespace-nowrap"
@@ -817,10 +839,10 @@ const AdditionalInfo = (props) => {
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="text"
-           
+
             placeholder="Compitior Brand"
             value={formData.competitorBrand}
-            onChange={(e)=> setFormData({...formData, competitorBrand: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, competitorBrand: e.target.value })}
           />
         </div>
         <div className="fle gap-4 w-full px-2">
@@ -833,21 +855,21 @@ const AdditionalInfo = (props) => {
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
             type="number"
-         
+
             placeholder="Compitior Price"
             value={formData.competitorPrice}
-            onChange={(e)=> setFormData({...formData, competitorPrice: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, competitorPrice: e.target.value })}
           />
         </div>
-        </div>
-        
-    
+      </div>
+
+
       {console.log("njuo", formData)}
 
       <div className="flex w-full justify-center gap-4 mt-4 ">
         <button
-          onClick={() => {    
-         handleSubmit()
+          onClick={() => {
+            handleSubmit()
           }}
           className="bg-green-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1.5 rounded-sm"
         >

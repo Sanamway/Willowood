@@ -30,6 +30,9 @@ const ZoneForm = () => {
         hod: apires[0].hod_name,
         mobile: apires[0].mobile_no,
         email: apires[0].email_id,
+        mrkt: apires[0].zdm_name,
+        mrktMobile: apires[0].zdm_mobile_no,
+        mrktEmail: apires[0].zdm_email_id,
       });
     } catch (error) {
       console.log(error);
@@ -70,6 +73,9 @@ const ZoneForm = () => {
     hod: "",
     mobile: "",
     email: "",
+    mrkt: "",
+    mrktMobile: "",
+    mrktEmail: "",
   });
   // Getting Company Information for the dropdown values
   const getBGInfo = async (companyId) => {
@@ -120,23 +126,33 @@ const ZoneForm = () => {
     companyId: Yup.string().required("Company Id is required"),
     bgId: Yup.string().required("Business Segment is required"),
     buId: Yup.string().required("Business Unit is required"),
+
+    // Email validation: simplify it while retaining the no-commas rule
     email: Yup.string()
       .required("Email is required")
-      .email()
-      .matches(/^(?!.*@[^,]*,)/),
-    mobile: Yup.number()
-      .transform((value, originalValue) => {
-        if (originalValue === "") return undefined;
-        return Number(value);
-      })
+      .email("Please enter a valid email address")
+      .matches(/^(?!.*@[^,]*,)/, "Email cannot contain commas"),
+
+    // Mobile validation: use string instead of number and correct the transformation logic
+    mobile: Yup.string()
       .required("Mobile No is required")
-      .test("is-valid-number", "Invalid Mobile Number", (value) => {
-        if (!value) return false;
-        const stringValue = value.toString();
-        return /^[6-9]\d{9}$/.test(stringValue);
-      })
+
       .typeError("Mobile No must be a valid number"),
-    hod: Yup.string().required("hod is required"),
+
+    hod: Yup.string().required("HOD is required"),
+    mrkt: Yup.string().required("Market is required"),
+
+    // Market mobile validation: similarly corrected as the mobile field
+    mrktMobile: Yup.string()
+      .required("Market Mobile No is required")
+
+      .typeError("Mobile No must be a valid number"),
+
+    // Market email validation: simplified as the email field
+    mrktEmail: Yup.string()
+      .required("Email is required")
+      .email("Please enter a valid email address")
+      .matches(/^(?!.*@[^,]*,)/, "Email cannot contain commas"),
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -156,6 +172,9 @@ const ZoneForm = () => {
         zone_name: zoneState.zone,
         c_name: "No Worries",
         ul_name: "No Man",
+        zdm_name: zoneState.mrkt,
+        zdm_mobile_no: zoneState.mrktMobile,
+        zdm_email_id: zoneState.mrktEmail,
       };
       const respond = await axios
         .post(`${url}/api/add_zone`, JSON.stringify(data), {
@@ -169,6 +188,7 @@ const ZoneForm = () => {
           }, [3000]);
         });
     } catch (errors) {
+      console.log("zxc", errors)
       const errorMessage = errors?.response?.data?.error;
       if (errorMessage?.includes("email_1")) {
         toast.error("Email already exist");
@@ -204,6 +224,9 @@ const ZoneForm = () => {
         zone_name: zoneState.zone,
         c_name: "No Worries",
         ul_name: "No Man",
+        zdm_name: zoneState.mrkt,
+        zdm_mobile_no: zoneState.mrktMobile,
+        zdm_email_id: zoneState.mrktEmail,
       };
       const respond = await axios
         .put(
@@ -419,32 +442,32 @@ const ZoneForm = () => {
                 )}
               </div>
             </div>
-            <div className="w-1/2 px-2 relative">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="emailField"
-              >
-                <small className="text-red-600">*</small> H.O.D Name
-              </label>
-              <input
-                className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                id="emailField"
-                placeholder="H.O.D Name"
-                value={zoneState.hod}
-                onChange={(e) =>
-                  setZoneState({
-                    ...zoneState,
-                    hod: e.target.value,
-                  })
-                }
-              />
-              {formErrors.hod && (
-                <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
-                  {formErrors.hod}
-                </p>
-              )}
-            </div>
-            <div className="flex w-full justify-between gap-4 mt-4 mb-4 ">
+            <div className="flex flex-row w-full gap-4 px-2 relative ">
+              <div className="w-full relative">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="emailField"
+                >
+                  <small className="text-red-600">*</small> Sales Person
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  id="emailField"
+                  placeholder="Sales Person Name"
+                  value={zoneState.hod}
+                  onChange={(e) =>
+                    setZoneState({
+                      ...zoneState,
+                      hod: e.target.value,
+                    })
+                  }
+                />
+                {formErrors.hod && (
+                  <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                    {formErrors.hod}
+                  </p>
+                )}
+              </div>
               <div className="w-full relative">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
@@ -454,7 +477,7 @@ const ZoneForm = () => {
                 </label>
                 <input
                   className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                  type="text"
+                  type="number"
                   id="inputField"
                   placeholder="Mobile"
                   value={zoneState.mobile}
@@ -494,6 +517,87 @@ const ZoneForm = () => {
                 {formErrors.email && (
                   <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
                     {formErrors.email}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-row w-full gap-4 px-2 relative mt-2 ">
+              <div className="w-full relative">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="emailField"
+                >
+                  <small className="text-red-600">*</small> Marketing Person Name
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  id="emailField"
+                  placeholder="H.O.D Name"
+                  value={zoneState.mrkt}
+                  onChange={(e) =>
+                    setZoneState({
+                      ...zoneState,
+                      mrkt: e.target.value,
+                    })
+                  }
+                />
+                {formErrors.mrkt && (
+                  <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                    {formErrors.mrkt}
+                  </p>
+                )}
+              </div>
+              <div className="w-full relative">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="inputField"
+                >
+                  <small className="text-red-600">*</small> Mobile
+                </label>
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  type="number"
+                  id="inputField"
+                  placeholder="Mobile"
+                  value={zoneState.mrktMobile}
+                  onChange={(e) =>
+                    setZoneState({
+                      ...zoneState,
+                      mrktMobile: e.target.value,
+                    })
+                  }
+                />
+                {formErrors.mrktMobile && (
+                  <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                    {formErrors.mrktMobile}
+                  </p>
+                )}
+              </div>
+              <div className="w-full relative">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="inputField"
+                >
+                  <small className="text-red-600">*</small> Email
+                </label>
+                {console.log("kzs", zoneState)}
+                <input
+                  className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                  type="email"
+                  id="inputField"
+                  placeholder="Email"
+                  value={zoneState.mrktEmail}
+                  onChange={(e) =>
+                    setZoneState({
+                      ...zoneState,
+                      mrktEmail: e.target.value,
+                    })
+                  }
+                />
+                {formErrors.mrktEmail && (
+                  <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                    {formErrors.mrktEmail}
                   </p>
                 )}
               </div>

@@ -10,6 +10,7 @@ import moment from "moment";
 import ReactPaginate from "react-paginate";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { TbFileDownload } from "react-icons/tb";
 const NewDealer = () => {
   const csvHeaders = [
     { label: "Id", key: "ds_id" },
@@ -170,7 +171,7 @@ const NewDealer = () => {
           .filter((item) => Number(item.bg_id) === Number(segmentId))
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -195,7 +196,7 @@ const NewDealer = () => {
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
           .filter((item) => Number(item.z_id) === Number(zoneId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -225,7 +226,7 @@ const NewDealer = () => {
           .filter((item) => Number(item.z_id) === Number(zoneId))
           .filter((item) => Number(item.r_id) === Number(regionId))
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -312,7 +313,16 @@ const NewDealer = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          startDate: new Date(),
+          startDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            1
+          ),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -361,7 +371,16 @@ const NewDealer = () => {
               : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
 
           tId: "All",
-          startDate: new Date(),
+          startDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            1
+          ),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -384,7 +403,7 @@ const NewDealer = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -409,7 +428,16 @@ const NewDealer = () => {
 
           rId: "All",
           tId: "All",
-          startDate: new Date(),
+          startDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            1
+          ),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -430,12 +458,12 @@ const NewDealer = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -459,7 +487,16 @@ const NewDealer = () => {
               : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: "All",
           tId: "All",
-          startDate: new Date(),
+          startDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            1
+          ),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -480,12 +517,12 @@ const NewDealer = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -499,7 +536,16 @@ const NewDealer = () => {
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: "All",
           tId: "All",
-          startDate: new Date(),
+          startDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            1
+          ),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         };
         setLocalStorageItems({
           bgId:
@@ -520,12 +566,12 @@ const NewDealer = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-                "All",
+              "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-                "All",
+              "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -548,10 +594,18 @@ const NewDealer = () => {
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          startDate: new Date(),
+          startDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            1
+          ),
+          endDate: new Date(
+            new Date().getFullYear(),
+            new Date().getMonth() + 1,
+            0
+          ),
         });
         setFilterState(filterState);
-
         break;
     }
   }, []);
@@ -580,6 +634,173 @@ const NewDealer = () => {
     filterState.empCode,
   ]);
   const { name } = router.query;
+  const [excelLoading, setExcelLoading] = useState(false)
+  const getExcelsheet = async (
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    from,
+    empCode
+  ) => {
+    try {
+      setExcelLoading(true)
+      const respond = await axios.get(`${url}/api/mr_dealer_map`, {
+        headers: headers,
+        params: {
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          year: moment(from).format("YYYY"),
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          emp_code: empCode,
+          excel: true,
+        },
+      });
+      const apires = await respond.data.data;
+      const ws = XLSX.utils.json_to_sheet(apires.map((item) => {
+        return {
+          ["Year"]: item.year,
+          ["Emp Code"]: item.emp_code,
+          ["Emp Name"]: item.emp_name,
+          ["Party Code"]: item.customer_code,
+          ["Party Name"]: item.party_name,
+          ["Party Complete Address"]: item.party_address,
+          ["Territory"]: item.territory_name,
+          ["Region"]: item.region_name,
+          ["Zone"]: item.zone_name,
+          ["Business_Unit"]: item.business_unit_name,
+          ["Company"]: item.cmpny_name,
+          ["Deleted"]: item.isDeleted ? "Yes" : "No",
+
+        }
+      }));
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+      XLSX.writeFile(wb, `Dealer Map.xlsx`);
+      setExcelLoading(false)
+    } catch (error) {
+      console.log("pop", error)
+      setExcelLoading(false)
+
+    }
+  };
+  const LoaderExcel = () => {
+    return (
+      <div class="flex space-x-1   justify-center items-center bg-white  ">
+        <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+        <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+        <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce"></div>
+      </div>
+    );
+  };
+  const filterDisableOption = (currentFilter) => {
+    function getLastAssignedKey(filterState) {
+      // Define an array of keys in the order you want to check
+      const keys = ['bgId', 'buId', 'zId', 'rId', 'tId'];
+
+      // Iterate through the keys in reverse order
+      for (let i = keys.length - 1; i >= 0; i--) {
+        const key = keys[i];
+        if (typeof filterState[key] === 'number' && !isNaN(filterState[key])) {
+          return key;
+        }
+      }
+
+      // If no valid number is found, return null or undefined
+      return null;
+    }
+
+    console.log("zpo", currentFilter)
+    const role = localStorageItems.roleId
+    console.log("pop", getLastAssignedKey(filterState) === "tId")
+    if (role === 9) {
+
+      switch (currentFilter) {
+        case "Teritory": if (
+          getLastAssignedKey(filterState) === "tId") { return true }
+        else {
+          return false
+
+        }
+        case "Region": if (
+          getLastAssignedKey(filterState) === "tId" || getLastAssignedKey(filterState) === "rId") { return true }
+        else {
+          return false
+
+        }
+        case "Zone": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId") { return true }
+        else {
+          return false
+
+        }
+        case "BU": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId") { return true }
+        else {
+          return false
+
+        }
+        case "BG": if (
+          getLastAssignedKey(filterState) === "tId" ||
+          getLastAssignedKey(filterState) === "rId" ||
+          getLastAssignedKey(filterState) === "zId" || getLastAssignedKey(filterState) === "buId" || getLastAssignedKey(filterState) === "bgId") { return true }
+        else {
+          return false
+
+        }
+      }
+
+    }
+    else {
+      switch (currentFilter) {
+        case "Territory": if (
+          role === 6) { return true }
+        else {
+          return false
+
+        }
+        case "Region": if (role === 6 || role === 5
+        ) { return true }
+        else { return false }
+        case "Zone": if (role === 6 ||
+          role === 5 ||
+          role === 4) {
+          return true
+        }
+        else { return false }
+        case "BU": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3) {
+          return true
+        }
+        else {
+          false
+        }
+        case "BG": if (role === 6 ||
+          role === 5 ||
+          role === 4 ||
+          role === 3 ||
+          role === 10) {
+          return true
+        }
+        else {
+          return false
+        }
+
+      }
+
+    }
+
+  }
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -592,14 +813,26 @@ const NewDealer = () => {
             <div className="search gap-2 mx-8">
               <div className="container"></div>
             </div>
-            <h2>
-              {/* <CSVLink data={data} headers={csvHeaders}>
-          <TbFileDownload
-            className="text-green-600"
-            size={34}
-          ></TbFileDownload>
-        </CSVLink> */}
-            </h2>
+
+            <div className="flex flex-row gap-2 ">
+              {" "}
+
+              {excelLoading ? <LoaderExcel
+              /> : <TbFileDownload
+                className="text-green-600 cursor-pointer "
+                size={32}
+                onClick={() => getExcelsheet(
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.startDate,
+                  filterState.empCode,
+                )
+                }
+              ></TbFileDownload>}
+
+            </div>
 
             <h2>
               <AiTwotoneHome
@@ -625,7 +858,7 @@ const NewDealer = () => {
             </button>
           </div>
         </div>
-         <div className="flex flex-row gap-4  px-4 pr-8 pb-2">
+        <div className="flex flex-row gap-4  px-4 pr-8 pb-2">
           <select
             className="border rounded px-2 py-1  w-1/2 h-8"
             id="stateSelect"
@@ -648,11 +881,7 @@ const NewDealer = () => {
               }
             }}
             disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4 ||
-              localStorageItems.roleId === 3 ||
-              localStorageItems.roleId === 10
+              filterDisableOption("BG")
             }
           >
             <option value={"All"} className="font-bold">
@@ -686,11 +915,7 @@ const NewDealer = () => {
                 });
               }
             }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4 ||
-              localStorageItems.roleId === 3
+            disabled={filterDisableOption("BU")
             }
           >
             <option value={"All"}>- All Business Unit -</option>
@@ -721,10 +946,7 @@ const NewDealer = () => {
                 });
               }
             }}
-            disabled={
-              localStorageItems.roleId === 6 ||
-              localStorageItems.roleId === 5 ||
-              localStorageItems.roleId === 4
+            disabled={filterDisableOption("Zone")
             }
           >
             <option value={"All"}>- All Zone -</option>
@@ -741,8 +963,7 @@ const NewDealer = () => {
             id="stateSelect"
             value={filterState.rId}
             disabled={
-              localStorageItems.roleId === 6 || localStorageItems.roleId === 5
-            }
+              filterDisableOption("Region")}
             onChange={(e) => {
               if (e.target.value === "All") {
                 setFilterState({
@@ -771,7 +992,7 @@ const NewDealer = () => {
             className="border rounded px-2 py-1 w-1/2 h-8"
             id="stateSelect"
             value={filterState.tId}
-            disabled={localStorageItems.roleId === 6}
+            disabled={filterDisableOption("Territory")}
             onChange={(e) =>
               setFilterState({
                 ...filterState,

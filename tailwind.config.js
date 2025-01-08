@@ -9,7 +9,12 @@ module.exports = {
     extend: {
       backgroundImage: {
         banner: "url('../public/newbg.jpg')",
+        bgnew: "url('../public/bgnew.png')",
+        wave: "url('../public/yellowgreen.png')",
+        polygreen: "url('../public/polygreen.png')",
+        wautimg: "url('../public/wautimg.jpeg')",
       },
+
 
       fontFamily: {
         arial: ["Arial"],

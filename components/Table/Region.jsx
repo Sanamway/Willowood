@@ -38,7 +38,7 @@ const RegionForm = () => {
       });
       const apires = await respond.data.data;
       setData(apires);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -58,14 +58,14 @@ const RegionForm = () => {
     setisOpen(false);
   };
 
-  const {name} = router.query 
+  const { name } = router.query
 
   return (
     <Layout>
       <div className=" w-full font-arial bg-white ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
-          <h2 className="font-arial font-normal text-3xl tabletitle  py-2">{name ? name :"Business Region"}</h2>
+          <h2 className="font-arial font-normal text-3xl tabletitle  py-2">{name ? name : "Business Region"}</h2>
           <span className="flex items-center gap-2 cursor-pointer">
             <span className="flex flex-row">
               <input
@@ -130,13 +130,22 @@ const RegionForm = () => {
                     Company
                   </th>
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    Email
-                  </th>
-                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
-                    H.O.D
+                    Sales Person Name
                   </th>
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                     Mobile
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Marketing Person Name
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Mobile
+                  </th>
+                  <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                    Email
                   </th>
                   <th className="px-4 py-2  text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                     Status
@@ -197,13 +206,23 @@ const RegionForm = () => {
                       {item.cmpny_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.email_id}
-                    </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.hod_name}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.mobile_no}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.email_id}
+                    </td>
+
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.rdm_name}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.rdm_mobile_no}
+                    </td>
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
+                      {item.rdm_email_id}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.isDeleted == false ? "Enabled" : "Disabled"}
