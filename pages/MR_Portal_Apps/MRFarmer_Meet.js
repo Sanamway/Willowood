@@ -538,8 +538,19 @@ const AdditionalInfo = (props) => {
     // Check if a file is selected
     if (file) {
       // Define allowed MIME types
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/bmp', 'image/heif'];
-      // Validate file type
+      const allowedTypes = [
+        'image/jpeg',  // JPEG images
+        'image/jpg',   // JPEG images (alternative extension)
+        'image/png',   // PNG images
+        'image/webp',  // WebP images
+        'image/bmp',   // Bitmap images
+        'image/gif',   // GIF images
+        'image/tiff',  // TIFF images
+        'image/svg+xml', // SVG images (Scalable Vector Graphics)
+        'image/heif',  // HEIF (High Efficiency Image Format)
+        'image/heic',  // HEIC (High Efficiency Image Coding)
+        'image/avif'   // AVIF (AV1 Image File Format)
+      ]; // Validate file type
       if (!allowedTypes.includes(file.type)) {
         toast.error("Invalid Image");
         return; // Stop processing if invalid

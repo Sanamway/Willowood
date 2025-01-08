@@ -16,7 +16,9 @@ import { IoSettingsOutline } from "react-icons/io5";
 import Profile from "../../public/userimg.jpg";
 import { FaArrowAltCircleUp } from "react-icons/fa";
 import ChartOne from "./ChartOne";
-import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
+import toast from "react-hot-toast";
+import { FiMinus, FiPlus } from "react-icons/fi";
+
 
 
 
@@ -989,6 +991,87 @@ const AdditionalInfo = (props) => {
 
         }
     };
+
+    const [collectionTableData, setCollectionTableData] = useState([])
+
+    const handleDownloadExcelNew = async (
+        yr,
+        month,
+        bgId,
+        buId,
+        zId,
+        rId,
+        tId,
+    ) => {
+        let paramsData;
+        if (filterState?.tId || filterState?.tId === "All") {
+            paramsData = {
+                c_id: 1,
+                t_id: tId,
+                t_des: territoryData.find(item => Number(item.t_id) === Number(tId))?.territory_name || '',
+                m_year: moment(month).format("YYYY-MM"),
+            };
+        } else if (
+            (filterState?.rId || filterState?.rId === "All") &&
+            !filterState?.tId
+        ) {
+            paramsData = {
+                c_id: 1,
+                r_id: rId,
+                r_des: regionData.find(item => Number(item.r_id) === Number(rId))?.region_name || '',
+                m_year: moment(month).format("YYYY-MM"),
+            };
+        } else if (
+            (filterState?.zId || filterState?.zId === "All") &&
+            !filterState?.rId
+        ) {
+            paramsData = {
+                c_id: 1,
+                z_id: zId,
+                z_des: zoneData.filter((item) => item.z_id === zId)[0].zone_name,
+                m_year: moment(month).format("YYYY-MM"),
+            };
+        } else if (filterState?.buId && !filterState?.zId) {
+            paramsData = {
+                c_id: 1,
+                bu_id: buId,
+                bu_des: buData.filter((item) => item.bu_id === buId)[0].business_unit_name,
+                m_year: moment(month).format("YYYY-MM"),
+            };
+        } else if (filterState?.bgId && !filterState?.buId) {
+            paramsData = {
+                c_id: 1,
+                bu_id: buId,
+                bu_des: buData.filter((item) => item.bu_id === buId)[0].business_unit_name,
+                m_year: moment(month).format("YYYY-MM"),
+            };
+        } else if (filterState?.bgId && !filterState?.buId) {
+            paramsData = {
+                c_id: 1,
+                bg_id: bgId,
+                bg_des: buData.filter((item) => item.bu_id === buId)[0].business_unit_name,
+                m_year: moment(month).format("YYYY-MM"),
+            };
+        }
+        try {
+
+            localStorage.setItem("RSP", JSON.stringify([]));
+            const respond = axios.get(`${url}/api/getsapCollectiondata`, {
+                headers: headers,
+                params: paramsData,
+            });
+            const apires = await respond;
+            console.log("zoz", apires)
+            setCollectionTableData(apires.data.data)
+
+
+
+        } catch (error) {
+            const errorMessage = error?.response?.data?.message;
+            toast.error(errorMessage);
+
+        }
+    };
     useEffect(() => {
         if (localStorageItems.roleId === 6 || localStorageItems.roleId === 5) {
 
@@ -1058,6 +1141,41 @@ const AdditionalInfo = (props) => {
 
     ])
 
+
+
+
+    useEffect(() => {
+        if (territoryData.length && zoneData.length && regionData.length) {
+            handleDownloadExcelNew(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                filterState.tId || null,
+            );
+        }
+
+
+
+
+
+    }, [
+
+        filterState.yr,
+        filterState.month,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+
+        territoryData,
+        zoneData,
+        regionData,
+        buData
+
+    ])
 
     const totalTarget = totalRow(allTableData.map(item => item.target));
     const totalBudget = totalRow(allTableData.map(item => item.budget));
@@ -1442,19 +1560,20 @@ const AdditionalInfo = (props) => {
                                                 <h2 className="text-[0.75rem] text-gray-600 font-semibold font-arial whitespace-nowrap">
                                                     Allocated Credit Limit{" "}
                                                 </h2>
-                                                <h2 className="text-sm text-[#ADBD5B] font-bold whitespace-nowrap">&#8377;1234</h2>
+                                                <h2 className="text-sm text-[#ADBD5B] font-bold whitespace-nowrap">&#8377;{parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["Credit Limit "], 0).toFixed(2))}</h2>
                                             </div>
                                             <div className="flex-col items-start justify-between w-full gap-2 p-1 border-l-[3px] ">
                                                 <h2 className="text-[0.75rem] text-gray-600 font-semibold whitespace-nowrap">
                                                     Utilized Credit Limit
                                                 </h2>
-                                                <h2 className="text-sm text-[#F5A05D] font-bold whitespace-nowrap">&#8377;1234</h2>
+                                                <h2 className="text-sm text-[#F5A05D] font-bold whitespace-nowrap">&#8377;{parseFloat(parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["Credit Limit "], 0).toFixed(2)) - parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0).toFixed(2))).toFixed(2)}</h2>
                                             </div>
                                             <div className="flex-col items-start justify-between w-full gap-2 p-1 border-l-[3px] ">
                                                 <h2 className="text-[0.75rem] text-gray-600 font-semibold whitespace-nowrap">
                                                     Balance Credit Limit
                                                 </h2>
-                                                <h2 className="text-sm text-[#E55769] font-bold whitespace-nowrap">&#8377;1234</h2>
+                                                <h2 className="text-sm text-[#E55769] font-bold whitespace-nowrap">&#8377;{
+                                                    parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0).toFixed(2))}</h2>
                                             </div>
                                         </div>
                                     </div>
@@ -1470,7 +1589,7 @@ const AdditionalInfo = (props) => {
                                                     </div>
                                                     <div className="flex flex-col items-start justify-center">
                                                         <h2 className="text-[0.75rem] text-gray-600 font-semibold">Total Outstanding</h2>
-                                                        <h2 className="text-[0.78rem] text-gray-600 font-bold">&#8377;24,96,843.55</h2>
+                                                        <h2 className="text-[0.78rem] text-gray-600 font-bold">&#8377;{parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0).toFixed(2))}</h2>
                                                     </div>
                                                 </div>
                                                 <div
@@ -1492,7 +1611,9 @@ const AdditionalInfo = (props) => {
                                                     </div>
                                                     <div className="flex flex-col items-start justify-center">
                                                         <h2 className="text-[0.75rem] text-gray-600 font-semibold">Total Overdue</h2>
-                                                        <h2 className="text-[0.78rem] text-gray-600 font-bold">&#8377;23,29,150.85</h2>
+                                                        <h2 className="text-[0.78rem] text-gray-600 font-bold">&#8377;{parseFloat(parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["180-365"], 0).toFixed(2)) + parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["366-720"], 0).toFixed(2)) + parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["720 And Above"], 0).toFixed(2))).toFixed(2)
+
+                                                        }</h2>
                                                     </div>
                                                 </div>
                                                 <div
@@ -1522,8 +1643,8 @@ const AdditionalInfo = (props) => {
                                             </div>
                                         </div>
                                     </div>
-                                    {open && <TotalOutStandPop closeModal={closeModal} dueData={totalOsData || []}></TotalOutStandPop>}
-                                    {openTwo && <TotalOverDueAmtPop closeModal={closeModal} dueData={totalOsData || []}></TotalOverDueAmtPop>}
+                                    {open && <TotalOutStandPop closeModal={closeModal} dueData={collectionTableData || []}></TotalOutStandPop>}
+                                    {openTwo && <TotalOverDueAmtPop closeModal={closeModal} dueData={collectionTableData || []}></TotalOverDueAmtPop>}
                                 </div>
                             </div>
                             <table className="w-full border-collapse border border-gray-200 text-[10px] font-bold">
@@ -1803,26 +1924,7 @@ const AdditionalInfo = (props) => {
                     }
                 />
             </div>
-            {/* Example row */}
 
-            {/* {tableData.map((item) => 
-         <tr className="bg-white whitespace-nowrap">
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-       </tr>
-      )} */}
         </form >
     );
 };
