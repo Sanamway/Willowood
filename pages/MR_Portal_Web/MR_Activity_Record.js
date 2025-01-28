@@ -10,6 +10,11 @@ import { url } from "@/constants/url";
 import { AiTwotoneHome } from "react-icons/ai";
 
 const ChartReports = () => {
+
+
+
+
+
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
@@ -601,10 +606,6 @@ const ChartReports = () => {
           year: yr,
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           emp_code: empCode
-
-
-
-
         },
       });
       const apires = await respond.data.data;
