@@ -1313,6 +1313,8 @@ const FeePayout = () => {
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Sr. No</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Code</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Name</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Name</th>
+
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Reporting HQ</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Territory</th>
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Application Fee Amount</th>
@@ -1386,7 +1388,7 @@ const FeePayout = () => {
                     <td className="px-4 py-2 text-left">{idx + 1}</td>
                     <td className="px-4 py-2">{item.empcode}</td>
                     <td className="px-4 py-2 whitespace-nowrap">{item.emp_name}</td>
-
+                    <td className="px-4 py-2 whitespace-nowrap">{item.design}</td>
                     <td className="px-4 py-2">{item.reporting_hq}</td>
                     <td className="px-4 py-2">{item.territory_name}</td>
                     <td className="px-4 py-2 text-right">{parseFloat(item.in_appl_amt) ? parseFloat(item.in_appl_amt)?.toFixed(2) : "-"}</td>

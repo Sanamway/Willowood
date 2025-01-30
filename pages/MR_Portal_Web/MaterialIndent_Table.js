@@ -855,7 +855,7 @@ const MaterialIndent_Table = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.mi_id,
+                id: item.f_demo_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -874,7 +874,7 @@ const MaterialIndent_Table = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.mi_id,
+                id: item.f_demo_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -891,7 +891,7 @@ const MaterialIndent_Table = () => {
               setModalData({
                 ...modalData,
 
-                id: item.mi_id,
+                id: item.f_demo_id,
               });
             }}
           >
@@ -911,7 +911,7 @@ const MaterialIndent_Table = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.mi_id,
+              id: item.f_demo_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -930,7 +930,7 @@ const MaterialIndent_Table = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.mi_id,
+              id: item.f_demo_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -947,7 +947,7 @@ const MaterialIndent_Table = () => {
             setModalData({
               ...modalData,
 
-              id: item.mi_id,
+              id: item.f_demo_id,
             });
           }}
         >
@@ -968,7 +968,7 @@ const MaterialIndent_Table = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.mi_id,
+              id: item.f_demo_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -981,31 +981,58 @@ const MaterialIndent_Table = () => {
 
       </div>
 
-      case 5: return <div className="flex items-center">
+      case 5:
+        return <div className="flex items-center">
 
-        <input type="Checkbox"
-          className="ml-1 mr-1"
-          checked={item.isApproved}
-          disabled={item.approved === "Yes"}
-          onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
-        <button
-          onClick={() => {
-            setShowVerifyModal(true);
-            setModalData({
-              ...modalData,
-              type: "Approve",
-              id: item.mi_id,
-            });
-          }}
-          disabled={item.approved === "Yes"}
-          className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Verify",
+                id: item.f_demo_id,
+              });
+            }}
+            disabled
 
-        >
-          Approve
-        </button>
+          >
+            Verify
+          </button>
+          <input type="Checkbox"
+            className="ml-1 mr-1"
+            checked={item.isApproved}
+            disabled={item.approved === "Yes"}
+            onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Approve",
+                id: item.f_demo_id,
+              });
+            }}
+            disabled={item.approved === "Yes"}
+            className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
 
+          >
+            Approve
+          </button>
 
-      </div>
+          <button
+            className="b text-black hover:text-red-500 ml-2"
+            onClick={() => {
+              setShowDeleteModal(true);
+              setModalData({
+                ...modalData,
+
+                id: item.f_demo_id,
+              });
+            }}
+          >
+            Delete
+          </button>
+        </div>
 
       case 6: return <div className="flex items-center">
         <input type="Checkbox"
@@ -1019,7 +1046,7 @@ const MaterialIndent_Table = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.mi_id,
+              id: item.f_demo_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1042,7 +1069,7 @@ const MaterialIndent_Table = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.mi_id,
+              id: item.f_demo_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1066,7 +1093,7 @@ const MaterialIndent_Table = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.mi_id,
+                id: item.f_demo_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -1085,7 +1112,7 @@ const MaterialIndent_Table = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.mi_id,
+                id: item.f_demo_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -1102,7 +1129,7 @@ const MaterialIndent_Table = () => {
               setModalData({
                 ...modalData,
 
-                id: item.mi_id,
+                id: item.f_demo_id,
               });
             }}
           >

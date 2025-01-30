@@ -85,9 +85,7 @@ const Dashboard = () => {
         </div>
 
         {/* View Cards  */}
-        <div className="flex items-center justify-between w-full">
-          <ViewCard></ViewCard>
-        </div>
+
       </section>
     </>
   );

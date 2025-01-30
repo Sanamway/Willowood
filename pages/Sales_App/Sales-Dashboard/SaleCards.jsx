@@ -2,21 +2,40 @@ import React, { useState, useEffect } from "react";
 import { GiNetworkBars } from "react-icons/gi";
 import { useSelector } from "react-redux";
 const SaleCards = () => {
+  const allRollingAnalyticalData = useSelector((state) => state.rspAnalytics.rspAnalyticalData.product_category
+  );
   const allRollingTableData = useSelector((state) => state.rolling.rollingTableData
   );
 
-  const [data, setData] = useState([{ name: "Total Sales", data: allRollingTableData.length ? allRollingTableData[0].actual : 0 }]);
+
+
+
+
+
+
+  const [data, setData] = useState([{ name: "Total Sales", data: allRollingTableData?.length ? allRollingTableData[0].actual : 0 }]);
   const [data2, setData2] = useState([
-    { name: "X-Factor", data: "43 Cr" },
-    { name: "Core", data: "23 Cr" },
-    { name: "Other Products", data: "35 Cr" }
+    { name: "X-Factor", data: "0" },
+    { name: "Core", data: "0" },
+    { name: "Other Products", data: "0" }
   ]);
+
+
   useEffect(() => {
-    setData([{ name: "Total Sales", data: allRollingTableData.length ? allRollingTableData[0].actual : 0 }]);
+    setData([{ name: "Total Sales", data: allRollingTableData?.length ? allRollingTableData[0].actual : 0 }]);
   }, [allRollingTableData]);
+
   useEffect(() => {
-    setData([{ name: "Total Sales", data: allRollingTableData.length ? allRollingTableData[0].actual : 0 }]);
-  }, [allRollingTableData]);
+    setData2(allRollingAnalyticalData?.length ? allRollingAnalyticalData.map((item) => {
+      return {
+        name: item._id, data: item.totalNewPriceValue
+      }
+    }
+
+    ) : []);
+  }, [allRollingAnalyticalData]);
+
+
 
 
   function Skeleton() {
@@ -38,11 +57,8 @@ const SaleCards = () => {
       </>
     );
   }
-
-
   return (
     <>
-
       <div className="w-full px- mt-4 flex lg:flex-row flex-col gap-3 font-arial   rounded-md">
         {data.length ? (
           data.map((item, index) => (
@@ -74,7 +90,7 @@ const SaleCards = () => {
               </div>
             ))
           ) : (
-            <Skeleton2></Skeleton2>
+            <Skeleton></Skeleton>
           )}
         </div>
 

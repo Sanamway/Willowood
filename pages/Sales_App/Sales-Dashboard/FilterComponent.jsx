@@ -88,32 +88,33 @@ const FilterComponent = () => {
     if (!filterState.yr) return;
     getAllTransactionYear(filterState.yr);
   }, [filterState.yr]);
-  console.log("zz", filterState.month, allMonthData)
+  console.log("zz", filterState)
 
   useEffect(() => {
+    console.log("olkp", allYearData)
 
     const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
-
+    setLocalStorageItems({
+      cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
+      bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
+      buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
+      rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
+      zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
+      tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+      roleId: roleId,
+      tDes: JSON.parse(window.localStorage.getItem("userinfo"))?.territory_name,
+      clName: window.localStorage.getItem("user_name"),
+      ulName: window.localStorage.getItem("phone_number"),
+      empCode: window.localStorage.getItem("emp_code"),
+      roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+      reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
+      developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
+      hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
+      reportingHQ: JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
+    });
     switch (roleId) {
       case 6:
-        setLocalStorageItems({
-          cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
-          bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
-          roleId: JSON.parse(window.localStorage.getItem("userinfo"))?.role_id,
-          tDes: JSON.parse(window.localStorage.getItem("userinfo"))?.territory_name,
-          clName: window.localStorage.getItem("user_name"),
-          ulName: window.localStorage.getItem("phone_number"),
-          empCode: window.localStorage.getItem("emp_code"),
-          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
-          reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
-          developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
-          hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
-          reportingHQ: JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
-        });
+
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
@@ -126,25 +127,7 @@ const FilterComponent = () => {
         });
         break;
       case 5:
-        setLocalStorageItems({
-          cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
-          bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
 
-          roleId: JSON.parse(window.localStorage.getItem("userinfo"))?.role_id,
-
-          clName: window.localStorage.getItem("user_name"),
-          ulName: window.localStorage.getItem("phone_number"),
-          empCode: window.localStorage.getItem("emp_code"),
-          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
-          reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
-          developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
-          hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
-          reportingHQ: JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
-        });
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
@@ -157,23 +140,7 @@ const FilterComponent = () => {
         });
         break;
       case 4:
-        setLocalStorageItems({
-          cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
-          bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
-          roleId: JSON.parse(window.localStorage.getItem("userinfo"))?.role_id,
-          clName: window.localStorage.getItem("user_name"),
-          ulName: window.localStorage.getItem("phone_number"),
-          empCode: window.localStorage.getItem("emp_code"),
-          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
-          reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
-          developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
-          hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
-          reportingHQ: JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
-        });
+
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
@@ -186,23 +153,7 @@ const FilterComponent = () => {
         });
         break;
       case 3:
-        setLocalStorageItems({
-          cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
-          bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
-          roleId: JSON.parse(window.localStorage.getItem("userinfo"))?.role_id,
-          clName: window.localStorage.getItem("user_name"),
-          ulName: window.localStorage.getItem("phone_number"),
-          empCode: window.localStorage.getItem("emp_code"),
-          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
-          reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
-          developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
-          hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
-          reportingHQ: JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
-        });
+
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
@@ -215,23 +166,6 @@ const FilterComponent = () => {
         });
         break;
       case 10:
-        setLocalStorageItems({
-          cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
-          bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
-          roleId: JSON.parse(window.localStorage.getItem("userinfo"))?.role_id,
-          clName: window.localStorage.getItem("user_name"),
-          ulName: window.localStorage.getItem("phone_number"),
-          empCode: window.localStorage.getItem("emp_code"),
-          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
-          reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
-          developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
-          hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
-          reportingHQ: JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
-        });
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
@@ -244,23 +178,7 @@ const FilterComponent = () => {
         });
         break;
       default:
-        setLocalStorageItems({
-          cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
-          bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-          buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-          rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-          zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-          tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
-          roleId: JSON.parse(window.localStorage.getItem("userinfo"))?.role_id,
-          clName: window.localStorage.getItem("user_name"),
-          ulName: window.localStorage.getItem("phone_number"),
-          empCode: window.localStorage.getItem("emp_code"),
-          roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
-          reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
-          developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
-          hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
-          reportingHQ: JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq
-        });
+
 
         setFilterState({
           bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
@@ -749,10 +667,7 @@ const FilterComponent = () => {
     tId,
 
   ) => {
-    let endPoint = "api/SA_sales_data_dashboard";;
-
-
-
+    let endPoint = "api/SA_sales_data_dashboard";
     try {
       const respond = await axios.get(`${url}/${endPoint}`, {
         headers: headers,
@@ -762,21 +677,22 @@ const FilterComponent = () => {
           c_id: 1,
           m_year:
             month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+
           bg_id: bgId === "All" || !bgId ? null : bgId,
-          bg_des: bgId === "All" || !bgId ? null : bgData.filter((item) => item.bg_id === bgId)[0]?.business_segment,
+          bg_des: bgId === "All" || !bgId ? null : bgData.filter((item) => Number(item.bg_id) === Number(bgId))[0]?.business_segment,
 
           bu_id: buId === "All" || !buId ? null : buId,
-          bu_des: buId === "All" || !buId ? null : buData.filter((item) => item.bu_id === buId)[0]?.business_unit_name,
+          bu_des: buId === "All" || !buId ? null : buData.filter((item) => Number(item.bu_id) === Number(buId))[0]?.business_unit_name,
 
           z_id: zId === "All" || !zId ? null : zId,
-          z_des: zId === "All" || !zId ? null : zoneData.filter((item) => item.z_id === zId)[0]?.zone_name,
+          z_des: zId === "All" || !zId ? null : zoneData.filter((item) => Number(item.z_id) === Number(zId))[0]?.zone_name,
 
 
           r_id: rId === "All" || !rId ? null : rId,
-          r_des: rId === "All" || !rId ? null : regionData.filter((item) => item.r_id === rId)[0]?.region_name,
+          r_des: rId === "All" || !rId ? null : regionData.filter((item) => Number(item.r_id) === Number(rId))[0]?.region_name,
 
           t_id: tId === "All" || !tId ? null : tId,
-          t_des: tId === "All" || !tId ? null : territoryData.filter((item) => item.t_id === tId)[0]?.territory_name,
+          t_des: tId === "All" || !tId ? null : territoryData.filter((item) => Number(item.t_id) === Number(tId))[0]?.territory_name,
 
         },
       });
@@ -796,15 +712,7 @@ const FilterComponent = () => {
   useEffect(() => {
 
 
-    // getRSPAnalatycal(
-    //   filterState.yr || null,
-    //   filterState.month || null,
-    //   filterState.bgId || null,
-    //   filterState.buId || null,
-    //   filterState.zId || null,
-    //   filterState.rId || null,
-    //   filterState.tId
-    // );
+
 
     getSapSales(
       filterState.yr || null,
@@ -847,7 +755,7 @@ const FilterComponent = () => {
   ]);
 
 
-  const getOneTimeSalesPlan = async (
+  const getOneTimeRSP = async (
     yr,
     month,
     bgId,
@@ -902,11 +810,7 @@ const FilterComponent = () => {
   };
 
   useEffect(() => {
-
-
-
-
-    getOneTimeSalesPlan(
+    getOneTimeRSP(
       filterState.yr || null,
       filterState.month || null,
       filterState.bgId || null,
@@ -915,8 +819,6 @@ const FilterComponent = () => {
       filterState.rId || null,
       filterState.tId
     );
-
-
   }, [
     filterState.yr,
     filterState.month,

@@ -25,6 +25,7 @@ import { BsCalendar2Month } from "react-icons/bs";
 import { IoTodayOutline } from "react-icons/io5";
 import { Dialog, Transition } from "@headlessui/react";
 import CameraComponent from "@/components/Camera";
+import Select from "react-select";
 
 const AdditionalInfo = (props) => {
   const headers = {
@@ -59,7 +60,7 @@ const AdditionalInfo = (props) => {
     status: "Open",
   });
   const [productDemoState, setProductDemoState] = useState({
-    crop: "",
+    crop: { label: "", value: "" },
     cropName: "",
     stage: "",
     acre: "",
@@ -154,8 +155,8 @@ const AdditionalInfo = (props) => {
   };
 
   useEffect(() => {
-    getSegmentInfo(productDemoState.crop,)
-  }, [productDemoState.crop])
+    getSegmentInfo(productDemoState.crop.value,)
+  }, [productDemoState.crop.value])
   useEffect(() => {
     getDelaerData();
     getCropInfo();
@@ -627,9 +628,9 @@ const AdditionalInfo = (props) => {
         try {
           const data = {
             f_demo_code: fDemoCode,
-            cr_id: Number(productDemoState.crop),
+            cr_id: Number(productDemoState.crop.value),
             crop: productDemoState.crop ? newCropData.filter(
-              (item) => item.cr_id === Number(productDemoState.crop)
+              (item) => item.cr_id === Number(productDemoState.crop.value)
             )[0].crop_name : null,
             stage: productDemoState.stage,
             acre_plot: productDemoState.acre,
@@ -679,9 +680,9 @@ const AdditionalInfo = (props) => {
         try {
           const data = {
             f_demo_code: fDemoCode,
-            cr_id: Number(productDemoState.crop),
+            cr_id: Number(productDemoState.crop.value),
             crop: productDemoState.crop ? newCropData.filter(
-              (item) => item.cr_id === Number(productDemoState.crop)
+              (item) => item.cr_id === Number(productDemoState.crop.value)
             )[0].crop_name : null,
             stage: productDemoState.stage,
             acre_plot: productDemoState.acre,
@@ -1528,16 +1529,14 @@ const AdditionalInfo = (props) => {
           >
             <small className="text-red-600">*</small> Crop
           </label>
-          <select
-            className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-            id="stateSelect"
-            disabled={formActive}
+
+          <Select
+            options={allCropData?.map((item) => { return { value: item.cr_id, label: item.crop_name } })}
+            className="w-full text-sm px-3  border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             value={productDemoState.crop}
-            onChange={(e) =>
+            onChange={(item) => {
               setProductDemoState({
-                ...productDemoState,
-                crop: e.target.value,
-                cropName: "",
+                ...productDemoState, crop: item, cropName: "",
                 stage: "",
                 acre: "",
                 segment: "",
@@ -1548,19 +1547,10 @@ const AdditionalInfo = (props) => {
                 recDose: ""
               })
             }
-          >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
-              Option
-            </option>
-            {newCropData.map((item) => (
-              <option key={item.cr_id} value={item.cr_id}>
-                {item.crop_name}
-              </option>
-            ))}
-          </select>
+            }
+
+          />
+
         </div>
         <div className="w-full px-2 mt-2">
           <label

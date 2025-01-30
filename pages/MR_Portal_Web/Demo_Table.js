@@ -979,31 +979,58 @@ const DemoTable = () => {
 
       </div>
 
-      case 5: return <div className="flex items-center">
+      case 5:
+        return <div className="flex items-center">
 
-        <input type="Checkbox"
-          className="ml-1 mr-1"
-          checked={item.isApproved}
-          disabled={item.approved === "Yes"}
-          onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
-        <button
-          onClick={() => {
-            setShowVerifyModal(true);
-            setModalData({
-              ...modalData,
-              type: "Approve",
-              id: item.f_demo_id,
-            });
-          }}
-          disabled={item.approved === "Yes"}
-          className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Verify",
+                id: item.f_demo_id,
+              });
+            }}
+            disabled
 
-        >
-          Approve
-        </button>
+          >
+            Verify
+          </button>
+          <input type="Checkbox"
+            className="ml-1 mr-1"
+            checked={item.isApproved}
+            disabled={item.approved === "Yes"}
+            onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Approve",
+                id: item.f_demo_id,
+              });
+            }}
+            disabled={item.approved === "Yes"}
+            className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
 
+          >
+            Approve
+          </button>
 
-      </div>
+          <button
+            className="b text-black hover:text-red-500 ml-2"
+            onClick={() => {
+              setShowDeleteModal(true);
+              setModalData({
+                ...modalData,
+
+                id: item.f_demo_id,
+              });
+            }}
+          >
+            Delete
+          </button>
+        </div>
 
       case 6: return <div className="flex items-center">
         <input type="Checkbox"
@@ -1330,6 +1357,7 @@ const DemoTable = () => {
 
   const getTopActionButton = () => {
     let role = localStorageItems.roleId
+
     switch (role) {
       case 1: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
 
@@ -1375,52 +1403,116 @@ const DemoTable = () => {
         >Approve All</button>
       </div>
       case 8: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+        <div className="inline-flex items-center">
+          <input
+            type="checkbox"
+            checked={allVerified}
+            onChange={handleVerifyAllChange}
+            className="ml-2"
+          />
+          <span className="text-xs ml-1">Select All Verify</span>
+        </div>
+
+        <div className="inline-flex items-center ml-4">
+          <input
+            type="checkbox"
+            checked={allApproved}
+            onChange={handleApproveAllChange}
+            className="ml-2"
+          />
+          <span className="text-xs ml-1">Select All Approve</span>
+        </div>
+      </div>
+
+      case 4: return <div className="flex flex-col gap-2 items-start ml-4">
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allApproved}
+            onChange={handleApproveAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Approve</span>
+        </span>
+
+
         <button type="button"
-          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
-          onClick={() => setData(data.map((item) => { return { ...item, isVerified: true } }))}
-        >Verify All</button>
-        <button type="button"
-          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
-          onClick={() => setData(data.map((item) => { return { ...item, isApproved: true } }))}
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleApproveAll()
+          }}
         >Approve All</button>
       </div>
 
-      case 4: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+
+
+      case 5: return <div className="flex flex-col gap-2 items-start ml-4">
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allApproved}
+            onChange={handleApproveAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Approve</span>
+        </span>
+
 
         <button type="button"
-          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
-          onClick={() => setData(data.map((item) => { return { ...item, isApproved: true } }))}
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleApproveAll()
+          }}
         >Approve All</button>
       </div>
 
-      case 5: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+
+      case 6: return <div className="flex flex-col gap-2 items-start ml-4">
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allVerified}
+            onChange={handleVerifyAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Verify</span>
+        </span>
+
 
         <button type="button"
-          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
-          onClick={() => setData(data.map((item) => { return { ...item, isApproved: true } }))}
-        >Approve All</button>
-      </div>
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
 
-      case 6: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
-        <button type="button"
-          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
-          onClick={() => setData(data.map((item) => { return { ...item, isVerified: true } }))}
+            handleVerifyAll()
+          }}
         >Verify All</button>
-
       </div>
 
+      case 9: return <div className="flex flex-col gap-2 items-start ml-4">
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allVerified}
+            onChange={handleVerifyAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Verify</span>
+        </span>
 
-      case 9: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+
         <button type="button"
-          className="inline-flex justify-center  text-white border border-transparent bg-blue-400 px-2 py-1 text-sm font-medium "
-          onClick={() => setData(data.map((item) => { return { ...item, isVerified: true } }))}
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleVerifyAll()
+          }}
         >Verify All</button>
-
       </div>
-
-
     }
   }
+
 
   return (
     <Layout>
