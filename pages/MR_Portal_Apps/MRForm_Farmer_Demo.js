@@ -60,7 +60,7 @@ const AdditionalInfo = (props) => {
     status: "Open",
   });
   const [productDemoState, setProductDemoState] = useState({
-    crop: { label: "", value: "" },
+    cropId: { value: "", label: "Select Crop", isDisabled: true },
     cropName: "",
     stage: "",
     acre: "",
@@ -71,11 +71,9 @@ const AdditionalInfo = (props) => {
     dose: "",
     recDose: ""
   });
-  console.log("pop", productDemoState)
 
   const [productDemoTableData, setProductDemoTableData] = useState([]);
   const [dealerData, setDealerData] = useState([]);
-
   const [allStageData, setAllStageData] = useState([]);
   const [allSegmentData, setAllSegmentData] = useState([]);
   const [allBrandData, setAllBrandData] = useState([]);
@@ -155,8 +153,9 @@ const AdditionalInfo = (props) => {
   };
 
   useEffect(() => {
+    if (!productDemoState.crop?.value) return
     getSegmentInfo(productDemoState.crop.value,)
-  }, [productDemoState.crop.value])
+  }, [productDemoState.crop?.value])
   useEffect(() => {
     getDelaerData();
     getCropInfo();
@@ -1530,9 +1529,13 @@ const AdditionalInfo = (props) => {
             <small className="text-red-600">*</small> Crop
           </label>
 
+
           <Select
-            options={allCropData?.map((item) => { return { value: item.cr_id, label: item.crop_name } })}
-            className="w-full text-sm px-3  border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            options={[
+              { value: "", label: "Select Crop", isDisabled: true }, // Default disabled option
+              ...allCropData?.map((item) => ({ value: item.cr_id, label: item.crop_name }))
+            ]}
+            className="w-full text-sm  border border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             value={productDemoState.crop}
             onChange={(item) => {
               setProductDemoState({

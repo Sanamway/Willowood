@@ -1313,7 +1313,7 @@ const FeePayout = () => {
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Sr. No</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Code</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Name</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Name</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Designation</th>
 
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Reporting HQ</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Territory</th>

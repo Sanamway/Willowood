@@ -6,6 +6,7 @@ import rollingReducer from './rollingSlice';
 import dealerCountReducer from './dealerCountSlice'
 import rspAnalyticalReducer from './rspAnalyticalSlice'
 import singleRollingReducer from './singleRollingSlice'
+import orderInfoReducer from './orderInfoSlice'
 
 
 const appStore = configureStore({
@@ -14,7 +15,8 @@ const appStore = configureStore({
         rolling: rollingReducer,
         dealer: dealerCountReducer,
         rspAnalytics: rspAnalyticalReducer,
-        singleRolling: singleRollingReducer
+        singleRolling: singleRollingReducer,
+        orderInfo: orderInfoReducer,
     },
 });
 

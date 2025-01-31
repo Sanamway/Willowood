@@ -681,7 +681,7 @@ const AdditionalInfo = (props) => {
     getAutoFarmerId()
   }, [addFarmerModal])
   const [addFarmerCrop, setAddFarmerCrop] = useState({
-    cropId: { label: "", value: "" },
+    cropId: { value: "", label: "Select Crop", isDisabled: true },
     area: ''
   })
 
@@ -949,6 +949,18 @@ const AdditionalInfo = (props) => {
                           >
                             Select Category
                           </option>
+                          <option value="Less than 1 Acre">
+                            Less than 1 Acre
+                          </option>
+                          <option value="1 - 5 Acre ">
+                            1 - 5 Acre
+                          </option>
+                          <option value="5-20 Acre">
+                            5-20 Acre
+                          </option>
+                          <option value="Greater than 20 Acre">
+                            Greater than 20 Acre
+                          </option>
                           <option value="Marginal-Below 1.00 hectare">
                             Marginal-Below 1.00 hectare
                           </option>
@@ -964,18 +976,7 @@ const AdditionalInfo = (props) => {
                           <option value="Large 10.00 hectare">
                             Large 10.00 hectare
                           </option>
-                          <option value="Less than 1 Acre">
-                            Less than 1 Acre
-                          </option>
-                          <option value="1 - 5 Acre ">
-                            1 - 5 Acre
-                          </option>
-                          <option value="5-20 Acre">
-                            5-20 Acre
-                          </option>
-                          <option value="Greater than 20 Acre">
-                            Greater than 20 Acre
-                          </option>
+
                         </select>
                       </div>
                     </div>
@@ -1181,9 +1182,25 @@ const AdditionalInfo = (props) => {
                     <div className="flex flex-row my-2 mb-2 ">
                       <div className="w-full px-2">
 
+                        {/* <Select
+                          options={[
+                            { value: "", label: "Select Crop", isDisabled: true }, // ✅ Default placeholder option
+                            ...allCropData?.map((item) => ({ value: item.cr_id, label: item.crop_name }))
+                          ]}
+                          placeholder="Select Crop" // ✅ Sets the placeholder
+
+                          className="w-full text-sm  border border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                          value={allCropData?.find((item) => item.cr_id === addFarmerCrop.cropId) || { value: "", label: "Select Crop" }} // ✅ Ensure the selected value matches format
+                          onChange={(item) => setAddFarmerCrop({ ...addFarmerCrop, cropId: item.value })}
+                        /> */}
+                        {console.log("nmk", addFarmerCrop)}
                         <Select
-                          options={allCropData?.map((item) => { return { value: item.cr_id, label: item.crop_name } })}
-                          className="w-full text-sm px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                          options={[
+                            { value: "", label: "Select Crop", isDisabled: true }, // Default disabled option
+                            ...allCropData?.map((item) => ({ value: item.cr_id, label: item.crop_name }))
+                          ]}
+
+                          className="w-full text-sm  border border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                           value={addFarmerCrop.cropId}
                           onChange={(item) => {
 

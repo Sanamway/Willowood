@@ -202,11 +202,11 @@ const ChartReports = () => {
       const respond = await axios.get(`${url}/api/get_employee`, {
         headers: headers,
         params: {
-          t_id: t === "All" ? null : t,
-          bg_id: bg === "All" ? null : bg,
-          bu_id: bu === "All" ? null : bu,
-          z_id: z === "All" ? null : z,
-          r_id: r === "All" ? null : r,
+          t_id: t === "All" ? null : t || null,
+          bg_id: bg === "All" ? null : bg || null,
+          bu_id: bu === "All" ? null : bu || null,
+          z_id: z === "All" ? null : z || null,
+          r_id: r === "All" ? null : r || null,
           zrt: true,
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
         },
@@ -548,16 +548,16 @@ const ChartReports = () => {
       const respond = await axios.get(`${url}/api/mr_activity_report_monthly`, {
         headers: headers,
         params: {
-          t_id: tId === "All" ? null : tId,
-          bg_id: bgId === "All" ? null : bgId,
-          bu_id: buId === "All" ? null : buId,
-          z_id: zId === "All" ? null : zId,
-          r_id: rId === "All" ? null : rId,
+          t_id: tId === "All" ? null : tId || null,
+          bg_id: bgId === "All" ? null : bgId || null,
+          bu_id: buId === "All" ? null : buId || null,
+          z_id: zId === "All" ? null : zId || null,
+          r_id: rId === "All" ? null : rId || null,
 
           year: adjustedYear,
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           count_type: "year",
-          emp_code: empCode
+          emp_code: empCode || null
 
 
         },
@@ -597,15 +597,15 @@ const ChartReports = () => {
       const respond = await axios.get(`${url}/api/mr_activity_report_territory`, {
         headers: headers,
         params: {
-          t_id: tId === "All" ? null : tId,
-          bg_id: bgId === "All" ? null : bgId,
-          bu_id: buId === "All" ? null : buId,
-          z_id: zId === "All" ? null : zId,
-          r_id: rId === "All" ? null : rId,
+          t_id: tId === "All" ? null : tId || null,
+          bg_id: bgId === "All" ? null : bgId || null,
+          bu_id: buId === "All" ? null : buId || null,
+          z_id: zId === "All" ? null : zId || null,
+          r_id: rId === "All" ? null : rId || null,
           month: monthToNumber[month],
           year: yr,
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          emp_code: empCode
+          emp_code: empCode || null
         },
       });
       const apires = await respond.data.data;
@@ -643,15 +643,15 @@ const ChartReports = () => {
       const respond = await axios.get(`${url}/api/mr_activity_report_emp`, {
         headers: headers,
         params: {
-          t_id: tId === "All" ? null : tId,
-          bg_id: bgId === "All" ? null : bgId,
-          bu_id: buId === "All" ? null : buId,
-          z_id: zId === "All" ? null : zId,
-          r_id: rId === "All" ? null : rId,
+          t_id: tId === "All" ? null : tId || null,
+          bg_id: bgId === "All" ? null : bgId || null,
+          bu_id: buId === "All" ? null : buId || null,
+          z_id: zId === "All" ? null : zId || null,
+          r_id: rId === "All" ? null : rId || null,
           month: monthToNumber[month],
           year: yr,
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          emp_code: empCode
+          emp_code: empCode || null
 
 
 
@@ -692,11 +692,11 @@ const ChartReports = () => {
       const respond = await axios.get(`${url}/api/crop_product_demo_count`, {
         headers: headers,
         params: {
-          t_id: tId === "All" ? null : tId,
-          bg_id: bgId === "All" ? null : bgId,
-          bu_id: buId === "All" ? null : buId,
-          z_id: zId === "All" ? null : zId,
-          r_id: rId === "All" ? null : rId,
+          t_id: tId === "All" ? null : tId || null,
+          bg_id: bgId === "All" ? null : bgId || null,
+          bu_id: buId === "All" ? null : buId || null,
+          z_id: zId === "All" ? null : zId || null,
+          r_id: rId === "All" ? null : rId || null,
           month: monthToNumber[month],
           year: yr,
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,

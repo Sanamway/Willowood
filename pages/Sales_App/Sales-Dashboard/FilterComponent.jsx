@@ -10,6 +10,7 @@ import { setRollingTableData } from "@/utils/rollingSlice";
 import { setDelaerCountData } from "@/utils/dealerCountSlice";
 import { setRSPAnalyticalData } from "@/utils/rspAnalyticalSlice";
 import { setSingleRollingTableData } from "@/utils/singleRollingSlice";
+import { setOrderInfoData } from "@/utils/orderInfoSlice";
 
 const FilterComponent = () => {
   const router = useRouter();
@@ -471,29 +472,8 @@ const FilterComponent = () => {
     "Feb-25",
     "Mar-25"];
 
-  const [bsGraphData, setBsGraphData] = useState([
-    {
-      label: "Budget",
-      backgroundColor: "rgba(34, 197, 94, 1)",  // Full opacity (green-400)
-      backgroundColor: "rgba(34, 197, 94, 0.6)", // 60% opacity
-      data: 0,
-    },
-    {
-      label: "RSP Budget",
-      backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity (blue)
-      backgroundColor: "rgba(59, 130, 246, 0.6)", // 60% opacity
-      data: 0,
-    },
-    {
-      label: "Total Sales",
-      backgroundColor: "rgba(249, 115, 22, 1)",  // Full opacity (orange)
-      borderColor: "rgba(249, 115, 22, 0.6)",    // 60% opacity
-      data: 0,
-    }
 
-  ])
 
-  // const [allTableData, setAllTableData] = useState([]);
 
 
   const getDealerCount = async (
@@ -597,6 +577,47 @@ const FilterComponent = () => {
 
       // setAllTableData(apires);
       dispatch(setRollingTableData(apires));
+
+    } catch (error) {
+      if (!error) return;
+      // setAllTableData([]);
+    }
+  };
+  const getAllOrderInfo = async (
+    yr,
+    month,
+    bgId,
+    buId,
+    zId,
+    rId,
+    tId,
+
+  ) => {
+    let endPoint = "api/get_order_info";
+
+
+
+    try {
+      const respond = await axios.get(`${url}/${endPoint}`, {
+        headers: headers,
+
+        params: {
+          t_year: yr || null,
+          m_year:
+            month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+          bg_id: bgId === "All" || !bgId ? null : bgId,
+          bu_id: buId === "All" || !buId ? null : buId,
+          z_id: zId === "All" || !zId ? null : zId,
+          r_id: rId === "All" || !rId ? null : rId,
+          t_id: tId === "All" || !tId ? null : tId,
+
+        },
+      });
+
+      const apires = await respond.data.data;
+
+      // setAllTableData(apires);
+      dispatch(setOrderInfoData(apires));
 
     } catch (error) {
       if (!error) return;
@@ -724,6 +745,15 @@ const FilterComponent = () => {
       filterState.tId
     );
     getAllSalesPlanStatus(
+      filterState.yr || null,
+      filterState.month || null,
+      filterState.bgId || null,
+      filterState.buId || null,
+      filterState.zId || null,
+      filterState.rId || null,
+      filterState.tId
+    );
+    getAllOrderInfo(
       filterState.yr || null,
       filterState.month || null,
       filterState.bgId || null,
