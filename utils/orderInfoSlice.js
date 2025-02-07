@@ -12,6 +12,6 @@ const orderInfoSlice = createSlice({
     },
 });
 
-export const { setDelaerCountData } = orderInfoSlice.actions;
+export const { setOrderInfoData } = orderInfoSlice.actions;
 
 export default orderInfoSlice.reducer;

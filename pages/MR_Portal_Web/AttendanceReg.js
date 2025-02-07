@@ -1561,6 +1561,8 @@ const Attendance = () => {
     }
 
   }
+
+  const [punchInDisable, setPunchInDisable] = useState(false);
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">

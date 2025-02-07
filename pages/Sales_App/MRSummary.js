@@ -906,7 +906,7 @@ const ChartReports = () => {
                         className="self-center "
                         onClick={() =>
                             router.push({
-                                pathname: "/MR_Portal_Apps/MRHome",
+                                pathname: "/Sales_App/Home",
                             })
                         }
                     />

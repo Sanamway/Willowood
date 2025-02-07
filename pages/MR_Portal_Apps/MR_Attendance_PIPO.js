@@ -75,7 +75,8 @@ const AdditionalInfo = (props) => {
     reason: "",
     attendanceId: "",
     closingKm: "",
-    openingKm: ""
+    openingKm: "",
+    disableAttendance: false
   });
   const [attendenceStatus, setAttendenceStatus] = useState("Punch In");
   const getAttandenceStatus = async () => {
@@ -91,12 +92,14 @@ const AdditionalInfo = (props) => {
       });
       const apires = await respond.data.data;
       if (apires) {
+
         setAttendenceStatus("Punch Out");
         setUserDetails({
           ...userDetails,
           lastPunchIn: apires.punch_in_time,
           attendanceType: "Punch Out",
           attendanceId: apires.attendance_id,
+          status: apires.status
         });
       } else {
         setAttendenceStatus("Punch In");
@@ -110,7 +113,6 @@ const AdditionalInfo = (props) => {
         setAttendenceStatus("Punch In");
         setUserDetails({
           ...userDetails,
-
           attendanceType: "Punch In",
         });
       } else {
@@ -120,6 +122,7 @@ const AdditionalInfo = (props) => {
     }
   };
   useEffect(() => {
+    if (!localStorageItems.empCode) return
     getAttandenceStatus();
   }, [localStorageItems]);
 
@@ -313,11 +316,41 @@ const AdditionalInfo = (props) => {
   const triggerFileInput = () => {
     fileInputRef.current.click();
   };
+  const [punchInDisable, setPunchInDisable] = useState(false);
+  const getAttandenceHeader = (data) => {
+    console.log("opl", data)
 
+    if (data.status === "WO") {
+      return <h1 className="text-xl font-bold  flex w-full  justify-center border-b-4 border-blue-800 shadow-xl ">
+        Weekly Off
+      </h1>
+    }
+    else if (data.status === "H") {
+      return <h1 className="text-xl font-bold  flex w-full  justify-center border-b-4 border-blue-800 shadow-xl ">
+        Holiday
+      </h1>
+    }
+    else if (attendenceStatus === "Punch In") {
+
+      return <h1 className="text-xl font-bold  flex w-full  justify-center border-b-4 border-blue-800 shadow-xl ">
+        Punch-In {PunchInTimeString}
+      </h1>
+    }
+    else {
+
+      return <h1 className="text-xl font-bold  flex w-full  mt-2 justify-center border-b-4 border-blue-800 shadow-xl ">
+        Punch-Out
+      </h1>
+
+    }
+
+
+  }
   return (
     <form
       className=" bg-white rounded  w-full  overflow-auto pb-4"
       onSubmit={(e) => e.preventDefault()}
+      disabled={userDetails.status === "WO" || userDetails.status === "H"}
     >
 
       <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
@@ -418,15 +451,8 @@ const AdditionalInfo = (props) => {
             </div>
           </div>
         </div>
-        {attendenceStatus === "Punch In" ? (
-          <h1 className="text-xl font-bold  flex w-full  justify-center border-b-4 border-blue-800 shadow-xl ">
-            Punch-In {PunchInTimeString}
-          </h1>
-        ) : (
-          <h1 className="text-xl font-bold  flex w-full  mt-2 justify-center border-b-4 border-blue-800 shadow-xl ">
-            Punch-Out
-          </h1>
-        )}
+        {getAttandenceHeader(userDetails)}
+
         <h1 className=" font-bold text-sm flex w-full justify-center h-8  border p-1  shadow-xl">
           Last Punch In :{" "}
           {attendenceStatus === "Punch In"
@@ -542,7 +568,12 @@ const AdditionalInfo = (props) => {
           <div className="flex w-full justify-center">
             <button
               className="text-xl py-1 rounded-md  bg-blue-200  flex  flex-row  w-1/2 justify-center  border my-2 shadow-xl"
-              onClick={() => handlePunchIn("PI")}
+              onClick={() => {
+                handlePunchIn("PI")
+                setPunchInDisable(true)
+              }}
+              type="submit"
+              disabled={punchInDisable || userDetails.status === "WO" || userDetails.status === "H"}
             >
               <MdOutlineTimer
                 size={28}
@@ -555,7 +586,12 @@ const AdditionalInfo = (props) => {
           <div className="flex w-full justify-center ">
             <button
               className="text-xl py-1 rounded-md  bg-blue-200  flex  flex-row  w-1/2 justify-center  border my-2 shadow-xl"
-              onClick={() => handlePunchIn("PO")}
+              type="submit"
+              onClick={() => {
+                handlePunchIn("PO")
+                setPunchInDisable(true)
+              }}
+              disabled={punchInDisable || userDetails.status === "WO" || userDetails.status === "H"}
             >
               <MdOutlineTimer
                 size={28}

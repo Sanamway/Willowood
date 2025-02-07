@@ -817,6 +817,7 @@ const FeePayout = () => {
           ["Sr. No"]: idx + 1,
           ["Employee Code"]: item.empcode,
           ["Employee Name"]: item.emp_name,
+          ["Designation"]: item.design,
           ["Reporting HQ"]: item.reporting_hq,
           ["Territory"]: item.territory_name,
           ["Application Fee Amount"]: item.in_appl_amt,
@@ -826,6 +827,8 @@ const FeePayout = () => {
           ["Gross Salary"]: item.grass_salary,
           ["Calendar WD"]: item.calender_w_d,
           ["Present Day"]: item.total_mr_present,
+
+          ["Weekly Off"]: item.emp_wo_count,
           ["Mannual Attendance"]: item.manual_attendance,
           ["Total Working Days"]: item.total_working_day,
           ["Earning Salary"]: item.earning_salary,

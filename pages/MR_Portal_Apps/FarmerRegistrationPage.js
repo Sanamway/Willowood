@@ -293,6 +293,7 @@ const AdditionalInfo = (props) => {
   const handleSaveFarmer = async () => {
     if (cropGridData.length) {
       try {
+        s
         const data = {
           fr_id: autoFarmer,
           c_id: Number(localStorageItems.cId),
@@ -325,6 +326,7 @@ const AdditionalInfo = (props) => {
           .then((res) => {
             if (!res) return;
             toast.success(res.data.message);
+            whatsAppMsg(farmerState.farmerName, farmerState.mobile);
             setFarmerState({
               farmerName: "",
               fatherName: "",
@@ -360,6 +362,29 @@ const AdditionalInfo = (props) => {
     }
 
   };
+
+  async function whatsAppMsg(
+    farmerName, farmerMobile
+  ) {
+    try {
+      const payLoad = {
+        recipient: farmerMobile,
+        tem_id: "717553",
+        placeholders: [
+          farmerName,
+          farmerMobile,
+        ]
+      };
+      // return;
+      const res = await axios.post(`${url}/api/whatsAppChat`, JSON.stringify(payLoad), {
+        headers: headers
+      });
+      const respData = await res.data;
+      console.log("WA", respData);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  }
 
   const [allState, setAllState] = useState([]);
   const [allDist, setAllDist] = useState([]);
@@ -684,6 +709,12 @@ const AdditionalInfo = (props) => {
     cropId: { value: "", label: "Select Crop", isDisabled: true },
     area: ''
   })
+
+
+
+
+
+
 
   const handleAddFarmerAreaCrop = async () => {
     try {
@@ -1227,7 +1258,10 @@ const AdditionalInfo = (props) => {
                       <div className="w-1/2  ">
                         <button type="button"
                           className="inline-flex justify-center  text-white rounded-md border border-transparent bg-orange-400 px-4 py-2 text-sm font-medium "
-                          onClick={() => handleAddFarmerAreaCrop()}
+                          onClick={() => {
+                            handleAddFarmerAreaCrop()
+
+                          }}
                         >Add+</button>
                       </div>
                     </div>
@@ -1296,7 +1330,10 @@ const AdditionalInfo = (props) => {
                     <button
                       type="button"
                       className="inline-flex justify-center  text-white rounded-md border border-transparent bg-green-400 px-4 py-2 text-sm font-medium hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={() => handleSaveFarmer()}
+                      onClick={() => {
+                        handleSaveFarmer()
+                      }
+                      }
                     >
                       Submit
                     </button>
