@@ -77,30 +77,17 @@ const Checkout = () => {
                 <h1 className="lg:text-3xl text-2xl font-bold mb-6 px-4">Checkout</h1>
 
                 <div className="flex flex-col lg:flex-row gap-8 px-1.5">
-                    {/* Left Section - Forms */}
-                    <div className="lg:w-2/3">
-                        {/* Shipping Address */}
-                        {/* <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-              <h2 className="text-xl font-semibold mb-4">Shipping Address</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" placeholder="First Name" className="border p-2 rounded" />
-                <input type="text" placeholder="Last Name" className="border p-2 rounded" />
-                <input type="text" placeholder="Address" className="border p-2 rounded md:col-span-2" />
-                <input type="text" placeholder="City" className="border p-2 rounded" />
-                <input type="text" placeholder="Postal Code" className="border p-2 rounded" />
-              </div>
-            </div> */}
 
-                        {/* Delivery Options */}
+                    <div className="lg:w-2/3">
+
+
+
                         <div className="bg-white lg:p-6 p-1.5 rounded-lg shadow-md mb-4">
                             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
                             <div className="space-y-4">
                                 <label className="flex items-center p-4 border rounded cursor-pointer hover:bg-gray-50">
                                     <div className="flex lg:flex  gap-1 justify-between w-full ">
-                                        {/* <div className="flex text-xs lg:text-sm gap-1">
-                      <h2 className="font-semibold whitespace-nowrap">Order No: </h2>
-                      <h2 className="text-gray-500">WILLXXXXXX</h2>
-                    </div> */}
+
                                         <div className="flex text-xs lg:text-sm gap-1">
                                             <h2 className="font-semibold">Date: </h2>
                                             <h2 className="text-gray-500 whitespace-nowrap">{new Date().toDateString()}</h2>

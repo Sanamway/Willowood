@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import FilterComponent from "./FilterComponent";
 import Layout from "../Layout";
 import { IoIosBasket } from "react-icons/io";
@@ -7,9 +7,7 @@ import { CiBookmark } from "react-icons/ci";
 import { LuRefreshCw } from "react-icons/lu";
 
 const Dashboard = () => {
-
-
-
+  const [refresh, setRefresh] = useState(false)
   return (
     <Layout>
       <div className="flex flex-col gap-2 h-screen">
@@ -41,13 +39,13 @@ const Dashboard = () => {
               <CiBookmark className="mr-2" />  Order Actions
             </button>
             <button
-
+              onClick={() => { setDownloadExcel() }}
               className="bg-white flex items-center justify-center whitespace-nowrap text-pink-500 px-2 py-1 rounded-sm border border-pink-500"
             >
               <LuRefreshCw className="mr-2" /> Generate Report
             </button>
             <button
-
+              onClick={() => setRefresh(!refresh)}
               className="bg-pink-500 flex items-center justify-center whitespace-nowrap text-white px-2 py-1 rounded-sm"
             >
               <LuRefreshCw className="mr-2" />   Refresh
@@ -62,7 +60,7 @@ const Dashboard = () => {
         <div className="flex flex-col flex-1 overflow-hidden">
           {/* Filter Component - Does Not Expand */}
           <div className="shadow-md rounded-lg">
-            <FilterComponent />
+            <FilterComponent refresh={refresh} />
           </div>
 
           {/* Order Table - Takes Up All Remaining Space */}
