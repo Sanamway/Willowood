@@ -88,10 +88,10 @@ const TrasactionPeriod = () => {
 
   useEffect(() => {
     if (!selectionState.businessSegmentId || !selectionState.companyId) return;
-     getBUInfo(selectionState.companyId, selectionState.businessSegmentId);
+    getBUInfo(selectionState.companyId, selectionState.businessSegmentId);
   }, [selectionState.businessSegmentId, selectionState.companyId]);
 
-   const [allTransactionData, setAllTransactionData] = useState([]);
+  const [allTransactionData, setAllTransactionData] = useState([]);
   const getAllTransactionData = async (year, cId, bgId, buId) => {
     if (!year || !cId || !bgId || !buId) return;
     try {
@@ -161,8 +161,9 @@ const TrasactionPeriod = () => {
       getBUInfo(router.query.cId, router.query.bgId);
     }
   }, [router]);
-
+  const [buttonLoading, setButtonLoading] = useState(false)
   const handleSavePlan = async () => {
+    setButtonLoading(true)
     try {
       const planId = allTransactionData.filter(
         (item) => item.isEditable === true
@@ -191,6 +192,7 @@ const TrasactionPeriod = () => {
         .then((res) => {
           if (!res) return;
           toast.success(res.data.message);
+          setButtonLoading(false)
           setTimeout(() => {
             router.push("/table/table_transaction_open");
           }, [3000]);
@@ -198,7 +200,7 @@ const TrasactionPeriod = () => {
     } catch (errors) {
       console.log("kl", errors);
       const errorMessage = errors?.response?.data?.message;
-
+      setButtonLoading(false)
       toast.error(errorMessage);
     }
   };
@@ -546,6 +548,7 @@ const TrasactionPeriod = () => {
                 <button
                   className="bg-green-700 px-4 py-1 text-white"
                   onClick={() => handleSavePlan()}
+                  disabled={buttonLoading === true}
                 >
                   Save
                 </button>

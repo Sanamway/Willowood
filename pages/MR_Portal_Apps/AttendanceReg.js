@@ -206,6 +206,7 @@ const AtReg = () => {
           setCurrentDateStatus("");
           getAttendanceData()
           toast.success(res.data.message);
+          router.push("/MR_Portal_Apps/MRHome")
         });
     } catch (errors) {
       console.log("pop", errors)

@@ -32,7 +32,6 @@ const FilterComponent = (props) => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-
       const userInfo = JSON.parse(localStorage.getItem("userinfo")) || {};
       const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
       setLocalStorageItems({ roleId: roleId })
@@ -161,9 +160,7 @@ const FilterComponent = (props) => {
       const respond = await axios.get(`${url}/api/get_territory`, {
         headers: headers,
       });
-
       const apires = await respond.data.data;
-
       setTerritoryData(
         apires
           .filter((item) => Number(item.bg_id) === Number(segmentId))
@@ -221,13 +218,10 @@ const FilterComponent = (props) => {
 
   const [pageSizeNumber, setPageSizeNumber] = useState(25)
 
-  useEffect(() => { if (filterState) getOrderList(pageSizeNumber) }, [pageSizeNumber])
-  useEffect(() => { if (filterState) getOrderList(pageSizeNumber) }, [props.refresh])
 
-  const getOrderList = async (
-    pageItemCount
-  ) => {
-    setOpenModal(false)
+  const getOrderList = async () => {
+    setOpenModal(false);
+
     const {
       from,
       to,
@@ -241,18 +235,14 @@ const FilterComponent = (props) => {
       zId,
       buId,
       bgId,
-    } = filterState
+    } = filterState;
+
     let endPoint = "api/get_order_info?c_id=1";
-
-
-
 
     try {
       const respond = await axios.get(`${url}/${endPoint}`, {
         headers: headers,
-
         params: {
-
           from: moment(from).format("YYYY-MM-DD"),
           to: moment(to).format("YYYY-MM-DD") || null,
           t_id: tId || null,
@@ -264,108 +254,22 @@ const FilterComponent = (props) => {
           depot: depot || null,
           material: materialCode || null,
           mat_name: materialSearch || null,
-          paging: true,
-          page: 1,
-          size: pageItemCount,
-
-
-
-
+          SAP_order_no: sapOrder?.value || null
         }
       });
 
-      const apires = await respond.data.data;
+      const apires = { orderInfoData: respond.data.data };
 
       dispatch(setAllOrderInfoData(apires));
 
-
-
     } catch (error) {
-      if (!error) return;
+      console.error("Error fetching order data:", error);
 
+      // If an error occurs, set an empty array in Redux state
+      dispatch(setAllOrderInfoData([]));
     }
   };
 
-
-  const getExcelsheet = async (
-    pageItemCount
-  ) => {
-    const {
-      from,
-      to,
-      party,
-      materialCode,
-      materialSearch,
-      depot,
-      sapOrder,
-      tId,
-      rId,
-      zId,
-      buId,
-      bgId,
-    } = filterState
-    let endPoint = "api/get_order_info?c_id=1";
-    try {
-      const respond = await axios.get(`${url}/${endPoint}`, {
-        headers: headers,
-
-        params: {
-
-          from: moment(from).format("YYYY-MM-DD"),
-          to: moment(to).format("YYYY-MM-DD") || null,
-          t_id: tId || null,
-          r_id: rId || null,
-          z_id: zId || null,
-          bu_id: buId || null,
-          bg_id: bgId || null,
-          kunnar_sold: party || null,
-          depot: depot || null,
-          material: materialCode || null,
-          mat_name: materialSearch || null,
-          paging: true,
-          page: 1,
-          size: pageItemCount,
-
-
-
-
-        }
-      });
-
-      const apires = await respond.data.data;
-
-      const ws = XLSX.utils.json_to_sheet(apires.map((item) => {
-        return {
-          ["Indent Code"]: item.mi_no,
-          ["Employee Code"]: item.emp_code,
-          ["Employee Name"]: item.emp_name,
-          ["Rquest Date"]: moment(item.indent_req_date).format("DD/MM/YYYY"),
-          ["Material POP Required"]: item.material_pop_require,
-          ["Any Specification of Material"]: item.any_specification_of_material,
-          ["Purpose of Material"]: item.purpose_of_material,
-          ["Priority DP"]: item.priority,
-          ["Current Stock Qty"]: item.current_stock_qty,
-          ["Required Qty"]: item.required_qty,
-          ["Delivery date"]: moment(item.
-            delivery_date
-          ).format("DD/MM/YYYY"),
-          ["Current_Status"]: item.status,
-          ["Territory"]: item.territory_name,
-          ["Company"]: item.cmpny_name,
-          ["Deleted"]: item.isDeleted ? "Yes" : "No",
-        }
-      }));
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-      XLSX.writeFile(wb, `Indent.xlsx`);
-
-
-
-    } catch (error) {
-      if (!error) return;
-
-    }
-  };
 
 
   const [partyOption, setPartyOption] = useState([]);
@@ -407,6 +311,7 @@ const FilterComponent = (props) => {
 
   const [mtrOption, setMtrOption] = useState([]);
   const [mtrNameOption, setMtrNameOption] = useState([]);
+  const [sapCodeOption, setSapCodeOption] = useState([]);
 
   const getAllMtrData = async () => {
 
@@ -447,6 +352,37 @@ const FilterComponent = (props) => {
       console.error("Error fetching data:", error);
     }
   };
+  const getAllSapData = async (search) => {
+    try {
+      const response = await axios.get(`${url}/api/get_order_info`, {
+        params: {
+          sap_order_list: true,
+          SAP_order_no: search
+        },
+        headers,
+      });
+
+      const apires = response.data.data;
+      if (Array.isArray(apires)) {
+        const formattedOptions = apires
+          .map(item => {
+            const num = Number(item);
+            return !isNaN(num) ? { value: num, label: num.toString() } : null;
+          })
+          .filter(Boolean);
+        setSapCodeOption(formattedOptions);
+      } else {
+
+        console.error("API response is not an array:", apires);
+        setSapCodeOption([]);
+
+      }
+
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   // Fetch initial data when component mounts
   useEffect(() => {
@@ -462,16 +398,38 @@ const FilterComponent = (props) => {
   }, [
     count
   ])
+  useEffect(() => { if (filterState) getOrderList() }, [props.refresh]);
+  useEffect(() => { if (filterState) getOrderList() }, [filterState]);
+
+
+
+
+  const [allOrderInfoDatalength, setAllOrderInfoDataLength] = useState([
+  ]);
+  const allOrderData = useSelector(
+    (state) => state.allOrdersInfo.allOrderInfoData
+  );
+  useEffect(() => {
+    setAllOrderInfoDataLength(allOrderData)
+  }, [allOrderData])
+  console.log("nop", filterState)
+
+
   return (
 
-    <div className="flex flex-row gap-3 bg-blue-500 p-2 items-center">
+    <div className="flex flex-row gap-2 bg-blue-500 p-2 items-center">
 
-      <div className="flex  flex-col gap-1.5 ">
-        <span value="All" disabled className="w-full max px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500">
-          {pageCount}
-        </span>
+      <div className="flex  flex-col w-16">
+        <input
+          className=" h-7 px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
+          id="stateSelect"
+          disabled
+          value={allOrderInfoDatalength?.length}
+        />
+
+
       </div>
-      <div className="w-[10%] flex flex-col gap-1.5 ">
+      <div className=" flex flex-col gap-1.5 ">
         <select
           className=" w-full max px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
           id="stateSelect"
@@ -494,7 +452,7 @@ const FilterComponent = (props) => {
           </option>
         </select>
       </div>
-      <div className="w-[25%] flex flex-col gap-1.5 ">
+      <div className="w-56 flex flex-col gap-1.5 ">
         <select
           className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
           id="stateSelect"
@@ -506,18 +464,7 @@ const FilterComponent = (props) => {
 
         </select>
       </div>
-      <div className="w-[25%] flex flex-col gap-1.5 ">
-        <select
-          className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
-          id="stateSelect"
 
-
-        >
-          <option value={""}>- Modification Date -</option>
-
-
-        </select>
-      </div>
       <div className="flex flex-col gap-1.5 ">
         <FaSearch className="text-white " size={20} />
       </div>
@@ -680,21 +627,32 @@ const FilterComponent = (props) => {
 
 
 
+
                     <div className="w-[100%] flex flex-row gap-1.5 ">
                       <label className="w-[40%] text-gray-500 font-bold text-[0.85rem]">SAP Order No</label>
-                      <input
+                      <Select
                         className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
-                        id="stateSelect"
-                        value={filterState?.sapOrder}
-
-                        onChange={(e) =>
-                          setFilterState({
-                            ...filterState,
-                            sapOrder: e.target.value
-                          })}
-
+                        value={filterState?.sapOrder || ""}
+                        isSearchable={true}
+                        isMulti={false}
+                        options={sapCodeOption}
+                        placeholder={"SAP Code"}
+                        onInputChange={(searchValue, { action }) => {
+                          if (action === "input-change") {
+                            getAllSapData(searchValue); // Call API when user types
+                          }
+                        }}
+                        onChange={(selectedOption) => {
+                          setFilterState({ ...filterState, sapOrder: selectedOption });
+                        }}
                       />
+
+
+
+
+
                     </div>
+
 
                     <div className="w-[100%] flex flex-row gap-1.5 ">
                       <label className="w-[40%] text-gray-500 font-bold text-[0.85rem]">Teritory</label>
@@ -857,7 +815,7 @@ const FilterComponent = (props) => {
                     <button
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={() => getOrderList(pageSizeNumber)}
+                      onClick={() => getOrderList()}
                     >
                       Search
                     </button>

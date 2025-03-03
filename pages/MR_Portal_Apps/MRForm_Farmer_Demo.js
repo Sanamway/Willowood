@@ -85,6 +85,7 @@ const AdditionalInfo = (props) => {
         params: {
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          emp_code: window.localStorage.getItem("emp_code")
         },
       });
       const apires = await respond.data.data;

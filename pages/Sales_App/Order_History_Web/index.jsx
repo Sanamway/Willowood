@@ -1,13 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FilterComponent from "./FilterComponent";
 import Layout from "../Layout";
 import { IoIosBasket } from "react-icons/io";
 import OrderTable from "./OrderTable";
 import { CiBookmark } from "react-icons/ci";
 import { LuRefreshCw } from "react-icons/lu";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const [refresh, setRefresh] = useState(false)
+  const [allOrderInfoData, setAllOrderInfoData] = useState([
+  ]);
+  const allOrderData = useSelector(
+    (state) => state.allOrdersInfo.allOrderInfoData
+  );
+  useEffect(() => {
+    setAllOrderInfoData(allOrderData)
+  }, [allOrderData])
+
+  const getExcelsheet = async (
+
+  ) => {
+
+
+    const ws = XLSX.utils.json_to_sheet(allOrderInfoData.map((item) => {
+      return {
+
+        ["Date"]: moment(item.creation_date).format("DD-MM-YYYY"),
+        ["Order No"]: item["SAP_order_no"],
+        ["Company"]: item.del_address,
+        ["Order Total"]: parseFloat(item.order_value).toFixed(2),
+        ["Item Count"]: item.orderItems?.length,
+        ["Last Modified"]: moment(item.modifi_date).format("DD-MM-YYYY")
+
+
+
+
+
+      }
+    }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, `Indent.xlsx`);
+
+
+
+
+  };
   return (
     <Layout>
       <div className="flex flex-col gap-2 h-screen">
@@ -39,7 +78,7 @@ const Dashboard = () => {
               <CiBookmark className="mr-2" />  Order Actions
             </button>
             <button
-              onClick={() => { setDownloadExcel() }}
+              onClick={() => { getExcelsheet() }}
               className="bg-white flex items-center justify-center whitespace-nowrap text-pink-500 px-2 py-1 rounded-sm border border-pink-500"
             >
               <LuRefreshCw className="mr-2" /> Generate Report
