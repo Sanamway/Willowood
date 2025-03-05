@@ -33,6 +33,7 @@ const Dashboard = () => {
         "Content-Type": "application/json",
         secret: "fsdhfgsfuiweifiowefjewcewcebjw",
     };
+
     const [filterState, setFilterState] = useState({
         bgId: null,
         buId: null,
@@ -43,6 +44,7 @@ const Dashboard = () => {
         tId: null,
         partyName: ""
     });
+
 
     useEffect(() => {
 
@@ -117,7 +119,7 @@ const Dashboard = () => {
                 break;
         }
     }, []);
-    console.log("zxcv", dealerData)
+
     const gettingDealerData = async () => {
         const { bgId, buId, rId, zId, tId, partyName } = filterState
 
@@ -133,7 +135,7 @@ const Dashboard = () => {
                     t_id: tId || null,
                     party_name: partyName || null,
                     bst_new: true,
-                    search: true,
+
                 }
             });
             const respData = await resp.data.data.dealerData;
@@ -156,88 +158,15 @@ const Dashboard = () => {
 
 
 
-    const [refresh, setRefresh] = useState(false)
-    const [allOrderInfoData, setAllOrderInfoData] = useState([
-    ]);
-    const allOrderData = useSelector(
-        (state) => state.allOrdersInfo.allOrderInfoData
-    );
-    useEffect(() => {
-        setAllOrderInfoData(allOrderData)
-    }, [allOrderData])
-
-    console.log("pop", allOrderInfoData)
-
-    const [orderedItems, setOrderedItems] = useState({});
-
-    const [openModal, setOpenModal] = useState(false)
-    const handleOrderItemModal = async (item) => {
-        setOpenModal(true)
-
-
-        setOrderedItems(item)
-
-
-
-
-    };
-    const getExcelsheet = async (
-
-    ) => {
-
-
-        const ws = XLSX.utils.json_to_sheet(allOrderInfoData.map((item) => {
-            return {
-
-                ["Date"]: moment(item.creation_date).format("DD-MM-YYYY"),
-                ["Order No"]: item["SAP_order_no"],
-                ["Company"]: item.del_address,
-                ["Order Total"]: parseFloat(item.order_value).toFixed(2),
-                ["Item Count"]: item.orderItems?.length,
-                ["Last Modified"]: moment(item.modifi_date).format("DD-MM-YYYY")
 
 
 
 
 
-            }
-        }));
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, `Indent.xlsx`);
 
 
 
 
-    };
-
-
-    const orders = [
-        {
-            id: "118245",
-            trader: "HR Sharma Traders - Shahzadpur",
-            address: "Ambala Road, Ambala, 134202, Haryana",
-            city: "Shahzadpur",
-            postal: "134202",
-            phone: "897966064",
-        },
-        {
-            id: "119876",
-            trader: "Rajesh Agro Solutions - Karnal",
-            address: "Sector 12, Karnal, Haryana, 132001",
-            city: "Karnal",
-            postal: "132001",
-            phone: "9876543210",
-        },
-        {
-            id: "120345",
-            trader: "AgriCare Distributors - Panipat",
-            address: "GT Road, Panipat, Haryana, 132103",
-            city: "Panipat",
-            postal: "132103",
-            phone: "8765432109",
-        },
-    ];
 
     return (
 
@@ -326,11 +255,10 @@ const Dashboard = () => {
                     <span className="font-semibold text-gray-700">{item.party_Name}</span>
 
                     {/* Address Row */}
-                    <div className="flex flex-row gap-2">
+                    <div className="inline-flex flex-wrap gap-2">
                         <span className="font-semibold text-black whitespace-nowrap">Address:</span>
-                        <span className="text-gray-500 truncate">{item.postal_Address}</span>
+                        <span className="text-gray-500 flex-1 min-w-0 break-words">{item.postal_Address}</span>
                     </div>
-
 
                     {/* City and Postal in one row */}
                     <div className="flex flex-row gap-4">
@@ -352,7 +280,14 @@ const Dashboard = () => {
                     </div>
 
                     <div className="flex justify-between items-center bg-white mx-2 mt-2">
-                        <div className="flex flex-col items-center cursor-pointer">
+                        <div className="flex flex-col items-center cursor-pointer"
+                            onClick={() => {
+                                router.push({
+                                    pathname: "/Sales_App/Order_Booking/Order",
+                                    query: { sap_code: item.SAP_customerSAPNo },
+                                });
+                            }} >
+
                             <FcNews size={32} className="text-indigo-600" />
                             <span className="text-xs text-gray-700 mt-1">Order</span>
                         </div>

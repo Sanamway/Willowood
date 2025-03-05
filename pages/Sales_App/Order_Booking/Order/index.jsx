@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { useRouter } from "next/router";
 import Layout from "../../Layout";
 import { IoIosBasket } from "react-icons/io";
 
@@ -20,90 +20,59 @@ import { FcNews } from "react-icons/fc";
 import { IoLocationOutline } from "react-icons/io5";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { FcNeutralTrading } from "react-icons/fc";
-
+import axios from "axios";
+import { url } from "@/constants/url";
+import Select from "react-select";
 const Dashboard = () => {
-    const [refresh, setRefresh] = useState(false)
-    const [allOrderInfoData, setAllOrderInfoData] = useState([
-    ]);
-    const allOrderData = useSelector(
-        (state) => state.allOrdersInfo.allOrderInfoData
-    );
-    useEffect(() => {
-        setAllOrderInfoData(allOrderData)
-    }, [allOrderData])
 
-    console.log("pop", allOrderInfoData)
+    const router = useRouter();
 
-    const [orderedItems, setOrderedItems] = useState({});
-
-    const [openModal, setOpenModal] = useState(false)
-    const handleOrderItemModal = async (item) => {
-        setOpenModal(true)
-
-
-        setOrderedItems(item)
-
-
-
-
+    const headers = {
+        "Content-Type": "application/json",
+        secret: "fsdhfgsfuiweifiowefjewcewcebjw",
     };
-    const getExcelsheet = async (
-
-    ) => {
-
-
-        const ws = XLSX.utils.json_to_sheet(allOrderInfoData.map((item) => {
-            return {
-
-                ["Date"]: moment(item.creation_date).format("DD-MM-YYYY"),
-                ["Order No"]: item["SAP_order_no"],
-                ["Company"]: item.del_address,
-                ["Order Total"]: parseFloat(item.order_value).toFixed(2),
-                ["Item Count"]: item.orderItems?.length,
-                ["Last Modified"]: moment(item.modifi_date).format("DD-MM-YYYY")
-
-
-
+    const [localStorage, setLocalStorage] = useState({
+        teritory: "",
+        region: "",
+        empCode: "",
+        empName: ""
+    })
+    useEffect(() => {
+        setLocalStorage(
+            {
+                teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
+                region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
+                empCode: window.localStorage.getItem("emp_code"),
+                empName: window.localStorage.getItem("user_name")
 
 
             }
-        }));
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, `Indent.xlsx`);
-
-
-
-
+        )
+    }, [])
+    const [dealerData, setDealerData] = useState([])
+    console.log("pop", router)
+    const gettingDealerData = async () => {
+        try {
+            const resp = await axios.get(`${url}/api/get_dealer`, {
+                headers: headers,
+                params: { customer_code: router.query.sap_code },
+            });
+            const respData = await resp.data.data;
+            setDealerData(respData);
+        } catch (error) {
+            console.log(error);
+            setDealerData([]);
+        }
     };
+    useEffect(() => {
+        if (!router.query.sap_code) return
+        gettingDealerData()
+    }, [router.query.sap_code])
 
 
-    const orders = [
-        {
-            id: "118245",
-            trader: "HR Sharma Traders - Shahzadpur",
-            address: "Ambala Road, Ambala, 134202, Haryana",
-            city: "Shahzadpur",
-            postal: "134202",
-            phone: "897966064",
-        },
-        {
-            id: "119876",
-            trader: "Rajesh Agro Solutions - Karnal",
-            address: "Sector 12, Karnal, Haryana, 132001",
-            city: "Karnal",
-            postal: "132001",
-            phone: "9876543210",
-        },
-        {
-            id: "120345",
-            trader: "AgriCare Distributors - Panipat",
-            address: "GT Road, Panipat, Haryana, 132103",
-            city: "Panipat",
-            postal: "132103",
-            phone: "8765432109",
-        },
-    ];
+
+
+
 
     const data = [
         {
@@ -131,6 +100,124 @@ const Dashboard = () => {
             value: "0.00",
         },
     ];
+
+    const [searchBy, setSearchBy] = useState("Name")
+    const [filterState, setFilterState] = useState("")
+    const [dropDownOption, setDropDownOption] = useState([])
+    // API call to fetch dropdown options
+
+
+    const getSearchData = async (value) => {
+        let params
+        switch (searchBy) {
+            case "Name":
+                params = {
+                    search: true,
+                    c_id: 1,
+                    bg_id: 1,
+                    name: value,
+                }
+
+                break;
+            case "Category":
+                params = {
+                    search: true,
+                    c_id: 1,
+                    bg_id: 1,
+                    category: value,
+                }
+
+                break;
+            case "Brand":
+                params = {
+                    search: true,
+                    c_id: 1,
+                    bg_id: 1,
+                    brand: value,
+                }
+
+                break;
+            case "Pack_Size":
+                params = {
+                    search: true,
+                    c_id: 1,
+                    bg_id: 1,
+                    pack_size: value,
+                }
+            case "Dealer":
+                params = {
+                    search: true,
+                    c_id: 1,
+                    bg_id: 1,
+                    dealer: value,
+                }
+            case "Segment":
+                params = {
+                    search: true,
+                    c_id: 1,
+                    bg_id: 1,
+                    segment: value,
+                }
+            case "Technical_Name":
+                params = {
+                    search: true,
+                    c_id: 1,
+                    bg_id: 1,
+                    technical_name: value,
+                }
+            case "Material_Code":
+                params = {
+                    search: true,
+                    c_id: 1,
+                    bg_id: 1,
+                    material_code: value,
+                }
+
+                break;
+
+            default:
+                break;
+        }
+        try {
+            const response = await axios.get(`${url}/api/get_product_material_sku`, {
+                params: params,
+                headers,
+            });
+
+            const apires = response.data.data;
+            console.log("API Response:", apires);
+
+            // Map API response to include images
+            let options = apires.map((item) => ({
+                value: item.mat_name,
+                label: item.mat_name,
+                image: item.product_banner, // Assuming this is the image URL
+            }));
+
+            setDropDownOption(options);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+
+    // Custom Single Option Component (Selected Value)
+    const customSingleValue = ({ data }) => (
+        <div className="flex items-center">
+            {data.image && <img src={data.image} alt={data.label} className="w-6 h-6 rounded-full mr-2" />}
+            <span>{data.label}</span>
+        </div>
+    );
+
+    // Custom Dropdown Option Component
+    const customOption = (props) => {
+        const { data, innerRef, innerProps } = props;
+        return (
+            <div ref={innerRef} {...innerProps} className="flex items-center px-2 py-2 hover:bg-gray-200 cursor-pointer">
+                {data.image && <img src={data.image} alt={data.label} className="w-8 h-8 rounded-md mr-2" />}
+                <span>{data.label}</span>
+            </div>
+        );
+    };
 
     return (
 
@@ -185,20 +272,21 @@ const Dashboard = () => {
                 <div className="text-sm space-y-2">
                     <div className="flex justify-between">
 
-                        <span className="font-bold"> 1212</span>
+                        <span className="font-bold">{dealerData.SAP_customerSAPNo}</span>
                     </div>
                     <div className="flex justify-between">
-                        <span><strong>Party Name</strong></span>
+                        <span><strong>{dealerData.party_Name}</strong></span>
 
                     </div>
 
                     <div>
-                        1234, XYZ Street, ABC City, 567890
+                        {dealerData.postal_Address
+                        }
                     </div>
 
                     <div className="flex justify-between font-bold">
-                        <span><strong>Depot Code:</strong> 1212</span>
-                        <span>Warehouse Des XXXXXXX</span>
+                        <span><strong>Depot Code:</strong> {dealerData?.depotResult?.r_w_id}</span>
+                        <span>Warehouse Des {dealerData?.depotResult?.depot_name}</span>
                     </div>
                 </div>
             </div>
@@ -209,33 +297,46 @@ const Dashboard = () => {
                 <select
                     className="w-36 px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                     id="citySelect"
+                    value={searchBy}
+                    onChange={(e) => setSearchBy(e.target.value)}
                 >
-                    <option value={""} className="focus:outline-none focus:border-b bg-white">-- Select --</option>
-                    <option value="Option">Option</option>
-                    <option value="Option">Option</option>
-                    <option value="Option">Option</option>
+
+                    <option value="Name">Name</option>
+                    <option value="Category">Category</option>
+                    <option value="Brand">Brand</option>
+                    <option value="Pack_Size">Pack Size</option>
+                    <option value="Dealer"> Dealer</option>
+                    <option value="Segment">Segment</option>
+                    <option value="Technical_Name"> Technical Name</option>
+                    <option value="Material_Code">Material Code</option>
+
+
                 </select>
 
                 <div className="relative w-3/4">
-                    <input
-                        className="w-full px-10 py-1.5 border border-gray-400  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                        id="stateSelect"
-                        placeholder="Search"
+                    <Select
+                        className="w-full px-3 py-1.5 border border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b-2 focus:border-indigo-500"
+                        value={filterState || ""}
+                        isSearchable={true}
+                        isMulti={false}
+                        options={dropDownOption}
+                        placeholder="SAP Code"
+                        getOptionLabel={(e) => (
+                            <div className="flex items-center">
+                                {e.image && <img src={e.image} alt={e.label} className="w-6 h-6 rounded-full mr-2" />}
+                                <span>{e.label}</span>
+                            </div>
+                        )}
+                        components={{ SingleValue: customSingleValue, Option: customOption }}
+                        onInputChange={(searchValue, { action }) => {
+                            if (action === "input-change") {
+                                getSearchData(searchValue); // Direct API call on input change
+                            }
+                        }}
+                        onChange={(selectedOption) => {
+                            setFilterState(selectedOption);
+                        }}
                     />
-                    <svg
-                        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 3a7.5 7.5 0 006.15 12.65z"
-                        />
-                    </svg>
                 </div>
 
                 <button className="w-10 h-10 flex items-center justify-center bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700">
@@ -257,9 +358,9 @@ const Dashboard = () => {
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                        {data?.map((item, idx) => (
+                        {/* {data?.map((item, idx) => (
                             <tr key={idx} className="border-b">
-                                {/* Description with hyperlink */}
+                             
                                 <td className="px-4 py-2 text-left whitespace-nowrap flex items-center gap-2">
                                     <div>
                                         {item.material_code}{" "}
@@ -269,7 +370,7 @@ const Dashboard = () => {
                                     </div>
                                 </td>
 
-                                {/* UOM (disabled) */}
+                             
                                 <td className="px-4 py-2 text-left whitespace-nowrap">
                                     <input
                                         type="text"
@@ -279,7 +380,7 @@ const Dashboard = () => {
                                     />
                                 </td>
 
-                                {/* Qty (input box) */}
+                               
                                 <td className="px-1 py-2 text-left whitespace-nowrap  bg-green-200">
                                     <input
                                         type="number"
@@ -288,12 +389,12 @@ const Dashboard = () => {
                                     />
                                 </td>
 
-                                {/* Price (disabled) */}
+                               
                                 <td className=" px py-2 text-right whitespace-nowrap">
                                     {item.price}
                                 </td>
 
-                                {/* Value (disabled) */}
+                             
                                 <td className="px-4 py-2 text-left whitespace-nowrap  bg-blue-200">
                                     15000.00
                                 </td>
@@ -301,24 +402,24 @@ const Dashboard = () => {
                                     <IoIosRemoveCircleOutline className="text-red-400" />
                                 </td>
                             </tr>
-                        ))}
+                        ))} */}
 
-                        {/* Total Row */}
+
                         <tr className="bg-blue-600 text-white font-bold">
-                            {/* Total Description */}
+
                             <td className="px-4 py-2 text-left" colSpan={2}>
                                 Total :  {data.length} ( Items )
                             </td>
 
-                            {/* Empty column for Qty */}
+
                             <td className="px-4 py-2 text-left">   100 </td>
 
-                            {/* Total Price Calculation */}
+
                             <td className="px-4 py-2 text-left">
                                 -
                             </td>
 
-                            {/* Total Value Calculation */}
+
                             <td className="px-4 py-2 text-left">
                                 12000
                             </td>
@@ -340,7 +441,7 @@ const Dashboard = () => {
                         <div className="px-2 border-r border-black">
                             <label className="block font-semibold mb-1">Delivery Address:</label>
                             <span>
-                                1234, XYZ Street, ABC City, 567890
+                                {dealerData.postal_Address}
                             </span>
                         </div>
                         <div className="px-2">
@@ -354,8 +455,8 @@ const Dashboard = () => {
                 <div className=" text-sm">
                     {/* First Row: Territory and Region */}
                     <div className="grid grid-cols-2 gap-6 border border-black p-4 rounded-lg">
-                        <div><strong>Territory:</strong> North Zone</div>
-                        <div><strong>Region:</strong> West India</div>
+                        <div><strong>Territory:</strong> {localStorage.teritory ? localStorage.teritory : "-"}</div>
+                        <div><strong>Region:</strong>  {localStorage.region ? localStorage.region : "-"}</div>
                     </div>
 
                     {/* Second Row: Main Content Box */}
@@ -363,9 +464,9 @@ const Dashboard = () => {
                         <div className="grid grid-cols-2 gap-6">
                             {/* Left Column */}
                             <div className="space-y-4">
-                                <div><strong>Emp Code:</strong> EMP12345</div>
-                                <div> John Doe (Employee Name)</div>
-                                <div><strong>Order Status:</strong> Pending</div>
+                                <div><strong>Emp Code:</strong> {localStorage.empCode}</div>
+                                <div> {localStorage.empName}</div>
+                                <div><strong>Order Status:</strong> O Booking</div>
                                 <div><strong>Upload Documents:</strong>
                                     <input type="file" className="mt-1 block w-full text-sm text-gray-500" />
                                 </div>
@@ -373,26 +474,29 @@ const Dashboard = () => {
 
                             {/* Right Column */}
                             <div className="space-y-2">
-                                <div><strong>Payment Terms:</strong> 30</div>
-                                <div><strong>Inco Terms:</strong> CIF</div>
-                                <div><strong>Inco Location:</strong> Mumbai </div>
-                                <div><strong>Order Type:</strong>  <select
-                                    className="w-12 px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                                    id="citySelect"
-                                >
-                                    <option className="focus:outline-none focus:border-b bg-white">-- Select --</option>
-                                    <option value="Option">Option</option>
-                                    <option value="Option">Option</option>
-                                    <option value="Option">Option</option>
-                                </select></div>
+                                <div><strong>Payment Terms:</strong> {dealerData.SAP_Payterm}</div>
+                                <div><strong>Inco Terms:</strong> {dealerData.SAP_incoterms}</div>
+                                <div><strong>Inco Location:</strong> {dealerData.SAP_incoterms_location}</div>
+                                <div><strong>Order Type:</strong>
+                                    <select
+                                        className="w-12 px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                                        id="citySelect"
+                                    >
+                                        <option className="focus:outline-none focus:border-b bg-white" value="Shop">Shop</option>
+                                        <option value="What up">What up</option>
+                                        <option value="Telephonic">Telephonic</option>
+                                        <option value="Mails">Mails</option>
+                                        <option value="Verbal">Verbal</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Third Row: Delivery Address and Special Instructions */}
+
 
                 </div>
-                {/* Order Now Button */}
+
                 <div className="flex justify-center mt-2">
                     <button className="bg-blue-600 text-white font-bold px-6 py-2 rounded-md shadow-md hover:bg-blue-700">
                         Order Now

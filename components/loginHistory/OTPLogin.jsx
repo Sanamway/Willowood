@@ -310,10 +310,7 @@ const Login = (props) => {
                   className="bg-transparent text-black py-1.5 max-w-full text-start outline-none border-0 placeholder:text-black text-sm border-black border-b-2 border-white-200"
                   type="number"
                   placeholder="Type your Mobile Number"
-                  // pattern="[6789][0-9]{9}"
-                  // title="Enter Valid Number"
-                  // minLength={10}
-                  // maxLength={10}
+
                   value={phone}
                   onChange={(e) => {
                     if (e.target.value.length > 10) {
@@ -327,7 +324,7 @@ const Login = (props) => {
                 <div className="flex items-center justify-between mt-2">
                   <h3
                     onClick={() => {
-                      // router.push("/forgotpass");
+
                       props.loginForm("emplogin");
                     }}
                     className="text-xs text-black cursor-pointer"
@@ -336,7 +333,7 @@ const Login = (props) => {
                   </h3>
                   <h3
                     onClick={() => {
-                      // router.push("/forgotpass");
+
                       ForgotLogout();
                     }}
                     className="text-xs text-black cursor-pointer"
