@@ -23,6 +23,8 @@ import { FcNeutralTrading } from "react-icons/fc";
 import axios from "axios";
 import { url } from "@/constants/url";
 import Select from "react-select";
+import grid from "@/pages/table/table_user_profile";
+import toast, { Toaster } from "react-hot-toast";
 const Dashboard = () => {
 
     const router = useRouter();
@@ -37,20 +39,128 @@ const Dashboard = () => {
         empCode: "",
         empName: ""
     })
+
+
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+
+    const handleNavigation = () => {
+        if (gridData.length > 0) {
+            setShowConfirmModal(true); // Show confirmation modal if gridData has items
+        } else {
+            router.push({
+                pathname: "/Sales_App/Order_Booking/Delaer_List",
+            });
+        }
+    };
+
+    const confirmNavigation = () => {
+        setShowConfirmModal(false);
+        router.push({
+            pathname: "/Sales_App/Order_Booking/Delaer_List",
+        });
+    };
+
     useEffect(() => {
-        setLocalStorage(
-            {
-                teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
-                region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
-                empCode: window.localStorage.getItem("emp_code"),
-                empName: window.localStorage.getItem("user_name")
 
 
-            }
-        )
-    }, [])
+        const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
+
+        switch (roleId) {
+            case 6:
+
+
+                setLocalStorage({
+                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
+                    region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
+                    empCode: window.localStorage.getItem("emp_code"),
+                    empName: window.localStorage.getItem("user_name"),
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
+                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
+                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
+                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
+                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                });
+                break;
+            case 5:
+
+
+                setLocalStorage({
+                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
+                    region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
+                    empCode: window.localStorage.getItem("emp_code"),
+                    empName: window.localStorage.getItem("user_name"),
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
+                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
+                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
+                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
+                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                });
+                break;
+            case 4:
+
+
+                setLocalStorage({
+                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
+                    region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
+                    empCode: window.localStorage.getItem("emp_code"),
+                    empName: window.localStorage.getItem("user_name"),
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
+                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
+                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
+                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
+                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                });
+                break;
+            case 3:
+
+
+                setLocalStorage({
+                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
+                    region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
+                    empCode: window.localStorage.getItem("emp_code"),
+                    empName: window.localStorage.getItem("user_name"),
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
+                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
+                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
+                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
+                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                });
+                break;
+            case 10:
+
+                setLocalStorage({
+                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
+                    region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
+                    empCode: window.localStorage.getItem("emp_code"),
+                    empName: window.localStorage.getItem("user_name"),
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
+                    buId: null,
+                    rId: null,
+                    zId: null,
+                    tId: null,
+                });
+                break;
+            default:
+
+
+                setLocalStorage({
+                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
+                    region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
+                    empCode: window.localStorage.getItem("emp_code"),
+                    empName: window.localStorage.getItem("user_name"),
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
+                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
+                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
+                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
+                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                });
+                break;
+        }
+    }, []);
+
     const [dealerData, setDealerData] = useState([])
-    console.log("pop", router)
+
     const gettingDealerData = async () => {
         try {
             const resp = await axios.get(`${url}/api/get_dealer`, {
@@ -103,6 +213,8 @@ const Dashboard = () => {
 
     const [searchBy, setSearchBy] = useState("Name")
     const [filterState, setFilterState] = useState("")
+    const [gridData, setGridData] = useState([])
+    console.log("jjk", gridData)
     const [dropDownOption, setDropDownOption] = useState([])
     // API call to fetch dropdown options
 
@@ -185,13 +297,12 @@ const Dashboard = () => {
             });
 
             const apires = response.data.data;
-            console.log("API Response:", apires);
 
-            // Map API response to include images
             let options = apires.map((item) => ({
                 value: item.mat_name,
                 label: item.mat_name,
                 image: item.product_banner, // Assuming this is the image URL
+                ...item
             }));
 
             setDropDownOption(options);
@@ -218,20 +329,155 @@ const Dashboard = () => {
             </div>
         );
     };
+    const [showPopup, setShowPopup] = useState(false)
+
+    const handleQtyChange = (idx, value) => {
+        const updatedData = [...gridData];
+        updatedData[idx] = {
+            ...updatedData[idx],
+            qty: Number(value) || 0,  // Ensure qty is a number
+        };
+        setGridData(updatedData);
+    };
+
+    const totalQty = gridData.reduce((sum, item) => sum + (item.qty || 0), 0);
+    const totalPrice = gridData.reduce((sum, item) => sum + (item.budget_price || 0), 0);
+    const totalValue = gridData.reduce((sum, item) => sum + ((item.qty || 0) * (item.budget_price || 0)), 0);
+
+
+
+    const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+
+
+    const handleOrderClick = () => {
+        setShowConfirmPopup(true);
+    };
+
+
+
+    const handleCancel = () => {
+        setShowConfirmPopup(false);
+    };
+
+
+
+    const [orderData, setOrderData] = useState({
+        orderType: "Shop",
+        specialIns: "",
+    })
+
+    const [uploadDocument, setUploadDocument] = useState("")
+    const handleFileChange = (event) => {
+        const file = event.target.files[0]; // Get the selected file
+        if (file) {
+            setUploadDocument(file); // Update state with the file object
+        }
+    };
+
+
+
+    const handleConfirm = async () => {
+        setShowConfirmPopup(false);
+
+        try {
+            const data = {
+                order_type: orderData.orderType,
+                order_dt: new Date(),
+                kunnr_sold: dealerData.party_Name,
+                cus_po_ref: "Willowood Delight",
+                cus_po_ref_dt: new Date(),
+                del_address: dealerData.address,
+                pay_terms: dealerData.SAP_customerSAPNo,
+                inco_terms: dealerData.SAP_incoterms,
+                inco_location: dealerData.SAP_incoterms_location,
+                expected_del_date: new Date(),
+                ord_status: "Order Booking",
+                werks: dealerData?.depotResult?.r_w_id,
+                t_id: localStorage.tId,
+                r_id: localStorage.rId,
+                z_id: localStorage.zId,
+                bu_id: localStorage.buId,
+                bg_id: localStorage.bgId,
+                c_id: 1,
+                order_item: gridData.map((item) => ({
+                    matnr: item.matnr,
+                    uom: item.uom,
+                    qty: item.qty,
+                    price: item.budget_price,
+                    net_value: item.budget_price * item.qty,
+                })),
+            };
+
+            const response = await axios.post(`${url}/api/add_order_info`, JSON.stringify(data), {
+                headers: headers,
+            });
+
+            if (response && response.data) {
+                toast.success("Order added successfully!");
+                uploadImage(response)
+
+
+                setTimeout(() => {
+                    router.push({
+                        pathname: "/Sales_App/Order_Booking/Delaer_List",
+                    });
+                }, 3000);
+            }
+        } catch (errors) {
+            if (errors.response?.data?.error) {
+                toast.error(errors.response.data.error);
+            }
+        }
+    };
+
+    const uploadImage = async (res) => {
+        console.log("im", res.data.data.order_id);
+
+        if (!uploadDocument) {
+            toast.error("No file selected");
+            return;
+        }
+
+        try {
+            const renamedBlob = new Blob([uploadDocument], {
+                type: uploadDocument.type,
+            });
+
+            const fd = new FormData();
+            fd.append("myFile", renamedBlob, uploadDocument.name); // Use uploadDocument instead
+
+            const response = await axios.post(`${url}/api/upload_file`, fd, {
+                params: {
+                    order_no: res.data.data.order_id,
+                    file_path: "order_info"
+                },
+            });
+
+            if (response && response.data) {
+                toast.success("File uploaded successfully!");
+                setUploadDocument(null); // Clear uploaded file state
+            }
+        } catch (error) {
+            console.error("File upload failed:", error);
+            toast.error("File upload failed");
+        }
+    };
+
+
+
+
 
     return (
 
         <div className="bg-gray-200">
             {/* Header Section */}
+
+            <Toaster position="bottom-center" reverseOrder={false} />
             <div className="w-full flex h-12 justify-between items-center px-4 shadow-lg bg-blue-400 lg:flex-col">
                 <span className="text-black flex flex-row gap-4 font-bold">
                     <FaArrowLeftLong
                         className="self-center cursor-pointer"
-                        onClick={() =>
-                            router.push({
-                                pathname: "/Sales_App/Home",
-                            })
-                        }
+                        onClick={handleNavigation}
                     />
                     <span className="flex flex-row gap-2 justify-center items-center">  <FcNews size={32} className="text-indigo-600" /> <span>XYZ General Store</span></span>
                 </span>
@@ -300,7 +546,6 @@ const Dashboard = () => {
                     value={searchBy}
                     onChange={(e) => setSearchBy(e.target.value)}
                 >
-
                     <option value="Name">Name</option>
                     <option value="Category">Category</option>
                     <option value="Brand">Brand</option>
@@ -309,8 +554,6 @@ const Dashboard = () => {
                     <option value="Segment">Segment</option>
                     <option value="Technical_Name"> Technical Name</option>
                     <option value="Material_Code">Material Code</option>
-
-
                 </select>
 
                 <div className="relative w-3/4">
@@ -327,6 +570,7 @@ const Dashboard = () => {
                                 <span>{e.label}</span>
                             </div>
                         )}
+                        isClearable={true}
                         components={{ SingleValue: customSingleValue, Option: customOption }}
                         onInputChange={(searchValue, { action }) => {
                             if (action === "input-change") {
@@ -335,100 +579,92 @@ const Dashboard = () => {
                         }}
                         onChange={(selectedOption) => {
                             setFilterState(selectedOption);
+
+
                         }}
                     />
+
                 </div>
 
-                <button className="w-10 h-10 flex items-center justify-center bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700">
+
+                <button className="w-10 h-10 flex items-center justify-center bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700"
+                    onClick={() => {
+                        if (!filterState) return; // Prevent adding empty selection
+
+                        const isDuplicate = gridData.some(item => item.mat_id === filterState.mat_id);
+
+                        if (isDuplicate) {
+                            setShowPopup(true);  // Show pop-up message for duplicate
+                            setTimeout(() => setShowPopup(false), 2000); // Auto-hide after 2 seconds
+                        } else {
+                            setGridData([...gridData, filterState]); // Add new material
+                            setFilterState(""); // Reset dropdown
+                        }
+                    }}
+
+                >
                     +
                 </button>
             </div>
 
             {/* Table Section */}
-            <div className="overflow-x-auto  mx-2">
+            <div className="overflow-x-auto mx-2">
                 <table className="min-w-full divide-y border divide-gray-200">
                     <thead className="border-b w-max bg-yellow-300">
                         <tr className="font-arial w-max text-gray-700">
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">Description</th>
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">UOM</th>
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">Qty</th>
-                            <th className=" py-2 text-left text-xs font-medium tracking-wider">Price</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">Price</th>
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">Value</th>
-                            <th className="px-4 py-2 text-left text-xs font-medium tracking-wider "></th>
+                            <th className="px-4 py-2 text-left text-xs font-medium tracking-wider"></th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                        {/* {data?.map((item, idx) => (
+                        {gridData?.map((item, idx) => (
                             <tr key={idx} className="border-b">
-                             
                                 <td className="px-4 py-2 text-left whitespace-nowrap flex items-center gap-2">
                                     <div>
-                                        {item.material_code}{" "}
+                                        {item.mat_id}{" "}
                                         <a href="#" className="text-blue-600 underline">View More</a>
                                         <br />
-                                        <span className="text-gray-500">Material Name XXXX</span>
+                                        <span className="text-gray-500">{item.mat_name}</span>
                                     </div>
                                 </td>
-
-                             
                                 <td className="px-4 py-2 text-left whitespace-nowrap">
-                                    <input
-                                        type="text"
-                                        className="w-full px-2 py-1 bg-gray-100 border rounded-md cursor-not-allowed text-gray-600"
-                                        value={item.uom}
-                                        disabled
-                                    />
+                                    <span className="px-2 py-1 bg-gray-100 border rounded-md text-gray-600">{item.uom}</span>
                                 </td>
-
-                               
-                                <td className="px-1 py-2 text-left whitespace-nowrap  bg-green-200">
+                                <td className="px-1 py-2 text-left whitespace-nowrap bg-green-200">
                                     <input
                                         type="number"
                                         className="w-full px-2 py-1 border rounded-md"
                                         placeholder="Enter Qty"
+                                        value={item.qty || ""}
+                                        onChange={(e) => handleQtyChange(idx, e.target.value)}
                                     />
                                 </td>
-
-                               
-                                <td className=" px py-2 text-right whitespace-nowrap">
-                                    {item.price}
-                                </td>
-
-                             
-                                <td className="px-4 py-2 text-left whitespace-nowrap  bg-blue-200">
-                                    15000.00
+                                <td className="px-4 py-2 text-left whitespace-nowrap">{item.budget_price}</td>
+                                <td className="px-4 py-2 text-left whitespace-nowrap bg-blue-200">
+                                    {((item.qty || 0) * (item.budget_price || 0)).toFixed(2)}
                                 </td>
                                 <td className="px-4 py-2 text-left whitespace-nowrap">
-                                    <IoIosRemoveCircleOutline className="text-red-400" />
+                                    <IoIosRemoveCircleOutline
+                                        className="text-red-400 cursor-pointer"
+                                        onClick={() => setGridData(gridData.filter((_, i) => i !== idx))}
+                                    />
                                 </td>
                             </tr>
-                        ))} */}
+                        ))}
 
-
+                        {/* Total Row */}
                         <tr className="bg-blue-600 text-white font-bold">
-
-                            <td className="px-4 py-2 text-left" colSpan={2}>
-                                Total :  {data.length} ( Items )
-                            </td>
-
-
-                            <td className="px-4 py-2 text-left">   100 </td>
-
-
-                            <td className="px-4 py-2 text-left">
-                                -
-                            </td>
-
-
-                            <td className="px-4 py-2 text-left">
-                                12000
-                            </td>
-                            <td className="px-4 py-2 text-left">
-                                -
-                            </td>
+                            <td className="px-4 py-2 text-left" colSpan={2}>Total: {gridData?.length} (Items)</td>
+                            <td className="px-4 py-2 text-left">{totalQty}</td>
+                            <td className="px-4 py-2 text-left">{totalPrice.toFixed(2)}</td>
+                            <td className="px-4 py-2 text-left">{totalValue.toFixed(2)}</td>
+                            <td className="px-4 py-2 text-left">-</td>
                         </tr>
                     </tbody>
-
                 </table>
             </div>
 
@@ -446,7 +682,9 @@ const Dashboard = () => {
                         </div>
                         <div className="px-2">
                             <label className="block font-semibold mb-1">Special Instructions for Orders / Dispatch</label>
-                            <textarea className="w-full p-2 border rounded-lg" rows="4" placeholder="Instruction"></textarea>
+                            <textarea className="w-full p-2 border rounded-lg" rows="4" placeholder="Instruction"
+                                value={orderData.specialIns}
+                                onChange={(e) => setOrderData({ ...orderData, specialIns: e.target.value })}></textarea>
                         </div>
                     </div>
                 </div>
@@ -468,7 +706,12 @@ const Dashboard = () => {
                                 <div> {localStorage.empName}</div>
                                 <div><strong>Order Status:</strong> O Booking</div>
                                 <div><strong>Upload Documents:</strong>
-                                    <input type="file" className="mt-1 block w-full text-sm text-gray-500" />
+                                    <input
+                                        type="file"
+                                        className="mt-1 block w-full text-sm text-gray-500"
+                                        accept=".pdf, .jpg, .jpeg, .png, .gif, .doc, .docx, .xls, .xlsx, .txt"
+                                        onChange={handleFileChange}
+                                    />
                                 </div>
                             </div>
 
@@ -479,8 +722,11 @@ const Dashboard = () => {
                                 <div><strong>Inco Location:</strong> {dealerData.SAP_incoterms_location}</div>
                                 <div><strong>Order Type:</strong>
                                     <select
-                                        className="w-12 px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                                        className="px-3 py-2 border-b border-gray-500 rounded-md bg-white text-xs focus:outline-none focus:border-b focus:border-indigo-500"
                                         id="citySelect"
+                                        value={orderData.orderType}
+                                        onChange={(e) => setOrderData({ ...orderData, orderType: e.target.value })}
+
                                     >
                                         <option className="focus:outline-none focus:border-b bg-white" value="Shop">Shop</option>
                                         <option value="What up">What up</option>
@@ -490,6 +736,7 @@ const Dashboard = () => {
                                     </select>
                                 </div>
                             </div>
+
                         </div>
                     </div>
 
@@ -498,10 +745,65 @@ const Dashboard = () => {
                 </div>
 
                 <div className="flex justify-center mt-2">
-                    <button className="bg-blue-600 text-white font-bold px-6 py-2 rounded-md shadow-md hover:bg-blue-700">
+                    <button
+                        className="bg-blue-600 text-white font-bold px-6 py-2 rounded-md shadow-md hover:bg-blue-700"
+                        onClick={handleOrderClick}
+                    >
                         Order Now
                     </button>
                 </div>
+                {showConfirmPopup && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-6 rounded shadow-lg text-center">
+                            <p className="text-black font-bold mb-4">Do you want to submit the order?</p>
+                            <div className="flex justify-center space-x-4">
+                                <button
+                                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                                    onClick={handleConfirm}
+                                >
+                                    Yes
+                                </button>
+                                <button
+                                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                                    onClick={handleCancel}
+                                >
+                                    No
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {showPopup && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-4 rounded shadow-lg">
+                            <p className="text-red-600 font-bold">Material already exists in current order!</p>
+                        </div>
+                    </div>
+                )}
+
+                {showConfirmModal && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-6 rounded shadow-lg text-center">
+                            <p className="text-black font-bold mb-4">
+                                Do you want to discard the booking?
+                            </p>
+                            <div className="flex justify-center space-x-4">
+                                <button
+                                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                                    onClick={confirmNavigation}
+                                >
+                                    Yes
+                                </button>
+                                <button
+                                    className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                                    onClick={() => setShowConfirmModal(false)}
+                                >
+                                    No
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
 
