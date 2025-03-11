@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { url } from "@/constants/url";
 
 import { IoIosBasket } from "react-icons/io";
 import { TbFileDownload } from "react-icons/tb";
@@ -20,90 +20,176 @@ import { FcNews } from "react-icons/fc";
 import { IoLocationOutline } from "react-icons/io5";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { FcNeutralTrading } from "react-icons/fc";
+import axios from "axios";
 
 const Dashboard = () => {
-    const [refresh, setRefresh] = useState(false)
-    const [allOrderInfoData, setAllOrderInfoData] = useState([
-    ]);
-    const allOrderData = useSelector(
-        (state) => state.allOrdersInfo.allOrderInfoData
-    );
+    const headers = {
+        "Content-Type": "application/json",
+        secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+    };
+
+    const [isClient, setIsClient] = useState(false);
+
     useEffect(() => {
-        setAllOrderInfoData(allOrderData)
-    }, [allOrderData])
+        setIsClient(true);
+    }, []);
 
-    console.log("pop", allOrderInfoData)
+    const [localStorage, setLocalStorage] = useState({
+        zone: "",
+        region: "",
+        businessUnit: "",
+        businessSegment: "",
+        empCode: "",
+        empName: ""
+    })
 
-    const [orderedItems, setOrderedItems] = useState({});
+    useEffect(() => {
+        if (!isClient) return;
+
+        const userInfo = JSON.parse(window.localStorage.getItem("userinfo") || "{}");
+        const roleId = userInfo?.role_id;
+        const uid = JSON.parse(window.localStorage.getItem("uid") || "null");
+
+        const storageData = {
+            roleId: userInfo?.role_id,
+            zone: userInfo.zone_name,
+            region: userInfo.region_name,
+            businessUnit: userInfo.business_unit_name,
+            businessSegment: userInfo.business_segment_name,
+            empCode: window.localStorage.getItem("emp_code"),
+            empName: window.localStorage.getItem("user_name"),
+            bgId: userInfo?.bg_id,
+            buId: userInfo?.bu_id || null,
+            rId: userInfo?.r_id || null,
+            zId: userInfo?.z_id || null,
+            tId: userInfo?.t_id || null,
+            uId: uid,
+        };
+
+        switch (roleId) {
+            case 5:
+                setLocalStorage(storageData);
+                getAllDepotData({ region_name: userInfo.region_name, r_id: userInfo?.r_id, });
+                break;
+            case 4:
+                setLocalStorage(storageData);
+                getAllDepotData({ zone_name: userInfo.zone_name, z_id: userInfo?.z_id });
+                break;
+            case 3:
+                setLocalStorage(storageData);
+                getAllDepotData({ business_unit_name: userInfo.business_unit_name, bu_id: userInfo?.bu_id });
+                break;
+            case 10:
+                setLocalStorage({ ...storageData, buId: null, rId: null, zId: null, tId: null });
+                getAllDepotData({ business_segment_name: userInfo.business_segment_name, bg_id: userInfo?.bg_id });
+                break;
+            default:
+                setLocalStorage(storageData);
+                break;
+        }
+    }, [isClient]);
+
+    const getUserPosition = () => {
+        if (!isClient) return
+        const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
+
+        switch (roleId) {
+
+            case 5:
+
+
+                return <span><strong>Region</strong>: {localStorage.region}</span>
+                break;
+            case 4:
+
+
+                return <span><strong>Zone</strong>: {localStorage.zone}</span>
+                break;
+            case 3:
+
+
+                return <span><strong>Business Unit</strong>: {localStorage.businessUnit}</span>
+                break;
+            case 10:
+
+                return <span><strong>Business Segment</strong>: {localStorage.businessSegment}</span>
+                break;
+            default:
+
+                return
+                <span><strong>Region</strong>: XXXXXX</span>
+                break;
+        }
+
+    }
+
+
+    const [filtersData, setFiltersData] = useState({
+        depotCode: "",
+        storeLocation: "",
+    })
+
+
+    const [wareHouseFilterOptions, setWarehouseFilterOptions] = useState([])
+
+    const getAllDepotData = async (data) => {
+        console.log("zaq", data)
+        try {
+            const respond = await axios.get(`${url}/api/get_dipot`, {
+                headers: headers,
+                params: data,
+            });
+
+            const apires = await respond.data.data;
+            setWarehouseFilterOptions(apires);
+            if (data.region_name) {
+                setFiltersData({ ...filtersData, depotCode: apires[0].depot_code })
+                getAllStoreLocationData(apires[0].depot_code)
+            }
+
+
+        } catch (error) {
+            console.log("zyui", error)
+        }
+    };
+
+    const [storeLocationOptions, setStoreLocationOptions] = useState([])
+    const getAllStoreLocationData = async (data) => {
+        console.log("zq", data)
+
+        try {
+            const respond = await axios.get(`${url}/api/get_warehousestockdata`, {
+                headers: headers,
+                params: {
+                    depot_code: data
+                },
+            });
+
+            const apires = await respond.data.data;
+            setStoreLocationOptions(apires);
+            if (data.region_name) {
+                setFiltersData({ ...filtersData, storeLocation: String(apires[0].warehouseCode) })
+            }
+            console.log("zqw", apires[0].warehouseCode)
+
+
+        } catch (error) {
+            console.log("zyui", error)
+        }
+    };
+
+
+
+    { console.log("zqwa", filtersData.storeLocation) }
+
+
+
+
+
+
+
 
     const [openModal, setOpenModal] = useState(false)
-    const handleOrderItemModal = async (item) => {
-        setOpenModal(true)
-
-
-        setOrderedItems(item)
-
-
-
-
-    };
-    const getExcelsheet = async (
-
-    ) => {
-
-
-        const ws = XLSX.utils.json_to_sheet(allOrderInfoData.map((item) => {
-            return {
-
-                ["Date"]: moment(item.creation_date).format("DD-MM-YYYY"),
-                ["Order No"]: item["SAP_order_no"],
-                ["Company"]: item.del_address,
-                ["Order Total"]: parseFloat(item.order_value).toFixed(2),
-                ["Item Count"]: item.orderItems?.length,
-                ["Last Modified"]: moment(item.modifi_date).format("DD-MM-YYYY")
-
-
-
-
-
-            }
-        }));
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-        XLSX.writeFile(wb, `Indent.xlsx`);
-
-
-
-
-    };
-
-
-    const orders = [
-        {
-            id: "118245",
-            trader: "HR Sharma Traders - Shahzadpur",
-            address: "Ambala Road, Ambala, 134202, Haryana",
-            city: "Shahzadpur",
-            postal: "134202",
-            phone: "897966064",
-        },
-        {
-            id: "119876",
-            trader: "Rajesh Agro Solutions - Karnal",
-            address: "Sector 12, Karnal, Haryana, 132001",
-            city: "Karnal",
-            postal: "132001",
-            phone: "9876543210",
-        },
-        {
-            id: "120345",
-            trader: "AgriCare Distributors - Panipat",
-            address: "GT Road, Panipat, Haryana, 132103",
-            city: "Panipat",
-            postal: "132103",
-            phone: "8765432109",
-        },
-    ];
 
     const data = [
         {
@@ -194,8 +280,6 @@ const Dashboard = () => {
             status: "Av"
         }
     ];
-
-
     return (
 
         <div className="bg-gray-200">
@@ -246,17 +330,52 @@ const Dashboard = () => {
                 <div className="text-sm space-y-2">
 
                     <div className="flex justify-between ">
-                        <span><strong>Region</strong>: XXXXXX</span>
-                        <span><strong>Zone</strong>: XXXX</span>
+                        {getUserPosition()}
+                    </div>
+                    <div className="flex    justify-between w-full ">
+                        {/* Warehouse Code */}
+                        <div className="flex flex-col items-center gap-2">
+                            <span className="text-sm font-semibold">Warehouse Code</span>
+                            <select
+                                className="w-32 px-3 py-2 h-8 border border-gray-400 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs"
+                                value={filtersData.depotCode}
+                                disabled={localStorage.roleId === 5}
+                                onChange={(e) => {
 
+                                    getAllStoreLocationData(e.target.value)
+                                    setFiltersData({ ...filtersData, depotCode: e.target.value })
+                                }}
+                            >
+                                <option value="">-- Select --</option>
+                                {wareHouseFilterOptions.map((item, index) => (
+                                    <option key={index} value={item.depot_code}>{item.depot_code}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Store Location */}
+                        <div className="flex flex-col items-center gap-2">
+                            <span className="text-sm font-semibold">Store Location</span>
+                            <select
+                                className="w-32 px-3 py-2  h-8  border border-gray-400 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs"
+                                value={filtersData.storeLocation}
+                                disabled={localStorage.roleId === 5}
+                                onChange={(e) => {
+
+                                    getAllStoreLocationData(e.target.value)
+                                    setFiltersData({ ...filtersData, storeLocation: e.target.value })
+                                }}
+                            >
+                                <option value="">-- Select --</option>
+                                {storeLocationOptions.map((item, index) => (
+                                    <option key={index} value={item.warehouseCode}>{item.warehouseCode}</option>
+                                ))}
+
+                            </select>
+                        </div>
                     </div>
                     <div className="flex justify-between">
-                        <span><strong>Warehouse Code</strong>: XXXX</span>
-                        <span><strong>Store Location</strong>: XXXX</span>
-
-                    </div>
-                    <div className="flex justify-between">
-                        <span><strong>Warehouse Name</strong>: XXXXXX</span>
+                        <span><strong>Warehouse Name</strong>: {wareHouseFilterOptions.filter((item) => item.depot_code === filtersData.depotCode)[0]?.depot_name}</span>
                         <span><TbFileDownload size={28} className="text-green-400" /></span>
                     </div>
 
@@ -315,10 +434,10 @@ const Dashboard = () => {
 
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200 text-xs">
+                    {/* <tbody className="bg-white divide-y divide-gray-200 text-xs">
                         {data?.map((item, idx) => (
                             <tr key={idx} className="border-b">
-                                {/* Description with hyperlink */}
+                            
                                 <td className="px-4 py-2 text-left whitespace-nowrap flex items-center gap-2">
                                     <div>
 
@@ -327,7 +446,7 @@ const Dashboard = () => {
                                         XXXXXXXXXX    </div>
                                 </td>
 
-                                {/* UOM (disabled) */}
+                              
                                 <td className="px-4 py-2 text-left whitespace-nowrap">
                                     <input
                                         type="text"
@@ -337,17 +456,17 @@ const Dashboard = () => {
                                     />
                                 </td>
 
-                                {/* Qty (input box) */}
+                              
                                 <td className="px-4 py-2 text-left whitespace-nowrap  ">
                                     Case
                                 </td>
 
-                                {/* Price (disabled) */}
+                              
                                 <td className="px-4 py-2 text-left whitespace-nowrap   ">
                                     1200
                                 </td>
 
-                                {/* Value (disabled) */}
+                             
                                 <td className="px-4 py-2 text-left whitespace-nowrap text-xs ">
                                     <button
                                         onClick={() => setOpenModal(true)}
@@ -361,7 +480,7 @@ const Dashboard = () => {
                         ))}
 
 
-                    </tbody>
+                    </tbody> */}
 
                 </table>
 

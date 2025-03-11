@@ -25,6 +25,7 @@ import { url } from "@/constants/url";
 import Select from "react-select";
 import grid from "@/pages/table/table_user_profile";
 import toast, { Toaster } from "react-hot-toast";
+
 const Dashboard = () => {
 
     const router = useRouter();
@@ -71,7 +72,7 @@ const Dashboard = () => {
 
 
                 setLocalStorage({
-                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
+                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).territory_name,
                     region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
                     empCode: window.localStorage.getItem("emp_code"),
                     empName: window.localStorage.getItem("user_name"),
@@ -80,13 +81,14 @@ const Dashboard = () => {
                     rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
                     zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
                     tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                    uId: JSON.parse(window.localStorage.getItem("uid")),
                 });
                 break;
             case 5:
 
 
                 setLocalStorage({
-                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
+                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).territory_name,
                     region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
                     empCode: window.localStorage.getItem("emp_code"),
                     empName: window.localStorage.getItem("user_name"),
@@ -95,13 +97,14 @@ const Dashboard = () => {
                     rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
                     zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
                     tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                    uId: JSON.parse(window.localStorage.getItem("uid")),
                 });
                 break;
             case 4:
 
 
                 setLocalStorage({
-                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
+                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).territory_name,
                     region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
                     empCode: window.localStorage.getItem("emp_code"),
                     empName: window.localStorage.getItem("user_name"),
@@ -110,13 +113,14 @@ const Dashboard = () => {
                     rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
                     zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
                     tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                    uId: JSON.parse(window.localStorage.getItem("uid")),
                 });
                 break;
             case 3:
 
 
                 setLocalStorage({
-                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
+                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).territory_name,
                     region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
                     empCode: window.localStorage.getItem("emp_code"),
                     empName: window.localStorage.getItem("user_name"),
@@ -125,12 +129,13 @@ const Dashboard = () => {
                     rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
                     zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
                     tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                    uId: JSON.parse(window.localStorage.getItem("uid")),
                 });
                 break;
             case 10:
 
                 setLocalStorage({
-                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
+                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).territory_name,
                     region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
                     empCode: window.localStorage.getItem("emp_code"),
                     empName: window.localStorage.getItem("user_name"),
@@ -139,14 +144,15 @@ const Dashboard = () => {
                     rId: null,
                     zId: null,
                     tId: null,
+                    uId: JSON.parse(window.localStorage.getItem("uid")),
                 });
                 break;
             default:
 
 
                 setLocalStorage({
-                    teritory: JSON.parse(window.localStorage.getItem("userinfo")).teritory_name,
-                    region: JSON.parse(window.localStorage.getItem("userinfo")).region_name,
+                    teritory: JSON.parse(window.localStorage.getItem("userinfo"))?.territory_name,
+                    region: JSON.parse(window.localStorage.getItem("userinfo"))?.region_name,
                     empCode: window.localStorage.getItem("emp_code"),
                     empName: window.localStorage.getItem("user_name"),
                     bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
@@ -154,10 +160,12 @@ const Dashboard = () => {
                     rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
                     zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
                     tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                    uId: JSON.parse(window.localStorage.getItem("uid")),
                 });
                 break;
         }
     }, []);
+
 
     const [dealerData, setDealerData] = useState([])
 
@@ -184,39 +192,14 @@ const Dashboard = () => {
 
 
 
-    const data = [
-        {
-            material_code: "MAT001",
-            uom: "KG",
-            price: "120.50",
-            value: "0.00", // This can be calculated dynamically based on Qty
-        },
-        {
-            material_code: "MAT002",
-            uom: "Litre",
-            price: "80.75",
-            value: "0.00",
-        },
-        {
-            material_code: "MAT003",
-            uom: "Piece",
-            price: "45.00",
-            value: "0.00",
-        },
-        {
-            material_code: "MAT004",
-            uom: "Box",
-            price: "250.00",
-            value: "0.00",
-        },
-    ];
 
     const [searchBy, setSearchBy] = useState("Name")
     const [filterState, setFilterState] = useState("")
     const [gridData, setGridData] = useState([])
+    const [searchText, setSearchText] = useState(""); // New state for input text
     console.log("jjk", gridData)
     const [dropDownOption, setDropDownOption] = useState([])
-    // API call to fetch dropdown options
+
 
 
     const getSearchData = async (value) => {
@@ -249,20 +232,22 @@ const Dashboard = () => {
                 }
 
                 break;
-            case "Pack_Size":
+            case "pack_size":
                 params = {
                     search: true,
                     c_id: 1,
                     bg_id: 1,
                     pack_size: value,
                 }
+                break;
             case "Dealer":
                 params = {
                     search: true,
                     c_id: 1,
                     bg_id: 1,
-                    dealer: value,
+                    customer_code: value,
                 }
+                break;
             case "Segment":
                 params = {
                     search: true,
@@ -270,21 +255,22 @@ const Dashboard = () => {
                     bg_id: 1,
                     segment: value,
                 }
-            case "Technical_Name":
+                break;
+            case "technical_name":
                 params = {
                     search: true,
                     c_id: 1,
                     bg_id: 1,
                     technical_name: value,
                 }
-            case "Material_Code":
+                break;
+            case "material_code":
                 params = {
                     search: true,
                     c_id: 1,
                     bg_id: 1,
                     material_code: value,
                 }
-
                 break;
 
             default:
@@ -305,11 +291,15 @@ const Dashboard = () => {
                 ...item
             }));
 
-            setDropDownOption(options);
+            options.length ? setDropDownOption([...options]) : setDropDownOption([]);
         } catch (error) {
             console.error("Error fetching data:", error);
+            setDropDownOption([]);
         }
     };
+
+    console.log("xcop", dropDownOption)
+
 
     // Custom Single Option Component (Selected Value)
     const customSingleValue = ({ data }) => (
@@ -362,8 +352,9 @@ const Dashboard = () => {
 
 
     const [orderData, setOrderData] = useState({
-        orderType: "Shop",
+        orderType: "ZDOR",
         specialIns: "",
+        orderBooking: "Shop"
     })
 
     const [uploadDocument, setUploadDocument] = useState("")
@@ -382,17 +373,20 @@ const Dashboard = () => {
         try {
             const data = {
                 order_type: orderData.orderType,
-                order_dt: new Date(),
-                kunnr_sold: dealerData.party_Name,
+                order_booking: orderData.orderBooking,
+                order_dt: new Date().toISOString().split("T")[0], // Removes time
+                kunnr_sold: dealerData.SAP_customerSAPNo,
+                kunnr_ship: dealerData.SAP_customerSAPNo,
+                SAP_sync: "N",
                 cus_po_ref: "Willowood Delight",
-                cus_po_ref_dt: new Date(),
+                cus_po_ref_dt: new Date().toISOString().split("T")[0], // Removes time
                 del_address: dealerData.address,
-                pay_terms: dealerData.SAP_customerSAPNo,
+                pay_terms: dealerData.SAP_Payterm,
                 inco_terms: dealerData.SAP_incoterms,
                 inco_location: dealerData.SAP_incoterms_location,
-                expected_del_date: new Date(),
+                expected_del_date: new Date().toISOString().split("T")[0], // Removes time
                 ord_status: "Order Booking",
-                werks: dealerData?.depotResult?.r_w_id,
+                werks: dealerData?.depotResult?.depot_code,
                 t_id: localStorage.tId,
                 r_id: localStorage.rId,
                 z_id: localStorage.zId,
@@ -406,6 +400,9 @@ const Dashboard = () => {
                     price: item.budget_price,
                     net_value: item.budget_price * item.qty,
                 })),
+                Emp_code: localStorage.empCode,
+                creation_date: new Date().toISOString().split("T")[0], // Removes time
+                Cuser_id: localStorage.uId,
             };
 
             const response = await axios.post(`${url}/api/add_order_info`, JSON.stringify(data), {
@@ -424,9 +421,10 @@ const Dashboard = () => {
                 }, 3000);
             }
         } catch (errors) {
-            if (errors.response?.data?.error) {
-                toast.error(errors.response.data.error);
-            }
+            console.log("zas", errors.response.data.message)
+            let err = errors.response.data.message
+            toast.error(err);
+
         }
     };
 
@@ -464,9 +462,6 @@ const Dashboard = () => {
     };
 
 
-
-
-
     return (
 
         <div className="bg-gray-200">
@@ -479,7 +474,7 @@ const Dashboard = () => {
                         className="self-center cursor-pointer"
                         onClick={handleNavigation}
                     />
-                    <span className="flex flex-row gap-2 justify-center items-center">  <FcNews size={32} className="text-indigo-600" /> <span>XYZ General Store</span></span>
+                    <span className="flex flex-row gap-2 justify-center items-center">  <FcNews size={32} className="text-indigo-600" /> <span>{dealerData.party_Name}</span></span>
                 </span>
                 <span className="text-white self-center">
                     <Popover as="div" className="relative border-none outline-none mt-2">
@@ -531,56 +526,70 @@ const Dashboard = () => {
                     </div>
 
                     <div className="flex justify-between font-bold">
-                        <span><strong>Depot Code:</strong> {dealerData?.depotResult?.r_w_id}</span>
+                        <span><strong>Depot Code:</strong> {dealerData?.depotResult?.depot_code}</span>
                         <span>Warehouse Des {dealerData?.depotResult?.depot_name}</span>
                     </div>
                 </div>
             </div>
-
+            {console.log("Selected:", searchBy)}
 
             {/* Search & Dropdown Section */}
             <div className="flex justify-center  mx-2 tems-center">
                 <select
-                    className="w-36 px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+                    className="w-36 px-3 py-2 border-b border-gray-500 bg-white focus:outline-none focus:border-indigo-500"
                     id="citySelect"
                     value={searchBy}
-                    onChange={(e) => setSearchBy(e.target.value)}
+                    onChange={(e) => {
+                        const selectedValue = e.target.value.trim();
+                        setDropDownOption([])
+                        setSearchBy(selectedValue);
+                    }}
                 >
                     <option value="Name">Name</option>
                     <option value="Category">Category</option>
                     <option value="Brand">Brand</option>
-                    <option value="Pack_Size">Pack Size</option>
-                    <option value="Dealer"> Dealer</option>
+                    <option value="pack_size">Pack Size</option>
+                    <option value="Dealer">Dealer</option>
                     <option value="Segment">Segment</option>
-                    <option value="Technical_Name"> Technical Name</option>
-                    <option value="Material_Code">Material Code</option>
+                    <option value="technical_name">Technical Name</option>
+                    <option value="material_code">Material Code</option>
                 </select>
 
                 <div className="relative w-3/4">
                     <Select
+
                         className="w-full px-3 py-1.5 border border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b-2 focus:border-indigo-500"
-                        value={filterState || ""}
+
+                        value={filterState || (searchText ? { label: searchText, value: searchText } : null)}
+
                         isSearchable={true}
+
                         isMulti={false}
+
                         options={dropDownOption}
-                        placeholder="SAP Code"
+
+                        placeholder="Willowood Product"
+
                         getOptionLabel={(e) => (
                             <div className="flex items-center">
                                 {e.image && <img src={e.image} alt={e.label} className="w-6 h-6 rounded-full mr-2" />}
                                 <span>{e.label}</span>
                             </div>
                         )}
+
                         isClearable={true}
                         components={{ SingleValue: customSingleValue, Option: customOption }}
+
                         onInputChange={(searchValue, { action }) => {
                             if (action === "input-change") {
-                                getSearchData(searchValue); // Direct API call on input change
+                                setSearchText(searchValue); // Update search text state
+                                getSearchData(searchValue); // Fetch API data
                             }
                         }}
+
                         onChange={(selectedOption) => {
                             setFilterState(selectedOption);
-
-
+                            setSearchText(""); // Clear input after selection
                         }}
                     />
 
@@ -712,10 +721,27 @@ const Dashboard = () => {
                                         accept=".pdf, .jpg, .jpeg, .png, .gif, .doc, .docx, .xls, .xlsx, .txt"
                                         onChange={handleFileChange}
                                     />
+
+
                                 </div>
+                                <div><strong>Order Booking:</strong>  <select
+                                    className="px-3 py-2 border-b border-gray-500 rounded-md bg-white text-xs focus:outline-none focus:border-b focus:border-indigo-500"
+                                    id="citySelect"
+                                    value={orderData.orderBooking}
+                                    onChange={(e) => setOrderData({ ...orderData, orderBooking: e.target.value })}
+                                >
+                                    <option className="focus:outline-none focus:border-b bg-white" value="Shop">Shop</option>
+                                    <option value="What up">What up</option>
+                                    <option value="Telephonic">Telephonic</option>
+                                    <option value="Mails">Mails</option>
+                                    <option value="Verbal">Verbal</option>
+                                </select></div>
+
+
                             </div>
 
                             {/* Right Column */}
+
                             <div className="space-y-2">
                                 <div><strong>Payment Terms:</strong> {dealerData.SAP_Payterm}</div>
                                 <div><strong>Inco Terms:</strong> {dealerData.SAP_incoterms}</div>
@@ -728,11 +754,8 @@ const Dashboard = () => {
                                         onChange={(e) => setOrderData({ ...orderData, orderType: e.target.value })}
 
                                     >
-                                        <option className="focus:outline-none focus:border-b bg-white" value="Shop">Shop</option>
-                                        <option value="What up">What up</option>
-                                        <option value="Telephonic">Telephonic</option>
-                                        <option value="Mails">Mails</option>
-                                        <option value="Verbal">Verbal</option>
+                                        <option className="focus:outline-none focus:border-b bg-white" value="ZDOR">ZDOR</option>
+
                                     </select>
                                 </div>
                             </div>

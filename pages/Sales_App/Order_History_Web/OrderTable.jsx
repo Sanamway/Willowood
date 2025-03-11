@@ -226,8 +226,11 @@ const OrderTable = () => {
                                                             <div className="flex items-start justify-center w-full flex-col ">
                                                                 <h2 className="text-xl font-semibold mb-">Billing Address</h2>
                                                                 <div className="flex lg:flex-row flex-col w-full items-center flex-wrap justify-center">
-                                                                    <div className="flex text-xs lg:text-sm gap- w-full py-1">
-                                                                        <h2 className="font-semibold whitespace-nowrap "> </h2>
+                                                                    <div className="flex flex-col text-xs lg:text-sm gap- w-full py-1">
+                                                                        <div className="flex flex-row text-xs lg:text-sm gap- w-full py-2 gap-x-2">
+                                                                            <h2 className="font-bold whitespace-nowrap ">SAP Code : </h2>
+                                                                            <h2 className="text-gray-500  font-bold">{orderedItems.kunnr_sold}</h2>
+                                                                        </div>
                                                                         <h3 className="text-gray-500 whitespace-nowrap font-semibold">
 
                                                                             {orderedItems.del_address}
@@ -249,10 +252,10 @@ const OrderTable = () => {
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex lg:flex-row flex-col w-full items-center flex-wrap justify-center">
-                                                                    <div className="flex text-xs lg:text-sm gap- w-full py-2 gap-x-2">
+                                                                    {/* <div className="flex text-xs lg:text-sm gap- w-full py-2 gap-x-2">
                                                                         <h2 className="font-semibold whitespace-nowrap ">SAP Code : </h2>
                                                                         <h2 className="text-gray-500">{orderedItems.SAP_order_no}</h2>
-                                                                    </div>
+                                                                    </div> */}
                                                                     <div className="flex text-xs lg:text-sm gap-1 w-full  ">
                                                                         <h2 className="font-semibold whitespace-nowrap gap-x-2  ">Depot Code : </h2>
                                                                         <h2 className="text-gray-500  ">{orderedItems.werks}</h2>
@@ -297,6 +300,8 @@ const OrderTable = () => {
                                                                 >
                                                                     <td className="py-2 px-2 whitespace-nowrap">
 
+                                                                        {item?.matnr}
+                                                                        <br />
                                                                         {item?.material_name}
                                                                     </td>
                                                                     <td className="py-2 px-2">{item.uom}</td>
@@ -313,10 +318,10 @@ const OrderTable = () => {
                                                                 </td>
                                                                 <td className="py-2 px-2">{"-"}</td>
                                                                 <td className="py-2 px-2">{"-"}</td>
-                                                                <td className="py-2 px-2 whitespace-nowrap">₹ {orderedItems?.orderItems?.reduce((curr, acc) => { return curr += acc.price }, 0)}</td>
+                                                                <td className="py-2 px-2 whitespace-nowrap">₹ {orderedItems?.orderItems?.reduce((curr, acc) => { return curr += Number(acc.price) }, 0)}</td>
 
 
-                                                                <td className="py-2 px-2"> {orderedItems?.orderItems?.reduce((curr, acc) => { return curr += acc.net_value }, 0)}</td>
+                                                                <td className="py-2 px-2"> {orderedItems?.orderItems?.reduce((curr, acc) => { return curr += Number(acc.net_value) }, 0)}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>

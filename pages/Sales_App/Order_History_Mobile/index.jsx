@@ -72,7 +72,6 @@ const Dashboard = () => {
     return (
 
         <div className="flex flex-col gap-2 ">
-
             <div className=" font-bold text-lg h-4 flex flex-col  ">
                 <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
                     <span className="text-black flex flex-row gap-4 font-bold   ">
@@ -224,24 +223,28 @@ const Dashboard = () => {
                                     <Dialog.Title as="h3" className="text-[1.78rem] font-bold leading-6 text-center text-gray-900">
                                         Orders Info
                                     </Dialog.Title>
-                                    <div className="flex-1 h-[96%] overflow-y-auto bg-gray-100 text-gray-700 p-2 mt-4 scrollbar-hidecvc                                                                 ">
-                                        <div className="container mx-auto py-8">
-
-
+                                    <div className="flex-1 h-[96%] overflow-y-auto bg-gray-100 text-gray-700 p-2 mt-2 scrollbar-hidecvc                                                                 ">
+                                        <div className="container mx-auto py-2">
                                             <div className="w-full">
-
-
-
-
                                                 <div className="bg-white p-2 p-1.5 rounded-lg shadow-md mb-4">
-                                                    <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+                                                    <h2 className="text-xl font-semibold mb-4"></h2>
                                                     <div className="space-y-4">
                                                         <label className="flex items-center p-4 border rounded cursor-pointer hover:bg-gray-50">
                                                             <div className="flex lg:flex  gap-1 justify-between w-full ">
 
-                                                                <div className="flex text-xs lg:text-sm gap-1">
-                                                                    <h2 className="font-semibold">Date: </h2>
-                                                                    <h2 className="text-gray-500 whitespace-nowrap">{moment(orderedItems.creation_date).format("DD-MM-YYYY")}</h2>
+                                                                <div className="flex w-full  justify-between text-xs lg:text-sm gap-1">
+                                                                    <div>
+                                                                        <h2 className="font-semibold">Order Number:</h2>
+                                                                        <h2 className="text-gray-500 whitespace-nowrap">{orderedItems.order_no}</h2>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h2 className="font-semibold">Date: </h2>
+                                                                        <h2 className="text-gray-500 whitespace-nowrap">{moment(orderedItems.creation_date).format("DD-MM-YYYY")}</h2>
+
+                                                                    </div>
+
+
+
                                                                 </div>
                                                             </div>
                                                         </label>
@@ -250,8 +253,13 @@ const Dashboard = () => {
                                                                 <div className="flex items-start justify-center w-full flex-col ">
                                                                     <h2 className="text-xl font-semibold mb-">Billing Address</h2>
                                                                     <div className="flex lg:flex-row flex-col w-full items-center flex-wrap justify-center">
-                                                                        <div className="flex text-xs lg:text-sm gap- w-full py-1">
-                                                                            <h2 className="font-semibold whitespace-nowrap "> </h2>
+                                                                        <div className="flex flex-col text-xs lg:text-sm gap- w-full py-1">
+                                                                            <div className="flex text-xs lg:text-sm gap- w-full py-2 gap-x-2">
+                                                                                <h2 className="font-bold whitespace-nowrap ">SAP Code : </h2>
+                                                                                <h2 className="text-gray-500  font-bold">{orderedItems.kunnr_sold}</h2>
+                                                                            </div>
+                                                                            <h2 className="font-semibold whitespace-nowrap "> {orderedItems.party_name}</h2>
+
                                                                             <h3 className="text-gray-500 font-semibold">
 
                                                                                 {orderedItems.del_address}
@@ -259,13 +267,8 @@ const Dashboard = () => {
                                                                         </div>
 
                                                                         <div className="flex text-xs lg:text-sm gap-1 w-full gap-x-2  ">
-                                                                            <h2 className="font-semibold whitespace-nowrap  ">City: </h2>
-                                                                            <h2 className="text-gray-500  ">{orderedItems.city}</h2>
-                                                                            <div className="flex px-2 gap-x-2">
-                                                                                <h2 className="font-semibold whitespace-nowrap ">Postal: </h2>
-                                                                                <h2 className="text-gray-500">{orderedItems.postal}</h2>
-                                                                            </div>
-                                                                            <div className="flex px-2 gap-x-2">
+
+                                                                            <div className="flex  gap-x-2">
                                                                                 <h2 className="font-semibold whitespace-nowrap ">Phone: </h2>
                                                                                 <h2 className="text-gray-500 ">{orderedItems.phone_no
                                                                                 }</h2>
@@ -273,10 +276,7 @@ const Dashboard = () => {
                                                                         </div>
                                                                     </div>
                                                                     <div className="flex lg:flex-row flex-col w-full items-center flex-wrap justify-center">
-                                                                        <div className="flex text-xs lg:text-sm gap- w-full py-2 gap-x-2">
-                                                                            <h2 className="font-semibold whitespace-nowrap ">SAP Code : </h2>
-                                                                            <h2 className="text-gray-500">{orderedItems.SAP_order_no}</h2>
-                                                                        </div>
+
                                                                         <div className="flex text-xs lg:text-sm gap-1 w-full  ">
                                                                             <h2 className="font-semibold whitespace-nowrap gap-x-2  ">Depot Code : </h2>
                                                                             <h2 className="text-gray-500  ">{orderedItems.werks}</h2>
@@ -287,24 +287,17 @@ const Dashboard = () => {
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                {/* <div>
-                      <h2 className="font-semibold">Date: </h2>
-                      <h2 className="text-gray-500">{new Date().toDateString()}</h2>
-                    </div> */}
                                                             </div>
                                                         </label>
                                                     </div>
                                                 </div>
-
-                                                {/* Order Preference Section */}
-
                                                 <div className="bg-white p-1.5 p-5 rounded-lg shadow-md mb-4">
-                                                    <h2 className="text-xl font-semibold mb-4">Items List : </h2>
+
 
                                                     <div className="overflow-x-auto">
                                                         <table className="min-w-full table-auto border-collapse">
-                                                            <thead>
-                                                                <tr className="border-b text-xs">
+                                                            <thead >
+                                                                <tr className="border-b text-xs  bg-yellow-400">
                                                                     <th className="py-2 px-2 text-left">Item Name</th>
                                                                     <th className="py-2 px-2 text-left">UOM</th>
                                                                     <th className="py-2 px-2 text-left">Qty</th>
@@ -319,8 +312,9 @@ const Dashboard = () => {
                                                                         className={`border-b text-xs lg:text-sm ${item.selected ? "bg-blue-50 border-blue-500" : "hover:bg-gray-100"
                                                                             }`}
                                                                     >
-                                                                        <td className="py-2 px-2 whitespace-nowrap">
-
+                                                                        <td className="py-2 px-2 w-24 ">
+                                                                            {item?.matnr}
+                                                                            <br />
                                                                             {item?.material_name}
                                                                         </td>
                                                                         <td className="py-2 px-2">{item.uom}</td>
@@ -333,14 +327,12 @@ const Dashboard = () => {
 
                                                                     <td className="py-2 px-2 whitespace-nowrap">
 
-                                                                        Total
+                                                                        Total ({orderedItems?.orderItems?.length})
                                                                     </td>
-                                                                    <td className="py-2 px-2">{"-"}</td>
-                                                                    <td className="py-2 px-2">{"-"}</td>
-                                                                    <td className="py-2 px-2 whitespace-nowrap">₹ {orderedItems?.orderItems?.reduce((curr, acc) => { return curr += acc.price }, 0)}</td>
-
-
-                                                                    <td className="py-2 px-2"> {orderedItems?.orderItems?.reduce((curr, acc) => { return curr += acc.net_value }, 0)}</td>
+                                                                    <td className="py-2 px-2 ">{"-"} </td>
+                                                                    <td className="py-2 px-2">{"-"} </td>
+                                                                    <td className="py-2 px-2 whitespace-nowrap">₹ {orderedItems?.orderItems?.reduce((curr, acc) => { return curr += Number(acc.price) }, 0)}</td>
+                                                                    <td className="py-2 px-2">{orderedItems?.orderItems?.reduce((curr, acc) => { return curr += Number(acc.net_value) }, 0)}</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -348,7 +340,7 @@ const Dashboard = () => {
 
                                                     {allOrderInfoData?.some((item) => item.selected) && (
                                                         <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                                                            <h3 className="font-medium mb-2">Selected Items Order:</h3>
+                                                            <h3 className="font-medium mb-2" >Selected Items Order:</h3>
                                                             <ol className="list-decimal list-inside space-y-1">
                                                                 {allOrderInfoData
                                                                     ?.filter((item) => item.selected)
@@ -411,7 +403,7 @@ const Dashboard = () => {
                                                                 <div className="flex lg:flex-row flex-col gap-1 justify-between w-full">
                                                                     <div className="flex gap-1">
                                                                         <h2 className="font-semibold">Employee Code: </h2>
-                                                                        <h2 className="">{orderedItems.emp_code}</h2>
+                                                                        <h2 className="">{orderedItems.Emp_code}</h2>
                                                                     </div>
                                                                     <div className="flex gap-1">
                                                                         <h2 className="font-semibold">Inco Location: </h2>
@@ -439,18 +431,10 @@ const Dashboard = () => {
                                                             Close
                                                         </button>
                                                     </div>
-
                                                 </div>
-
-
-
-
-
-
-
                                             </div>
                                         </div>
-                                        {/* <OrderSuccessModal isOpen={isOpen} setOpen={() => setIsOpen(!isOpen)}></OrderSuccessModal> */}
+
                                     </div>
 
 
