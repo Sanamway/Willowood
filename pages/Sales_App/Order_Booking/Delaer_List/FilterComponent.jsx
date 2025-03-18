@@ -259,15 +259,16 @@ const FilterComponent = (props) => {
       });
 
       const apires = { orderInfoData: respond.data.data };
-
       dispatch(setAllOrderInfoData(apires));
 
     } catch (error) {
-      console.error("Error fetching order data:", error);
 
+      console.error("Error fetching order data:", error);
       // If an error occurs, set an empty array in Redux state
       dispatch(setAllOrderInfoData([]));
+
     }
+
   };
 
 
@@ -275,12 +276,9 @@ const FilterComponent = (props) => {
   const [partyOption, setPartyOption] = useState([]);
 
   const getAllPartyData = async (partyName = "") => {
-    console.log("Searching for:", partyName);
-
     try {
       const { tId, rId, zId, buId, bgId } = filterState;
       const c_id = JSON.parse(localStorage.getItem("userinfo"))?.c_id || null;
-
       const response = await axios.get(`${url}/api/get_dealer`, {
         params: {
           search: true,
@@ -294,10 +292,7 @@ const FilterComponent = (props) => {
         },
         headers,
       });
-      console.log("bnm", response.data.data.map((item) => ({
-        value: item.SAP_customerSAPNo || "",
-        label: item.party_Name || "",
-      })))
+
       const options = response.data.data.map((item) => ({
         value: item.SAP_customerSAPNo || "",
         label: item.party_Name || "",

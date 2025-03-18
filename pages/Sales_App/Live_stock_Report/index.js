@@ -21,8 +21,43 @@ import { IoLocationOutline } from "react-icons/io5";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { FcNeutralTrading } from "react-icons/fc";
 import axios from "axios";
+import Select from "react-select";
+
+import * as FileSaver from 'file-saver'
+import * as  XLSX from 'xlsx'
 
 const Dashboard = () => {
+
+    const data = [
+        {
+            material_code: "MAT001",
+            uom: "KG",
+            price: "120.50",
+            value: "0.00", // This can be calculated dynamically based on Qty
+        },
+        {
+            material_code: "MAT002",
+            uom: "Litre",
+            price: "80.75",
+            value: "0.00",
+        },
+        {
+            material_code: "MAT003",
+            uom: "Piece",
+            price: "45.00",
+            value: "0.00",
+        },
+        {
+            material_code: "MAT004",
+            uom: "Box",
+            price: "250.00",
+            value: "0.00",
+        },
+    ];
+
+    const [modalData, setModalData] = useState({})
+
+
     const headers = {
         "Content-Type": "application/json",
         secret: "fsdhfgsfuiweifiowefjewcewcebjw",
@@ -155,7 +190,7 @@ const Dashboard = () => {
 
     const [storeLocationOptions, setStoreLocationOptions] = useState([])
     const getAllStoreLocationData = async (data) => {
-        console.log("zq", data)
+
 
         try {
             const respond = await axios.get(`${url}/api/get_warehousestockdata`, {
@@ -167,10 +202,8 @@ const Dashboard = () => {
 
             const apires = await respond.data.data;
             setStoreLocationOptions(apires);
-            if (data.region_name) {
-                setFiltersData({ ...filtersData, storeLocation: String(apires[0].warehouseCode) })
-            }
-            console.log("zqw", apires[0].warehouseCode)
+
+
 
 
         } catch (error) {
@@ -180,7 +213,7 @@ const Dashboard = () => {
 
 
 
-    { console.log("zqwa", filtersData.storeLocation) }
+    console.log("pop", filtersData)
 
 
 
@@ -191,95 +224,95 @@ const Dashboard = () => {
 
     const [openModal, setOpenModal] = useState(false)
 
-    const data = [
-        {
-            material_code: "MAT001",
-            uom: "KG",
-            price: "120.50",
-            value: "0.00", // This can be calculated dynamically based on Qty
-        },
-        {
-            material_code: "MAT002",
-            uom: "Litre",
-            price: "80.75",
-            value: "0.00",
-        },
-        {
-            material_code: "MAT003",
-            uom: "Piece",
-            price: "45.00",
-            value: "0.00",
-        },
-        {
-            material_code: "MAT004",
-            uom: "Box",
-            price: "250.00",
-            value: "0.00",
-        },
-    ];
 
-    const modalData = [
-        {
-            loc: "A1",
-            batch: "B123",
-            case: 5,
-            qty: 100,
-            expDate: "-",
-            mfgDate: "-",
-            sixMonth: "Pass",
-            twelveMonth: "Pass",
-            oneYear: "Fail",
-            status: "Av"
-        },
-        {
-            loc: "A2",
-            batch: "B456",
-            case: 10,
-            qty: 200,
-            expDate: "-",
-            mfgDate: "-",
-            sixMonth: "Pass",
-            twelveMonth: "Pass",
-            oneYear: "Pass",
-            status: "Out "
-        },
-        {
-            loc: "B3",
-            batch: "C789",
-            case: 7,
-            qty: 150,
-            expDate: "-",
-            mfgDate: "-",
-            sixMonth: "Fail",
-            twelveMonth: "Pass",
-            oneYear: "Pass",
-            status: "Av"
-        },
-        {
-            loc: "C4",
-            batch: "D012",
-            case: 3,
-            qty: 50,
-            expDate: "-",
-            mfgDate: "-",
-            sixMonth: "Pass",
-            twelveMonth: "Fail",
-            oneYear: "Fail",
-            status: "Out "
-        },
-        {
-            loc: "D5",
-            batch: "E345",
-            case: 12,
-            qty: 300,
-            expDate: "-",
-            mfgDate: "-",
-            sixMonth: "Pass",
-            twelveMonth: "Pass",
-            oneYear: "Pass",
-            status: "Av"
+    const [inputFilter, setInputFilter] = useState("")
+    const [searchBy, setSearchBy] = useState("")
+    const [tableOption, setTableOption] = useState([])
+
+
+    const getSearchData = async (value) => {
+        let params
+        switch (searchBy) {
+            case "all":
+                params = {
+                    c_id: 1,
+                    depot_code: filtersData.depotCode,
+                    warehouse_code: filtersData.storeLocation
+                }
+                break;
+            case "brand":
+                params = {
+                    c_id: 1,
+                    brand: value,
+                    depot_code: filtersData.depotCode,
+                    warehouse_code: filtersData.storeLocation
+                }
+                break;
+            case "category":
+                params = {
+                    c_id: 1,
+                    category: value,
+                    depot_code: filtersData.depotCode,
+                    warehouse_code: filtersData.storeLocation
+                }
+                break;
+
+            case "material_name":
+                params = {
+                    c_id: 1,
+                    material_name: value,
+                    depot_code: filtersData.depotCode,
+                    warehouse_code: filtersData.storeLocation
+                }
+                break;
+            case "material_code":
+                params = {
+                    c_id: 1,
+                    material_code: value,
+                    depot_code: filtersData.depotCode,
+                    warehouse_code: filtersData.storeLocation
+                }
+                break;
+
+
+            default:
+                break;
         }
-    ];
+        try {
+            const response = await axios.get(`${url}/api/get_warehousestockdata`, {
+                params: params,
+                headers,
+            });
+
+            const apires = response.data.data;
+
+            setTableOption(apires)
+
+
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            setTableOption([]);
+        }
+    };
+
+
+    useEffect(() => {
+        getSearchData()
+
+    }, [
+        filtersData.depotCode, filtersData.storeLocation
+    ])
+
+
+
+    const handledownloadBrandExcel = (data) => {
+        console.log("mlop", data);
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, `Live_Stock.xlsx`);
+    };
+
     return (
 
         <div className="bg-gray-200">
@@ -341,7 +374,6 @@ const Dashboard = () => {
                                 value={filtersData.depotCode}
                                 disabled={localStorage.roleId === 5}
                                 onChange={(e) => {
-
                                     getAllStoreLocationData(e.target.value)
                                     setFiltersData({ ...filtersData, depotCode: e.target.value })
                                 }}
@@ -359,10 +391,8 @@ const Dashboard = () => {
                             <select
                                 className="w-32 px-3 py-2  h-8  border border-gray-400 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs"
                                 value={filtersData.storeLocation}
-                                disabled={localStorage.roleId === 5}
-                                onChange={(e) => {
 
-                                    getAllStoreLocationData(e.target.value)
+                                onChange={(e) => {
                                     setFiltersData({ ...filtersData, storeLocation: e.target.value })
                                 }}
                             >
@@ -376,7 +406,7 @@ const Dashboard = () => {
                     </div>
                     <div className="flex justify-between">
                         <span><strong>Warehouse Name</strong>: {wareHouseFilterOptions.filter((item) => item.depot_code === filtersData.depotCode)[0]?.depot_name}</span>
-                        <span><TbFileDownload size={28} className="text-green-400" /></span>
+                        <span><TbFileDownload size={28} className="text-green-400" onClick={() => handledownloadBrandExcel(tableOption)} /></span>
                     </div>
 
 
@@ -385,40 +415,43 @@ const Dashboard = () => {
 
 
             {/* Search & Dropdown Section */}
-            <div className="bg-white shadow-md rounded-lg p-4 mb-1  mx-2 mt-2 flex flex-row ">
+            <div className="bg-white shadow-md rounded-lg p-4 mb-1  mx-2 mt-2 flex flex-row gap-4 ">
                 <select
-                    className="w-24 px-3 py-2 border border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500 text-xs"
+                    className="w-36 px-3 py-2 border-b border-gray-500 bg-white focus:outline-none focus:border-indigo-500"
                     id="citySelect"
+                    value={searchBy}
+                    onChange={(e) => {
+                        const selectedValue = e.target.value.trim();
+                        setTableOption([])
+                        setSearchBy(selectedValue);
+                    }}
+
                 >
-                    <option value={""} className="focus:outline-none focus:border-b bg-white text-xs">-- Select --</option>
-                    <option value="Option">Option</option>
-                    <option value="Option">Option</option>
-                    <option value="Option">Option</option>
+
+                    <option value="">All Material</option>
+                    <option value="brand">Brand</option>
+                    <option value="category">Category</option>
+                    <option value="material_name">Material Name</option>
+                    <option value="mat_code">Mat Code</option>
+
                 </select>
 
-                <div className="relative w-full">
+                <div className="relative w-3/4">
+
                     <input
-                        className="w-full h-10 px-10 py-1.5 border border-gray-400  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-                        id="stateSelect"
-                        placeholder="Search"
-                    />
-                    <svg
-                        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 3a7.5 7.5 0 006.15 12.65z"
-                        />
-                    </svg>
+                        className="w-full px-3 py-1.5 border border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b-2 focus:border-indigo-500"
+                        value={inputFilter}
+
+                        disabled={searchBy === ""}
+                        onChange={(e) => {
+                            setInputFilter(e.target.value)
+                            getSearchData(e.target.value)
+                        }} />
+
+
                 </div>
 
-
+                {console.log("lop", tableOption)}
             </div>
 
             {/* Table Section */}
@@ -434,42 +467,48 @@ const Dashboard = () => {
 
                         </tr>
                     </thead>
-                    {/* <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                        {data?.map((item, idx) => (
+                    <tbody className="bg-white divide-y divide-gray-200 text-xs">
+                        {tableOption?.map((item, idx) => (
                             <tr key={idx} className="border-b">
-                            
+
                                 <td className="px-4 py-2 text-left whitespace-nowrap flex items-center gap-2">
                                     <div>
 
-                                        Material Code  - Brand Code -  Category
+                                        {item.materialNumber}  - {item.brandDesc} -  {item.categoryDesc}
                                         <br />
-                                        XXXXXXXXXX    </div>
+                                    </div>
                                 </td>
 
-                              
+
                                 <td className="px-4 py-2 text-left whitespace-nowrap">
                                     <input
                                         type="text"
                                         className="w-full px-2 py-1 bg-gray-100 border rounded-md cursor-not-allowed text-gray-600"
-                                        value={item.uom}
+                                        value={item?.material_result?.uom}
                                         disabled
                                     />
                                 </td>
 
-                              
+
                                 <td className="px-4 py-2 text-left whitespace-nowrap  ">
-                                    Case
+                                    {item.case}
                                 </td>
 
-                              
+
                                 <td className="px-4 py-2 text-left whitespace-nowrap   ">
-                                    1200
+                                    {item.quantity}
                                 </td>
 
-                             
+
                                 <td className="px-4 py-2 text-left whitespace-nowrap text-xs ">
                                     <button
-                                        onClick={() => setOpenModal(true)}
+                                        onClick={() => {
+                                            setOpenModal(true)
+                                            setModalData(item)
+                                        }
+
+
+                                        }
                                         className="text-blue-500  hover:text-blue-700 font-semibold py-2 px-2 border rounded-md bg-transparent border-blue-500 hover:bg-blue-500 hover:text-white"
                                     >
                                         View Details
@@ -480,14 +519,14 @@ const Dashboard = () => {
                         ))}
 
 
-                    </tbody> */}
+                    </tbody>
 
                 </table>
 
 
             </div>
             <span className="italic ml-2 bg-white-400 ml-2 text-xs">
-                Live Stock updated: 12-06-2024 Time: 11:00 AM
+                {tableOption.length ? `Live Stock updated: ${moment(tableOption[0].liveDateTime).format("DD-MM-YYYY")} Time: ${moment(tableOption[0].liveDateTime).format("hh:mm A")}` : `Live Stock updated: - Time: -`}
             </span>
 
             {/* Delivery Address & Special Instructions */}
@@ -518,7 +557,6 @@ const Dashboard = () => {
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-
                                     {/* Modal Title */}
                                     <Dialog.Title className="text-[1.1rem] font-bold leading-6 text-center text-gray-900 lg:text-[1.5rem]">
                                         View Details - Material Code
@@ -528,45 +566,45 @@ const Dashboard = () => {
                                     <div className="mt-4 overflow-x-auto">
                                         <div className="min-w-max w-full">
                                             {/* Header */}
-                                            <div className="grid grid-cols-10 bg-blue-600 text-white font-semibold p-2 rounded-t-lg text-xs ml-4 md:text-sm">
-                                                <div className="px-2 py-1">Loc</div>
-                                                <div className="px-2 py-1">Batch</div>
-                                                <div className="px-2 py-1">Case</div>
-                                                <div className="px-2 py-1">Qty</div>
-                                                <div className="px-2 py-1">Exp Date</div>
-                                                <div className="px-2 py-1">MFG Date</div>
-                                                <div className="px-2 py-1">6M</div>
-                                                <div className="px-2 py-1">12M</div>
-                                                <div className="px-2 py-1">1Y</div>
-                                                <div className="px-2 py-1">Status</div>
+                                            <div className="grid grid-cols-10 bg-blue-600 text-white font-semibold p-2 rounded-t-lg text-xs md:text-sm">
+                                                <div className="px-2 py-2 text-center">Loc</div>
+                                                <div className="px-2 py-2 text-center">Batch</div>
+                                                <div className="px-2 py-2 text-center">Case</div>
+                                                <div className="px-2 py-2 text-center">Qty</div>
+                                                <div className="px-2 py-2 w-24 text-center">Exp Date</div>
+                                                <div className="px-2 py-2 w-24 text-center">MFG Date</div>
+                                                <div className="px-2 py-2 text-center">6M</div>
+                                                <div className="px-2 py-2 text-center">12M</div>
+                                                <div className="px-2 py-2 text-center">1Y</div>
+                                                <div className="px-2 py-2 text-center">Status</div>
                                             </div>
 
                                             {/* Table Rows */}
-                                            <div className="divide-y divide-gray-300 bg-white ">
-                                                {modalData?.map((item, idx) => (
-                                                    <div key={idx} className="grid grid-cols-10 p-2  border-b text-center text-xs md:text-sm">
-                                                        <div>{item.loc}</div>
-                                                        <div>{item.batch}</div>
-                                                        <div>{item.case}</div>
-                                                        <div>{item.qty}</div>
-                                                        <div>{item.expDate}</div>
-                                                        <div>{item.mfgDate}</div>
-                                                        <div>{item.sixMonth}</div>
-                                                        <div>{item.twelveMonth}</div>
-                                                        <div>{item.oneYear}</div>
-                                                        <div className={item.status === "Available" ? "text-green-500" : "text-red-500"}>
-                                                            {item.status}
-                                                        </div>
+                                            <div className="divide-y divide-gray-300 bg-white">
+                                                <div className="grid grid-cols-10 p-2 border-b text-center text-xs md:text-sm">
+                                                    <div className="px-2 py-2">{modalData.loc}</div>
+                                                    <div className="px-2 py-2">{modalData.batch}</div>
+                                                    <div className="px-2 py-2">{modalData.case}</div>
+                                                    <div className="px-2 py-2">{modalData.quantity}</div>
+                                                    <div className="px-2 py-2 w-24">{moment(modalData.expDate).format("DD-MM-YYYY")}</div>
+                                                    <div className="px-2 py-2 w-24">{moment(modalData.mfgDate).format("DD-MM-YYYY")}</div>
+                                                    <div className="px-2 py-2">{modalData.sixMonths}</div>
+                                                    <div className="px-2 py-2">{modalData.twelveMonths}</div>
+                                                    <div className="px-2 py-2">{modalData.greaterThanOneYear}</div>
+                                                    <div className={`px-2 py-2 ${modalData.quantity ? "text-green-500" : "text-red-500"}`}>
+                                                        {modalData.quantity ? "Yes" : "No"}
                                                     </div>
-                                                ))}
+                                                </div>
+
+
                                             </div>
                                         </div>
                                     </div>
-
                                 </Dialog.Panel>
                             </Transition.Child>
                         </div>
                     </div>
+
                 </Dialog>
             </Transition>
         </div>
