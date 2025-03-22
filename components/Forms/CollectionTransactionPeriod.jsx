@@ -161,8 +161,9 @@ const CollectionTrasactionPeriod = () => {
       getBUInfo(router.query.cId, router.query.bgId);
     }
   }, [router]);
-
+  const [buttonLoading, setButtonLoading] = useState(false)
   const handleSavePlan = async () => {
+    setButtonLoading(true)
     try {
       const planId = allTransactionData.filter(
         (item) => item.isEditable === true
@@ -191,6 +192,7 @@ const CollectionTrasactionPeriod = () => {
         .then((res) => {
           if (!res) return;
           toast.success(res.data.message);
+          setButtonLoading(false)
           setTimeout(() => {
             router.push("/table/table_collectiontransaction_open");
           }, [3000]);
@@ -200,6 +202,7 @@ const CollectionTrasactionPeriod = () => {
       const errorMessage = errors?.response?.data?.message;
 
       toast.error(errorMessage);
+      setButtonLoading(false)
     }
   };
 
@@ -546,6 +549,7 @@ const CollectionTrasactionPeriod = () => {
                 <button
                   className="bg-green-700 px-4 py-1 text-white"
                   onClick={() => handleSavePlan()}
+                  disabled={buttonLoading === true}
                 >
                   Save
                 </button>

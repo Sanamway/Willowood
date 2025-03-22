@@ -17,20 +17,20 @@ function ConfirmModal({ onClose, isOpen, onOpen, userId, onDeletedData, method, 
       const resp = await axios[method](`${url}/api/${endpoints}/${userId}`, { headers });
       const respdata = await resp.data.data;
       const respData = await resp.data
-      
+
       if (respdata) {
         onDeletedData();
         onClose();
       }
       const msgg = respData.message
-      if(msgg){
+      if (msgg) {
         toast.error(msgg)
         onClose();
       }
     } catch (error) {
       console.log("moderr", error?.response?.data.message)
       const errMsg = error?.response?.data.message
-      if(errMsg){
+      if (errMsg) {
         toast.error(errMsg)
         onClose()
       }

@@ -823,7 +823,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_fields_id,
+                id: item.f_demo_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -842,7 +842,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_fields_id,
+                id: item.f_demo_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -859,7 +859,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_fields_id,
+                id: item.f_demo_id,
               });
             }}
           >
@@ -879,7 +879,7 @@ const FieldDay = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_fields_id,
+              id: item.f_demo_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -898,7 +898,7 @@ const FieldDay = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.f_demo_fields_id,
+              id: item.f_demo_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -915,7 +915,7 @@ const FieldDay = () => {
             setModalData({
               ...modalData,
 
-              id: item.f_demo_fields_id,
+              id: item.f_demo_id,
             });
           }}
         >
@@ -936,7 +936,7 @@ const FieldDay = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.f_demo_fields_id,
+              id: item.f_demo_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -949,31 +949,58 @@ const FieldDay = () => {
 
       </div>
 
-      case 5: return <div className="flex items-center">
+      case 5:
+        return <div className="flex items-center">
 
-        <input type="Checkbox"
-          className="ml-1 mr-1"
-          checked={item.isApproved}
-          disabled={item.approved === "Yes"}
-          onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
-        <button
-          onClick={() => {
-            setShowVerifyModal(true);
-            setModalData({
-              ...modalData,
-              type: "Approve",
-              id: item.f_demo_fields_id,
-            });
-          }}
-          disabled={item.approved === "Yes"}
-          className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Verify",
+                id: item.f_demo_id,
+              });
+            }}
+            disabled
 
-        >
-          Approve
-        </button>
+          >
+            Verify
+          </button>
+          <input type="Checkbox"
+            className="ml-1 mr-1"
+            checked={item.isApproved}
+            disabled={item.approved === "Yes"}
+            onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Approve",
+                id: item.f_demo_id,
+              });
+            }}
+            disabled={item.approved === "Yes"}
+            className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
 
+          >
+            Approve
+          </button>
 
-      </div>
+          <button
+            className="b text-black hover:text-red-500 ml-2"
+            onClick={() => {
+              setShowDeleteModal(true);
+              setModalData({
+                ...modalData,
+
+                id: item.f_demo_id,
+              });
+            }}
+          >
+            Delete
+          </button>
+        </div>
 
       case 6: return <div className="flex items-center">
         <input type="Checkbox"
@@ -987,7 +1014,7 @@ const FieldDay = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_fields_id,
+              id: item.f_demo_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1010,7 +1037,7 @@ const FieldDay = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_fields_id,
+              id: item.f_demo_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1034,7 +1061,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_fields_id,
+                id: item.f_demo_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -1053,7 +1080,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_fields_id,
+                id: item.f_demo_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -1070,7 +1097,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_fields_id,
+                id: item.f_demo_id,
               });
             }}
           >
@@ -1080,7 +1107,6 @@ const FieldDay = () => {
 
     }
   }
-
 
   const [allVerified, setAllVerified] = useState(false)
   const [allApproved, setAllApproved] = useState(false)

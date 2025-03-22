@@ -629,10 +629,6 @@ const AdditionalInfo = (props) => {
                     data: allTableData.map((item) => item.actual),
                 }
 
-
-
-
-
             ]
         )
     }, [
@@ -793,7 +789,7 @@ const AdditionalInfo = (props) => {
 
         }
     }
-    console.log("zxcv", localStorageItems)
+
 
     const totalOverall = {
         target: 0,
@@ -1003,56 +999,54 @@ const AdditionalInfo = (props) => {
         rId,
         tId,
     ) => {
+
+
+
         let paramsData;
-        if (filterState?.tId || filterState?.tId === "All") {
+
+        if (tId) {
+            // Call for territory data
             paramsData = {
                 c_id: 1,
                 t_id: tId,
                 t_des: territoryData.find(item => Number(item.t_id) === Number(tId))?.territory_name || '',
                 m_year: moment(month).format("YYYY-MM"),
             };
-        } else if (
-            (filterState?.rId || filterState?.rId === "All") &&
-            !filterState?.tId
-        ) {
+        }
+
+        else if (!rId && zId) {
+            // Call for zone data
+            paramsData = {
+                c_id: 1,
+                z_id: zId,
+                z_des: zoneData.filter((item) => Number(item.z_id) === Number(zId))[0]?.zone_name,
+                m_year: moment(month).format("YYYY-MM"),
+            };
+        }
+
+        else if (!tId && rId) {
+            console.log('r is calling')
             paramsData = {
                 c_id: 1,
                 r_id: rId,
                 r_des: regionData.find(item => Number(item.r_id) === Number(rId))?.region_name || '',
                 m_year: moment(month).format("YYYY-MM"),
             };
-        } else if (
-            (filterState?.zId || filterState?.zId === "All") &&
-            !filterState?.rId
-        ) {
-            paramsData = {
-                c_id: 1,
-                z_id: zId,
-                z_des: zoneData.filter((item) => item.z_id === zId)[0].zone_name,
-                m_year: moment(month).format("YYYY-MM"),
-            };
-        } else if (filterState?.buId && !filterState?.zId) {
+        }
+
+        else if (!zId && buId) {
+            // Call for business unit data
             paramsData = {
                 c_id: 1,
                 bu_id: buId,
-                bu_des: buData.filter((item) => item.bu_id === buId)[0].business_unit_name,
-                m_year: moment(month).format("YYYY-MM"),
-            };
-        } else if (filterState?.bgId && !filterState?.buId) {
-            paramsData = {
-                c_id: 1,
-                bu_id: buId,
-                bu_des: buData.filter((item) => item.bu_id === buId)[0].business_unit_name,
-                m_year: moment(month).format("YYYY-MM"),
-            };
-        } else if (filterState?.bgId && !filterState?.buId) {
-            paramsData = {
-                c_id: 1,
-                bg_id: bgId,
-                bg_des: buData.filter((item) => item.bu_id === buId)[0].business_unit_name,
+                bu_des: buData.filter((item) => item.bu_id === buId)[0]?.business_unit_name,
                 m_year: moment(month).format("YYYY-MM"),
             };
         }
+        else {
+            return
+        }
+
         try {
 
             localStorage.setItem("RSP", JSON.stringify([]));
@@ -1061,12 +1055,10 @@ const AdditionalInfo = (props) => {
                 params: paramsData,
             });
             const apires = await respond;
-            console.log("zoz", apires)
+
             setCollectionTableData(apires.data.data)
-
-
-
         } catch (error) {
+            console.log("zxc", error)
             const errorMessage = error?.response?.data?.message;
             toast.error(errorMessage);
 
@@ -1144,24 +1136,95 @@ const AdditionalInfo = (props) => {
 
 
 
+    // useEffect(() => {
+    //     if (filterState.zId &&
+    //         filterState.rId &&
+    //         filterState.tId) {
+
+    //         if (territoryData.length && zoneData.length && regionData.length) {
+    //             setCollectionTableData([])
+    //             handleDownloadExcelNew(filterState.yr || null,
+    //                 filterState.month || null,
+    //                 filterState.bgId || null,
+    //                 filterState.buId || null,
+    //                 filterState.zId || null,
+    //                 filterState.rId || null,
+    //                 filterState.tId || null,
+    //             );
+    //         }
+    //     }
+    //     else {
+    //         setCollectionTableData([])
+    //         handleDownloadExcelNew(filterState.yr || null,
+    //             filterState.month || null,
+    //             filterState.bgId || null,
+    //             filterState.buId || null,
+    //             filterState.zId || null,
+    //             filterState.rId || null,
+    //             filterState.tId || null,
+    //         );
+    //     }
+
+
+
+
+
+
+    // }, [
+
+    //     filterState.yr,
+    //     filterState.month,
+    //     filterState.bgId,
+    //     filterState.buId,
+    //     filterState.zId,
+    //     filterState.rId,
+    //     filterState.tId,
+
+    //     territoryData,
+    //     zoneData,
+    //     regionData,
+    //     buData
+
+    // ])
     useEffect(() => {
-        if (territoryData.length && zoneData.length && regionData.length) {
-            handleDownloadExcelNew(filterState.yr || null,
-                filterState.month || null,
-                filterState.bgId || null,
-                filterState.buId || null,
-                filterState.zId || null,
-                filterState.rId || null,
-                filterState.tId || null,
-            );
+        const { yr, month, bgId, buId, zId, rId, tId } = filterState;
+        console.log("zbnm", yr, month, bgId, buId, zId, rId, tId, !rId && zId && zoneData.length > 0, tId && territoryData.length > 0, !tId && rId && regionData.length > 0, !zId && buId && buData.length > 0)
+        // Call the API based on the conditions
+        if (tId && territoryData.length > 0) {
+            // Call for territory data
+            console.log('t is calling')
+            setCollectionTableData([])
+            handleDownloadExcelNew(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
+            return; // Exit after handling this condition
         }
 
+        else if (!rId && zId && zoneData.length > 0) {
+            // Call for zone data
+            console.log('z is calling')
+            setCollectionTableData([])
+            handleDownloadExcelNew(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
+            return; // Exit after handling this condition
+        }
 
+        else if (!tId && rId && regionData.length > 0) {
+            console.log('r is calling')
+            setCollectionTableData([])
+            handleDownloadExcelNew(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
+            return; // Exit after handling this condition
+        }
 
+        else if (!zId && buId && buData.length > 0) {
+            // Call for business unit data
+            console.log('bu is calling')
+            setCollectionTableData([])
 
-
+            handleDownloadExcelNew(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
+            return; // Exit after handling this condition
+        }
+        else {
+            return
+        }
     }, [
-
         filterState.yr,
         filterState.month,
         filterState.bgId,
@@ -1169,13 +1232,11 @@ const AdditionalInfo = (props) => {
         filterState.zId,
         filterState.rId,
         filterState.tId,
-
         territoryData,
         zoneData,
         regionData,
         buData
-
-    ])
+    ]);
 
     const totalTarget = totalRow(allTableData.map(item => item.target));
     const totalBudget = totalRow(allTableData.map(item => item.budget));
@@ -1229,7 +1290,7 @@ const AdditionalInfo = (props) => {
                         className="self-center "
                         onClick={() =>
                             router.push({
-                                pathname: "/MR_Portal_Apps/MRHome",
+                                pathname: "/Sales_App/Home",
                             })
                         }
                     />
@@ -1876,7 +1937,7 @@ const AdditionalInfo = (props) => {
                                         <td className="border border-gray-200">
                                             <input
                                                 className="p-0 w-14 text h-6"
-                                                value={partySaleData?.reduce((acc, item) => acc + item.category_result?.reduce((innerAcc, categoryItem) => innerAcc + (parseFloat(categoryItem.fy) || 0), 0), 0).toFixed(2)} // Grand total FY value
+                                                ue={partySaleData?.reduce((acc, item) => acc + item.category_result?.reduce((innerAcc, categoryItem) => innerAcc + (parseFloat(categoryItem.fy) || 0), 0), 0).toFixed(2)} // Grand total FY value
                                                 disabled
                                             />
                                         </td>
@@ -1924,7 +1985,6 @@ const AdditionalInfo = (props) => {
                     }
                 />
             </div>
-
         </form >
     );
 };

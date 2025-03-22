@@ -11,6 +11,7 @@ import ReactPaginate from "react-paginate";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { TbFileDownload } from "react-icons/tb";
+import * as XLSX from "xlsx";
 const NewDealer = () => {
   const csvHeaders = [
     { label: "Id", key: "ds_id" },
@@ -661,6 +662,23 @@ const NewDealer = () => {
         },
       });
       const apires = await respond.data.data;
+      console.log("zcv", apires.map((item) => {
+        return {
+          ["Year"]: item.year,
+          ["Emp Code"]: item.emp_code,
+          ["Emp Name"]: item.emp_name,
+          ["Party Code"]: item.customer_code,
+          ["Party Name"]: item.party_name,
+          ["Party Complete Address"]: item.party_address,
+          ["Territory"]: item.territory_name,
+          ["Region"]: item.region_name,
+          ["Zone"]: item.zone_name,
+          ["Business_Unit"]: item.business_unit_name,
+          ["Company"]: item.cmpny_name,
+          ["Deleted"]: item.isDeleted ? "Yes" : "No",
+
+        }
+      }))
       const ws = XLSX.utils.json_to_sheet(apires.map((item) => {
         return {
           ["Year"]: item.year,
@@ -822,6 +840,7 @@ const NewDealer = () => {
                 className="text-green-600 cursor-pointer "
                 size={32}
                 onClick={() => getExcelsheet(
+                  filterState.bgId,
                   filterState.buId,
                   filterState.zId,
                   filterState.rId,

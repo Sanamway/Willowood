@@ -817,6 +817,7 @@ const FeePayout = () => {
           ["Sr. No"]: idx + 1,
           ["Employee Code"]: item.empcode,
           ["Employee Name"]: item.emp_name,
+          ["Designation"]: item.design,
           ["Reporting HQ"]: item.reporting_hq,
           ["Territory"]: item.territory_name,
           ["Application Fee Amount"]: item.in_appl_amt,
@@ -826,6 +827,8 @@ const FeePayout = () => {
           ["Gross Salary"]: item.grass_salary,
           ["Calendar WD"]: item.calender_w_d,
           ["Present Day"]: item.total_mr_present,
+
+          ["Weekly Off"]: item.emp_wo_count,
           ["Mannual Attendance"]: item.manual_attendance,
           ["Total Working Days"]: item.total_working_day,
           ["Earning Salary"]: item.earning_salary,
@@ -862,7 +865,7 @@ const FeePayout = () => {
   };
   const [total, setTotal] = useState({})
   useEffect(() => {
-    const totals = data.reduce(
+    const totals = data?.reduce(
       (acc, item) => {
         acc.applicationFeeAmount += parseFloat(item.in_appl_amt) || 0;
         acc.festivalAmount += parseFloat(item.in_fest_amount_e) || 0;
@@ -1313,6 +1316,8 @@ const FeePayout = () => {
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Sr. No</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Code</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Name</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Designation</th>
+
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Reporting HQ</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Territory</th>
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Application Fee Amount</th>
@@ -1386,7 +1391,7 @@ const FeePayout = () => {
                     <td className="px-4 py-2 text-left">{idx + 1}</td>
                     <td className="px-4 py-2">{item.empcode}</td>
                     <td className="px-4 py-2 whitespace-nowrap">{item.emp_name}</td>
-
+                    <td className="px-4 py-2 whitespace-nowrap">{item.design}</td>
                     <td className="px-4 py-2">{item.reporting_hq}</td>
                     <td className="px-4 py-2">{item.territory_name}</td>
                     <td className="px-4 py-2 text-right">{parseFloat(item.in_appl_amt) ? parseFloat(item.in_appl_amt)?.toFixed(2) : "-"}</td>
@@ -1475,17 +1480,17 @@ const FeePayout = () => {
                 ))}
                 <tr className="bg-gray-200 font-semibold">
                   <td className="px-4 py-2 text-right" colSpan="5">Total</td>
-                  <td className="px-4 py-2 text-right">{total.applicationFeeAmount ? total.applicationFeeAmount?.toFixed(2) : "-"}</td>
-                  <td className="px-4 py-2 text-right">{total.festivalAmount ? total.festivalAmount?.toFixed(2) : "-"}</td>
-                  <td className="px-4 py-2 text-right">{total.incentiveAmount ? total.incentiveAmount?.toFixed(2) : "-"}</td>
-                  <td className="px-4 py-2 text-right">{total.otherAmount ? total.otherAmount?.toFixed(2) : "-"}</td>
-                  <td className="px-4 py-2 text-right">{total.grossSalary ? total.grossSalary?.toFixed(2) : "-"}</td>
+                  <td className="px-4 py-2 text-right">{total?.applicationFeeAmount ? total?.applicationFeeAmount?.toFixed(2) : "-"}</td>
+                  <td className="px-4 py-2 text-right">{total?.festivalAmount ? total?.festivalAmount?.toFixed(2) : "-"}</td>
+                  <td className="px-4 py-2 text-right">{total?.incentiveAmount ? total?.incentiveAmount?.toFixed(2) : "-"}</td>
+                  <td className="px-4 py-2 text-right">{total?.otherAmount ? total?.otherAmount?.toFixed(2) : "-"}</td>
+                  <td className="px-4 py-2 text-right">{total?.grossSalary ? total?.grossSalary?.toFixed(2) : "-"}</td>
                   <td className="px-4 py-2 text-right" colSpan="4"></td>
-                  <td className="px-4 py-2 text-right">{total.earningSalary ? total.earningSalary?.toFixed(2) : "-"}</td>
-                  <td className="px-4 py-2 text-right">{total.bonusAmount ? total.bonusAmount?.toFixed(2) : "-"}</td>
+                  <td className="px-4 py-2 text-right">{total?.earningSalary ? total?.earningSalary?.toFixed(2) : "-"}</td>
+                  <td className="px-4 py-2 text-right">{total?.bonusAmount ? total?.bonusAmount?.toFixed(2) : "-"}</td>
                   <td className="px-4 py-2 text-right"></td>
-                  <td className="px-4 py-2 text-right">{total.totalDeduction ? total.totalDeduction?.toFixed(2) : "-"}</td>
-                  <td className="px-4 py-2 text-right">{total.netSalary ? total.netSalary?.toFixed(2) : "-"}</td>
+                  <td className="px-4 py-2 text-right">{total?.totalDeduction ? total?.totalDeduction?.toFixed(2) : "-"}</td>
+                  <td className="px-4 py-2 text-right">{total?.netSalary ? total?.netSalary?.toFixed(2) : "-"}</td>
 
                   <td className="px-4 py-2 text-right" colSpan="5"></td>
                 </tr>
@@ -1495,7 +1500,7 @@ const FeePayout = () => {
 
 
 
-          <div className="text-right font-semibold mt-2">Total Rows: {data.length}</div>
+          <div className="text-right font-semibold mt-2">Total Rows: {data?.length}</div>
         </div>
 
       </div>

@@ -111,6 +111,47 @@ const AdditionalInfo = () => {
   };
   const [isOpen, setIsOpen] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
+  const getFollowupButton = (item) => {
+    const currentDate = new Date();
+    const pastDate = new Date(currentDate);
+    pastDate.setDate(currentDate.getDate() - 30); // 30 days ago
+
+    const futureDate = new Date(currentDate);
+    futureDate.setDate(currentDate.getDate() + 4); // 4 days into the future
+
+    if (new Date(item.next_visit_date) >= pastDate && new Date(item.next_visit_date) <= futureDate) {
+      return (
+        <div className="flex flex-col gap-4 self-start">
+          <button
+            className="bg-[#4285F4] text-white-400 p-2 rounded-full whitespace-nowrap"
+            onClick={() => {
+              router.push({
+                pathname: "/MR_Portal_Apps/MRForm_Farmer_Demo_Followup",
+                query: {
+                  f_demo_code: item.f_demo_code,
+                },
+              });
+            }}
+          >
+            Follow up
+          </button>
+          <button
+            className="bg-orange-400 text-white-400 p-2 rounded-full whitespace-nowrap"
+            onClick={() => {
+              router.push({
+                pathname: "/MR_Portal_Apps/MRForm_Farmer_Fieldday",
+                query: {
+                  f_demo_code: item.f_demo_code,
+                },
+              });
+            }}
+          >
+            Open Filed Day
+          </button>
+        </div>
+      );
+    }
+  }
   return (
     <form
       className="bg-white rounded w-full overflow-hidden pb-4"
@@ -397,36 +438,7 @@ const AdditionalInfo = () => {
               </div>
             </div>
             {console.log("pop", moment(new Date(item.next_visit_date)).format("DD mm yyyy hh:mm a"), moment().format("DD mm yyyy hh:mm a"), new Date(item.next_visit_date) >= new Date(), new Date(item.next_visit_date))}
-            {new Date(item.next_visit_date) >= new Date().setHours(0, 0, 0, 0) && new Date(item.next_visit_date) <= new Date(new Date().setDate(new Date().getDate() + 4)) && (
-              <div className="flex flex-col gap-4 self-start">
-                <button
-                  className="bg-[#4285F4] text-white-400 p-2 rounded-full whitespace-nowrap"
-                  onClick={() => {
-                    router.push({
-                      pathname: "/MR_Portal_Apps/MRForm_Farmer_Demo_Followup",
-                      query: {
-                        f_demo_code: item.f_demo_code,
-                      },
-                    });
-                  }}
-                >
-                  Follow up
-                </button>
-                <button
-                  className="bg-orange-400 text-white-400 p-2 rounded-full whitespace-nowrap"
-                  onClick={() => {
-                    router.push({
-                      pathname: "/MR_Portal_Apps/MRForm_Farmer_Fieldday",
-                      query: {
-                        f_demo_code: item.f_demo_code,
-                      },
-                    });
-                  }}
-                >
-                  Open Filed Day
-                </button>
-              </div>
-            )}
+            {getFollowupButton(item)}
           </div>
 
           <button

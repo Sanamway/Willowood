@@ -1,9 +1,11 @@
 import "@/styles/globals.css";
 import Head from "next/head";
+import appStore from "@/utils/appStore";
+import { Provider } from "react-redux";
 export default function App({ Component, pageProps }) {
   const title = "Willowood - Delight";
   return (
-    <>
+    <Provider store={appStore}>
       <div>
         <Head>
           <meta property="og:image" content="/fav.png" />
@@ -19,6 +21,6 @@ export default function App({ Component, pageProps }) {
         </Head>
         <Component {...pageProps} />
       </div>
-    </>
+    </Provider>
   );
 }

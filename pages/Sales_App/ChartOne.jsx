@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Chart } from "react-chartjs-2";
-import * as FileSaver from "file-saver";
+import { useSelector } from "react-redux";
 import html2canvas from "html2canvas";
 import {
   Chart as ChartJs,
@@ -15,9 +15,81 @@ import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
 import { MdOutlineCloudDownload } from "react-icons/md";
 
 const ChartOne = (props) => {
+
+  let allRollingTableData = useSelector((state) => state.singleRolling.singleRollingTableData
+  );
+
+  const lab = ["Apr-24",
+    "May-24",
+    "Jun-24",
+    "Jul-24",
+    "Aug-24",
+    "Sep-24",
+    "Oct-24",
+    "Nov-24",
+    "Dec-24",
+    "Jan-25",
+    "Feb-25",
+    "Mar-25"];
+  const [datasets, setDataSets] = useState([
+    {
+      label: "Budget",
+      backgroundColor: "rgba(34, 197, 94, 1)",  // Full opacity (green-400)
+      backgroundColor: "rgba(34, 197, 94, 0.6)", // 60% opacity
+      data: 0,
+    },
+    {
+      label: "RSP Budget",
+      backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity (blue)
+      backgroundColor: "rgba(59, 130, 246, 0.6)", // 60% opacity
+      data: 0,
+    },
+    {
+      label: "Total Sales",
+      backgroundColor: "rgba(249, 115, 22, 1)",  // Full opacity (orange)
+      borderColor: "rgba(249, 115, 22, 0.6)",    // 60% opacity
+      data: 0,
+    }
+
+  ])
+
+
+  useEffect(() => {
+    if (!allRollingTableData.length) return
+    setDataSets(
+      [
+        {
+          label: "Budget",
+          backgroundColor: "rgba(34, 197, 94, 1)",  // Full opacity (green-400)
+          backgroundColor: "rgba(34, 197, 94, 0.6)", // 60% opacity
+          data: allRollingTableData.map((item) => item.budget),
+        },
+        {
+          label: "RSP Budget",
+          backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity (blue)
+          backgroundColor: "rgba(59, 130, 246, 0.6)", // 60% opacity
+          data: allRollingTableData.map((item) => item.target),
+        },
+        {
+          label: "Total Sales",
+          backgroundColor: "rgba(249, 115, 22, 1)",  // Full opacity (orange)
+          borderColor: "rgba(249, 115, 22, 0.6)",    // 60% opacity
+          data: allRollingTableData.map((item) => item.actual),
+        }
+
+
+
+
+
+      ]
+    )
+  }, [
+    allRollingTableData
+  ])
+
   const chartRef = useRef(null);
   const chartContainerRef = useRef(null);
-  const { lab, datasets } = props;
+
 
   const [height, setHeight] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);

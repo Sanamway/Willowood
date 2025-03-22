@@ -1,28 +1,63 @@
 import React, { useState, useEffect } from "react";
-import { FaUser } from "react-icons/fa";
-import { BiSolidLockAlt } from "react-icons/bi";
-import { AiFillGoogleCircle, AiFillTwitterCircle } from "react-icons/ai";
-import { BsFacebook } from "react-icons/bs";
 import Logo from "../../public/NewLogo.png";
+import Banner from "../../public/bgnew.png";
+import Farmer from "../../public/agrimanwoman.jpg";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import axios from "axios";
 import { url } from "@/constants/url";
 import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/router";
+import { AiTwotoneHome, AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 
-const Login = (props) => {
+const EmpLogin = (props) => {
   const router = useRouter();
-  const [phone, setPhone] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [empcode, setEmpcode] = useState("");
+  const [passcode, setPasscode] = useState("");
   const [isLoading, setLoading] = useState(false);
+  const [showPass, setShowPass] = useState(false);
   const [spinner, setSpinner] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoggedMode, setLoggedMode] = useState(null);
-  const [u_id, setU_id] = useState(null);
 
-  const headers = {
-    "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
-  };
+  // useEffect(() => {
+  //   const checkLocalStorage = () => {
+  //     if (window.localStorage) {
+  //       const isLoggedInInLocalStorage = !!localStorage.getItem("uid");
+  //       const userinfoo = localStorage.getItem("userinfo");
+  //       const mode = localStorage.getItem("mode");
+
+  //       // setIsLoggedIn(isLoggedInInLocalStorage);
+
+  //       if (isLoggedInInLocalStorage) {
+  //         router.push("/Sales_App/Home");
+  //         return;
+  //       } else if (isLoggedInInLocalStorage && mode == "mobile") {
+  //         // router.push("/mrhome");
+  //         router.push("/Sales_App/Home");
+  //         return;
+  //       }
+  //     }
+  //     setSpinner(false)
+  //   };
+  //   checkLocalStorage();
+  // }, [router]);
+
+  // useEffect(() => {
+  //   if (window.localStorage) {
+  //     const isLoggedInInLocalStorage = !!localStorage.getItem("uid");
+  //     setIsLoggedIn(isLoggedInInLocalStorage);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     router.push("/Sales_App/Home");
+  //   } else if (isLoggedIn && isLoggedMode == "mobile") {
+  //     router.push("/Sales_App/Home");
+
+  //   } else {
+  //   }
+  // }, [isLoggedIn]);
 
   useEffect(() => {
     const checkLocalStorage = () => {
@@ -31,9 +66,14 @@ const Login = (props) => {
         const mode = localStorage.getItem("mode");
         if (isLoggedInInLocalStorage) {
           if (mode === "mobile") {
-            router.push("/MR_Portal_Apps/MRHome");
+            router.push("/Sales_App/Home");
+          }
+
+          else if (mode == "Sales App") {
+            // router.push("/mrhome");
+            router.push("/Sales_App/Home");
           } else {
-            router.push("/");
+            router.push("/Sales_App/Home");
           }
           return;
         }
@@ -43,29 +83,22 @@ const Login = (props) => {
     checkLocalStorage();
   }, [router]);
 
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     router.push("/");
-  //   } else if (isLoggedIn && isLoggedMode == "mobile") {
-  //     // router.push("/mrhome");
-  //     router.push("/MR_Portal_Apps/MRHome");
+  //headers
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+  };
 
-  //   } else {
-  //   }
-  // }, [isLoggedIn]);
-
+  //handler
   const loginHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("data", phone);
-    if (phone.length < 10) {
-      toast.error("Enter the valid Mobile number");
-      setLoading(false);
-      return;
-    }
+    console.log("data", empcode);
     const payload = {
-      phone_number: phone
+      emp_code: empcode,
+      password: passcode
     };
+    // return;
     try {
       const resp = await axios.post(`${url}/api/login_user`, payload, {
         headers: headers
@@ -79,7 +112,7 @@ const Login = (props) => {
         setTimeout(() => {
           router.push({
             pathname: `/otp`,
-            query: { phone_number: phone, uid: uuid }
+            query: { phone_number: empcode, uid: uuid }
           });
         }, 1000);
       }
@@ -92,12 +125,6 @@ const Login = (props) => {
       const userinfo = respdata?.data?.userBSTDetails;
 
       setLoggedMode(mode);
-
-      // console.log("logInfo", userinfo?.bg_id);
-
-      // if (uid) {
-      //   gettingMenuSidebar(uid);
-      // }
 
       if (respdata?.message && respdata?.status == true) {
         setLoading(false);
@@ -131,9 +158,15 @@ const Login = (props) => {
 
         if (mode == "mobile") {
           // router.push("/mrhome");
-          router.push("/MR_Portal_Apps/MRHome");
-        } else {
-          router.push("/");
+          router.push("/Sales_App/Home");
+        }
+        else if (mode == "Sales App") {
+          // router.push("/mrhome");
+          router.push("/Sales_App/Home");
+        }
+
+        else {
+          router.push("/Sales_App/Home");
         }
       }
 
@@ -158,9 +191,15 @@ const Login = (props) => {
 
         if (mode == "mobile") {
           // router.push("/mrhome");
-          router.push("/MR_Portal_Apps/MRHome");
-        } else {
-          router.push("/");
+          router.push("/Sales_App/Home");
+        }
+        else if (mode == "Sales App") {
+          // router.push("/mrhome");
+          router.push("/Sales_App/Home");
+        }
+
+        else {
+          router.push("/Sales_App/Home");
         }
       }
     } catch (error) {
@@ -208,17 +247,15 @@ const Login = (props) => {
     }
   };
 
-  //Handling Forgot Password Actions
-
   const ForgotLogout = async () => {
+    const payload = {
+      emp_code: empcode,
+      password: passcode
+    };
     try {
-      const resp = await axios.post(
-        `${url}/api/login_user`,
-        { phone_number: phone },
-        {
-          headers: headers
-        }
-      );
+      const resp = await axios.post(`${url}/api/login_user`, payload, {
+        headers: headers
+      });
       const respdata = await resp.data;
       console.log("hadnledLog", respdata);
       if (!respdata) {
@@ -239,7 +276,6 @@ const Login = (props) => {
   };
 
   const handleLogout = async (uid) => {
-    console.log("pay", phone);
     try {
       const resp = await axios.get(`${url}/api/logout?user_id=${uid}`, {
         headers: headers
@@ -268,6 +304,11 @@ const Login = (props) => {
     }
   };
 
+  //toggle P
+
+  function togglePass() {
+    setShowPass(!showPass);
+  }
 
   if (spinner) {
     return (
@@ -294,90 +335,100 @@ const Login = (props) => {
 
   return (
     <>
-      <div className="flex w-full h-screen font-arial">
+      <div className="min-h-screen font-arial flex flex-col items-center bg-wave bg-cover bg-center bg-no-repeat">
         <Toaster position="bottom-center" reverseOrder={false} />
-        <div className="relative flex-1 bg-banner bg-cover bg-center bg-no-repeat">
-          <div className="flex items-center justify-center min-h-screen">
-            <form className="relative form rounded-lg   bg-opacity-[0.35] w-[90%] md:w-[30%] px-8 pb-8">
-              <div className="relative top-[1rem] flex items-center justify-center">
-                <Image src={Logo}></Image>
-              </div>
-              <div className="flex flex-col justify-between mt-8 mx-12 ">
-                <label className="flex  text-black items-center gap-1 font-semibold">
-                  <FaUser></FaUser>
-                  Mobile Number
-                </label>
-                <input
-                  className="bg-transparent text-black py-1.5 max-w-full text-start outline-none border-0 placeholder:text-black text-sm border-black border-b-2 border-white-200"
-                  type="number"
-                  placeholder="Type your Mobile Number"
-                  // pattern="[6789][0-9]{9}"
-                  // title="Enter Valid Number"
-                  // minLength={10}
-                  // maxLength={10}
-                  value={phone}
-                  onChange={(e) => {
-                    if (e.target.value.length > 10) {
-                      return;
-                    }
-                    setPhone(e.target.value);
-                  }}
-                />
-              </div>
-              <div className="flex flex-col justify-between mx-12 mt-4">
-                <div className="flex items-center justify-between mt-2">
+
+        <section className="flex flex-col-reverse md:flex-row rounded-3xl shadow-2xl shadow-grey-400  bg-white md:flex-1 py-2 items-center md:justify-between  max-w-[930px] mx-2 my-20 px-10 gap-4">
+          <div className="flex relative flex-col md:w-1/2  ">
+            <div className="flex justify-start mb-6 md:absolute md:-top-20   mt-10 md:mt-0">
+              <Image src={Logo} className="h-16 w-auto" alt="Company Logo" />
+            </div>
+            <div className="w-full h-auto md:h-auto bg-green-2 flex items-center justify-center">
+              <form className="form bg-white shad rounded-xl ">
+                <div className="flex flex-col mb-6 w-[80%] ">
+                  <label className="text-gray-700 font-semibold text-[0.75rem]">Employee Code</label>
+                  <input
+                    className="shadow-md mt-2 px-4 py-1 bg-gray-0 rounded-lg border border-gray-00 placeholder:text-gray-400 focus:outline-none focus:border-indigo-500"
+                    type="text"
+                    placeholder="Enter employee code"
+                    maxLength={10}
+                    value={empcode}
+                    onChange={(e) => setEmpcode(e.target.value.toUpperCase())}
+                  />
+                </div>
+
+                <div className="flex flex-col mb-6 relative  w-[80%]">
+                  <label className="text-gray-700 font-semibold text-[0.75rem]">Password</label>
+                  <input
+                    className=" shadow-md mt-2 px-4 py-1 bg-gray-0 rounded-lg border border-gray-300 placeholder:text-gray-400 focus:outline-none focus:border-indigo-500"
+                    type={showPass ? "text" : "password"}
+                    placeholder="Enter password"
+                    // maxLength={10}
+                    value={passcode}
+                    onChange={(e) => setPasscode(e.target.value)}
+                  />
+                  <span className="absolute bottom-2 right-3 cursor-pointer" onClick={togglePass}>
+                    {showPass ? (
+                      <AiOutlineEye className="text-green-500" size={18} />
+                    ) : (
+                      <AiOutlineEyeInvisible size={18} />
+                    )}
+                  </span>
+                </div>
+                <div className="flex justify-between gap-4 w-full mb-4 ">
                   <h3
                     onClick={() => {
-                      // router.push("/forgotpass");
-                      props.loginForm("emplogin");
+                      // props.loginForm("forgot")
                     }}
-                    className="text-xs text-black cursor-pointer"
+                    className="text-[0.69rem] text-indigo-600 hover:underline cursor-pointer"
                   >
-                    User Login
+                    Forgot Password
                   </h3>
                   <h3
                     onClick={() => {
-                      // router.push("/forgotpass");
+                      props.loginForm("otplogin");
+                    }}
+                    className="text-[0.69rem] text-indigo-600 hover:underline cursor-pointer"
+                  >
+                    OTP Login
+                  </h3>
+                  <h3
+                    onClick={() => {
+                      // props.loginForm("")
                       ForgotLogout();
                     }}
-                    className="text-xs text-black cursor-pointer"
+                    className="text-[0.69rem] text-indigo-600 hover:underline cursor-pointer"
                   >
                     Logout Device
                   </h3>
                 </div>
-              </div>
-              <div className="flex items-center justify-center mt-4">
-                {/* <button onClick={()=>{router.push('/otp')}} className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full uppercase text-sm text-white"> */}
-                <button
-                  type="submit"
-                  onClick={loginHandler}
-                  className="bg-green-700 py-1.5 w-full md:w-2/3 rounded-full text-sm text-white"
-                >
-                  {isLoading ? "Loading..." : "Login"}
-                </button>
-              </div>
 
-              {/* <div className="googleWrap flex items-center flex-col justify-center mt-10">
-                <h2 className="text-gray-600">or sign up using</h2>
-                <div className="icons flex items-center justify-center gap-2 mt-2 mb-4">
-                  <BsFacebook className="text-blue-600" size={26}></BsFacebook>
-                  <AiFillTwitterCircle
-                    className="text-blue-500"
-                    size={29}
-                    color="blue"
-                  ></AiFillTwitterCircle>
-                  <AiFillGoogleCircle
-                    className="text-red-600"
-                    size={29}
-                  ></AiFillGoogleCircle>
+                <div className="flex justify-center">
+                  <button
+                    type="submit"
+                    onClick={loginHandler}
+                    className="bg-[#DB4B31] md:shadow-2xl md:drop-shadow-2xl md:shadow-gray-700 text-white py-2 my-3 w-1/2 md:w-2/3 rounded-lg text-sm font-semibold transition duration-200 hover:bg-green-700"
+                  >
+                    {isLoading ? "Loading..." : "Login"}
+                  </button>
                 </div>
-              </div> */}
-            </form>
+              </form>
+            </div>
           </div>
-        </div>
+
+          <div className="md:w-1/2 flex justify-center">
+            <div className="w-full h-auto md:h-auto bg-green- flex items-center justify-center">
+              <Image
+                src={Farmer}
+                alt="Farmers Illustration"
+                className="w-full h-full object-cover rounded-xl"
+              />
+            </div>
+          </div>
+        </section>
       </div>
     </>
   );
 };
 
-export default Login;
+export default EmpLogin;

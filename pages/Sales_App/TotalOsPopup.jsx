@@ -140,8 +140,10 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200 break-normal ">
+
                         {catdata?.length ? (
                           catdata?.map((item, idx) => (
+
                             <tr key={idx}>
                               <td
                                 className={`px-4 font-normal gap-1 text-left whitespace-nowrap py-1 text-[0.66rem] text-gray-500 border `}
@@ -149,21 +151,41 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
                                 {item._id}
                               </td>
                               <td
-                                className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
+                                className={`px-2  text-left whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
                               >
                                 {item.Account}
                               </td>
                               <td
                                 className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
                               >
-                                {item["Net Balance Amt(INR)"] / 100000}
+                                {item["Net Balance Amt(INR)"]}
                               </td>
 
                             </tr>
                           ))
+
                         ) : (
                           <Skeleton></Skeleton>
                         )}
+                        <tr >
+                          <td
+                            className={`px-4 font-normal gap-1 text-left whitespace-nowrap py-1 text-[0.66rem] text-gray-500 border `}
+                          >
+                            Total
+                          </td>
+                          <td
+                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
+                          >
+
+                          </td>
+                          <td
+                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
+                          >
+                            {catdata.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"] || 0, 0).toFixed(2)}
+
+                          </td>
+
+                        </tr>
                       </tbody>
                     </table>
                   </div>

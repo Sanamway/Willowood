@@ -27,16 +27,14 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
     } else {
       setRegionData(sortData);
     }
-
     setNameSort(!nameSort);
   };
-
-
 
   const springProps = useSpring({
     from: { opacity: 0, scale: 0.8, },
     to: { opacity: 1, scale: 1 },
   });
+
 
   function Skeleton() {
     return (
@@ -190,7 +188,7 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
                                 {item._id}
                               </td>
                               <td
-                                className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
+                                className={`px-2  text-left whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
                               >
                                 {item.Account}
                               </td>
@@ -202,17 +200,17 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
                               <td
                                 className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
                               >
-                                {item["180-365"] / 100000}
+                                {item["180-365"]}
                               </td>
                               <td
                                 className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
                               >
-                                {item["366-720"] / 100000}
+                                {item["366-720"]}
                               </td>
                               <td
                                 className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
                               >
-                                {item["720 And Above"] / 100000}
+                                {item["720 And Above"]}
                               </td>
 
                             </tr>
@@ -220,6 +218,43 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
                         ) : (
                           <Skeleton></Skeleton>
                         )}
+
+                        <tr >
+                          <td
+                            className={`px-4 font-normal gap-1 text-left whitespace-nowrap py-1 text-[0.66rem] text-gray-500 border `}
+                          >
+                            Total
+                          </td>
+                          <td
+                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
+                          >
+
+                          </td>
+                          <td
+                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
+                          >
+                            {catdata.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0).toFixed(2)}
+                          </td>
+                          <td
+                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
+                          >
+
+                            {catdata.reduce((acc, curr) => acc + curr["180-365"], 0).toFixed(2)}
+                          </td>
+                          <td
+                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
+                          >
+                            {catdata.reduce((acc, curr) => acc + curr["366-720"], 0).toFixed(2)}
+
+                          </td>
+                          <td
+                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
+                          >
+                            {catdata.reduce((acc, curr) => acc + curr["720 And Above"], 0).toFixed(2)}
+
+                          </td>
+
+                        </tr>
                       </tbody>
                     </table>
                   </div>

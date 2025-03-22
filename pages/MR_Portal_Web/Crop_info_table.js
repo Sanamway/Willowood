@@ -77,9 +77,9 @@ const AdditionalInfo = (props) => {
   const { name } = router.query;
   return (
     <Layout>
-      <div className="bg-white rounded p-4 w-full overflow-auto ">
+      <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
         <Toaster position="bottom-center" reverseOrder={false} />
-        <div className="flex flex-row justify-between  h-max  px-2 ">
+        <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl tabletitle py-2">
             {name ? name : "Crop Info"}
           </h2>
@@ -110,10 +110,13 @@ const AdditionalInfo = (props) => {
             </button>
           </span>
         </div>
-        <div className="flex flex-row justify-between  h-max  px-2 ">
+        <div className="overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2  select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
           <table className="min-w-full divide-y border- divide-gray-200 ">
             <thead className="border-b w-max">
               <tr className="bg-gray-200 font-arial">
+                <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
+                  S No.
+                </th>
                 <th className="px-4 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 tracking-wider">
                   Action
                 </th>
@@ -131,6 +134,9 @@ const AdditionalInfo = (props) => {
             <tbody className="bg-white divide-y  divide-gray-200 text-xs">
               {data?.map((item, idx) => (
                 <tr className="dark:border-2">
+                  <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
+                    {idx + 1}
+                  </td>
                   <td className="px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ">
                     <button
                       onClick={() => {

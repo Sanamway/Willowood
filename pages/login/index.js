@@ -1,5 +1,5 @@
 import React from "react";
-import Login from "@/components/loginHistory/Login";
+import Login from "@/components/loginHistory/OTPLogin";
 import FormContainer from "@/components/loginHistory/FormContainer";
 const index = () => {
   return (

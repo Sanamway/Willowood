@@ -7,8 +7,8 @@ const index = () => {
   const router = useRouter()
   const [mode, setMode] = useState(null)
 
-   useEffect(() => {
-    if(window.localStorage){
+  useEffect(() => {
+    if (window.localStorage) {
       const mode = localStorage.getItem("mode");
       const uid = localStorage.getItem("uid");
       setMode(mode)
@@ -16,25 +16,24 @@ const index = () => {
         router.push("/login");
       }
       console.log("mode", mode)
-      if(mode=="mobile"){
+      if (mode == "mobile") {
         router.push("/MR_Portal_Apps/MRHome")
-      }else{
+      } else {
         router.push('/')
-      }  
+      }
     }
   }, []);
-  const ab= new Promise((res, rej)=>
-  {
-    setTimeout(()=> {
+  const ab = new Promise((res, rej) => {
+    setTimeout(() => {
       res("! ")
-    },404)
-  
-   
+    }, 404)
+
+
   }
- )
- ab.then((res, rej)=>console.log("promises", res, rej))
- 
- 
+  )
+  ab.then((res, rej) => console.log("promises", res, rej))
+
+
 
   return (
     <>

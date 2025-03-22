@@ -19,6 +19,20 @@ import ChartOne from "./ChartOne";
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
 
 const AdditionalInfo = (props) => {
+
+
+    let obj1 = {
+        name: "Sanamway",
+        printName: function (abc) {
+            console.log(this.name + abc)
+        }
+
+    }
+    let obj2 = {
+        name: "Dhanraj",
+    }
+    obj1.printName.call(obj2);
+    console.log("pop",)
     const router = useRouter();
     const headers = {
         "Content-Type": "application/json",
@@ -1095,7 +1109,7 @@ const AdditionalInfo = (props) => {
                         className="self-center "
                         onClick={() =>
                             router.push({
-                                pathname: "/MR_Portal_Apps/MRHome",
+                                pathname: "/Sales_App/Home",
                             })
                         }
                     />
