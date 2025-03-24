@@ -22,9 +22,11 @@ import { IoBagCheckOutline } from "react-icons/io5";
 import { FcNeutralTrading } from "react-icons/fc";
 import Collection from "./Sfa_payment_collection";
 import History from "./Sfa_payment_history";
+import { useRouter } from "next/router";
 
 const Dashboard = () => {
-    const [refresh, setRefresh] = useState(false)
+
+    const router = useRouter();
     const [allOrderInfoData, setAllOrderInfoData] = useState([
     ]);
     const allOrderData = useSelector(
@@ -201,6 +203,7 @@ const Dashboard = () => {
     ];
 
     const [tabType, setTabType] = useState("Payment")
+
     return (
 
         <div className="bg-gray-200">
@@ -267,11 +270,11 @@ const Dashboard = () => {
 
             {tabType === "Payment" ? (
 
-                <Collection />
+                <Collection data={{ sapCode: router.query.sap_code, partyName: router.query.party_name }} />
 
             ) : (
 
-                <History />
+                <History data={{ sapCode: router.query.sap_code, partyName: router.query.party_name }} />
 
             )}
         </div>

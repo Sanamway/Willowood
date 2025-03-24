@@ -55,8 +55,33 @@ const Dashboard = () => {
         },
     ];
 
-    const [modalData, setModalData] = useState({})
+    const [modalData, setModalData] = useState([])
 
+    const getPopTableData = async (matCode) => {
+
+        try {
+            const respond = await axios.get(`${url}/api/get_warehousestockdata`, {
+                headers: headers,
+                params: {
+                    c_id: 1,
+                    depot_code: filtersData.depotCode,
+                    warehouse_code: filtersData.storeLocation,
+                    material_code: matCode,
+                    material_details: true
+                },
+            });
+
+            const apires = await respond.data.data;
+
+            setModalData(apires)
+            setOpenModal(true)
+
+        } catch (error) {
+            console.log("zyui", error)
+        }
+    };
+
+    console.log("zsr", modalData)
 
     const headers = {
         "Content-Type": "application/json",
@@ -100,6 +125,7 @@ const Dashboard = () => {
             tId: userInfo?.t_id || null,
             uId: uid,
         };
+
 
         switch (roleId) {
             case 5:
@@ -190,8 +216,6 @@ const Dashboard = () => {
 
     const [storeLocationOptions, setStoreLocationOptions] = useState([])
     const getAllStoreLocationData = async (data) => {
-
-
         try {
             const respond = await axios.get(`${url}/api/get_warehousestockdata`, {
                 headers: headers,
@@ -199,32 +223,14 @@ const Dashboard = () => {
                     depot_code: data
                 },
             });
-
             const apires = await respond.data.data;
             setStoreLocationOptions(apires);
-
-
-
-
         } catch (error) {
             console.log("zyui", error)
         }
     };
 
-
-
-    console.log("pop", filtersData)
-
-
-
-
-
-
-
-
     const [openModal, setOpenModal] = useState(false)
-
-
     const [inputFilter, setInputFilter] = useState("")
     const [searchBy, setSearchBy] = useState("")
     const [tableOption, setTableOption] = useState([])
@@ -265,17 +271,23 @@ const Dashboard = () => {
                     warehouse_code: filtersData.storeLocation
                 }
                 break;
-            case "material_code":
+            case "mat_code":
                 params = {
                     c_id: 1,
                     material_code: value,
                     depot_code: filtersData.depotCode,
                     warehouse_code: filtersData.storeLocation
                 }
+
                 break;
 
 
             default:
+                params = {
+                    c_id: 1,
+                    depot_code: filtersData.depotCode,
+                    warehouse_code: filtersData.storeLocation
+                }
                 break;
         }
         try {
@@ -283,12 +295,8 @@ const Dashboard = () => {
                 params: params,
                 headers,
             });
-
             const apires = response.data.data;
-
             setTableOption(apires)
-
-
         } catch (error) {
             console.error("Error fetching data:", error);
             setTableOption([]);
@@ -297,6 +305,7 @@ const Dashboard = () => {
 
 
     useEffect(() => {
+        if (!filtersData.depotCode || !filtersData.storeLocation) return
         getSearchData()
 
     }, [
@@ -474,8 +483,9 @@ const Dashboard = () => {
                                 <td className="px-4 py-2 text-left whitespace-nowrap flex items-center gap-2">
                                     <div>
 
-                                        {item.materialNumber}  - {item.brandDesc} -  {item.categoryDesc}
+                                        {item.materialNumber}  - {item.material_result?.brand_code} -  {item.productCategoryresult?.pcat_name}
                                         <br />
+                                        {item.material_result?.mat_name}
                                     </div>
                                 </td>
 
@@ -491,20 +501,22 @@ const Dashboard = () => {
 
 
                                 <td className="px-4 py-2 text-left whitespace-nowrap  ">
-                                    {item.case}
+                                    {item.totalCases
+                                    }
                                 </td>
 
 
                                 <td className="px-4 py-2 text-left whitespace-nowrap   ">
-                                    {item.quantity}
+                                    {item.totalQuantity}
                                 </td>
 
 
                                 <td className="px-4 py-2 text-left whitespace-nowrap text-xs ">
                                     <button
                                         onClick={() => {
-                                            setOpenModal(true)
-                                            setModalData(item)
+                                            getPopTableData(item.materialNumber)
+
+
                                         }
 
 
@@ -579,25 +591,27 @@ const Dashboard = () => {
                                                 <div className="px-2 py-2 text-center">Status</div>
                                             </div>
 
-                                            {/* Table Rows */}
-                                            <div className="divide-y divide-gray-300 bg-white">
-                                                <div className="grid grid-cols-10 p-2 border-b text-center text-xs md:text-sm">
-                                                    <div className="px-2 py-2">{modalData.loc}</div>
-                                                    <div className="px-2 py-2">{modalData.batch}</div>
-                                                    <div className="px-2 py-2">{modalData.case}</div>
-                                                    <div className="px-2 py-2">{modalData.quantity}</div>
-                                                    <div className="px-2 py-2 w-24">{moment(modalData.expDate).format("DD-MM-YYYY")}</div>
-                                                    <div className="px-2 py-2 w-24">{moment(modalData.mfgDate).format("DD-MM-YYYY")}</div>
-                                                    <div className="px-2 py-2">{modalData.sixMonths}</div>
-                                                    <div className="px-2 py-2">{modalData.twelveMonths}</div>
-                                                    <div className="px-2 py-2">{modalData.greaterThanOneYear}</div>
-                                                    <div className={`px-2 py-2 ${modalData.quantity ? "text-green-500" : "text-red-500"}`}>
-                                                        {modalData.quantity ? "Yes" : "No"}
+                                            {modalData?.map((item, idx) =>
+
+                                                <div className="divide-y divide-gray-300 bg-white">
+                                                    <div className="grid grid-cols-10 p-2 border-b text-center text-xs md:text-sm">
+                                                        <div className="px-2 py-2">{item.warehouseCode}</div>
+                                                        <div className="px-2 py-2">{item.batch}</div>
+                                                        <div className="px-2 py-2">{item.case}</div>
+                                                        <div className="px-2 py-2">{item.quantity}</div>
+                                                        <div className="px-2 py-2 w-24">{moment(item.expDate).format("DD-MM-YYYY")}</div>
+                                                        <div className="px-2 py-2 w-24">{moment(item.mfgDate).format("DD-MM-YYYY")}</div>
+                                                        <div className="px-2 py-2">{item.sixMonths}</div>
+                                                        <div className="px-2 py-2">{item.twelveMonths}</div>
+                                                        <div className="px-2 py-2">{item.greaterThanOneYear}</div>
+                                                        <div className={`px-2 py-2`}>
+                                                            {item.warehouse}
+                                                        </div>
                                                     </div>
-                                                </div>
 
 
-                                            </div>
+                                                </div>)}
+
                                         </div>
                                     </div>
                                 </Dialog.Panel>

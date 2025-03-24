@@ -6,7 +6,13 @@ import { IoEyeOutline } from "react-icons/io5";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
 
-const History = () => {
+const History = (props) => {
+    const [propsData, setPropsData] = useState("")
+
+
+    useEffect(() => {
+        setPropsData(props)
+    }, [props])
     const reports = [
         {
             collectionDate: "XXXXX",
@@ -42,12 +48,15 @@ const History = () => {
                 <div className="bg-yellow-400 text-black text-center font-semibold py-2 rounded-t-lg">
                     Party Information
                 </div>
-                <div className="flex items-center mb-2">
-                    <span className="font-medium min-w-[140px]">SAP Code</span>
-
-                </div>
-                <div className="flex items-center mb-2">
-                    <span className="font-medium min-w-[140px]">Party Name</span>
+                <div className="p-2 border-b border-gray-300">
+                    <div className="flex">
+                        <span className="font-medium w-[160px]">SAP Code</span>
+                        <span>: {propsData.data?.sapCode}</span>
+                    </div>
+                    <div className="flex">
+                        <span className="font-medium w-[160px]">Party Name</span>
+                        <span>: {propsData.data?.partyName}</span>
+                    </div>
 
                 </div>
                 <div className="flex gap-2 mt-2 items-center justify-center">
