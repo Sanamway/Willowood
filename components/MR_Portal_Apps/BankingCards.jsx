@@ -56,7 +56,6 @@ const iconComponents = {
   CiBoxes,
   BiCartDownload,
   BsImages,
-  
 };
 
 
@@ -143,35 +142,27 @@ const BankingCards = () => {
                   console.log("ICON NAME", sub.icon_link),
                   (
                     <div
-                      // onClick={(e) => {
-                      //   e.preventDefault();
-                      //   // if (!sub.page_call?.startsWith("/")) {
-                      //     router.push({
-                      //       pathname: `/${sub.page_call}`,
-                      //       // query: { name: `${sub.label}` }
-                      //     });
-                      //   // }
-                      // }}
+
                       key={sub.umenu_Name}
                       className="flex flex-col items-center mx-2 w-auto justify-center  "
                     >
                       <button className="bg-pink-0 rounded-full px-2 py-2"
-                       onClick={(e) => {
-                        e.preventDefault();
-                        // if (!sub.page_call?.startsWith("/")) {
+                        onClick={(e) => {
+                          e.preventDefault();
+                          // if (!sub.page_call?.startsWith("/")) {
                           router.push({
                             pathname: `/${sub.page_call}`,
                             // query: { name: `${sub.label}` }
                           });
-                        // }
-                      }}
+                          // }
+                        }}
                       >
                         {/* {sub.icon_link && <sub.icon_link className={`text-red-500`} size={25} />} */}
                         {sub.icon_link && iconComponents[sub.icon_link]
                           ? React.createElement(iconComponents[sub.icon_link], {
-                              className: `text-black-500`,
-                              size: 32
-                            })
+                            className: `text-black-500`,
+                            size: 32
+                          })
                           : null}
                       </button>
                       <div className="h-12 cursor-pointer">

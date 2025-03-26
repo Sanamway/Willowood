@@ -85,6 +85,7 @@ const FieldDay = () => {
       verified: modalData.isTrue,
       verified_date: new Date(),
       verified_user: currentUser,
+      f_demo_fields_id: modalData.id,
     };
 
     try {
@@ -117,6 +118,7 @@ const FieldDay = () => {
       approved: modalData.isTrue,
       approved_date: new Date(),
       approved_user: currentUser,
+      f_demo_fields_id: modalData.id
     };
     try {
       const respond = await axios.put(
@@ -823,7 +825,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.f_demo_fields_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -842,7 +844,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.f_demo_fields_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -859,7 +861,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.f_demo_fields_id,
               });
             }}
           >
@@ -879,7 +881,7 @@ const FieldDay = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.f_demo_fields_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -898,7 +900,7 @@ const FieldDay = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.f_demo_id,
+              id: item.f_demo_fields_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -915,7 +917,7 @@ const FieldDay = () => {
             setModalData({
               ...modalData,
 
-              id: item.f_demo_id,
+              id: item.f_demo_fields_id,
             });
           }}
         >
@@ -936,7 +938,7 @@ const FieldDay = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.f_demo_id,
+              id: item.f_demo_fields_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -958,7 +960,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.f_demo_fields_id,
               });
             }}
             disabled
@@ -977,7 +979,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.f_demo_fields_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -994,7 +996,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.f_demo_fields_id,
               });
             }}
           >
@@ -1014,7 +1016,7 @@ const FieldDay = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.f_demo_fields_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1037,7 +1039,7 @@ const FieldDay = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.f_demo_fields_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1061,7 +1063,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.f_demo_fields_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -1080,7 +1082,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.f_demo_fields_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -1097,7 +1099,7 @@ const FieldDay = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.f_demo_fields_id,
               });
             }}
           >

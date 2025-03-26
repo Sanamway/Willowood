@@ -212,6 +212,7 @@ const AtReg = () => {
       console.log("pop", errors)
       errors?.message && toast.error(errors?.response?.data?.message);
       errors?.data?.message && toast.error(errors?.data?.message);
+      router.push("/MR_Portal_Apps/MRHome")
       console.log(errors);
     }
   };

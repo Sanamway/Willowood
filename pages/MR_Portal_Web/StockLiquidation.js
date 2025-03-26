@@ -114,6 +114,37 @@ const StockLiquidation = () => {
       );
     } catch (error) { }
   };
+  const handleApprove = async () => {
+    const data = {
+      approved: modalData.isTrue,
+      approved_date: new Date(),
+      approved_user: currentUser,
+    };
+
+    try {
+      const respond = await axios.put(
+        `${url}/api/update_dealer_stock_liq/${modalData.id}`,
+        JSON.stringify(data),
+        {
+          headers: headers,
+        }
+      );
+      handleCloseModal();
+      const apires = await respond.data.message;
+      toast.success(apires);
+      getFarmerDemo(
+        currentPage.selected + 1,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.startDate,
+        filterState.endDate,
+        filterState.empCode
+      );
+    } catch (error) { }
+  };
 
   const handleDelete = async () => {
     try {

@@ -12,7 +12,7 @@ import TotalOverDueAmtPop from "../TotalOverDueAmtPop";
 const CreditBalance = () => {
   const allCollectionTableData = useSelector((state) => state.collection.collectionTableData
   );
-  console.log("redux-data", allCollectionTableData)
+
 
   const [open, setOpen] = useState(false);
   const [openTwo, setOpenTwo] = useState(false);

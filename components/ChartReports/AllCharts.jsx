@@ -473,21 +473,19 @@ const AllCharts = (props) => {
       <section className="wrapper w-full px-2 mt-2 font-arial  relative ">
         <div className="flex w-full border-black border-b-2 items-start gap-8 mt-2">
           <button
-            className={`${
-              props.tabType === "Table"
+            className={`${props.tabType === "Table"
                 ? " flex  gap-2 inline-block  rounded-t py-2 px-4 font-semibold  border-b-2 border-orange-500 text-black text-sm bg-black/5"
                 : " flex  gap-2  inline-block  text-black rounded-t py-2 px-4 font-semibold  text-sm bg-black/8"
-            }`}
+              }`}
             onClick={() => props.setTabType("Table")}
           >
             Table
           </button>{" "}
           <button
-            className={`${
-              props.tabType === "Chart"
+            className={`${props.tabType === "Chart"
                 ? " flex  gap-2 inline-block rounded-t py-2 px-4 font-semibold  border-b-2 border-orange-500 text-black text-sm bg-black/5"
                 : " flex  gap-2   inline-block  text-black rounded-t py-2 px-4 font-semibold  text-sm bg-black/8"
-            }`}
+              }`}
             onClick={() => props.setTabType("Chart")}
           >
             Chart
@@ -774,34 +772,34 @@ const AllCharts = (props) => {
                       (props.summaryData.actual / props.summaryData.budget) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.summaryData.actual.toFixed(2) /
-                        props.summaryData.budget.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.summaryData.actual.toFixed(2) /
+                          props.summaryData.budget.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.summaryData.actual /
-                            props.summaryData.budget) *
-                          100
-                        ).toFixed(2)}
+                        (props.summaryData.actual /
+                          props.summaryData.budget) *
+                        100
+                      ).toFixed(2)}
                   </span>
                   <span className=" flex items-center  justify-center  border-gray-300 w-20">
                     {(
                       (props.summaryData.actual / props.summaryData.target) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.summaryData.actual.toFixed(2) /
-                        props.summaryData.target.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.summaryData.actual.toFixed(2) /
+                          props.summaryData.target.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.summaryData.actual /
-                            props.summaryData.target) *
-                          100
-                        ).toFixed(2)}
+                        (props.summaryData.actual /
+                          props.summaryData.target) *
+                        100
+                      ).toFixed(2)}
                   </span>
                 </div>
 
@@ -978,17 +976,17 @@ const AllCharts = (props) => {
                         props.summaryData.budgetCurrent) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.summaryData.actualCurrent /
-                        props.summaryData.budgetCurrent) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.summaryData.actualCurrent /
+                          props.summaryData.budgetCurrent) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.summaryData.actualCurrent /
-                            props.summaryData.budgetCurrent) *
-                          100
-                        ).toFixed(2)}
+                        (props.summaryData.actualCurrent /
+                          props.summaryData.budgetCurrent) *
+                        100
+                      ).toFixed(2)}
                   </span>
                   <span className=" flex items-center  justify-center  border-gray-300 w-20">
                     {(
@@ -996,17 +994,17 @@ const AllCharts = (props) => {
                         props.summaryData.targetCurrent) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.summaryData.actualCurrent.toFixed(2) /
-                        props.summaryData.targetCurrent.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.summaryData.actualCurrent.toFixed(2) /
+                          props.summaryData.targetCurrent.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.summaryData.actualCurrent /
-                            props.summaryData.targetCurrent) *
-                          100
-                        ).toFixed(2)}
+                        (props.summaryData.actualCurrent /
+                          props.summaryData.targetCurrent) *
+                        100
+                      ).toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -1115,34 +1113,34 @@ const AllCharts = (props) => {
                       (props.summaryData.actual / props.summaryData.budget) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.summaryData.actual.toFixed(2) /
-                        props.summaryData.budget.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.summaryData.actual.toFixed(2) /
+                          props.summaryData.budget.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.summaryData.actual /
-                            props.summaryData.budget) *
-                          100
-                        ).toFixed(2)}
+                        (props.summaryData.actual /
+                          props.summaryData.budget) *
+                        100
+                      ).toFixed(2)}
                   </span>
                   <span className=" flex items-center  justify-center  border-gray-300 w-20">
                     {(
                       (props.summaryData.actual / props.summaryData.target) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.summaryData.actual.toFixed(2) /
-                        props.summaryData.target.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.summaryData.actual.toFixed(2) /
+                          props.summaryData.target.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.summaryData.actual /
-                            props.summaryData.target) *
-                          100
-                        ).toFixed(2)}
+                        (props.summaryData.actual /
+                          props.summaryData.target) *
+                        100
+                      ).toFixed(2)}
                   </span>
                 </div>
                 <div className="border border-gray-300  flex justify-between items-center ">
@@ -1162,17 +1160,17 @@ const AllCharts = (props) => {
                         props.summaryData.budgetH1) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.summaryData.actualH1.toFixed(2) /
-                        props.summaryData.budgetH1.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.summaryData.actualH1.toFixed(2) /
+                          props.summaryData.budgetH1.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.summaryData.actualH1 /
-                            props.summaryData.budgetH1) *
-                          100
-                        ).toFixed(2)}
+                        (props.summaryData.actualH1 /
+                          props.summaryData.budgetH1) *
+                        100
+                      ).toFixed(2)}
                   </span>
                   <span className=" flex items-center  justify-center  border-gray-300 w-20">
                     {(
@@ -1180,17 +1178,17 @@ const AllCharts = (props) => {
                         props.summaryData.targetH1) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.summaryData.actualH1.toFixed(2) /
-                        props.summaryData.targetH1.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.summaryData.actualH1.toFixed(2) /
+                          props.summaryData.targetH1.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.summaryData.actualH1 /
-                            props.summaryData.targetH1) *
-                          100
-                        ).toFixed(2)}
+                        (props.summaryData.actualH1 /
+                          props.summaryData.targetH1) *
+                        100
+                      ).toFixed(2)}
                   </span>
                 </div>
                 <div className="border border-gray-300  flex justify-between items-center">
@@ -1210,17 +1208,17 @@ const AllCharts = (props) => {
                         props.summaryData.budgetH2) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.summaryData.actualH2.toFixed(2) /
-                        props.summaryData.budgetH2.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.summaryData.actualH2.toFixed(2) /
+                          props.summaryData.budgetH2.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.summaryData.actualH2 /
-                            props.summaryData.budgetH2) *
-                          100
-                        ).toFixed(2)}
+                        (props.summaryData.actualH2 /
+                          props.summaryData.budgetH2) *
+                        100
+                      ).toFixed(2)}
                   </span>
                   <span className=" flex items-center  justify-center  border-gray-300 w-20">
                     {(
@@ -1228,17 +1226,17 @@ const AllCharts = (props) => {
                         props.summaryData.targetH2) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.summaryData.actualH2.toFixed(2) /
-                        props.summaryData.targetH2.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.summaryData.actualH2.toFixed(2) /
+                          props.summaryData.targetH2.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.summaryData.actualH2 /
-                            props.summaryData.targetH2) *
-                          100
-                        ).toFixed(2)}
+                        (props.summaryData.actualH2 /
+                          props.summaryData.targetH2) *
+                        100
+                      ).toFixed(2)}
                   </span>
                 </div>
                 <div className="border border-gray-300  flex justify-between items-center">
@@ -1257,17 +1255,17 @@ const AllCharts = (props) => {
                         props.summaryData.budgetCurrent) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.summaryData.actualCurrent /
-                        props.summaryData.budgetCurrent) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.summaryData.actualCurrent /
+                          props.summaryData.budgetCurrent) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.summaryData.actualCurrent /
-                            props.summaryData.budgetCurrent) *
-                          100
-                        ).toFixed(2)}
+                        (props.summaryData.actualCurrent /
+                          props.summaryData.budgetCurrent) *
+                        100
+                      ).toFixed(2)}
                   </span>
                   <span className=" flex items-center  justify-center  border-gray-300 w-20">
                     {(
@@ -1275,17 +1273,17 @@ const AllCharts = (props) => {
                         props.summaryData.targetCurrent) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.summaryData.actualCurrent.toFixed(2) /
-                        props.summaryData.targetCurrent.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.summaryData.actualCurrent.toFixed(2) /
+                          props.summaryData.targetCurrent.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.summaryData.actualCurrent /
-                            props.summaryData.targetCurrent) *
-                          100
-                        ).toFixed(2)}
+                        (props.summaryData.actualCurrent /
+                          props.summaryData.targetCurrent) *
+                        100
+                      ).toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -1325,17 +1323,17 @@ const AllCharts = (props) => {
                       (props.cSummaryData.actual / props.cSummaryData.target) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.cSummaryData.actual.toFixed(2) /
-                        props.cSummaryData.target.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.cSummaryData.actual.toFixed(2) /
+                          props.cSummaryData.target.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.cSummaryData.actual /
-                            props.cSummaryData.target) *
-                          100
-                        ).toFixed(2)}
+                        (props.cSummaryData.actual /
+                          props.cSummaryData.target) *
+                        100
+                      ).toFixed(2)}
                   </span>
                 </div>
 
@@ -1506,17 +1504,17 @@ const AllCharts = (props) => {
                         props.cSummaryData.targetCurrent) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.cSummaryData.actualCurrent.toFixed(2) /
-                        props.cSummaryData.targetCurrent.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.cSummaryData.actualCurrent.toFixed(2) /
+                          props.cSummaryData.targetCurrent.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.cSummaryData.actualCurrent /
-                            props.cSummaryData.targetCurrent) *
-                          100
-                        ).toFixed(2)}
+                        (props.cSummaryData.actualCurrent /
+                          props.cSummaryData.targetCurrent) *
+                        100
+                      ).toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -1603,17 +1601,17 @@ const AllCharts = (props) => {
                       (props.cSummaryData.actual / props.cSummaryData.target) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.cSummaryData.actual.toFixed(2) /
-                        props.cSummaryData.target.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.cSummaryData.actual.toFixed(2) /
+                          props.cSummaryData.target.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.cSummaryData.actual /
-                            props.cSummaryData.target) *
-                          100
-                        ).toFixed(2)}
+                        (props.cSummaryData.actual /
+                          props.cSummaryData.target) *
+                        100
+                      ).toFixed(2)}
                   </span>
                 </div>
                 <div className="border border-gray-300  flex justify-between items-center">
@@ -1630,17 +1628,17 @@ const AllCharts = (props) => {
                         props.cSummaryData.targetH1) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.cSummaryData.actualH1.toFixed(2) /
-                        props.cSummaryData.targetH1.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.cSummaryData.actualH1.toFixed(2) /
+                          props.cSummaryData.targetH1.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.cSummaryData.actualH1 /
-                            props.cSummaryData.targetH1) *
-                          100
-                        ).toFixed(2)}
+                        (props.cSummaryData.actualH1 /
+                          props.cSummaryData.targetH1) *
+                        100
+                      ).toFixed(2)}
                   </span>
                 </div>
                 <div className="border border-gray-300  flex justify-between items-center">
@@ -1657,17 +1655,17 @@ const AllCharts = (props) => {
                         props.cSummaryData.targetH2) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.cSummaryData.actualH2.toFixed(2) /
-                        props.cSummaryData.targetH2.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.cSummaryData.actualH2.toFixed(2) /
+                          props.cSummaryData.targetH2.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.cSummaryData.actualH2 /
-                            props.cSummaryData.targetH2) *
-                          100
-                        ).toFixed(2)}
+                        (props.cSummaryData.actualH2 /
+                          props.cSummaryData.targetH2) *
+                        100
+                      ).toFixed(2)}
                   </span>
                 </div>
                 <div className="border border-gray-300  flex justify-between items-center ">
@@ -1683,17 +1681,17 @@ const AllCharts = (props) => {
                         props.cSummaryData.targetCurrent) *
                       100
                     ).toFixed(2) === "NaN" ||
-                    (
-                      (props.cSummaryData.actualCurrent.toFixed(2) /
-                        props.cSummaryData.targetCurrent.toFixed(2)) *
-                      100
-                    ).toFixed(2) === "Infinity"
+                      (
+                        (props.cSummaryData.actualCurrent.toFixed(2) /
+                          props.cSummaryData.targetCurrent.toFixed(2)) *
+                        100
+                      ).toFixed(2) === "Infinity"
                       ? 0
                       : (
-                          (props.cSummaryData.actualCurrent /
-                            props.cSummaryData.targetCurrent) *
-                          100
-                        ).toFixed(2)}
+                        (props.cSummaryData.actualCurrent /
+                          props.cSummaryData.targetCurrent) *
+                        100
+                      ).toFixed(2)}
                   </span>
                 </div>
               </div>

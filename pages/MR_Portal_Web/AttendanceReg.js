@@ -90,7 +90,7 @@ const Attendance = () => {
       verified_date: new Date(),
       verified_user: currentUser,
       c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-      t_id: modalData.tId
+      ar_id: modalData.id
     };
 
     try {
@@ -124,7 +124,7 @@ const Attendance = () => {
       approved_date: new Date(),
       approved_user: currentUser,
       c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-      t_id: modalData.tId
+      ar_id: modalData.id
     };
     try {
       const respond = await axios.put(
@@ -889,7 +889,7 @@ const Attendance = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.ar_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -908,7 +908,7 @@ const Attendance = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.ar_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -925,7 +925,7 @@ const Attendance = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.ar_id,
               });
             }}
           >
@@ -945,7 +945,7 @@ const Attendance = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.ar_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -964,7 +964,7 @@ const Attendance = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.f_demo_id,
+              id: item.ar_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -981,7 +981,7 @@ const Attendance = () => {
             setModalData({
               ...modalData,
 
-              id: item.f_demo_id,
+              id: item.ar_id,
             });
           }}
         >
@@ -1002,7 +1002,7 @@ const Attendance = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.f_demo_id,
+              id: item.ar_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -1024,7 +1024,7 @@ const Attendance = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.ar_id,
               });
             }}
             disabled
@@ -1043,7 +1043,7 @@ const Attendance = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.ar_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -1060,7 +1060,7 @@ const Attendance = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.ar_id,
               });
             }}
           >
@@ -1080,7 +1080,7 @@ const Attendance = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.ar_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1103,7 +1103,7 @@ const Attendance = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.ar_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1127,7 +1127,7 @@ const Attendance = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.ar_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -1146,7 +1146,7 @@ const Attendance = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.ar_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -1163,7 +1163,7 @@ const Attendance = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.ar_id,
               });
             }}
           >
@@ -1414,7 +1414,8 @@ const Attendance = () => {
       const apires = await respond.data.data;
       const ws = XLSX.utils.json_to_sheet(apires.map((item) => {
         return {
-
+          ["TM Status"]: item.verified === "Yes" ? "Verified" : "Pending to Verify",
+          ["RM Status"]: item.approved === "Yes" ? "Approved" : "Pending to Approve",
           ["Emp Code"]: item.emp_code,
           ["Emp Name"]: item.emp_name,
           ["Attendence Type"]: "RG",

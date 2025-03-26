@@ -11,9 +11,6 @@ const Collection = (props) => {
         "Content-Type": "application/json",
         secret: "fsdhfgsfuiweifiowefjewcewcebjw",
     };
-    console.log("uio", props)
-    const [localStorageItems, setLocalStorage] = useState({})
-
 
     const [formData, setFormData] = useState({
         collectionDate: null,
@@ -40,12 +37,7 @@ const Collection = (props) => {
         });
     };
 
-    const handleFileChange = (e) => {
-        setFormData({
-            ...formData,
-            file: e.target.files[0],
-        });
-    };
+
 
 
     const [propsData, setPropsData] = useState("")
@@ -111,7 +103,7 @@ const Collection = (props) => {
     const handleSave = async () => {
         try {
             const data = {
-                kunnr: 123456,
+                kunnr: propsData.data?.sapCode,
                 collection_date: formData.collectionDate,
                 payment_date: formData.paymentDate,
                 amount_collected: formData.amountClosed,
@@ -135,7 +127,8 @@ const Collection = (props) => {
                 .then((res) => {
                     if (!res) return;
 
-
+                    console.log("pop", res.data.data.pay_no)
+                    uploadImage(res.data.data.pay_no)
                     toast.success(res.data.message)
 
                 });
@@ -237,6 +230,64 @@ const Collection = (props) => {
         getCollectionData()
     }, [propsData])
 
+
+    const [uploadDocument, setUploadDocument] = useState("")
+    const handleFileChange = (event) => {
+        const file = event.target.files[0]; // Get the selected file
+        if (file) {
+            setUploadDocument(file); // Update state with the file object
+        }
+    };
+
+    console.log("qaxs", uploadDocument)
+
+    const uploadImage = async (data) => {
+        function getFileExtension(filename) {
+            if (typeof filename.name !== "string") {
+                console.error("Invalid input. Expected a string.");
+                return toast.error("Input a valid Image");
+            }
+
+            const parts = filename.name.split(".");
+            if (parts.length > 1) {
+                return parts[parts.length - 1];
+            } else {
+                return "jpg";
+            }
+        }
+
+        try {
+            const renamedBlob = new Blob([uploadDocument], {
+                type: uploadDocument?.type,
+            });
+
+            const fd = new FormData();
+            fd.append(
+                "myFile",
+                renamedBlob,
+                `${getFileExtension(uploadDocument)}`
+            );
+
+            const response = await axios
+                .post(`${url}/api/upload_file`, fd, {
+                    params: {
+                        file_path: "payment_collection",
+                        payment_image: `${data}.${getFileExtension(
+                            uploadDocument
+                        )}`,
+                        pay_no: data,
+                    },
+                })
+                .then(() => {
+                    setUploadDocument("")
+                    toast.success("Image added successfully!");
+                });
+        } catch (error) {
+
+            console.log("ooo", error)
+        }
+    };
+
     return (
         <div className="bg-white shadow-md rounded-lg p-1 mb-2 mx-1 mt-2">
             <Toaster position="bottom-center" reverseOrder={false} />
@@ -286,6 +337,7 @@ const Collection = (props) => {
                         <span>:</span>
                         <DatePicker
                             selected={formData.collectionDate}
+                            dateFormat="dd-MM-yyyy"
                             onChange={(date) => handleDateChange(date, "collectionDate")}
                             className="border rounded p-1 ml-2 flex-1"
                         />
@@ -296,6 +348,7 @@ const Collection = (props) => {
                         <span>:</span>
                         <DatePicker
                             selected={formData.paymentDate}
+                            dateFormat="dd-MM-yyyy"
                             onChange={(date) => handleDateChange(date, "paymentDate")}
                             className="border rounded p-1 ml-2 flex-1"
                         />
