@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import FilterComponent from "./FilterComponent";
 import Layout from "../Layout";
 import { IoIosBasket } from "react-icons/io";
+import { useRouter } from "next/router";
 
 import { CiBookmark } from "react-icons/ci";
 import { LuRefreshCw } from "react-icons/lu";
@@ -15,6 +16,7 @@ import { Transition, Dialog } from "@headlessui/react";
 import { Fragment } from "react";
 const Dashboard = () => {
     const [refresh, setRefresh] = useState(false)
+    const router = useRouter();
     const [allOrderInfoData, setAllOrderInfoData] = useState([
     ]);
     const allOrderData = useSelector(
@@ -29,11 +31,34 @@ const Dashboard = () => {
     const [orderedItems, setOrderedItems] = useState({});
 
     const [openModal, setOpenModal] = useState(false)
-    const handleOrderItemModal = async (item) => {
-        setOpenModal(true)
+    const handleOrderItemModal = async (item, type) => {
+        if (type === "View Order Item") {
+            setOpenModal(true)
 
 
-        setOrderedItems(item)
+            setOrderedItems(item)
+        }
+        else if (
+            type === "View Order Activity"
+        ) {
+            router.push({
+                pathname: "/Sales_App/Order_Treking",
+                query: {
+                    sap_code: item.kunnr_sold || "",
+                    order_no: item.order_no || "",
+                    party_name: item.party_name || "",
+                    address: item.del_address || "",
+                    amount: item.order_value || ""
+
+
+                },
+            });
+        }
+        else {
+            return
+        }
+
+
 
 
 
@@ -182,7 +207,12 @@ const Dashboard = () => {
                                     <button
                                         key={btnText}
                                         className="h-8 bg-pink-500 flex items-center justify-end text-white px-2 py-1 rounded-sm  shadow-md"
-                                        onClick={() => handleOrderItemModal(item)}
+                                        onClick={() =>
+
+
+
+                                            handleOrderItemModal(item, btnText)}
+
                                     >
                                         {btnText}
                                     </button>

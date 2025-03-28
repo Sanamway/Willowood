@@ -1474,6 +1474,10 @@ const MainReport = () => {
                 setFilterState({
                   ...filterState,
                   bgId: e.target.value,
+                  buId: "",
+                  zId: "",
+                  rId: "",
+                  tId: "",
                 });
               }
             }}
@@ -1516,6 +1520,9 @@ const MainReport = () => {
                 setFilterState({
                   ...filterState,
                   buId: e.target.value,
+                  zId: "",
+                  rId: "",
+                  tId: "",
                 });
               }
             }}
@@ -1551,6 +1558,8 @@ const MainReport = () => {
                 setFilterState({
                   ...filterState,
                   zId: e.target.value,
+                  rId: "",
+                  tId: "",
                 });
               }
             }}
