@@ -6,14 +6,16 @@ import axios from "axios";
 import { url } from "@/constants/url";
 import toast, { Toaster } from "react-hot-toast";
 import moment from "moment";
+import { useRouter } from "next/router";
 const Collection = (props) => {
+    const router = useRouter()
     const headers = {
         "Content-Type": "application/json",
         secret: "fsdhfgsfuiweifiowefjewcewcebjw",
     };
 
     const [formData, setFormData] = useState({
-        collectionDate: null,
+        collectionDate: new Date(),
         paymentDate: null,
         amountClosed: "",
         mode: "",
@@ -99,8 +101,9 @@ const Collection = (props) => {
     }
 
 
-
+    const [loading, setLoading] = useState(false)
     const handleSave = async () => {
+        setLoading(true)
         try {
             const data = {
                 kunnr: propsData.data?.sapCode,
@@ -126,7 +129,7 @@ const Collection = (props) => {
                 })
                 .then((res) => {
                     if (!res) return;
-
+                    setLoading(false)
                     console.log("pop", res.data.data.pay_no)
                     uploadImage(res.data.data.pay_no)
                     toast.success(res.data.message)
@@ -232,11 +235,14 @@ const Collection = (props) => {
 
 
     const [uploadDocument, setUploadDocument] = useState("")
+    const [image, setImage] = useState()
     const handleFileChange = (event) => {
         const file = event.target.files[0]; // Get the selected file
         if (file) {
             setUploadDocument(file); // Update state with the file object
+            setImage(URL.createObjectURL(file))
         }
+
     };
 
     console.log("qaxs", uploadDocument)
@@ -280,6 +286,20 @@ const Collection = (props) => {
                 })
                 .then(() => {
                     setUploadDocument("")
+                    router.push({
+                        pathname: "/Sales_App/Order_Booking/Delaer_List"
+                    })
+                    setFormData(
+                        {
+                            collectionDate: null,
+                            paymentDate: null,
+                            amountClosed: "",
+                            mode: "",
+                            chequeUtrNo: "",
+                            date: null,
+                            file: null,
+                        }
+                    )
                     toast.success("Image added successfully!");
                 });
         } catch (error) {
@@ -290,6 +310,13 @@ const Collection = (props) => {
 
     return (
         <div className="bg-white shadow-md rounded-lg p-1 mb-2 mx-1 mt-2">
+            <input
+                id="file-upload"
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleFileChange}
+            />
             <Toaster position="bottom-center" reverseOrder={false} />
             <div className="bg-yellow-400 text-black text-center font-semibold py-2 rounded-t-lg">
                 Party Information
@@ -299,9 +326,9 @@ const Collection = (props) => {
                     <span className="font-medium w-[160px]">SAP Code</span>
                     <span>: {propsData.data?.sapCode}</span>
                 </div>
-                <div className="flex">
-                    <span className="font-medium w-[160px]">Party Name</span>
-                    <span>: {propsData.data?.partyName}</span>
+                <div className="flex flex-col">
+                    <span className="font-medium w-[160px]">Party Name :</span>
+                    <span>{propsData.data?.partyName}</span>
                 </div>
                 {getBstData()}
             </div>
@@ -355,7 +382,7 @@ const Collection = (props) => {
                     </div>
 
                     <div className="mb-2 flex items-center">
-                        <label className="font-medium min-w-[160px]">Amount Closed</label>
+                        <label className="font-medium min-w-[160px]">Collection Amount</label>
                         <span>:</span>
                         <input
                             type="text"
@@ -399,6 +426,7 @@ const Collection = (props) => {
                         <span>:</span>
                         <DatePicker
                             selected={formData.date}
+                            dateFormat="dd-MM-yyyy"
                             onChange={(date) => handleDateChange(date, "date")}
                             className="border rounded p-1 ml-2 flex-1"
                         />
@@ -411,24 +439,48 @@ const Collection = (props) => {
                 <div className="bg-yellow-400 text-black text-center font-semibold py-2 rounded-t-lg">
                     Upload Image
                 </div>
-                <div className="border-dashed border-2 border-gray-400 rounded-lg h-40 flex flex-col justify-center items-center mt-4">
-                    <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
-                        <IoIosBasket className="w-12 h-12 text-gray-400 mb-2" />
-                        <span className="text-gray-600">Click to Upload</span>
-                        <input
-                            id="file-upload"
-                            type="file"
-                            className="hidden"
-                            onChange={handleFileChange}
+                {console.log("opo", uploadDocument)}
+                {image ? (
+                    <label htmlFor="file-upload">
+                        <img
+                            src={image}
+                            alt="Uploaded Image"
+                            className="border-dashed border-2 border-gray-400 rounded-lg h-40 w-full object-cover cursor-pointer"
+
                         />
                     </label>
-                </div>
+                ) : (
+                    <div className="border-dashed border-2 border-gray-400 rounded-lg h-40 flex flex-col justify-center items-center mt-4">
+                        <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
+                            <IoIosBasket className="w-12 h-12 text-gray-400 mb-2" />
+                            <span className="text-gray-600">Click to Upload</span>
+                            <input
+                                id="file-upload"
+                                type="file"
+                                className="hidden"
+                                onChange={handleFileChange}
+                            />
+                        </label>
+                    </div>
+                )}
+
             </div>
 
             {/* Buttons */}
             <div className="flex justify-center gap-4 p-4">
-                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg" onClick={() => handleSave()}>Submit</button>
-                <button className="bg-gray-400 text-white px-4 py-2 rounded-lg">Close</button>
+                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg" onClick={() => handleSave()} disabled={loading}>Submit</button>
+                <button className="bg-gray-400 text-white px-4 py-2 rounded-lg" onClick={() => {
+                    if (window.confirm("Do you want to close")) {
+                        router.push({
+                            pathname: "/Sales_App/Order_Booking/Delaer_List"
+                        })
+                    }
+                    else {
+                        return
+                    }
+                }
+                }
+                >Close</button>
 
             </div>
         </div>

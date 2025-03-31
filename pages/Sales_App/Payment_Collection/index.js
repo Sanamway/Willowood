@@ -214,7 +214,7 @@ const Dashboard = () => {
                         className="self-center cursor-pointer"
                         onClick={() =>
                             router.push({
-                                pathname: "/Sales_App/Home",
+                                pathname: "/Sales_App/Order_Booking/Delaer_List"
                             })
                         }
                     />

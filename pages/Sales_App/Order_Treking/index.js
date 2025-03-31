@@ -6,6 +6,80 @@ import { useRouter } from 'next/router';
 import axios from "axios";
 import { url } from '@/constants/url';
 import moment from 'moment';
+import { MdOutlineQrCodeScanner } from "react-icons/md";
+import { RiContactsBookFill } from "react-icons/ri";
+import { PiBankFill } from "react-icons/pi";
+import { FaUserNinja } from "react-icons/fa6";
+import { CiBank } from "react-icons/ci";
+import { CiWallet } from "react-icons/ci";
+import { SlNotebook } from "react-icons/sl";
+import { HiOutlineBanknotes } from "react-icons/hi2";
+import { FcBusinessman } from "react-icons/fc";
+import { FaRegCircleCheck } from "react-icons/fa6";
+import { GiOnTarget } from "react-icons/gi";
+import { FcBullish } from "react-icons/fc";
+import { VscFeedback } from "react-icons/vsc";
+import { TbView360Number } from "react-icons/tb";
+import { RxText } from "react-icons/rx";
+import { FcCalendar } from "react-icons/fc";
+import { GiExitDoor } from "react-icons/gi";
+import { GiGrass } from "react-icons/gi";
+import { FcSportsMode } from "react-icons/fc";
+import { IoWalkSharp } from "react-icons/io5";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { GiPlantRoots } from "react-icons/gi";
+import { PiPresentationChartLight } from "react-icons/pi";
+import { FcRules } from "react-icons/fc";
+import { CiBoxes } from "react-icons/ci";
+import { BiCartDownload } from "react-icons/bi";
+import { BsImages } from "react-icons/bs";
+import { FiClipboard } from 'react-icons/fi';
+import { GiTimeSynchronization } from 'react-icons/gi';
+import { FaBitcoinSign } from 'react-icons/fa6';
+import { FiSettings } from "react-icons/fi";
+import { GiFactory } from "react-icons/gi";
+import { FaPrescription, FaCuttlefish, FaFileInvoice } from "react-icons/fa";
+import { FcInTransit } from "react-icons/fc";
+import { MdOutlineInventory2 } from "react-icons/md";
+const iconComponents = {
+    FiSettings,
+    GiFactory,
+    FcInTransit,
+    FaPrescription,
+    FaCuttlefish,
+    FaFileInvoice,
+    MdOutlineInventory2,
+    FaBitcoinSign,
+    GiTimeSynchronization,
+    FiClipboard,
+    MdOutlineQrCodeScanner,
+    RiContactsBookFill,
+    PiBankFill,
+    FaUserNinja,
+    CiBank,
+    CiWallet,
+    SlNotebook,
+    HiOutlineBanknotes,
+    FcBusinessman,
+    FaRegCircleCheck,
+    GiOnTarget,
+    FcBullish,
+    VscFeedback,
+    TbView360Number,
+    RxText,
+    FcCalendar,
+    GiExitDoor,
+    GiGrass,
+    FcSportsMode,
+    IoWalkSharp,
+    FaPeopleGroup,
+    GiPlantRoots,
+    PiPresentationChartLight,
+    FcRules,
+    CiBoxes,
+    BiCartDownload,
+    BsImages,
+};
 const statuses = [
     {
         title: "Order Rescheduled",
@@ -29,6 +103,8 @@ const statuses = [
         completed: true,
     },
 ];
+
+
 const OrderStatus = () => {
     const router = useRouter()
 
@@ -87,7 +163,7 @@ const OrderStatus = () => {
             </div>
 
             {/* Order Details Section */}
-            <div className="bg-blue-100 p-4 border rounded-md mb-4 text-sm">
+            <div className="bg-blue-50 p-4 border rounded-md mb-4 text-sm">
                 <div className="flex justify-between font-semibold">
                     <span>SAP Code</span>
                     <span>Order No</span>
@@ -115,7 +191,6 @@ const OrderStatus = () => {
 
 
 
-
                     orderStatus.map(item => {
                         console.log("vcx", { item })
                         return [item].map((status, index) => (
@@ -130,7 +205,13 @@ const OrderStatus = () => {
                                     <IoEllipseOutline className="text-blue-500" size={24} />
                                 )} */}
 
-                                <IoCheckmarkCircle className={status.status_details?.color_code} size={24} />
+                                {status.status_details?.icon && iconComponents[status.status_details?.icon]
+                                    ? React.createElement(iconComponents[status.status_details?.icon], {
+                                        className: `${status.status_details?.color_code} mt-4`,
+                                        size: 24
+                                    })
+                                    : null}
+                                {/* <IoCheckmarkCircle className={status.status_details?.color_code} size={24} /> */}
                                 <div>
                                     <h3 className="font-semibold text-gray-800">{status.order_status}</h3>
                                     <p className="text-gray-600 text-sm">{status.status_details?.detail_desc}</p>

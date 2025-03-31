@@ -750,7 +750,7 @@ const ChartReports = () => {
       return null;
     }
 
-    console.log("zpo", currentFilter)
+
     const role = localStorageItems.roleId
     console.log("pop", getLastAssignedKey(filterState) === "tId")
     if (role === 9) {

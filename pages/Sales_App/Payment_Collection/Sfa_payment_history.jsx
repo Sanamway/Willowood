@@ -22,8 +22,19 @@ const History = (props) => {
     }, [props])
 
 
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
+
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+
+    useEffect(() => {
+        const today = new Date();
+        const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+        const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+        setStartDate(firstDay);
+        setEndDate(lastDay);
+    }, []);
+
     const [paymentCollectionData, setPaymentCollectionData] = useState(null);
 
     const getPaymentCollectionData = async () => {
@@ -66,9 +77,9 @@ const History = (props) => {
                         <span className="font-medium w-[160px]">SAP Code</span>
                         <span>: {propsData.data?.sapCode}</span>
                     </div>
-                    <div className="flex">
-                        <span className="font-medium w-[160px]">Party Name</span>
-                        <span>: {propsData.data?.partyName}</span>
+                    <div className="flex flex-col">
+                        <span className="font-medium w-[160px]">Party Name :</span>
+                        <span>{propsData.data?.partyName}</span>
                     </div>
 
                 </div>
@@ -78,7 +89,7 @@ const History = (props) => {
                             selected={startDate}
                             onChange={(date) => setStartDate(date)}
                             className="border rounded w-full p-1 flex-1"
-                            dateFormat="yyyy-MM-dd"
+                            dateFormat="dd-MM-yyyy"
                             placeholderText="Select start date"
                         />
                     </div>
@@ -88,7 +99,7 @@ const History = (props) => {
                             selected={endDate}
                             onChange={(date) => setEndDate(date)}
                             className="border rounded w-full p-1 flex-1"
-                            dateFormat="yyyy-MM-dd"
+                            dateFormat="dd-MM-yyyy"
                             placeholderText="Select end date"
                         />
                     </div>
@@ -107,7 +118,7 @@ const History = (props) => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                    {paymentCollectionData.length > 0 ? (
+                    {paymentCollectionData?.length > 0 ? (
                         paymentCollectionData.map((report, index) => (
                             <div key={index} className="bg-gray-100 p-4 rounded-lg shadow-md relative">
                                 {/* Eye Icon for Viewing Image */}
