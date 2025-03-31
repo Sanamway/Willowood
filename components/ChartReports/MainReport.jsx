@@ -39,27 +39,27 @@ const MainReport = () => {
     zDes: null,
     buDes: null,
     bgDes: null,
-    yr: "",
+    yr: moment().year(),
     month: [],
   });
 
   // All Year Month Data
   const [allMonthData, setAllMonthData] = useState([]);
-  const [allYearData, setAllYearData] = useState([2024, 2025, 2026]);
-  // const getAllTransactionPlan = async () => {
-  //   try {
-  //     const respond = await axios.get(`${url}/api/get_rp`, {
-  //       headers: headers,
-  //       params: { status: true },
-  //     });
-  //     const apires = await respond.data.data;
-  //     setAllYearData([...new Set(apires.map((item) => item.t_year))]);
-  //   } catch (error) { }
-  // };
+  const [allYearData, setAllYearData] = useState([]);
+  const getAllTransactionPlan = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_rp`, {
+        headers: headers,
+        params: { status: true },
+      });
+      const apires = await respond.data.data;
+      setAllYearData([...new Set(apires.map((item) => item.t_year))]);
+    } catch (error) { }
+  };
 
-  // useEffect(() => {
-  //   getAllTransactionPlan();
-  // }, []);
+  useEffect(() => {
+    getAllTransactionPlan();
+  }, []);
 
   const getAllTransactionYear = async (yr) => {
     try {
@@ -114,7 +114,7 @@ const MainReport = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: "",
+          yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
         };
         setLocalStorageItems({
@@ -164,7 +164,7 @@ const MainReport = () => {
               : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
 
           tId: "All",
-          yr: "",
+          yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
         };
         setLocalStorageItems({
@@ -213,7 +213,7 @@ const MainReport = () => {
 
           rId: "All",
           tId: "All",
-          yr: "",
+          yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
         };
         setLocalStorageItems({
@@ -264,7 +264,7 @@ const MainReport = () => {
               : JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: "All",
           tId: "All",
-          yr: "",
+          yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
         };
         setLocalStorageItems({
@@ -305,7 +305,7 @@ const MainReport = () => {
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           rId: "All",
           tId: "All",
-          yr: "",
+          yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
         };
         setLocalStorageItems({
@@ -356,7 +356,7 @@ const MainReport = () => {
           rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
           zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
           tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
-          yr: "",
+          yr: Math.max(...allYearData),
           month: allMonthData[allMonthData.length - 1],
         });
         break;
@@ -1422,7 +1422,7 @@ const MainReport = () => {
                 yr: e.target.value,
               })
             }
-
+            disabled={!filterState.yr}
           >
             <option value="All" className="font-bold" disabled={true}>
               -- Select --
@@ -1443,7 +1443,7 @@ const MainReport = () => {
                 month: e.target.value,
               })
             }
-
+            disabled={!filterState.yr}
           >
             <option value="All" className="font-bold">
               Select
