@@ -78,8 +78,10 @@ const MainReport = () => {
     getAllTransactionYear(filterState.yr);
   }, [filterState.yr]);
 
+  const [initialized, setInitialized] = useState(false);
   useEffect(() => {
-    if (!allYearData.length) return;
+    if (initialized || !allYearData.length) return;
+
     // const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
     const roleId = 6;
     let filterState = {
@@ -361,7 +363,8 @@ const MainReport = () => {
         });
         break;
     }
-  }, [allYearData, allMonthData]);
+    setInitialized(true);
+  }, [allYearData]);
 
   const [bgData, setBgData] = useState([]);
 

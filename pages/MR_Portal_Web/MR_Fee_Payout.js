@@ -827,10 +827,13 @@ const FeePayout = () => {
           ["Gross Salary"]: item.grass_salary,
           ["Calendar WD"]: item.calender_w_d,
           ["Present Day"]: item.total_mr_present,
+          ["Half day"]: item.h_count,
+          ["Absent"]: item.a_count,
 
           ["Weekly Off"]: item.emp_wo_count,
           ["Mannual Attendance"]: item.manual_attendance,
           ["Total Working Days"]: item.total_working_day,
+          ["Half Day"]: item.hd_count,
           ["Earning Salary"]: item.earning_salary,
           ["Bonus Amount"]: item.bonus_amt,
           ["Other Amount"]: item.other_amt,
@@ -1327,10 +1330,17 @@ const FeePayout = () => {
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Gross Salary</th>
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Calendar W.D.</th>
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Present Day</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Half Day</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Holiday</th>
+
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Weekly Off</th>
 
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Manual Attendance</th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Total Working Days</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Working Days</th>
+
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Absent Day</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Total Calender Days</th>
+
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Earning Salary</th>
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Bonus Amount</th>
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Other Amount</th>
@@ -1401,10 +1411,17 @@ const FeePayout = () => {
                     <td className="px-4 py-2 text-right">{parseFloat(item.grass_salary) ? parseFloat(item.grass_salary)?.toFixed(2) : "-"}</td>
                     <td className="px-4 py-2 text-right">{item.calender_w_d}</td>
                     <td className="px-4 py-2 text-right">{item.total_mr_present}</td>
+                    <td className="px-4 py-2 text-right">{item.hd_count}</td>
+                    <td className="px-4 py-2 text-right">{item.h_count}</td>
+                    <td className="px-4 py-2 text-right">{item.a_count}</td>
+                    <td className="px-4 py-2 text-right">{parseInt(item.h_count) + parseInt(item.a_count)}</td>
+
+
                     <td className="px-4 py-2 text-right">{item.emp_wo_count}</td>
 
                     <td className="px-4 py-2 text-right">{item.manual_attendance}</td>
                     <td className="px-4 py-2 text-right">{item.total_working_day}</td>
+
                     <td className="px-4 py-2 text-right">{parseFloat(item.earning_salary) ? parseFloat(item.earning_salary)?.toFixed(2) : "-"}</td>
                     <td className="px-4 py-2 text-right">{parseFloat(item.bonus_amt) ? parseFloat(item.bonus_amt)?.toFixed(2) : "-"}</td>
                     <td className="px-4 py-2 text-right">{parseFloat(item.other_amt) ? parseFloat(item.other_amt)?.toFixed(2) : "-"}</td>
