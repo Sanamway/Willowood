@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { Dialog, Transition } from "@headlessui/react";
+import React, { useState, useEffect } from "react";
+
 import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
@@ -16,6 +16,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { TbFileDownload } from "react-icons/tb";
 import * as XLSX from "xlsx";
 import { IoTerminal } from "react-icons/io5";
+import { Transition, Dialog } from "@headlessui/react";
+import { Fragment } from "react";
 const FeePayout = () => {
 
   const router = useRouter();
@@ -131,6 +133,10 @@ const FeePayout = () => {
     yr,
     month,
     empCode) => {
+
+    console.log("hjgk", yr,
+      month,
+      empCode)
     try {
       const allMonths = [
         { month: "January", number: 1 },
@@ -1024,6 +1030,233 @@ const FeePayout = () => {
     }
 
   }
+
+  const [openModal, setOpenModal] = useState(false)
+  const [modalData, setModalData] = useState([])
+
+
+  const getTimesheet = async (
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    from,
+    to,
+    empCode
+  ) => {
+    try {
+      const respond = await axios.get(`${url}/api/get_emp_attendance`, {
+        headers: headers,
+        params: {
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          c_id: 1,
+          from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+          to: moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+          emp_code: empCode,
+          paging: true,
+          page: 1,
+          size: 100,
+        },
+      });
+      const apires = await respond.data.data.MR_attendance;
+      const count = await respond.data.data.Total_count;
+
+
+      setModalData(apires.map((item) => { return { isVerified: item.verified === "Yes" ? true : false, isApproved: item.approved === "Yes" ? true : false, ...item } }));
+
+    } catch (error) {
+
+    }
+  };
+
+
+  const [modalPayoutItems, setModalPayoutItems] = useState(
+    {
+      mark: {},
+      verify: {},
+      approve: {}
+    }
+  );
+  const getModalMarkData = async (
+    yr,
+    month,
+    empCode) => {
+    try {
+      const allMonths = [
+        { month: "January", number: 1 },
+        { month: "February", number: 2 },
+        { month: "March", number: 3 },
+        { month: "April", number: 4 },
+        { month: "May", number: 5 },
+        { month: "June", number: 6 },
+        { month: "July", number: 7 },
+        { month: "August", number: 8 },
+        { month: "September", number: 9 },
+        { month: "October", number: 10 },
+        { month: "November", number: 11 },
+        { month: "December", number: 12 }
+      ];
+
+      console.log("nop", month, allMonths.filter((item) => item.month === month))
+      const respond = await axios.get(`${url}/api/get_employee_payout_emp`, {
+        headers: headers,
+        params: {
+          emp_code: empCode,
+          year: yr,
+          month: month ? allMonths.filter((item) => item.month === month)[0].number : "",
+          c_id: 1
+        },
+      });
+      const apires = await respond.data.data.employeeData;
+      console.log("nos", apires)
+      setModalPayoutItems((prevItems) => ({
+        ...prevItems,
+        mark: apires.length ? apires[0] : {}
+      }));
+
+    } catch (error) {
+      setModalPayoutItems((prevItems) => ({
+        ...prevItems
+      }));;
+    }
+  };
+  const getModalVerifyData = async (
+    yr,
+    month,
+    empCode) => {
+    try {
+      const allMonths = [
+        { month: "January", number: 1 },
+        { month: "February", number: 2 },
+        { month: "March", number: 3 },
+        { month: "April", number: 4 },
+        { month: "May", number: 5 },
+        { month: "June", number: 6 },
+        { month: "July", number: 7 },
+        { month: "August", number: 8 },
+        { month: "September", number: 9 },
+        { month: "October", number: 10 },
+        { month: "November", number: 11 },
+        { month: "December", number: 12 }
+      ];
+
+
+      const respond = await axios.get(`${url}/api/get_employee_payout_emp`, {
+        headers: headers,
+        params: {
+          emp_code: empCode,
+          year: yr,
+          month: month ? allMonths.filter((item) => item.month === month)[0].number : "",
+          c_id: 1,
+          status: "verify"
+        },
+      });
+      const apires = await respond.data.data.employeeData;
+      console.log("nop", apires)
+
+      setModalPayoutItems((prevItems) => ({
+        ...prevItems,
+        verify: apires.length ? apires[0] : {}
+      }));
+
+    } catch (error) {
+      setModalPayoutItems((prevItems) => ({
+        ...prevItems
+      }));;
+    }
+  };
+
+  const getModalApproveData = async (
+    yr,
+    month,
+    empCode
+  ) => {
+    console.log("zaqew", yr,
+      month,
+      empCode)
+    try {
+      const allMonths = [
+        { month: "January", number: 1 },
+        { month: "February", number: 2 },
+        { month: "March", number: 3 },
+        { month: "April", number: 4 },
+        { month: "May", number: 5 },
+        { month: "June", number: 6 },
+        { month: "July", number: 7 },
+        { month: "August", number: 8 },
+        { month: "September", number: 9 },
+        { month: "October", number: 10 },
+        { month: "November", number: 11 },
+        { month: "December", number: 12 }
+      ];
+      const respond = await axios.get(`${url}/api/get_employee_payout_emp`, {
+        headers: headers,
+        params: {
+          emp_code: empCode,
+          year: yr,
+          month: month ? allMonths.filter((item) => item.month === month)[0].number : "",
+          c_id: 1,
+          status: "approve"
+        },
+      });
+      const apires = await respond.data.data.employeeData;
+      console.log("noa", apires)
+      setModalPayoutItems((prevItems) => ({
+        ...prevItems,
+        approve: apires.length ? apires[0] : {}
+      }));
+
+    } catch (error) {
+      setModalPayoutItems((prevItems) => ({
+        ...prevItems
+      }));;
+    }
+  };
+
+  //  useEffect(() => {
+  //     if (filterState.empCode && filterState.startDate) {
+  //       getMarkData(
+  //         moment(filterState.startDate).format("YYYY"),
+  //         moment(filterState.startDate).format("MMMM"),
+  //         filterState.empCode
+  //       ),
+  //         getVerifyData(
+  //           moment(filterState.startDate).format("YYYY"),
+  //           moment(filterState.startDate).format("MMMM"),
+  //           filterState.empCode
+  //         ),
+  //         getApproveData(
+  //           moment(filterState.startDate).format("YYYY"),
+  //           moment(filterState.startDate).format("MMMM"),
+  //           filterState.empCode
+  //         )
+  //     }
+  //     else return
+
+  //   }, [filterState.empCode, filterState.startDate])
+
+  const getTimeDiff = (item) => {
+
+    if (item.punch_out_time && item.punch_in_time) {
+      const time1 = moment(item.punch_in_time).subtract(5, 'hours').subtract(30, 'minutes');
+      const time2 = moment(item.punch_out_time);
+
+      const diffDuration = moment.duration(time2.diff(time1));
+
+      // Calculate hours and minutes from the difference
+      const hours = Math.floor(diffDuration.asHours()); // total hours
+      const minutes = diffDuration.minutes(); // remaining minutes
+
+      return `${hours}.${minutes < 10 ? '0' : ''}${minutes}`;
+    } else {
+      return "-";
+    }
+  }
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -1319,6 +1552,7 @@ const FeePayout = () => {
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
+
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Sr. No</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Code</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Name</th>
@@ -1338,6 +1572,7 @@ const FeePayout = () => {
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Weekly Off</th>
 
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Manual Attendance</th>
+
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Paid Working Days</th>
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Absent</th>
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Total Half Day</th>
@@ -1416,9 +1651,33 @@ const FeePayout = () => {
                     <td className="px-4 py-2 text-right">{item.hd_count}</td>
                     <td className="px-4 py-2 text-right">{item.h_count}</td>
                     <td className="px-4 py-2 text-right">{item.emp_wo_count}</td>
-
                     <td className="px-4 py-2 text-right">{item.manual_attendance}</td>
-                    <td className="px-4 py-2 text-right bg-green-200">{item.total_working_day}</td>
+                    <td className="px-4 py-2 text-right bg-green-200">
+                      <button
+                        className="text-blue-600 underline hover:text-blue-800"
+                        onClick={() => {
+                          const startOfMonth = moment(`${filterState.yr}-${filterState.month}-01`).format("YYYY-MM-DD");
+                          const endOfMonth = moment(`${filterState.yr}-${filterState.month}-01`).endOf('month').format("YYYY-MM-DD");
+                          console.log("zpop", startOfMonth);
+                          setOpenModal(true);
+                          getTimesheet(
+                            item.bg_id,
+                            item.bu_id,
+                            item.z_id,
+                            item.r_id,
+                            item.t_id,
+                            startOfMonth,
+                            endOfMonth,
+                            item.empcode
+                          );
+                          getModalMarkData(filterState.yr, filterState.month, item.empcode);
+                          getModalVerifyData(filterState.yr, filterState.month, item.empcode);
+                          getModalApproveData(filterState.yr, filterState.month, item.empcode);
+                        }}
+                      >
+                        {item.total_working_day}
+                      </button>
+                    </td>
                     <td className="px-4 py-2 text-right">{item.a_count}</td>
                     <td className="px-4 py-2 text-right">{item.total_hd_count}</td>
                     <td className="px-4 py-2 text-right">{item.w_o_diff}</td>
@@ -1456,32 +1715,23 @@ const FeePayout = () => {
                           total_accumulative_vs_salary)?.toFixed(2) : "-"}
 
                     </td>
-                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-                      {item.
-                        tds_percent ? item.
-                        tds_percent : "-"
-                      }
+                    <td className="px-4 py-2 dark:border-2 whitespace-nowrap" >
+                      {item.tds_percent ? item.tds_percent : "-"}
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
-
                       {parseFloat(item.tds_amount) ? parseFloat(item.tds_amount)?.toFixed(2) : "-"}
-
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.incentive_or_disincemtive ? item.incentive_or_disincemtive : "-"}
-
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.emp_status}
-
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.rp_manager}
-
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.region_name}
-
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.zone_name}
@@ -1492,10 +1742,10 @@ const FeePayout = () => {
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.resignation_request_date ? moment(item.resignation_request_date).format("DD-MM-YYYY") : "-"}
                     </td>
-
                     <td className="px-4 py-2 whitespace-nowrap">{item.app_status}</td>
                   </tr>
                 ))}
+
                 <tr className="bg-gray-200 font-semibold">
                   <td className="px-4 py-2 text-right" colSpan="6">Total</td>
                   <td className="px-4 py-2 text-right">{total?.applicationFeeAmount ? total?.applicationFeeAmount?.toFixed(2) : "-"}</td>
@@ -1503,16 +1753,15 @@ const FeePayout = () => {
                   <td className="px-4 py-2 text-right">{total?.incentiveAmount ? total?.incentiveAmount?.toFixed(2) : "-"}</td>
                   <td className="px-4 py-2 text-right">{total?.otherAmount ? total?.otherAmount?.toFixed(2) : "-"}</td>
                   <td className="px-4 py-2 text-right">{total?.grossSalary ? total?.grossSalary?.toFixed(2) : "-"}</td>
-
                   <td className="px-4 py-2 text-right" colSpan="11"></td>
                   <td className="px-4 py-2 text-right">{total?.earningSalary ? total?.earningSalary?.toFixed(2) : "-"}</td>
                   <td className="px-4 py-2 text-right">{total?.bonusAmount ? total?.bonusAmount?.toFixed(2) : "-"}</td>
                   <td className="px-4 py-2 text-right"></td>
                   <td className="px-4 py-2 text-right">{total?.totalDeduction ? total?.totalDeduction?.toFixed(2) : "-"}</td>
                   <td className="px-4 py-2 text-right">{total?.netSalary ? total?.netSalary?.toFixed(2) : "-"}</td>
-
                   <td className="px-4 py-2 text-right" colSpan="5"></td>
                 </tr>
+
               </tbody>
             </table>
           )}
@@ -1521,13 +1770,138 @@ const FeePayout = () => {
 
           <div className="text-right font-semibold mt-2">Total Rows: {data?.length}</div>
         </div>
+        <Transition appear show={openModal} as={Fragment}>
+          <Dialog as="div" className="relative z-10" onClose={() => setOpenModal(false)}>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <div className="fixed inset-0 bg-black/25" />
+            </Transition.Child>
 
+            <div className="fixed inset-0 flex items-center justify-center p-4">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-7xl h-[90vh] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all relative flex flex-col">
+                  <button
+                    className="absolute top-4 right-4 bg-red-500 text-white rounded-full p-2 text-sm"
+                    onClick={() => setOpenModal(false)}
+                  >
+                    ✖
+                  </button>
+                  <Dialog.Title className="text-lg font-bold text-center text-gray-900 lg:text-xl">
+                    Timesheet - {modalData[0].emp_name} - {filterState.yr} - {filterState.month}
+                  </Dialog.Title>
+
+                  {/* Table Container */}
+                  <div className="mt-4 flex flex-col gap-4 overflow-y-auto overflow-x-auto">
+                    <table className="w-full border-collapse border border-gray-300">
+                      {/* Table Header */}
+                      <thead className="sticky top-0 bg-blue-600 text-white font-semibold text-sm">
+                        <tr>
+                          <th className="p-2 border w-32">Emp Code</th>
+                          <th className="p-2 border w-48">Emp Name</th>
+                          <th className="p-2 border w-48">Attendance Type</th>
+                          <th className="p-2 border w-40">Date</th>
+                          <th className="p-2 border w-48">Punch In Time</th>
+                          <th className="p-2 border w-48">Opening KM</th>
+                          <th className="p-2 border w-48">Punch Out Time</th>
+                          <th className="p-2 border w-48">Closing KM</th>
+                          <th className="p-2 border w-48">Total Hour</th>
+                          <th className="p-2 border w-48">Total KM</th>
+                          <th className="p-2 border w-48">Status</th>
+                        </tr>
+                      </thead>
+                      {/* Table Body */}
+                      <tbody>
+                        {modalData?.map((item, idx) => (
+                          <tr key={idx} className="text-center text-xs md:text-sm border">
+                            <td className="p-2 border w-32">{item.emp_code}</td>
+                            <td className="p-2 border w-48">{item.emp_name}</td>
+                            <td className="p-2 border w-48">{item.attendance_type}</td>
+                            <td className="p-2 border w-40">{moment(item.date).format("DD-MM-YYYY")}</td>
+                            <td className="p-2 border w-48"> {item.punch_in_time ? moment(item.punch_in_time).subtract(5, 'hours')
+                              .subtract(30, 'minutes').format("hh:mm A") : "-"}</td>
+                            <td className="p-2 border w-48">{item.opening_km}</td>
+                            <td className="p-2 border w-48"> {item.punch_out_time
+                              ? moment(item.punch_out_time).format("hh:mm A")
+                              : "-"}</td>
+                            <td className="p-2 border w-48">{item.closing_km}</td>
+                            <td className="p-2 border w-48">{getTimeDiff(item)}</td>
+                            <td className="p-2 border w-48">{item.closing_km - item.opening_km}</td>
+                            <td className="p-2 border w-48">{item.status}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+
+                    <table className="min-w-[50%] border-collapse table-auto">
+                      <thead>
+                        <tr className="bg-gray-200">
+                          <th className="px-4 py-2 text-left">Activity</th>
+                          <th className="px-4 py-2 text-left">PO</th>
+                          <th className="px-4 py-2 text-left">WO</th>
+                          <th className="px-4 py-2 text-left">H</th>
+                          <th className="px-4 py-2 text-left">HD</th>
+                          <th className="px-4 py-2 text-left">A</th>
+                          <th className="px-4 py-2 text-left">PR</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {/* Example data row */}
+                        <tr className="border-t">
+                          <td className="px-4 py-2">Mark</td>
+                          <td className="px-4 py-2">{modalPayoutItems.mark.pd}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.mark.wo}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.mark.h}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.mark.hd}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.mark.a}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.mark.pr}</td>
+                        </tr>
+                        <tr className="border-t">
+                          <td className="px-4 py-2">Verify</td>
+                          <td className="px-4 py-2">{modalPayoutItems.verify.pd}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.verify.wo}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.verify.h}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.verify.hd}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.verify.a}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.verify.pr}</td>
+                        </tr>
+                        <tr className="border-t">
+                          <td className="px-4 py-2">Approve</td>
+                          <td className="px-4 py-2">{modalPayoutItems.approve.pd}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.approve.wo}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.approve.h}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.approve.hd}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.approve.a}</td>
+                          <td className="px-4 py-2">{modalPayoutItems.approve.pr}</td>
+                        </tr>
+                        {/* Add more rows as needed */}
+                      </tbody>
+                    </table>
+                  </div>
+
+
+
+
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </Dialog>
+        </Transition>
       </div>
-
-
-
-
-
     </Layout>
   );
 };
