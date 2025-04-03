@@ -1504,7 +1504,6 @@ const FeePayout = () => {
             }
           >
             <option value="All">- All Territory -</option>
-
             {allTerritoryData.map((item, idx) => (
               <option value={item.t_id} key={idx}>
                 {item.territory_name}
@@ -1552,12 +1551,10 @@ const FeePayout = () => {
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
-
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Sr. No</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Code</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Name</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Designation</th>
-
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Reporting HQ</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Territory</th>
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Application Fee Amount</th>
@@ -1652,6 +1649,7 @@ const FeePayout = () => {
                     <td className="px-4 py-2 text-right">{item.h_count}</td>
                     <td className="px-4 py-2 text-right">{item.emp_wo_count}</td>
                     <td className="px-4 py-2 text-right">{item.manual_attendance}</td>
+
                     <td className="px-4 py-2 text-right bg-green-200">
                       <button
                         className="text-blue-600 underline hover:text-blue-800"
@@ -1678,18 +1676,29 @@ const FeePayout = () => {
                         {item.total_working_day}
                       </button>
                     </td>
+
                     <td className="px-4 py-2 text-right">{item.a_count}</td>
+
+
                     <td className="px-4 py-2 text-right">{item.total_hd_count}</td>
+
                     <td className="px-4 py-2 text-right">{item.w_o_diff}</td>
+
                     <td className={`px-4 py-2 text-right ${item.calender_w_d !== item.total_calender_day ? "text-red-200" : ""} `}>{item.total_calender_day}</td>
+
                     <td className="px-4 py-2 text-right">{parseFloat(item.earning_salary) ? parseFloat(item.earning_salary)?.toFixed(2) : "-"}</td>
+
                     <td className="px-4 py-2 text-right">{parseFloat(item.bonus_amt) ? parseFloat(item.bonus_amt)?.toFixed(2) : "-"}</td>
+
                     <td className="px-4 py-2 text-right">{parseFloat(item.other_amt) ? parseFloat(item.other_amt)?.toFixed(2) : "-"}</td>
+
                     <td className="px-4 py-2 text-right">{parseFloat(item.total_deduc) ? parseFloat(item.total_deduc)?.toFixed(2) : "-"}</td>
+
                     <td className="px-4 py-2 text-right bg-green-200">{parseFloat(item.net_salary) ? parseFloat(item.net_salary)?.toFixed(2) : "-"}</td>
 
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.total_mr_demo_present ? item.total_mr_demo_present : "-"}
+
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.mr_field_present ? item.mr_field_present : "-"}

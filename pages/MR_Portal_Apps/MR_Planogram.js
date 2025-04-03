@@ -87,7 +87,7 @@ const AdditionalInfo = (props) => {
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
           e_id: id,
-          year: moment().format("YYYY"),
+
           emp_code: window.localStorage.getItem("emp_code")
         },
       });
