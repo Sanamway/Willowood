@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Layout from "../../Layout";
+import Layout from "../../../../components/Sales_Portal_Apps/Layout";
 import { IoIosBasket } from "react-icons/io";
 
 import { CiBookmark } from "react-icons/ci";

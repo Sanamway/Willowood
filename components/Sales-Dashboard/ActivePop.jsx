@@ -72,7 +72,7 @@ const PopupModals = ({ closeModal, regionData, catData }) => {
 
   return (
     <>
-      <animated.div  className=" bg-gray-300/40 opacity-1 backdrop-blur-[4px]  from-gray-50 to-transparent z-10 w-full flex items-center justify-center min-h-screen fixed top-0 right-0 left-0 bottom-0 ">
+      <animated.div className=" bg-gray-300/40 opacity-1 backdrop-blur-[4px]  from-gray-50 to-transparent z-10 w-full flex items-center justify-center min-h-screen fixed top-0 right-0 left-0 bottom-0 ">
         <animated.div style={springProps} className="mainContainer lg:w-[55%] w-full mx-2 h-auto   bg-white rounded-lg  ">
           <div className="flex items-center justify-between py-1.5 px-2 border-b-2">
             <div className="px-2 text-[0.89rem] font-semibold text-gray-500 py-1">Active Customer</div>
@@ -87,21 +87,19 @@ const PopupModals = ({ closeModal, regionData, catData }) => {
           <div className="wrapTitle flex items-center justify-start mt-4 px-6 ">
             <button
               onClick={() => setSelected("category")}
-              className={`text-[0.75rem] font-semibold pb-1  ${
-                selected == "category"
+              className={`text-[0.75rem] font-semibold pb-1  ${selected == "category"
                   ? "border-b-[3px] px-2 text-blue-400 border-blue-400"
                   : "border-b-2 px-2 text-gray-500 "
-              }`}
+                }`}
             >
               Category Based
             </button>
             <button
               onClick={() => setSelected("region")}
-              className={`text-[0.75rem] font-semibold pb-1  ${
-                selected == "region"
+              className={`text-[0.75rem] font-semibold pb-1  ${selected == "region"
                   ? "border-b-[3px] px-2 text-blue-400 border-blue-400"
                   : "border-b-2 px-2 text-gray-500 "
-              }`}
+                }`}
             >
               Region Based
             </button>
@@ -218,7 +216,7 @@ const PopupModals = ({ closeModal, regionData, catData }) => {
                           </th>
 
                           <th onClick={handleSort} className="px-2 cursor-pointer py-1 text-[0.78rem] text-blue-400 font-bold">
-                          <span className="flex items-center justify-center w-full">
+                            <span className="flex items-center justify-center w-full">
                               Total Sales{" "}
                               {nameSort ? (
                                 <IoMdArrowDropdown size={20}></IoMdArrowDropdown>
@@ -226,10 +224,10 @@ const PopupModals = ({ closeModal, regionData, catData }) => {
                                 <IoMdArrowDropup size={20}></IoMdArrowDropup>
                               )}
                             </span>
-                           </th>
+                          </th>
 
                           <th onClick={handleSort} className="px-2 py-1 cursor-pointer text-[0.78rem] text-blue-400 font-bold">
-                          <span className="flex items-center justify-center w-full">
+                            <span className="flex items-center justify-center w-full">
                               No. of Customers{" "}
                               {nameSort ? (
                                 <IoMdArrowDropdown size={20}></IoMdArrowDropdown>
@@ -275,7 +273,7 @@ const PopupModals = ({ closeModal, regionData, catData }) => {
               </div>
             </div>
           )}
-          
+
         </animated.div>
       </animated.div>
     </>

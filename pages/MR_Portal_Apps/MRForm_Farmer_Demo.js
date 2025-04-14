@@ -131,6 +131,8 @@ const AdditionalInfo = (props) => {
       }
   };
 
+
+
   const getSegmentInfo = async (cropId) => {
     if (new Date())
       try {

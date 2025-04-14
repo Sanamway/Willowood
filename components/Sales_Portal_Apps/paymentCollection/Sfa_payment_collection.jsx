@@ -59,11 +59,9 @@ const Collection = (props) => {
             case 6:
                 return <div className="flex flex-row justify-between">
                     <div className="flex">
-
                         <span className="font-medium  w-[160px]">Territory</span>
                         <span>: {JSON.parse(window.localStorage.getItem("userinfo")).territory_name}</span>
                     </div>
-
                 </div>
 
                 break;
@@ -159,7 +157,6 @@ const Collection = (props) => {
                 };
                 break;
             case 5:
-
                 paramsData = {
                     c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
                     r_id: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
@@ -167,11 +164,8 @@ const Collection = (props) => {
                     m_year: moment().format("YYYY-MM"),
                     party_code: propsData.data?.sapCode
                 };
-
-
                 break;
             case 4:
-
                 paramsData = {
                     c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
                     z_id: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
@@ -179,10 +173,8 @@ const Collection = (props) => {
                     m_year: moment().format("YYYY-MM"),
                     party_code: propsData.data?.sapCode
                 };
-
                 break;
             case 3:
-
                 paramsData = {
                     c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
                     bu_id: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
@@ -190,7 +182,6 @@ const Collection = (props) => {
                     m_year: moment().format("YYYY-MM"),
                     party_code: propsData.data?.sapCode
                 };
-
                 break;
             case 10:
                 paramsData = {
@@ -200,8 +191,6 @@ const Collection = (props) => {
                     m_year: moment().format("YYYY-MM"),
                     party_code: propsData.data?.sapCode
                 };
-
-
                 break;
             default:
 
@@ -222,12 +211,8 @@ const Collection = (props) => {
         } catch (error) {
             console.log("zxc", error)
             const errorMessage = error?.response?.data?.message;
-
-
         }
     };
-
-
     useEffect(() => {
         if (typeof window === "undefined") return
         getCollectionData()
@@ -236,6 +221,7 @@ const Collection = (props) => {
 
     const [uploadDocument, setUploadDocument] = useState("")
     const [image, setImage] = useState()
+
     const handleFileChange = (event) => {
         const file = event.target.files[0]; // Get the selected file
         if (file) {
@@ -244,8 +230,6 @@ const Collection = (props) => {
         }
 
     };
-
-    console.log("qaxs", uploadDocument)
 
     const uploadImage = async (data) => {
         function getFileExtension(filename) {

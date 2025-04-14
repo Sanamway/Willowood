@@ -148,7 +148,7 @@ const Layout = ({ children }) => {
       );
       const respData = await resp.data.data;
       setMenus(respData);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const payload = {
@@ -179,7 +179,7 @@ const Layout = ({ children }) => {
         toast.success(respdata.message);
         setTimeout(() => router.push("/logoutsuccess"), 1000);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -196,7 +196,7 @@ const Layout = ({ children }) => {
       const respData = await res.data;
       setUserImage(respData?.data?.image_url);
       localStorage.setItem("ImageLink", respData?.data?.image_url);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -217,7 +217,7 @@ const Layout = ({ children }) => {
       });
       const respData = await res.data;
       setUserImage(respData?.data?.image_url);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const messageContent = `
@@ -325,9 +325,8 @@ Application End User
       <div className="flex fixed w-full h-screen  font-arial bg-[#15283c]   ">
         {/* Sidebar */}
         <div
-          className={`flex-shrink-0   ${
-            isOpen ? (isMobile ? " " : "w-[6rem]  ") : isMobile ? "hidden " : "w-[14rem] "
-          } bg-[#15283c] text-white custom-scrollbar min-h-screen overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-500`}
+          className={`flex-shrink-0   ${isOpen ? (isMobile ? " " : "w-[6rem]  ") : isMobile ? "hidden " : "w-[14rem] "
+            } bg-[#15283c] text-white custom-scrollbar min-h-screen overflow-x-hidden overflow-y-scroll transition-all ease-in-out duration-500`}
         >
           <div className={`flex flex-col ${isOpen ? "items-center" : "items-start"} w-full  `}>
             <div className="flex items-center justify-between relative">
@@ -349,9 +348,8 @@ Application End User
                         <h2 className="font-sm text-white whitespace-nowrap">{user_name}</h2>
                         <div className="flex items-center gap-2">
                           <h2
-                            className={`bg-[#00FF00] h-2 w-2 rounded-full ${
-                              uid == 1 ? "animate-ping" : "bg-gray-200 h-2 w-2 rounded-full"
-                            }`}
+                            className={`bg-[#00FF00] h-2 w-2 rounded-full ${uid == 1 ? "animate-ping" : "bg-gray-200 h-2 w-2 rounded-full"
+                              }`}
                           ></h2>
                           <h2 className="text-sm text-text-green font-arial">{"Online"}</h2>
                         </div>
@@ -371,20 +369,19 @@ Application End User
                 <>
                   <div
                     key={_id}
-                    className={`flex ${
-                      isOpen ? "flex-col text-[0.7rem] items-center" : "flex-row gap-2 text-[0.8rem] "
-                    }  cursor-pointer text-left border-1 rounded-md border-black w-full hover:bg-orange-500  px-2 py-1 `}
+                    className={`flex ${isOpen ? "flex-col text-[0.7rem] items-center" : "flex-row gap-2 text-[0.8rem] "
+                      }  cursor-pointer text-left border-1 rounded-md border-black w-full hover:bg-orange-500  px-2 py-1 `}
                   >
                     <div
                       className=""
-                      // onClick={(e) => {
-                      //       e.preventDefault();
-                      //       // router.push(`/${item.page_call}`);
-                      //       router.push({
-                      //         pathname: `/${menu.page_call}`,
-                      //         query: { name: `${menu.label}` },
-                      //       });
-                      //     }}
+                    // onClick={(e) => {
+                    //       e.preventDefault();
+                    //       // router.push(`/${item.page_call}`);
+                    //       router.push({
+                    //         pathname: `/${menu.page_call}`,
+                    //         query: { name: `${menu.label}` },
+                    //       });
+                    //     }}
                     >
                       <FcVoicePresentation size={20}></FcVoicePresentation>
                     </div>
@@ -516,9 +513,8 @@ Application End User
 
                               <Popover.Panel
                                 as="div"
-                                className={`${
-                                  open ? "block" : "hidden"
-                                } absolute right-2 mt-2 w-40 bg-white text-black borde rounded-md shadow-md`}
+                                className={`${open ? "block" : "hidden"
+                                  } absolute right-2 mt-2 w-40 bg-white text-black borde rounded-md shadow-md`}
                               >
                                 <ul className="py-2 p text-text-black flex flex-col gap-2 px-4 font-Rale cursor-pointer">
                                   <li

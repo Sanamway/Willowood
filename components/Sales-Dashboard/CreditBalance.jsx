@@ -5,9 +5,9 @@ import { BsCashCoin } from "react-icons/bs";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { GiAlarmClock } from "react-icons/gi";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
-import TotalOutStandPop from "../TotalOsPopup";
+import TotalOutStandPop from "./TotalOsPopup";
 
-import TotalOverDueAmtPop from "../TotalOverDueAmtPop";
+import TotalOverDueAmtPop from "./TotalOverDueAmtPop";
 
 const CreditBalance = () => {
   const allCollectionTableData = useSelector((state) => state.collection.collectionTableData

@@ -1811,7 +1811,7 @@ const FeePayout = () => {
                     ✖
                   </button>
                   <Dialog.Title className="text-lg font-bold text-center text-gray-900 lg:text-xl">
-                    Timesheet - {modalData[0].emp_name} - {filterState.yr} - {filterState.month}
+                    Timesheet - {modalData[0]?.emp_name} - {filterState.yr} - {filterState.month}
                   </Dialog.Title>
 
                   {/* Table Container */}

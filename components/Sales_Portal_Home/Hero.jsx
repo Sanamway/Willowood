@@ -5,7 +5,6 @@ import Swipecards from "./Swipecards";
 import UPICards from "./UPICards";
 import { FaArrowAltCircleUp } from "react-icons/fa";
 
-
 const Hero = () => {
   const [dragup, setDragUp] = useState(true);
 
@@ -19,26 +18,27 @@ const Hero = () => {
     const scrolledUp = touchY > window.innerHeight / 4;
     setDragUp(scrolledUp);
   };
-
-
-
+  
+  
+ 
   const [error, setError] = useState(null);
   // 404 error handlling Function
-  const ab = new Promise((res, rej) => {
-    setTimeout(() => {
-      res("! ")
-    }, 404)
-
-
-  }
-  )
-  ab.then((res, rej) => console.log("promises", res, rej))
-
+  const ab= new Promise((res, rej)=>
+    {
+      setTimeout(()=> {
+        res("! ")
+      },404)
+    
+     
+    }
+   )
+   ab.then((res, rej)=>console.log("promises", res, rej))
+   
   const handleRequestLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-
+         
           setError(null);
         },
         (error) => {
@@ -65,21 +65,22 @@ const Hero = () => {
     }
   };
 
-  useEffect(() => {
+  useEffect(()=>{
     handleRequestLocation()
-  }, [])
+  },[])
 
   return (
     <>
-      <section className="main w-full bg-yellow-400 h-screen  ">
+      <section className="main w-full bg-[#012A72] h-screen  ">
         {/* <div className="flex bg-white h-screen text-center">Background Content</div> */}
         <div
           onWheel={handleScroll}
           // onTouchMove={handleTouchMove}
-          className={`flex items-center overflow-y-auto mrhome fixed top-5 bg-white rounded-2xl justify-center w-[99.7%] ${dragup
-            ? "transition-all ease-out duration-300 mt-10"
-            : "transition-all ease-out duration-300 mt-52"
-            }`}
+          className={`flex items-center overflow-y-auto mrhome fixed top-5 bg-white rounded-2xl justify-center w-[99.7%] ${
+            dragup
+              ? "transition-all ease-out duration-300 mt-10"
+              : "transition-all ease-out duration-300 mt-52"
+          }`}
           style={{ height: "calc(100vh - 5rem)" }}
         >
           <div className="h-full w-full  ">
@@ -96,31 +97,31 @@ const Hero = () => {
                 <BankingCards></BankingCards>
                 <UPICards></UPICards>
 
-
+              
               </div>
 
               <div className="bg-[#F2F4FF] w-[97%] my-2 rounded-lg">
                 <Swipecards></Swipecards>
               </div>
-
+              
             </div>
           </div>
           <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 ">
-            <FaArrowAltCircleUp
-              size={42}
-              className="self-center size-120 text-black-400 text-blue-400 "
-              onClick={() =>
-                window.scrollTo({
-                  top: 0,
-                  behavior: "smooth", // Smooth scrolling animation
-                })
-              }
-            />
-          </div>
+         <FaArrowAltCircleUp
+          size={42}
+          className="self-center size-120 text-black-400 text-blue-400 "
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth", // Smooth scrolling animation
+            })
+          }
+        />
+      </div>
         </div>
-
+        
       </section>
-
+     
     </>
   );
 };

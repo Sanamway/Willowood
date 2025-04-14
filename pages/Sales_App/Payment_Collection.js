@@ -20,8 +20,8 @@ import { FcNews } from "react-icons/fc";
 import { IoLocationOutline } from "react-icons/io5";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { FcNeutralTrading } from "react-icons/fc";
-import Collection from "./Sfa_payment_collection";
-import History from "./Sfa_payment_history";
+import Collection from "../../components/Sales_Portal_Apps/paymentCollection/Sfa_payment_collection";
+import History from "../../components/Sales_Portal_Apps/paymentCollection/Sfa_payment_history";
 import { useRouter } from "next/router";
 
 const Dashboard = () => {

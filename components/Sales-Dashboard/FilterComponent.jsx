@@ -891,212 +891,225 @@ const FilterComponent = () => {
   //   allTableData
   // ])
 
-
+  const [isOpen, setIsOpen] = useState(true);
   return (
 
-    <div className="flex gap-2 flex-wrap w-full flex-row justify-around">
-      <div className="w-[46%] flex flex-col gap-1.5 ">
-        <label className="text-gray-500 font-bold text-[0.85rem]">Year</label>
-        <select
-          className=" w-full max px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
-          id="stateSelect"
-          value={filterState.yr}
-          onChange={(e) =>
-            setFilterState({
-              ...filterState,
-              yr: e.target.value,
-            })
-          }
-          disabled={!filterState.yr}
+    <div className="w-full">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="mb-3 px-4 py-2 bg-indigo-600 text-white rounded-md font-semibold shadow hover:bg-indigo-700 transition"
+      >
+        {isOpen ? "Hide Filters ▲" : "Show Filters ▼"}
+      </button>
 
-        >
+      {isOpen && (
 
-          <option value="All" className="font-bold" disabled={true}>
-            -- Select --
-          </option>
-          {allYearData.map((item, idx) => (
-            <option value={item} key={idx}>
-              {item}
-            </option>))}
+        <div className="flex gap-2 flex-wrap w-full flex-row justify-around">
+          <div className="w-[46%] flex flex-col gap-1.5 ">
+            <label className="text-gray-500 font-bold text-[0.85rem]">Year</label>
+            <select
+              className=" w-full max px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
+              id="stateSelect"
+              value={filterState.yr}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  yr: e.target.value,
+                })
+              }
+              disabled={!filterState.yr}
 
-        </select>
-      </div>
-      <div className="w-[46%] flex  flex-col gap-1.5 ">
-        <label className="text-gray-500 font-bold text-[0.85rem]">Month</label>
-        <select
-          className=" w-full max px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
-          id="stateSelect"
-          value={filterState.month}
-          onChange={(e) =>
-            setFilterState({
-              ...filterState,
-              month: e.target.value,
-            })
-          }
-          disabled={!filterState.yr}
-        >
-          <option value="All" className="font-bold">
-            All
-          </option>
-          {allMonthData.map((item, idx) => (
-            <option value={item} key={idx}>
-              {moment(item).format('MMM YYYY')}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="w-[46%] flex flex-col gap-1.5 ">
-        <label className="text-gray-500 font-bold text-[0.85rem]">Segment</label>
-        <select
-          className=" w-full max px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
-          id="stateSelect"
-          value={filterState.bgId}
-          onChange={(e) =>
-            setFilterState({
-              ...filterState,
-              bgId: e.target.value,
-              buId: '',
-              zId: '',
-              rId: '',
-              tId: '',
-            })
-          }
-          disabled={
-            localStorageItems.roleId === 6 ||
-            localStorageItems.roleId === 5 ||
-            localStorageItems.roleId === 4 ||
-            localStorageItems.roleId === 3 ||
-            localStorageItems.roleId === 10
-          }
+            >
 
-        >
-          <option value={""} className="font-bold">
-            - Business Segment -
-          </option>
-          <option value={"All"}>All Segment</option>
-          {bgData.map((item, idx) => (
-            <option value={item.bg_id} key={idx}>
-              {item.business_segment}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="w-[46%] flex flex-col gap-1.5 ">
-        <label className="text-gray-500 font-bold text-[0.85rem]">Business Unit</label>
-        <select
-          className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
-          id="stateSelect"
-          value={filterState.buId}
-          onChange={(e) =>
-            setFilterState({
-              ...filterState,
-              buId: e.target.value,
+              <option value="All" className="font-bold" disabled={true}>
+                -- Select --
+              </option>
+              {allYearData.map((item, idx) => (
+                <option value={item} key={idx}>
+                  {item}
+                </option>))}
 
-              zId: '',
-              rId: '',
-              tId: '',
-            })
-          }
-          disabled={
-            localStorageItems.roleId === 6 ||
-            localStorageItems.roleId === 5 ||
-            localStorageItems.roleId === 4 ||
-            localStorageItems.roleId === 3
-          }
+            </select>
+          </div>
+          <div className="w-[46%] flex  flex-col gap-1.5 ">
+            <label className="text-gray-500 font-bold text-[0.85rem]">Month</label>
+            <select
+              className=" w-full max px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
+              id="stateSelect"
+              value={filterState.month}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  month: e.target.value,
+                })
+              }
+              disabled={!filterState.yr}
+            >
+              <option value="All" className="font-bold">
+                All
+              </option>
+              {allMonthData.map((item, idx) => (
+                <option value={item} key={idx}>
+                  {moment(item).format('MMM YYYY')}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="w-[46%] flex flex-col gap-1.5 ">
+            <label className="text-gray-500 font-bold text-[0.85rem]">Segment</label>
+            <select
+              className=" w-full max px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
+              id="stateSelect"
+              value={filterState.bgId}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  bgId: e.target.value,
+                  buId: '',
+                  zId: '',
+                  rId: '',
+                  tId: '',
+                })
+              }
+              disabled={
+                localStorageItems.roleId === 6 ||
+                localStorageItems.roleId === 5 ||
+                localStorageItems.roleId === 4 ||
+                localStorageItems.roleId === 3 ||
+                localStorageItems.roleId === 10
+              }
 
-        >
-          <option value={""}>- Business Unit -</option>
+            >
+              <option value={""} className="font-bold">
+                - Business Segment -
+              </option>
+              <option value={"All"}>All Segment</option>
+              {bgData.map((item, idx) => (
+                <option value={item.bg_id} key={idx}>
+                  {item.business_segment}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="w-[46%] flex flex-col gap-1.5 ">
+            <label className="text-gray-500 font-bold text-[0.85rem]">Business Unit</label>
+            <select
+              className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
+              id="stateSelect"
+              value={filterState.buId}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  buId: e.target.value,
 
-          {buData.map((item, idx) => (
-            <option value={item.bu_id} key={idx}>
-              {item.business_unit_name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="w-[46%] flex flex-col gap-1.5 ">
-        <label className="text-gray-500 font-bold text-[0.85rem]">Zone</label>
-        <select
-          className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
-          id="stateSelect"
-          value={filterState.zId}
-          onChange={(e) =>
-            setFilterState({
-              ...filterState,
-              zId: e.target.value,
-              rId: '',
-              tId: '',
-            })
-          }
-          disabled={
-            localStorageItems.roleId === 6 ||
-            localStorageItems.roleId === 5 ||
-            localStorageItems.roleId === 4
-          }
+                  zId: '',
+                  rId: '',
+                  tId: '',
+                })
+              }
+              disabled={
+                localStorageItems.roleId === 6 ||
+                localStorageItems.roleId === 5 ||
+                localStorageItems.roleId === 4 ||
+                localStorageItems.roleId === 3
+              }
 
-        >
-          <option value={""}>- Zone -</option>
+            >
+              <option value={""}>- Business Unit -</option>
 
-          {zoneData.map((item, idx) => (
-            <option value={item.z_id} key={idx}>
-              {item.zone_name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="w-[46%] flex flex-col gap-1.5 ">
-        <label className="text-gray-500 font-bold text-[0.85rem]">Region</label>
-        <select
-          className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
-          id="stateSelect"
-          value={filterState.rId}
-          disabled={
-            localStorageItems.roleId === 6 || localStorageItems.roleId === 5
-          }
-          onChange={(e) =>
-            setFilterState({
-              ...filterState,
-              rId: e.target.value,
-              tId: '',
-            })
-          }
-        >
-          <option value={""}>- Region -</option>
-          {regionData.map((item, idx) => (
-            <option value={item.r_id} key={idx}>
-              {item.region_name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="w-[46%] flex flex-col gap-1.5 ">
-        <label className="text-gray-500 font-bold text-[0.85rem]">Teritory</label>
-        <select
-          className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
-          id="stateSelect"
-          value={filterState.tId}
-          disabled={
-            localStorageItems.roleId === 11 || localStorageItems.roleId === 6
-          }
-          onChange={(e) =>
-            setFilterState({
-              ...filterState,
-              tId: e.target.value,
-            })
-          }
-        >
-          <option value={""}>- Territory -</option>
-          {territoryData.map((item, idx) => (
-            <option value={item.t_id} key={idx}>
-              {item.territory_name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="w-[46%] flex flex-col gap-1.5 ">
+              {buData.map((item, idx) => (
+                <option value={item.bu_id} key={idx}>
+                  {item.business_unit_name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="w-[46%] flex flex-col gap-1.5 ">
+            <label className="text-gray-500 font-bold text-[0.85rem]">Zone</label>
+            <select
+              className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
+              id="stateSelect"
+              value={filterState.zId}
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  zId: e.target.value,
+                  rId: '',
+                  tId: '',
+                })
+              }
+              disabled={
+                localStorageItems.roleId === 6 ||
+                localStorageItems.roleId === 5 ||
+                localStorageItems.roleId === 4
+              }
 
-      </div>
+            >
+              <option value={""}>- Zone -</option>
+
+              {zoneData.map((item, idx) => (
+                <option value={item.z_id} key={idx}>
+                  {item.zone_name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="w-[46%] flex flex-col gap-1.5 ">
+            <label className="text-gray-500 font-bold text-[0.85rem]">Region</label>
+            <select
+              className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
+              id="stateSelect"
+              value={filterState.rId}
+              disabled={
+                localStorageItems.roleId === 6 || localStorageItems.roleId === 5
+              }
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  rId: e.target.value,
+                  tId: '',
+                })
+              }
+            >
+              <option value={""}>- Region -</option>
+              {regionData.map((item, idx) => (
+                <option value={item.r_id} key={idx}>
+                  {item.region_name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="w-[46%] flex flex-col gap-1.5 ">
+            <label className="text-gray-500 font-bold text-[0.85rem]">Teritory</label>
+            <select
+              className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
+              id="stateSelect"
+              value={filterState.tId}
+              disabled={
+                localStorageItems.roleId === 11 || localStorageItems.roleId === 6
+              }
+              onChange={(e) =>
+                setFilterState({
+                  ...filterState,
+                  tId: e.target.value,
+                })
+              }
+            >
+              <option value={""}>- Territory -</option>
+              {territoryData.map((item, idx) => (
+                <option value={item.t_id} key={idx}>
+                  {item.territory_name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="w-[46%] flex flex-col gap-1.5 ">
+
+          </div>
+        </div>
+      )}
     </div>
+
 
   );
 };

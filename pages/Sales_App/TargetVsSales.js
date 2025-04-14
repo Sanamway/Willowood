@@ -15,7 +15,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 
 import Profile from "../../public/userimg.jpg";
 import { FaArrowAltCircleUp } from "react-icons/fa";
-import ChartOne from "./ChartOne";
+import ChartOne from "../../components/Sales_Portal_Apps/ChartOne";
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
 
 const AdditionalInfo = (props) => {

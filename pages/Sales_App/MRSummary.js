@@ -17,20 +17,20 @@ import { IoSettingsOutline } from "react-icons/io5";
 
 import Profile from "../../public/userimg.jpg";
 import { FaArrowAltCircleUp } from "react-icons/fa";
-import ChartOne from "./ChartOne";
+import ChartOne from "../../components/Sales_Portal_Apps/ChartOne";
 import toast from "react-hot-toast";
 import { FiMinus, FiPlus } from "react-icons/fi";
 
-import AllTables from "./AllTables";
+import AllTables from "../../components/Sales_Portal_Apps/AllTables";
 
 
 import { BsCashCoin } from "react-icons/bs";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { GiAlarmClock } from "react-icons/gi";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
-import TotalOutStandPop from "./TotalOsPopup";
-import { totalOsData } from "./sampleData";
-import TotalOverDueAmtPop from "./TotalOverDueAmtPop";
+import TotalOutStandPop from "../../components/Sales_Portal_Apps/TargetVsCollection/TotalOsPopup";
+
+import TotalOverDueAmtPop from "../../components/Sales_Portal_Apps/TargetVsCollection/TotalOverDueAmtPop";
 
 const ChartReports = () => {
     const router = useRouter();

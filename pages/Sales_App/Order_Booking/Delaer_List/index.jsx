@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import FilterComponent from "./FilterComponent";
-import Layout from "../../Layout";
+import FilterComponent from "../../../../components/Sales_Portal_Apps/DealerFilterComponent";
+import Layout from "../../../../components/Sales_Portal_Apps/Layout";
 import { IoIosBasket } from "react-icons/io";
 import { useRouter } from "next/router";
 

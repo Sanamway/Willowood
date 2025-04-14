@@ -1,24 +1,25 @@
 import React from "react";
-import FilterComponent from "./FilterComponent";
-import SaleCards from "./SaleCards";
-import CustomerCards from "./CustomerCards";
-import SaleSummary from "./SaleSummary";
+import FilterComponent from "../../../components/Sales-Dashboard/FilterComponent";
+import SaleCards from "../../../components/Sales-Dashboard/SaleCards";
+import CustomerCards from "../../../components/Sales-Dashboard/CustomerCards";
+import SaleSummary from "../../../components/Sales-Dashboard/SaleSummary";
 import { useState } from "react";
-import CreditBalance from "./CreditBalance";
-import TotalCards from "./TotalCards";
-import RecentOrder from "./RecentOrder";
-import RollingCards from "./RollingCards";
-import GraphCard from "./GraphCard";
-import ProductCards from "./ProductCards";
+import CreditBalance from "../../../components/Sales-Dashboard/CreditBalance";
+
+import RecentOrder from "../../../components/Sales-Dashboard/RecentOrder";
+import RollingCards from "../../../components/Sales-Dashboard/RollingCards";
+import GraphCard from "../../../components/Sales-Dashboard/GraphCard";
+import ProductCards from "../../../components/Sales-Dashboard/ProductCards";
 import { LiaFileDownloadSolid } from "react-icons/lia";
 import { Popover, Switch } from "@headlessui/react";
-import ViewCard from "./ViewCards";
-import ChartOne from "../ChartOne";
+import ViewCard from "../../../components/Sales-Dashboard/ViewCards";
+import ChartOne from "../../../components/Sales_Portal_Apps/ChartOne";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { BsCalendar2Month } from "react-icons/bs";
 import { FaHandsHelping } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
+
 
 const Dashboard = () => {
   return (

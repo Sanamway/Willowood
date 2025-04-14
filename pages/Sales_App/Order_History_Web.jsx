@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import FilterComponent from "./FilterComponent";
-import Layout from "../Layout";
+import FilterComponent from "../../components/Sales_Portal_Apps/OrderhistoryWeb/FilterComponent";
+import Layout from "../../components/Sales_Portal_Apps/Layout";
 import { IoIosBasket } from "react-icons/io";
-import OrderTable from "./OrderTable";
+import OrderTable from "../../components/Sales_Portal_Apps/OrderhistoryWeb/OrderTable";
 import { CiBookmark } from "react-icons/ci";
 import { LuRefreshCw } from "react-icons/lu";
 import { useSelector } from "react-redux";

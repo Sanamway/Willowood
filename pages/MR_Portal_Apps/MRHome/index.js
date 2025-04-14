@@ -27,8 +27,6 @@ const index = () => {
     setTimeout(() => {
       res("! ")
     }, 404)
-
-
   }
   )
   ab.then((res, rej) => console.log("promises", res, rej))

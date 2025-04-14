@@ -11,7 +11,7 @@ import { url } from "@/constants/url";
 import ConfirmModal from "../modals/ConfirmModal";
 
 const AssignRole = () => {
-          const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
 
   const router = useRouter();
 
@@ -34,7 +34,7 @@ const AssignRole = () => {
       const uniqueRecords = {};
       respData.forEach((record) => {
         const roleId = record.role_id;
-                  if (!uniqueRecords[roleId]) {
+        if (!uniqueRecords[roleId]) {
           uniqueRecords[roleId] = record;
         }
       });
@@ -46,7 +46,7 @@ const AssignRole = () => {
   };
 
   useEffect(() => {
-            getAssignRoleDatas();
+    getAssignRoleDatas();
   }, []);
 
   const [isOpen, setisOpen] = useState(false);
@@ -61,7 +61,7 @@ const AssignRole = () => {
     getAssignRoleDatas();
     setisOpen(false);
   };
-  const { name } = router.query; 
+  const { name } = router.query;
 
   return (
     <Layout>
@@ -76,13 +76,13 @@ const AssignRole = () => {
           onDeletedData={resetData}
         ></ConfirmModal>
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-        <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name ? name :"Assign Rights -Role Profile"}</h2>
+          <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name ? name : "Assign Rights -Role Profile"}</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
                 <form className="form flex items-center ">
                   <input
-                               type="search"
+                    type="search"
                     placeholder="Search"
                     className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
                   />
@@ -136,7 +136,7 @@ const AssignRole = () => {
                   <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     Action
                   </th>
-                  
+
                   <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     User Id
                   </th>
@@ -190,7 +190,7 @@ const AssignRole = () => {
                         Delete
                       </button>
                     </td>
-                    
+
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item?.user_id}
                     </td>
