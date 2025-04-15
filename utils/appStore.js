@@ -8,6 +8,7 @@ import rspAnalyticalReducer from './rspAnalyticalSlice'
 import singleRollingReducer from './singleRollingSlice'
 import orderInfoReducer from './orderInfoSlice'
 import allOrderInfoReducer from './allOrderInfoSlice'
+import additionalDataReducer from './additionalDataSlice'
 
 
 const appStore = configureStore({
@@ -18,7 +19,8 @@ const appStore = configureStore({
         rspAnalytics: rspAnalyticalReducer,
         singleRolling: singleRollingReducer,
         orderInfo: orderInfoReducer,
-        allOrdersInfo: allOrderInfoReducer
+        allOrdersInfo: allOrderInfoReducer,
+        additionalData: additionalDataReducer
     },
 });
 

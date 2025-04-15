@@ -21,7 +21,8 @@ const ProductCards = () => {
       rating: {
         rate: (Math.random() * (5 - 3) + 3).toFixed(1), // Random rating between 3.0 and 5.0
         count: Math.floor(Math.random() * 500) + 50 // Random count between 50 and 500
-      }
+      },
+      qty: item.sku_billqty
     }));
 
     setData(formattedData);
@@ -70,10 +71,13 @@ const ProductCards = () => {
               <div className="content flex flex-col">
                 <h2 className="text-[1rem] text-gray-600">{item.title}</h2>
                 <h3 className="start text-[0.7rem]">
+                  <span>{item.qty}</span>
+                </h3>
+                <h3 className="start text-[0.7rem]">
                   <span>*</span>4.1/5
                 </h3>
                 <h3 className="text-[0.7rem]">Last Months Sale</h3>
-                <h3>43,234</h3>
+                <h3>₹ {item.price}</h3>
               </div>
             </div>
           ))}

@@ -20,10 +20,19 @@ const SaleSummary = () => {
   const allCurrentmonthtilldata = useSelector((state) => state.rspAnalytics.rspAnalyticalData.CurrentmonthDataR?.[0]?.totalNewPriceValue || 0);
   const allLastmonthtilldata = useSelector((state) => state.rspAnalytics.rspAnalyticalData.lastmonthDataR?.[0]?.totalNewPriceValue || 0)
   const allLastmonthdata = useSelector((state) => state.rspAnalytics.rspAnalyticalData.lastmonththisyearR?.[0]?.totalNewPriceValue || 0)
+
+  const additionalReduxData = useSelector((state) => state.additionalData.additionalData)
+  console.log("plo", additionalReduxData)
+  const [additionalData, setAdditionalData] = useState({})
+
+
+  useEffect(() => {
+    setAdditionalData(additionalReduxData)
+  }, [additionalReduxData])
   useEffect(() => {
     setData(
       [{ name: "Last Yr Till", data: allLastyeartilldata },
-      { name: "Last Yr", data: allThisyeartilldata },
+      { name: "Last Yr", data: allLastyeardata },
       { name: "This Yr", data: allThisyeartilldata }]
 
     );
@@ -58,7 +67,7 @@ const SaleSummary = () => {
               </div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Current Year Till Date Sale</h2>
-                <h2>{moment().format("YYYY")}</h2>
+                <h2>{additionalData.yr}</h2>
               </div>
             </div>
 
@@ -70,7 +79,7 @@ const SaleSummary = () => {
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Year Till Date Sale</h2>
-                <h2>{moment().format("YYYY")}</h2>
+                <h2>{additionalData.yr - 1}</h2>
               </div>
             </div>
             <h2 className="font-bold">₹{data[0].data}</h2>
@@ -80,7 +89,7 @@ const SaleSummary = () => {
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Year Total Sale</h2>
-                <h2>{moment().format("YYYY")}</h2>
+                <h2>{additionalData.yr - 1}</h2>
               </div>
             </div>
             <h2 className="font-bold">₹{data[1].data}</h2>

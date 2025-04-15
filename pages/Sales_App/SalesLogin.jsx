@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import Logo from "../../../public/NewLogo.png";
-import Sales from "../../../public/saleslogin3.jpg";
+import Logo from "../../public/NewLogo.png";
+import Sales from "../../public/saleslogin3.jpg";
 
 import Image from "next/image";
 import axios from "axios";

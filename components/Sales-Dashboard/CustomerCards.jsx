@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 const CustomerCards = () => {
   let allCollectionTableData = useSelector((state) => state.collection.collectionTableData
   );
-  let delaerCountData = useSelector((state) => state.dealer.delaerCountData)
+  let delaerCountData = useSelector((state) => state.dealer.dealerCountData)
   const [data, setData] = useState([
     { name: "Active Customers", order: "0", data: delaerCountData ? delaerCountData.dealerActivecount : 0 },
     { name: "New Customers", order: "This Month", data: delaerCountData ? delaerCountData.monthCount : 0 },
@@ -21,18 +21,18 @@ const CustomerCards = () => {
 
   useEffect(() => {
     setData([
-      { name: "Active Customers", order: "0", data: "675" },
-      { name: "New Customers", order: "This Month", data: "96" },
-      { name: "Inactive Customers", order: "0 Order This Month", data: "78" },
+      { name: "Active Customers", order: "0", data: delaerCountData.dealerActivecount },
+      { name: "New Customers", order: "This Month", data: delaerCountData.monthCount },
+      { name: "Inactive Customers", order: "0 Order This Month", data: delaerCountData.dealerDeactivecount },
       { name: "Customers Overdue", order: "0", data: allCollectionTableData.length },
       { name: "Customers Overdue", order: "", data: "675" },
       { name: "Customers Overdue", data: "675" },
       { name: "Customers Overdue", data: "675" }
     ]);
-  }, [allCollectionTableData])
+  }, [allCollectionTableData, delaerCountData])
 
 
-  console.log("redux-data-2", allCollectionTableData)
+  console.log("redux-data-2", allCollectionTableData, delaerCountData)
 
 
 

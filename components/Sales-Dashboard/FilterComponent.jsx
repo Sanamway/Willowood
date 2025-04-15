@@ -5,6 +5,7 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { setCollectionTableData } from "@/utils/collectionSlice";
+import { setAdditionalData } from "@/utils/additionalDataSlice";
 import toast from "react-hot-toast";
 import { setRollingTableData } from "@/utils/rollingSlice";
 import { setDelaerCountData } from "@/utils/dealerCountSlice";
@@ -57,6 +58,11 @@ const FilterComponent = () => {
     month: moment().startOf('month').startOf('day').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
     partyName: ""
   });
+  useEffect(() => {
+    dispatch(setAdditionalData(filterState))
+
+  }, [filterState])
+
   const [allMonthData, setAllMonthData] = useState([]);
   const [allYearData, setAllYearData] = useState([]);
   const getAllTransactionPlan = async () => {
@@ -523,6 +529,7 @@ const FilterComponent = () => {
       const apires = await respond.data.data;
 
       // setAllTableData(apires);
+      console.log("qas", apires)
       dispatch(setDelaerCountData(apires));
 
     } catch (error) {
@@ -626,58 +633,7 @@ const FilterComponent = () => {
   };
 
 
-  // const getRSPAnalatycal = async (
-  //   yr,
-  //   month,
-  //   bgId,
-  //   buId,
-  //   zId,
-  //   rId,
-  //   tId,
 
-  // ) => {
-  //   let endPoint = "api/SA_Analytical_Dashboard";;
-
-  //   console.log("lmjk", buData.filter((item) => item.bu_id === buId)[0]?.business_unit_name)
-
-  //   try {
-  //     const respond = await axios.get(`${url}/${endPoint}`, {
-  //       headers: headers,
-
-  //       params: {
-  //         year: yr || null,
-  //         m_year:
-  //           month === "All" || !month ? null : moment(month).format("YYYY-MM"),
-  //         bg_id: bgId === "All" || !bgId ? null : bgId,
-  //         bg_des: bgId === "All" || !bgId ? null : bgData.filter((item) => item.bg_id === bgId)[0]?.business_segment,
-
-  //         bu_id: buId === "All" || !buId ? null : buId,
-  //         bu_des: buId === "All" || !buId ? null : buData.filter((item) => item.bu_id === buId)[0]?.business_unit_name,
-
-  //         z_id: zId === "All" || !zId ? null : zId,
-  //         z_des: zId === "All" || !zId ? null : zoneData.filter((item) => item.z_id === zId)[0]?.zone_name,
-
-
-  //         r_id: rId === "All" || !rId ? null : rId,
-  //         r_des: rId === "All" || !rId ? null : regionData.filter((item) => item.r_id === rId)[0]?.region_name,
-
-  //         t_id: tId === "All" || !tId ? null : tId,
-  //         t_des: tId === "All" || !tId ? null : territoryData.filter((item) => item.t_id === tId)[0]?.territory_name,
-
-
-  //       },
-  //     });
-
-  //     const apires = await respond.data.data;
-
-  //     // setAllTableData(apires);
-  //     dispatch(setRSPAnalyticalData(apires));
-
-  //   } catch (error) {
-  //     if (!error) return;
-  //     // setAllTableData([]);
-  //   }
-  // };
   const getSapSales = async (
     yr,
     month,
@@ -690,32 +646,67 @@ const FilterComponent = () => {
   ) => {
     let endPoint = "api/SA_sales_data_dashboard";
     try {
-      const respond = await axios.get(`${url}/${endPoint}`, {
-        headers: headers,
-
-        params: {
+      let params
+      if (bgId && buId && zId && rId && tId) {
+        params = {
           year: yr || null,
           c_id: 1,
-          m_year:
-            month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+          m_year: month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+          bg_id: bgId === "All" || !bgId ? null : bgId,
+          bu_id: buId === "All" || !buId ? null : buId,
+          z_id: zId === "All" || !zId ? null : zId,
+          r_id: rId === "All" || !rId ? null : rId,
+          t_id: tId === "All" || !tId ? null : tId,
+          t_des: tId === "All" || !tId ? null : territoryData.filter((item) => Number(item.t_id) === Number(tId))[0]?.territory_name,
+
+        };
+      } else if (bgId && buId && zId && rId && !tId) {
+        params = {
+          year: yr || null,
+          c_id: 1,
+          m_year: month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+          bg_id: bgId === "All" || !bgId ? null : bgId,
+          bu_id: buId === "All" || !buId ? null : buId,
+          z_id: zId === "All" || !zId ? null : zId,
+          r_id: rId === "All" || !rId ? null : rId,
+          r_des: rId === "All" || !rId ? null : regionData.filter((item) => Number(item.r_id) === Number(rId))[0]?.region_name,
+        };
+      } else if (bgId && buId && zId && !rId && !tId) {
+        params = {
+          year: yr || null,
+          c_id: 1,
+          m_year: month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+          bg_id: bgId === "All" || !bgId ? null : bgId,
+          bu_id: buId === "All" || !buId ? null : buId,
+          z_id: zId === "All" || !zId ? null : zId,
+          z_des: zId === "All" || !zId ? null : zoneData.filter((item) => Number(item.z_id) === Number(zId))[0]?.zone_name,
+        }
+      } else if (bgId && buId && !zId && !rId && !tId) {
+        params = {
+          year: yr || null,
+          c_id: 1,
+          m_year: month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+          bg_id: bgId === "All" || !bgId ? null : bgId,
+          bu_id: buId === "All" || !buId ? null : buId,
+          bu_des: buId === "All" || !buId ? null : buData.filter((item) => Number(item.bu_id) === Number(buId))[0]?.business_unit_name,
+        };
+      } else if (bgId && !buId && !zId && !rId && !tId) {
+        params = {
+          year: yr || null,
+          c_id: 1,
+          m_year: month === "All" || !month ? null : moment(month).format("YYYY-MM"),
 
           bg_id: bgId === "All" || !bgId ? null : bgId,
           bg_des: bgId === "All" || !bgId ? null : bgData.filter((item) => Number(item.bg_id) === Number(bgId))[0]?.business_segment,
 
-          bu_id: buId === "All" || !buId ? null : buId,
-          bu_des: buId === "All" || !buId ? null : buData.filter((item) => Number(item.bu_id) === Number(buId))[0]?.business_unit_name,
+        };
+      } else {
+        return;
+      }
+      const respond = await axios.get(`${url}/${endPoint}`, {
+        headers: headers,
 
-          z_id: zId === "All" || !zId ? null : zId,
-          z_des: zId === "All" || !zId ? null : zoneData.filter((item) => Number(item.z_id) === Number(zId))[0]?.zone_name,
-
-
-          r_id: rId === "All" || !rId ? null : rId,
-          r_des: rId === "All" || !rId ? null : regionData.filter((item) => Number(item.r_id) === Number(rId))[0]?.region_name,
-
-          t_id: tId === "All" || !tId ? null : tId,
-          t_des: tId === "All" || !tId ? null : territoryData.filter((item) => Number(item.t_id) === Number(tId))[0]?.territory_name,
-
-        },
+        params: params,
       });
 
       const apires = await respond.data.data;
@@ -731,9 +722,14 @@ const FilterComponent = () => {
   };
 
   useEffect(() => {
+    const allDataAvailable =
+      bgData?.length &&
+      buData?.length &&
+      zoneData?.length &&
+      regionData?.length &&
+      territoryData?.length;
 
-
-
+    if (!allDataAvailable) return;
 
     getSapSales(
       filterState.yr || null,
@@ -762,7 +758,6 @@ const FilterComponent = () => {
       filterState.rId || null,
       filterState.tId
     );
-
     getDealerCount(
       filterState.yr || null,
       filterState.month || null,
@@ -773,7 +768,6 @@ const FilterComponent = () => {
       filterState.tId
     );
 
-
   }, [
     filterState.yr,
     filterState.month,
@@ -782,8 +776,12 @@ const FilterComponent = () => {
     filterState.zId,
     filterState.rId,
     filterState.tId,
+    bgData,
+    buData,
+    zoneData,
+    regionData,
+    territoryData,
   ]);
-
 
   const getOneTimeRSP = async (
     yr,
