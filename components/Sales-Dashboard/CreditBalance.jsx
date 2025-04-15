@@ -13,6 +13,9 @@ const CreditBalance = () => {
   const allCollectionTableData = useSelector((state) => state.collection.collectionTableData
   );
 
+  const [data, setData] = useState([])
+  useEffect(() => { setData(allCollectionTableData) }, [allCollectionTableData])
+
 
   const [open, setOpen] = useState(false);
   const [openTwo, setOpenTwo] = useState(false);
@@ -41,23 +44,23 @@ const CreditBalance = () => {
         <div className="flex-row flex-col gap-3 font-arial   rounded-md bg-white ">
           <div className="flex items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
             <div className="flex-col  items-start justify-between w-full gap-2 p-1">
-              <h2 className="text-[0.69rem] text-gray-600 font-semibold font-arial whitespace-nowrap">
+              <h2 className="text-[0.59rem] text-gray-600 font-semibold font-arial whitespace-nowrap">
                 Allocated Credit Limit{" "}
               </h2>
-              <h2 className="text-sm text-[#ADBD5B] font-bold whitespace-nowrap">&#8377;{parseFloat(allCollectionTableData.reduce((acc, curr) => acc + curr["Credit Limit "], 0).toFixed(2))}</h2>
+              <h2 className="text-sm text-[#ADBD5B] font-bold whitespace-nowrap">&#8377;{parseFloat(data.reduce((acc, curr) => acc + curr["Credit Limit "], 0).toFixed(2))}</h2>
             </div>
             <div className="flex-col items-start justify-between w-full gap-2 p-1 border-l-[3px] ">
-              <h2 className="text-[0.69rem] text-gray-600 font-semibold whitespace-nowrap">
+              <h2 className="text-[0.59rem] text-gray-600 font-semibold whitespace-nowrap">
                 Utilized Credit Limit
               </h2>
-              <h2 className="text-sm text-[#F5A05D] font-bold whitespace-nowrap">&#8377;{parseFloat(parseFloat(allCollectionTableData.reduce((acc, curr) => acc + curr["Credit Limit "], 0).toFixed(2)) - parseFloat(allCollectionTableData.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0).toFixed(2))).toFixed(2)}</h2>
+              <h2 className="text-sm text-[#F5A05D] font-bold whitespace-nowrap">&#8377;{parseFloat(parseFloat(data.reduce((acc, curr) => acc + curr["Credit Limit "], 0).toFixed(2)) - parseFloat(data.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0).toFixed(2))).toFixed(2)}</h2>
             </div>
             <div className="flex-col items-start justify-between w-full gap-2 p-1 border-l-[3px] ">
-              <h2 className="text-[0.69rem] text-gray-600 font-semibold whitespace-nowrap">
+              <h2 className="text-[0.59rem] text-gray-600 font-semibold whitespace-nowrap">
                 Balance Credit Limit
               </h2>
               <h2 className="text-sm text-[#E55769] font-bold whitespace-nowrap">&#8377;{
-                parseFloat(allCollectionTableData.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0).toFixed(2))}</h2>
+                parseFloat(data.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0).toFixed(2))}</h2>
             </div>
           </div>
         </div>
@@ -73,7 +76,7 @@ const CreditBalance = () => {
                 </div>
                 <div className="flex flex-col items-start justify-center">
                   <h2 className="text-[0.69rem] text-gray-600 font-semibold">Total Outstanding</h2>
-                  <h2 className="text-[0.78rem] text-gray-600 font-bold">&#8377;{parseFloat(allCollectionTableData.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0).toFixed(2))}</h2>
+                  <h2 className="text-[0.78rem] text-gray-600 font-bold">&#8377;{parseFloat(data.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0).toFixed(2))}</h2>
                 </div>
               </div>
               <div
@@ -95,7 +98,7 @@ const CreditBalance = () => {
                 </div>
                 <div className="flex flex-col items-start justify-center">
                   <h2 className="text-[0.69rem] text-gray-600 font-semibold">Total Overdue</h2>
-                  <h2 className="text-[0.78rem] text-gray-600 font-bold">&#8377;{parseFloat(parseFloat(allCollectionTableData.reduce((acc, curr) => acc + curr["180-365"], 0).toFixed(2)) + parseFloat(allCollectionTableData.reduce((acc, curr) => acc + curr["366-720"], 0).toFixed(2)) + parseFloat(allCollectionTableData.reduce((acc, curr) => acc + curr["720 And Above"], 0).toFixed(2))).toFixed(2)
+                  <h2 className="text-[0.78rem] text-gray-600 font-bold">&#8377;{parseFloat(parseFloat(data.reduce((acc, curr) => acc + curr["180-365"], 0).toFixed(2)) + parseFloat(data.reduce((acc, curr) => acc + curr["366-720"], 0).toFixed(2)) + parseFloat(data.reduce((acc, curr) => acc + curr["720 And Above"], 0).toFixed(2))).toFixed(2)
 
                   }</h2>
                 </div>
@@ -127,8 +130,8 @@ const CreditBalance = () => {
             </div>
           </div>
         </div>
-        {open && <TotalOutStandPop closeModal={closeModal} dueData={allCollectionTableData || []}></TotalOutStandPop>}
-        {openTwo && <TotalOverDueAmtPop closeModal={closeModal} dueData={allCollectionTableData || []}></TotalOverDueAmtPop>}
+        {open && <TotalOutStandPop closeModal={closeModal} dueData={data || []}></TotalOutStandPop>}
+        {openTwo && <TotalOverDueAmtPop closeModal={closeModal} dueData={data || []}></TotalOverDueAmtPop>}
       </div>
     </div>
   );

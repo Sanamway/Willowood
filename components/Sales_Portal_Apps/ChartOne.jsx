@@ -13,13 +13,17 @@ import {
 } from "chart.js/auto";
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
 import { MdOutlineCloudDownload } from "react-icons/md";
+import moment from "moment";
 
 const ChartOne = (props) => {
 
   let allRollingTableData = useSelector((state) => state.singleRolling.singleRollingTableData
   );
 
-  const lab = ["Apr-24",
+  const additionalReduxData = useSelector((state) => state.additionalData.additionalData)
+  console.log("plo", additionalReduxData)
+  const [additionalData, setAdditionalData] = useState({})
+  const [lab, setLab] = useState(["Apr-24",
     "May-24",
     "Jun-24",
     "Jul-24",
@@ -30,7 +34,28 @@ const ChartOne = (props) => {
     "Dec-24",
     "Jan-25",
     "Feb-25",
-    "Mar-25"];
+    "Mar-25"]);
+  const generateFiscalLabels = (year) => {
+    console.log("vfr", year)
+    const labels = [];
+
+    // Fiscal year starts in April of the given year
+    for (let i = 3; i < 15; i++) {
+      const date = moment(`${year}-04-01`).add(i - 3, 'months');
+      labels.push(date.format("MMM-YY"));
+    }
+    setLab(labels)
+
+  };
+  useEffect(() => {
+    generateFiscalLabels(additionalReduxData.yr)
+  }, [additionalReduxData])
+
+  console.log("dot", additionalData.yr)
+
+
+
+
   const [datasets, setDataSets] = useState([
     {
       label: "Budget",

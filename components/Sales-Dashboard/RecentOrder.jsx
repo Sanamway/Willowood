@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-
+import { useSelector } from "react-redux";
 const RecentOrder = () => {
   const [data, setData] = useState([]);
-
+  const orderData = useSelector((state) => state.orderInfo.orderInfoData
+  );
   const sampleData = [
     { id: 1, order: "10000072_20_10000", name: "Pesticide", status: "Pending", color: "blue" },
     { id: 2, order: "10000072_30_10000", name: "Fegiscide", status: "Received", color: "green" },
@@ -11,13 +12,9 @@ const RecentOrder = () => {
   ];
 
   useEffect(() => {
-    let timer = setTimeout(() => {
-      setData(sampleData);
-    }, 1000);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
+
+    setData(orderData)
+  }, [orderData]);
 
   function Skeleton() {
     return (
@@ -59,36 +56,36 @@ const RecentOrder = () => {
                     <th className="px-4 py-1 text-center text-[0.6rem] text-gray-600 font-bold">
                       Sales Order ID
                     </th>
-                    
-                    <th className="px-2 py-1 text-[0.6rem] text-gray-600 font-bold">Item Name</th>
+
+                    {/* <th className="px-2 py-1 text-[0.6rem] text-gray-600 font-bold">Item Name</th> */}
 
                     <th className="px-2 py-1 text-[0.6rem] text-gray-600 font-bold">Invoice Status</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 break-normal ">
                   {data.length ? (
-                    data.map((item) => (
+                    data.map((item, idx) => (
                       <tr key={item?.id}>
                         <td
                           className={`px-2 text-left whitespace-nowrap py-1 text-[0.6rem] text-gray-900 border `}
                         >
-                          {item?.id}
+                          {idx + 1}
                         </td>
                         <td
                           className={`px-2 text-center whitespace-nowrap py-1 text-[0.6rem] text-gray-900 border `}
                         >
-                          {item?.order}
+                          {item?.SAP_order_no}
                         </td>
-                        <td
+                        {/* <td
                           className={`px-2 text-center whitespace-nowrap py-1 text-[0.6rem] text-gray-900 border `}
                         >
                           {item?.name}
-                        </td>
+                        </td> */}
                         <td
                           className={`px-4 text-center whitespace-nowrap  py-1 text-[0.6rem] text-gray-900 border `}
                         >
-                          <div className={`bg-${item.color}-500 rounded-full text-white font-bold`}>
-                            {item?.status}
+                          <div className={`bg-blue-500 rounded-full text-white font-bold`}>
+                            {item.ord_status}
                           </div>
                         </td>
                       </tr>

@@ -30,6 +30,7 @@ import TotalOutStandPop from "../../components/Sales_Portal_Apps/TargetVsCollect
 
 import TotalOverDueAmtPop from "../../components/Sales_Portal_Apps/TargetVsCollection/TotalOverDueAmtPop";
 
+
 const AdditionalInfo = (props) => {
     const router = useRouter();
     const headers = {

@@ -52,7 +52,7 @@ const SaleSummary = () => {
     );
   }, [allCurrentmonthtilldata, allLastmonthtilldata, allLastmonthdata]);
 
-  console.log("jkl", data)
+  console.log("jkl", additionalData)
   return (
     <>
       <div className="h-6 bg-white rounded-t-md flex items-center px-2  mt-4">
@@ -110,7 +110,7 @@ const SaleSummary = () => {
               </div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Current Month Till Date Sale</h2>
-                <h2>December</h2>
+                <h2>{moment(additionalData.month).format("MMMM")}</h2>
               </div>
             </div>
 
@@ -122,7 +122,7 @@ const SaleSummary = () => {
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Month Till Date Sale</h2>
-                <h2>26-12-2022</h2>
+                <h2>{moment(additionalData.month).subtract(1, 'months').format("MMMM")}</h2>
               </div>
             </div>
             <h2 className="font-bold">₹{data2[1].data}</h2>
@@ -132,7 +132,7 @@ const SaleSummary = () => {
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Month Total Sale</h2>
-                <h2>12-2022</h2>
+                <h2>{moment(additionalData.month).subtract(1, 'months').format("MMMM")}</h2>
               </div>
             </div>
             <h2 className="font-bold">₹{data2[2].data}</h2>
