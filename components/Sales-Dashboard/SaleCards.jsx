@@ -59,7 +59,8 @@ const SaleCards = () => {
   }
   return (
     <>
-      <div className="w-full px- mt-4 flex lg:flex-row flex-col gap-3 font-arial   rounded-md">
+
+      <div className="w-full px- mt-4 flex lg:flex-row flex-col  font-arial   rounded-md">
         {data.length ? (
           data.map((item, index) => (
             <div key={index} className="bg-white p-2 lg:w-[40%] flex flex-col items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
@@ -77,21 +78,28 @@ const SaleCards = () => {
         ) : (
           <Skeleton />
         )}
-        <div className="bg-white p-2 flex-1 md:flex items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
-          {data2.length ? (
-            data2.map((item, index) => (
-              <div
-                key={index}
-                className={`flex  items-center justify-between w-full gap-2 p-1 ${index == 1 ? "md:border-r-2 md:border-l-2 px-2" : ""
-                  }`}
-              >
-                <h2 className="text-gray-500 text-sm font-bold whitespace-nowrap"> {item.name}: </h2>
-                <h2 className="text-lg text-[#ADBD5B] font-bold whitespace-nowrap">{item.data}</h2>
-              </div>
-            ))
-          ) : (
-            <Skeleton></Skeleton>
-          )}
+
+        <div className="  flex-1 md:flex items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
+          <div className="h-6 bg-white rounded-t-md flex items-center   mt-4">
+            <h2 className="text-[0.75rem] text-black px-2">Product Category wise Sale</h2>
+          </div>
+          <div className="bg-white mt-2">
+            {data2.length ? (
+              data2.map((item, index) => (
+                <div
+                  key={index}
+                  className={`flex  items-center justify-between w-full gap-2 p-1 ${index == 1 ? "md:border-r-2 md:border-l-2 px-2" : ""
+                    }`}
+                >
+                  <h2 className="text-gray-500 text-sm font-bold whitespace-nowrap">{item.name}: </h2>
+                  <h2 className="text-lg text-[#ADBD5B] font-bold whitespace-nowrap">{item.data}</h2>
+                </div>
+              ))
+            ) : (
+              <Skeleton></Skeleton>
+            )}
+          </div>
+
         </div>
 
       </div>

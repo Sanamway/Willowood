@@ -16,23 +16,13 @@ import { IoSettingsOutline } from "react-icons/io5";
 import Profile from "../../public/userimg.jpg";
 import { FaArrowAltCircleUp } from "react-icons/fa";
 import ChartOne from "../../components/Sales_Portal_Apps/ChartOne";
+import BrandChart from "@/components/Sales_Portal_Apps/BrandChart";
+import PPChart from "@/components/Sales_Portal_Apps/PPChart";
+import SegementChart from "@/components/Sales_Portal_Apps/SegmentChart";
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
 
 const AdditionalInfo = (props) => {
 
-
-    let obj1 = {
-        name: "Sanamway",
-        printName: function (abc) {
-            console.log(this.name + abc)
-        }
-
-    }
-    let obj2 = {
-        name: "Dhanraj",
-    }
-    obj1.printName.call(obj2);
-    console.log("pop",)
     const router = useRouter();
     const headers = {
         "Content-Type": "application/json",
@@ -75,6 +65,9 @@ const AdditionalInfo = (props) => {
         }
 
     ])
+
+
+
 
 
 
@@ -128,7 +121,7 @@ const AdditionalInfo = (props) => {
         if (!filterState.yr) return;
         getAllTransactionYear(filterState.yr);
     }, [filterState.yr]);
-    console.log("zz", filterState.month, allMonthData)
+
 
     useEffect(() => {
 
@@ -315,9 +308,6 @@ const AdditionalInfo = (props) => {
         }
     }, [allYearData]);
 
-    // const toggleDropdown = () => {
-    //   setIsDropdownOpen(!isDropdownOpen);
-    // };
 
     const [bgData, setBgData] = useState([]);
 
@@ -455,33 +445,8 @@ const AdditionalInfo = (props) => {
         );
     }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
 
-    const [depotData, setDepotData] = useState([]);
 
-    const getAllDepotData = async (bgId, buId, zId, rId) => {
-        try {
-            const respond = await axios.get(`${url}/api/get_dipot`, {
-                headers: headers,
-                params: {
-                    bg_id: bgId,
-                    bu_id: buId,
-                    z_id: zId,
-                    r_id: rId,
-                },
-            });
 
-            const apires = await respond.data.data;
-            setDepotData(apires);
-        } catch (error) { }
-    };
-
-    useEffect(() => {
-        getAllDepotData(
-            filterState.bgId,
-            filterState.buId,
-            filterState.zId,
-            filterState.rId
-        );
-    }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
 
 
     const [allTableData, setAllTableData] = useState([]);
@@ -518,8 +483,7 @@ const AdditionalInfo = (props) => {
 
                 params: {
                     t_year: yr || null,
-                    // m_year:
-                    //     month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+
                     bg_id: bgId === "All" || !bgId ? null : bgId,
                     bu_id: buId === "All" || !buId ? null : buId,
                     z_id: zId === "All" || !zId ? null : zId,
@@ -541,6 +505,7 @@ const AdditionalInfo = (props) => {
 
     const [allTeamData, setAllTeamData] = useState([]);
 
+
     const getAllTeamStatus = async (
         yr,
         month,
@@ -551,13 +516,7 @@ const AdditionalInfo = (props) => {
         tId
     ) => {
         let endPoint;
-        console.log("mjklo", yr,
-            month,
-            bgId,
-            buId,
-            zId,
-            rId,
-            tId)
+
         if (bgId && buId && zId && rId && tId) {
 
             endPoint = "api/get_rollingdata_based_on_roll_t";
@@ -651,8 +610,13 @@ const AdditionalInfo = (props) => {
         allTableData
     ])
     useEffect(() => {
-        if (JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 11)
-            return;
+
+        if (typeof window === "undefined") return;
+
+        const userInfo = JSON.parse(window.localStorage.getItem("userinfo"));
+
+
+        if (userInfo?.role_id === 11) return;
 
         getAllSalesPlanStatus(
             filterState.yr || null,
@@ -672,7 +636,7 @@ const AdditionalInfo = (props) => {
             filterState.zId || null,
             filterState.rId || null,
             filterState.tId
-        )
+        );
     }, [
         filterState.yr,
         filterState.month,
@@ -701,7 +665,7 @@ const AdditionalInfo = (props) => {
         setIsCollapsed2(!isCollapsed2);
     };
 
-    const [isCollapsed3, setIsCollapsed3] = useState(true); // State to manage collapsibility
+    const [isCollapsed3, setIsCollapsed3] = useState(false); // State to manage collapsibility
 
     // Function to toggle collapsibility
     const toggleCollapse3 = () => {
@@ -709,7 +673,7 @@ const AdditionalInfo = (props) => {
     };
 
 
-    const [isCollapsed4, setIsCollapsed4] = useState(true); // State to manage collapsibility
+    const [isCollapsed4, setIsCollapsed4] = useState(false); // State to manage collapsibility
 
     // Function to toggle collapsibility
     const toggleCollapse4 = () => {
@@ -906,21 +870,33 @@ const AdditionalInfo = (props) => {
     const [categoryData, setCategoryData] = useState([]);
     const [segmentData, setSegementData] = useState([]);
 
-    const getThreeTableData = async (
-        yr, month, bgId, buId, zId, rId, tId
 
-    ) => {
+
+    const getThreeTableData = async (yr, month, bgId, buId, zId, rId, tId) => {
         let endPoint = "SA_sales_Analytical";
-        let paramsData
+        let paramsData;
+
         const tName = territoryData.find(item => Number(item.t_id) === Number(tId))?.territory_name || '';
         const rName = regionData.find(item => Number(item.r_id) === Number(rId))?.region_name || '';
         const zName = zoneData.find(item => Number(item.z_id) === Number(zId))?.zone_name || '';
         const buName = buData.find(item => Number(item.bu_id) === Number(buId))?.business_unit_name || '';
+
+        // 🚫 Prevent API call if required descriptive names are missing
+        if (
+            (filterState.tId && filterState.tId !== "All" && !tName) ||
+            (filterState.rId && !filterState.tId && !rName) ||
+            (filterState.zId && !filterState.rId && !zName) ||
+            (filterState.buId && !filterState.zId && !buName)
+        ) {
+            console.warn("Required descriptive name missing. API call aborted.");
+            return;
+        }
+
+        // ✅ Build paramsData based on filters
         if (filterState.tId && filterState.tId !== "All") {
             paramsData = {
                 year: yr || null,
-                month:
-                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                month: month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
                 bg_id: bgId === "All" || !bgId ? null : bgId,
                 bu_id: buId === "All" || !buId ? null : buId,
                 z_id: zId === "All" || !zId ? null : zId,
@@ -928,79 +904,63 @@ const AdditionalInfo = (props) => {
                 t_id: tId === "All" || !tId ? null : tId,
                 t_des: tName,
                 c_id: 1,
-
             };
-        } else if (
-            (filterState.rId && !filterState.tId)
-        ) {
+        } else if (filterState.rId && !filterState.tId) {
             paramsData = {
                 year: yr || null,
-                month:
-                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                month: month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
                 bg_id: bgId === "All" || !bgId ? null : bgId,
                 bu_id: buId === "All" || !buId ? null : buId,
                 z_id: zId === "All" || !zId ? null : zId,
                 r_id: rId === "All" || !rId ? null : rId,
                 r_des: rName,
                 c_id: 1,
-
             };
-        } else if ((filterState.zId && !filterState.rId)) {
+        } else if (filterState.zId && !filterState.rId) {
             paramsData = {
                 year: yr || null,
-                month:
-                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                month: month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
                 bg_id: bgId === "All" || !bgId ? null : bgId,
                 bu_id: buId === "All" || !buId ? null : buId,
                 z_id: zId === "All" || !zId ? null : zId,
                 z_des: zName,
                 c_id: 1,
-
             };
-        } else if ((filterState.buId && !filterState.zId)) {
+        } else if (filterState.buId && !filterState.zId) {
             paramsData = {
                 year: yr || null,
-                month:
-                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                month: month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
                 bg_id: bgId === "All" || !bgId ? null : bgId,
                 bu_id: buId === "All" || !buId ? null : buId,
                 bu_des: buName,
                 c_id: 1,
-
             };
         } else {
             paramsData = {
                 year: yr || null,
-                month:
-                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                month: month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
                 bg_id: bgId === "All" || !bgId ? null : bgId,
                 bu_id: buId === "All" || !buId ? null : buId,
                 bu_des: buName,
                 c_id: 1,
-
-
             };
         }
 
+        // ✅ Safe to make API call now
         try {
             const respond = await axios.get(`${url}/api/${endPoint}`, {
                 headers: headers,
-
                 params: paramsData,
             });
 
-            const apires = await respond.data.data;
-            console.log("plki", apires)
-            setBrandData(apires.combined_brand)
-            setCategoryData(apires.combined_category)
-            setSegementData(apires.combined_segment)
+            const apires = respond.data.data;
+            console.log("plki", apires);
 
-
+            setBrandData(apires.combined_brand);
+            setCategoryData(apires.combined_category);
+            setSegementData(apires.combined_segment);
         } catch (error) {
-
-            if (!error) return;
-            console.log("vbn", error)
-
+            console.log("vbn", error);
         }
     };
     useEffect(() => {
@@ -1097,7 +1057,12 @@ const AdditionalInfo = (props) => {
     const segementMtd = totalRow(categoryData.map(item => item.total_mtd_new_budget_price_value));
     const segementToday = totalRow(categoryData.map(item => item.total_today_new_budget_price));
 
-
+    const [userImg, setUserImg] = useState(null);
+    useEffect(() => {
+        // Ensure this runs only on the client
+        if (typeof window === "undefined") return;
+        setUserImg(localStorage.getItem("ImageLink"));
+    }, []);
     return (
         <form
             className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -1152,12 +1117,9 @@ const AdditionalInfo = (props) => {
             </div>
 
             <div className="flex mb-4 mt-2 mb-8">
+
                 <div className="w-40 h-30 flex justify-center items-center">
-                    <Image
-                        className="h-[5.1rem] w-[5.1rem] rounded-full mt-2"
-                        src={Profile}
-                        alt="img"
-                    />
+                    <img src={userImg} className="h-20 w-20 rounded-full text-orange-500 mt-4" size={80}></img>
                 </div>
 
                 <div className="flex  flex-col  w-full mt-4 md:hidden">
@@ -1202,6 +1164,7 @@ const AdditionalInfo = (props) => {
                                     setFilterState({
                                         ...filterState,
                                         yr: e.target.value,
+                                        month: "All"
                                     })
                                 }
                                 disabled={!filterState.yr}
@@ -1514,71 +1477,61 @@ const AdditionalInfo = (props) => {
                         </thead>
                         <tbody>
                             {allTeamData.map((item) => (
-                                <tr className="font-bold">
-                                    <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
+                                <tr className="font-bold" key={item.id || item.m_year}>
+                                    <td className="border border-gray-200 w-24 px-2 py-2 whitespace-nowrap">
+                                        {moment(item.m_year).format('MMMM')}
+                                    </td>
+                                    <td className="border border-gray-200 w-32 px-2 py-2">
                                         {
-                                            moment(item.m_year).format('MMMM')
+                                            [
+                                                item.business_segment || "",
+                                                item.business_unit_name || "",
+                                                item.zone_name || "",
+                                                item.region_name || "",
+                                                item.territory_name || ""
+                                            ].reverse().find(value => value !== "")
                                         }
-
+                                        <br />
+                                        {
+                                            [
+                                                item.business_segment || "",
+                                                item.business_unit_hod_name || "",
+                                                item.zone_hod_name || "",
+                                                item.region_hod_name || "",
+                                                item.territory_hod_name || ""
+                                            ].reverse().find(value => value !== "")
+                                        }
                                     </td>
-                                    <td className="border border-gray-200 w-48 px-2 py-2">
-                                        {[item.business_segment || ""
-                                            ,
-                                        item.business_unit_name || ""
-                                            ,
-                                        item.zone_name || ""
-                                            ,
-                                        item.region_name || ""
-                                            ,
-                                        item.territory_name
-                                        || ""].reverse().find(value => value !== "")}
-                                        -
-                                        {[item.business_segment || ""
-                                            ,
-                                        item.business_unit_hod_name || ""
-                                            ,
-                                        item.zone_hod_name || ""
-                                            ,
-                                        item.region_hod_name || ""
-                                            ,
-                                        item.territory_hod_name || ""].reverse().find(value => value !== "")}
-
-
-
-
-                                    </td>
-                                    <td className="border border-gray-200  py-2">{item.target}</td>
+                                    <td className="border border-gray-200 py-2">{item.target}</td>
                                     <td className="border border-gray-200 py-2">{item.actual}</td>
-
-                                    <td className="border border-gray-200  py-2">
+                                    <td className="border border-gray-200 py-2">
                                         {(item.actual / item.target * 100).toFixed(2)} %
-
                                     </td>
                                 </tr>
                             ))}
 
-
-
-                            {/* Row for Totals (appears at the end) */}
                             <tr className="font-bold bg-blue-800 text-white">
-                                <td className="border border-gray-200 px-2 py-2">MTD Total</td>
-                                <td className="border border-gray-200 px-2 py-2">
-
-                                </td>
+                                <td className="border border-gray-200 w-24 px-2 py-2">MTD Total</td>
+                                <td className="border border-gray-200 w-32 px-2 py-2"></td>
                                 <td className="border border-gray-200 py-2">
                                     {Number(TeamTarget).toFixed(2)}
                                 </td>
-                                <td className="border border-gray-200  py-2">
+                                <td className="border border-gray-200 py-2">
                                     {Number(TeamActual).toFixed(2)}
                                 </td>
-                                <td className="border border-gray-200  py-2">
+                                <td className="border border-gray-200 py-2">
                                     {TeamPercentage} %
                                 </td>
                             </tr>
-
                         </tbody>
                     </table>
                     )}
+                    <ChartOne
+                        title={"Target Vs Sales"}
+                        color={"bg-blue-800"}
+                        lab={bsLabelData}
+                        datasets={bsGraphData || []}
+                    />
                 </div>
 
             </div>
@@ -1651,6 +1604,11 @@ const AdditionalInfo = (props) => {
 
                             </tbody>
                         </table>
+                        <PPChart
+                            title={"Target Vs Sales"}
+                            color={"bg-blue-800"}
+                            data={categoryData}
+                        />
 
 
 
@@ -1669,6 +1627,7 @@ const AdditionalInfo = (props) => {
 
                                 </tr>
                             </thead>
+                            {console.log("zzz", brandData)}
                             <tbody>
                                 {brandData.map((item) => (
                                     <tr className="font-bold">
@@ -1711,6 +1670,11 @@ const AdditionalInfo = (props) => {
 
                             </tbody>
                         </table>
+                        <BrandChart
+                            title={"Target Vs Sales"}
+                            color={"bg-blue-800"}
+                            data={brandData}
+                        />
 
 
                         <h1 className="font-bold text-center bg-yellow-300 flex justify-between items-center ">
@@ -1769,6 +1733,11 @@ const AdditionalInfo = (props) => {
 
                             </tbody>
                         </table>
+                        <SegementChart
+                            title={"Target Vs Sales"}
+                            color={"bg-blue-800"}
+                            data={segmentData}
+                        />
                     </div>)}
 
             </div>
@@ -1876,6 +1845,7 @@ const AdditionalInfo = (props) => {
                         )}
 
                     </div>
+
 
                 </div>
                 : ""

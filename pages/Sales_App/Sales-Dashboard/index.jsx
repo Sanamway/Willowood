@@ -19,9 +19,11 @@ import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { BsCalendar2Month } from "react-icons/bs";
 import { FaHandsHelping } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
-
+import RollingTable from "@/components/Sales-Dashboard/RollingTable";
+import { useRouter } from "next/router";
 
 const Dashboard = () => {
+  const router = useRouter();
   return (
     <>
       <section className="w-full px-3 bg-[#f0eff2] min-h-screen  pb-12 font-arial">
@@ -36,60 +38,9 @@ const Dashboard = () => {
                 })
               }
             />
-            <span>Sales Dashboard</span>
+            <span>My KPI Dashboard</span>
           </span>{" "}
-          <span className="text-white self-center">
-            <Popover as="div" className="relative border-none outline-none mt-2">
-              {({ open }) => (
-                <>
-                  <Popover.Button className="focus:outline-none">
-                    <PiDotsThreeOutlineVerticalFill
-                      className="text-[#626364] cursor-pointer"
-                      size={20}
-                    />
-                  </Popover.Button>
 
-                  <Popover.Panel
-                    as="div"
-                    className={`${open ? "block" : "hidden"
-                      } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
-                  >
-                    <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
-                      <li
-                        className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap "
-                        onClick={() =>
-                          router.push({
-                            pathname: "/MR_Portal_Apps/MRHome",
-                          })
-                        }
-                      >
-                        <BsCalendar2Month
-                          className="text-[#626364] cursor-pointer"
-                          size={20}
-                        />{" "}
-                        Approval Req.
-                      </li>
-
-                      <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
-                        <FaHandsHelping
-                          className="text-[#626364] cursor-pointer"
-                          size={20}
-                        />{" "}
-                        Help
-                      </li>
-                      <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:flex-col ">
-                        <IoSettingsOutline
-                          className="text-[#626364] cursor-pointer"
-                          size={20}
-                        />{" "}
-                        Setting
-                      </li>
-                    </ul>
-                  </Popover.Panel>
-                </>
-              )}
-            </Popover>
-          </span>
         </div>
 
 
@@ -106,7 +57,7 @@ const Dashboard = () => {
 
 
             <CustomerCards></CustomerCards>
-
+            <RollingTable></RollingTable>
             <RollingCards></RollingCards>
 
 
@@ -140,11 +91,8 @@ const Dashboard = () => {
 
 
         <div className="h- bg-white rounded-l-md rounded-r-md flex justify-between w-full items-center px-2  mt-3">
-          <h2 className="text-[0.85rem] font-semibold py-2 ">Top Sale Products</h2>
-          <button className="flex items-center bg-[#9BB456] rounded-sm py-1 px-1 gap-1">
-            <LiaFileDownloadSolid className="text-white" size={20}></LiaFileDownloadSolid>
-            <h2 className="text-white text-[0.7rem] font-bold">Export Excel</h2>
-          </button>
+          <h2 className=" font-semibold py-2 text-[0.7rem]">Top 20 Products Trends</h2>
+
         </div>
         <div
           className="filterwrap w-full flex items-center justify-center  font-arial  rounded-b-md bg-white  py-1 "
@@ -157,7 +105,7 @@ const Dashboard = () => {
 
       </section>
     </>
-  );
+  ); 1
 };
 
 export default Dashboard;

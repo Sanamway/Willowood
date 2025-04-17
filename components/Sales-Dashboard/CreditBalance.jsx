@@ -38,7 +38,7 @@ const CreditBalance = () => {
     <div className=" bg-gray-200  flex flex-col">
       <div className="creditwrapper mt-2 flex flex-col gap-2 ">
         <div className="h-6 bg-white rounded-t-md flex items-center px-2 ">
-          <h2 className="text-[0.95rem] text-gray-600 font-bold">Credit Balance Details</h2>
+          <h2 className="text-[0.70rem] text-gray-600 font-bold">Customer Ageing Insight</h2>
         </div>
 
         <div className="flex-row flex-col gap-3 font-arial   rounded-md bg-white ">

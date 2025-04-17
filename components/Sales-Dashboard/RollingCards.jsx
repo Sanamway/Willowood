@@ -48,15 +48,12 @@ const StaCards = () => {
       <div className="flex flex-row justify-between w-full my-4 ">
         {data?.length ? (
           data.map((item, index) => (
-            <div key={index} className="flex flex-col  bg-white w-32 justify-center gap-4 rounded-md shadow-md text-white text-center">
+            <div key={index} className="flex flex-col  bg-white w-32 justify-center gap-2 rounded-md shadow-md text-white text-center">
               <div className="flex flex-row justify-center px-2 ">
                 <h2 className="text-gray-500 font-bold text-left text-sm whitespace-nowrap">{item.name}</h2>
               </div>
-              <div className="flex items-center justify-between w-full px-2">
+              <div className="flex items-center justify-center w-full px-2">
                 <h2 className="text-xl text-[#3B6ADB] font-bold ">{item.data}</h2>
-                <div className="bg-[#EBEFFD] px-1.5 py-1 rounded-md">
-                  <PiChartLineUpLight className="text-[#5d7eda] " size={18}></PiChartLineUpLight>
-                </div>
               </div>
             </div>
           ))

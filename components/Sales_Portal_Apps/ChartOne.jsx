@@ -90,13 +90,13 @@ const ChartOne = (props) => {
           data: allRollingTableData.map((item) => item.budget),
         },
         {
-          label: "RSP Budget",
+          label: "RSP",
           backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity (blue)
           backgroundColor: "rgba(59, 130, 246, 0.6)", // 60% opacity
           data: allRollingTableData.map((item) => item.target),
         },
         {
-          label: "Total Sales",
+          label: "Sales",
           backgroundColor: "rgba(249, 115, 22, 1)",  // Full opacity (orange)
           borderColor: "rgba(249, 115, 22, 0.6)",    // 60% opacity
           data: allRollingTableData.map((item) => item.actual),
@@ -209,79 +209,32 @@ const ChartOne = (props) => {
 
   //download chart as jpeg
 
-  const downloadImage = async () => {
-    if (chartContainerRef.current) {
-      try {
-        const chartImage = await html2canvas(chartContainerRef.current);
-        chartImage.toBlob((blob) => {
-          FileSaver.saveAs(blob, `${props.title}`);
-        }, "image/jpeg");
-      } catch (error) {
-        console.error("Error capturing chart image:", error);
-      }
-    }
-  };
+
   console.log("mio", data);
   return (
     <>
+      <div className="h-6 bg-white rounded-t-md flex items-center px-2 ">
+        <h2 className="text-[0.75rem]">Graph Sales Insight</h2>
+      </div>
       <div
         ref={chartContainerRef}
-        className={`wrapper  ${!height ? "h-72 " : ""
-          } lg:w-full flex-col bg-white rounded-lg ${
+        className={`wrapper mt-2  ${!height ? "h-72 " : ""
+          } lg:w-full flex-col bg-white rounded-lg  gap-2 ${
           // fullScreen ? "fixed min-w-[84%] h-auto  top-8 mx-auto" : "h-auto "
           // fullScreen ? "absolute min-w-[90%] h-auto  top-12 mx-auto" : "h-auto"
           fullScreen
             ? "fixed min-w-[84%]  h-auto lg:min-h-[84%]  top-8 mx-auto"
             : "h-auto"
-          } `}
+          } gap-2`}
       >
-        <div
-          className={`flex items-center justify-between rounded-t-md text-white p-2 ${props.color}`}
-        >
-          <div className="font flex flex-col ">
-            <h2>{props.title}</h2>
-          </div>
-          <div className="btns flex items-center gap-2">
-            <button onClick={() => setHeight(false)}>
-              <MdOutlineCloudDownload
-                onClick={downloadImage}
-                size={20}
-              ></MdOutlineCloudDownload>
-            </button>
-            {fullScreen ? (
-              <button
-                className="lg:block hidden"
-                onClick={() => setFullScreen(false)}
-              >
-                <FiMinimize></FiMinimize>
-              </button>
-            ) : (
-              <button
-                className="lg:block hidden"
-                onClick={() => setFullScreen(true)}
-              >
-                <FiMaximize></FiMaximize>
-              </button>
-            )}
-            {!height ? (
-              <button
-                className={`${fullScreen && "hidden"}`}
-                onClick={() => setHeight(true)}
-              >
-                <FiMinus></FiMinus>
-              </button>
-            ) : (
-              <button onClick={() => setHeight(false)}>
-                <FiPlus></FiPlus>
-              </button>
-            )}
-          </div>
-        </div>
+
         {/* {!height && <Chart className="min-w-full min-h-full px-2" ref={chartRef} type="bar" data={data} />} */}
         {/* {!height && <Chart className="min-w-full min-h-full px-2" ref={chartRef} type="bar" data={data} />} */}
+
         {!height && (
+
           <Chart
-            className={`min-w-full lg:max-h-64  ${fullScreen ? "lg:max-h-[84%]" : ""
+            className={`min-w-full lg:max-h-64  ${fullScreen ? "lg:max-h-[84%] mt-2" : ""
               } px-2`}
             ref={chartRef}
             type="bar"

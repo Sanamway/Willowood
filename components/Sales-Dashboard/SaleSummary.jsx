@@ -67,7 +67,7 @@ const SaleSummary = () => {
               </div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Current Year Till Date Sale</h2>
-                <h2>{additionalData.yr}</h2>
+                <h2>{additionalData.yr}  ({moment().format("DD MMMM")})</h2>
               </div>
             </div>
 
@@ -79,7 +79,7 @@ const SaleSummary = () => {
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Year Till Date Sale</h2>
-                <h2>{additionalData.yr - 1}</h2>
+                <h2>{additionalData.yr - 1}  ({moment().format("DD MMMM")})</h2>
               </div>
             </div>
             <h2 className="font-bold">₹{data[0].data}</h2>
@@ -95,11 +95,25 @@ const SaleSummary = () => {
             <h2 className="font-bold">₹{data[1].data}</h2>
           </div>
 
-          <div className="flex items-center justify-end w-full text-gray-600">
-            <h2 className="text-[0.6rem]">
-              Increase by <span className="bg-[#ECF9F4] px-1 py-1 rounded-md"> 0%</span> this month
-            </h2>
-          </div>
+          {(() => {
+            const tillDateSale = Number(data[0]?.data) || 0;
+            const totalSale = Number(data[1]?.data) || 1; // prevent divide by zero
+            const percentChange = 100 - (tillDateSale / totalSale) * 100;
+            const isDecrease = percentChange > 0;
+            const formattedPercent = Math.abs(percentChange).toFixed(2);
+
+            return (
+              <div className={`flex items-center justify-end w-full ${isDecrease ? "text-red-600" : "text-green-600"}`}>
+                <h2 className="text-[0.6rem]">
+                  {isDecrease ? "Decrease by" : "Increase by"}{" "}
+                  <span className="bg-[#ECF9F4] px-1 py-1 rounded-md">
+                    {formattedPercent}%
+                  </span>{" "}
+                  this month
+                </h2>
+              </div>
+            );
+          })()}
         </div>
 
         <div className="bg-white p-2 lg:w-1/2  flex flex-col items-center justify-center gap-2 rounded-b-md shadow-md text-white text-center">
@@ -110,7 +124,7 @@ const SaleSummary = () => {
               </div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Current Month Till Date Sale</h2>
-                <h2>{moment(additionalData.month).format("MMMM")}</h2>
+                <h2>{moment(additionalData.month).format("MMMM")} ({moment().format("DD yy")})</h2>
               </div>
             </div>
 
@@ -122,7 +136,7 @@ const SaleSummary = () => {
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Month Till Date Sale</h2>
-                <h2>{moment(additionalData.month).subtract(1, 'months').format("MMMM")}</h2>
+                <h2>{moment(additionalData.month).subtract(1, 'months').format("MMMM")}  ({moment().format("DD yy")})</h2>
               </div>
             </div>
             <h2 className="font-bold">₹{data2[1].data}</h2>
@@ -132,16 +146,30 @@ const SaleSummary = () => {
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Month Total Sale</h2>
-                <h2>{moment(additionalData.month).subtract(1, 'months').format("MMMM")}</h2>
+                <h2>{moment(additionalData.month).subtract(1, 'months').format("MMMM")} ({moment().format("YYYY")})</h2>
               </div>
             </div>
             <h2 className="font-bold">₹{data2[2].data}</h2>
           </div>
-          <div className="flex items-center justify-end w-full text-gray-600">
-            <h2 className="text-[0.6rem]">
-              Decrease by <span className="bg-[#ECF9F4] px-1 py-1 rounded-md">81.82%</span> this month
-            </h2>
-          </div>
+          {(() => {
+            const tillDateSale = Number(data2[1]?.data) || 0;
+            const totalSale = Number(data2[2]?.data) || 1; // avoid division by zero
+            const percentChange = 100 - (tillDateSale / totalSale) * 100;
+            const isDecrease = percentChange > 0;
+            const formattedPercent = Math.abs(percentChange).toFixed(2);
+
+            return (
+              <div className={`flex items-center justify-end w-full ${isDecrease ? "text-red-600" : "text-green-600"}`}>
+                <h2 className="text-[0.6rem]">
+                  {isDecrease ? "Decrease by" : "Increase by"}{" "}
+                  <span className="bg-[#ECF9F4] px-1 py-1 rounded-md">
+                    {formattedPercent}%
+                  </span>{" "}
+                  this month
+                </h2>
+              </div>
+            );
+          })()}
         </div>
       </div>
     </>

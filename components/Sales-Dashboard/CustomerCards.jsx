@@ -14,9 +14,9 @@ const CustomerCards = () => {
     { name: "New Customers", order: "This Month", data: delaerCountData ? delaerCountData.monthCount : 0 },
     { name: "Inactive Customers", order: "0 Order This Month", data: delaerCountData ? delaerCountData.dealerDeactivecount : 0 },
     { name: "Customers Overdue", order: "0", data: allCollectionTableData.length },
-    { name: "Customers Overdue", order: "", data: "675" },
-    { name: "Customers Overdue", data: "675" },
-    { name: "Customers Overdue", data: "675" }
+    { name: "Customers Overdue", order: "", data: allCollectionTableData.length },
+    { name: "Customers Overdue", data: allCollectionTableData.length },
+    { name: "Customers Overdue", data: allCollectionTableData.length }
   ]);
 
   useEffect(() => {
@@ -25,10 +25,11 @@ const CustomerCards = () => {
       { name: "New Customers", order: "This Month", data: delaerCountData.monthCount },
       { name: "Inactive Customers", order: "0 Order This Month", data: delaerCountData.dealerDeactivecount },
       { name: "Customers Overdue", order: "0", data: allCollectionTableData.length },
-      { name: "Customers Overdue", order: "", data: "675" },
-      { name: "Customers Overdue", data: "675" },
-      { name: "Customers Overdue", data: "675" }
+      { name: "Customers Overdue", order: "", data: allCollectionTableData.length },
+      { name: "Customers Overdue", data: allCollectionTableData.length },
+      { name: "Customers Overdue", data: allCollectionTableData.length }
     ]);
+
   }, [allCollectionTableData, delaerCountData])
 
 
@@ -109,16 +110,22 @@ const CustomerCards = () => {
                   <h2 className={`text-gray-400 text-[0.6rem] py-2 invisible`}></h2>
                 )}
               </div>
-              <div className="flex items-center justify-between w-full px-2">
-                <h2
-                  className="text-xl text-[#3B6ADB] font-bold cursor-pointer"
-                  onClick={() => handleOpenModal(item, index)}
-                >
-                  {item.data}
-                </h2>
-                <div className="bg-[#EBEFFD] px-1.5 py-1 rounded-md">
-                  <RiGroupLine className="text-[#5d7eda]" size={18} />
+              <div className="flex items-end justify-between w-full px-2">
+                <div className="w-full">
+
                 </div>
+                <div className="flex flex-row justify-between w-full">
+                  <h2
+                    className="text-xl text-[#3B6ADB] font-bold cursor-pointer"
+                    onClick={() => handleOpenModal(item, index)}
+                  >
+                    {item.data}
+                  </h2>
+                  <div className="bg-[#EBEFFD] px-1.5 py-1 rounded-md flex items-end">
+                    <RiGroupLine className="text-[#5d7eda]" size={18} />
+                  </div>
+                </div>
+
               </div>
             </div>
           ))

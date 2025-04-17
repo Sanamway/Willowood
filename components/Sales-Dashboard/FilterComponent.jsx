@@ -5,13 +5,13 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { setCollectionTableData } from "@/utils/collectionSlice";
-import { setAdditionalData } from "@/utils/additionalDataSlice";
 import toast from "react-hot-toast";
 import { setRollingTableData } from "@/utils/rollingSlice";
 import { setDelaerCountData } from "@/utils/dealerCountSlice";
 import { setRSPAnalyticalData } from "@/utils/rspAnalyticalSlice";
 import { setSingleRollingTableData } from "@/utils/singleRollingSlice";
 import { setOrderInfoData } from "@/utils/orderInfoSlice";
+import { setAdditionalData } from "@/utils/additionalDataSlice";
 
 const FilterComponent = () => {
   const router = useRouter();
@@ -58,10 +58,11 @@ const FilterComponent = () => {
     month: moment().startOf('month').startOf('day').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
     partyName: ""
   });
+
   useEffect(() => {
     dispatch(setAdditionalData(filterState))
-
   }, [filterState])
+
 
   const [allMonthData, setAllMonthData] = useState([]);
   const [allYearData, setAllYearData] = useState([]);
@@ -893,12 +894,17 @@ const FilterComponent = () => {
   return (
 
     <div className="w-full">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="mb-3 px-4 py-2 bg-indigo-600 text-white rounded-md font-semibold shadow hover:bg-indigo-700 transition"
+      <div className="w-full flex justify-end"
       >
-        {isOpen ? "Hide Filters ▲" : "Show Filters ▼"}
-      </button>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="mb-3 px-2 py-1 bg-indigo-600   text-[0.45rem] text-white rounded-md font-semibold shadow hover:bg-indigo-700 transition"
+        >
+          {isOpen ? "▲" : "▼"}
+        </button>
+
+      </div>
+
 
       {isOpen && (
 
@@ -906,7 +912,7 @@ const FilterComponent = () => {
           <div className="w-[46%] flex flex-col gap-1.5 ">
             <label className="text-gray-500 font-bold text-[0.85rem]">Year</label>
             <select
-              className=" w-full max px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
+              className=" w-full max px-3 text-[0.85rem] py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
               value={filterState.yr}
               onChange={(e) =>
@@ -929,7 +935,7 @@ const FilterComponent = () => {
 
             </select>
           </div>
-          <div className="w-[46%] flex  flex-col gap-1.5 ">
+          <div className="w-[46%] flex text-[0.85rem]  flex-col gap-1.5 ">
             <label className="text-gray-500 font-bold text-[0.85rem]">Month</label>
             <select
               className=" w-full max px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
@@ -953,7 +959,7 @@ const FilterComponent = () => {
               ))}
             </select>
           </div>
-          <div className="w-[46%] flex flex-col gap-1.5 ">
+          <div className="w-[46%] flex text-[0.85rem] flex-col gap-1.5 ">
             <label className="text-gray-500 font-bold text-[0.85rem]">Segment</label>
             <select
               className=" w-full max px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
@@ -989,7 +995,7 @@ const FilterComponent = () => {
               ))}
             </select>
           </div>
-          <div className="w-[46%] flex flex-col gap-1.5 ">
+          <div className="w-[46%] flex text-[0.85rem] flex-col gap-1.5 ">
             <label className="text-gray-500 font-bold text-[0.85rem]">Business Unit</label>
             <select
               className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
@@ -1022,7 +1028,7 @@ const FilterComponent = () => {
               ))}
             </select>
           </div>
-          <div className="w-[46%] flex flex-col gap-1.5 ">
+          <div className="w-[46%] flex  text-[0.85rem] flex-col gap-1.5 ">
             <label className="text-gray-500 font-bold text-[0.85rem]">Zone</label>
             <select
               className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
@@ -1052,7 +1058,7 @@ const FilterComponent = () => {
               ))}
             </select>
           </div>
-          <div className="w-[46%] flex flex-col gap-1.5 ">
+          <div className="w-[46%] flex text-[0.85rem] flex-col gap-1.5 ">
             <label className="text-gray-500 font-bold text-[0.85rem]">Region</label>
             <select
               className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
@@ -1077,7 +1083,7 @@ const FilterComponent = () => {
               ))}
             </select>
           </div>
-          <div className="w-[46%] flex flex-col gap-1.5 ">
+          <div className="w-[46%] flex text-[0.85rem] flex-col gap-1.5 ">
             <label className="text-gray-500 font-bold text-[0.85rem]">Teritory</label>
             <select
               className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
@@ -1101,7 +1107,7 @@ const FilterComponent = () => {
               ))}
             </select>
           </div>
-          <div className="w-[46%] flex flex-col gap-1.5 ">
+          <div className="w-[46%] flex  text-[0.85rem] flex-col gap-1.5 ">
 
           </div>
         </div>

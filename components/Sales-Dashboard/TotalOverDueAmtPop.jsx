@@ -88,12 +88,10 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
                   <div className="overflow-x-auto chat-scrollbar select-none w-full h-72">
                     <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-full ">
                       <thead className="text-xs text-gray-900 text-center bg-blue-50 rounded-md ">
-                        <tr className="">
-
-
+                        <tr>
                           <th
                             onClick={handleSort}
-                            className="px-2 text-left cursor-pointer  py-1 text-[0.78rem] text-blue-400 font-bold"
+                            className="px-2 text-left cursor-pointer py-1 text-[0.78rem] text-blue-400 font-bold"
                           >
                             <span className="flex t items-center justify-center w-full">
                               Id{" "}
@@ -104,8 +102,6 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
                               )}
                             </span>
                           </th>
-
-
 
                           <th
                             onClick={handleSort}
@@ -173,87 +169,78 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
                               )}
                             </span>
                           </th>
-
-
-
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200 break-normal ">
                         {catdata?.length ? (
-                          catdata?.map((item, idx) => (
-                            <tr key={idx}>
-                              <td
-                                className={`px-4 font-normal gap-1 text-left whitespace-nowrap py-1 text-[0.66rem] text-gray-500 border `}
-                              >
-                                {item._id}
-                              </td>
-                              <td
-                                className={`px-2  text-left whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                              >
-                                {item.Account}
-                              </td>
-                              <td
-                                className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                              >
-                                {item["Net Balance Amt(INR)"]}
-                              </td>
-                              <td
-                                className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                              >
-                                {item["180-365"]}
-                              </td>
-                              <td
-                                className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                              >
-                                {item["366-720"]}
-                              </td>
-                              <td
-                                className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                              >
-                                {item["720 And Above"]}
-                              </td>
+                          catdata?.map((item, idx) => {
+                            // Check if all three values are 0
+                            if (
+                              item["180-365"] === 0 &&
+                              item["366-720"] === 0 &&
+                              item["720 And Above"] === 0
+                            ) {
+                              return null; // Don't render the row if all values are 0
+                            }
 
-                            </tr>
-                          ))
+                            return (
+                              <tr key={idx}>
+                                <td className="px-4 font-normal gap-1 text-left whitespace-nowrap py-1 text-[0.66rem] text-gray-500 border">
+                                  {item._id}
+                                </td>
+                                <td className="px-2 text-left whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border">
+                                  {item.Account}
+                                </td>
+                                <td className="px-2 text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border">
+                                  {item["Net Balance Amt(INR)"]}
+                                </td>
+                                {item["180-365"] !== 0 && (
+                                  <td className="px-2 text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border">
+                                    {item["180-365"]}
+                                  </td>
+                                )}
+                                {item["366-720"] !== 0 && (
+                                  <td className="px-2 text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border">
+                                    {item["366-720"]}
+                                  </td>
+                                )}
+                                {item["720 And Above"] !== 0 && (
+                                  <td className="px-2 text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border">
+                                    {item["720 And Above"]}
+                                  </td>
+                                )}
+                              </tr>
+                            );
+                          })
                         ) : (
-                          <Skeleton></Skeleton>
+                          <Skeleton />
                         )}
 
-                        <tr >
-                          <td
-                            className={`px-4 font-normal gap-1 text-left whitespace-nowrap py-1 text-[0.66rem] text-gray-500 border `}
-                          >
+                        <tr>
+                          <td className="px-4 font-normal gap-1 text-left whitespace-nowrap py-1 text-[0.66rem] text-gray-500 border">
                             Total
                           </td>
-                          <td
-                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                          >
-
+                          <td className="px-2 text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border"></td>
+                          <td className="px-2 text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border">
+                            {catdata
+                              .reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0)
+                              .toFixed(2)}
                           </td>
-                          <td
-                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                          >
-                            {catdata.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0).toFixed(2)}
-                          </td>
-                          <td
-                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                          >
-
-                            {catdata.reduce((acc, curr) => acc + curr["180-365"], 0).toFixed(2)}
-                          </td>
-                          <td
-                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                          >
-                            {catdata.reduce((acc, curr) => acc + curr["366-720"], 0).toFixed(2)}
-
-                          </td>
-                          <td
-                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                          >
-                            {catdata.reduce((acc, curr) => acc + curr["720 And Above"], 0).toFixed(2)}
-
-                          </td>
-
+                          {catdata.reduce((acc, curr) => acc + curr["180-365"], 0) !== 0 && (
+                            <td className="px-2 text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border">
+                              {catdata.reduce((acc, curr) => acc + curr["180-365"], 0).toFixed(2)}
+                            </td>
+                          )}
+                          {catdata.reduce((acc, curr) => acc + curr["366-720"], 0) !== 0 && (
+                            <td className="px-2 text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border">
+                              {catdata.reduce((acc, curr) => acc + curr["366-720"], 0).toFixed(2)}
+                            </td>
+                          )}
+                          {catdata.reduce((acc, curr) => acc + curr["720 And Above"], 0) !== 0 && (
+                            <td className="px-2 text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border">
+                              {catdata.reduce((acc, curr) => acc + curr["720 And Above"], 0).toFixed(2)}
+                            </td>
+                          )}
                         </tr>
                       </tbody>
                     </table>

@@ -69,15 +69,13 @@ const ProductCards = () => {
                 {item.image ? <img className="object-contain w-24 h-24" src={item.image} alt="image" /> : <div className="object-contain w-24 h-24" > </div>}
               </div>
               <div className="content flex flex-col">
-                <h2 className="text-[1rem] text-gray-600">{item.title}</h2>
+                <h2 className=" text-[0.7rem] text-gray-600 font-bold">{item.title}</h2>
                 <h3 className="start text-[0.7rem]">
-                  <span>{item.qty}</span>
+                  <span>{item.qty} (QTY)</span>
                 </h3>
-                <h3 className="start text-[0.7rem]">
-                  <span>*</span>4.1/5
-                </h3>
-                <h3 className="text-[0.7rem]">Last Months Sale</h3>
-                <h3>₹ {item.price}</h3>
+
+                <h3 className="text-[0.7rem]">Total Year Sale</h3>
+                <h3 className="text-[0.7rem]"> ₹ {item.price}</h3>
               </div>
             </div>
           ))}
