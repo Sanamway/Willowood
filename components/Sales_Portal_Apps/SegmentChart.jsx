@@ -44,8 +44,8 @@ const SegementChart = (props) => {
         setDatasets([
             {
                 label: "Segemnt",
-                backgroundColor: "rgba(34, 197, 94, 0.6)",
-                borderColor: "rgba(34, 197, 94, 1)",
+                backgroundColor: "rgba(54, 162, 235, 0.6)", // blue with transparency
+                borderColor: "rgba(54, 162, 235, 1)",       // solid blue border
                 borderWidth: 1,
                 data: chartData,
             },
@@ -76,7 +76,7 @@ const SegementChart = (props) => {
     return (
         <>
             <div className="h-6 bg-white rounded-t-md flex items-center px-2 ">
-                <h2 className="text-[0.75rem]">Graph Sales Insight</h2>
+                <h2 className="text-[0.75rem]">Segment Qty Sold Insight (YTD)</h2>
             </div>
             <div
                 ref={chartContainerRef}

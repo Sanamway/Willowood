@@ -890,7 +890,7 @@ const FilterComponent = () => {
   //   allTableData
   // ])
 
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   return (
 
     <div className="w-full">
@@ -902,7 +902,6 @@ const FilterComponent = () => {
         >
           {isOpen ? "▲" : "▼"}
         </button>
-
       </div>
 
 

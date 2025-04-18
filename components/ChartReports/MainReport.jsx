@@ -1582,7 +1582,27 @@ const MainReport = () => {
           </select>
 
 
+          <select
+            className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
+            id="stateSelect"
+            value={filterState.rId}
+            disabled={localStorageItems.roleId === 6 ||
+              localStorageItems.roleId === 5}
+            onChange={(e) =>
+              setFilterState({
+                ...filterState,
+                rId: e.target.value,
+              })
+            }
+          >
+            <option value="All">- All Region -</option>
 
+            {allRegionData.map((item, idx) => (
+              <option value={item.r_id} key={idx}>
+                {item.region_name}
+              </option>
+            ))}
+          </select>
           <select
             className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"

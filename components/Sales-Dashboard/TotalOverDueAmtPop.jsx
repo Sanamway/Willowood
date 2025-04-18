@@ -173,15 +173,11 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200 break-normal ">
                         {catdata?.length ? (
-                          catdata?.map((item, idx) => {
+                          catdata?.filter((item) => {
+                            return item["180-365"] !== 0 || item["366-720"] !== 0 || item["720 And Above"] !== 0;
+                          }).map((item, idx) => {
                             // Check if all three values are 0
-                            if (
-                              item["180-365"] === 0 &&
-                              item["366-720"] === 0 &&
-                              item["720 And Above"] === 0
-                            ) {
-                              return null; // Don't render the row if all values are 0
-                            }
+
 
                             return (
                               <tr key={idx}>

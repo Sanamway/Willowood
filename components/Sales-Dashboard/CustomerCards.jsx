@@ -14,9 +14,6 @@ const CustomerCards = () => {
     { name: "New Customers", order: "This Month", data: delaerCountData ? delaerCountData.monthCount : 0 },
     { name: "Inactive Customers", order: "0 Order This Month", data: delaerCountData ? delaerCountData.dealerDeactivecount : 0 },
     { name: "Customers Overdue", order: "0", data: allCollectionTableData.length },
-    { name: "Customers Overdue", order: "", data: allCollectionTableData.length },
-    { name: "Customers Overdue", data: allCollectionTableData.length },
-    { name: "Customers Overdue", data: allCollectionTableData.length }
   ]);
 
   useEffect(() => {
@@ -24,11 +21,13 @@ const CustomerCards = () => {
       { name: "Active Customers", order: "0", data: delaerCountData.dealerActivecount },
       { name: "New Customers", order: "This Month", data: delaerCountData.monthCount },
       { name: "Inactive Customers", order: "0 Order This Month", data: delaerCountData.dealerDeactivecount },
-      { name: "Customers Overdue", order: "0", data: allCollectionTableData.length },
-      { name: "Customers Overdue", order: "", data: allCollectionTableData.length },
-      { name: "Customers Overdue", data: allCollectionTableData.length },
-      { name: "Customers Overdue", data: allCollectionTableData.length }
+      {
+        name: "Customers Overdue", order: "0", data: allCollectionTableData.filter((item) => {
+          return item["180-365"] !== 0 || item["366-720"] !== 0 || item["720 And Above"] !== 0;
+        }).length
+      },
     ]);
+
 
   }, [allCollectionTableData, delaerCountData])
 

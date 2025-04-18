@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 import { url } from "@/constants/url";
@@ -20,6 +20,8 @@ import BrandChart from "@/components/Sales_Portal_Apps/BrandChart";
 import PPChart from "@/components/Sales_Portal_Apps/PPChart";
 import SegementChart from "@/components/Sales_Portal_Apps/SegmentChart";
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
+import MyTeam from "@/components/Sales_Portal_Apps/MyTeamChart";
+import TargetVsSales from "@/components/Sales_Portal_Apps/TargetVsSales";
 
 const AdditionalInfo = (props) => {
 
@@ -515,6 +517,7 @@ const AdditionalInfo = (props) => {
         rId,
         tId
     ) => {
+        setAllTeamData([]); // clear old
         let endPoint;
 
         if (bgId && buId && zId && rId && tId) {
@@ -588,13 +591,13 @@ const AdditionalInfo = (props) => {
                     data: allTableData.map((item) => item.budget),
                 },
                 {
-                    label: "RSP Budget",
+                    label: "Budget",
                     backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity (blue)
                     backgroundColor: "rgba(59, 130, 246, 0.6)", // 60% opacity
                     data: allTableData.map((item) => item.target),
                 },
                 {
-                    label: "Total Sales",
+                    label: "Sales",
                     backgroundColor: "rgba(249, 115, 22, 1)",  // Full opacity (orange)
                     borderColor: "rgba(249, 115, 22, 0.6)",    // 60% opacity
                     data: allTableData.map((item) => item.actual),
@@ -625,7 +628,7 @@ const AdditionalInfo = (props) => {
             filterState.buId || null,
             filterState.zId || null,
             filterState.rId || null,
-            filterState.tId
+            filterState.tId || null,
         );
 
         getAllTeamStatus(
@@ -635,7 +638,7 @@ const AdditionalInfo = (props) => {
             filterState.buId || null,
             filterState.zId || null,
             filterState.rId || null,
-            filterState.tId
+            filterState.tId || null,
         );
     }, [
         filterState.yr,
@@ -646,6 +649,7 @@ const AdditionalInfo = (props) => {
         filterState.rId,
         filterState.tId,
     ]);
+
 
 
 
@@ -687,7 +691,7 @@ const AdditionalInfo = (props) => {
         return Object.values(data).reduce((acc, val) => acc + Number(val), 0);
     };
 
-    const bsLabelData = ["Apr-24",
+    const [bsLabelData, setBsLabelData] = useState(["Apr-24",
         "May-24",
         "Jun-24",
         "Jul-24",
@@ -698,7 +702,24 @@ const AdditionalInfo = (props) => {
         "Dec-24",
         "Jan-25",
         "Feb-25",
-        "Mar-25"];
+        "Mar-25"]);
+
+    const generateFiscalLabels = (year) => {
+
+        const labels = [];
+
+        // Fiscal year starts in April of the given year
+        for (let i = 3; i < 15; i++) {
+            const date = moment(`${year}-04-01`).add(i - 3, 'months');
+            labels.push(date.format("MMM-YY"));
+        }
+        setBsLabelData(labels)
+
+    };
+    useEffect(() => {
+        generateFiscalLabels(filterState.yr)
+    }, [filterState.yr])
+
 
 
     const getUserItem = () => {
@@ -1032,6 +1053,48 @@ const AdditionalInfo = (props) => {
 
     ])
 
+    const hasCalledAPI = useRef(false);
+
+    useEffect(() => {
+        const isBrowser = typeof window !== 'undefined';
+
+        const hasAnyData =
+            territoryData?.length > 0 ||
+            zoneData?.length > 0 ||
+            regionData?.length > 0 ||
+            buData?.length > 0;
+
+        if (isBrowser && hasAnyData && !hasCalledAPI.current) {
+            const {
+                yr = null,
+                month = null,
+                bgId = null,
+                buId = null,
+                zId = null,
+                rId = null,
+                tId = null,
+                partyName = null,
+            } = filterState;
+
+            getThreeTableData({ yr, month, bgId, buId, zId, rId, tId, partyName });
+
+            hasCalledAPI.current = true; // Prevent further calls
+        }
+    }, [
+        territoryData,
+        zoneData,
+        regionData,
+        buData,
+        filterState.yr,
+        filterState.month,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.partyName,
+    ]); // empty dependency array ensures it runs only once
+
 
     const totalTarget = totalRow(allTableData.map(item => item.target));
     const totalBudget = totalRow(allTableData.map(item => item.budget));
@@ -1063,6 +1126,8 @@ const AdditionalInfo = (props) => {
         if (typeof window === "undefined") return;
         setUserImg(localStorage.getItem("ImageLink"));
     }, []);
+
+
     return (
         <form
             className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -1439,7 +1504,7 @@ const AdditionalInfo = (props) => {
                                     {Number(totalTarget).toFixed(2)}
                                 </td>
                                 <td className="border border-gray-200 px-2 py-2">
-                                    {Number(totalActual).toFixed(2)}
+                                    {Number(totalActual).toFixed(2) || "-"}
                                 </td>
                                 <td className="border border-gray-200 px-2 py-2">
                                     {totalPercentage} %
@@ -1464,73 +1529,82 @@ const AdditionalInfo = (props) => {
                             </button>
                         )}
                     </h1>
-                    {!isCollapsed2 && (<table className="w-full border-collapse border border-gray-200 text-[10px] font-bold">
-                        <thead>
-                            <tr className="bg-blue-800 text-white">
-                                <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">Month</th>
-                                <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">BST</th>
+                    {!isCollapsed2 && (
 
-                                <th className="border border-gray-200  py-2">RSP Target</th>
-                                <th className="border border-gray-200  py-2">Total Sales</th>
-                                <th className="border border-gray-200  py-2">ACH%</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {allTeamData.map((item) => (
-                                <tr className="font-bold" key={item.id || item.m_year}>
-                                    <td className="border border-gray-200 w-24 px-2 py-2 whitespace-nowrap">
-                                        {moment(item.m_year).format('MMMM')}
-                                    </td>
-                                    <td className="border border-gray-200 w-32 px-2 py-2">
-                                        {
-                                            [
-                                                item.business_segment || "",
-                                                item.business_unit_name || "",
-                                                item.zone_name || "",
-                                                item.region_name || "",
-                                                item.territory_name || ""
-                                            ].reverse().find(value => value !== "")
-                                        }
-                                        <br />
-                                        {
-                                            [
-                                                item.business_segment || "",
-                                                item.business_unit_hod_name || "",
-                                                item.zone_hod_name || "",
-                                                item.region_hod_name || "",
-                                                item.territory_hod_name || ""
-                                            ].reverse().find(value => value !== "")
-                                        }
-                                    </td>
-                                    <td className="border border-gray-200 py-2">{item.target}</td>
-                                    <td className="border border-gray-200 py-2">{item.actual}</td>
-                                    <td className="border border-gray-200 py-2">
-                                        {(item.actual / item.target * 100).toFixed(2)} %
-                                    </td>
-                                </tr>
-                            ))}
+                        <div key={allTeamData.length}>
+                            <table className="w-full border-collapse border border-gray-200 text-[10px] font-bold">
+                                <thead>
+                                    <tr className="bg-blue-800 text-white">
+                                        <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">Month</th>
+                                        <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">BST</th>
 
-                            <tr className="font-bold bg-blue-800 text-white">
-                                <td className="border border-gray-200 w-24 px-2 py-2">MTD Total</td>
-                                <td className="border border-gray-200 w-32 px-2 py-2"></td>
-                                <td className="border border-gray-200 py-2">
-                                    {Number(TeamTarget).toFixed(2)}
-                                </td>
-                                <td className="border border-gray-200 py-2">
-                                    {Number(TeamActual).toFixed(2)}
-                                </td>
-                                <td className="border border-gray-200 py-2">
-                                    {TeamPercentage} %
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                        <th className="border border-gray-200  py-2">RSP Target</th>
+                                        <th className="border border-gray-200  py-2">Total Sales</th>
+                                        <th className="border border-gray-200  py-2">ACH%</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {allTeamData.map((item) => (
+
+                                        <tr className="font-bold" key={item.id || item.m_year}>
+
+                                            <td className="border border-gray-200 w-24 px-2 py-2 whitespace-nowrap">
+                                                {moment(item.m_year).format('MMMM')}
+                                            </td>
+                                            <td className="border border-gray-200 w-32 px-2 py-2">
+                                                {
+                                                    [
+                                                        item.business_segment || "",
+                                                        item.business_unit_name || "",
+                                                        item.zone_name || "",
+                                                        item.region_name || "",
+                                                        item.territory_name || ""
+                                                    ].reverse().find(value => value !== "")
+                                                }
+                                                <br />
+                                                {
+                                                    [
+                                                        item.business_segment || "",
+                                                        item.business_unit_hod_name || "",
+                                                        item.zone_hod_name || "",
+                                                        item.region_hod_name || "",
+                                                        item.territory_hod_name || ""
+                                                    ].reverse().find(value => value !== "")
+                                                }
+
+
+                                            </td>
+                                            <td className="border border-gray-200 py-2">{item.target}</td>
+                                            <td className="border border-gray-200 py-2">{item.actual}</td>
+                                            <td className="border border-gray-200 py-2">
+                                                {(item.actual / item.target * 100).toFixed(2)} %
+                                            </td>
+                                        </tr>
+                                    ))}
+
+
+                                    <tr className="font-bold bg-blue-800 text-white">
+                                        <td className="border border-gray-200 w-24 px-2 py-2">MTD Total</td>
+                                        <td className="border border-gray-200 w-32 px-2 py-2"></td>
+                                        <td className="border border-gray-200 py-2">
+                                            {Number(TeamTarget).toFixed(2)}
+                                        </td>
+                                        <td className="border border-gray-200 py-2">
+                                            {Number(TeamActual).toFixed(2)}
+                                        </td>
+                                        <td className="border border-gray-200 py-2">
+                                            {TeamPercentage} %
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
                     )}
-                    <ChartOne
+                    <MyTeam
                         title={"Target Vs Sales"}
                         color={"bg-blue-800"}
-                        lab={bsLabelData}
-                        datasets={bsGraphData || []}
+                        data={allTeamData}
                     />
                 </div>
 
@@ -1560,6 +1634,8 @@ const AdditionalInfo = (props) => {
                                     <th className="border border-gray-200 px-2 py-2">YTD Sale</th>
                                     <th className="border border-gray-200 px-2 py-2">MTD Sale</th>
                                     <th className="border border-gray-200 px-2 py-2">Today Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">Contri %</th>
+
 
                                 </tr>
                             </thead>
@@ -1582,24 +1658,28 @@ const AdditionalInfo = (props) => {
                                             {item.total_today_new_budget_price_value}
 
                                         </td>
+                                        <td className="border border-gray-200  px-2 py-2">
+                                            {(item.total_ytd_new_budget_price_value / Number(productYtd).toFixed(2) * 100).toFixed(2)}
+                                        </td>
                                     </tr>
                                 ))}
 
 
 
-                                {/* Row for Totals (appears at the end) */}
                                 <tr className="font-bold bg-blue-800 text-white">
                                     <td className="border border-gray-200 px-2 py-2">Total</td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(productYtd).toFixed(2)}
+                                        {productYtd != null && !isNaN(Number(productYtd)) ? Number(productYtd).toFixed(2) : "-"}
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(productMtd).toFixed(2)}
+                                        {productMtd != null && !isNaN(Number(productMtd)) ? Number(productMtd).toFixed(2) : "-"}
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(productToday).toFixed(2)}
+                                        {productToday != null && !isNaN(Number(productToday)) ? Number(productToday).toFixed(2) : "-"}
                                     </td>
-
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        -
+                                    </td>
                                 </tr>
 
                             </tbody>
@@ -1624,6 +1704,7 @@ const AdditionalInfo = (props) => {
                                     <th className="border border-gray-200 px-2 py-2">YTD Sale</th>
                                     <th className="border border-gray-200 px-2 py-2">MTD Sale</th>
                                     <th className="border border-gray-200 px-2 py-2">Today Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">Contri %</th>
 
                                 </tr>
                             </thead>
@@ -1647,6 +1728,9 @@ const AdditionalInfo = (props) => {
                                             {item.total_today_new_budget_price_value}
 
                                         </td>
+                                        <td className="border border-gray-200  px-2 py-2">
+                                            {(item.total_ytd_new_budget_price_value / Number(brandYtd).toFixed(2) * 100).toFixed(2)}
+                                        </td>
                                     </tr>
                                 ))}
 
@@ -1656,16 +1740,17 @@ const AdditionalInfo = (props) => {
                                 <tr className="font-bold bg-blue-800 text-white">
                                     <td className="border border-gray-200 px-2 py-2">Total</td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(brandYtd).toFixed(2)}
+                                        {brandYtd != null && !isNaN(Number(brandYtd)) ? Number(brandYtd).toFixed(2) : "-"}
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(brandMtd).toFixed(2)}
+                                        {brandMtd != null && !isNaN(Number(brandMtd)) ? Number(brandMtd).toFixed(2) : "-"}
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(brandToday).toFixed(2)}
+                                        {brandToday != null && !isNaN(Number(brandToday)) ? Number(brandToday).toFixed(2) : "-"}
                                     </td>
-
-
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        -
+                                    </td>
                                 </tr>
 
                             </tbody>
@@ -1689,6 +1774,7 @@ const AdditionalInfo = (props) => {
                                     <th className="border border-gray-200 px-2 py-2">YTD Sale</th>
                                     <th className="border border-gray-200 px-2 py-2">MTD Sale</th>
                                     <th className="border border-gray-200 px-2 py-2">Today Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">Contri %</th>
 
                                 </tr>
                             </thead>
@@ -1712,6 +1798,9 @@ const AdditionalInfo = (props) => {
                                             {item.total_today_new_budget_price_value}
 
                                         </td>
+                                        <td className="border border-gray-200  px-2 py-2">
+                                            {(item.total_ytd_new_budget_price_value / Number(segementYtd).toFixed(2) * 100).toFixed(2)}
+                                        </td>
                                     </tr>
                                 ))}
 
@@ -1721,13 +1810,16 @@ const AdditionalInfo = (props) => {
                                 <tr className="font-bold bg-blue-800 text-white">
                                     <td className="border border-gray-200 px-2 py-2">Total</td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(segementYtd).toFixed(2)}
+                                        {segementYtd != null && !isNaN(Number(segementYtd)) ? Number(segementYtd).toFixed(2) : "-"}
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(segementMtd).toFixed(2)}
+                                        {segementMtd != null && !isNaN(Number(segementMtd)) ? Number(segementMtd).toFixed(2) : "-"}
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(segementToday).toFixed(2)}
+                                        {segementToday != null && !isNaN(Number(segementToday)) ? Number(segementToday).toFixed(2) : "-"}
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        -
                                     </td>
                                 </tr>
 
@@ -1859,7 +1951,7 @@ const AdditionalInfo = (props) => {
                 Monthly Graph
             </h1>
 
-            <ChartOne
+            <TargetVsSales
                 title={"Target Vs Sales"}
                 color={"bg-blue-800"}
                 lab={bsLabelData}
@@ -1877,26 +1969,7 @@ const AdditionalInfo = (props) => {
                     }
                 />
             </div>
-            {/* Example row */}
 
-            {/* {tableData.map((item) => 
-         <tr className="bg-white whitespace-nowrap">
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-       </tr>
-      )} */}
         </form >
     );
 };

@@ -124,7 +124,7 @@ const SaleSummary = () => {
               </div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Current Month Till Date Sale</h2>
-                <h2>{moment(additionalData.month).format("MMMM")} ({moment().format("DD yy")})</h2>
+                <h2>{moment(additionalData.month).format("MMMM")} ({moment().format("DD")} {moment(additionalData.yr).format("YYYY")})</h2>
               </div>
             </div>
 
@@ -136,7 +136,7 @@ const SaleSummary = () => {
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Month Till Date Sale</h2>
-                <h2>{moment(additionalData.month).subtract(1, 'months').format("MMMM")}  ({moment().format("DD yy")})</h2>
+                <h2>{moment(additionalData.month).subtract(1, 'months').format("MMMM")}  ({moment().format("DD")} {moment(additionalData.yr).format("YYYY")})</h2>
               </div>
             </div>
             <h2 className="font-bold">₹{data2[1].data}</h2>
@@ -146,7 +146,7 @@ const SaleSummary = () => {
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Month Total Sale</h2>
-                <h2>{moment(additionalData.month).subtract(1, 'months').format("MMMM")} ({moment().format("YYYY")})</h2>
+                <h2>{moment(additionalData.month).subtract(1, 'months').format("MMMM")} ({moment(additionalData.yr).format("YYYY")})</h2>
               </div>
             </div>
             <h2 className="font-bold">₹{data2[2].data}</h2>

@@ -26,7 +26,7 @@ ChartJS.register(
     Tooltip
 );
 
-const PPChart = (props) => {
+const MyTeam = (props) => {
     const [labels, setLabels] = useState([]);
     const [datasets, setDatasets] = useState([]);
 
@@ -37,15 +37,21 @@ const PPChart = (props) => {
     useEffect(() => {
         if (!props.data || props.data.length === 0) return;
 
-        const chartLabels = props.data.map((item) => item.product_category);
-        const chartData = props.data.map((item) => item.total_mtd_qty);
+        const chartLabels = props.data.map((item) => [
+            item.business_segment || "",
+            item.business_unit_hod_name || "",
+            item.zone_hod_name || "",
+            item.region_hod_name || "",
+            item.territory_hod_name || ""
+        ].reverse().find(value => value !== ""));
+        const chartData = props.data.map((item) => item.actual);
 
         setLabels(chartLabels);
         setDatasets([
             {
-                label: "Produt Category",
-                backgroundColor: "rgba(34, 197, 94, 0.6)",
-                borderColor: "rgba(1, 197, 94, 1)",
+                label: "My Team",
+                backgroundColor: "rgb(99, 115, 255)", // red with transparency
+                borderColor: "rgb(99, 255, 161)",       // solid red border
                 borderWidth: 1,
                 data: chartData,
             },
@@ -76,7 +82,7 @@ const PPChart = (props) => {
     return (
         <>
             <div className="h-6 bg-white rounded-t-md flex items-center px-2 ">
-                <h2 className="text-[0.75rem]">Category Qty Sold Insight (YTD)</h2>
+                <h2 className="text-[0.75rem]">My Team Sale Insight (Total Sale)</h2>
             </div>
             <div
                 ref={chartContainerRef}
@@ -98,4 +104,4 @@ const PPChart = (props) => {
     );
 };
 
-export default PPChart;
+export default MyTeam;

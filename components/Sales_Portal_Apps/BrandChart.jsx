@@ -44,8 +44,8 @@ const BrandChart = (props) => {
         setDatasets([
             {
                 label: "Brand",
-                backgroundColor: "rgba(34, 197, 94, 0.6)",
-                borderColor: "rgba(34, 197, 94, 1)",
+                backgroundColor: "rgba(255, 99, 132, 0.6)", // red with transparency
+                borderColor: "rgba(255, 99, 132, 1)",       // solid red border
                 borderWidth: 1,
                 data: chartData,
             },
@@ -76,7 +76,7 @@ const BrandChart = (props) => {
     return (
         <>
             <div className="h-6 bg-white rounded-t-md flex items-center px-2 ">
-                <h2 className="text-[0.75rem]">Graph Sales Insight</h2>
+                <h2 className="text-[0.75rem]">Brand Qty Sold Insight (YTD)</h2>
             </div>
             <div
                 ref={chartContainerRef}

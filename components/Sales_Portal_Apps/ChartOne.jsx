@@ -64,13 +64,13 @@ const ChartOne = (props) => {
       data: 0,
     },
     {
-      label: "RSP Budget",
+      label: "RSP",
       backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity (blue)
       backgroundColor: "rgba(59, 130, 246, 0.6)", // 60% opacity
       data: 0,
     },
     {
-      label: "Total Sales",
+      label: "Sale",
       backgroundColor: "rgba(249, 115, 22, 1)",  // Full opacity (orange)
       borderColor: "rgba(249, 115, 22, 0.6)",    // 60% opacity
       data: 0,
@@ -80,38 +80,26 @@ const ChartOne = (props) => {
 
 
   useEffect(() => {
-    if (!allRollingTableData.length) return
-    setDataSets(
-      [
-        {
-          label: "Budget",
-          backgroundColor: "rgba(34, 197, 94, 1)",  // Full opacity (green-400)
-          backgroundColor: "rgba(34, 197, 94, 0.6)", // 60% opacity
-          data: allRollingTableData.map((item) => item.budget),
-        },
-        {
-          label: "RSP",
-          backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity (blue)
-          backgroundColor: "rgba(59, 130, 246, 0.6)", // 60% opacity
-          data: allRollingTableData.map((item) => item.target),
-        },
-        {
-          label: "Sales",
-          backgroundColor: "rgba(249, 115, 22, 1)",  // Full opacity (orange)
-          borderColor: "rgba(249, 115, 22, 0.6)",    // 60% opacity
-          data: allRollingTableData.map((item) => item.actual),
-        }
-
-
-
-
-
-      ]
-    )
-  }, [
-    allRollingTableData
-  ])
-
+    if (!allRollingTableData.length) return;
+    setDataSets([
+      {
+        label: "Budget",
+        backgroundColor: "rgba(34, 197, 94, 0.6)",
+        data: allRollingTableData.map((item) => item.budget).reverse(),
+      },
+      {
+        label: "RSP",
+        backgroundColor: "rgba(59, 130, 246, 0.6)",
+        data: allRollingTableData.map((item) => item.target).reverse(),
+      },
+      {
+        label: "Sales",
+        backgroundColor: "rgba(249, 115, 22, 1)",
+        borderColor: "rgba(249, 115, 22, 0.6)",
+        data: allRollingTableData.map((item) => item.actual).reverse(),
+      }
+    ]);
+  }, [allRollingTableData]);
   const chartRef = useRef(null);
   const chartContainerRef = useRef(null);
 
