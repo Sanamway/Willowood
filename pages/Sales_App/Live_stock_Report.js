@@ -22,39 +22,41 @@ import { IoBagCheckOutline } from "react-icons/io5";
 import { FcNeutralTrading } from "react-icons/fc";
 import axios from "axios";
 import Select from "react-select";
+import { FiX } from "react-icons/fi";
 
 import * as FileSaver from 'file-saver'
 import * as  XLSX from 'xlsx'
+import { useRouter } from "next/router";
 
 const Dashboard = () => {
 
-    const data = [
-        {
-            material_code: "MAT001",
-            uom: "KG",
-            price: "120.50",
-            value: "0.00", // This can be calculated dynamically based on Qty
-        },
-        {
-            material_code: "MAT002",
-            uom: "Litre",
-            price: "80.75",
-            value: "0.00",
-        },
-        {
-            material_code: "MAT003",
-            uom: "Piece",
-            price: "45.00",
-            value: "0.00",
-        },
-        {
-            material_code: "MAT004",
-            uom: "Box",
-            price: "250.00",
-            value: "0.00",
-        },
-    ];
-
+    // const data = [
+    //     {
+    //         material_code: "MAT001",
+    //         uom: "KG",
+    //         price: "120.50",
+    //         value: "0.00", // This can be calculated dynamically based on Qty
+    //     },
+    //     {
+    //         material_code: "MAT002",
+    //         uom: "Litre",
+    //         price: "80.75",
+    //         value: "0.00",
+    //     },
+    //     {
+    //         material_code: "MAT003",
+    //         uom: "Piece",
+    //         price: "45.00",
+    //         value: "0.00",
+    //     },
+    //     {
+    //         material_code: "MAT004",
+    //         uom: "Box",
+    //         price: "250.00",
+    //         value: "0.00",
+    //     },
+    // ];
+    const router = useRouter()
     const [modalData, setModalData] = useState([])
 
     const getPopTableData = async (matCode) => {
@@ -64,10 +66,13 @@ const Dashboard = () => {
                 headers: headers,
                 params: {
                     c_id: 1,
-                    depot_code: filtersData.depotCode,
-                    warehouse_code: filtersData.storeLocation,
+
                     material_code: matCode,
-                    material_details: true
+                    material_details: true,
+                    depot_code: filtersData.depotCode === "All" ? JSON.stringify(wareHouseFilterOptions.map((item) => item.depot_code)) : JSON.stringify([filtersData.depotCode]),
+                    warehouse_code: filtersData.storeLocation === "All" ? JSON.stringify(storeLocationOptions.map((item, index) => (
+                        item.warehouseCode)
+                    )) : JSON.stringify([filtersData.storeLocation]),
                 },
             });
 
@@ -157,18 +162,12 @@ const Dashboard = () => {
         switch (roleId) {
 
             case 5:
-
-
                 return <span><strong>Region</strong>: {localStorage.region}</span>
                 break;
             case 4:
-
-
                 return <span><strong>Zone</strong>: {localStorage.zone}</span>
                 break;
             case 3:
-
-
                 return <span><strong>Business Unit</strong>: {localStorage.businessUnit}</span>
                 break;
             case 10:
@@ -194,18 +193,18 @@ const Dashboard = () => {
     const [wareHouseFilterOptions, setWarehouseFilterOptions] = useState([])
 
     const getAllDepotData = async (data) => {
-        console.log("zaq", data)
+
         try {
             const respond = await axios.get(`${url}/api/get_dipot`, {
                 headers: headers,
-                params: data,
+                params: [data],
             });
 
             const apires = await respond.data.data;
             setWarehouseFilterOptions(apires);
             if (data.region_name) {
                 setFiltersData({ ...filtersData, depotCode: apires[0].depot_code })
-                getAllStoreLocationData(apires[0].depot_code)
+                getAllStoreLocationData(JSON.stringify([apires[0].depot_code]))
             }
 
 
@@ -216,6 +215,7 @@ const Dashboard = () => {
 
     const [storeLocationOptions, setStoreLocationOptions] = useState([])
     const getAllStoreLocationData = async (data) => {
+
         try {
             const respond = await axios.get(`${url}/api/get_warehousestockdata`, {
                 headers: headers,
@@ -242,24 +242,30 @@ const Dashboard = () => {
             case "all":
                 params = {
                     c_id: 1,
-                    depot_code: filtersData.depotCode,
-                    warehouse_code: filtersData.storeLocation
+                    depot_code: filtersData.depotCode === "All" ? JSON.stringify(wareHouseFilterOptions.map((item) => item.depot_code)) : JSON.stringify([filtersData.depotCode]),
+                    warehouse_code: filtersData.storeLocation === "All" ? JSON.stringify(storeLocationOptions.map((item, index) => (
+                        item.warehouseCode)
+                    )) : JSON.stringify([filtersData.storeLocation]),
                 }
                 break;
             case "brand":
                 params = {
                     c_id: 1,
                     brand: value,
-                    depot_code: filtersData.depotCode,
-                    warehouse_code: filtersData.storeLocation
+                    depot_code: filtersData.depotCode === "All" ? JSON.stringify(wareHouseFilterOptions.map((item) => item.depot_code)) : JSON.stringify([filtersData.depotCode]),
+                    warehouse_code: filtersData.storeLocation === "All" ? JSON.stringify(storeLocationOptions.map((item, index) => (
+                        item.warehouseCode)
+                    )) : JSON.stringify([filtersData.storeLocation]),
                 }
                 break;
             case "category":
                 params = {
                     c_id: 1,
                     category: value,
-                    depot_code: filtersData.depotCode,
-                    warehouse_code: filtersData.storeLocation
+                    depot_code: filtersData.depotCode === "All" ? JSON.stringify(wareHouseFilterOptions.map((item) => item.depot_code)) : JSON.stringify([filtersData.depotCode]),
+                    warehouse_code: filtersData.storeLocation === "All" ? JSON.stringify(storeLocationOptions.map((item, index) => (
+                        item.warehouseCode)
+                    )) : JSON.stringify([filtersData.storeLocation]),
                 }
                 break;
 
@@ -267,16 +273,20 @@ const Dashboard = () => {
                 params = {
                     c_id: 1,
                     material_name: value,
-                    depot_code: filtersData.depotCode,
-                    warehouse_code: filtersData.storeLocation
+                    depot_code: filtersData.depotCode === "All" ? JSON.stringify(wareHouseFilterOptions.map((item) => item.depot_code)) : JSON.stringify([filtersData.depotCode]),
+                    warehouse_code: filtersData.storeLocation === "All" ? JSON.stringify(storeLocationOptions.map((item, index) => (
+                        item.warehouseCode)
+                    )) : JSON.stringify([filtersData.storeLocation]),
                 }
                 break;
             case "mat_code":
                 params = {
                     c_id: 1,
                     material_code: value,
-                    depot_code: filtersData.depotCode,
-                    warehouse_code: filtersData.storeLocation
+                    depot_code: filtersData.depotCode === "All" ? JSON.stringify(wareHouseFilterOptions.map((item) => item.depot_code)) : JSON.stringify([filtersData.depotCode]),
+                    warehouse_code: filtersData.storeLocation === "All" ? JSON.stringify(storeLocationOptions.map((item, index) => (
+                        item.warehouseCode)
+                    )) : JSON.stringify([filtersData.storeLocation]),
                 }
 
                 break;
@@ -285,8 +295,11 @@ const Dashboard = () => {
             default:
                 params = {
                     c_id: 1,
-                    depot_code: filtersData.depotCode,
-                    warehouse_code: filtersData.storeLocation
+                    depot_code: filtersData.depotCode === "All" ? JSON.stringify(wareHouseFilterOptions.map((item) => item.depot_code)) : JSON.stringify([filtersData.depotCode]),
+                    warehouse_code: filtersData.storeLocation === "All" ? JSON.stringify(storeLocationOptions.map((item, index) => (
+                        item.warehouseCode)
+                    )) : JSON.stringify([filtersData.storeLocation]),
+
                 }
                 break;
         }
@@ -383,13 +396,24 @@ const Dashboard = () => {
                                 value={filtersData.depotCode}
                                 disabled={localStorage.roleId === 5}
                                 onChange={(e) => {
-                                    getAllStoreLocationData(e.target.value)
-                                    setFiltersData({ ...filtersData, depotCode: e.target.value })
+                                    const value = e.target.value;
+
+                                    if (value === "All") {
+                                        const allDepots = wareHouseFilterOptions.map((item) => item.depot_code);
+                                        getAllStoreLocationData(JSON.stringify(allDepots));
+                                        setFiltersData({ ...filtersData, depotCode: "All", storeLocation: "0010" });
+                                    } else {
+                                        getAllStoreLocationData(JSON.stringify([value]));
+                                        setFiltersData({ ...filtersData, depotCode: value, storeLocation: "0010" });
+                                    }
                                 }}
                             >
                                 <option value="">-- Select --</option>
+                                <option value="All">All</option>
                                 {wareHouseFilterOptions.map((item, index) => (
-                                    <option key={index} value={item.depot_code}>{item.depot_code}</option>
+                                    <option key={index} value={item.depot_code}>
+                                        {item.depot_code}
+                                    </option>
                                 ))}
                             </select>
                         </div>
@@ -404,8 +428,10 @@ const Dashboard = () => {
                                 onChange={(e) => {
                                     setFiltersData({ ...filtersData, storeLocation: e.target.value })
                                 }}
+
                             >
                                 <option value="">-- Select --</option>
+                                <option value="All">All</option>
                                 {storeLocationOptions.map((item, index) => (
                                     <option key={index} value={item.warehouseCode}>{item.warehouseCode}</option>
                                 ))}
@@ -433,6 +459,7 @@ const Dashboard = () => {
                         const selectedValue = e.target.value.trim();
                         setTableOption([])
                         setSearchBy(selectedValue);
+                        setInputFilter("")
                     }}
 
                 >
@@ -470,26 +497,21 @@ const Dashboard = () => {
                         <tr className="font-arial w-max text-gray-700">
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">Item Description</th>
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">UOM</th>
-                            <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">Case</th>
-                            <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">Qty</th>
+                            <th className="px-2 py-2 text-left text-xs font-medium tracking-wider w-12">Case</th>
+                            <th className="px-2 py-2 text-left text-xs font-medium tracking-wider w-12">Qty</th>
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider"></th>
-
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200 text-xs">
                         {tableOption?.map((item, idx) => (
                             <tr key={idx} className="border-b">
-
                                 <td className="px-4 py-2 text-left whitespace-nowrap flex items-center gap-2">
                                     <div>
-
-                                        {item.materialNumber}  - {item.material_result?.brand_code} -  {item.productCategoryresult?.pcat_name}
+                                        {item.materialNumber} - {item.brand_info?.brand_name} - {item.productCategoryresult?.pcat_name}
                                         <br />
                                         {item.material_result?.mat_name}
                                     </div>
                                 </td>
-
-
                                 <td className="px-4 py-2 text-left whitespace-nowrap">
                                     <input
                                         type="text"
@@ -498,47 +520,36 @@ const Dashboard = () => {
                                         disabled
                                     />
                                 </td>
-
-
-                                <td className="px-4 py-2 text-left whitespace-nowrap  ">
-                                    {item.totalCases
-                                    }
+                                <td className="px-2 py-2 whitespace-nowrap w-12 text-right">
+                                    {Math.round(item.totalCases)}
                                 </td>
-
-
-                                <td className="px-4 py-2 text-left whitespace-nowrap   ">
-                                    {item.totalQuantity}
+                                <td className="px-2 py-2 whitespace-nowrap w-12 text-right">
+                                    {Math.round(item.totalQuantity)}
                                 </td>
-
-
-                                <td className="px-4 py-2 text-left whitespace-nowrap text-xs ">
+                                <td className="px-4 py-2 text-left whitespace-nowrap text-xs">
                                     <button
-                                        onClick={() => {
-                                            getPopTableData(item.materialNumber)
-
-
-                                        }
-
-
-                                        }
-                                        className="text-blue-500  hover:text-blue-700 font-semibold py-2 px-2 border rounded-md bg-transparent border-blue-500 hover:bg-blue-500 hover:text-white"
+                                        onClick={() => getPopTableData(item.materialNumber)}
+                                        className="text-blue-500 hover:text-blue-700 font-semibold py-2 px-2 border rounded-md bg-transparent border-blue-500 hover:bg-blue-500 hover:text-white"
                                     >
                                         View Details
                                     </button>
                                 </td>
-
                             </tr>
                         ))}
-
-
                     </tbody>
-
                 </table>
 
 
             </div>
-            <span className="italic ml-2 bg-white-400 ml-2 text-xs">
-                {tableOption.length ? `Live Stock updated: ${moment(tableOption[0].liveDateTime).format("DD-MM-YYYY")} Time: ${moment(tableOption[0].liveDateTime).format("hh:mm A")}` : `Live Stock updated: - Time: -`}
+            <span className="italic ml-2 text-xs">
+                {tableOption.length
+                    ? (() => {
+                        const latest = tableOption.reduce((latestItem, currentItem) =>
+                            moment(currentItem.liveDateTime).isAfter(moment(latestItem.liveDateTime)) ? currentItem : latestItem
+                        );
+                        return `Live Stock updated: ${moment(latest.liveDateTime).format("DD-MM-YYYY")} Time: ${moment(latest.liveDateTime).format("hh:mm A")}`;
+                    })()
+                    : "Live Stock updated: - Time: -"}
             </span>
 
             {/* Delivery Address & Special Instructions */}
@@ -568,12 +579,20 @@ const Dashboard = () => {
                                 leaveFrom="opacity-100 scale-100"
                                 leaveTo="opacity-0 scale-95"
                             >
-                                <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                                <Dialog.Panel className="w-full max-w-4xl relative transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+
+                                    {/* Close Button */}
+                                    <button
+                                        className="absolute top-4 right-4 text-gray-600 hover:text-red-500 focus:outline-none"
+                                        onClick={() => setOpenModal(false)}
+                                    >
+                                        <FiX size={20} />
+                                    </button>
+
                                     {/* Modal Title */}
                                     <Dialog.Title className="text-[1.1rem] font-bold leading-6 text-center text-gray-900 lg:text-[1.5rem]">
                                         View Details - Material Code
                                     </Dialog.Title>
-
                                     {/* Scrollable Table Container */}
                                     <div className="mt-4 overflow-x-auto">
                                         <div className="min-w-max w-full">

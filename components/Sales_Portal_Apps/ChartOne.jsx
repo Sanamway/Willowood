@@ -202,7 +202,7 @@ const ChartOne = (props) => {
   return (
     <>
       <div className="h-6 bg-white rounded-t-md flex items-center px-2 ">
-        <h2 className="text-[0.75rem]">Graph Sales Insight</h2>
+        <h2 className="text-[0.75rem]">Graph Collection Insight</h2>
       </div>
       <div
         ref={chartContainerRef}

@@ -18,7 +18,8 @@ import { FaArrowAltCircleUp } from "react-icons/fa";
 import ChartOne from "../../components/Sales_Portal_Apps/ChartOne";
 import toast from "react-hot-toast";
 import { FiMinus, FiPlus } from "react-icons/fi";
-
+import TargetVsCollectionGraph from "@/components/Sales_Portal_Apps/TargetVsCollectionGraph";
+import TargetVsCollectionTwoGraph from "@/components/Sales_Portal_Apps/TargetVsCollectionTwoGraph";
 
 
 
@@ -192,12 +193,12 @@ const AdditionalInfo = (props) => {
                 break;
             case 4:
                 setLocalStorageItems({
-                    cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
-                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
-                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                    cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id || "",
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id || "",
+                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id || "",
+                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id || "",
+                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id || "",
+                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id || "",
                     roleId: JSON.parse(window.localStorage.getItem("userinfo"))?.role_id,
                     clName: window.localStorage.getItem("user_name"),
                     ulName: window.localStorage.getItem("phone_number"),
@@ -210,23 +211,23 @@ const AdditionalInfo = (props) => {
                 });
 
                 setFilterState({
-                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
-                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id || "",
+                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id || "",
+                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id || "",
+                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id || "",
+                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id || "",
                     yr: Math.max(...allYearData),
                     month: moment().startOf('month').startOf('day').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
                 });
                 break;
             case 3:
                 setLocalStorageItems({
-                    cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
-                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
-                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                    cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id || "",
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id || "",
+                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id || "",
+                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id || "",
+                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id || "",
+                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id || "",
                     roleId: JSON.parse(window.localStorage.getItem("userinfo"))?.role_id,
                     clName: window.localStorage.getItem("user_name"),
                     ulName: window.localStorage.getItem("phone_number"),
@@ -239,11 +240,11 @@ const AdditionalInfo = (props) => {
                 });
 
                 setFilterState({
-                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
-                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id || "",
+                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id || "",
+                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id || "",
+                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id || "",
+                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id || "",
                     yr: Math.max(...allYearData),
                     month: moment().startOf('month').startOf('day').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
                 });
@@ -556,7 +557,7 @@ const AdditionalInfo = (props) => {
 
             endPoint = "api/get_collectiondata_based_on_roll_t";
         } else if (bgId && buId && zId && rId && !tId) {
-            if (tId === "" || tId === 0 || tId === null) {
+            if (tId === "" || tId === 0 || tId === null || tId === undefined) {
                 endPoint = "api/get_collectiondata_based_on_roll_t"; // tId is an empty string
             } else {
                 endPoint = "api/get_collectiondata_based_on_roll_r"; // tId holds some value
@@ -708,7 +709,7 @@ const AdditionalInfo = (props) => {
         return Object.values(data).reduce((acc, val) => acc + Number(val), 0);
     };
 
-    const bsLabelData = ["Apr-24",
+    const [bsLabelData, setBsLabelData] = useState(["Apr-24",
         "May-24",
         "Jun-24",
         "Jul-24",
@@ -719,7 +720,25 @@ const AdditionalInfo = (props) => {
         "Dec-24",
         "Jan-25",
         "Feb-25",
-        "Mar-25"];
+        "Mar-25"]);
+
+    const generateFiscalLabels = (year) => {
+
+        const labels = [];
+
+        // Fiscal year starts in April of the given year
+        for (let i = 3; i < 15; i++) {
+            const date = moment(`${year}-04-01`).add(i - 3, 'months');
+            labels.push(date.format("MMM-YY"));
+        }
+        setBsLabelData(labels)
+
+    };
+    useEffect(() => {
+        generateFiscalLabels(filterState.yr)
+    }, [filterState.yr])
+
+
 
 
     const getUserItem = () => {
@@ -1279,7 +1298,12 @@ const AdditionalInfo = (props) => {
             setOpenTwo(true);
         }
     };
-
+    const [userImg, setUserImg] = useState(null);
+    useEffect(() => {
+        // Ensure this runs only on the client
+        if (typeof window === "undefined") return;
+        setUserImg(localStorage.getItem("ImageLink"));
+    }, []);
     return (
         <form
             className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -1334,13 +1358,11 @@ const AdditionalInfo = (props) => {
             </div>
 
             <div className="flex mb-4 mt-2 mb-8">
+
                 <div className="w-40 h-30 flex justify-center items-center">
-                    <Image
-                        className="h-[5.1rem] w-[5.1rem] rounded-full mt-2"
-                        src={Profile}
-                        alt="img"
-                    />
+                    <img src={userImg} className="h-20 w-20 rounded-full text-orange-500 mt-4" size={80}></img>
                 </div>
+
 
                 <div className="flex  flex-col  w-full mt-4 md:hidden">
                     <div className="flex w-full  w-28">
@@ -1613,25 +1635,25 @@ const AdditionalInfo = (props) => {
                             <div className=" bg-gray-200  flex flex-col">
                                 <div className="creditwrapper mt-2 flex flex-col gap-2 ">
                                     <div className="h-6 bg-white rounded-t-md flex items-center px-2 ">
-                                        <h2 className="text-[0.95rem] text-gray-600 font-bold">Credit Balance Details</h2>
+                                        <h2 className="text-[0.95rem] text-gray-600 font-bold">Customer Ageing Insight</h2>
                                     </div>
 
                                     <div className="flex-row flex-col gap-3 font-arial   rounded-md bg-white ">
                                         <div className="flex items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
                                             <div className="flex-col  items-start justify-between w-full gap-2 p-1">
-                                                <h2 className="text-[0.75rem] text-gray-600 font-semibold font-arial whitespace-nowrap">
-                                                    Allocated Credit Limit{" "}
+                                                <h2 className="text-[0.65rem] text-gray-600 font-semibold font-arial whitespace-nowrap">
+                                                    Balance Credit Limit{" "}
                                                 </h2>
                                                 <h2 className="text-sm text-[#ADBD5B] font-bold whitespace-nowrap">&#8377;{parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["Credit Limit "], 0).toFixed(2))}</h2>
                                             </div>
                                             <div className="flex-col items-start justify-between w-full gap-2 p-1 border-l-[3px] ">
-                                                <h2 className="text-[0.75rem] text-gray-600 font-semibold whitespace-nowrap">
+                                                <h2 className="text-[0.65rem] text-gray-600 font-semibold whitespace-nowrap">
                                                     Utilized Credit Limit
                                                 </h2>
                                                 <h2 className="text-sm text-[#F5A05D] font-bold whitespace-nowrap">&#8377;{parseFloat(parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["Credit Limit "], 0).toFixed(2)) - parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0).toFixed(2))).toFixed(2)}</h2>
                                             </div>
                                             <div className="flex-col items-start justify-between w-full gap-2 p-1 border-l-[3px] ">
-                                                <h2 className="text-[0.75rem] text-gray-600 font-semibold whitespace-nowrap">
+                                                <h2 className="text-[0.65rem] text-gray-600 font-semibold whitespace-nowrap">
                                                     Balance Credit Limit
                                                 </h2>
                                                 <h2 className="text-sm text-[#E55769] font-bold whitespace-nowrap">&#8377;{
@@ -1784,80 +1806,136 @@ const AdditionalInfo = (props) => {
                         <thead>
                             <tr className="bg-blue-800 text-white">
                                 <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">Month</th>
-                                <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">BST</th>
-
-                                <th className="border border-gray-200  py-2">Target</th>
-                                <th className="border border-gray-200  py-2">Total Collection</th>
-                                <th className="border border-gray-200  py-2">ACH%</th>
+                                <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold w-28">BST</th>
+                                <th className="border border-gray-200 py-2 w-10">Target</th>
+                                <th className="border border-gray-200 py-2 w-10">Total Collection</th>
+                                <th className="border border-gray-200 py-2 w-[5.5rem]">ACH%</th>
                             </tr>
                         </thead>
                         <tbody>
                             {allTeamData.map((item) => (
                                 <tr className="font-bold">
-                                    <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
-                                        {
-                                            moment(item.m_year).format('MMMM')
-                                        }
-
+                                    <td className="border border-gray-200 px-2 py-2 whitespace-nowrap">
+                                        {moment(item.m_year).format('MMMM')}
                                     </td>
-                                    <td className="border border-gray-200 w-48 px-2 py-2">
-                                        {[item.business_segment || ""
-                                            ,
-                                        item.business_unit_name || ""
-                                            ,
-                                        item.zone_name || ""
-                                            ,
-                                        item.region_name || ""
-                                            ,
-                                        item.territory_name
-                                        || ""].reverse().find(value => value !== "")}
-                                        -
-                                        {[item.business_segment || ""
-                                            ,
-                                        item.business_unit_hod_name || ""
-                                            ,
-                                        item.zone_hod_name || ""
-                                            ,
-                                        item.region_hod_name || ""
-                                            ,
-                                        item.territory_hod_name || ""].reverse().find(value => value !== "")}
-
-
-
-
+                                    <td className="border border-gray-200 px-2 py-2 text-xs w-28 break-words">
+                                        {[
+                                            item.business_segment || "",
+                                            item.business_unit_name || "",
+                                            item.zone_name || "",
+                                            item.region_name || "",
+                                            item.territory_name || ""
+                                        ].reverse().find(value => value !== "")}
+                                        <br />
+                                        {[
+                                            item.business_segment || "",
+                                            item.business_unit_hod_name || "",
+                                            item.zone_hod_name || "",
+                                            item.region_hod_name || "",
+                                            item.territory_hod_name || ""
+                                        ].reverse().find(value => value !== "")}
                                     </td>
-                                    <td className="border border-gray-200  py-2">{item.target}</td>
-                                    <td className="border border-gray-200 py-2">{item.actual}</td>
-
-                                    <td className="border border-gray-200  py-2">
+                                    <td className="border border-gray-200 py-2 w-10 text-right">{item.target}</td>
+                                    <td className="border border-gray-200 py-2 w-10 text-right">{item.actual}</td>
+                                    <td className="border border-gray-200 py-2 w-[5.5rem] text-right">
                                         {(item.actual / item.target * 100).toFixed(2)} %
-
                                     </td>
                                 </tr>
                             ))}
 
-
-
-                            {/* Row for Totals (appears at the end) */}
                             <tr className="font-bold bg-blue-800 text-white">
                                 <td className="border border-gray-200 px-2 py-2">MTD Total</td>
-                                <td className="border border-gray-200 px-2 py-2">
-
-                                </td>
-                                <td className="border border-gray-200 py-2">
+                                <td className="border border-gray-200 px-2 py-2"></td>
+                                <td className="border border-gray-200 py-2 w-10 text-right">
                                     {Number(TeamTarget).toFixed(2)}
                                 </td>
-                                <td className="border border-gray-200  py-2">
+                                <td className="border border-gray-200 py-2 w-10 text-right">
                                     {Number(TeamActual).toFixed(2)}
                                 </td>
-                                <td className="border border-gray-200  py-2">
+                                <td className="border border-gray-200 py-2 w-[5.5rem] text-right">
                                     {TeamPercentage} %
                                 </td>
                             </tr>
-
                         </tbody>
                     </table>
                     )}
+                    <TargetVsCollectionGraph
+                        title={"Target Vs Sales"}
+                        color={"bg-blue-800"}
+                        data={allTeamData}
+                    />
+                    <div className="p-4 overflow-auto h-[calc(100%-50px)]">
+                        <div className="w-full flex justify-center font-bold">
+                            <h4>Total Overdue</h4>
+                        </div>
+
+                        <table className="w-full text-sm text-left text-gray-500 rounded-full">
+                            <thead className="text-xs text-gray-900 text-center bg-blue-50 rounded-md">
+                                <tr>
+                                    {[
+                                        { label: "Id" },
+                                        { label: "Account" },
+                                        { label: "Net Balance Amount" },
+                                        { label: "180-365" },
+                                        { label: "366-720" },
+                                        { label: "720 And Above" },
+                                    ].map(({ label }) => (
+                                        <th
+                                            key={label}
+
+                                            className="px-2 py-1 cursor-pointer text-[0.78rem] text-blue-400 font-bold"
+                                        >
+                                            <span className="flex items-center justify-center w-full">
+                                                {label}
+
+                                            </span>
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200 break-normal">
+                                {
+                                    collectionTableData.map((item, idx) => (
+                                        <tr key={idx}>
+                                            <td className="px-4 font-normal text-left py-1 text-[0.66rem] text-gray-500 border">
+                                                {item._id}
+                                            </td>
+                                            <td className="px-2 text-left py-1 text-[0.75rem] text-gray-600 border">
+                                                {item.Account}
+                                            </td>
+                                            <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border">
+                                                {item["Net Balance Amt(INR)"]}
+                                            </td>
+                                            <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border">
+                                                {item["180-365"]}
+                                            </td>
+                                            <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border">
+                                                {item["366-720"]}
+                                            </td>
+                                            <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border">
+                                                {item["720 And Above"]}
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+
+                                <tr>
+                                    <td className="px-4 font-normal text-left py-1 text-[0.66rem] text-gray-500 border">
+                                        Total
+                                    </td>
+                                    <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border"></td>
+                                    {["Net Balance Amt(INR)", "180-365", "366-720", "720 And Above"].map((key, idx) => (
+                                        <td
+                                            key={idx}
+                                            className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border"
+                                        >
+                                            {collectionTableData.reduce((acc, curr) => acc + curr[key], 0).toFixed(2)}
+                                        </td>
+                                    ))}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>
@@ -1901,9 +1979,6 @@ const AdditionalInfo = (props) => {
                                         return (
                                             <tr key={idx} className="font-bold">
                                                 <td className="border border-gray-200 ">{item.customer_name}</td>
-
-
-
                                                 <td className="border border-gray-200">
                                                     {item.category_result?.map((categoryItem, index) => (
                                                         <li key={index} className="border-b-2 border-black flex justify-left text-black p-1">
@@ -1932,9 +2007,6 @@ const AdditionalInfo = (props) => {
                                     {/* Add the final row that shows the grand total */}
                                     <tr className="font-bold bg-gray-100">
                                         <td className="border border-gray-200">Grand Total</td>
-                                        <td className="border border-gray-200">
-                                            {/* Empty because category names don't have a total */}
-                                        </td>
                                         <td className="border border-gray-200">
                                             <input
                                                 className="p-0 w-14 text h-6"
@@ -1965,10 +2037,10 @@ const AdditionalInfo = (props) => {
 
 
             <h1 className=" font-bold text-center  bg-yellow-300">
-                Monthly Graph
+                Monthly Collection Graph
             </h1>
 
-            <ChartOne
+            <TargetVsCollectionTwoGraph
                 title={"Target Vs Collection"}
                 color={"bg-blue-800"}
                 lab={bsLabelData}

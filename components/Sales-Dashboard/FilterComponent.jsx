@@ -723,14 +723,9 @@ const FilterComponent = () => {
   };
 
   useEffect(() => {
-    const allDataAvailable =
-      bgData?.length &&
-      buData?.length &&
-      zoneData?.length &&
-      regionData?.length &&
-      territoryData?.length;
 
-    if (!allDataAvailable) return;
+
+
 
     getSapSales(
       filterState.yr || null,
@@ -857,38 +852,6 @@ const FilterComponent = () => {
     filterState.rId,
     filterState.tId,
   ]);
-  // useEffect(() => {
-  //   if (!allTableData.length) return
-  //   setBsGraphData(
-  //     [
-  //       {
-  //         label: "Budget",
-  //         backgroundColor: "rgba(34, 197, 94, 1)",  // Full opacity (green-400)
-  //         backgroundColor: "rgba(34, 197, 94, 0.6)", // 60% opacity
-  //         data: allTableData.map((item) => item.budget),
-  //       },
-  //       {
-  //         label: "RSP Budget",
-  //         backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity (blue)
-  //         backgroundColor: "rgba(59, 130, 246, 0.6)", // 60% opacity
-  //         data: allTableData.map((item) => item.target),
-  //       },
-  //       {
-  //         label: "Total Sales",
-  //         backgroundColor: "rgba(249, 115, 22, 1)",  // Full opacity (orange)
-  //         borderColor: "rgba(249, 115, 22, 0.6)",    // 60% opacity
-  //         data: allTableData.map((item) => item.actual),
-  //       }
-
-
-
-
-
-  //     ]
-  //   )
-  // }, [
-  //   allTableData
-  // ])
 
   const [isOpen, setIsOpen] = useState(false);
   return (

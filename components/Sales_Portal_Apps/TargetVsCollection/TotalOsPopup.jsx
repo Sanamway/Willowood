@@ -20,7 +20,9 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
   }, [selected, catData, regionData]);
 
   const handleSort = () => {
-    const sortData = [...catdata].sort((a, b) => (nameSort ? a.id - b.id : b.id - a.id));
+    const sortData = [...catdata].sort((a, b) =>
+      nameSort ? a.id - b.id : b.id - a.id
+    );
 
     if (selected === "category") {
       setCatData(sortData);
@@ -31,10 +33,8 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
     setNameSort(!nameSort);
   };
 
-
-
   const springProps = useSpring({
-    from: { opacity: 0, scale: 0.8, },
+    from: { opacity: 0, scale: 0.95 },
     to: { opacity: 1, scale: 1 },
   });
 
@@ -43,21 +43,11 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
       <>
         {Array.from({ length: dueData?.length }).map((_, index) => (
           <tr key={index}>
-            <td className="px-2 py-1 text-center whitespace-nowrap border">
-              <div className="w-3/4 h-3 bg-gray-300 rounded-md animate-pulse"></div>
-            </td>
-            <td className="px-2 py-1 text-center whitespace-nowrap border">
-              <div className="w-3/4 h-3 bg-gray-300 rounded-md animate-pulse"></div>
-            </td>
-            <td className="px-2 py-1 text-center whitespace-nowrap border">
-              <div className="w-3/4 h-3 bg-gray-300 rounded-md animate-pulse"></div>
-            </td>
-            <td className="px-2 py-1 text-center whitespace-nowrap border">
-              <div className="w-3/4 h-3 bg-gray-300 rounded-md animate-pulse"></div>
-            </td>
-            <td className="px-2 py-1 text-center whitespace-nowrap border">
-              <div className="w-3/4 h-3 bg-gray-300 rounded-md animate-pulse"></div>
-            </td>
+            {[...Array(5)].map((_, i) => (
+              <td key={i} className="px-2 py-1 text-center whitespace-nowrap border">
+                <div className="w-3/4 h-3 bg-gray-300 rounded-md animate-pulse"></div>
+              </td>
+            ))}
           </tr>
         ))}
       </>
@@ -66,268 +56,100 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
 
   return (
     <>
-      <animated.div className=" bg-gray-100/40  backdrop-blur-[4px] from-gray-10 to-transparent z-10 w-full flex items-center justify-center min-h-screen fixed top-0 right-0 left-0 bottom-0 ">
-        {/* <div className=" bg-gray-100/40  opacity-1 backdrop-blur-[4px] from-gray-10 to-transparent z-10 w-full flex items-center justify-center min-h-screen fixed top-0 right-0 left-0 bottom-0 "> */}
-        <animated.div style={springProps} className="mainContainer lg:w-[55%] w-full mx-2 h-auto  bg-white rounded-lg  ">
-          <div className="flex items-center justify-between py-1.5 px-2 border-b-2">
-            <div className="px-2 text-[0.89rem] font-semibold text-gray-500 py-1">Total Outstanding</div>
-            <button className="" onClick={closeModal}>
+      <animated.div className="fixed inset-0 z-50 bg-gray-100/50 backdrop-blur-sm flex items-center justify-center">
+        <animated.div
+          style={springProps}
+          className="w-full h-full bg-white"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between py-2 px-4 border-b">
+            <div className="text-base font-semibold text-gray-600">
+              Total Outstanding
+            </div>
+            <button onClick={closeModal}>
               <IoCloseOutline
-                className="text-gray-900 bg-gray-50 rounded-full border"
+                className="text-gray-800 bg-gray-200 rounded-full border"
                 size={25}
-              ></IoCloseOutline>
+              />
             </button>
           </div>
 
-
-
-          {/* tables  */}
-
-          {selected == "category" && (
-            <div className="orderwrapper px-2 py-2 ">
-              <div className="w-full px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md">
-                <div className="bg-white  flex-1 md:flex items-center justify-center gap-4 rounded-md shadow- text-white text-center">
-                  <div className="overflow-x-auto chat-scrollbar select-none w-full h-72">
-                    <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-full ">
-                      <thead className="text-xs text-gray-900 text-center bg-blue-50 rounded-md ">
-                        <tr className="">
-
-
-                          <th
-                            onClick={handleSort}
-                            className="px-2 text-left cursor-pointer  py-1 text-[0.78rem] text-blue-400 font-bold"
-                          >
-                            <span className="flex t items-center justify-center w-full">
-                              Id{" "}
-                              {nameSort ? (
-                                <IoMdArrowDropdown size={20}></IoMdArrowDropdown>
-                              ) : (
-                                <IoMdArrowDropup size={20}></IoMdArrowDropup>
-                              )}
-                            </span>
-                          </th>
-
-
-
-                          <th
-                            onClick={handleSort}
-                            className="px-2 py-1 cursor-pointer text-[0.78rem] text-blue-400 font-bold"
-                          >
-                            <span className="flex t items-center justify-center w-full">
-                              Account{" "}
-                              {nameSort ? (
-                                <IoMdArrowDropdown size={20}></IoMdArrowDropdown>
-                              ) : (
-                                <IoMdArrowDropup size={20}></IoMdArrowDropup>
-                              )}
-                            </span>
-                          </th>
-                          <th
-                            onClick={handleSort}
-                            className="px-2 py-1 cursor-pointer text-[0.78rem] text-blue-400 font-bold"
-                          >
-                            <span className="flex t items-center justify-center w-full">
-                              Net Balance Amount
-                              {nameSort ? (
-                                <IoMdArrowDropdown size={20}></IoMdArrowDropdown>
-                              ) : (
-                                <IoMdArrowDropup size={20}></IoMdArrowDropup>
-                              )}
-                            </span>
-                          </th>
-
-
+          {/* Tab: Category View */}
+          {selected === "category" && (
+            <div className="p-4 overflow-auto h-[calc(100%-50px)]">
+              <table className="w-full text-sm text-gray-600 border rounded">
+                <thead className="text-xs bg-blue-50 text-blue-500 font-bold text-center">
+                  <tr>
+                    <th
+                      onClick={handleSort}
+                      className="px-2 py-2 cursor-pointer text-left"
+                    >
+                      <div className="flex items-center justify-start gap-1">
+                        Id {nameSort ? <IoMdArrowDropdown /> : <IoMdArrowDropup />}
+                      </div>
+                    </th>
+                    <th
+                      onClick={handleSort}
+                      className="px-2 py-2 cursor-pointer text-left"
+                    >
+                      <div className="flex items-center justify-start gap-1">
+                        Account {nameSort ? <IoMdArrowDropdown /> : <IoMdArrowDropup />}
+                      </div>
+                    </th>
+                    <th
+                      onClick={handleSort}
+                      className="px-2 py-2 cursor-pointer text-center"
+                    >
+                      <div className="flex items-center justify-center gap-1">
+                        Net Balance Amount
+                        {nameSort ? <IoMdArrowDropdown /> : <IoMdArrowDropup />}
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {catdata?.length ? (
+                    <>
+                      {catdata.map((item, idx) => (
+                        <tr key={idx}>
+                          <td className="px-2 py-2 border text-left text-[0.75rem]">
+                            {item._id}
+                          </td>
+                          <td className="px-2 py-2 border text-left text-[0.75rem]">
+                            {item.Account}
+                          </td>
+                          <td className="px-2 py-2 border text-center text-[0.75rem]">
+                            {item["Net Balance Amt(INR)"]}
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200 break-normal ">
-
-                        {catdata?.length ? (
-                          catdata?.map((item, idx) => (
-
-                            <tr key={idx}>
-                              <td
-                                className={`px-4 font-normal gap-1 text-left whitespace-nowrap py-1 text-[0.66rem] text-gray-500 border `}
-                              >
-                                {item._id}
-                              </td>
-                              <td
-                                className={`px-2  text-left whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                              >
-                                {item.Account}
-                              </td>
-                              <td
-                                className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                              >
-                                {item["Net Balance Amt(INR)"]}
-                              </td>
-
-                            </tr>
-                          ))
-
-                        ) : (
-                          <Skeleton></Skeleton>
-                        )}
-                        <tr >
-                          <td
-                            className={`px-4 font-normal gap-1 text-left whitespace-nowrap py-1 text-[0.66rem] text-gray-500 border `}
-                          >
-                            Total
-                          </td>
-                          <td
-                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                          >
-
-                          </td>
-                          <td
-                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                          >
-                            {catdata.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"] || 0, 0).toFixed(2)}
-
-                          </td>
-
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+                      ))}
+                      <tr className="font-semibold">
+                        <td className="px-2 py-2 border text-left">Total</td>
+                        <td className="px-2 py-2 border"></td>
+                        <td className="px-2 py-2 border text-center">
+                          {catdata
+                            .reduce(
+                              (acc, curr) =>
+                                acc + (curr["Net Balance Amt(INR)"] || 0),
+                              0
+                            )
+                            .toFixed(2)}
+                        </td>
+                      </tr>
+                    </>
+                  ) : (
+                    <Skeleton />
+                  )}
+                </tbody>
+              </table>
             </div>
           )}
 
-          {selected == "region" && (
-            <div className="orderwrapper px-2 py-2 ">
-              <div className="w-full px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md">
-                <div className="bg-white  flex-1 md:flex items-center justify-center gap-4 rounded-md shadow- text-white text-center">
-                  <div className="overflow-x-auto chat-scrollbar select-none w-full h-72">
-                    <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-full ">
-                      <thead className="text-xs text-gray-900 text-center bg-blue-50 rounded-md ">
-                        <tr className="">
-                          <th
-                            onClick={handleSort}
-                            className="px-4 cursor-pointer text-left  py-1  text-[0.78rem] text-blue-400 font-bold"
-                          >
-                            <span className="flex items-center">
-                              Invoice No{" "}
-                              {nameSort ? (
-                                <IoMdArrowDropdown size={20}></IoMdArrowDropdown>
-                              ) : (
-                                <IoMdArrowDropup size={20}></IoMdArrowDropup>
-                              )}
-                            </span>
-                          </th>
-
-                          <th
-                            onClick={handleSort}
-                            className="px-2 text-left cursor-pointer  py-1 text-[0.78rem] text-blue-400 font-bold"
-                          >
-                            <span className="flex t items-center justify-center w-full">
-                              Invoice Date{" "}
-                              {nameSort ? (
-                                <IoMdArrowDropdown size={20}></IoMdArrowDropdown>
-                              ) : (
-                                <IoMdArrowDropup size={20}></IoMdArrowDropup>
-                              )}
-                            </span>
-                          </th>
-
-                          <th
-                            onClick={handleSort}
-                            className="px-2 py-1 cursor-pointer text-[0.78rem] text-blue-400 font-bold"
-                          >
-                            <span className="flex t items-center justify-center w-full">
-                              Invoice Amount{" "}
-                              {nameSort ? (
-                                <IoMdArrowDropdown size={20}></IoMdArrowDropdown>
-                              ) : (
-                                <IoMdArrowDropup size={20}></IoMdArrowDropup>
-                              )}
-                            </span>
-                          </th>
-
-                          <th
-                            onClick={handleSort}
-                            className="px-2 py-1 cursor-pointer text-[0.78rem] text-blue-400 font-bold"
-                          >
-                            <span className="flex t items-center justify-center w-full">
-                              Payment Status{" "}
-                              {nameSort ? (
-                                <IoMdArrowDropdown size={20}></IoMdArrowDropdown>
-                              ) : (
-                                <IoMdArrowDropup size={20}></IoMdArrowDropup>
-                              )}
-                            </span>
-                          </th>
-
-                          <th
-                            onClick={handleSort}
-                            className="px-2 py-1 cursor-pointer text-[0.78rem] text-blue-400 font-bold"
-                          >
-                            <span className="flex t items-center justify-center w-full">
-                              Due since{" "}
-                              {nameSort ? (
-                                <IoMdArrowDropdown size={20}></IoMdArrowDropdown>
-                              ) : (
-                                <IoMdArrowDropup size={20}></IoMdArrowDropup>
-                              )}
-                            </span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200 break-normal ">
-                        {catdata?.length ? (
-                          catdata?.map((item) => (
-                            <tr key={item?.id}>
-                              <td
-                                className={`px-4 font-normal gap-1 text-left whitespace-nowrap py-1 text-[0.66rem] text-gray-500 border `}
-                              >
-                                <div className="flex items-center gap-4">
-                                  {" "}
-                                  <input type="checkbox" className="" />
-                                  {item?.invoice_no}
-                                </div>
-                              </td>
-                              <td
-                                className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                              >
-                                {item?.invoice_date}
-                              </td>
-                              <td
-                                className={`px-4 font-semibold text-center whitespace-nowrap  py-1 text-[0.74rem] text-gray-500 border `}
-                              >
-                                ₹ {item?.invoice_amount}
-                              </td>
-
-                              <td
-                                className={`px-2  text-left whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                              >
-                                <div
-                                  className={`bg-${item.color}-500 px-2  rounded-md text-[0.67rem] text-white font-semibold`}
-                                >
-                                  {item?.payment_status}
-                                </div>
-                              </td>
-
-                              <td
-                                className={`px-4 font-semibold text-left whitespace-nowrap  py-1 text-[0.74rem] text-gray-500 border `}
-                              >
-                                {item?.due_since}
-                              </td>
-                            </tr>
-                          ))
-                        ) : (
-                          <Skeleton></Skeleton>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* You can add the "region" tab content the same way inside here */}
         </animated.div>
-        {/* </div> */}
       </animated.div>
     </>
   );
 };
+
 export default TotalOutStandPop;
