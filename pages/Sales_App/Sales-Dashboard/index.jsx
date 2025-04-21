@@ -51,16 +51,15 @@ const Dashboard = () => {
           <FilterComponent></FilterComponent>
         </div>
 
-        <div className="cardgraphwrapper w-full px- mt-4 flex lg:flex-row flex-col gap-3 font-arial   rounded-md">
 
+        <div className="cardgraphwrapper w-full px- mt-4 flex lg:flex-row flex-col gap-3 font-arial   rounded-md">
           <div className="leftwrapper lg:w-[65%]  rounded-md">
 
 
             <CustomerCards></CustomerCards>
+
             <RollingTable></RollingTable>
             <RollingCards></RollingCards>
-
-
             <SaleCards></SaleCards>
             <SaleSummary></SaleSummary>
 
@@ -74,10 +73,6 @@ const Dashboard = () => {
           <div className="rightwrapper h-64 flex-1  mt- border-green rounded-md">
 
             <CreditBalance></CreditBalance>
-
-
-
-
             <ChartOne></ChartOne>
 
 

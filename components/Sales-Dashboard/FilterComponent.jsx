@@ -347,7 +347,7 @@ const FilterComponent = () => {
 
 
 
-  const handleDownloadExcelNew = async (
+  const getCustomerCardData = async (
     yr,
     month,
     bgId,
@@ -378,7 +378,7 @@ const FilterComponent = () => {
     }
 
     else if (!tId && rId) {
-      console.log('r is calling')
+
       paramsData = {
         c_id: 1,
         r_id: rId,
@@ -413,8 +413,8 @@ const FilterComponent = () => {
       console.log("zxc", error)
       const errorMessage = error?.response?.data?.message;
       toast.error(errorMessage);
-
     }
+
   };
   useEffect(() => {
     const { yr, month, bgId, buId, zId, rId, tId } = filterState;
@@ -423,7 +423,7 @@ const FilterComponent = () => {
     if (tId && territoryData.length > 0) {
       // Call for territory data
       dispatch(setCollectionTableData([]));
-      handleDownloadExcelNew(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
+      getCustomerCardData(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
       return;
       // Exit after handling this condition
     }
@@ -431,21 +431,21 @@ const FilterComponent = () => {
     else if (zId && zoneData.length > 0) {
       // Call for zone data
       dispatch(setCollectionTableData([]));
-      handleDownloadExcelNew(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
+      getCustomerCardData(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
       return; // Exit after handling this condition
     }
 
     else if (rId && regionData.length > 0) {
       // Call for region data
       dispatch(setCollectionTableData([]));
-      handleDownloadExcelNew(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
+      getCustomerCardData(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
       return; // Exit after handling this condition
     }
 
     else if (buId && buData.length > 0) {
       // Call for business unit data
       dispatch(setCollectionTableData([]));
-      handleDownloadExcelNew(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
+      getCustomerCardData(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
       return; // Exit after handling this condition
     }
     else {

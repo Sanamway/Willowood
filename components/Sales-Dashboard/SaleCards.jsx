@@ -74,7 +74,7 @@ const SaleCards = () => {
                   </div>
                   <div>
                     <h2 className="text-gray-500 text-sm font-bold whitespace-nowrap">{item.name}</h2>
-                    <h2 className="text-xl text-[#ADBD5B] font-bold">{data2.reduce((sum, item) => sum + Number(item.data), 0)}</h2>
+                    <h2 className="text-xl text-[#ADBD5B] font-bold">{data2.reduce((sum, item) => sum + Number(item.data), 0).toFixed(2)}</h2>
                   </div>
                 </div>
               </div>

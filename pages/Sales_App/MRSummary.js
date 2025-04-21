@@ -76,13 +76,13 @@ const ChartReports = () => {
         buDes: null,
         bgDes: null,
         yr: "2025",
-        month: "",
+        month: moment().format('MMM'),
         empCode: "",
     });
 
 
 
-
+    console.log("cvb", filterState)
 
 
     const [bgData, setBgData] = useState([]);
@@ -281,7 +281,7 @@ const ChartReports = () => {
                             ? "All"
                             : JSON.parse(window.localStorage.getItem("userinfo")).t_id,
                     yr: "2025",
-                    month: "",
+                    month: moment().format('MMM'),
                     empCode: "",
                 };
                 setLocalStorageItems({
@@ -327,7 +327,7 @@ const ChartReports = () => {
 
                     tId: "All",
                     yr: "2025",
-                    month: "",
+                    month: moment().format('MMM'),
                     empCode: ""
                 };
                 setLocalStorageItems({
@@ -371,7 +371,7 @@ const ChartReports = () => {
                     rId: "All",
                     tId: "All",
                     yr: "2025",
-                    month: "",
+                    month: moment().format('MMM'),
                     empCode: ""
                 };
                 setLocalStorageItems({
@@ -413,7 +413,7 @@ const ChartReports = () => {
                     rId: "All",
                     tId: "All",
                     yr: "2025",
-                    month: "",
+                    month: moment().format('MMM'),
                     empCode: ""
                 };
                 setLocalStorageItems({
@@ -445,7 +445,7 @@ const ChartReports = () => {
                     rId: "All",
                     tId: "All",
                     yr: "2025",
-                    month: "",
+                    month: moment().format('MMM'),
                     empCode: ""
                 };
                 setLocalStorageItems({
@@ -495,7 +495,7 @@ const ChartReports = () => {
                     zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
                     tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
                     yr: "2025",
-                    month: "",
+                    month: moment().format('MMM'),
                     empCode: ""
                 });
 
@@ -895,6 +895,13 @@ const ChartReports = () => {
 
     const [isFilterVisible, setIsFilterVisible] = useState(false);
 
+
+    const [userImg, setUserImg] = useState(null);
+    useEffect(() => {
+        // Ensure this runs only on the client
+        if (typeof window === "undefined") return;
+        setUserImg(localStorage.getItem("ImageLink"));
+    }, []);
     return (
         <form
             className=" bg-white rounded  w-full  overflow-auto pb-4"
@@ -950,13 +957,8 @@ const ChartReports = () => {
 
             <div className="flex mb-4 mt-2 mb-8">
                 <div className="w-40 h-30 flex justify-center items-center">
-                    <Image
-                        className="h-[5.1rem] w-[5.1rem] rounded-full mt-2"
-                        src={Profile}
-                        alt="img"
-                    />
+                    <img src={userImg} className="h-20 w-20 rounded-full text-orange-500 mt-4" size={80}></img>
                 </div>
-
                 <div className="flex  flex-col  w-full mt-4 md:hidden">
                     <div className="flex w-full  w-28">
                         <div className="flex">
@@ -1206,21 +1208,24 @@ const ChartReports = () => {
                             </select>
 
                         </div>
+                        <div className="flex justify-end w-100 ">
+                            <button
+                                className="bg-blue-500 px-4 py-1 text-white cursor-pointer  mt-2"
+                                onClick={() => {
+                                    handleGetAllData()
+                                }}
+                            >
+                                View Data
+                            </button>
+                        </div>
                     </div>
+
                 )}
+
             </div>
 
             <section className="outer  w-full px-2  bg-black/5   ">
-                <div className="flex justify-end w-100 ">
-                    <button
-                        className="bg-blue-500 px-4 py-1 text-white cursor-pointer  mt-2"
-                        onClick={() => {
-                            handleGetAllData()
-                        }}
-                    >
-                        View Data
-                    </button>
-                </div>
+
 
                 <div className="hey">
 
