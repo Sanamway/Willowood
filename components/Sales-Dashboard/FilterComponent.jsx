@@ -648,7 +648,7 @@ const FilterComponent = () => {
     let endPoint = "api/SA_sales_data_dashboard";
     try {
       let params
-      if (bgId && buId && zId && rId && tId) {
+      if (bgId && buId && zId && rId && tId && territoryData.filter((item) => Number(item.t_id) === Number(tId))[0]?.territory_name) {
         params = {
           year: yr || null,
           c_id: 1,
@@ -661,7 +661,7 @@ const FilterComponent = () => {
           t_des: tId === "All" || !tId ? null : territoryData.filter((item) => Number(item.t_id) === Number(tId))[0]?.territory_name,
 
         };
-      } else if (bgId && buId && zId && rId && !tId) {
+      } else if (bgId && buId && zId && rId && !tId && regionData.filter((item) => Number(item.r_id) === Number(rId))[0]?.region_name) {
         params = {
           year: yr || null,
           c_id: 1,
@@ -672,7 +672,7 @@ const FilterComponent = () => {
           r_id: rId === "All" || !rId ? null : rId,
           r_des: rId === "All" || !rId ? null : regionData.filter((item) => Number(item.r_id) === Number(rId))[0]?.region_name,
         };
-      } else if (bgId && buId && zId && !rId && !tId) {
+      } else if (bgId && buId && zId && !rId && !tId && zoneData.filter((item) => Number(item.z_id) === Number(zId))[0]?.zone_name) {
         params = {
           year: yr || null,
           c_id: 1,

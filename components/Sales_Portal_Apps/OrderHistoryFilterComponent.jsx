@@ -43,6 +43,7 @@ const FilterComponent = (props) => {
         materialSearch: "",
         depot: "",
         sapOrder: "",
+        orderStatus: "",
         bgId: JSON.parse(localStorage.getItem("userinfo"))?.bg_id || "",
         buId: JSON.parse(localStorage.getItem("userinfo"))?.bu_id || "",
         rId: JSON.parse(localStorage.getItem("userinfo"))?.r_id || "",
@@ -220,7 +221,7 @@ const FilterComponent = (props) => {
 
 
   const getOrderList = async () => {
-    setOpenModal(false);
+
 
     const {
       from,
@@ -235,6 +236,7 @@ const FilterComponent = (props) => {
       zId,
       buId,
       bgId,
+      orderStatus
     } = filterState;
 
     let endPoint = "api/get_order_info?c_id=1";
@@ -254,7 +256,9 @@ const FilterComponent = (props) => {
           depot: depot || null,
           material: materialCode || null,
           mat_name: materialSearch || null,
-          SAP_order_no: sapOrder?.value || null
+          SAP_order_no: sapOrder?.value || null,
+          ord_status: orderStatus || null
+
         }
       });
 
@@ -406,6 +410,7 @@ const FilterComponent = (props) => {
 
   const [allOrderInfoDatalength, setAllOrderInfoDataLength] = useState([
   ]);
+  console.log("opo", allOrderInfoDatalength)
   const allOrderData = useSelector(
     (state) => state.allOrdersInfo.allOrderInfoData
   );
@@ -413,6 +418,31 @@ const FilterComponent = (props) => {
     setAllOrderInfoDataLength(allOrderData)
   }, [allOrderData])
   console.log("nop", filterState)
+
+
+
+  const [optionsFilter, setOptionsFilter] = useState([])
+  const getFilterOptionData = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_order_status_list`, {
+        headers: headers,
+        params: {
+
+          list: true,
+
+        },
+      });
+      const apires = await respond.data.data;
+      setOptionsFilter(apires);
+    } catch (error) { }
+  }
+  useEffect(() => {
+
+    getFilterOptionData(
+
+    );
+  }, []);
+
 
 
   return (
@@ -424,7 +454,7 @@ const FilterComponent = (props) => {
           className=" h-7 px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
           id="stateSelect"
           disabled
-          value={allOrderInfoDatalength?.length}
+          value={allOrderInfoDatalength?.length || 0}
         />
 
 
@@ -456,18 +486,25 @@ const FilterComponent = (props) => {
         <select
           className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
           id="stateSelect"
+          onChange={(e) => setFilterState({ ...filterState, orderStatus: e.target.value })}
+
 
 
         >
-          <option value={""}>- Confirmed -</option>
+          <option value={""}>- Option -</option>
+          {
+            optionsFilter.map((item) => <option value={item.order_status} className="font-bold">
+              {
+                item.order_status
+              }
+            </option>)
+          }
 
 
         </select>
       </div>
 
-      <div className="flex flex-col gap-1.5 ">
-        <FaSearch className="text-white " size={20} />
-      </div>
+
       <div className=" flex flex-col gap-1.5 ">
         <FaFilter className="text-white" size={25} onClick={() => setOpenModal(true)} />
       </div>
@@ -519,6 +556,7 @@ const FilterComponent = (props) => {
                           selected={filterState?.from}
                           onChange={(date) => setFilterState({ ...filterState, from: date })}
                           dateFormat="dd/MM/yyyy"
+
                           className=" w-full max px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
 
                         />
