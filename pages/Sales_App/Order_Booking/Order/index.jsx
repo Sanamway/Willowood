@@ -27,6 +27,7 @@ import { url } from "@/constants/url";
 import Select from "react-select";
 import grid from "@/pages/table/table_user_profile";
 import toast, { Toaster } from "react-hot-toast";
+import OrderStatus from "../../Order_Treking";
 
 const Dashboard = () => {
 
@@ -209,6 +210,11 @@ const Dashboard = () => {
         switch (searchBy) {
             case "Name":
                 params = {
+                    from: new Date(),
+                    to: new Date(),
+                    plant: dealerData?.depotResult?.depot_code,
+                    condition: "ZR00",
+                    payment_terms: dealerData.SAP_Payterm,
                     search: true,
                     c_id: 1,
                     bg_id: 1,
@@ -218,6 +224,11 @@ const Dashboard = () => {
                 break;
             case "Category":
                 params = {
+                    from: new Date(),
+                    to: new Date(),
+                    plant: dealerData?.depotResult?.depot_code,
+                    condition: "ZR00",
+                    payment_terms: dealerData.SAP_Payterm,
                     search: true,
                     c_id: 1,
                     bg_id: 1,
@@ -227,6 +238,11 @@ const Dashboard = () => {
                 break;
             case "Brand":
                 params = {
+                    from: new Date(),
+                    to: new Date(),
+                    plant: dealerData?.depotResult?.depot_code,
+                    condition: "ZR00",
+                    payment_terms: dealerData.SAP_Payterm,
                     search: true,
                     c_id: 1,
                     bg_id: 1,
@@ -236,6 +252,11 @@ const Dashboard = () => {
                 break;
             case "pack_size":
                 params = {
+                    from: new Date(),
+                    to: new Date(),
+                    plant: dealerData?.depotResult?.depot_code,
+                    condition: "ZR00",
+                    payment_terms: dealerData.SAP_Payterm,
                     search: true,
                     c_id: 1,
                     bg_id: 1,
@@ -244,6 +265,11 @@ const Dashboard = () => {
                 break;
             case "Dealer":
                 params = {
+                    from: new Date(),
+                    to: new Date(),
+                    plant: dealerData?.depotResult?.depot_code,
+                    condition: "ZR00",
+                    payment_terms: dealerData.SAP_Payterm,
                     search: true,
                     c_id: 1,
                     bg_id: 1,
@@ -252,6 +278,11 @@ const Dashboard = () => {
                 break;
             case "Segment":
                 params = {
+                    from: new Date(),
+                    to: new Date(),
+                    plant: dealerData?.depotResult?.depot_code,
+                    condition: "ZR00",
+                    payment_terms: dealerData.SAP_Payterm,
                     search: true,
                     c_id: 1,
                     bg_id: 1,
@@ -260,6 +291,11 @@ const Dashboard = () => {
                 break;
             case "technical_name":
                 params = {
+                    from: new Date(),
+                    to: new Date(),
+                    plant: dealerData?.depotResult?.depot_code,
+                    condition: "ZR00",
+                    payment_terms: dealerData.SAP_Payterm,
                     search: true,
                     c_id: 1,
                     bg_id: 1,
@@ -268,6 +304,11 @@ const Dashboard = () => {
                 break;
             case "material_code":
                 params = {
+                    from: new Date(),
+                    to: new Date(),
+                    plant: dealerData?.depotResult?.depot_code,
+                    condition: "ZR00",
+                    payment_terms: dealerData.SAP_Payterm,
                     search: true,
                     c_id: 1,
                     bg_id: 1,
@@ -334,8 +375,9 @@ const Dashboard = () => {
     };
 
     const totalQty = gridData.reduce((sum, item) => sum + (item.qty || 0), 0);
-    const totalPrice = gridData.reduce((sum, item) => sum + (item.budget_price || 0), 0);
-    const totalValue = gridData.reduce((sum, item) => sum + ((item.qty || 0) * (item.budget_price || 0)), 0);
+    const totalUOM = gridData.reduce((sum, item) => sum + (item.material_uom_conversion?.y_qty / item.material_uom_conversion?.x_qty * item.qty || 0), 0);
+    const totalPrice = gridData.reduce((sum, item) => sum + (item.order_price || 0), 0);
+    const totalValue = gridData.reduce((sum, item) => sum + (item.qty * (item.material_uom_conversion?.y_qty / item.material_uom_conversion?.x_qty) * item.order_price), 0);
 
 
 
@@ -357,7 +399,8 @@ const Dashboard = () => {
     const [orderData, setOrderData] = useState({
         orderType: "ZDOR",
         specialIns: "",
-        orderBooking: "Shop"
+        orderBooking: "Shop",
+        orderStatus: "Order Draft"
     })
 
     const [uploadDocument, setUploadDocument] = useState("")
@@ -378,17 +421,17 @@ const Dashboard = () => {
                 order_type: orderData.orderType,
                 order_booking: orderData.orderBooking,
                 order_dt: new Date().toISOString().split("T")[0], // Removes time
-                kunnr_sold: dynamicAddress.SAP_customerSAPNo,
+                kunnr_sold: dealerData.SAP_customerSAPNo,
                 kunnr_ship: dynamicAddress.SAP_customerSAPNo,
                 SAP_sync: "N",
                 cus_po_ref: "Willowood Delight",
                 cus_po_ref_dt: new Date().toISOString().split("T")[0], // Removes time
-                del_address: dynamicAddress.postal_Address,
+                del_address: dealerData.postal_Address,
                 pay_terms: dealerData.SAP_Payterm,
                 inco_terms: dealerData.SAP_incoterms,
                 inco_location: dealerData.SAP_incoterms_location,
                 expected_del_date: new Date().toISOString().split("T")[0], // Removes time
-                ord_status: "Order Draft",
+                ord_status: orderData.orderStatus,
                 werks: dealerData?.depotResult?.depot_code,
                 t_id: localStorage.tId,
                 r_id: localStorage.rId,
@@ -400,9 +443,15 @@ const Dashboard = () => {
                     matnr: item.matnr,
                     uom: item.uom,
                     qty: item.qty,
-                    price: item.budget_price,
-                    net_value: item.budget_price * item.qty,
+                    price: item.order_price,
+                    net_value: item.order_price * item.qty,
+                    pkg_std: item.material_uom_conversion?.x_qty + "-" + item.material_uom_conversion?.x_uom + "=" + item.material_uom_conversion?.y_qty + " " + item.material_uom_conversion?.y_uom,
+                    per_uom: item.material_uom_conversion ? item.material_uom_conversion?.y_qty / item.material_uom_conversion?.x_qty + " " + item.material_uom_conversion?.y_uom : "-",
+                    total_uom: item.material_uom_conversion ? item.material_uom_conversion?.y_qty / item.material_uom_conversion?.x_qty * item.qty + " " + item.material_uom_conversion?.y_uom : "-",
                 })),
+
+
+
                 Emp_code: localStorage.empCode,
                 creation_date: new Date().toISOString().split("T")[0], // Removes time
                 Cuser_id: localStorage.uId,
@@ -432,7 +481,7 @@ const Dashboard = () => {
     };
 
     const uploadImage = async (res) => {
-        console.log("im", res.data.data.order_id);
+        console.log("im", res.data.data.order_no);
 
         if (!uploadDocument) {
             toast.error("No file selected");
@@ -449,7 +498,7 @@ const Dashboard = () => {
 
             const response = await axios.post(`${url}/api/upload_file`, fd, {
                 params: {
-                    order_no: res.data.data.order_id,
+                    order_no: res.data.data.order_no,
                     file_path: "order_info"
                 },
             });
@@ -583,17 +632,17 @@ const Dashboard = () => {
     }, [modalFilter]);
     return (
 
-        <div className="bg-gray-200">
+        <div className="bg-blue-200">
             {/* Header Section */}
 
             <Toaster position="bottom-center" reverseOrder={false} />
-            <div className="w-full flex h-12 justify-between items-center px-4 shadow-lg bg-blue-400 lg:flex-col">
+            <div className="w-full flex h-12 justify-between items-center px-4 shadow-lg bg-blue-600  text-sm lg:flex-col">
                 <span className="text-black flex flex-row gap-4 font-bold">
                     <FaArrowLeftLong
                         className="self-center cursor-pointer"
                         onClick={handleNavigation}
                     />
-                    <span className="flex flex-row gap-2 justify-center items-center">  <FcNews size={32} className="text-indigo-600" /> <span>{dealerData.party_Name}</span></span>
+                    <span className="flex flex-row gap-2 justify-center items-center text-white">  <FcNews size={32} className="text-indigo-600" /> <span>{dealerData.party_Name}</span></span>
                 </span>
                 <span className="text-white self-center">
                     <Popover as="div" className="relative border-none outline-none mt-2">
@@ -717,8 +766,12 @@ const Dashboard = () => {
                     <thead className="border-b w-max bg-yellow-300">
                         <tr className="font-arial w-max text-gray-700">
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">Description</th>
+
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">UOM</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">PKG.STD</th>
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">Qty</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium  tracking-wider">Per UOM</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium  tracking-wider">Total UOM</th>
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">Price</th>
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">Value</th>
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider"></th>
@@ -742,6 +795,11 @@ const Dashboard = () => {
                                 <td className="px-4 py-2 text-left whitespace-nowrap">
                                     <span className="px-2 py-1 bg-gray-100 border rounded-md text-gray-600">{item.uom}</span>
                                 </td>
+                                <td className="px-4 py-2  text-[10px] text-left whitespace-nowrap">
+                                    {item.material_uom_conversion ?
+                                        item.material_uom_conversion?.x_qty + "-" + item.material_uom_conversion?.x_uom + "=" + item.material_uom_conversion?.y_qty + " " + item.material_uom_conversion?.y_uom
+                                        : "-"}
+                                </td>
                                 <td className="px-1 py-2 text-left whitespace-nowrap bg-green-200">
                                     <input
                                         type="number"
@@ -751,10 +809,18 @@ const Dashboard = () => {
                                         onChange={(e) => handleQtyChange(idx, e.target.value)}
                                     />
                                 </td>
-                                <td className="px-4 py-2 text-left whitespace-nowrap">{item.budget_price}</td>
+                                <td className="px-4 py-2 text-left whitespace-nowrap">
+                                    {item.material_uom_conversion &&
+                                        isFinite(item.material_uom_conversion?.y_qty / item.material_uom_conversion?.x_qty)
+                                        ? (item.material_uom_conversion.y_qty / item.material_uom_conversion.x_qty) + " " + item.material_uom_conversion.y_uom
+                                        : "-"}
+                                </td>      <td className="px-4 py-2 text-left whitespace-nowrap bg-blue-200">
+                                    {item.material_uom_conversion && isFinite(item.material_uom_conversion?.y_qty / item.material_uom_conversion?.x_qty * item.qty) ? item.material_uom_conversion?.y_qty / item.material_uom_conversion?.x_qty * item.qty + " " + item.material_uom_conversion?.y_uom : "-"}                       </td>
+                                <td className="px-4 py-2 text-left whitespace-nowrap">{item.order_price}</td>
                                 <td className="px-4 py-2 text-left whitespace-nowrap bg-blue-200">
-                                    {((item.qty || 0) * (item.budget_price || 0)).toFixed(2)}
+                                    {item.material_uom_conversion && isFinite(item.qty * (item.material_uom_conversion?.y_qty / item.material_uom_conversion?.x_qty) * item.order_price) ? Math.floor(item.qty * (item.material_uom_conversion?.y_qty / item.material_uom_conversion?.x_qty) * item.order_price) : "-"}
                                 </td>
+
                                 <td className="px-4 py-2 text-left whitespace-nowrap">
                                     <IoIosRemoveCircleOutline
                                         className="text-red-400 cursor-pointer"
@@ -767,9 +833,13 @@ const Dashboard = () => {
                         {/* Total Row */}
                         <tr className="bg-blue-600 text-white font-bold">
                             <td className="px-4 py-2 text-left" colSpan={2}>Total: {gridData?.length} (Items)</td>
+                            <td className="px-4 py-2 text-left">-</td>
+
                             <td className="px-4 py-2 text-left">{totalQty}</td>
                             <td className="px-4 py-2 text-left">-</td>
-                            <td className="px-4 py-2 text-left">{totalValue.toFixed(2)}</td>
+                            <td className="px-4 py-2 text-left">{totalUOM}</td>
+                            <td className="px-4 py-2 text-left">-</td>
+                            <td className="px-4 py-2 text-left">{Math.floor(totalValue)}</td>
                             <td className="px-4 py-2 text-left">-</td>
                         </tr>
                     </tbody>
@@ -813,8 +883,8 @@ const Dashboard = () => {
                 <div className=" text-sm">
                     {/* First Row: Territory and Region */}
                     <div className="grid grid-cols-2 gap-6 border border-black p-4 rounded-lg">
-                        <div><strong>Territory:</strong> {localStorage.teritory ? localStorage.teritory : "-"}</div>
-                        <div><strong>Region:</strong>  {localStorage.region ? localStorage.region : "-"}</div>
+                        <div><strong>Territory:</strong> <br />{localStorage.teritory ? localStorage.teritory : "-"}</div>
+                        <div><strong>Region:</strong>    <br />{localStorage.region ? localStorage.region : "-"}</div>
                     </div>
 
                     {/* Second Row: Main Content Box */}
@@ -826,17 +896,49 @@ const Dashboard = () => {
                                     <br /> {localStorage.empCode}</div>
                                 <div> {localStorage.empName}</div>
                                 <div><strong>Order Status:</strong>
-                                    <br /> Order Draft</div>
-                                <div><strong>Upload Documents:</strong>
-                                    <input
-                                        type="file"
-                                        className="mt-1 block w-full text-sm text-gray-500"
-                                        accept=".pdf, .jpg, .jpeg, .png, .gif, .doc, .docx, .xls, .xlsx, .txt"
-                                        onChange={handleFileChange}
-                                    />
+                                    <br />
+                                    <select
+                                        className="px-3 py-2 border-b border-gray-500 rounded-md bg-white text-xs focus:outline-none focus:border-b focus:border-indigo-500"
+                                        id="citySelect"
+                                        value={orderData.orderStatus}
+                                        onChange={(e) => setOrderData({ ...orderData, orderStatus: e.target.value })}
+                                    >
+                                        <option className="focus:outline-none focus:border-b bg-white" value="Order Draft">Order Draft</option>
+                                        <option value="Stock Out">Stock Out</option>
 
-
+                                    </select>
                                 </div>
+                                {/* <div><strong>Order Status:</strong>
+                                    <br />
+
+
+                                    Order Draft</div> */}
+
+                                <div><strong>Order Type:</strong>
+                                    <br /> <select
+                                        className="px-3 py-2 border-b border-gray-500 rounded-md bg-white text-xs focus:outline-none focus:border-b focus:border-indigo-500"
+                                        id="citySelect"
+                                        value={orderData.orderType}
+                                        onChange={(e) => setOrderData({ ...orderData, orderType: e.target.value })}
+
+                                    >
+                                        <option className="focus:outline-none focus:border-b bg-white" value="ZDOR">ZDOR</option>
+
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            {/* Right Column */}
+
+                            <div className="space-y-2">
+                                <div><strong>Pay Terms:</strong>
+                                    <br /> {dealerData.SAP_Payterm}</div>
+                                <div><strong>Inco Terms:</strong>
+                                    <br /> {dealerData.SAP_incoterms}</div>
+                                <div><strong>Inco Loc:</strong>
+                                    <br />{dealerData.SAP_incoterms_location}</div>
+
                                 <div><strong>Order Booking:</strong>
                                     <br />
                                     <select
@@ -853,31 +955,17 @@ const Dashboard = () => {
                                     </select>
                                 </div>
 
-
                             </div>
 
-                            {/* Right Column */}
+                        </div>
+                        <div className="flex flex-row whitespace-nowrap gap-4 items-center"><strong>Upload Party PO :</strong>
+                            <input
+                                type="file"
+                                className="mt-1 block w-full text-sm text-gray-500"
+                                accept=".pdf, .jpg, .jpeg, .png, .gif, .doc, .docx, .xls, .xlsx, .txt"
+                                onChange={handleFileChange}
+                            />
 
-                            <div className="space-y-2">
-                                <div><strong>Pay Terms:</strong>
-                                    <br /> {dealerData.SAP_Payterm}</div>
-                                <div><strong>Inco Terms:</strong>
-                                    <br /> {dealerData.SAP_incoterms}</div>
-                                <div><strong>Inco Loc:</strong>
-                                    <br />{dealerData.SAP_incoterms_location}</div>
-                                <div><strong>Order Type:</strong>
-                                    <br /> <select
-                                        className="px-3 py-2 border-b border-gray-500 rounded-md bg-white text-xs focus:outline-none focus:border-b focus:border-indigo-500"
-                                        id="citySelect"
-                                        value={orderData.orderType}
-                                        onChange={(e) => setOrderData({ ...orderData, orderType: e.target.value })}
-
-                                    >
-                                        <option className="focus:outline-none focus:border-b bg-white" value="ZDOR">ZDOR</option>
-
-                                    </select>
-                                </div>
-                            </div>
 
                         </div>
                     </div>

@@ -144,6 +144,9 @@ const ProductBrand = () => {
                     Brand Code
                   </th>
                   <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
+                    Image
+                  </th>
+                  <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
                     Brand Name
                   </th>
                   <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500 whitespace-nowrap tracking-wider">
@@ -195,6 +198,9 @@ const ProductBrand = () => {
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item?.brand_code}
+                    </td>
+                    <td className="px-6 py-2  dark:border-2 whitespace-nowrap">
+                      <img width={20} className="rounded-full " height={20} src={item?.image_name} alt={"name"}></img>
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item?.brand_name}

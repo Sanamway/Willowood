@@ -75,8 +75,8 @@ const BrandChart = (props) => {
 
     return (
         <>
-            <div className="h-6 bg-white rounded-t-md flex items-center px-2 ">
-                <h2 className="text-[0.75rem]">Brand Qty Sold Insight (YTD)</h2>
+            <div className="h-6 bg-white rounded-t-md flex items-center px-2 justify-center ">
+                <h2 className="text-[0.75rem] font-bold">Brand Qty Sold Insight (YTD)</h2>
             </div>
             <div
                 ref={chartContainerRef}

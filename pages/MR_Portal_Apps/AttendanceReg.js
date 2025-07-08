@@ -86,7 +86,7 @@ const AtReg = () => {
           emp_code: window.localStorage.getItem("emp_code"),
           t_id: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
           c_id: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
-          attendance_date_start: moment().startOf('month').format("YYYY-MM-DD"),
+          attendance_date_start: moment().subtract(1, 'month').startOf('month').format("YYYY-MM-DD"),
           attendance_date_end: moment().endOf('month').format("YYYY-MM-DD"),
         },
       });
@@ -102,6 +102,7 @@ const AtReg = () => {
       console.log(error);
     }
   };
+  console.log("zolo", listItem)
 
   useEffect(() => {
     getAttandenceStatus();
@@ -429,8 +430,8 @@ const AtReg = () => {
             onChange={(date) => setFormData({ ...formData, fromDate: date })}
             dateFormat="dd/MM/yyyy"
             className="w-1/2 px-2 border rounded-md focus:ring focus:border-blue-300 ml-2"
-            minDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
-            maxDate={new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)}
+            minDate={new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1)} // start of previous month
+            maxDate={new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)} // end of current month
             includeDates={listItem
               .filter(item => item.status === "PI" || item.status === "A" || item.status === "HD")
               .map(item => new Date(item.date))}

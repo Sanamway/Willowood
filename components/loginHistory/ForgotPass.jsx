@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
-import { BiSolidLockAlt } from "react-icons/bi";
+
 import { AiFillGoogleCircle, AiFillTwitterCircle } from "react-icons/ai";
 import { BsFacebook } from "react-icons/bs";
 import Logo from "../../public/Willowood.png";
@@ -9,12 +9,11 @@ import { useRouter } from "next/router";
 import axios from "axios";
 
 import { url } from "@/constants/url";
-
 const ForgotPass = () => {
   const [phone, setPhone] = useState("");
   const router = useRouter();
 
-  const headers = {
+    const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
@@ -24,7 +23,7 @@ const ForgotPass = () => {
   };
 
   const forgotHandler = async (e) => {
-
+    console.log("fpp", payload);
     e.preventDefault();
 
     try {

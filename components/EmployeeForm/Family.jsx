@@ -10,7 +10,7 @@ const Family = (props) => {
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
   };
   const [formActive, setFormActive] = useState(false);
   const [familyData, setFamilyData] = useState({
@@ -18,45 +18,52 @@ const Family = (props) => {
     motherName: "",
     maritialStatus: "",
     spouseName: "",
-    dom: "",
+    dom: ""
   });
+  const [roleId, setRoleId] = useState(null);
+ 
   useEffect(() => {
     if (props)
       setFamilyData({
         fatherName: props.data?.ffname || "",
-        motherName: props.data?.mname || "",
+        motherName: props.data?.mothername || "",
         maritialStatus: props.data?.mstatus || "",
         spouseName: props.data?.spouse || "",
-        dom: props.data?.dateofmar || new Date(),
+        dom: props.data?.dateofmar || new Date()
       });
+
+      if (window.localStorage) {
+        const userInfo = JSON?.parse(localStorage?.getItem("userinfo"));
+        setRoleId(userInfo?.role_id);
+       
+      }
   }, [props]);
+
 
   const handleEditFamily = async () => {
     try {
-      const { fatherName, motherName, maritialStatus, spouseName, dom } =
-        familyData;
+      const { fatherName, motherName, maritialStatus, spouseName, dom } = familyData;
+      let appStatus = "Update Family"
       const data = {
+        // app_status: "Update Family",
         ffname: fatherName,
-        mname: motherName,
+        mothername: motherName,
         mstatus: maritialStatus,
         spouse: spouseName,
-        dateofmar: dom,
-        emp_status: "Update Family",
+        dateofmar: dom || "",
       };
+      const modifiedData =  ![1,8, 17].includes(roleId) ? { ...data, app_status: appStatus } : data;
       const respond = await axios
-        .put(
-          `${url}/api/update_family/${router.query.id}`,
-          JSON.stringify(data),
-          {
-            headers: headers,
-          }
-        )
+        .put(`${url}/api/update_family/${router.query.id}`, JSON.stringify(modifiedData), {
+          headers: headers,
+          params:{roleId}
+        })
         .then((res) => {
           if (!res) return;
           toast.success("Family edited successfully!");
           setTimeout(() => {
-            props.formType("Bank");
-          }, [1000]);
+            props.formType("Professional");
+          }, 1500);
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
@@ -70,27 +77,49 @@ const Family = (props) => {
     }
   };
 
+
+  const [disableNext, setDisableNext] = useState(false);
+  
+  useEffect(() => {
+    switch (roleId) {
+      case 1:
+      case 8:
+        if (
+          props?.data?.app_status == "Approved By Region" ||
+          props?.data?.app_status == "Approved By Zonal" ||
+          props?.data?.app_status == "Approved By Business Unit" ||
+          props?.data?.app_status == "Approved By Zonal A/c Manager"
+        ) {
+          setDisableNext(false);
+        }
+        break;
+      default:
+        if (
+          props?.data?.app_status == "Approved By Region" ||
+          props?.data?.app_status == "Approved By Zonal" ||
+          props?.data?.app_status == "Approved By Business Unit" ||
+          props?.data?.app_status == "Approved By Zonal A/c Manager"
+        ) {
+          setDisableNext(true);
+        }
+    }
+  }, [props]);
+
   return (
-    <form
-      className=" bg-white rounded shadow p-4 w-full pb-20"
-      onSubmit={(e) => e.preventDefault()}
-    >
+    <form className=" bg-white rounded shadow p-4 w-full pb-20" onSubmit={(e) => e.preventDefault()}>
       <Toaster
         position="bottom-center"
         reverseOrder={false}
         toastOptions={{
-          duration: 500,
+          duration: 500
         }}
       />
-      <div className="flex bg-gray-100 w-2/3 h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
+      <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Parental Information
       </div>
       <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
-        <div className="w-2/3  px-2  lg:w-1/2 ">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
+        <div className="w-full  px-2  lg:w-1/2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600">*</small> Father Name
           </label>
           <input
@@ -99,18 +128,13 @@ const Family = (props) => {
             id="inputField"
             placeholder="Father Name"
             value={familyData.fatherName}
-            onChange={(e) =>
-              setFamilyData({ ...familyData, fatherName: e.target.value })
-            }
+            onChange={(e) => setFamilyData({ ...familyData, fatherName: e.target.value })}
           />
         </div>
 
-        <div className="w-2/3  px-2  lg:w-1/2 ">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
-            Mother Name
+        <div className="w-full  px-2  lg:w-1/2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
+          <span className="text-red-500">*</span> Mother Name
           </label>
           <input
             className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
@@ -118,22 +142,17 @@ const Family = (props) => {
             id="inputField"
             placeholder="Mother Name"
             value={familyData.motherName}
-            onChange={(e) =>
-              setFamilyData({ ...familyData, motherName: e.target.value })
-            }
+            onChange={(e) => setFamilyData({ ...familyData, motherName: e.target.value })}
           />
         </div>
       </div>
 
-      <div className="flex bg-gray-100 w-2/3 h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
+      <div className="flex bg-gray-100 w-full h-8  text-slate-400  items-center text-slate-00  pl-2 mb-2 lg:w-full">
         Martial Status & Children Details
       </div>
       <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
-        <div className="w-2/3  px-2  lg:w-1/2 ">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="inputField"
-          >
+        <div className="w-full  px-2  lg:w-1/2 ">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
             <small className="text-red-600">*</small> Maritial Status
           </label>
           <select
@@ -146,31 +165,26 @@ const Family = (props) => {
                     ...familyData,
                     maritialStatus: e.target.value,
                     spouseName: "",
-                    dom: "",
+                    dom: ""
                   })
                 : setFamilyData({
                     ...familyData,
                     maritialStatus: e.target.value,
+                    dom:""
                   });
             }}
           >
-            <option
-              value=""
-              className="focus:outline-none focus:border-b bg-white"
-            >
+            <option value="" className="focus:outline-none focus:border-b bg-white">
               Option
             </option>
             <option value="Married">Married</option>
-            <option value="Seprated">Un-Married</option>
+            <option value="Un-Married">Un-Married</option>
             <option value="Others">Others</option>
           </select>
         </div>
         {familyData.maritialStatus === "Married" && (
-          <div className="w-2/3  px-2  lg:w-1/2 ">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="inputField"
-            >
+          <div className="w-full  px-2  lg:w-1/2 ">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
               Spouse Name
             </label>
             <input
@@ -179,20 +193,15 @@ const Family = (props) => {
               id="inputField"
               placeholder="Spouse Name"
               value={familyData.spouseName}
-              onChange={(e) =>
-                setFamilyData({ ...familyData, spouseName: e.target.value })
-              }
+              onChange={(e) => setFamilyData({ ...familyData, spouseName: e.target.value })}
             />
           </div>
         )}
       </div>
       {familyData.maritialStatus === "Married" && (
         <div className="flex flex-col gap-2   lg:flex-row -mx-2 mb-8 ">
-          <div className="w-2/3  px-2  lg:w-1/2 ">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="inputField"
-            >
+          <div className="w-full  px-2  lg:w-1/2 ">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
               <small className="text-red-600">*</small> Date of Marriage
             </label>
 
@@ -208,7 +217,7 @@ const Family = (props) => {
                 onChange={(date) =>
                   setFamilyData({
                     ...familyData,
-                    dom: moment(date).format("LL"),
+                    dom: moment(date).format("LL")
                   })
                 }
               />
@@ -223,7 +232,7 @@ const Family = (props) => {
                 onChange={(date) =>
                   setFamilyData({
                     ...familyData,
-                    dom: moment(date).format("LL"),
+                    dom: moment(date).format("LL")
                   })
                 }
               />
@@ -233,19 +242,20 @@ const Family = (props) => {
       )}
 
       {router.query.type === "Edit" && (
-        <div className="flex justify-between  gap-2 w-2/3 mt-12  flex gap-1 lg:w-1/2   overflow-hidden  px-4 py-1 text-white  pointer">
-          <div
-            className="w-full  text-center  bg-green-700 px-4 py-1 text-white cursor-pointer"
+        <div className="flex items-center justify-center w-full gap-4 py-4">
+          <button
+            className="text-center cursor-pointer rounded-md bg-green-500 text-white py-1 px-4 text-lg"
             onClick={() => props.formType("Personal")}
           >
-            ...Prev
-          </div>
-          <div
-            className=" w-full text-center bg-orange-400 px-4 py-1 text-white cursor-pointer"
+            Prev
+          </button>
+          <button
+             disabled={disableNext}
+            className=" text-center cursor-pointer rounded-md bg-orange-500 text-white py-1 px-4 text-lg"
             onClick={() => handleEditFamily()}
           >
-            Next..
-          </div>
+            Next
+          </button>
         </div>
       )}
     </form>

@@ -60,13 +60,13 @@ const ChartOne = (props) => {
     {
       label: "Budget",
       backgroundColor: "rgba(34, 197, 94, 1)",  // Full opacity (green-400)
-      backgroundColor: "rgba(34, 197, 94, 0.6)", // 60% opacity
+      borderColor: "rgba(34, 197, 94, 0.6)", // 60% opacity
       data: 0,
     },
     {
       label: "RSP",
       backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity (blue)
-      backgroundColor: "rgba(59, 130, 246, 0.6)", // 60% opacity
+      borderColor: "rgba(59, 130, 246, 0.6)", // 60% opacity
       data: 0,
     },
     {
@@ -84,18 +84,20 @@ const ChartOne = (props) => {
     setDataSets([
       {
         label: "Budget",
-        backgroundColor: "rgba(34, 197, 94, 0.6)",
+        backgroundColor: "rgba(34, 197, 94, 1)",  // Full opacity (green-400)
+        borderColor: "rgba(34, 197, 94, 0.6)", // 60% opacity
         data: allRollingTableData.map((item) => item.budget).reverse(),
       },
       {
         label: "RSP",
-        backgroundColor: "rgba(59, 130, 246, 0.6)",
+        backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity (blue)
+        borderColor: "rgba(59, 130, 246, 0.6)", // 60% opacity
         data: allRollingTableData.map((item) => item.target).reverse(),
       },
       {
         label: "Sales",
-        backgroundColor: "rgba(249, 115, 22, 1)",
-        borderColor: "rgba(249, 115, 22, 0.6)",
+        backgroundColor: "rgba(249, 115, 22, 1)",  // Full opacity (orange)
+        borderColor: "rgba(249, 115, 22, 0.6)",    // 60% opacity
         data: allRollingTableData.map((item) => item.actual).reverse(),
       }
     ]);
@@ -202,7 +204,7 @@ const ChartOne = (props) => {
   return (
     <>
       <div className="h-6 bg-white rounded-t-md flex items-center px-2 ">
-        <h2 className="text-[0.75rem]">Graph Collection Insight</h2>
+        <h2 className="text-[0.75rem]">Graph Sale Insight</h2>
       </div>
       <div
         ref={chartContainerRef}

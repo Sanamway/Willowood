@@ -35,10 +35,11 @@ const PPChart = (props) => {
     const [fullScreen, setFullScreen] = useState(false);
 
     useEffect(() => {
+        console.log("cvb", props.data)
         if (!props.data || props.data.length === 0) return;
 
         const chartLabels = props.data.map((item) => item.product_category);
-        const chartData = props.data.map((item) => item.total_mtd_qty);
+        const chartData = props.data.map((item) => item.total_ytd_new_budget_price_value);
 
         setLabels(chartLabels);
         setDatasets([
@@ -75,8 +76,8 @@ const PPChart = (props) => {
 
     return (
         <>
-            <div className="h-6 bg-white rounded-t-md flex items-center px-2 ">
-                <h2 className="text-[0.75rem]">Category Qty Sold Insight (YTD)</h2>
+            <div className="h-6 bg-white rounded-t-md flex items-center px-2 flex justify-center ">
+                <h2 className="text-[0.75rem] font-bold">Category Value Sold Insight (YTD)</h2>
             </div>
             <div
                 ref={chartContainerRef}

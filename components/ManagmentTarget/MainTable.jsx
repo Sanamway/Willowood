@@ -137,8 +137,6 @@ function MainTable({
         return {
           Year: item.t_year,
           Month: item.m_year,
-          BusinessUnit: item.business_unit_name,
-          Zone: item.zone_name,
           Region: item.region_name,
           Budget: item.budget,
           RSP: item.target,
@@ -165,8 +163,6 @@ function MainTable({
         return {
           Year: item.t_year,
           Month: item.m_year,
-          BusinessUnit: item.business_unit_name,
-          Zone: item.zone_name,
           Region: item.region_name,
 
           CTarget: item.target,
@@ -329,81 +325,81 @@ function MainTable({
         <div className="bg-white h-screen flex items-start justify-center max-w-full mt-4">
           <div className=" text-black font-arial scrollbar-hide overflow-x-auto w-full px-4 min-h-screen">
             <table className="min-w-full divide-y border- divide-gray-200">
-              <thead className="text-[10px]">
+              <thead className="">
                 <tr>
-                  <th className="px-3 py-2 border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white hidden">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
                     Month-Year
                   </th>
 
-                  <th className="pl-4 py-2 border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white hidden">
+                  <th className="pl-4 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white">
                     Segment
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
                     Unit
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
                     Zone
                   </th>
-                  <th className=" border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
                     Region
                   </th>
-                  <th className=" border-b-2 border-gray-200 bg-[#626364] text-left font-semibold text-white">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
                     Budget
                   </th>
-                  <th className="border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
                     RSP
                   </th>
-                  <th className=" border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
                     M.Target
                   </th>
-                  <th className=" pl-2 py-2 border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
                     Sale
                   </th>
-                  <th className="py-2 border-b-2 border-gray-200 bg-[#626364] text-left font-semibold text-white">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white  ">
                     B.Ach
                   </th>
-                  <th className="px-2 py-2 border-b-2 border-gray-200 bg-[#626364] text-left font-semibold text-white">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
                     R.Ach
                   </th>
-                  <th className="px-2 py-2 border-b-2 border-gray-200 bg-[#626364] text-left  font-semibold text-white">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
                     M.Ach
                   </th>
-                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left font-semibold text-white">
+                  <th className="px-5 py-2 border-b-2 border-gray-200 bg-[#626364] text-left text-xs font-semibold text-white ">
                     Overall Achievement
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {rTableData.map((item, idx) => (
-                  <tr key={idx} className="text-[10px]">
-                    <td className="px-5 py-1 border-b border-gray-200 bg-white  hidden">
+                  <tr key={idx}>
+                    <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
                       {moment(item.m_year).format("MMM YYYY")}
                     </td>
 
-                    <td className="pl-4 py-2 border-b border-gray-200 bg-white hidden ">
+                    <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
                       {item.business_segment}
                     </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white  text-left">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
                       {item.business_unit_name}
                     </td>
 
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white ">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
                       {item.zone_name}
                     </td>
 
-                    <td className=" py-1 border-b border-gray-200 bg-white ">
+                    <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
                       {item.region_name}
                     </td>
-                    <td className="py-1 border-b border-gray-200 bg-white ">
+                    <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
                       {item.budget}
                     </td>
 
-                    <td className=" py-2 border-b border-gray-200 bg-white ">
+                    <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
                       {item.target}
                     </td>
-                    <td className=" py-2 border-b border-gray-200 bg-white  text-left">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
                       <input
-                        className="border-2 border-solid border-black-500 px-2 py-2 text-right    w-12 h-4"
+                        className="border-2 border-solid border-black-500 px-2 py-2 text-right  w-16 h-4"
                         placeholder="Enter M.Target"
                         value={item.m_target}
                         disabled={isRegionSelected === false}
@@ -421,11 +417,11 @@ function MainTable({
                       />
                     </td>
 
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white   text-center">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-center">
                       {item.actual}
                     </td>
 
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white   text-center">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-center">
                       {" "}
                       {((item.actual / item.budget) * 100).toFixed(2) ===
                         "NaN" ||
@@ -434,7 +430,7 @@ function MainTable({
                         ? 0
                         : ((item.actual / item.budget) * 100).toFixed(2)}
                     </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white   text-center">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-center">
                       {" "}
                       {((item.actual / item.target) * 100).toFixed(2) ===
                         "NaN" ||
@@ -443,7 +439,7 @@ function MainTable({
                         ? 0
                         : ((item.actual / item.target) * 100).toFixed(2)}
                     </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white   text-center">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-center">
                       {((item.actual / item.m_target) * 100).toFixed(2) ===
                         "NaN" ||
                       ((item.actual / item.m_target) * 100).toFixed(2) ===
@@ -451,32 +447,32 @@ function MainTable({
                         ? 0
                         : ((item.actual / item.m_target) * 100).toFixed(2)}
                     </td>
-                    <td className="pl-2 py-2 border-b border-gray-200 bg-white   text-right">
+                    <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-right">
                       <div className="demo-preview">{getProgressBar(item)}</div>
                     </td>
                   </tr>
                 ))}
 
-                <tr className="text-[10px]">
-                  <td className="  px-5 py-1 border-b border-gray-200 bg-white font-bold hidden">
+                <tr>
+                  <td className="px-5 py-1 border-b border-gray-200 bg-white font-bold">
                     Total
                   </td>
 
-                  <td className="pl-4 py-2 border-b border-gray-200 bg-white hidden">
+                  <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm">
                     -
                   </td>
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white  text-left">
-                    -
-                  </td>
-
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white ">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
                     -
                   </td>
 
-                  <td className="px-5 py-1 border-b border-gray-200 bg-white ">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
                     -
                   </td>
-                  <td className=" py-1 border-b border-gray-200 bg-white  text-left">
+
+                  <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs">
+                    -
+                  </td>
+                  <td className="px-5 py-1 border-b border-gray-200 bg-white text-xs text-left">
                     {rTableData
                       .reduce((acc, curr) => {
                         return (acc = Number(acc) + Number(curr.budget));
@@ -484,14 +480,14 @@ function MainTable({
                       ?.toFixed(2)}
                   </td>
 
-                  <td className=" py-2 border-b border-gray-200 bg-white  text-left">
+                  <td className="pl-4 py-2 border-b border-gray-200 bg-white text-sm text-left">
                     {rTableData
                       .reduce((acc, curr) => {
                         return (acc = Number(acc) + Number(curr.target));
                       }, 0)
                       ?.toFixed(2) || 0}
                   </td>
-                  <td className=" py-2 border-b border-gray-200 bg-white  text-left">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-left">
                     {rTableData
                       .reduce((acc, curr) => {
                         return (acc = Number(acc) + Number(curr.m_target));
@@ -499,7 +495,7 @@ function MainTable({
                       ?.toFixed(2)}
                   </td>
 
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white  text-center">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm text-center">
                     {rTableData
                       .reduce((acc, curr) => {
                         return (acc = Number(acc) + Number(curr.actual));
@@ -507,16 +503,16 @@ function MainTable({
                       ?.toFixed(2)}
                   </td>
 
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white ">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
                     -
                   </td>
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white ">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
                     -
                   </td>
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white ">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
                     -
                   </td>
-                  <td className="pl-2 py-2 border-b border-gray-200 bg-white ">
+                  <td className="pl-2 py-2 border-b border-gray-200 bg-white text-sm">
                     -
                   </td>
                 </tr>

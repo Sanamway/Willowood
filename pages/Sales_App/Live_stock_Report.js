@@ -23,6 +23,7 @@ import { FcNeutralTrading } from "react-icons/fc";
 import axios from "axios";
 import Select from "react-select";
 import { FiX } from "react-icons/fi";
+import { FcViewDetails } from "react-icons/fc";
 
 import * as FileSaver from 'file-saver'
 import * as  XLSX from 'xlsx'
@@ -197,14 +198,15 @@ const Dashboard = () => {
         try {
             const respond = await axios.get(`${url}/api/get_dipot`, {
                 headers: headers,
-                params: [data],
+                params: data,
             });
 
             const apires = await respond.data.data;
             setWarehouseFilterOptions(apires);
             if (data.region_name) {
-                setFiltersData({ ...filtersData, depotCode: apires[0].depot_code })
+                setFiltersData({ ...filtersData, depotCode: apires[0].depot_code, storeLocation: "0010" })
                 getAllStoreLocationData(JSON.stringify([apires[0].depot_code]))
+
             }
 
 
@@ -337,9 +339,9 @@ const Dashboard = () => {
 
     return (
 
-        <div className="bg-gray-200">
+        <div className="bg-v-200">
             {/* Header Section */}
-            <div className="w-full flex h-12 justify-between items-center px-4 shadow-lg bg-blue-400 ">
+            <div className="w-full flex h-12 justify-between items-center px-4 shadow-lg bg-blue-600 ">
                 <span className="text-black flex flex-row gap-4 font-bold">
                     <FaArrowLeftLong
                         className="self-center cursor-pointer"
@@ -349,7 +351,11 @@ const Dashboard = () => {
                             })
                         }
                     />
-                    <span className="flex flex-row gap-2 justify-center items-center">   <span>Warehouse Live Stock Report</span></span>
+                    <FcViewDetails
+                        className="self-center cursor-pointer"
+                        size={25}
+                    />
+                    <span className="flex flex-row gap-2 justify-center items-center">   <span className="text-white">Warehouse Live Stock Report</span></span>
                 </span>
                 <span className="text-white self-center">
                     <Popover as="div" className="relative border-none outline-none mt-2">
@@ -496,7 +502,7 @@ const Dashboard = () => {
                     <thead className="border-b w-max bg-yellow-300">
                         <tr className="font-arial w-max text-gray-700">
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">Item Description</th>
-                            <th className="px-4 py-2 text-left text-xs font-medium tracking-wider">UOM</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium tracking-wider w-16">UOM</th>
                             <th className="px-2 py-2 text-left text-xs font-medium tracking-wider w-12">Case</th>
                             <th className="px-2 py-2 text-left text-xs font-medium tracking-wider w-12">Qty</th>
                             <th className="px-4 py-2 text-left text-xs font-medium tracking-wider"></th>
@@ -515,7 +521,7 @@ const Dashboard = () => {
                                 <td className="px-4 py-2 text-left whitespace-nowrap">
                                     <input
                                         type="text"
-                                        className="w-full px-2 py-1 bg-gray-100 border rounded-md cursor-not-allowed text-gray-600"
+                                        className="w-12 px-2 py-1 bg-gray-100 border rounded-md cursor-not-allowed text-gray-600"
                                         value={item?.material_result?.uom}
                                         disabled
                                     />

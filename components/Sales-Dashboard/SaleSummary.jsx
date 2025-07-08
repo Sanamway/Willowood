@@ -20,11 +20,11 @@ const SaleSummary = () => {
   const allCurrentmonthtilldata = useSelector((state) => state.rspAnalytics.rspAnalyticalData.CurrentmonthDataR?.[0]?.totalNewPriceValue || 0);
   const allLastmonthtilldata = useSelector((state) => state.rspAnalytics.rspAnalyticalData.lastmonthDataR?.[0]?.totalNewPriceValue || 0)
   const allLastmonthdata = useSelector((state) => state.rspAnalytics.rspAnalyticalData.lastmonththisyearR?.[0]?.totalNewPriceValue || 0)
+  const lastYrCurrentMonth = useSelector((state) => state.rspAnalytics.rspAnalyticalData.lastyearCurrentmonthDataR?.[0]?.totalNewPriceValue || 0)
 
   const additionalReduxData = useSelector((state) => state.additionalData.additionalData)
-  console.log("plo", additionalReduxData)
-  const [additionalData, setAdditionalData] = useState({})
 
+  const [additionalData, setAdditionalData] = useState({})
 
   useEffect(() => {
     setAdditionalData(additionalReduxData)
@@ -40,19 +40,24 @@ const SaleSummary = () => {
   const [data2, setData2] = useState(
     [{ name: "Current Month", data: 0 },
     { name: "Last Month", data: 0 },
-    { name: "This Month", data: 0 }]
+    { name: "This Month", data: 0 },
+    { name: "Prev", data: 0 },]
 
   );
   useEffect(() => {
     setData2(
       [{ name: "Current Month", data: allCurrentmonthtilldata },
       { name: "Last Month", data: allLastmonthtilldata },
-      { name: "This Month", data: allLastmonthdata }]
+      { name: "This Month", data: allLastmonthdata },
+      { name: "Prev", data: lastYrCurrentMonth },
+      ],
+
+
 
     );
   }, [allCurrentmonthtilldata, allLastmonthtilldata, allLastmonthdata]);
 
-  console.log("jkl", additionalData)
+
   return (
     <>
       <div className="h-6 bg-white rounded-t-md flex items-center px-2  mt-4">
@@ -96,10 +101,11 @@ const SaleSummary = () => {
           </div>
 
           {(() => {
-            const tillDateSale = Number(data[0]?.data) || 0;
-            const totalSale = Number(data[1]?.data) || 1; // prevent divide by zero
-            const percentChange = 100 - (tillDateSale / totalSale) * 100;
-            const isDecrease = percentChange > 0;
+            const lastYrSale = Number(data[0]?.data) || 0;
+            const currentYrSale = Number(data[2]?.data) || 1; // prevent divide by zero
+            const percentChange = 100 - (lastYrSale / currentYrSale * 100);
+            console.log("hui", 100 - (lastYrSale / currentYrSale * 100))
+            const isDecrease = percentChange < 0;
             const formattedPercent = Math.abs(percentChange).toFixed(2);
 
             return (
@@ -109,7 +115,7 @@ const SaleSummary = () => {
                   <span className="bg-[#ECF9F4] px-1 py-1 rounded-md">
                     {formattedPercent}%
                   </span>{" "}
-                  this month
+                  this year
                 </h2>
               </div>
             );
@@ -131,7 +137,7 @@ const SaleSummary = () => {
             <h2 className="font-bold">₹{data2[0].data}</h2>
           </div>
 
-          <div className="flex items-center justify-between w-full text-[0.75rem] text-gray-600">
+          {/* <div className="flex items-center justify-between w-full text-[0.75rem] text-gray-600">
             <div className="flex items-center gap-2">
               <div className="px-4"></div>
               <div className="flex  items-start flex-col ">
@@ -140,6 +146,17 @@ const SaleSummary = () => {
               </div>
             </div>
             <h2 className="font-bold">₹{data2[1].data}</h2>
+          </div> */}
+          <div className="flex items-center justify-between w-full text-[0.75rem] text-gray-600">
+            <div className="flex items-center gap-2">
+              <div className="px-4"></div>
+              <div className="flex  items-start flex-col ">
+                <h2 className="text-[0.75rem] text-gray-600 font-semibold">Prev Year - Current Month Till date sale</h2>
+                <h2>{moment(additionalData.month).format("MMMM")} ({moment().format("DD")} {additionalData.yr - 1})</h2>
+              </div>
+
+            </div>
+            <h2 className="font-bold">₹{data2[3].data}</h2>
           </div>
           <div className="flex items-center justify-between w-full text-[0.75rem] text-gray-600">
             <div className="flex items-center gap-2">
@@ -148,14 +165,17 @@ const SaleSummary = () => {
                 <h2 className="text-[0.75rem] text-gray-600 font-semibold">Last Month Total Sale</h2>
                 <h2>{moment(additionalData.month).subtract(1, 'months').format("MMMM")} ({additionalData.yr})</h2>
               </div>
+
             </div>
             <h2 className="font-bold">₹{data2[2].data}</h2>
           </div>
+
+
           {(() => {
             const tillDateSale = Number(data2[1]?.data) || 0;
-            const totalSale = Number(data2[2]?.data) || 1; // avoid division by zero
-            const percentChange = 100 - (tillDateSale / totalSale) * 100;
-            const isDecrease = percentChange > 0;
+            const totalSale = Number(data2[0]?.data) || 1; // avoid division by zero
+            const percentChange = 100 - (tillDateSale / totalSale * 100);
+            const isDecrease = percentChange < 0;
             const formattedPercent = Math.abs(percentChange).toFixed(2);
 
             return (

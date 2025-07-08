@@ -393,6 +393,7 @@ const AdditionalInfo = (props) => {
     }
   };
 
+
   const triggerFileInput = () => {
     fileInputRef.current.click();
   };

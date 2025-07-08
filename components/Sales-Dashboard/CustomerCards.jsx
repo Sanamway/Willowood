@@ -10,21 +10,22 @@ const CustomerCards = () => {
   );
   let delaerCountData = useSelector((state) => state.dealer.dealerCountData)
   const [data, setData] = useState([
-    { name: "Active Customers", order: "0", data: delaerCountData ? delaerCountData.dealerActivecount : 0 },
-    { name: "New Customers", order: "This Month", data: delaerCountData ? delaerCountData.monthCount : 0 },
-    { name: "Inactive Customers", order: "0 Order This Month", data: delaerCountData ? delaerCountData.dealerDeactivecount : 0 },
-    { name: "Customers Overdue", order: "0", data: allCollectionTableData.length },
+    { name: "Active Customers", order: "0", data: 0 },
+    { name: "New Customers", order: "This Month", data: 0 },
+    { name: "Inactive Customers", order: "0 Order This Month", data: 0 },
+    { name: "Customers Overdue", order: "0", data: 0 },
   ]);
 
   useEffect(() => {
+    console.log("qaw", allCollectionTableData, delaerCountData)
     setData([
-      { name: "Active Customers", order: "0", data: delaerCountData.dealerActivecount },
-      { name: "New Customers", order: "This Month", data: delaerCountData.monthCount },
-      { name: "Inactive Customers", order: "0 Order This Month", data: delaerCountData.dealerDeactivecount },
+      { name: "Active Customers", order: "0", data: delaerCountData.dealerActivecount?.length },
+      { name: "New Customers", order: "This Month", data: delaerCountData.monthCount?.length },
+      { name: "Inactive Customers", order: "0 Order This Month", data: delaerCountData.dealerDeactivecount?.length },
       {
         name: "Customers Overdue", order: "0", data: allCollectionTableData.filter((item) => {
           return item["180-365"] !== 0 || item["366-720"] !== 0 || item["720 And Above"] !== 0;
-        }).length
+        })?.length
       },
     ]);
 
@@ -76,15 +77,16 @@ const CustomerCards = () => {
       setOpen(true);
       return
     }
-    if (item.name == "Customers Oneact") {
+    else if (item.name == "New Customers") {
       setDueOpen(true);
     }
-    if (item.name == "Inactive Customers") {
+    else if (item.name == "Inactive Customers") {
       setInactOpen(true);
     }
-    if (item.name == "New Customers") {
-      setInactOpen(true);
+    else {
+      return
     }
+
   };
 
   return (
@@ -135,26 +137,26 @@ const CustomerCards = () => {
 
       {open && (
         <PopupModals
-          customer={customerData || []}
+          customer={delaerCountData.dealerActivecount || []}
           closeModal={closeModal}
-          regionData={regionData || []}
-          catData={categoryData || []}
+          gridData={delaerCountData.dealerActivecount || []}
+
         />
       )}
 
       {dueOpen && (
         <DuePopup
-          customer={customerData || []}
+          customer={delaerCountData.monthCount || []}
           closeModal={closeModal}
-          dueData={cusOverDue || []}
+          gridData={delaerCountData.monthCount || []}
         />
       )}
 
       {inactOpen && (
         <InactivePopup
-          customer={customerData || []}
+          customer={delaerCountData.dealerDeactivecount || []}
           closeModal={closeModal}
-          dueData={inactList || []}
+          gridData={delaerCountData.dealerDeactivecount || []}
         />
       )}
     </div>

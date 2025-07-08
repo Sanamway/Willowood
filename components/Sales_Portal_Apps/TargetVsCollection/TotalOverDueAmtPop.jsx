@@ -3,7 +3,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import { useSpring, animated } from "react-spring";
 
-const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
+const TotalOutStandPop = ({ closeModal, regionData, catData, dueData, specialColumn }) => {
   const [selected, setSelected] = useState("category");
   const [nameSort, setNameSort] = useState(true);
   const [catdata, setCatData] = useState([]);
@@ -75,25 +75,35 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
                     <table className="w-full text-sm text-left text-gray-500 rounded-full">
                       <thead className="text-xs text-gray-900 text-center bg-blue-50 rounded-md">
                         <tr>
-                          {[
-                            { label: "Id" },
-                            { label: "Account" },
-                            { label: "Net Balance Amount" },
-                            { label: "180-365" },
-                            { label: "366-720" },
-                            { label: "720 And Above" },
-                          ].map(({ label }) => (
-                            <th
-                              key={label}
-                              onClick={handleSort}
-                              className="px-2 py-1 cursor-pointer text-[0.78rem] text-blue-400 font-bold"
-                            >
-                              <span className="flex items-center justify-center w-full">
-                                {label}
-                                {nameSort ? <IoMdArrowDropdown size={20} /> : <IoMdArrowDropup size={20} />}
-                              </span>
-                            </th>
-                          ))}
+                          {
+                            specialColumn ?
+                              [
+                                { label: "Id" },
+                                { label: "Account" },
+                                { label: "Net Balance Amount" },
+                                { label: "120-180" },
+                                { label: "180-365" },
+                                { label: "366-720" },
+                                { label: "720 And Above" },
+                              ] : [
+                                { label: "Id" },
+                                { label: "Account" },
+                                { label: "Net Balance Amount" },
+                                { label: "180-365" },
+                                { label: "366-720" },
+                                { label: "720 And Above" },
+                              ].map(({ label }) => (
+                                <th
+                                  key={label}
+                                  onClick={handleSort}
+                                  className="px-2 py-1 cursor-pointer text-[0.78rem] text-blue-400 font-bold"
+                                >
+                                  <span className="flex items-center justify-center w-full">
+                                    {label}
+                                    {nameSort ? <IoMdArrowDropdown size={20} /> : <IoMdArrowDropup size={20} />}
+                                  </span>
+                                </th>
+                              ))}
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200 break-normal">
@@ -109,6 +119,11 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
                               <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border">
                                 {item["Net Balance Amt(INR)"]}
                               </td>
+                              {
+                                specialColumn && <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border">
+                                  {item["121-180"]}
+                                </td>
+                              }
                               <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border">
                                 {item["180-365"]}
                               </td>
@@ -129,14 +144,15 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
                             Total
                           </td>
                           <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border"></td>
-                          {["Net Balance Amt(INR)", "180-365", "366-720", "720 And Above"].map((key, idx) => (
-                            <td
-                              key={idx}
-                              className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border"
-                            >
-                              {catdata.reduce((acc, curr) => acc + curr[key], 0).toFixed(2)}
-                            </td>
-                          ))}
+                          {
+                            specialColumn ? ["Net Balance Amt(INR)", "120-180", "180-365", "366-720", "720 And Above"] : ["Net Balance Amt(INR)", "180-365", "366-720", "720 And Above"].map((key, idx) => (
+                              <td
+                                key={idx}
+                                className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border"
+                              >
+                                {catdata.reduce((acc, curr) => acc + curr[key], 0).toFixed(2)}
+                              </td>
+                            ))}
                         </tr>
                       </tbody>
                     </table>

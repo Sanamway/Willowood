@@ -75,6 +75,61 @@ const Navbar = () => {
     }
   }, []);
 
+  const [localStorageItems, setLocalStorageItems] = useState({
+    uId: "",
+    cId: "",
+    bgId: "",
+    buId: "",
+    rId: "",
+    zId: "",
+    tId: "",
+    empCode: ""
+  });
+
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    setLocalStorageItems({
+      uId: JSON.parse(window.localStorage.getItem("uid")),
+      cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
+      bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
+      buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
+      rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
+      zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
+      tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+      empCode: window.localStorage.getItem("emp_code"),
+      empName: window.localStorage.getItem("user_name"),
+      userInfo: JSON.parse(window.localStorage.getItem("userinfo")),
+      mobile: JSON.parse(window.localStorage.getItem("phone_number")),
+      email: window.localStorage.getItem("email_id"),
+    });
+  }, []);
+  const [imagePreview, setImagePreview] = useState(null);
+  const getImage = async () => {
+    if (typeof window === "undefined") return;
+    try {
+      const res = await axios.get(`${url}/api/get_image`, {
+        headers: headers,
+        params: {
+          phone_number: localStorageItems.mobile,
+          file_path: "user",
+        },
+      });
+
+      const respdata = res.data.data;
+      console.log("Fetched Image URL:", respdata.image_url);
+      setImagePreview(respdata.image_url || "/default-profile.png");
+    } catch (error) {
+      console.log("Error fetching image:", error);
+      setImagePreview("/default-profile.png");
+    }
+  };
+
+  useEffect(() => {
+    if (!localStorageItems.mobile) return
+    getImage();
+  }, [localStorageItems.mobile]);
+
   return (
     <>
       <div className="nav-container bg-[#15283C] h-[60px] flex justify-between items-center pl-[15px] w-[1600px] max-w-full m-auto">
@@ -167,10 +222,10 @@ const Navbar = () => {
             <span onClick={toggleDrawer} className="hamburger hover:text-blue-800">
               {!isOpen ? (
                 // <FaRegUserCircle className="text-orange-500" size={30}></FaRegUserCircle>
-                <img src={userImg} className="text-orange-500 h-8 w-8 rounded-full" size={30}></img>
+                <img src={imagePreview} className="text-orange-500 h-8 w-8 rounded-full" size={30}></img>
               ) : (
                 // <FaRegUserCircle className="text-orange-500" size={30}></FaRegUserCircle>
-                <img src={userImg} className="text-orange-500 h-8 w-8 rounded-full" size={30}></img>
+                <img src={imagePreview} className="text-orange-500 h-8 w-8 rounded-full" size={30}></img>
               )}
             </span>
             <div className="logo h-[40px] w-[120px] ">
@@ -192,9 +247,7 @@ const Navbar = () => {
           </div>
 
           <main
-            // className={`mobo-nav-drawer  -z-10  h-100vh bg-gray-100 fixed top-[3.7rem] -left-[100%] right-0 bottom-0 w-[100%]  px-[15px] transition-all ease-in-out ${
-            //   isOpen ? "left-0" : ""
-            // }`}
+
             className={`mobo-nav-drawer  z-10  h-100vh bg-gray-100 fixed top-[0rem] -left-[100%] right-0 bottom-0 w-[100%]  transition-all ease-in-out ${isOpen ? "left-0" : ""
               }`}
           >
@@ -210,7 +263,7 @@ const Navbar = () => {
                         ) : (
                           // <img src={userImg} className="text-orange-500 h-8 w-8 rounded-full" size={30}></img>
                           // <FaRegUserCircle className="text-orange-500" size={38}></FaRegUserCircle>
-                          <img src={userImg} className="text-orange-500 h-8 w-10 rounded-full"></img>
+                          <img src={imagePreview} className="text-orange-500 h-8 w-10 rounded-full"></img>
                         )}
                       </span>
                       <div className="username flex flex-col justify-start w-full items-start">

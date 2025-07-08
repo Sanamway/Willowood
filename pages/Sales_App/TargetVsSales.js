@@ -519,6 +519,13 @@ const AdditionalInfo = (props) => {
     ) => {
         setAllTeamData([]); // clear old
         let endPoint;
+        console.log("nji", yr,
+            month,
+            bgId,
+            buId,
+            zId,
+            rId,
+            tId)
 
         if (bgId && buId && zId && rId && tId) {
 
@@ -564,8 +571,10 @@ const AdditionalInfo = (props) => {
                     bg_id: bgId === "All" || !bgId ? null : bgId,
                     bu_id: buId === "All" || !buId ? null : buId,
                     z_id: zId === "All" || !zId ? null : zId,
+
                     r_id: rId === "All" || !rId ? null : rId,
                     t_id: tId === "All" || !tId ? null : tId,
+
                 },
             });
 
@@ -581,6 +590,7 @@ const AdditionalInfo = (props) => {
 
 
     useEffect(() => {
+        console.log("jkl", allTableData)
         if (!allTableData.length) return
         setBsGraphData(
             [
@@ -588,19 +598,19 @@ const AdditionalInfo = (props) => {
                     label: "Budget",
                     backgroundColor: "rgba(34, 197, 94, 1)",  // Full opacity (green-400)
                     backgroundColor: "rgba(34, 197, 94, 0.6)", // 60% opacity
-                    data: allTableData.map((item) => item.budget),
+                    data: allTableData.sort((a, b) => new Date(a.m_year) - new Date(b.m_year)).map((item) => item.budget),
                 },
                 {
-                    label: "Budget",
+                    label: "Target",
                     backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity (blue)
                     backgroundColor: "rgba(59, 130, 246, 0.6)", // 60% opacity
-                    data: allTableData.map((item) => item.target),
+                    data: allTableData.sort((a, b) => new Date(a.m_year) - new Date(b.m_year)).map((item) => item.target),
                 },
                 {
                     label: "Sales",
                     backgroundColor: "rgba(249, 115, 22, 1)",  // Full opacity (orange)
                     borderColor: "rgba(249, 115, 22, 0.6)",    // 60% opacity
-                    data: allTableData.map((item) => item.actual),
+                    data: allTableData.sort((a, b) => new Date(a.m_year) - new Date(b.m_year)).map((item) => item.actual),
                 }
 
 
@@ -612,43 +622,43 @@ const AdditionalInfo = (props) => {
     }, [
         allTableData
     ])
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (typeof window === "undefined") return;
+    //     if (typeof window === "undefined") return;
 
-        const userInfo = JSON.parse(window.localStorage.getItem("userinfo"));
+    //     const userInfo = JSON.parse(window.localStorage.getItem("userinfo"));
 
 
-        if (userInfo?.role_id === 11) return;
+    //     if (userInfo?.role_id === 11) return;
 
-        getAllSalesPlanStatus(
-            filterState.yr || null,
-            filterState.month || null,
-            filterState.bgId || null,
-            filterState.buId || null,
-            filterState.zId || null,
-            filterState.rId || null,
-            filterState.tId || null,
-        );
+    //     getAllSalesPlanStatus(
+    //         filterState.yr || null,
+    //         filterState.month || null,
+    //         filterState.bgId || null,
+    //         filterState.buId || null,
+    //         filterState.zId || null,
+    //         filterState.rId || null,
+    //         filterState.tId || null,
+    //     );
 
-        getAllTeamStatus(
-            filterState.yr || null,
-            filterState.month || null,
-            filterState.bgId || null,
-            filterState.buId || null,
-            filterState.zId || null,
-            filterState.rId || null,
-            filterState.tId || null,
-        );
-    }, [
-        filterState.yr,
-        filterState.month,
-        filterState.bgId,
-        filterState.buId,
-        filterState.zId,
-        filterState.rId,
-        filterState.tId,
-    ]);
+    //     getAllTeamStatus(
+    //         filterState.yr || null,
+    //         filterState.month || null,
+    //         filterState.bgId || null,
+    //         filterState.buId || null,
+    //         filterState.zId || null,
+    //         filterState.rId || null,
+    //         filterState.tId || null,
+    //     );
+    // }, [
+    //     filterState.yr,
+    //     filterState.month,
+    //     filterState.bgId,
+    //     filterState.buId,
+    //     filterState.zId,
+    //     filterState.rId,
+    //     filterState.tId,
+    // ]);
 
 
 
@@ -985,25 +995,313 @@ const AdditionalInfo = (props) => {
         }
     };
     useEffect(() => {
-        if (localStorageItems.roleId === 6 || localStorageItems.roleId === 5) {
 
-            if (territoryData.length &&
-                zoneData.length &&
-                regionData.length &&
-                buData.length) {
-                getSaleData(filterState.yr || null,
+
+        if (localStorageItems.roleId === 6) {
+            getSaleData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                filterState.tId || null,
+                filterState.partyName || null);
+        }
+        else if (localStorageItems.roleId === 5) {
+            getSaleData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 4) {
+            getSaleData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 3) {
+            getSaleData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 10) {
+            getSaleData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else { return }
+
+
+
+    }, [
+
+        filterState.yr,
+        filterState.month,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.partyName,
+
+    ])
+
+
+    useEffect(() => {
+
+
+        if (localStorageItems.roleId === 6) {
+            getThreeTableData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                filterState.tId || null,
+                filterState.partyName || null);
+        }
+        else if (localStorageItems.roleId === 5) {
+            getThreeTableData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 4) {
+            getThreeTableData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 3) {
+            getThreeTableData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 10) {
+            getThreeTableData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 10) {
+            getThreeTableData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else { return }
+
+
+
+
+    }, [
+
+        filterState.yr,
+        filterState.month,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.partyName,
+        territoryData,
+        zoneData,
+        regionData,
+        buData
+    ])
+
+
+
+    useEffect(() => {
+
+
+        if (localStorageItems.roleId === 6) {
+            getAllTeamStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                filterState.tId || null,
+            );
+            getAllSalesPlanStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                filterState.tId || null,
+            )
+
+
+        }
+        else if (localStorageItems.roleId === 5) {
+            getAllTeamStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                null,
+            );
+            getAllSalesPlanStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                null,
+            )
+            return
+        }
+        else if (localStorageItems.roleId === 4) {
+            if (
+                filterState.bgId &&
+                filterState.buId &&
+                filterState.zId) {
+                getAllTeamStatus(
+                    filterState.yr || null,
                     filterState.month || null,
                     filterState.bgId || null,
                     filterState.buId || null,
                     filterState.zId || null,
-                    filterState.rId || null,
-                    filterState.tId || null,
-                    filterState.partyName || null);
+                    null,
+                    null,
+                );
+                getAllSalesPlanStatus(
+                    filterState.yr || null,
+                    filterState.month || null,
+                    filterState.bgId || null,
+                    filterState.buId || null,
+                    filterState.zId || null,
+                    null,
+                    null,
+                )
             }
-            else {
-                return
-            }
+
+            return
         }
+        else if (localStorageItems.roleId === 3) {
+            getAllTeamStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                null,
+                null,
+                null,
+            );
+            getAllSalesPlanStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                null,
+                null,
+                null,
+            )
+            return
+        }
+        else if (localStorageItems.roleId === 10) {
+            getAllTeamStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+            );
+            getAllSalesPlanStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+            )
+            return
+        }
+        else if (localStorageItems.roleId === 10) {
+            getAllSalesPlanStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+            )
+            getAllTeamStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+            );
+            return
+        }
+        else {
+            return
+
+        }
+
+
 
 
     }, [
@@ -1023,77 +1321,8 @@ const AdditionalInfo = (props) => {
     ])
 
 
-    useEffect(() => {
-
-        getThreeTableData(filterState.yr || null,
-            filterState.month || null,
-            filterState.bgId || null,
-            filterState.buId || null,
-            filterState.zId || null,
-            filterState.rId || null,
-            filterState.tId || null,
-            filterState.partyName || null);
 
 
-
-    }, [
-
-        filterState.yr,
-        filterState.month,
-        filterState.bgId,
-        filterState.buId,
-        filterState.zId,
-        filterState.rId,
-        filterState.tId,
-        filterState.partyName,
-        territoryData,
-        zoneData,
-        regionData,
-        buData
-
-    ])
-
-    const hasCalledAPI = useRef(false);
-
-    useEffect(() => {
-        const isBrowser = typeof window !== 'undefined';
-
-        const hasAnyData =
-            territoryData?.length > 0 ||
-            zoneData?.length > 0 ||
-            regionData?.length > 0 ||
-            buData?.length > 0;
-
-        if (isBrowser && hasAnyData && !hasCalledAPI.current) {
-            const {
-                yr = null,
-                month = null,
-                bgId = null,
-                buId = null,
-                zId = null,
-                rId = null,
-                tId = null,
-                partyName = null,
-            } = filterState;
-
-            getThreeTableData({ yr, month, bgId, buId, zId, rId, tId, partyName });
-
-            hasCalledAPI.current = true; // Prevent further calls
-        }
-    }, [
-        territoryData,
-        zoneData,
-        regionData,
-        buData,
-        filterState.yr,
-        filterState.month,
-        filterState.bgId,
-        filterState.buId,
-        filterState.zId,
-        filterState.rId,
-        filterState.tId,
-        filterState.partyName,
-    ]); // empty dependency array ensures it runs only once
 
 
     const totalTarget = totalRow(allTableData.map(item => item.target));
@@ -1102,6 +1331,7 @@ const AdditionalInfo = (props) => {
     const totalPercentage = (totalActual / totalTarget * 100).toFixed(2);
     const TeamTarget = totalRow(allTeamData.map(item => item.target));
     const TeamActual = totalRow(allTeamData.map(item => item.actual));
+    const TeamBudget = totalRow(allTeamData.map(item => item.budget));
     const TeamPercentage = (TeamActual / TeamTarget * 100).toFixed(2);
 
 
@@ -1110,22 +1340,43 @@ const AdditionalInfo = (props) => {
     ));
     const productMtd = totalRow(brandData.map(item => item.total_mtd_new_budget_price_value
     ));
-    const productToday = totalRow(brandData.map(item => item.total_today_new_budget_price));
+    const productToday = totalRow(brandData.map(item => item.total_today_new_budget_price_value));
 
     const brandYtd = totalRow(segmentData.map(item => item.total_ytd_new_budget_price_value));
     const brandMtd = totalRow(segmentData.map(item => item.total_mtd_new_budget_price_value));
-    const brandToday = totalRow(segmentData.map(item => item.total_today_new_budget_price));
+    const brandToday = totalRow(segmentData.map(item => item.total_today_new_budget_price_value));
 
     const segementYtd = totalRow(categoryData.map(item => item.total_ytd_new_budget_price_value));
     const segementMtd = totalRow(categoryData.map(item => item.total_mtd_new_budget_price_value));
-    const segementToday = totalRow(categoryData.map(item => item.total_today_new_budget_price));
+    const segementToday = totalRow(categoryData.map(item => item.total_today_new_budget_price_value));
 
-    const [userImg, setUserImg] = useState(null);
-    useEffect(() => {
-        // Ensure this runs only on the client
+    const [imagePreview, setImagePreview] = useState(null);
+    console.log("pol", imagePreview)
+    // Fetch image from API
+    const getImage = async (mobile) => {
         if (typeof window === "undefined") return;
-        setUserImg(localStorage.getItem("ImageLink"));
-    }, []);
+        try {
+            const res = await axios.get(`${url}/api/get_image`, {
+                headers: headers,
+                params: {
+                    phone_number: mobile,
+                    file_path: "user",
+                },
+            });
+
+            const respdata = res.data.data;
+            console.log("Fetched Image URL:", respdata.image_url);
+            setImagePreview(respdata.image_url);
+        } catch (error) {
+            console.log("Error fetching image:", error);
+            // setImagePreview("/default-profile.png");
+        }
+    };
+    useEffect(() => {
+        if (typeof window === undefined) return
+        getImage(JSON.parse(window.localStorage.getItem("phone_number")))
+    }, [])
+
 
 
     return (
@@ -1133,17 +1384,17 @@ const AdditionalInfo = (props) => {
             className=" bg-white rounded  w-full  overflow-auto pb-4"
             onSubmit={(e) => e.preventDefault()}
         >
-            <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
+            <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col bg-blue-600  ">
                 <span className="text-black flex flex-row gap-4 font-bold   ">
                     <FaArrowLeftLong
-                        className="self-center "
+                        className="self-center text-white "
                         onClick={() =>
                             router.push({
                                 pathname: "/Sales_App/Home",
                             })
                         }
                     />
-                    <span>Target VS Sales</span>
+                    <span className="text-white">Target VS Sales</span>
                 </span>{" "}
                 <span className="text-white self-center">
                     <Popover as="div" className="relative border-none outline-none mt-2">
@@ -1184,7 +1435,7 @@ const AdditionalInfo = (props) => {
             <div className="flex mb-4 mt-2 mb-8">
 
                 <div className="w-40 h-30 flex justify-center items-center">
-                    <img src={userImg} className="h-20 w-20 rounded-full text-orange-500 mt-4" size={80}></img>
+                    <img src={imagePreview} className="h-20 w-20 rounded-full text-orange-500 mt-4" size={80}></img>
                 </div>
 
                 <div className="flex  flex-col  w-full mt-4 md:hidden">
@@ -1279,13 +1530,14 @@ const AdditionalInfo = (props) => {
                                         tId: '',
                                     })
                                 }
-                                disabled={
-                                    localStorageItems.roleId === 6 ||
-                                    localStorageItems.roleId === 5 ||
-                                    localStorageItems.roleId === 4 ||
-                                    localStorageItems.roleId === 3 ||
-                                    localStorageItems.roleId === 10
-                                }
+                                // disabled={
+                                //     localStorageItems.roleId === 6 ||
+                                //     localStorageItems.roleId === 5 ||
+                                //     localStorageItems.roleId === 4 ||
+                                //     localStorageItems.roleId === 3 ||
+                                //     localStorageItems.roleId === 10
+                                // }
+                                disabled={true}
                             >
                                 <option value={''} className="font-bold">
                                     - Business Segment -
@@ -1314,12 +1566,13 @@ const AdditionalInfo = (props) => {
                                         tId: '',
                                     })
                                 }
-                                disabled={
-                                    localStorageItems.roleId === 6 ||
-                                    localStorageItems.roleId === 5 ||
-                                    localStorageItems.roleId === 4 ||
-                                    localStorageItems.roleId === 3
-                                }
+                                // disabled={
+                                //     localStorageItems.roleId === 6 ||
+                                //     localStorageItems.roleId === 5 ||
+                                //     localStorageItems.roleId === 4 ||
+                                //     localStorageItems.roleId === 3
+                                // }
+                                disabled={true}
                             >
                                 <option value={''}>- Business Unit -</option>
 
@@ -1341,11 +1594,12 @@ const AdditionalInfo = (props) => {
                                         tId: '',
                                     })
                                 }
-                                disabled={
-                                    localStorageItems.roleId === 6 ||
-                                    localStorageItems.roleId === 5 ||
-                                    localStorageItems.roleId === 4
-                                }
+                                // disabled={
+                                //     localStorageItems.roleId === 6 ||
+                                //     localStorageItems.roleId === 5 ||
+                                //     localStorageItems.roleId === 4
+                                // }
+                                disabled={true}
                             >
                                 <option value={''}>- Zone -</option>
 
@@ -1359,9 +1613,10 @@ const AdditionalInfo = (props) => {
                                 className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                                 id="stateSelect"
                                 value={filterState.rId}
-                                disabled={
-                                    localStorageItems.roleId === 6 || localStorageItems.roleId === 5
-                                }
+                                // disabled={
+                                //     localStorageItems.roleId === 6 || localStorageItems.roleId === 5
+                                // }
+                                disabled={true}
                                 onChange={(e) =>
                                     setFilterState({
                                         ...filterState,
@@ -1385,9 +1640,10 @@ const AdditionalInfo = (props) => {
                                 className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                                 id="stateSelect"
                                 value={filterState.tId}
-                                disabled={
-                                    localStorageItems.roleId === 11 || localStorageItems.roleId === 6
-                                }
+                                // disabled={
+                                //     localStorageItems.roleId === 11 || localStorageItems.roleId === 6
+                                // }
+                                disabled={true}
                                 onChange={(e) =>
                                     setFilterState({
                                         ...filterState,
@@ -1409,6 +1665,7 @@ const AdditionalInfo = (props) => {
                                     className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                                     id="stateSelect"
                                     value={filterState.partyName}
+
 
                                     onChange={(e) =>
                                         setFilterState({
@@ -1448,7 +1705,7 @@ const AdditionalInfo = (props) => {
 
                 <div className="overflow-x-auto">
                     <h1 className="font-bold text-center bg-yellow-300 flex justify-between items-center ">
-                        <span className="flex-grow text-center">Target VS Sales</span>
+                        <span className="flex-grow text-center ">Target VS Sales</span>
 
                         {isCollapsed ? (
                             <button onClick={toggleCollapse} className="ml-auto">
@@ -1535,8 +1792,9 @@ const AdditionalInfo = (props) => {
                             <table className="w-full border-collapse border border-gray-200 text-[10px] font-bold">
                                 <thead>
                                     <tr className="bg-blue-800 text-white">
-                                        <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">Month</th>
+                                        <th className="border border-gray-200 px-2 w-12 py-2 whitespace-nowrap font-bold">Month</th>
                                         <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">BST</th>
+                                        <th className="border border-gray-200 py-2 ">Budget</th>
 
                                         <th className="border border-gray-200  py-2">RSP Target</th>
                                         <th className="border border-gray-200  py-2">Total Sales</th>
@@ -1548,7 +1806,7 @@ const AdditionalInfo = (props) => {
 
                                         <tr className="font-bold" key={item.id || item.m_year}>
 
-                                            <td className="border border-gray-200 w-24 px-2 py-2 whitespace-nowrap">
+                                            <td className="border border-gray-200 w-12 px-2 py-2 whitespace-nowrap">
                                                 {moment(item.m_year).format('MMMM')}
                                             </td>
                                             <td className="border border-gray-200 w-32 px-2 py-2">
@@ -1574,6 +1832,7 @@ const AdditionalInfo = (props) => {
 
 
                                             </td>
+                                            <td className="border border-gray-200 py-2">{item.budget}</td>
                                             <td className="border border-gray-200 py-2">{item.target}</td>
                                             <td className="border border-gray-200 py-2">{item.actual}</td>
                                             <td className="border border-gray-200 py-2">
@@ -1584,15 +1843,20 @@ const AdditionalInfo = (props) => {
 
 
                                     <tr className="font-bold bg-blue-800 text-white">
-                                        <td className="border border-gray-200 w-24 px-2 py-2">MTD Total</td>
-                                        <td className="border border-gray-200 w-32 px-2 py-2"></td>
-                                        <td className="border border-gray-200 py-2">
+                                        <td className="border border-gray-200 w-12 px-2 py-2">MTD</td>
+                                        <td className="border border-gray-200 w-32 px-2 py-2">
+
+                                        </td>
+                                        <td className="border border-gray-200 text-center py-2">
+                                            {Number(TeamBudget).toFixed(2)}
+                                        </td>
+                                        <td className="border border-gray-200 text-center py-2">
                                             {Number(TeamTarget).toFixed(2)}
                                         </td>
-                                        <td className="border border-gray-200 py-2">
+                                        <td className="border border-gray-200 text-center py-2">
                                             {Number(TeamActual).toFixed(2)}
                                         </td>
-                                        <td className="border border-gray-200 py-2">
+                                        <td className="border border-gray-200 text-center py-2">
                                             {TeamPercentage} %
                                         </td>
                                     </tr>
@@ -1701,8 +1965,11 @@ const AdditionalInfo = (props) => {
                             <thead>
                                 <tr className="bg-blue-800 text-white">
                                     <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">Brand</th>
+                                    <th className="border border-gray-200 px-2 py-2">YTD Qty</th>
                                     <th className="border border-gray-200 px-2 py-2">YTD Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">MTD Qty</th>
                                     <th className="border border-gray-200 px-2 py-2">MTD Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">Total Qty</th>
                                     <th className="border border-gray-200 px-2 py-2">Today Sale</th>
                                     <th className="border border-gray-200 px-2 py-2">Contri %</th>
 
@@ -1715,15 +1982,21 @@ const AdditionalInfo = (props) => {
                                         <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
                                             {item.product_brand}
 
+
                                         </td>
+
+                                        <td className="border border-gray-200  px-2 py-2">{Math.floor(item.total_ytd_qty)}</td>
+
                                         <td className="border border-gray-200  px-2 py-2">{item.total_ytd_new_budget_price_value
                                         }</td>
+
+                                        <td className="border border-gray-200  px-2 py-2">{Math.floor(item.total_mtd_qty)}</td>
 
                                         <td className="border border-gray-200  px-2 py-2">{item.
                                             total_mtd_new_budget_price_value}</td>
 
 
-
+                                        <td className="border border-gray-200  px-2 py-2">{item.total_today_qty}</td>
                                         <td className="border border-gray-200  px-2 py-2">
                                             {item.total_today_new_budget_price_value}
 
@@ -1740,10 +2013,19 @@ const AdditionalInfo = (props) => {
                                 <tr className="font-bold bg-blue-800 text-white">
                                     <td className="border border-gray-200 px-2 py-2">Total</td>
                                     <td className="border border-gray-200 px-2 py-2">
+                                        -
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
                                         {brandYtd != null && !isNaN(Number(brandYtd)) ? Number(brandYtd).toFixed(2) : "-"}
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
+                                        -
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
                                         {brandMtd != null && !isNaN(Number(brandMtd)) ? Number(brandMtd).toFixed(2) : "-"}
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        -
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
                                         {brandToday != null && !isNaN(Number(brandToday)) ? Number(brandToday).toFixed(2) : "-"}
@@ -1960,11 +2242,11 @@ const AdditionalInfo = (props) => {
             <div className="flex justify-end w-full">
                 <FaArrowAltCircleUp
                     size={42}
-                    className="self-center size-120 text-black-400 text-blue-400  "
+                    className="fixed bottom-4 right-4 z-50 text-blue-500 cursor-pointer hover:scale-110 transition-transform duration-200"
                     onClick={() =>
                         window.scrollTo({
                             top: 0,
-                            behavior: "smooth", // Smooth scrolling animation
+                            behavior: "smooth",
                         })
                     }
                 />

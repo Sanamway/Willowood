@@ -285,8 +285,9 @@ Application End User
 
                             <Popover.Panel
                               as="div"
-                              className={`${open ? "block" : "hidden"
-                                } absolute right-2 mt-2 w-40 bg-white text-black borde rounded-md shadow-md`}
+                              className={`${
+                                open ? "block" : "hidden"
+                              } absolute right-2 mt-2 w-40 bg-white text-black borde rounded-md shadow-md`}
                             >
                               <ul className="text-black flex flex-col gap-2 px-4 font-Rale cursor-pointer">
                                 <li

@@ -474,8 +474,8 @@ const AllCharts = (props) => {
         <div className="flex w-full border-black border-b-2 items-start gap-8 mt-2">
           <button
             className={`${props.tabType === "Table"
-              ? " flex  gap-2 inline-block  rounded-t py-2 px-4 font-semibold  border-b-2 border-orange-500 text-black text-sm bg-black/5"
-              : " flex  gap-2  inline-block  text-black rounded-t py-2 px-4 font-semibold  text-sm bg-black/8"
+                ? " flex  gap-2 inline-block  rounded-t py-2 px-4 font-semibold  border-b-2 border-orange-500 text-black text-sm bg-black/5"
+                : " flex  gap-2  inline-block  text-black rounded-t py-2 px-4 font-semibold  text-sm bg-black/8"
               }`}
             onClick={() => props.setTabType("Table")}
           >
@@ -483,8 +483,8 @@ const AllCharts = (props) => {
           </button>{" "}
           <button
             className={`${props.tabType === "Chart"
-              ? " flex  gap-2 inline-block rounded-t py-2 px-4 font-semibold  border-b-2 border-orange-500 text-black text-sm bg-black/5"
-              : " flex  gap-2   inline-block  text-black rounded-t py-2 px-4 font-semibold  text-sm bg-black/8"
+                ? " flex  gap-2 inline-block rounded-t py-2 px-4 font-semibold  border-b-2 border-orange-500 text-black text-sm bg-black/5"
+                : " flex  gap-2   inline-block  text-black rounded-t py-2 px-4 font-semibold  text-sm bg-black/8"
               }`}
             onClick={() => props.setTabType("Chart")}
           >

@@ -7,17 +7,17 @@ import { url } from "@/constants/url";
 import axios from "axios";
 import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
-
+  
 const MapDepot = () => {
   const router = useRouter();
-
+  
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-
+  
   const [companyData, setCompanyData] = useState([]);
-
+  
   const getDataById = async () => {
     try {
       const respond = await axios.get(`${url}/api/get_dipot`, {
@@ -25,7 +25,7 @@ const MapDepot = () => {
         params: { d_id: router.query.id },
       });
       const apires = await respond.data.data;
-      
+     
       setDepotState({
         companyId: apires[0].c_id,
         bgId: apires[0].bg_id,
@@ -40,12 +40,12 @@ const MapDepot = () => {
       console.log(error);
     }
   };
-
+  
   useEffect(() => {
     if (router.query.type === "Add") return;
     getDataById();
   }, [router]);
-
+  
   // Getting Company Information for the dropdown values
   const getCompanyInfo = async () => {
     try {
@@ -53,17 +53,17 @@ const MapDepot = () => {
         headers: headers,
       });
       const apires = await respond.data.data;
-
+  
       setCompanyData(apires.filter((item, idx) => item.isDeleted === false));
     } catch (error) {
       console.log(error);
     }
   };
-
+  
   useEffect(() => {
     getCompanyInfo();
   }, []);
-
+  
   const [bgData, setBGData] = useState([]);
   const [depotState, setDepotState] = useState({
     bgId: "",
@@ -85,20 +85,20 @@ const MapDepot = () => {
         }
       );
       const apires = await respond.data.data;
-
+  
       setBGData(apires.filter((item, idx) => item.isDeleted === false));
     } catch (error) {
       console.log(error);
       setBGData([]);
     }
   };
-
+  
   useEffect(() => {
     getBGInfo(depotState.companyId);
   }, [depotState.companyId]);
-
+  
   const [buData, setBUData] = useState([]);
-
+  
   const getBUInfo = async (companyId, businessSegmentId) => {
     try {
       const respond = await axios.get(
@@ -108,7 +108,7 @@ const MapDepot = () => {
         }
       );
       const apires = await respond.data.data;
-
+  
       setBUData(
         apires.filter((item) => Number(item.c_id) === Number(companyId))
       );
@@ -116,16 +116,16 @@ const MapDepot = () => {
       console.log(error);
     }
   };
-
+  
   const [zoneData, setAllZoneData] = useState([]);
   const getAllZoneData = async (companyId, segmentId, businessUnitId) => {
     try {
       const respond = await axios.get(`${url}/api/get_zone`, {
         headers: headers,
       });
-
+  
       const apires = await respond.data.data;
-
+  
       setAllZoneData(
         apires
           .filter((item) => Number(item.c_id) === Number(companyId))
@@ -134,7 +134,7 @@ const MapDepot = () => {
       );
     } catch (error) {}
   };
-
+  
   useEffect(() => {
     if (depotState.bgId && depotState.companyId && depotState.buId) {
       getAllZoneData(depotState.companyId, depotState.bgId, depotState.buId);
@@ -142,7 +142,7 @@ const MapDepot = () => {
       return;
     }
   }, [depotState.bgId, depotState.companyId, depotState.buId]);
-
+  
   const [regionData, setAllRegionData] = useState([]);
   const getAllRegionData = async (
     companyId,
@@ -154,9 +154,9 @@ const MapDepot = () => {
       const respond = await axios.get(`${url}/api/get_region`, {
         headers: headers,
       });
-
+  
       const apires = await respond.data.data;
-
+  
       setAllRegionData(
         apires
           .filter((item) => Number(item.c_id) === Number(companyId))
@@ -166,7 +166,7 @@ const MapDepot = () => {
       );
     } catch (error) {}
   };
-
+  
   const [territoryData, setTerritoryData] = useState([]);
   const getAllTerritoryData = async (
     companyId,
@@ -179,9 +179,9 @@ const MapDepot = () => {
       const respond = await axios.get(`${url}/api/get_territory`, {
         headers: headers,
       });
-
+  
       const apires = await respond.data.data;
-
+  
       setTerritoryData(
         apires
           .filter((item) => Number(item.c_id) === Number(companyId))
@@ -194,7 +194,7 @@ const MapDepot = () => {
       console.log("error", error);
     }
   };
-
+  
   const [districtData, setDistrictData] = useState([]);
   const getAllDistrictData = async (
     companyId,
@@ -208,9 +208,9 @@ const MapDepot = () => {
       const respond = await axios.get(`${url}/api/get_district`, {
         headers: headers,
       });
-
+  
       const apires = await respond.data.data;
-
+  
       setDistrictData(
         apires
           .filter((item) => Number(item.c_id) === Number(companyId))
@@ -224,7 +224,7 @@ const MapDepot = () => {
       console.log("error", error);
     }
   };
-
+  
   useEffect(() => {
     if (
       depotState.bgId &&
@@ -247,7 +247,7 @@ const MapDepot = () => {
     depotState.buId,
     depotState.zoneId,
   ]);
-
+  
   useEffect(() => {
     if (
       depotState.bgId &&
@@ -273,7 +273,7 @@ const MapDepot = () => {
     depotState.zoneId,
     depotState.regionId,
   ]);
-
+  
   useEffect(() => {
     if (
       depotState.bgId &&
@@ -302,12 +302,12 @@ const MapDepot = () => {
     depotState.regionId,
     depotState.territoryId,
   ]);
-
+  
   useEffect(() => {
     if (!depotState.bgId && !depotState.companyId) return;
     getBUInfo(depotState.companyId, depotState.bgId);
   }, [depotState.bgId, depotState.companyId]);
-
+  
   //Defining the Validation Schema
   const validationSchema = Yup.object().shape({
     companyId: Yup.string().required("Company Id is required"),
@@ -319,7 +319,7 @@ const MapDepot = () => {
     depotId: Yup.string().required("Depot is required"),
     depotName: Yup.string().required("Depot is required"),
   });
-
+  
   const [formErrors, setFormErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const handleSaveVillage = async (e) => {
@@ -363,7 +363,7 @@ const MapDepot = () => {
       setFormErrors(newErrors);
     }
   };
-
+  
   const handleEditVillage = async (e) => {
     e.preventDefault();
     try {
@@ -413,7 +413,7 @@ const MapDepot = () => {
       handleEditVillage(e);
     }
   };
-
+  
   const [allDepotWarehouse, setAllDepotWarehouse] = useState([]);
   const getWarehouse = async () => {
     try {
@@ -421,15 +421,15 @@ const MapDepot = () => {
         headers: headers,
       });
       const apires = await respond.data.data;
-
+  
       setAllDepotWarehouse(apires);
     } catch (error) {}
   };
-
+  
   useEffect(() => {
     getWarehouse();
   }, []);
-
+  
   return (
     <Layout>
       <Toaster position="bottom-center" reverseOrder={false} />
@@ -451,7 +451,7 @@ const MapDepot = () => {
             </h2>
           </div>
         </div>
-
+  
         <div className="bg-gray-0 p-4 bg-gray-100  w-full flex items-start min-h-screen ">
           <form
             className=" bg-white rounded shadow p-4 w-full pb-24"
@@ -477,7 +477,7 @@ const MapDepot = () => {
                 disabled={true}
               />
             </div>
-
+  
             <div className="flex -mx-2 mb-4">
               <div className="w-1/2 px-2 relative">
                 <label
@@ -544,7 +544,7 @@ const MapDepot = () => {
                   </p>
                 )}
               </div>
-
+  
               <div className="w-1/2 px-2 relative">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
@@ -727,7 +727,7 @@ const MapDepot = () => {
                 )}
               </div>
             </div>
-
+  
             {router.query.type !== "View" && (
               <div className="button flex items-center gap-3 mt-6">
                 <div
@@ -753,5 +753,5 @@ const MapDepot = () => {
     </Layout>
   );
 };
-
+  
 export default MapDepot;

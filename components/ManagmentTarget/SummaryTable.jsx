@@ -18,7 +18,7 @@ function SummmaryTable({ gridType, summaryData, collectionSummaryData }) {
             <h2 className="flex  font-bold text-xs">
               Total Summary Rolling Plan (in Lac){" "}
             </h2>
-            <div className="flex flex-row px-2 items-center gap-4 font-bold text-[10px]">
+            <div className="flex flex-row px-2 items-center gap-4 font-bold text-xs">
               <span>Target Ach </span>{" "}
               <span className="flex h-3 w-3 bg-red-500"></span>
               {"< = 50"}

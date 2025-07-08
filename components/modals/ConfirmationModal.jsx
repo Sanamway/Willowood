@@ -239,22 +239,6 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       if (error.response) toast.error(error.response.data.message);
     }
   };
-  const handleMRSalesCat = async () => {
-    try {
-      const respond = await axios
-        .delete(`${url}/api/delete_mr_sale_cateogory/${id}`, {
-          headers: headers,
-        })
-        .then((res) => {
-          if (!res) return;
-          toast.success("Sales Cat. deleted successfully!");
-          onDeletedData();
-        });
-      const apires = await respond.data.data;
-    } catch (error) {
-      if (error.response) toast.error(error.response.data.message);
-    }
-  };
 
   const handleDelete = () => {
     if (type === "Company Information") {
@@ -314,14 +298,7 @@ function ConfirmationModal({ isOpen, onClose, id, type, onDeletedData }) {
       handleDeleteDepotWarehouse();
       onClose();
       onDeletedData();
-    }
-    
-    else if (type === "Sales Cat") {
-      handleMRSalesCat();
-      onClose();
-      onDeletedData();
-    }
-    else {
+    } else {
       return;
     }
   };

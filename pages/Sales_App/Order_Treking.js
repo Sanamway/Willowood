@@ -161,9 +161,13 @@ const OrderStatus = () => {
                     Delivery Status List
                 </span>
             </div>
+            <div className="bg-blue-50 p-4 border rounded-md mb-4 text-sm">
+
+            </div>
 
             {/* Order Details Section */}
             <div className="bg-blue-50 p-4 border rounded-md mb-4 text-sm">
+                <h3 className='font-bold'>Billing Address</h3>
                 <div className="flex justify-between font-semibold">
                     <span>SAP Code</span>
                     <span>Order No</span>
@@ -176,21 +180,49 @@ const OrderStatus = () => {
                 <div className="font-semibold">Party Name</div>
                 <div className="mb-2">{orderDetails.party_name}</div>
 
-                <div className="font-semibold">Delivery Address</div>
+                <div className="font-semibold">Address</div>
                 <div className="whitespace-pre-wrap mb-2">{orderDetails.address}</div>
 
+
+                <br />
+                <h3 className='font-bold'>Delivery Address</h3>
+                <div className="flex justify-between font-semibold">
+                    <span>Party Code</span>
+
+                </div>
+                <div className="flex justify-between mb-2">
+                    <span>{orderDetails.delCode}</span>
+
+                </div>
+
+                <div className="font-semibold">Party Name</div>
+                <div className="mb-2">{orderDetails.delParty}</div>
+
+                <div className="font-semibold">Delivery Address</div>
+                <div className="whitespace-pre-wrap mb-2">{orderDetails.delAddress}</div>
+
+
+
+                <div className="flex flex-row gap-2  justify-between font-bold text-xs mt-2">
+                    <span><strong>Depot Code:</strong>
+                        <br />{orderDetails.depotCode}</span>
+
+                    <span>Warehouse Des:
+                        <br /> {orderDetails.depotName}</span>
+                    {/* <span><HiOutlineExternalLink onClick={() => setShowDuplicatePopup(true)} size={28} className="self-center" /></span> */}
+                </div>
+                <br />
                 <div className="font-semibold flex justify-between">
                     <span>SAP Order Amount</span>
                     <span>{orderDetails.amount}</span>
                 </div>
+
             </div>
+
 
             {/* Order Status List */}
             <div className="p-4">
                 {
-
-
-
                     orderStatus.map(item => {
                         console.log("vcx", { item })
                         return [item].map((status, index) => (
@@ -207,7 +239,7 @@ const OrderStatus = () => {
 
                                 {status.status_details?.icon && iconComponents[status.status_details?.icon]
                                     ? React.createElement(iconComponents[status.status_details?.icon], {
-                                        className: `${status.status_details?.color_code} mt-4`,
+                                        className: `${status.status_details?.color_code?.replace('bg-', 'text-')} mt-4`,
                                         size: 24
                                     })
                                     : null}

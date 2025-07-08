@@ -12,7 +12,7 @@ const DonutPopup = (props) => {
     return (
         <div className="p-4 bg-white rounded-lg shadow-md max-w-md mx-auto">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold">  X-Factor, Core, and Other Products (Qty)</h2>
+                <h2 className="text-lg font-bold"> Product Category (Qty)</h2>
                 <IoCloseOutline
                     className="text-2xl cursor-pointer"
                     onClick={props.closeModal}

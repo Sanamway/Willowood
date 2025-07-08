@@ -159,22 +159,21 @@ const ProductWiseTable = (props) => {
                                             const maxProductsCrop = datas.reduce((max, current) => {
                                                 return current.products.length > max.products.length ? current : max;
                                             }, datas[0]);
-
+                                            // Find the matching product count for each product in the current crop
                                             return maxProductsCrop.products.map((product) => {
                                                 const matchingProduct = item.products.find(
                                                     (prod) => prod.product === product.product
                                                 );
-
-                                                const value =
-                                                    matchingProduct
-                                                        ? props.title === "Month wise - Crop & Product Wise Demo ( Nos )"
-                                                            ? matchingProduct.count ?? 0 // Default to 0 if undefined
-                                                            : matchingProduct.recDoseSum ?? 0
-                                                        : 0;
-
                                                 return (
-                                                    <td key={product.product} className="px-2 py-1 text-center text-[0.6rem] text-gray-900 border w-12">
-                                                        {value}
+                                                    <td
+                                                        key={product.product}
+                                                        className="px-2 py-1 text-center text-[0.6rem] text-gray-900 border w-12"
+                                                    >
+                                                        {matchingProduct
+                                                            ? props.title === "Month wise - Crop & Product Wise Demo ( Nos )"
+                                                                ? matchingProduct.count
+                                                                : matchingProduct.recDoseSum
+                                                            : 0}
                                                     </td>
                                                 );
                                             });
@@ -191,28 +190,23 @@ const ProductWiseTable = (props) => {
                                         const maxProductsCrop = datas.reduce((max, current) => {
                                             return current.products.length > max.products.length ? current : max;
                                         }, datas[0]);
-
                                         const sums = maxProductsCrop?.products.map((product) => {
                                             return datas.reduce((sum, item) => {
                                                 const matchingProduct = item.products.find(
                                                     (prod) => prod.product === product.product
                                                 );
-
-                                                // Ensure we are adding valid numbers, using default values to prevent NaN
-                                                const value =
-                                                    matchingProduct
-                                                        ? props.title === "Month wise - Crop & Product Wise Demo ( Nos )"
-                                                            ? matchingProduct.count ?? 0
-                                                            : matchingProduct.recDoseSum ?? 0
-                                                        : 0;
-
-                                                return sum + value; // Ensure summing numbers
+                                                if (matchingProduct) {
+                                                    // Choose the correct property to sum
+                                                    return sum + (props.title === "Month wise - Crop & Product Wise Demo ( Nos )"
+                                                        ? matchingProduct.count
+                                                        : matchingProduct.recDoseSum);
+                                                }
+                                                return sum;
                                             }, 0);
                                         });
-
                                         return sums?.map((sum, idx) => (
                                             <td key={idx} className="px-2 py-1 text-center text-[0.6rem] text-gray-900 border w-12">
-                                                {sum ?? 0}
+                                                {sum}
                                             </td>
                                         ));
                                     })()}

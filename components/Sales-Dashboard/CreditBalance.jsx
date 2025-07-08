@@ -12,6 +12,19 @@ import TotalOverDueAmtPop from "./TotalOverDueAmtPop";
 const CreditBalance = () => {
   const allCollectionTableData = useSelector((state) => state.collection.collectionTableData
   );
+  const buId = useSelector((state) => state.additionalData.additionalData.buId);
+  console.log("zxc", buId)
+  const [specialColumn, setSpecialColumn] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === undefined) return
+    if (buId === 2) {
+      setSpecialColumn(true)
+    } else {
+      setSpecialColumn(false)
+    }
+
+  }, [buId])
 
   const [data, setData] = useState([])
   useEffect(() => { setData(allCollectionTableData) }, [allCollectionTableData])
@@ -35,10 +48,11 @@ const CreditBalance = () => {
   };
 
   return (
+
     <div className=" bg-gray-200  flex flex-col">
       <div className="creditwrapper mt-2 flex flex-col gap-2 ">
         <div className="h-6 bg-white rounded-t-md flex items-center px-2 ">
-          <h2 className="text-[0.70rem] text-gray-600 font-bold">Customer Ageing Insight</h2>
+          <h2 className="text-[0.70rem] text-gray-600 font-bold">Customer Ageing Insight  (All figure in Lac)</h2>
         </div>
 
         <div className="flex-row flex-col gap-3 font-arial   rounded-md bg-white ">
@@ -98,7 +112,7 @@ const CreditBalance = () => {
                 </div>
                 <div className="flex flex-col items-start justify-center">
                   <h2 className="text-[0.69rem] text-gray-600 font-semibold">Total Overdue</h2>
-                  <h2 className="text-[0.78rem] text-gray-600 font-bold">&#8377;{parseFloat(parseFloat(data.reduce((acc, curr) => acc + curr["180-365"], 0).toFixed(2)) + parseFloat(data.reduce((acc, curr) => acc + curr["366-720"], 0).toFixed(2)) + parseFloat(data.reduce((acc, curr) => acc + curr["720 And Above"], 0).toFixed(2))).toFixed(2)
+                  <h2 className="text-[0.78rem] text-gray-600 font-bold">&#8377;{parseFloat((specialColumn ? parseFloat(data.reduce((acc, curr) => acc + curr["121-180"], 0).toFixed(2)) || 0 : 0) + parseFloat(data.reduce((acc, curr) => acc + curr["180-365"], 0).toFixed(2)) + parseFloat(data.reduce((acc, curr) => acc + curr["366-720"], 0).toFixed(2)) + parseFloat(data.reduce((acc, curr) => acc + curr["720 And Above"], 0).toFixed(2))).toFixed(2)
 
                   }</h2>
                 </div>
@@ -131,7 +145,7 @@ const CreditBalance = () => {
           </div>
         </div>
         {open && <TotalOutStandPop closeModal={closeModal} dueData={data || []}></TotalOutStandPop>}
-        {openTwo && <TotalOverDueAmtPop closeModal={closeModal} dueData={data || []}></TotalOverDueAmtPop>}
+        {openTwo && <TotalOverDueAmtPop closeModal={closeModal} dueData={data || []} ></TotalOverDueAmtPop>}
       </div>
     </div>
   );

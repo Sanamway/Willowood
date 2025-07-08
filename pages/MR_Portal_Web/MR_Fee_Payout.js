@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useEffect, useRef } from "react";
 import { AiTwotoneHome } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
@@ -18,6 +17,7 @@ import * as XLSX from "xlsx";
 import { IoTerminal } from "react-icons/io5";
 import { Transition, Dialog } from "@headlessui/react";
 import { Fragment } from "react";
+import { TbFileUpload } from "react-icons/tb";
 const FeePayout = () => {
 
   const router = useRouter();
@@ -30,9 +30,49 @@ const FeePayout = () => {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-
+  const [userRole, setUserRole] = useState("")
+  useEffect(() => {
+    // Only runs in the browser
+    const userInfo = window.localStorage.getItem("userinfo");
+    if (userInfo) {
+      try {
+        const parsed = JSON.parse(userInfo);
+        setUserRole(parsed.role_id);
+      } catch (err) {
+        console.error("Failed to parse userinfo from localStorage:", err);
+      }
+    }
+  }, []);
 
   const [downloadLoading, setDownloadLoading] = useState(false)
+  const [gridDataType, setGridDataType] = useState("")
+  useEffect(() => {
+    if (!userRole) return
+    else {
+
+      if (userRole === 8) {
+        setGridDataType("Yet to Submit")
+        setFilterState({ ...filterState, salaryFilter: "2" })
+      }
+      else if (userRole === 17) {
+        setGridDataType("Darft Submit")
+        setFilterState({ ...filterState, salaryFilter: "2" })
+      }
+      else if (userRole === 18) {
+        setGridDataType("Final Submitted")
+        setFilterState({ ...filterState, salaryFilter: "2" })
+      }
+      else if (userRole === 1) {
+        setGridDataType("Yet to Submit")
+
+      }
+      else {
+        setGridDataType("Yet to Submit")
+      }
+    }
+  }, [
+    userRole
+  ])
   const getFeeData = async (
     yr,
     month,
@@ -42,12 +82,14 @@ const FeePayout = () => {
     r,
     t,
     empCode,
-    status
+    status,
+    salary,
+    gridType
   ) => {
 
     try {
+      setData([])
       setDownloadLoading(true)
-
       const allMonths = [
         { month: "January", number: 1 },
         { month: "February", number: 2 },
@@ -62,9 +104,15 @@ const FeePayout = () => {
         { month: "November", number: 11 },
         { month: "December", number: 12 }
       ];
-
+      let endpoints
+      if (gridType === "Yet to Submit") {
+        endpoints = "get_employee_payout"
+      }
+      else {
+        endpoints = "get_employee_salary"
+      }
       console.log("nop", month, allMonths.filter((item) => item.month === month))
-      const respond = await axios.get(`${url}/api/get_employee_payout`, {
+      const respond = await axios.get(`${url}/api/${endpoints}`, {
         headers: headers,
         params: {
           t_id: t === "All" ? null : t,
@@ -76,14 +124,18 @@ const FeePayout = () => {
           emp_code: empCode,
           year: yr,
           month: month ? allMonths.filter((item) => item.month === month)[0].number : "",
-          status: status,
-          zrt: true
+          status: gridType === "Yet to Submit" ? status : gridType,
+          zrt: true,
+          salary: salary || 1,
+
 
         },
       });
       const apires = await respond.data.data.employeeData;
 
       setData(apires);
+      setSelectedRowData([])
+
       setDownloadLoading(false)
     } catch (error) {
       setDownloadLoading(false)
@@ -117,7 +169,8 @@ const FeePayout = () => {
     buDes: null,
     bgDes: null,
     newFil: "All",
-    empCode: ""
+    empCode: "",
+    salaryFilter: "1"
 
   });
 
@@ -744,7 +797,8 @@ const FeePayout = () => {
     }
   }, []);
   useEffect(() => {
-
+    if (!gridDataType)
+      setSelectedRowData([])
     getFeeData(
       filterState.yr,
       filterState.month,
@@ -754,7 +808,9 @@ const FeePayout = () => {
       filterState.rId,
       filterState.tId,
       filterState.empCode,
-      filterState.newFil
+      filterState.newFil,
+      filterState.salaryFilter,
+      gridDataType
     );
   }, [
     filterState.yr,
@@ -765,7 +821,9 @@ const FeePayout = () => {
     filterState.rId,
     filterState.tId,
     filterState.empCode,
-    filterState.newFil
+    filterState.newFil,
+    filterState.salaryFilter,
+    gridDataType
   ]);
 
   const { name } = router.query;
@@ -782,7 +840,9 @@ const FeePayout = () => {
     r,
     t,
     empCode,
-    status
+    status,
+    salary,
+    gridType
   ) => {
     const allMonths = [
       { month: "January", number: 1 },
@@ -798,9 +858,16 @@ const FeePayout = () => {
       { month: "November", number: 11 },
       { month: "December", number: 12 }
     ];
+    let endpoints
+    if (gridType === "Yet to Submit") {
+      endpoints = "get_employee_payout"
+    }
+    else {
+      endpoints = "get_employee_salary"
+    }
     try {
       setExcelLoading(true)
-      const respond = await axios.get(`${url}/api/get_employee_payout`, {
+      const respond = await axios.get(`${url}/api/${endpoints}`, {
         headers: headers,
         params: {
           t_id: t === "All" ? null : t,
@@ -812,8 +879,9 @@ const FeePayout = () => {
           emp_code: empCode,
           year: yr,
           month: month ? allMonths.filter((item) => item.month === month)[0].number : "",
-          status: status,
-          zrt: true
+          status: gridType === "Yet to Submit" ? status : gridType,
+          zrt: true,
+          salary: salary
         },
       });
       const apires = await respond.data.data.employeeData;
@@ -821,6 +889,7 @@ const FeePayout = () => {
         return {
 
           ["Sr. No"]: idx + 1,
+          ["Action"]: gridDataType === "Yet to Submit" ? item.salary_status : gridDataType,
           ["Employee Code"]: item.empcode,
           ["Employee Name"]: item.emp_name,
           ["Designation"]: item.design,
@@ -835,10 +904,10 @@ const FeePayout = () => {
           ["Present Day"]: item.total_mr_present,
           ["Half Day"]: item.hd_count,
           ["Holiday"]: item.h_count,
-
           ["Weekly Off"]: item.emp_wo_count,
           ["Mannual Attendance"]: item.manual_attendance,
           ["Paid Working Days"]: item.total_working_day,
+          ["Recon Days"]: item.recon_day,
           ["Absent"]: item.a_count,
           ["Total Half Day"]: item.total_hd_count,
           ["Diff W.O"]: item.w_o_diff,
@@ -943,7 +1012,6 @@ const FeePayout = () => {
       return null;
     }
 
-    console.log("zpo", currentFilter)
     const role = localStorageItems.roleId
     console.log("pop", getLastAssignedKey(filterState) === "tId")
     if (role === 9) {
@@ -1257,6 +1325,302 @@ const FeePayout = () => {
       return "-";
     }
   }
+
+  const handleUploadExcel = async (data) => {
+    try {
+      const paramsData = data?.map((item, idx) => {
+        return {
+          emp_code: item["Employee Code"],
+          e_id: item["e_id"],
+          emp_name: item["Employee Name"],
+          reconDays: item["Recon Days"],
+          m_year: item["m_year"]
+        }
+      }
+      );
+      const respond = await axios
+        .post(`${url}/api/Employee_Salary_Recondays`, JSON.stringify(paramsData), {
+          headers: headers,
+        })
+        .then((res) => {
+          toast.success(res.data.message);
+        });
+    } catch (errors) {
+      console.log("plo", errors)
+      const errorMessage = errors?.response?.data?.message;
+      toast.error(errorMessage);
+      const newErrors = {};
+      errors?.inner?.forEach((error) => {
+        newErrors[error?.path] = error?.message;
+      });
+    }
+  };
+
+
+  const getNewExcelsheet = async (
+    yr,
+    month,
+    bg,
+    bu,
+    z,
+    r,
+    t,
+    empCode,
+    status,
+    salary
+  ) => {
+    console.log("iop", yr, month)
+    const mYear = moment(`${month} ${yr}`, "MMMM YYYY").format("YYYY-MM");
+
+    const allMonths = [
+      { month: "January", number: 1 },
+      { month: "February", number: 2 },
+      { month: "March", number: 3 },
+      { month: "April", number: 4 },
+      { month: "May", number: 5 },
+      { month: "June", number: 6 },
+      { month: "July", number: 7 },
+      { month: "August", number: 8 },
+      { month: "September", number: 9 },
+      { month: "October", number: 10 },
+      { month: "November", number: 11 },
+      { month: "December", number: 12 }
+    ];
+    try {
+
+      const respond = await axios.get(`${url}/api/get_employee_payout`, {
+        headers: headers,
+        params: {
+          t_id: t === "All" ? null : t,
+          bg_id: bg === "All" ? null : bg,
+          bu_id: bu === "All" ? null : bu,
+          z_id: z === "All" ? null : z,
+          r_id: r === "All" ? null : r,
+          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+          emp_code: empCode,
+          year: yr,
+          month: month ? allMonths.filter((item) => item.month === month)[0].number : "",
+          status: status,
+          zrt: true,
+          salary: salary || 1
+        },
+      });
+      const apires = await respond.data.data.employeeData;
+      const ws = XLSX.utils.json_to_sheet(apires.map((item, idx) => {
+        return {
+
+          ["Sr. No"]: idx + 1,
+          ["Employee Code"]: item.empcode,
+          ["Employee Name"]: item.emp_name,
+          ["Designation"]: item.design,
+          ["Reporting HQ"]: item.reporting_hq,
+          ["Territory"]: item.territory_name,
+          ["Paid Working Days"]: item.total_working_day,
+          ["Recon Days"]: item.recon_day,
+          ["e_id"]: item.e_id,
+          ["m_year"]: mYear
+
+
+        }
+      }));
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+      XLSX.writeFile(wb, `download_template_recondays.xlsx`);
+      setExcelLoading(false)
+    } catch (error) {
+      setExcelLoading(false)
+      console.log("notch", error)
+    }
+  };
+
+
+
+
+  const [excelUploadLoading, setExcelUploadLoading] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setExcelUploadLoading(true);
+    const reader = new FileReader();
+
+    reader.onload = (evt) => {
+      const binaryStr = evt.target.result;
+      const workbook = XLSX.read(binaryStr, { type: "binary" });
+
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+      handleUploadExcel(jsonData)
+
+      setExcelUploadLoading(false);
+      console.log("Parsed JSON data:", jsonData);
+    };
+
+    reader.readAsBinaryString(file);
+  };
+
+
+  const [selectedRowData, setSelectedRowData] = useState([]); // State to store selected row objects
+
+  // Handler for individual checkbox change
+  const handleCheckboxChange = (item, isChecked) => {
+    setSelectedRowData((prevSelectedRowData) => {
+      if (isChecked) {
+        // Add the item if it's checked and not already in the state
+        return [...prevSelectedRowData, item];
+      } else {
+        // Remove the item if it's unchecked
+        return prevSelectedRowData.filter((row) => row.empcode !== item.empcode);
+      }
+    });
+  };
+
+  const [loadingState, setLoadingState] = useState(false)
+  const handleDraftSubmit = async (data, type) => {
+    if (!data.length) {
+      toast.error("Please Select Checkbox to Submit")
+
+    }
+    else {
+      setLoadingState(true)
+      console.log("zop", filterState.yr, filterState.month)
+      try {
+        let paramsData
+        let endPoints
+        if (type === "Yet to Submit") {
+          endPoints = "add_employee_salary"
+          paramsData = data?.map((item) => {
+            return {
+              c_id: 1,
+              emp_code: item.empcode,
+              year: filterState.yr,
+              m_year: moment(`${filterState.yr}-${filterState.month}`, "YYYY-MMMM")
+                .startOf('month')
+                .format("YYYY-MM-DD[T00:00:00.000Z]"),
+              applicationFeeAmount: Number(item.in_appl_amt),
+              festivalAmount: Number(item.in_fest_amount_e),
+              incentiveAmount: Number(item.incentive_or_disincemtive),
+              otherAmount: Number(item.in_other_amt_e),
+              grossSalary: Number(item.grass_salary),
+              calendarDays: Number(item.calender_w_d),
+              presentDays: Number(item.pd),
+              halfDays: Number(item.hd_count),
+              holidays: Number(item.h_count),
+              weeklyOff: Number(item.emp_wo_count),
+              manualAttendance: Number(item.manual_attendance),
+              paidWorkingDays: Number(item.total_working_day),
+              absentDays: Number(item.a_count),
+              totalHalfDays: Number(item.total_hd_count),
+              diffWeeklyOff: Number(item.w_o_diff),
+              totalCalendarDays: Number(item.total_calender_day),
+              earningSalary: Number(item.earning_salary),
+              bonusAmount: Number(item.bonus_amt),
+              totalDeduction: Number(item.total_deduc),
+              netSalary: Number(item.net_salary),
+              totalDemo: Number(item.total_mr_demo_present),
+              totalFieldDay: Number(item.mr_field_present),
+              totalGroupMeet: Number(item.mr_meet_1),
+              totalOFM: Number(item.mr_meet_2),
+              activityScore: Number(item.total_activity_score),
+              totalAccumulativeSalary: Number(item.total_accumulative_vs_salary),
+              tdsPercent: Number(item.tds_percent),
+              tdsAmount: Number(item.tds_amount),
+              incentiveDisincentive: Number(item.incentive_or_disincemtive),
+              sap_v_code: item.sap_v_code,
+              status: "Draft Submit",
+              recon_day: item.recon_day,
+              resignationDate: item.resignation_request_date ? new Date(item.resignation_request_date) : null,
+              t_id: item.t_id,
+              r_id: item.r_id,
+              z_id: item.z_id,
+              bu_id: item.bu_id,
+              bg_id: item.bg_id,
+              app_status: item.app_status
+
+            }
+          });
+        }
+        else if (type === "Draft Submit") {
+          endPoints = "update_employee_salary_status"
+          paramsData = data?.map((item) => {
+            return {
+
+              emp_code: item.empcode,
+              status: "Final Submitted",
+              m_year: moment(`${filterState.yr}-${filterState.month}`, "YYYY-MMMM")
+                .startOf('month')
+                .format("YYYY-MM-DD[T00:00:00.000Z]"),
+
+
+            }
+          });
+        }
+        else if (type === "SAP") {
+          endPoints = "update_employee_salary_status"
+          paramsData = data?.map((item) => {
+            return {
+
+              emp_code: item.empcode,
+              status: "Posting in SAP",
+              m_year: moment(`${filterState.yr}-${filterState.month}`, "YYYY-MMMM")
+                .startOf('month')
+                .format("YYYY-MM-DD[T00:00:00.000Z]"),
+
+
+            }
+          });
+        }
+
+
+
+        const respond = await axios
+          .post(`${url}/api/${endPoints}`, JSON.stringify(paramsData), {
+            headers: headers,
+          })
+          .then((res) => {
+            toast.success(res.data.message);
+            setLoadingState(false)
+            setFilterState({ ...filterState, month: "" })
+            getFeeData(
+              filterState.yr,
+              "",
+              filterState.bgId,
+              filterState.buId,
+              filterState.zId,
+              filterState.rId,
+              filterState.tId,
+              filterState.empCode,
+              filterState.newFil,
+              filterState.salaryFilter,
+              gridDataType
+            );
+          });
+      } catch (errors) {
+        console.log("plo", errors)
+        const errorMessage = errors?.response?.data?.message;
+        toast.error(errorMessage);
+        const newErrors = {};
+        errors?.inner?.forEach((error) => {
+          newErrors[error?.path] = error?.message;
+        });
+      }
+    }
+
+  };
+
+  const handleChangeAllSelectBox = (type, selectedData, data) => {
+    if (type === "Yet to Submit") {
+      selectedData.length ? setSelectedRowData([]) : setSelectedRowData(data.filter((item) => item.salary_status === "Yet to Submit"))
+    }
+    else {
+      selectedData.length ? setSelectedRowData([]) : setSelectedRowData(data)
+    }
+
+
+  }
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -1266,6 +1630,45 @@ const FeePayout = () => {
             {name ? name : "Fee Payout"}
           </h2>
           <div className="flex items-center gap-2 cursor-pointer pr-4">
+            <div className="flex flex-row gap-2">
+              {excelUploadLoading ? (
+                <LoaderExcel />
+              ) : (
+                <button
+                  onClick={() => fileInputRef.current.click()}
+                  className="text-blue-600 font-bold hover:underline hover:text-blue-800 text-sm"
+                >
+                  <input
+                    type="file"
+                    accept=".xlsx, .xls"
+                    className="hidden"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                  />
+                  Upload Reco
+                </button>
+              )}
+            </div>
+            <div className="flex flex-row gap-2 ">
+              <button
+                className="text-blue-600 font-bold hover:underline hover:text-blue-800 text-sm "
+                onClick={() => getNewExcelsheet(
+                  filterState.yr,
+                  filterState.month,
+                  filterState.bgId,
+                  filterState.buId,
+                  filterState.zId,
+                  filterState.rId,
+                  filterState.tId,
+                  filterState.empCode,
+                  filterState.newFil,
+                  filterState.salaryFilter
+                )
+                }
+              >
+                Download Reco
+              </button>
+            </div>
             <div className="flex flex-row gap-2 ">
               {" "}
 
@@ -1282,7 +1685,9 @@ const FeePayout = () => {
                   filterState.rId,
                   filterState.tId,
                   filterState.empCode,
-                  filterState.newFil
+                  filterState.newFil,
+                  filterState.salaryFilter,
+                  gridDataType
                 )
                 }
               ></TbFileDownload>}
@@ -1301,10 +1706,11 @@ const FeePayout = () => {
           </div>
         </div>
 
-        <div className="flex flex-row gap-4  px-4 pr-8 pb-2">
+        <div className="flex flex-row gap-4  px-4 pr-8 pb-2 text-xs">
           <select
             className=" w-full max px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
             id="stateSelect"
+
             value={filterState.yr}
             onChange={(e) =>
               setFilterState({
@@ -1538,11 +1944,85 @@ const FeePayout = () => {
             <option value={"Approve"}>Approve</option>
 
             <option value={"All"}>All</option>
-
           </select>
 
+          <select
+            id="attendanceType"
+            className="border rounded px-2 py-1 w-full h-8"
+            value={filterState.salaryFilter}
+            onChange={(e) =>
+              setFilterState({ ...filterState, salaryFilter: e.target.value })
+            }
+          >
 
+
+
+            {!(userRole === 17 || userRole === 8 || userRole === 18) && (
+              <option value={"1"}>Portal Days Calculation</option>
+            )}
+
+
+            <option value={"2"}>Recon Days Calculation</option>
+
+
+
+
+          </select>
+          <select
+            id="attendanceType"
+            className="border rounded px-2 py-1 w-full h-8"
+            value={gridDataType}
+            onChange={(e) => setGridDataType(e.target.value)}
+            disabled={gridDataType === true}
+          >
+            <option value={""} disabled>
+              Select
+            </option>
+
+            {/* Show only if role is 8 or 1 */}
+            {(userRole === 8 || userRole === 1) && (
+              <option value="Yet to Submit">Yet to Submit</option>
+            )}
+
+            {/* Show only if role is 17 or 1 */}
+            {(userRole === 17 || userRole === 1) && (
+              <option value="Draft Submit">Draft Submit</option>
+            )}
+
+            {/* Show only if role is 18 or 1 */}
+            {(userRole === 18 || userRole === 1) && (
+              <option value="Final Submitted">Final Submitted</option>
+            )}
+
+            {(userRole === 1) && (
+              <option value="Posting in SAP">Posting in SAP</option>
+            )}
+
+          </select>
         </div>
+        <div className="flex justify-between px-4 pr-8 font-semibold mt-2 w-full "><span>
+          {gridDataType === "Yet to Submit" ? <input
+            type="checkbox"
+            checked={data?.filter((item) => item.salary_status === "Yet to Submit") === selectedRowData}
+            onChange={() =>
+              handleChangeAllSelectBox(gridDataType, selectedRowData, data)
+            }
+          /> : <input
+            type="checkbox"
+            checked={data === selectedRowData}
+            onChange={() =>
+              handleChangeAllSelectBox(gridDataType, selectedRowData, data)
+            }
+          />}
+          Select All
+
+          <input
+            type="checkbox"
+            className="ml-4"
+            checked={selectedRowData.length === 0}
+            onChange={() => setSelectedRowData([])}
+          /> Deselect All
+        </span><span>Total Rows: {data?.length}</span></div>
 
         <div className="overflow-x-auto overflow-y-hidden bg-white h-max flex flex-col gap-2 select-none items-start justify-between w-[98%] mx-4 no-scrollbar">
           {downloadLoading ? (
@@ -1551,8 +2031,10 @@ const FeePayout = () => {
             <table className="min-w-full divide-y border divide-gray-200">
               <thead className="border-b">
                 <tr className="bg-gray-50 font-arial">
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Action</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Sr. No</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Code</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">SAP V Code</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Employee Name</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Designation</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Reporting HQ</th>
@@ -1571,6 +2053,7 @@ const FeePayout = () => {
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Manual Attendance</th>
 
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Paid Working Days</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Recon Days</th>
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Absent</th>
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Total Half Day</th>
                   <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 tracking-wider">Diff W.O</th>
@@ -1632,8 +2115,25 @@ const FeePayout = () => {
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
                 {data?.map((item, idx) => (
                   <tr className="dark:border-2" key={idx}>
+                    <td className="px-4 py-2 text-left flex flex-row whitespace-nowrap">
+                      {gridDataType === "Yet to Submit" ? <input
+                        type="checkbox"
+                        disabled={item.salary_status !== "Yet to Submit"}
+                        checked={selectedRowData.some(row => row.empcode === item.empcode)} // Check if this item is in selectedRowData
+                        onChange={(e) => handleCheckboxChange(item, e.target.checked)}
+                        aria-label={`Select row ${item.emp_name}`}
+                      /> : <input
+                        type="checkbox"
+                        checked={selectedRowData.some(row => row.empcode === item.empcode)} // Check if this item is in selectedRowData
+                        onChange={(e) => handleCheckboxChange(item, e.target.checked)}
+                        aria-label={`Select row ${item.emp_name}`}
+                      />}
+
+                      <span className="ml-2">{gridDataType === "Yet to Submit" ? item.salary_status : gridDataType}</span>
+                    </td>
                     <td className="px-4 py-2 text-left">{idx + 1}</td>
                     <td className="px-4 py-2">{item.empcode}</td>
+                    <td className="px-4 py-2  whitespace-nowrap">{item.sap_v_code}</td>
                     <td className="px-4 py-2 whitespace-nowrap">{item.emp_name}</td>
                     <td className="px-4 py-2 whitespace-nowrap">{item.design}</td>
                     <td className="px-4 py-2">{item.reporting_hq}</td>
@@ -1676,7 +2176,7 @@ const FeePayout = () => {
                         {item.total_working_day}
                       </button>
                     </td>
-
+                    <td className="px-4 py-2 text-right">{item.recon_day}</td>
                     <td className="px-4 py-2 text-right">{item.a_count}</td>
 
 
@@ -1698,7 +2198,6 @@ const FeePayout = () => {
 
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.total_mr_demo_present ? item.total_mr_demo_present : "-"}
-
                     </td>
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.mr_field_present ? item.mr_field_present : "-"}
@@ -1716,20 +2215,22 @@ const FeePayout = () => {
 
                     <td className={`px-4 py-2 dark:border-2 bg-green-200 whitespace-nowrap ${item.total_activity_score < 5 ? "text-red-400" : ""}`}>
                       {parseFloat(item.total_activity_score) ? parseFloat(item.total_activity_score)?.toFixed(2) : "-"}
-
                     </td>
+
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {parseFloat(item.
                         total_accumulative_vs_salary) ? parseFloat(item.
                           total_accumulative_vs_salary)?.toFixed(2) : "-"}
-
                     </td>
+
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap" >
                       {item.tds_percent ? item.tds_percent : "-"}
                     </td>
+
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {parseFloat(item.tds_amount) ? parseFloat(item.tds_amount)?.toFixed(2) : "-"}
                     </td>
+
                     <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                       {item.incentive_or_disincemtive ? item.incentive_or_disincemtive : "-"}
                     </td>
@@ -1756,13 +2257,13 @@ const FeePayout = () => {
                 ))}
 
                 <tr className="bg-gray-200 font-semibold">
-                  <td className="px-4 py-2 text-right" colSpan="6">Total</td>
+                  <td className="px-4 py-2 text-right" colSpan="8">Total</td>
                   <td className="px-4 py-2 text-right">{total?.applicationFeeAmount ? total?.applicationFeeAmount?.toFixed(2) : "-"}</td>
                   <td className="px-4 py-2 text-right">{total?.festivalAmount ? total?.festivalAmount?.toFixed(2) : "-"}</td>
                   <td className="px-4 py-2 text-right">{total?.incentiveAmount ? total?.incentiveAmount?.toFixed(2) : "-"}</td>
                   <td className="px-4 py-2 text-right">{total?.otherAmount ? total?.otherAmount?.toFixed(2) : "-"}</td>
                   <td className="px-4 py-2 text-right">{total?.grossSalary ? total?.grossSalary?.toFixed(2) : "-"}</td>
-                  <td className="px-4 py-2 text-right" colSpan="11"></td>
+                  <td className="px-4 py-2 text-right" colSpan="12"></td>
                   <td className="px-4 py-2 text-right">{total?.earningSalary ? total?.earningSalary?.toFixed(2) : "-"}</td>
                   <td className="px-4 py-2 text-right">{total?.bonusAmount ? total?.bonusAmount?.toFixed(2) : "-"}</td>
                   <td className="px-4 py-2 text-right"></td>
@@ -1775,9 +2276,39 @@ const FeePayout = () => {
             </table>
           )}
 
+          {data?.length ? <div className="flex flex-row gap-2 w-full">
+            {
+              gridDataType === "Yet to Submit" && <button className={`flex items-center justify-center px-4 py-2 rounded-md text-white font-semibold 
+              bg-blue-400 hover:bg-blue-500 
+              disabled:bg-blue-300 disabled:cursor-not-allowed 
+              transition-all duration-200 mb-4`}
+                disabled={loadingState}
+                onClick={() => {
+                  handleDraftSubmit(selectedRowData, "Yet to Submit")
+                }}>Draft Save</button>
+            }
+            {
+              gridDataType === "Draft Submit" && <button className={`flex items-center justify-center px-4 py-2 rounded-md text-white font-semibold 
+              bg-blue-400 hover:bg-blue-500 
+              disabled:bg-blue-300 disabled:cursor-not-allowed 
+              transition-all duration-200 mb-4`}
+                disabled={loadingState}
+                onClick={() => {
+                  handleDraftSubmit(selectedRowData, "Draft Submit")
+                }}>Final Submit</button>
+            }
+            {gridDataType === "Final Submitted" && <button className={`flex items-center justify-center px-4 py-2 rounded-md text-white font-semibold 
+              bg-blue-400 hover:bg-blue-500 
+              disabled:bg-blue-300 disabled:cursor-not-allowed 
+              transition-all duration-200 mb-4`}
+              disabled={loadingState}
+              onClick={() => {
+                handleDraftSubmit(selectedRowData, "SAP")
+              }}>Posting in SAP</button>
+            }
+          </div> : ""}
 
 
-          <div className="text-right font-semibold mt-2">Total Rows: {data?.length}</div>
         </div>
         <Transition appear show={openModal} as={Fragment}>
           <Dialog as="div" className="relative z-10" onClose={() => setOpenModal(false)}>

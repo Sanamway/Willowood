@@ -17,8 +17,8 @@ import { useRouter } from "next/router";
 const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [inputValue, setInputValue] = useState("");
-  const [height, setHeight] = useState(false);
-  const [close, setClose] = useState(false);
+  const [height, setHeight] = useState(false)
+  const [close, setClose] = useState(false)
   const router = useRouter();
 
   useEffect(() => {
@@ -238,33 +238,22 @@ const HomePage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 ">
           {/* new users  */}
-          <div
-            className={`bg-teal-800 text-white p-4 rounded-md shadow-md ${
-              !height ? "h-auto" : "h-12"
-            } ${!close ? "block" : "hidden"}`}
-          >
+          <div className={`bg-teal-800 text-white p-4 rounded-md shadow-md ${!height ? "h-auto":"h-12"} ${!close ? "block":"hidden"}`}>
             <div className="flex items-center justify-between w-full">
               <h2 className="text-xs lg:text-sm">Latest Members</h2>
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-xs lg:text-sm">8 new Members</h2>
-                <button onClick={() => setHeight((prev) => !prev)}>
+                <button onClick={()=> setHeight((prev)=> !prev)}>
                   <FaRegWindowMinimize />
                 </button>
-                <button onClick={() => setClose((prev) => !prev)}>
+                <button onClick={()=> setClose((prev)=> !prev)}>
                   <AiOutlineClose />
                 </button>
               </div>
             </div>
-            <div
-              className={`grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2 pb-4 ${
-                !height ? "block" : "hidden"
-              }`}
-            >
+            <div className={`grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-2 mt-2 pb-4 ${!height ? "block":"hidden"}`}>
               {cardData?.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col items-center justify-center"
-                >
+                <div key={index} className="flex flex-col items-center justify-center">
                   <img
                     className="h-[3.5rem] w-[3.5rem] rounded-full"
                     src={item.img}

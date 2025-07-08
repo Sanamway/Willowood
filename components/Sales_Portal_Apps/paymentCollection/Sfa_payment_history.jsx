@@ -106,7 +106,7 @@ const History = (props) => {
 
                 </div>
                 <div className="flex w-full justify-center text-white items-center  mb-2">
-                    <button className="flex  justify-center w-16 bg-blue-400 h-8 items-center mt-2" onClick={() => getPaymentCollectionData()}>View</button>
+                    <button className="flex  justify-center w-16 bg-blue-600 h-8 items-center mt-2" onClick={() => getPaymentCollectionData()}>View</button>
 
                 </div>
 
@@ -197,9 +197,10 @@ const History = (props) => {
                                         Payment Image
                                     </Dialog.Title>
                                     <div className="mt-2">
+
                                         {selectedImage ? (
                                             <img
-                                                src={`data:image/png;base64,${selectedImage}`}
+                                                src={selectedImage}
                                                 alt="Payment Proof"
                                                 className="rounded bg-gray-200 w-full h-auto"
                                             />

@@ -7,7 +7,7 @@ export default function DragAndDrop(props) {
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef(null);
 
-         const router = useRouter();
+  const router = useRouter();
   const [jsonData, setJsonData] = useState("");
   function handleChange(e) {
     e.preventDefault();
@@ -89,7 +89,7 @@ export default function DragAndDrop(props) {
   return (
     <div className="main">
       <form
-        className={`flex justify-center flex-col items-center md:w-[96%] mx-auto h-1/2 border-2 border-dashed mt-4 rounded-lg 
+        className={`flex justify-center flex-col items-center md:w-[96%] mx-auto h-1/2 border-2 border-dashed mt-4 rounded-lg
         ${dragActive ? "bg-sky-50 border-sky-400" : "border-gray-300"}`}
         onDragEnter={handleDragEnter}
         onSubmit={(e) => e.preventDefault()}

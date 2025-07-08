@@ -27,7 +27,21 @@ const FilterComponent = (props) => {
   console.log("")
   const dispatch = useDispatch(); // Access the dispatch function
   const [openModal, setOpenModal] = useState(false)
-  const [filterState, setFilterState] = useState(null); // Start with null
+  const [filterState, setFilterState] = useState({
+    from: new Date(moment().startOf("month").format("YYYY-MM-DD")),
+    to: new Date(moment().endOf("month").format("YYYY-MM-DD")),
+    party: "",
+    materialCode: "",
+    materialSearch: "",
+    depot: "",
+    sapOrder: "",
+    orderStatus: "Order Book",
+    bgId: "",
+    buId: "",
+    rId: "",
+    zId: "",
+    tId: "",
+  }); // Start with null
   const [localStorageItems, setLocalStorageItems] = useState({ roleId: "" })
 
   useEffect(() => {
@@ -43,7 +57,7 @@ const FilterComponent = (props) => {
         materialSearch: "",
         depot: "",
         sapOrder: "",
-        orderStatus: "",
+        orderStatus: "Order Book",
         bgId: JSON.parse(localStorage.getItem("userinfo"))?.bg_id || "",
         buId: JSON.parse(localStorage.getItem("userinfo"))?.bu_id || "",
         rId: JSON.parse(localStorage.getItem("userinfo"))?.r_id || "",
@@ -191,7 +205,7 @@ const FilterComponent = (props) => {
 
   const [depotData, setDepotData] = useState([]);
 
-  const getAllDepotData = async (bgId, buId, zId, rId) => {
+  const getAllDepotData = async (bgId, buId, zId, rId, tId) => {
     try {
       const respond = await axios.get(`${url}/api/get_dipot`, {
         headers: headers,
@@ -200,9 +214,9 @@ const FilterComponent = (props) => {
           bu_id: buId,
           z_id: zId,
           r_id: rId,
+          t_id: tId
         },
       });
-
       const apires = await respond.data.data;
       setDepotData(apires);
     } catch (error) { }
@@ -213,16 +227,13 @@ const FilterComponent = (props) => {
       filterState?.bgId,
       filterState?.buId,
       filterState?.zId,
-      filterState?.rId
+      filterState?.rId,
+      filterState?.tId
     );
-  }, [filterState?.bgId, filterState?.buId, filterState?.zId, filterState?.rId]);
+  }, [filterState?.bgId, filterState?.buId, filterState?.zId, filterState?.rId, filterState?.tId]);
 
   const [pageSizeNumber, setPageSizeNumber] = useState(25)
-
-
   const getOrderList = async () => {
-
-
     const {
       from,
       to,
@@ -252,7 +263,7 @@ const FilterComponent = (props) => {
           z_id: zId || null,
           bu_id: buId || null,
           bg_id: bgId || null,
-          kunnar_sold: party || null,
+          kunnr_sold: party || null,
           depot: depot || null,
           material: materialCode || null,
           mat_name: materialSearch || null,
@@ -265,12 +276,14 @@ const FilterComponent = (props) => {
       const apires = { orderInfoData: respond.data.data };
 
       dispatch(setAllOrderInfoData(apires));
+      setOpenModal(false)
 
     } catch (error) {
       console.error("Error fetching order data:", error);
 
       // If an error occurs, set an empty array in Redux state
       dispatch(setAllOrderInfoData([]));
+      setOpenModal(false)
     }
   };
 
@@ -279,8 +292,6 @@ const FilterComponent = (props) => {
   const [partyOption, setPartyOption] = useState([]);
 
   const getAllPartyData = async (partyName = "") => {
-    console.log("Searching for:", partyName);
-
     try {
       const { tId, rId, zId, buId, bgId } = filterState;
       const c_id = JSON.parse(localStorage.getItem("userinfo"))?.c_id || null;
@@ -402,8 +413,8 @@ const FilterComponent = (props) => {
   }, [
     count
   ])
-  useEffect(() => { if (filterState) getOrderList() }, [props.refresh]);
-  useEffect(() => { if (filterState) getOrderList() }, [filterState]);
+  useEffect(() => { if (filterState) getOrderList() }, [props.refresh, filterState]);
+  useEffect(() => { if (filterState) getOrderList() }, [filterState.orderStatus]);
 
 
 
@@ -417,8 +428,6 @@ const FilterComponent = (props) => {
   useEffect(() => {
     setAllOrderInfoDataLength(allOrderData)
   }, [allOrderData])
-  console.log("nop", filterState)
-
 
 
   const [optionsFilter, setOptionsFilter] = useState([])
@@ -434,13 +443,12 @@ const FilterComponent = (props) => {
       });
       const apires = await respond.data.data;
       setOptionsFilter(apires);
+
+
     } catch (error) { }
   }
   useEffect(() => {
-
-    getFilterOptionData(
-
-    );
+    getFilterOptionData();
   }, []);
 
 
@@ -487,11 +495,11 @@ const FilterComponent = (props) => {
           className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
           id="stateSelect"
           onChange={(e) => setFilterState({ ...filterState, orderStatus: e.target.value })}
-
+          value={filterState?.orderStatus || ""}
 
 
         >
-          <option value={""}>- Option -</option>
+          <option value={""}>- All -</option>
           {
             optionsFilter.map((item) => <option value={item.order_status} className="font-bold">
               {

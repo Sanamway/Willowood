@@ -8,20 +8,23 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { url } from "@/constants/url";
 import { CSVLink } from "react-csv";
+import toast, { Toaster } from "react-hot-toast";
 
 const UserInformation = () => {
   const router = useRouter();
   const [datas, setDatas] = useState([]);
+  const [cid, setCid] = useState(null);
+  const [UID, setUID] = useState(null);
 
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
   };
 
   const getApiData = async () => {
     try {
-      const resp = await axios.get(`${url}/api/get_users`, {
-        headers: headers,
+      const resp = await axios.get(`${url}/api/get_users/?c_id=${cid}`, {
+        headers: headers
       });
       const respdata = await resp.data.data;
       setDatas(respdata);
@@ -32,6 +35,15 @@ const UserInformation = () => {
 
   useEffect(() => {
     getApiData();
+  }, [cid]);
+
+  useEffect(() => {
+    if (window.localStorage) {
+      const c_id = localStorage.getItem("c_id");
+      const u_id = localStorage.getItem("uid");
+      setCid(c_id);
+      setUID(u_id);
+    }
   }, []);
 
   const [isOpen, setisOpen] = useState(false);
@@ -50,6 +62,7 @@ const UserInformation = () => {
   const csvHeaders = [
     { label: "Id", key: "user_id" },
     { label: "Username", key: "user_name" },
+    { label: "Emp Code", key: "emp_code" },
     { label: "Position", key: "position" },
     { label: "Address", key: "address" },
     { label: "City", key: "city" },
@@ -57,7 +70,7 @@ const UserInformation = () => {
     { label: "Email", key: "email" },
     { label: "Phone", key: "phone_number" },
     { label: "User Role", key: "t_user" },
-    { label: "Deleted", key: "isDeleted" },
+    { label: "Deleted", key: "isDeleted" }
   ];
 
   const statusUl = (item) => {
@@ -77,13 +90,63 @@ const UserInformation = () => {
     }
   };
 
+  const getLable =(item)=>{
+    console.log("utfer", item)
+   let res = item?.map((item)=> item?.label )
+   return res.join(", ")
+
+  }
+
   const { name } = router.query;
 
-  console.log("griddata", datas)
+  // console.log("griddata", datas)
+
+  //handling logout button
+
+  const handleLogout = async (uid) => {
+    // console.log("userId", uid);
+    // return
+    try {
+      const resp = await axios.get(`${url}/api/logout?user_id=${uid}`, {
+        headers: headers
+      });
+      const respdata = await resp.data;
+      console.log("Logo", respdata);
+      if (!respdata) {
+        return;
+      }
+      if (respdata.status) {
+        toast.success(respdata.message);
+        loginStatus(uid);
+        // setTimeout(()=>router.push("/logoutsuccess"),1000)
+      }
+    } catch (error) {
+      console.log("logoeee", error);
+    }
+  };
+
+  const loginStatus = async (uid) => {
+    console.log("Get UID", uid);
+    try {
+      const resp = await axios.get(`${url}/api/get_login_status?user_id=${uid}`, {
+        headers: headers
+      });
+      const respdata = await resp.data.data;
+      console.log("fsfr", respdata.login_status);
+      if (UID === uid) {
+        localStorage.setItem("login_status", respdata.login_status);
+      }
+      console.log("LoginStatus", respdata);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
 
   return (
     <Layout>
       <div className=" overflow-auto w-full pb-64 bg-white   ">
+        <Toaster position="bottom-center" reverseOrder={false} />
+
         <ConfirmModal
           isOpen={isOpen}
           onClose={() => setisOpen(false)}
@@ -94,7 +157,9 @@ const UserInformation = () => {
           onDeletedData={resetData}
         ></ConfirmModal>
         <div className="text-black userinfotext  flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-          <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name ? name :"Manage - User Registration"}</h2>
+          <h2 className="font-arial font-normal text-xl tabletitle  py-2">
+            {name ? name : "Manage - User Registration"}
+          </h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
@@ -104,14 +169,8 @@ const UserInformation = () => {
                     placeholder="Search"
                     className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
                   />
-                  <button
-                    type="submit"
-                    className="bg-blue-500 text-white rounded-r-md p-1 "
-                  >
-                    <AiOutlineSearch
-                      className="mx-2 my-1"
-                      size={20}
-                    ></AiOutlineSearch>
+                  <button type="submit" className="bg-blue-500 text-white rounded-r-md p-1 ">
+                    <AiOutlineSearch className="mx-2 my-1" size={20}></AiOutlineSearch>
                   </button>
                 </form>
               </div>
@@ -136,7 +195,7 @@ const UserInformation = () => {
               onClick={() => {
                 router.push({
                   pathname: "/form/user_information_form",
-                  query: { type: "CREATE" },
+                  query: { type: "CREATE" }
                 });
               }}
               className=" text-white py-1.5 px-2 rounded-md bg-green-500 hover:bg-orange-500"
@@ -156,6 +215,9 @@ const UserInformation = () => {
                   </th>
                   <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Userid
+                  </th>
+                  <th className="  px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Image
                   </th>
                   <th className="  px-6 py-2 text-left whitespace-nowrap dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Emp Code
@@ -190,6 +252,18 @@ const UserInformation = () => {
                     User Status
                   </th>
                   <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Mode
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    App Type
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    OTP
+                  </th>
+                  <th className="px-6 py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Company
+                  </th>
+                  <th className="px-6  py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Status
                   </th>
                 </tr>
@@ -215,7 +289,7 @@ const UserInformation = () => {
                           router.push({
                             pathname: "/form/user_information_form",
                             // query: { userData: JSON.stringify(item) },
-                            query: { type: "Edit", id: item?.user_id },
+                            query: { type: "Edit", id: item?.user_id }
                           });
                         }}
                         className="b text-black hover:text-yellow-400 ml-2"
@@ -230,9 +304,20 @@ const UserInformation = () => {
                       >
                         Delete
                       </button>
+                      <button
+                        onClick={() => {
+                          handleLogout(item?.user_id);
+                        }}
+                        className="b text-black hover:text-red-500 ml-2"
+                      >
+                        Logout
+                      </button>
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.user_id}</td>
-                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{""}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                    <img className="rounded-full h-5 w-5"  src={item?.image_url} alt={"name"}></img>
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.emp_code}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.user_name}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.position}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.address}</td>
@@ -242,12 +327,15 @@ const UserInformation = () => {
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.phone_number}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.t_user}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{statusUl(item)}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{getLable(item?.mode)}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item.app_type}</td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                      {item.otp_enable == 0 ? "Disable" : "Enable"}
+                    </td>
+                    <td className="px-6 py-2 dark:border-2 whitespace-nowrap ">{item.c_names.join(", ")}</td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.isDeleted == true ? "Disable" : "Enable"}
                     </td>
-                    {/* <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                      {item.status == 1 ? "Enabled" : "Disabled"}
-                    </td> */}
                   </tr>
                 ))}
               </tbody>

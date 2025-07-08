@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import FilterComponent from "../../components/Sales_Portal_Apps/OrderHistoryFilterComponent";
-import Layout from "../../components/Sales_Portal_Apps/Layout";
-import { IoIosBasket } from "react-icons/io";
+
+import { FcInTransit } from "react-icons/fc";
+
 import { useRouter } from "next/router";
 
 import { CiBookmark } from "react-icons/ci";
@@ -16,6 +17,10 @@ import { Transition, Dialog } from "@headlessui/react";
 import { Fragment } from "react";
 import { url } from "@/constants/url";
 import axios from "axios";
+import * as XLSX from "xlsx";
+import { IoDownloadOutline } from "react-icons/io5";
+
+import { IoEyeOutline } from "react-icons/io5";
 const Dashboard = () => {
     const [refresh, setRefresh] = useState(false)
 
@@ -54,7 +59,12 @@ const Dashboard = () => {
                     order_no: item.order_no || "",
                     party_name: item.party_name || "",
                     address: item.del_address || "",
-                    amount: item.order_value || ""
+                    amount: item.order_value || "",
+                    delCode: item.kunnr_ship || "",
+                    delParty: item.party_name || "",
+                    delAddress: item.postal_ship || "",
+                    depotCode: item.werks || "",
+                    depotName: item.depot_name || ""
 
 
                 },
@@ -63,21 +73,62 @@ const Dashboard = () => {
         else {
             return
         }
-
-
-
-
-
-
     };
+    const handleApproveOrder = (item) => {
+
+        router.push({
+            pathname: "/Sales_App/Order_Approval",
+            query: {
+                sap_code: item.kunnr_sold || "",
+                order_no: item.order_no || "",
+                party_name: item.party_name || "",
+                address: item.del_address || "",
+                amount: item.order_value || "",
+                delCode: item.kunnr_ship || "",
+                delParty: item.party_name || "",
+                delAddress: item.postal_ship || "",
+                depotCode: item.werks || "",
+                depotName: item.depot_name || ""
+
+
+            },
+        })
+
+    }
+
+
+
+    const dowloadExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(allOrderInfoData.map((item) => {
+            return {
+                ["SAP Code"]: item.kunnr_sold,
+                ["Order No"]: item.order_no,
+                ["Order Date"]: moment(item.order_dt).format("DD-MM-YYYY"),
+                ["Delivery Date"]: moment(item.expected_del_date).format("DD-MM-YYYY"),
+                ["Buyer"]: item.party_name,
+                ["Total Items"]: item.orderItems.length,
+                ["Order Amount"]: item.order_value,
+                ["Status"]: item.ord_status,
+            }
+        }));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, `Order_history_mobile.xlsx`);
+    }
+
+
+    const [showImageModal, setShowImageModal] = useState(false);
+    const [selectedImage, setSelectedImage] = useState("");
+
+
 
 
     return (
 
         <div className="flex flex-col gap-2 ">
             <div className=" font-bold text-lg h-4 flex flex-col  ">
-                <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
-                    <span className="text-black flex flex-row gap-4 font-bold   ">
+                <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4 bg-blue-600  shadow-lg lg:flex-col  ">
+                    <span className="text-black flex flex-row gap-4 font-bold text-white  ">
                         <FaArrowLeftLong
                             className="self-center "
                             onClick={() =>
@@ -86,7 +137,12 @@ const Dashboard = () => {
                                 })
                             }
                         />
-                        <span>Order List</span>
+                        <FcInTransit
+                            size={25}
+                            className="self-center "
+
+                        />
+                        <span className="text-sm self-center"> My Order List</span>
                     </span>{" "}
                     <span className="text-white self-center">
                         <Popover as="div" className="relative border-none outline-none mt-2">
@@ -126,15 +182,15 @@ const Dashboard = () => {
                 <div className="p-2 flex flex-row gap-2  w-full  justify-end flex-wrap font-normal text-[8px]">
 
                     <button
-                        onClick={() => { getExcelsheet() }}
-                        className=" h-8 bg-pink-400 flex items-center text-white-500 whitespace-nowrap text-white px-2 py-1 rounded-sm"
+                        onClick={() => { dowloadExcel() }}
+                        className=" h-8 text-[12px] bg-blue-600 flex items-center text-white-500 whitespace-nowrap text-white px-2 py-1 rounded-sm"
                     >
                         <LuRefreshCw className="mr-2" />    Generate Report
                     </button>
 
                     <button
                         onClick={() => setRefresh(!refresh)}
-                        className=" h-8 bg-pink-400 flex items-center text-white-500 whitespace-nowrap text-white px-2 py-1 rounded-sm"
+                        className=" h-8 text-[12px]  bg-blue-600 flex items-center text-white-500 whitespace-nowrap text-white px-2 py-1 rounded-sm"
                     >
                         <LuRefreshCw className="mr-2" />   Refresh
                     </button>
@@ -147,60 +203,93 @@ const Dashboard = () => {
 
                 <h5 className="ml-2">List of Order</h5>
                 <div className="flex flex-col justify-between m-2 gap-4  ">
-                    {allOrderInfoData?.map(item =>
-                        <div className="flex flex-col gap-2 text-sm bg-gray-100 shadow-lg rounded-md p-4">
-                            <div className={`${item.status_details?.color_code} flex justify-between w-full p-2 rounded-md text-white font-bold`}>
-                                <span>SAP Code: {item.kunnr_sold}</span>
+                    <div className="grid gap-4">
+                        {allOrderInfoData?.map((item, index) => (
+                            <div
+                                key={index}
+                                className="relative flex flex-col gap-2 text-sm bg-gray-100 shadow-lg rounded-md p-4"
+                            >
+                                {/* Header with Color Code */}
+                                <div className={`${item.status_details?.color_code} flex justify-between w-full p-2 rounded-md text-white font-bold`}>
+                                    <span>SAP Code: {item.kunnr_sold}</span>
+                                    <span>Order No: {item.order_no}</span>
+                                </div>
 
-                                <span>Order No: {item.order_no}</span>
+                                {/* Order Info */}
+                                <div className="flex flex-row justify-between border-b border-gray-300 pb-2">
+                                    <span>
+                                        SAP Order No.:<br />{item.sap_order_no}
+                                    </span>
+                                    <span>
+                                        Order Date:<br />{moment(item.order_dt).format("DD-MM-YYYY")}
+                                    </span>
+                                    <span>
+                                        Delivery Date:<br />{moment(item.expected_del_date).format("DD-MM-YYYY")}
+                                    </span>
+                                </div>
 
-                            </div>
+                                {/* Buyer Info */}
+                                <div className="flex w-full justify-between border-b border-gray-300 pb-2">
+                                    <h5>Buyer: {item.party_name}</h5>
+                                </div>
 
+                                {/* Total Items and Qty */}
+                                <div className="flex flex-row justify-between border-b border-gray-300 pb-2">
+                                    <span>Total Items: {item.orderItems.length}</span>
+                                    <span>
+                                        Total Qty:{" "}
+                                        {item.orderItems.reduce((sum, currentItem) => {
+                                            return parseInt(sum) + parseInt(currentItem.qty);
+                                        }, 0)}
+                                    </span>
+                                </div>
 
-                            <div className="flex flex-row justify-between border-b border-gray-300 pb-2">
-                                <span>Order Date: {moment(item.order_dt).format("DD-MM-YYYY")}</span> <span>Delivery Date: {moment(item.expected_del_date).format("DD-MM-YYYY")}</span>
-                            </div>
+                                {/* Order Value */}
+                                <div className="flex flex-row justify-between border-b border-gray-300 pb-2">
+                                    <span>Order Amount</span>
+                                    <span>₹{item.order_value}</span>
+                                </div>
 
-                            <h5 className="border-b border-gray-300 pb-2">Buyer: {item.party_name}</h5>
+                                {/* Status */}
+                                <div className="flex flex-row justify-between border-b border-gray-300 pb-2">
+                                    <span>Status</span>
+                                    <span>{item.ord_status}</span>
+                                </div>
 
-                            <div className="flex flex-row justify-between border-b border-gray-300 pb-2">
-                                <span>Total Items: {item.orderItems.length}</span> <span >Total Count: {item.orderItems.length}</span>
-                            </div>
+                                {/* Footer Buttons with Download */}
+                                <div className="p-2 flex flex-row gap-1 justify-center w-full flex-wrap font-normal text-[8px]">
+                                    {["View Order Item", "View Order Activity"].map((btnText) => (
+                                        <button
+                                            key={btnText}
+                                            className="h-8 bg-blue-600 text-[12px] flex items-center justify-end text-white px-2 py-1 rounded-sm shadow-md"
+                                            onClick={() => handleOrderItemModal(item, btnText)}
+                                        >
+                                            {btnText}
+                                        </button>
+                                    ))}
+                                    {item.ord_status === "Order Credit Block" && <button
 
-                            <div className="flex flex-row justify-between border-b border-gray-300 pb-2">
-                                <span>Order Amount</span> <span>₹{item.order_value}</span>
-                            </div>
-
-                            <div className="flex flex-row justify-between border-b border-gray-300 pb-2">
-                                <span>Status</span> <span>{item.ord_status}</span>
-                            </div>
-
-
-                            <div className="p-2 flex flex-row gap-1 justify-center w-full flex-wrap font-normal text-[8px]">
-                                {["View Order Item", "View Order Activity", "Download PDF"].map((btnText) => (
-                                    <button
-                                        key={btnText}
-                                        className="h-8 bg-pink-500 flex items-center justify-end text-white px-2 py-1 rounded-sm  shadow-md"
-                                        onClick={() =>
-
-
-
-                                            handleOrderItemModal(item, btnText)}
-
+                                        className="h-8 bg-blue-600 text-[12px] flex items-center justify-end text-white px-2 py-1 rounded-sm shadow-md"
+                                        onClick={() => handleApproveOrder(item)}
                                     >
-                                        {btnText}
-                                    </button>
-                                ))}
+                                        Approve Order
+                                    </button>}
+
+                                    {item.image_url && (
+                                        <a
+                                            href={item.image_url}
+                                            download
+                                            className="h-8 bg-blue-600 text-[12px] text-white px-2 py-1 rounded-sm shadow-md flex items-center"
+                                            title="Download File"
+                                        >
+                                            Download File
+                                        </a>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    )}
-
-
-
-
+                        ))}
+                    </div>
                 </div>
-
-
             </div>
 
 
@@ -232,213 +321,197 @@ const Dashboard = () => {
                             leaveTo="opacity-0 scale-95"
                         >
                             <Dialog.Panel className="w-full h-full max-w-none bg-white p-2 text-left align-middle shadow-xl transition-all">
-                                <Dialog.Title as="h3" className="text-[1.78rem] font-bold leading-6 text-center text-gray-900">
+                                <Dialog.Title as="h3" className="text-lg font-semibold text-center text-gray-900">
                                     Orders Info
                                 </Dialog.Title>
-                                <div className="flex-1 h-[96%] overflow-y-auto bg-gray-100 text-gray-700 p-2 mt-2 scrollbar-hidecvc                                                                 ">
-                                    <div className="container mx-auto py-2">
+
+                                <div className="flex-1 h-[96%] overflow-y-auto bg-gray-100 text-gray-700 p-2 mt-1 scrollbar-hidecvc">
+                                    <div className="container mx-auto py-1">
                                         <div className="w-full">
-                                            <div className="bg-white p-2 p-1.5 rounded-lg shadow-md mb-4">
-                                                <h2 className="text-xl font-semibold mb-4"></h2>
-                                                <div className="space-y-4">
-                                                    <label className="flex items-center p-4 border rounded cursor-pointer hover:bg-gray-50">
-                                                        <div className="flex lg:flex  gap-1 justify-between w-full ">
+                                            {/* Order Summary */}
+                                            <div className="bg-white p-2 rounded shadow mb-2">
+                                                <label className="flex items-center border rounded p-2 hover:bg-gray-50">
+                                                    <div className="flex w-full justify-between text-xs gap-2">
+                                                        <div>
+                                                            <h2 className="font-semibold">Order Number:</h2>
+                                                            <h2 className="text-gray-500 whitespace-nowrap">{orderedItems.order_no}</h2>
+                                                        </div>
+                                                        <div>
+                                                            <h2 className="font-semibold">Date:</h2>
+                                                            <h2 className="text-gray-500 whitespace-nowrap">
+                                                                {moment(orderedItems.creation_date).format("DD-MM-YYYY")}
+                                                            </h2>
+                                                        </div>
+                                                    </div>
+                                                </label>
 
-                                                            <div className="flex w-full  justify-between text-xs lg:text-sm gap-1">
-                                                                <div>
-                                                                    <h2 className="font-semibold">Order Number:</h2>
-                                                                    <h2 className="text-gray-500 whitespace-nowrap">{orderedItems.order_no}</h2>
-                                                                </div>
-                                                                <div>
-                                                                    <h2 className="font-semibold">Date: </h2>
-                                                                    <h2 className="text-gray-500 whitespace-nowrap">{moment(orderedItems.creation_date).format("DD-MM-YYYY")}</h2>
-
-                                                                </div>
-
-
-
+                                                {/* Billing Address */}
+                                                <label className="flex items-start p-2 border rounded cursor-pointer hover:bg-gray-50 mt-1">
+                                                    <div className="flex flex-col w-full text-xs">
+                                                        <h2 className="font-semibold mb-1">Billing Address</h2>
+                                                        <div className="flex flex-col gap-1">
+                                                            <div className="flex gap-1">
+                                                                <h2 className="font-bold">SAP Code:</h2>
+                                                                <h2 className="text-gray-500 font-bold">{orderedItems.kunnr_sold}</h2>
+                                                            </div>
+                                                            <h2 className="font-semibold">{orderedItems.party_name}</h2>
+                                                            <h3 className="text-gray-500 font-semibold">{orderedItems.del_address}</h3>
+                                                            <div className="flex gap-1">
+                                                                <h2 className="font-semibold">Phone:</h2>
+                                                                <h2 className="text-gray-500">{orderedItems.phone_no}</h2>
+                                                            </div>
+                                                            <div className="flex gap-1">
+                                                                <h2 className="font-semibold">Depot Code:</h2>
+                                                                <h2 className="text-gray-500">{orderedItems.werks}</h2>
+                                                                <h2 className="font-semibold pl-2">Depot Desc:</h2>
+                                                                <h2 className="text-gray-500">{orderedItems.depot_name}</h2>
                                                             </div>
                                                         </div>
-                                                    </label>
-                                                    <label className="flex items-center p-2 border rounded cursor-pointer hover:bg-gray-50">
-                                                        <div className="flex gap-1 justify-between w-full">
-                                                            <div className="flex items-start justify-center w-full flex-col ">
-                                                                <h2 className="text-xl font-semibold mb-">Billing Address</h2>
-                                                                <div className="flex lg:flex-row flex-col w-full items-center flex-wrap justify-center">
-                                                                    <div className="flex flex-col text-xs lg:text-sm gap- w-full py-1">
-                                                                        <div className="flex text-xs lg:text-sm gap- w-full py-2 gap-x-2">
-                                                                            <h2 className="font-bold whitespace-nowrap ">SAP Code : </h2>
-                                                                            <h2 className="text-gray-500  font-bold">{orderedItems.kunnr_sold}</h2>
-                                                                        </div>
-                                                                        <h2 className="font-semibold whitespace-nowrap "> {orderedItems.party_name}</h2>
+                                                    </div>
 
-                                                                        <h3 className="text-gray-500 font-semibold">
 
-                                                                            {orderedItems.del_address}
-                                                                        </h3>
-                                                                    </div>
 
-                                                                    <div className="flex text-xs lg:text-sm gap-1 w-full gap-x-2  ">
-
-                                                                        <div className="flex  gap-x-2">
-                                                                            <h2 className="font-semibold whitespace-nowrap ">Phone: </h2>
-                                                                            <h2 className="text-gray-500 ">{orderedItems.phone_no
-                                                                            }</h2>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="flex lg:flex-row flex-col w-full items-center flex-wrap justify-center">
-
-                                                                    <div className="flex text-xs lg:text-sm gap-1 w-full  ">
-                                                                        <h2 className="font-semibold whitespace-nowrap gap-x-2  ">Depot Code : </h2>
-                                                                        <h2 className="text-gray-500  ">{orderedItems.werks}</h2>
-                                                                        <div className="flex px-2 gap-x-2">
-                                                                            <h2 className="font-semibold whitespace-nowrap ">Depot Desc : </h2>
-                                                                            <h2 className="text-gray-500  ">{orderedItems.depot_name}</h2>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </label>
-                                                </div>
+                                                </label>
                                             </div>
-                                            <div className="bg-white p-1.5 p-5 rounded-lg shadow-md mb-4">
 
-
+                                            {/* Items Table */}
+                                            <div className="bg-white p-2 rounded shadow mb-2">
                                                 <div className="overflow-x-auto">
-                                                    <table className="min-w-full table-auto border-collapse">
-                                                        <thead >
-                                                            <tr className="border-b text-xs  bg-yellow-400">
-                                                                <th className="py-2 px-2 text-left">Item Name</th>
-                                                                <th className="py-2 px-2 text-left">UOM</th>
-                                                                <th className="py-2 px-2 text-left">Qty</th>
-                                                                <th className="py-2 px-2 text-left">Rate</th>
-                                                                <th className="py-2 px-2 text-left">Value</th>
+                                                    <table className="min-w-full text-xs border-collapse">
+                                                        <thead>
+                                                            <tr className="border-b bg-yellow-400">
+                                                                <th className="py-1 px-2 text-left">Item</th>
+                                                                <th className="py-1 px-2 text-left">UOM</th>
+                                                                <th className="py-1 px-2 text-left">Pkg Std</th>
+                                                                <th className="py-1 px-2 text-left">Qty</th>
+                                                                <th className="py-1 px-2 text-left">Per UOM</th>
+                                                                <th className="py-1 px-2 text-left">Total UOM</th>
+                                                                <th className="py-1 px-2 text-left">Rate</th>
+                                                                <th className="py-1 px-2 text-left">Value</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             {orderedItems?.orderItems?.map((item, idx) => (
                                                                 <tr
                                                                     key={idx}
-                                                                    className={`border-b text-xs lg:text-sm ${item.selected ? "bg-blue-50 border-blue-500" : "hover:bg-gray-100"
-                                                                        }`}
+                                                                    className={`border-b ${item.selected ? "bg-blue-50 border-blue-500" : "hover:bg-gray-100"}`}
                                                                 >
-                                                                    <td className="py-2 px-2 w-24 ">
-                                                                        {item?.matnr}
+                                                                    <td className="py-1 px-2 whitespace-nowrap">
+                                                                        {item.matnr}
                                                                         <br />
-                                                                        {item?.material_name}
+                                                                        {item.material_name}
                                                                     </td>
-                                                                    <td className="py-2 px-2">{item.uom}</td>
-                                                                    <td className="py-2 px-2">{item.qty}</td>
-                                                                    <td className="py-2 px-2 whitespace-nowrap">₹ {item.price.toLocaleString()}</td>
-                                                                    <td className="py-2 px-2">{(item.net_value).toLocaleString()}</td>
+                                                                    <td className="py-1 px-2">{item.uom}</td>
+
+                                                                    <td className="py-1 px-2 whitespace-nowrap">{item.pkg_std}</td>
+
+                                                                    <td className="py-1 px-2">{item.qty}</td>
+                                                                    <td className="py-1 px-2">{item.per_uom}</td>
+                                                                    <td className="py-1 px-2 whitespace-nowrap">{item.total_uom}</td>
+                                                                    <td className="py-1 px-2 whitespace-nowrap">{item.price.toLocaleString()}</td>
+                                                                    <td className="py-1 px-2">{item.net_value.toLocaleString()}</td>
                                                                 </tr>
                                                             ))}
-                                                            <tr className="border-t font-semibold text-sm  ">
-
-                                                                <td className="py-2 px-2 whitespace-nowrap">
-
-                                                                    Total ({orderedItems?.orderItems?.length})
-                                                                </td>
-                                                                <td className="py-2 px-2 ">{"-"} </td>
-                                                                <td className="py-2 px-2">{"-"} </td>
-                                                                <td className="py-2 px-2 whitespace-nowrap">₹ {orderedItems?.orderItems?.reduce((curr, acc) => { return curr += Number(acc.price) }, 0)}</td>
-                                                                <td className="py-2 px-2">{orderedItems?.orderItems?.reduce((curr, acc) => { return curr += Number(acc.net_value) }, 0)}</td>
+                                                            <tr className="border-t font-semibold">
+                                                                <td className="py-1 px-2">Total ({orderedItems?.orderItems?.length})</td>
+                                                                <td className="py-1 px-2">-</td>
+                                                                <td className="py-1 px-2">-</td>
+                                                                <td className="py-1 px-2">{orderedItems?.orderItems?.reduce((curr, acc) => curr + Number(acc.qty), 0)}</td>
+                                                                <td className="py-1 px-2">-</td>
+                                                                <td className="py-1 px-2">-</td>
+                                                                <td className="py-1 px-2">-</td>
+                                                                <td className="py-1 px-2">{orderedItems?.orderItems?.reduce((curr, acc) => curr + Number(acc.net_value), 0)}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
-
-                                                {allOrderInfoData?.some((item) => item.selected) && (
-                                                    <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                                                        <h3 className="font-medium mb-2" >Selected Items Order:</h3>
-                                                        <ol className="list-decimal list-inside space-y-1">
-                                                            {allOrderInfoData
-                                                                ?.filter((item) => item.selected)
-                                                                ?.map((item) => (
-                                                                    <li key={item.id} className="text-gray-600">
-                                                                        {item.name}
-                                                                    </li>
-                                                                ))}
-                                                        </ol>
-                                                    </div>
-                                                )}
                                             </div>
 
                                             {/* Delivery Address */}
-                                            <div className="bg-white p-2 rounded-lg shadow-md">
-                                                <h2 className="text-xl font-semibold lg:mb-4 mb-2">Delivery Address </h2>
-                                                <div className="space-y-4">
-                                                    <div className="address flex gap-1  flex-wrap">
-                                                        <div>
-                                                            <h2>
-                                                                {orderedItems.SAP_order_no}
-                                                                <br />
-                                                                {orderedItems.party_name}
-                                                                <br />
-                                                                {orderedItems.del_address}</h2>
+                                            <div className="bg-white p-2 rounded shadow mb-2 text-xs w-full">
+                                                <h2 className="font-semibold  mb-1 text-xs">Delivery Address</h2>
+                                                <label className="flex items-start p-2 border rounded cursor-pointer hover:bg-gray-50 mt-1 text-xs">
+
+
+
+                                                    <div className="bg-white shadow-md rounded-lg  text-xs w-full">
+
+
+                                                        {/* Billing Details */}
+                                                        <div className="space-y-2 w-full">
+                                                            <div className="flex justify-between">
+
+                                                                <span className="font-bold text-xs">{orderedItems.kunnr_ship}</span>
+                                                            </div>
+                                                            <div className="flex justify-between text-xs ">
+                                                                <span><strong>{orderedItems.party_name}</strong></span>
+                                                            </div>
+
+                                                            <div className="flex justify-between text-xs">
+                                                                {orderedItems.postal_ship}
+                                                            </div>
+
+                                                            <div className="flex flex-row gap-2  justify-between font-bold text-xs">
+                                                                <span><strong>Depot Code:</strong>
+                                                                    <br />{orderedItems.werks}</span>
+
+                                                                <span>Warehouse Des:
+                                                                    <br /> {orderedItems.depot_name}</span>
+                                                                {/* <span><HiOutlineExternalLink onClick={() => setShowDuplicatePopup(true)} size={28} className="self-center" /></span> */}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </label>
                                             </div>
 
-                                            {/* Territory EMP Details  */}
-                                            <div className="bg-white lg:p-4 p-1.5 rounded-lg shadow-md mt-4">
-                                                <div className="space-y-4">
-                                                    <label className="flex items-center p-3 border rounded cursor-pointer hover:bg-gray-50">
-                                                        <div className="flex lg:flex-row flex-col gap-1 justify-between w-full">
-                                                            <div className="flex gap-1">
-                                                                <h2 className="font-semibold">Territory: </h2>
-                                                                <h2 className="text-gray-500">{orderedItems.territory_name}</h2>
-                                                            </div>
-                                                            <div className="flex gap-1">
-                                                                <h2 className="font-semibold">Region: </h2>
-                                                                <h2 className="text-gray-500">{orderedItems.region_name}</h2>
-                                                            </div>
-                                                        </div>
-                                                    </label>
-                                                    <label className="flex items-center p-3 border rounded cursor-pointer hover:bg-gray-50">
-                                                        <div className="flex  flex-col gap-1 justify-between w-full">
-                                                            <div className="flex lg:flex-row flex-col gap-2 py-2 justify-between w-full">
-                                                                <div className="flex gap-1">
-                                                                    <h2 className="font-semibold">Payment Terms: </h2>
-                                                                    <h2 className="text-gray-500">{orderedItems.pay_terms}</h2>
-                                                                </div>
-                                                                <div className="flex gap-1">
-                                                                    <h2 className="font-semibold">Inco Terms: </h2>
-                                                                    <h2 className="">{orderedItems.inco_terms
-                                                                    }</h2>
-                                                                </div>
-                                                            </div>
 
-                                                            <div className="flex lg:flex-row flex-col gap-1 justify-between w-full">
-                                                                <div className="flex gap-1">
-                                                                    <h2 className="font-semibold">Employee Code: </h2>
-                                                                    <h2 className="">{orderedItems.Emp_code}</h2>
-                                                                </div>
-                                                                <div className="flex gap-1">
-                                                                    <h2 className="font-semibold">Inco Location: </h2>
-                                                                    <h2 className="text-gray-500">{orderedItems.inco_location}</h2>
-                                                                </div>
-                                                            </div>
-                                                            <div className="flex lg:flex-row flex-col gap-1 justify-between w-full">
-                                                                <div className="flex gap-1">
-                                                                    <h2 className="font-semibold">Name: </h2>
-                                                                    <h2 className="">{orderedItems.name}</h2>
-                                                                </div>
-                                                                <div className="flex gap-1">
-                                                                    <h2 className="font-semibold">Order Status: </h2>
-                                                                    <h2 className="text-gray-500">{orderedItems.ord_status}</h2>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </label>
+                                            {/* Territory and Employee Details */}
+                                            <div className="bg-white p-2 rounded shadow mb-2 text-xs">
+                                                <div className="flex justify-between gap-2 mb-1">
+                                                    <div className="flex gap-1">
+                                                        <h2 className="font-semibold">Territory:</h2>
+                                                        <h2 className="text-gray-500">{orderedItems.territory_name}</h2>
+                                                    </div>
+                                                    <div className="flex gap-1">
+                                                        <h2 className="font-semibold">Region:</h2>
+                                                        <h2 className="text-gray-500">{orderedItems.region_name}</h2>
+                                                    </div>
                                                 </div>
+                                                <div className="flex justify-between gap-2 mb-1">
+                                                    <div className="flex gap-1">
+                                                        <h2 className="font-semibold">Payment Terms:</h2>
+                                                        <h2 className="text-gray-500">{orderedItems.pay_terms}</h2>
+                                                    </div>
+                                                    <div className="flex gap-1">
+                                                        <h2 className="font-semibold">Inco Terms:</h2>
+                                                        <h2 className="text-gray-500">{orderedItems.inco_terms}</h2>
+                                                    </div>
+                                                </div>
+                                                <div className="flex justify-between gap-2 mb-1">
+                                                    <div className="flex gap-1">
+                                                        <h2 className="font-semibold">Emp Code:</h2>
+                                                        <h2 className="text-gray-500">{orderedItems.Emp_code}</h2>
+                                                    </div>
+                                                    <div className="flex gap-1">
+                                                        <h2 className="font-semibold">Inco Location:</h2>
+                                                        <h2 className="text-gray-500">{orderedItems.inco_location}</h2>
+                                                    </div>
+                                                </div>
+                                                <div className="flex justify-between gap-2">
+                                                    <div className="flex gap-1">
+                                                        <h2 className="font-semibold">Name:</h2>
+                                                        <h2 className="text-gray-500">{orderedItems.name}</h2>
+                                                    </div>
+                                                    <div className="flex gap-1">
+                                                        <h2 className="font-semibold">Order Status:</h2>
+                                                        <h2 className="text-gray-500">{orderedItems.ord_status}</h2>
+                                                    </div>
+                                                </div>
+
                                                 <div className="w-full flex justify-center mt-2">
                                                     <button
                                                         onClick={() => setOpenModal(false)}
-                                                        className=" bg-red-500 text-white p-3 rounded-md shadow-lg hover:bg-red-600 "
+                                                        className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 text-sm"
                                                     >
                                                         Close
                                                     </button>
@@ -446,10 +519,7 @@ const Dashboard = () => {
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
-
-
                             </Dialog.Panel>
                         </Transition.Child>
 
@@ -457,19 +527,56 @@ const Dashboard = () => {
                 </Dialog>
             </Transition>
 
+            <Transition appear show={showImageModal} as={Fragment}>
+                <Dialog as="div" className="z-10" onClose={() => setShowImageModal(false)}>
+                    <Transition.Child
+                        as={Fragment}
+                        enter="ease-out duration-300"
+                        enterFrom="opacity-0"
+                        enterTo="opacity-100"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                    >
+                        <div className="fixed inset-0 bg-black/25" />
+                    </Transition.Child>
 
+                    <div className="fixed inset-0 overflow-y-auto">
+                        <div className="flex min-h-full items-center justify-center p-4 text-center">
+                            <Transition.Child
+                                as={Fragment}
+                                enter="ease-out duration-300"
+                                enterFrom="opacity-0 scale-95"
+                                enterTo="opacity-100 scale-100"
+                                leave="ease-in duration-200"
+                                leaveFrom="opacity-100 scale-100"
+                                leaveTo="opacity-0 scale-95"
+                            >
+                                <Dialog.Panel className="max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                                    <Dialog.Title
+                                        as="h3"
+                                        className="text-[1.78rem] font-medium leading-6 text-center text-gray-900"
+                                    >
+                                        Payment Image
+                                    </Dialog.Title>
+                                    <div className="mt-2">
 
-
-
-
-
-
-
-
-
-
-
-
+                                        {selectedImage ? (
+                                            <img
+                                                src={selectedImage}
+                                                alt="Payment Proof"
+                                                className="rounded bg-gray-200 w-full h-auto"
+                                            />
+                                        ) : (
+                                            <p className="text-center text-gray-500">No image available</p>
+                                        )}
+                                    </div>
+                                </Dialog.Panel>
+                            </Transition.Child>
+                        </div>
+                    </div>
+                </Dialog>
+            </Transition>
 
         </div>
 

@@ -131,6 +131,10 @@ const Collection = (props) => {
                     console.log("pop", res.data.data.pay_no)
                     uploadImage(res.data.data.pay_no)
                     toast.success(res.data.message)
+                    router.push({
+                        pathname: "/Sales_App/Order_Booking/Delaer_List"
+                    })
+
 
                 });
         } catch (errors) {
@@ -231,66 +235,68 @@ const Collection = (props) => {
 
     };
 
+
+
     const uploadImage = async (data) => {
-        function getFileExtension(filename) {
-            if (typeof filename.name !== "string") {
-                console.error("Invalid input. Expected a string.");
-                return toast.error("Input a valid Image");
+        function getFileExtension(file) {
+            if (typeof file?.name !== "string") {
+                toast.error("Upload Image is Mandatory");
+                throw new Error("Invalid file");
             }
 
-            const parts = filename.name.split(".");
-            if (parts.length > 1) {
-                return parts[parts.length - 1];
-            } else {
-                return "jpg";
-            }
+            const parts = file.name.split(".");
+            return parts.length > 1 ? parts.pop() : "jpg";
         }
 
         try {
+            const extension = getFileExtension(uploadDocument);
             const renamedBlob = new Blob([uploadDocument], {
                 type: uploadDocument?.type,
             });
 
             const fd = new FormData();
-            fd.append(
-                "myFile",
-                renamedBlob,
-                `${getFileExtension(uploadDocument)}`
-            );
+            fd.append("myFile", renamedBlob, `${data}.${extension}`);
 
-            const response = await axios
-                .post(`${url}/api/upload_file`, fd, {
-                    params: {
-                        file_path: "payment_collection",
-                        payment_image: `${data}.${getFileExtension(
-                            uploadDocument
-                        )}`,
-                        pay_no: data,
-                    },
-                })
-                .then(() => {
-                    setUploadDocument("")
-                    router.push({
-                        pathname: "/Sales_App/Order_Booking/Delaer_List"
-                    })
-                    setFormData(
-                        {
-                            collectionDate: null,
-                            paymentDate: null,
-                            amountClosed: "",
-                            mode: "",
-                            chequeUtrNo: "",
-                            date: null,
-                            file: null,
-                        }
-                    )
-                    toast.success("Image added successfully!");
-                });
+            await axios.post(`${url}/api/upload_file`, fd, {
+                params: {
+                    file_path: "payment_collection",
+                    payment_image: `${data}.${extension}`,
+                    pay_no: data,
+                },
+            });
+
+            setUploadDocument("");
+            setFormData({
+                collectionDate: null,
+                paymentDate: null,
+                amountClosed: "",
+                mode: "",
+                chequeUtrNo: "",
+                date: null,
+                file: null,
+            });
+
+            router.push({
+                pathname: "/Sales_App/Order_Booking/Delaer_List",
+            });
+
+            toast.success("Image added successfully!");
         } catch (error) {
-
-            console.log("ooo", error)
+            console.error("Upload failed", error);
+            toast.error("Image upload failed.");
         }
     };
+
+
+
+
+
+
+
+
+
+
+
 
     return (
         <div className="bg-white shadow-md rounded-lg p-1 mb-2 mx-1 mt-2">
@@ -343,48 +349,51 @@ const Collection = (props) => {
                     Payment Collection Input
                 </div>
                 <div className="p-2 border-b border-gray-300">
-                    <div className="mb-2 flex items-center">
+
+                    <div className="mb-2 flex items-center gap-2">
                         <label className="font-medium min-w-[160px]">Collection Date</label>
                         <span>:</span>
                         <DatePicker
                             selected={formData.collectionDate}
                             dateFormat="dd-MM-yyyy"
                             onChange={(date) => handleDateChange(date, "collectionDate")}
-                            className="border rounded p-1 ml-2 flex-1"
+                            className="border rounded p-1 w-full max-w-sm"
                         />
                     </div>
 
-                    <div className="mb-2 flex items-center">
+                    <div className="mb-2 flex items-center gap-2">
                         <label className="font-medium min-w-[160px]">Payment Date</label>
                         <span>:</span>
                         <DatePicker
                             selected={formData.paymentDate}
                             dateFormat="dd-MM-yyyy"
                             onChange={(date) => handleDateChange(date, "paymentDate")}
-                            className="border rounded p-1 ml-2 flex-1"
+                            className="border rounded p-1 w-full max-w-sm"
                         />
                     </div>
 
-                    <div className="mb-2 flex items-center">
+                    <div className="mb-2 flex items-center gap-2">
                         <label className="font-medium min-w-[160px]">Collection Amount</label>
                         <span>:</span>
                         <input
-                            type="text"
+                            type="number"
                             name="amountClosed"
                             value={formData.amountClosed}
                             onChange={handleInputChange}
-                            className="border rounded p-1 ml-2 flex-1"
+                            className="border rounded p-1 w-full max-w-sm"
+                            min="0"
+                            step="0.01"
                         />
                     </div>
 
-                    <div className="mb-2 flex items-center">
+                    <div className="mb-2 flex items-center gap-2">
                         <label className="font-medium min-w-[160px]">Mode</label>
                         <span>:</span>
                         <select
                             name="mode"
                             value={formData.mode}
                             onChange={handleInputChange}
-                            className="border rounded p-1 ml-2 flex-1"
+                            className="border rounded p-1 w-full max-w-sm"
                         >
                             <option value="">Select Mode</option>
                             <option value="cash">Cash</option>
@@ -393,28 +402,31 @@ const Collection = (props) => {
                         </select>
                     </div>
 
-                    <div className="mb-2 flex items-center">
-                        <label className="font-medium min-w-[160px]">Cheque/UTR No</label>
-                        <span>:</span>
-                        <input
-                            type="text"
-                            name="chequeUtrNo"
-                            value={formData.chequeUtrNo}
-                            onChange={handleInputChange}
-                            className="border rounded p-1 ml-2 flex-1"
-                        />
-                    </div>
+                    {formData.mode !== "cash" && (
+                        <div className="mb-2 flex items-center gap-2">
+                            <label className="font-medium min-w-[160px]">Cheque/UTR No</label>
+                            <span>:</span>
+                            <input
+                                type="text"
+                                name="chequeUtrNo"
+                                value={formData.chequeUtrNo}
+                                onChange={handleInputChange}
+                                className="border rounded p-1 w-full max-w-sm"
+                            />
+                        </div>
+                    )}
 
-                    <div className="mb-2 flex items-center">
+                    <div className="mb-2 flex items-center gap-2">
                         <label className="font-medium min-w-[160px]">Date</label>
                         <span>:</span>
                         <DatePicker
                             selected={formData.date}
                             dateFormat="dd-MM-yyyy"
                             onChange={(date) => handleDateChange(date, "date")}
-                            className="border rounded p-1 ml-2 flex-1"
+                            className="border rounded p-1 w-full max-w-sm"
                         />
                     </div>
+
                 </div>
             </div>
 
@@ -439,10 +451,12 @@ const Collection = (props) => {
                             <IoIosBasket className="w-12 h-12 text-gray-400 mb-2" />
                             <span className="text-gray-600">Click to Upload</span>
                             <input
-                                id="file-upload"
                                 type="file"
+                                accept="image/*"
+                                id="fileInput"
                                 className="hidden"
                                 onChange={handleFileChange}
+
                             />
                         </label>
                     </div>

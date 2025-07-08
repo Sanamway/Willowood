@@ -86,7 +86,7 @@ const SaleCards = () => {
         </div>
 
       </div>
-      <div className="w-full px- mt-4 flex lg:flex-row flex-col  font-arial   rounded-md">
+      <div className="w-full px- mt-2 flex lg:flex-row flex-col  font-arial   rounded-md">
         <div className="bg-white mt-2">
           {data2.length ? (
             data2.map((item, index) => (

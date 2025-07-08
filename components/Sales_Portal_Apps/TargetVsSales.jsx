@@ -38,6 +38,9 @@ const TargetVsSales = (props) => {
         });
     }, [props.datasets, props.lab]);
 
+
+    console.log("zas", data)
+
     // ✅ Tooltip logic (optional – not active now)
     function triggerTooltip(chart) {
         if (!chart?.tooltip) return;
@@ -81,6 +84,7 @@ const TargetVsSales = (props) => {
                         : "h-auto"
                     }`}
             >
+                {console.log("dfer", chartRef, data, options)}
                 {data.datasets?.length > 0 && (
                     <Chart
                         className={`min-w-full lg:max-h-64 ${fullScreen ? "lg:max-h-[84%] mt-2" : ""

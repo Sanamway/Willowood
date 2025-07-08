@@ -18,6 +18,7 @@ import { IoCallOutline } from "react-icons/io5";
 import { CiBoxList } from "react-icons/ci";
 import { FcNews } from "react-icons/fc";
 import { IoLocationOutline } from "react-icons/io5";
+import { FcCurrencyExchange } from "react-icons/fc";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { FcNeutralTrading } from "react-icons/fc";
 import Collection from "../../components/Sales_Portal_Apps/paymentCollection/Sfa_payment_collection";
@@ -208,7 +209,7 @@ const Dashboard = () => {
 
         <div className="bg-gray-200">
             {/* Header Section */}
-            <div className="w-full flex h-12 justify-between items-center px-4 shadow-lg bg-blue-400 ">
+            <div className="w-full flex h-12 justify-between items-center px-4 shadow-lg bg-blue-600 ">
                 <span className="text-black flex flex-row gap-4 font-bold">
                     <FaArrowLeftLong
                         className="self-center cursor-pointer"
@@ -218,7 +219,8 @@ const Dashboard = () => {
                             })
                         }
                     />
-                    <span className="flex flex-row gap-2 justify-center items-center"> {tabType === "Payment" ? <span>Payment Collection</span> : <span>Report Analysis</span>}   </span>
+
+                    <span className="flex flex-row gap-2 justify-center items-center text-white text-sm"> <FcCurrencyExchange className="text-[#626364] cursor-pointer" size={25} /> {tabType === "Payment" ? <span>Payment Collection</span> : <span>Report Analysis</span>}   </span>
                 </span>
                 <span className="text-white self-center">
                     <Popover as="div" className="relative border-none outline-none mt-2">

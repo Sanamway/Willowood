@@ -129,7 +129,7 @@ const UserProfile = () => {
             <h2>
               <TiArrowBack
                 onClick={() => {
-                  router.push("/table/table_user_profile");
+                  router.push("/");
                 }}
                 className="text-gray-400"
                 size={35}

@@ -96,7 +96,7 @@ const FilterComponent = () => {
     if (!filterState.yr) return;
     getAllTransactionYear(filterState.yr);
   }, [filterState.yr]);
-  console.log("zz", filterState)
+
 
   useEffect(() => {
     console.log("olkp", allYearData)
@@ -420,32 +420,69 @@ const FilterComponent = () => {
     const { yr, month, bgId, buId, zId, rId, tId } = filterState;
 
     // Call the API based on the conditions
-    if (tId && territoryData.length > 0) {
-      // Call for territory data
-      dispatch(setCollectionTableData([]));
-      getCustomerCardData(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
-      return;
-      // Exit after handling this condition
+    if (localStorageItems.roleId === 6) {
+      if (filterState.yr > 0 &&
+        filterState.month &&
+        filterState.bgId &&
+        filterState.buId &&
+        filterState.zId &&
+        filterState.rId &&
+        filterState.tId &&
+        regionData.length) {
+        // Call for territory data
+        dispatch(setCollectionTableData([]));
+        getCustomerCardData(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
+        return;
+        // Exit after handling this condition
+      }
     }
 
-    else if (zId && zoneData.length > 0) {
-      // Call for zone data
-      dispatch(setCollectionTableData([]));
-      getCustomerCardData(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
-      return; // Exit after handling this condition
+    else if (localStorageItems.roleId === 5) {
+      if (filterState.yr > 0 &&
+        filterState.month &&
+        filterState.bgId &&
+        filterState.buId &&
+        filterState.zId &&
+        filterState.rId &&
+        regionData.length) {
+        // Call for zone data
+        dispatch(setCollectionTableData([]));
+        getCustomerCardData(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, null);
+        return; // Exit after handling this condition
+      }
     }
 
-    else if (rId && regionData.length > 0) {
-      // Call for region data
-      dispatch(setCollectionTableData([]));
-      getCustomerCardData(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
-      return; // Exit after handling this condition
+    else if (localStorageItems.roleId === 4) {
+      if (filterState.yr > 0 &&
+        filterState.month &&
+        filterState.bgId &&
+        filterState.buId &&
+        filterState.zId &&
+        zoneData.length) {
+        // Call for region data
+        dispatch(setCollectionTableData([]));
+        getCustomerCardData(yr || null, month || null, bgId || null, buId || null, zId || null, null, null);
+        return; // Exit after handling this condition
+      }
+    }
+    else if (localStorageItems.roleId === 3) {
+      if (filterState.yr > 0 &&
+        filterState.month &&
+        filterState.bgId &&
+        filterState.buId &&
+        buData.length) {
+        // Call for region data
+        dispatch(setCollectionTableData([]));
+        getCustomerCardData(yr || null, month || null, bgId || null, buId || null, null, null, null);
+        return; // Exit after handling this condition
+
+      }
     }
 
-    else if (buId && buData.length > 0) {
+    else if (localStorageItems.roleId === 10) {
       // Call for business unit data
       dispatch(setCollectionTableData([]));
-      getCustomerCardData(yr || null, month || null, bgId || null, buId || null, zId || null, rId || null, tId || null);
+      getCustomerCardData(yr || null, month || null, bgId || null, buId || null, null, null, null);
       return; // Exit after handling this condition
     }
     else {
@@ -591,6 +628,8 @@ const FilterComponent = () => {
       // setAllTableData([]);
     }
   };
+
+
   const getAllOrderInfo = async (
     yr,
     month,
@@ -724,45 +763,243 @@ const FilterComponent = () => {
 
   useEffect(() => {
 
+    if (localStorageItems.roleId === 6) {
+      if (filterState.yr > 0 &&
+        filterState.month &&
+        filterState.bgId &&
+        filterState.buId &&
+        filterState.zId &&
+        filterState.rId &&
+        filterState.tId &&
+        territoryData.length
+      ) {
+        getSapSales(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          filterState.zId || null,
+          filterState.rId || null,
+          filterState.tId
+        );
+        getAllSalesPlanStatus(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          filterState.zId || null,
+          filterState.rId || null,
+          filterState.tId
+        );
+        getAllOrderInfo(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          filterState.zId || null,
+          filterState.rId || null,
+          filterState.tId
+        );
+        getDealerCount(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          filterState.zId || null,
+          filterState.rId || null,
+          filterState.tId
+        );
+      }
+      else { return }
+
+    }
+    else if (localStorageItems.roleId === 5) {
+      if (filterState.yr > 0 &&
+        filterState.month &&
+        filterState.bgId &&
+        filterState.buId &&
+        filterState.zId &&
+        filterState.rId &&
+        regionData.length
+      ) {
+        getSapSales(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          filterState.zId || null,
+          filterState.rId || null,
+          null
+        );
+        getAllSalesPlanStatus(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          filterState.zId || null,
+          filterState.rId || null,
+          null
+        );
+        getAllOrderInfo(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          filterState.zId || null,
+          filterState.rId || null,
+          null
+        );
+        getDealerCount(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          filterState.zId || null,
+          filterState.rId || null,
+          null
+        );
+      }
+      else { return }
+    }
+    else if (localStorageItems.roleId === 4) {
+      if (filterState.yr > 0 &&
+        filterState.month &&
+        filterState.bgId &&
+        filterState.buId &&
+        filterState.zId &&
+        zoneData.length
+      ) {
+        getSapSales(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          filterState.zId || null,
+          null,
+          null
+        );
+        getAllSalesPlanStatus(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          filterState.zId || null,
+          null,
+          null
+        );
+        getAllOrderInfo(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          filterState.zId || null,
+          null,
+          null
+        );
+        getDealerCount(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          filterState.zId || null,
+          null,
+          null
+        );
+      }
+      else {
+        return
+      }
+    }
+    else if (localStorageItems.roleId === 3) {
+      if (filterState.yr > 0 &&
+        filterState.month &&
+        filterState.bgId &&
+        filterState.buId &&
+        buData.length) {
+        getSapSales(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          null,
+          null,
+          null
+        );
+        getAllSalesPlanStatus(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          null,
+          null,
+          null
+        );
+        getAllOrderInfo(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          null,
+          null,
+          null
+        );
+        getDealerCount(
+          filterState.yr || null,
+          filterState.month || null,
+          filterState.bgId || null,
+          filterState.buId || null,
+          null,
+          null,
+          null
+        );
+      }
+      else { return }
+
+    }
+    else if (localStorageItems.roleId === 10) {
+
+      getSapSales(
+        filterState.yr || null,
+        filterState.month || null,
+        filterState.bgId || null,
+        null,
+        null,
+        null,
+        null
+      );
+      getAllSalesPlanStatus(
+        filterState.yr || null,
+        filterState.month || null,
+        filterState.bgId || null,
+        null,
+        null,
+        null,
+        null
+      );
+      getAllOrderInfo(
+        filterState.yr || null,
+        filterState.month || null,
+        filterState.bgId || null,
+        null,
+        null,
+        null,
+        null
+      );
+      getDealerCount(
+        filterState.yr || null,
+        filterState.month || null,
+        filterState.bgId || null,
+        null,
+        null,
+        null,
+        null
+      );
+    }
 
 
 
-    getSapSales(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null,
-      filterState.rId || null,
-      filterState.tId
-    );
-    getAllSalesPlanStatus(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null,
-      filterState.rId || null,
-      filterState.tId
-    );
-    getAllOrderInfo(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null,
-      filterState.rId || null,
-      filterState.tId
-    );
-    getDealerCount(
-      filterState.yr || null,
-      filterState.month || null,
-      filterState.bgId || null,
-      filterState.buId || null,
-      filterState.zId || null,
-      filterState.rId || null,
-      filterState.tId
-    );
+
+
 
   }, [
     filterState.yr,
@@ -853,17 +1090,69 @@ const FilterComponent = () => {
     filterState.tId,
   ]);
 
+
   const [isOpen, setIsOpen] = useState(false);
+
+  const [salesCollectionUpdate, setSalesCollectionUpdate] = useState({})
+  const getSapData = async (
+
+
+  ) => {
+    let endPoint = "api/get_last_sales_and_collection_update";
+    try {
+      let params
+
+      params = {
+
+        c_id: 1,
+
+
+      };
+
+      const respond = await axios.get(`${url}/${endPoint}`, {
+        headers: headers,
+
+        params: params,
+      });
+
+      const apires = await respond.data.data;
+      setSalesCollectionUpdate(apires)
+
+      // setAllTableData(apires);
+
+
+    } catch (error) {
+      if (!error) return;
+      console.log("opo", error)
+    }
+  };
+  useEffect(() => {
+    getSapData()
+  }, [])
+  console.log("zas", salesCollectionUpdate)
   return (
 
     <div className="w-full">
-      <div className="w-full flex justify-end"
-      >
+      <div className="w-full flex justify-end">
+        <div className="mt-1 text-[0.80rem] text-left">
+          {Object.entries(salesCollectionUpdate).map(([key, value]) => (
+            <div key={key}>
+              <span className="font-semibold">{key}:</span> {value}
+            </div>
+          ))}
+        </div>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="mb-3 px-2 py-1 bg-indigo-600   text-[0.45rem] text-white rounded-md font-semibold shadow hover:bg-indigo-700 transition"
+          className="mb-3 px-2 py-1 bg-indigo-600 text-[0.45rem] h-8 text-white rounded-md font-semibold shadow hover:bg-indigo-700 transition text-right"
         >
-          {isOpen ? "▲" : "▼"}
+          {isOpen ? (
+            "▲"
+          ) : (
+
+            "▼"
+
+
+          )}
         </button>
       </div>
 
@@ -937,13 +1226,14 @@ const FilterComponent = () => {
                   tId: '',
                 })
               }
-              disabled={
-                localStorageItems.roleId === 6 ||
-                localStorageItems.roleId === 5 ||
-                localStorageItems.roleId === 4 ||
-                localStorageItems.roleId === 3 ||
-                localStorageItems.roleId === 10
-              }
+              // disabled={
+              //   localStorageItems.roleId === 6 ||
+              //   localStorageItems.roleId === 5 ||
+              //   localStorageItems.roleId === 4 ||
+              //   localStorageItems.roleId === 3 ||
+              //   localStorageItems.roleId === 10
+              // }
+              disabled={true}
 
             >
               <option value={""} className="font-bold">
@@ -973,12 +1263,13 @@ const FilterComponent = () => {
                   tId: '',
                 })
               }
-              disabled={
-                localStorageItems.roleId === 6 ||
-                localStorageItems.roleId === 5 ||
-                localStorageItems.roleId === 4 ||
-                localStorageItems.roleId === 3
-              }
+              disabled={true}
+            // disabled={
+            //   localStorageItems.roleId === 6 ||
+            //   localStorageItems.roleId === 5 ||
+            //   localStorageItems.roleId === 4 ||
+            //   localStorageItems.roleId === 3
+            // }
 
             >
               <option value={""}>- Business Unit -</option>
@@ -1004,11 +1295,12 @@ const FilterComponent = () => {
                   tId: '',
                 })
               }
-              disabled={
-                localStorageItems.roleId === 6 ||
-                localStorageItems.roleId === 5 ||
-                localStorageItems.roleId === 4
-              }
+              disabled={true}
+            // disabled={
+            //   localStorageItems.roleId === 6 ||
+            //   localStorageItems.roleId === 5 ||
+            //   localStorageItems.roleId === 4
+            // }
 
             >
               <option value={""}>- Zone -</option>
@@ -1026,9 +1318,10 @@ const FilterComponent = () => {
               className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
               value={filterState.rId}
-              disabled={
-                localStorageItems.roleId === 6 || localStorageItems.roleId === 5
-              }
+              // disabled={
+              //   localStorageItems.roleId === 6 || localStorageItems.roleId === 5
+              // }
+              disabled={true}
               onChange={(e) =>
                 setFilterState({
                   ...filterState,
@@ -1051,9 +1344,10 @@ const FilterComponent = () => {
               className="w-full px-3 py-1.5 border-[1px] border-gray-400 rounded-md bg-gray-100 focus:outline-none focus:border-b focus:border-indigo-500"
               id="stateSelect"
               value={filterState.tId}
-              disabled={
-                localStorageItems.roleId === 11 || localStorageItems.roleId === 6
-              }
+              // disabled={
+              //   localStorageItems.roleId === 11 || localStorageItems.roleId === 6
+              // }
+              disabled={true}
               onChange={(e) =>
                 setFilterState({
                   ...filterState,

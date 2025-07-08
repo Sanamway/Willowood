@@ -1,6 +1,6 @@
 import React from 'react'
 import RollingPlans from '@/components/tables/RollingPlans'
-import CopyRollingPlans from '@/components/tables/CollectionPlans'
+import CopyRollingPlans from '@/components/tables/CopyRollingPlans'
 const index = () => {
   return (
     <>

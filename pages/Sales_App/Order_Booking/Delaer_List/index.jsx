@@ -21,6 +21,7 @@ import { FcMultipleSmartphones } from "react-icons/fc";
 import { FcCurrencyExchange } from "react-icons/fc";
 import { url } from "@/constants/url";
 import axios from "axios";
+import { FcConferenceCall } from "react-icons/fc";
 const Dashboard = () => {
 
     const router = useRouter();
@@ -166,9 +167,9 @@ const Dashboard = () => {
 
     return (
 
-        <div className="bg-gray-200">
-            <div className="w-full flex h-12  justify-between items-center px-4  shadow-lg lg:flex-col  ">
-                <span className="text-black flex flex-row gap-4 font-bold   ">
+        <div className="bg-blue-200">
+            <div className="w-full flex h-12  justify-between items-center px-4  shadow-lg lg:flex-col  bg-blue-600  ">
+                <span className="text-black flex flex-row gap-4 font-bold  text-white text-sm">
                     <FaArrowLeftLong
                         className="self-center "
                         onClick={() =>
@@ -177,7 +178,12 @@ const Dashboard = () => {
                             })
                         }
                     />
-                    <span>List of Dealer</span>
+                    <FcConferenceCall
+                        className="self-center "
+                        size={25}
+                    />
+
+                    <span>List of Dealer ({dealerData.length})</span>
                 </span>{" "}
                 <span className="text-white self-center">
                     <Popover as="div" className="relative border-none outline-none mt-2">
@@ -292,7 +298,15 @@ const Dashboard = () => {
                             <span className="text-xs text-gray-700 mt-1">Sale Return</span>
                         </div>
                         <div className="flex flex-col items-center cursor-pointer"
-
+                            onClick={() => {
+                                router.push({
+                                    pathname: "/Sales_App/Dealer_Stock_Liqdation",
+                                    query: {
+                                        sap_code: item.SAP_customerSAPNo,
+                                        party_name: item.party_Name
+                                    },
+                                });
+                            }}
 
 
                         >

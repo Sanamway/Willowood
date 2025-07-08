@@ -34,10 +34,13 @@ const MapDepot = () => {
     try {
       const respond = await axios.get(`${url}/api/get_dipot`, {
         headers: headers,
+        params: {
+          depot: "all"
+        }
       });
       const apires = await respond.data.data;
       setData(apires);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -57,15 +60,15 @@ const MapDepot = () => {
     setisOpen(false);
   };
 
-  const {name} =router.query
+  const { name } = router.query
   return (
     <Layout>
       <div className=" w-full font-arial bg-white ">
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="flex flex-row justify-between  h-max  px-5">
           <h2 className="font-arial font-normal text-3xl tabletitle py-2">
-            {name ? name :"Mapping Depot"}
-           
+            {name ? name : "Mapping Depot"}
+
           </h2>
           <span className="flex items-center gap-2 cursor-pointer">
             <span className="flex flex-row">

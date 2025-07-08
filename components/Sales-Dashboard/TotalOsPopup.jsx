@@ -171,15 +171,15 @@ const TotalOutStandPop = ({ closeModal, regionData, catData, dueData }) => {
                           <td
                             className={`px-4 font-normal gap-1 text-left whitespace-nowrap py-1 text-[0.66rem] text-gray-500 border `}
                           >
-                            Total
-                          </td>
-                          <td
-                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
-                          >
 
                           </td>
                           <td
-                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border `}
+                            className={`px-2  text-end whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border  font-bold`}
+                          >
+                            Total
+                          </td>
+                          <td
+                            className={`px-2  text-center whitespace-nowrap py-1 text-[0.75rem] text-gray-600 border font-bold`}
                           >
                             {catdata.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"] || 0, 0).toFixed(2)}
 

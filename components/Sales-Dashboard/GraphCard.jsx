@@ -17,7 +17,9 @@ const GraphCard = () => {
   const allRollingAnalyticalData = useSelector(
     (state) => state.rspAnalytics.rspAnalyticalData.product_category
   );
-
+  console.log(
+    allRollingAnalyticalData, "fgy"
+  )
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -32,7 +34,7 @@ const GraphCard = () => {
   useEffect(() => {
     if (allRollingAnalyticalData && allRollingAnalyticalData.length > 0) {
       const names = allRollingAnalyticalData.map(item => item._id); // Extract names (e.g., 'X-Factor', 'Core', etc.)
-      const dataValues = allRollingAnalyticalData.map(item => item.sku_billqty); // Extract the values (e.g., '43 Cr', '23 Cr', etc.)
+      const dataValues = allRollingAnalyticalData.map(item => item.totalNewPriceValue); // Extract the values (e.g., '43 Cr', '23 Cr', etc.)
 
       // Generate dynamic colors based on the number of segments in the chart
       const backgroundColors = generateRandomColors(allRollingAnalyticalData.length);
@@ -71,7 +73,7 @@ const GraphCard = () => {
           <div className="flex flex-col w-full">
             <div className="text-left p-1.5 flex items-center justify-between w-full">
               <h2 className="text-[0.48rem] text-gray-600 font-bold">
-                X-Factor, Core, and Other Products (Qty)
+                X-Factor, Core, and Other Products (Value)
               </h2>
               <button
                 onClick={openModal}

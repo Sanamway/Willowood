@@ -1,6 +1,6 @@
 import React from "react";
 import { FaUser } from "react-icons/fa";
-import { BiSolidLockAlt } from "react-icons/bi";
+
 import { AiFillGoogleCircle, AiFillTwitterCircle } from "react-icons/ai";
 import { BsFacebook } from "react-icons/bs";
 import Logo from "../../public/Willowood.png";

@@ -331,7 +331,6 @@ const AdditionalInfo = (props) => {
   }, [])
 
   const [addFarmerModal, setAddFarmerModal] = useState(false);
-
   const [farmerState, setFarmerState] = useState({
     farmerName: "",
     fatherName: "",
@@ -348,8 +347,8 @@ const AdditionalInfo = (props) => {
     village: "",
     pinCode: "",
     retailer: ""
-  });
 
+  });
   const handleSaveFarmer = async () => {
     if (cropGridData.length) {
       try {

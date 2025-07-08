@@ -878,7 +878,7 @@ const Attendance = () => {
     switch (role) {
       case 1:
         return <div className="flex items-center">
-          <input type="Checkbox"
+          {/* <input type="Checkbox"
             className="ml-1 mr-1"
             checked={item.isVerified}
             disabled={item.verified === "Yes"}
@@ -896,7 +896,7 @@ const Attendance = () => {
 
           >
             Verify
-          </button>
+          </button> */}
           <input type="Checkbox"
             className="ml-1 mr-1"
             checked={item.isApproved}
@@ -934,7 +934,7 @@ const Attendance = () => {
         </div>
 
       case 8: return <div className="flex items-center">
-        <input type="Checkbox"
+        {/* <input type="Checkbox"
           className="ml-1 mr-1"
           checked={item.isVerified}
           disabled={item.verified === "Yes"}
@@ -952,7 +952,7 @@ const Attendance = () => {
 
         >
           Verify
-        </button>
+        </button> */}
         <input type="Checkbox"
           className="ml-1 mr-1"
           checked={item.isApproved}
@@ -1018,7 +1018,7 @@ const Attendance = () => {
       case 5:
         return <div className="flex items-center">
 
-          <button
+          {/* <button
             onClick={() => {
               setShowVerifyModal(true);
               setModalData({
@@ -1031,7 +1031,7 @@ const Attendance = () => {
 
           >
             Verify
-          </button>
+          </button> */}
           <input type="Checkbox"
             className="ml-1 mr-1"
             checked={item.isApproved}
@@ -1068,35 +1068,60 @@ const Attendance = () => {
           </button>
         </div>
 
-      case 6: return <div className="flex items-center">
-        <input type="Checkbox"
-          className="ml-1 mr-1"
-          checked={item.isVerified}
-          disabled={item.verified === "Yes"}
-          onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
-        <button
-          onClick={() => {
-            setShowVerifyModal(true);
-            setModalData({
-              ...modalData,
-              type: "Verify",
-              id: item.ar_id,
-            });
-          }}
-          disabled={item.verified === "Yes"}
+      case 6:
+        return <div className="flex items-center">
+          {/* <input type="Checkbox"
+            className="ml-1 mr-1"
+            checked={item.isVerified}
+            disabled={item.verified === "Yes"}
 
-        >
-          Verify
-        </button>
+            onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
 
-      </div>
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Verify",
+                id: item.ar_id,
+              });
+            }}
+
+            disabled={item.verified === "Yes"}
+          >
+            Verify
+          </button> */}
+          <input type="Checkbox"
+            className="ml-1 mr-1"
+            checked={item.isApproved}
+            disabled={item.approved === "Yes"}
+            onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+          <button
+            onClick={() => {
+              setShowVerifyModal(true);
+              setModalData({
+                ...modalData,
+                type: "Approve",
+                id: item.ar_id,
+              });
+            }}
+            disabled={item.approved === "Yes"}
+            className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+
+          >
+            Approve
+          </button>
+
+
+        </div>
 
       case 9: return <div className="flex items-center">
-        <input type="Checkbox"
+        {/* <input type="Checkbox"
           className="ml-1 mr-1"
           checked={item.isVerified}
           disabled={item.verified === "Yes"}
           onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
+
         <button
           onClick={() => {
             setShowVerifyModal(true);
@@ -1110,13 +1135,34 @@ const Attendance = () => {
 
         >
           Verify
+        </button> */}
+        <input type="Checkbox"
+          className="ml-1 mr-1"
+          checked={item.isApproved}
+          disabled={item.approved === "Yes"}
+          onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
+        <button
+          onClick={() => {
+            setShowVerifyModal(true);
+            setModalData({
+              ...modalData,
+              type: "Approve",
+              id: item.ar_id,
+            });
+          }}
+          disabled={item.approved === "Yes"}
+          className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+
+        >
+          Approve
         </button>
+
 
       </div>
 
       default:
         return <div className="flex items-center">
-          <input type="Checkbox"
+          {/* <input type="Checkbox"
             className="ml-1 mr-1"
             checked={item.isVerified}
             disabled={item.verified === "Yes"}
@@ -1134,7 +1180,7 @@ const Attendance = () => {
 
           >
             Verify
-          </button>
+          </button> */}
           <input type="Checkbox"
             className="ml-1 mr-1"
             checked={item.isApproved}
@@ -1224,7 +1270,7 @@ const Attendance = () => {
 
 
 
-        <span className="flex items-center">
+        {/* <span className="flex items-center">
           <input
             type="checkbox"
             checked={allVerified}
@@ -1232,16 +1278,16 @@ const Attendance = () => {
             className="ml-2 text-center"
           />
           <span className="text-xs ml-1 text-center">Select All Verify</span>
-        </span>
+        </span> */}
 
 
-        <button type="button"
+        {/* <button type="button"
           className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
           onClick={() => {
 
             handleVerifyAll()
           }}
-        >Verify All</button>
+        >Verify All</button> */}
 
 
         <span className="flex items-center">
@@ -1264,7 +1310,7 @@ const Attendance = () => {
         >Approve All</button>
       </div>
       case 8: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
-        <div className="inline-flex items-center">
+        {/* <div className="inline-flex items-center">
           <input
             type="checkbox"
             checked={allVerified}
@@ -1272,7 +1318,7 @@ const Attendance = () => {
             className="ml-2"
           />
           <span className="text-xs ml-1">Select All Verify</span>
-        </div>
+        </div> */}
 
         <div className="inline-flex items-center ml-4">
           <input
@@ -1330,8 +1376,11 @@ const Attendance = () => {
       </div>
 
 
-      case 6: return <div className="flex flex-col gap-2 items-start ml-4">
-        <span className="flex items-center">
+      case 6: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
+
+
+
+        {/* <span className="flex items-center">
           <input
             type="checkbox"
             checked={allVerified}
@@ -1339,6 +1388,26 @@ const Attendance = () => {
             className="ml-2 text-center"
           />
           <span className="text-xs ml-1 text-center">Select All Verify</span>
+        </span> */}
+
+
+        {/* <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleVerifyAll()
+          }}
+        >Verify All</button> */}
+
+
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allApproved}
+            onChange={handleApproveAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Approve</span>
         </span>
 
 
@@ -1346,9 +1415,9 @@ const Attendance = () => {
           className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
           onClick={() => {
 
-            handleVerifyAll()
+            handleApproveAll()
           }}
-        >Verify All</button>
+        >Approve All</button>
       </div>
 
 
@@ -1357,9 +1426,11 @@ const Attendance = () => {
 
 
 
+      case 9: return <div className="flex w-full fex-row gap-2 justify-start px-4 mb-2">
 
-      case 9: return <div className="flex flex-col gap-2 items-start ml-4">
-        <span className="flex items-center">
+
+
+        {/* <span className="flex items-center">
           <input
             type="checkbox"
             checked={allVerified}
@@ -1367,6 +1438,26 @@ const Attendance = () => {
             className="ml-2 text-center"
           />
           <span className="text-xs ml-1 text-center">Select All Verify</span>
+        </span> */}
+
+
+        {/* <button type="button"
+          className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
+          onClick={() => {
+
+            handleVerifyAll()
+          }}
+        >Verify All</button> */}
+
+
+        <span className="flex items-center">
+          <input
+            type="checkbox"
+            checked={allApproved}
+            onChange={handleApproveAllChange}
+            className="ml-2 text-center"
+          />
+          <span className="text-xs ml-1 text-center">Select All Approve</span>
         </span>
 
 
@@ -1374,11 +1465,10 @@ const Attendance = () => {
           className="inline-flex justify-center  text-white border border-transparent bg-green-400 px-2 py-1 text-sm font-medium "
           onClick={() => {
 
-            handleVerifyAll()
+            handleApproveAll()
           }}
-        >Verify All</button>
+        >Approve All</button>
       </div>
-
     }
   }
 

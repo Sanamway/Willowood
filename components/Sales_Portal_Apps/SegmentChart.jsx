@@ -36,9 +36,10 @@ const SegementChart = (props) => {
 
     useEffect(() => {
         if (!props.data || props.data.length === 0) return;
-
+        console.log("zoo", props.data)
         const chartLabels = props.data.map((item) => item.product_segment);
-        const chartData = props.data.map((item) => item.total_mtd_qty);
+        const chartData = props.data.map((item) => item.total_mtd_new_budget_price_value
+        );
 
         setLabels(chartLabels);
         setDatasets([
@@ -75,8 +76,8 @@ const SegementChart = (props) => {
 
     return (
         <>
-            <div className="h-6 bg-white rounded-t-md flex items-center px-2 ">
-                <h2 className="text-[0.75rem]">Segment Qty Sold Insight (YTD)</h2>
+            <div className="h-6 bg-white rounded-t-md flex items-center px-2  flex justify-center">
+                <h2 className="text-[0.75rem] font-bold">Segment Value Sold Insight (YTD)</h2>
             </div>
             <div
                 ref={chartContainerRef}
