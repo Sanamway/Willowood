@@ -18,6 +18,9 @@ const ProductBrand = () => {
     secret: "fsdhfgsfuiweifiowefjewcewcebjw"
   };
 
+  const [tempImage, setTempImage] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
+
   const [formState, setFromState] = useState({
     brand_name: "",
     brand_code: "",
@@ -35,10 +38,13 @@ const ProductBrand = () => {
       const respData = await resp.data.data;
       setFromState({
         brand_name: respData?.brand_name,
-        brand_code: respData?.brand_code,
+        brand_code: respData?.brand_code ?? 1234,
         pseg_id: respData?.pseg_id,
-        c_name: respData?.c_name
+        c_name: respData?.c_name,
+        c_id: respData?.c_id
       });
+
+      setImagePreview(respData?.image_name)
     } catch (error) {
       console.log("ee", error);
     }
@@ -49,8 +55,22 @@ const ProductBrand = () => {
     if (id) getPrdBrandById(id);
   }, [id]);
 
+  //////////Handle Save //////////////////////////////////////////
+
+
   const handleSaveBrand = async (e) => {
     e.preventDefault();
+
+    if (!formState.brand_name || !formState.c_id) {
+      toast.error("Product Category and Company are required");
+      return;
+    }
+
+    if (!tempImage) {
+      toast.error("Please select an image");
+      return;
+    }
+
     try {
       const Formdata = {
         brand_name: formState?.brand_name,
@@ -58,40 +78,68 @@ const ProductBrand = () => {
         pseg_id: formState?.pseg_id,
         c_name: formState?.c_name,
         status: formState?.status,
-        c_id: formState?.c_name,
+        c_id: formState?.c_id,
         pseg_name: formState?.pseg_name,
         ul_name: formState?.ul_name
       };
+
+      console.log("formdata", Formdata);
+
       const resp = await axios.post(`${url}/api/create_product_brand`, JSON.stringify(Formdata), {
         headers: headers
       });
+
       const respdata = await resp.data;
       console.log("saved", respdata);
+
       if (respdata) {
         toast.success(respdata.message);
-        setTimeout(() => {
-          router.push("/table/table_product_brand");
-        }, 2500);
+
+        const imageFormData = new FormData();
+        imageFormData.append("myFile", tempImage);
+
+        const imageUploadResp = await axios.post(
+          `${url}/api/upload_file/?file_path=product_brand&image_name=${tempImage.name}&c_id=${+formState?.c_name}&brand_name=${formState?.brand_name}`,
+          imageFormData,
+          {
+            headers: {
+              ...headers,
+              "Content-Type": "multipart/form-data"
+            }
+          }
+        );
+
+        console.log("Image uploaded", imageUploadResp.data);
+
+        if (imageUploadResp.data) {
+          toast.success("Image uploaded successfully");
+
+          setTimeout(() => {
+            router.push("/table/table_product_brand");
+          }, 2500);
+        }
       }
     } catch (errors) {
-      const ermsg = errors.response.data.message;
-      const errmsg = errors.response.data.error;
-      if(ermsg){
-        toast.error(ermsg)
-        return
-      }
-      console.log("fefef", errors)
-      if (errmsg?.includes('brand_name_1')) {
-        toast.error('Brand Name is Duplicate');
-      }else if(errmsg?.includes('brand_code_1')){
-        toast.error('Brand Id is duplicate')
-      }else{
-        toast.error(errmsg)
+      console.error("Error occurred", errors);
+
+      const errmsg = errors?.response?.data?.error || "Something went wrong";
+
+      if (errmsg?.includes("brand_name_1")) {
+        toast.error("Brand Name is Duplicate");
+      } else if (errmsg?.includes("brand_code_1")) {
+        toast.error("Brand Id is duplicate");
+      } else if (errors.message === "Network Error") {
+        toast.error("Network Error. Please check your connection");
+      } else if (errors?.response?.status === 413) {
+        toast.error("Image size is too large");
+      } else {
+        toast.error(errmsg);
       }
     }
   };
 
   //Edit Brand
+
 
   const handleEditBrand = async (e) => {
     e.preventDefault();
@@ -100,46 +148,89 @@ const ProductBrand = () => {
         brand_name: formState.brand_name,
         brand_code: formState.brand_code,
         pseg_id: formState.pseg_id,
-        c_name: formState.c_name
+        c_name: formState.c_name,
+        c_id: formState.c_id
       };
+
       const emptyFields = Object.entries(Editdata)
         .filter(([key, value]) => value === "")
         .map(([key]) => key);
+
       if (emptyFields.length > 0) {
         const customMessages = {
           c_name: "Company Name",
+          c_id: "Company ID",
           pseg_id: "Product Segment",
           brand_code: "Brand Code",
           brand_name: "Brand Name"
         };
         const requiredFields = emptyFields.map((field) => customMessages[field] || field);
         toast.error(`${requiredFields.join(", ")} is required.`);
-      } else {
-        const resp = await axios.put(`${url}/api/update_product_brand/${id}`, JSON.stringify(Editdata), {
-          headers: headers
-        });
-        const respdata = await resp.data;
-        if (respdata) {
-          toast.success(respdata.message);
-          setTimeout(() => {
-            router.push("/table/table_product_brand");
-          }, 2500);
+        return;
+      }
+
+      console.log("prodEdit", Editdata)
+
+      // return 
+
+      const resp = await axios.put(`${url}/api/update_product_brand/${id}`, JSON.stringify(Editdata), {
+        headers: headers
+      });
+
+      const respdata = await resp.data;
+      console.log("resap", respdata);
+
+      if (respdata) {
+        toast.success(respdata.message);
+
+        if (tempImage) {
+          const imageFormData = new FormData();
+          imageFormData.append("myFile", tempImage);
+
+          const imageUploadResp = await axios.post(
+            `${url}/api/upload_file/?file_path=product_brand&image_name=${tempImage.name}&c_id=${formState?.c_id}&brand_name=${formState?.brand_name}`,
+            imageFormData,
+            {
+              headers: {
+                ...headers,
+                "Content-Type": "multipart/form-data"
+              }
+            }
+          );
+
+          console.log("Image uploaded", imageUploadResp.data);
+
+          if (imageUploadResp.data) {
+            toast.success("Image uploaded successfully");
+          }
         }
+
+        setTimeout(() => {
+          router.push("/table/table_product_brand");
+        }, 2500);
       }
     } catch (errors) {
-      const ermsg = errors.response.data.message;
-      // if(ermsg){
-      //   toast.error(ermsg)
-        
-      // }
-      const errmsg = errors.response.data.error;
-      console.log("fefef", errors)
-      if (errmsg?.includes('brand_name_1')) {
-        toast.error('Brand Name is Duplicate');
-      }else if(errmsg?.includes('brand_code_1')){
-        toast.error('Brand Id is duplicate')
-      }else{
-        toast.error(errmsg)
+      console.log("e", errors);
+      const ermsg = errors?.response?.data?.message;
+
+      if (ermsg) {
+        toast.error(ermsg);
+        return;
+      }
+
+      const errmsg = errors?.response?.data?.error;
+      console.log("fefef", errors);
+
+      if (errmsg?.includes("brand_name_1")) {
+        toast.error("Brand Name is Duplicate");
+      } else if (errmsg?.includes("brand_code_1")) {
+        toast.error("Brand Id is duplicate");
+      } else if (errors.message === "Network Error") {
+        toast.error("Network Error. Please check your connection");
+      } else if (errors?.response?.status === 413) {
+        toast.error("Image size is too large");
+      } else {
+        toast.error(errmsg || "Something went wrong");
       }
     }
   };
@@ -186,9 +277,26 @@ const ProductBrand = () => {
     } catch (error) {}
   };
 
-  console.log("fddf", prdSegment);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    if (!allowedTypes.includes(file?.type)) {
+      toast.error("Please upload only JPG, JPEG or PNG images");
+      return;
+    }
 
- 
+    const maxSize = 2 * 1024 * 1024;
+    if (file?.size > maxSize) {
+      toast.error("Image size should be less than 2MB");
+      return;
+    }
+
+    setTempImage(file);
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
+  };
+
+  console.log("Formdata", formState);
 
   return (
     <>
@@ -221,14 +329,59 @@ const ProductBrand = () => {
 
           {/* <div className="bg-gray-300"></div> */}
           <div className="text-black h-screen  ">
-            <div className="bg-gray-100 p-4  h-screen ">
+            <div className="bg-gray-100 p-4 h-screen ">
               <form
                 onSubmit={(e) => e.preventDefault()}
-                disabled={router.query.type === "CREATE" }
+                disabled={router.query.type === "CREATE"}
                 className="max-w-1/2 mx-4 mt mb-12 bg-white rounded shadow p-4"
               >
-                <div className="flex -mx-2 mb-4 flex-col">
-                  <div className="lg:w-1/6 px-2 mb-2">
+                <div className="flex -mx-2 mb-4 flex-col  relative">
+                  <div className="absolute right-20">
+                    <label className="block text-gray-700 text-center text-sm font-bold mb-2">
+                      Product Brand Image
+                      <span className="text-red-500">*</span>
+                    </label>
+                    <div className="flex items-center flex-col space-x-4">
+                      {imagePreview && (
+                        <div className="relative">
+                          <img
+                            src={imagePreview}
+                            alt="Preview"
+                            className="lg:w-32 lg:h-32 w-20 h-20 object-cover rounded-full"
+                          />
+                          {router.query.type !== "view" && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setTempImage("");
+                                setImagePreview("");
+                              }}
+                              className="absolute lg:w-8 lg:h-8 w-4 h-4 top-1 right-2 lg:top-0 lg:right-0 bg-red-500 text-white rounded-full "
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </div>
+                      )}
+                      {router.query.type !== "view" && (
+                        <input
+                          type="file"
+                          accept=".jpg,.jpeg,.png"
+                          onChange={handleImageChange}
+                          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold
+        file:bg-violet-50 file:text-violet-700
+        hover:file:bg-violet-100"
+                          disabled={!formState.brand_name || !formState.c_name}
+                        />
+                      )}
+                    </div>
+                    {(!formState.brand_name || !formState.c_name) && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        Please fill in Product Brand and Company first
+                      </p>
+                    )}
+                  </div>
+                  <div className="lg:w-1/6 w-1/4 px-2 mb-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
                       Brand Code
                     </label>
@@ -249,7 +402,6 @@ const ProductBrand = () => {
                       }}
                     />
                   </div>
-                 
                 </div>
                 <div className="flex -mx-2 mb-4">
                   <div className="w-full lg:w-1/2 px-2">
@@ -265,7 +417,8 @@ const ProductBrand = () => {
 
                         setFromState({
                           ...formState,
-                          c_name: e.target.value
+                          c_name: e.target.value,
+                          c_id: e.target.value
                         });
                       }}
                     >
@@ -308,20 +461,15 @@ const ProductBrand = () => {
                       <option value={""} className="focus:outline-none focus:border-b bg-white">
                         Select Options
                       </option>
-                      {prdSegment.map(
-                        (option, idx) => (
-                          console.log("ff", option),
-                          (
-                            <option
-                              key={idx}
-                              value={option?.pseg_id ? option?.pseg_id : ""}
-                              className="focus:outline-none focus:border-b bg-white"
-                            >
-                              {option?.pseg_name ? option?.pseg_name : "Select Option"}
-                            </option>
-                          )
-                        )
-                      )}
+                      {prdSegment.map((option, idx) => (
+                        <option
+                          key={idx}
+                          value={option?.pseg_id ? option?.pseg_id : ""}
+                          className="focus:outline-none focus:border-b bg-white"
+                        >
+                          {option?.pseg_name ? option?.pseg_name : "Select Option"}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>

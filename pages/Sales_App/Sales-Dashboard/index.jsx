@@ -1,32 +1,175 @@
-import React from "react";
-import FilterComponent from "./FilterComponent";
-import SaleCards from "./SaleCards";
-import CustomerCards from "./CustomerCards";
-import SaleSummary from "./SaleSummary";
-import { useState } from "react";
-import CreditBalance from "./CreditBalance";
-import TotalCards from "./TotalCards";
-import RecentOrder from "./RecentOrder";
-import RollingCards from "./RollingCards";
-import GraphCard from "./GraphCard";
-import ProductCards from "./ProductCards";
+import React, { useState, useEffect } from "react";
+import FilterComponent from "../../../components/Sales-Dashboard/FilterComponent";
+import SaleCards from "../../../components/Sales-Dashboard/SaleCards";
+import CustomerCards from "../../../components/Sales-Dashboard/CustomerCards";
+import SaleSummary from "../../../components/Sales-Dashboard/SaleSummary";
+
+import CreditBalance from "../../../components/Sales-Dashboard/CreditBalance";
+
+import RecentOrder from "../../../components/Sales-Dashboard/RecentOrder";
+import RollingCards from "../../../components/Sales-Dashboard/RollingCards";
+import GraphCard from "../../../components/Sales-Dashboard/GraphCard";
+import ProductCards from "../../../components/Sales-Dashboard/ProductCards";
 import { LiaFileDownloadSolid } from "react-icons/lia";
 import { Popover, Switch } from "@headlessui/react";
-import ViewCard from "./ViewCards";
-import ChartOne from "../ChartOne";
+import ViewCard from "../../../components/Sales-Dashboard/ViewCards";
+import ChartOne from "../../../components/Sales_Portal_Apps/ChartOne";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { BsCalendar2Month } from "react-icons/bs";
 import { FaHandsHelping } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
+import RollingTable from "@/components/Sales-Dashboard/RollingTable";
+import { useRouter } from "next/router";
+import { url } from "@/constants/url";
+import axios from "axios";
 
 const Dashboard = () => {
+  const router = useRouter();
+  const headers = {
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+  };
+  const [localStorageItems, setLocalStorageItems] = useState({
+    uId: "",
+    cId: "",
+    bgId: "",
+    buId: "",
+    rId: "",
+    zId: "",
+    tId: "",
+    roleId: "",
+    empCode: "",
+    tDes: ""
+  });
+
+  useEffect(() => {
+
+    if (typeof window === undefined) return
+    setLocalStorageItems({
+      cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
+      bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
+      buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
+      rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
+      zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
+      tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+      roleId: JSON.parse(window.localStorage.getItem("userinfo"))?.role_id,
+      clName: window.localStorage.getItem("user_name"),
+      ulName: window.localStorage.getItem("phone_number"),
+      empCode: window.localStorage.getItem("emp_code"),
+      roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
+      reportingManager: JSON.parse(window.localStorage.getItem("userinfo")).rp_manager,
+      developmentManager: JSON.parse(window.localStorage.getItem("userinfo")).functional_mgr,
+      hrManager: JSON.parse(window.localStorage.getItem("userinfo")).hr_name,
+      reportingHQ: JSON.parse(window.localStorage.getItem("userinfo")).reporting_hq,
+      mobile: JSON.parse(window.localStorage.getItem("phone_number")),
+    });
+
+
+
+  }, []);
+
+
+  const getUserItem = () => {
+    let role = localStorageItems.roleId
+    switch (role) {
+      case 1: return <div className="flex w-full  w-28">
+        <div className="flex">
+          <p className=" font-bold text-sm text-blue-800 w-24">
+            Business Segment
+          </p>
+          <span>:</span>
+        </div>
+        <span className="w-32 ml-3">{JSON.parse(window.localStorage.getItem("userinfo"))?.business_segment
+        }</span>
+      </div>
+
+      case 3: return <div className="flex w-full  w-28">
+        <div className="flex">
+          <p className=" font-bold text-sm text-blue-800 w-24">
+            Business Unit
+          </p>
+          <span>:</span>
+        </div>
+        <span className="w-32 ml-3">{JSON.parse(window.localStorage.getItem("userinfo"))?.business_unit_name}</span>
+      </div>
+
+      case 4: return <div className="flex w-full  w-28">
+        <div className="flex">
+          <p className=" font-bold text-sm text-blue-800 w-24">
+            Zone
+          </p>
+          <span>:</span>
+        </div>
+        <span className="w-32 ml-3">{JSON.parse(window.localStorage.getItem("userinfo"))?.zone_name}</span>
+      </div>
+
+      case 5: return <div className="flex w-full  w-28">
+        <div className="flex">
+          <p className=" font-bold text-sm text-blue-800 w-24">
+            Region
+          </p>
+          <span>:</span>
+        </div>
+        <span className="w-32 ml-3">{JSON.parse(window.localStorage.getItem("userinfo"))?.region_name
+        }</span>
+      </div>
+
+      case 6: return <div className="flex w-full  w-28">
+        <div className="flex">
+          <p className=" font-bold text-sm text-blue-800 w-24">
+            Territory
+          </p>
+          <span>:</span>
+        </div>
+        <span className="w-32 ml-3">{localStorageItems.tDes}</span>
+      </div>
+      case 10: return <div className="flex w-full  w-28">
+        <div className="flex">
+          <p className=" font-bold text-sm text-blue-800 w-24">
+            Business Segment
+          </p>
+          <span>:</span>
+        </div>
+        <span className="w-32 ml-3">{JSON.parse(window.localStorage.getItem("userinfo"))?.business_segment
+        }</span>
+      </div>
+
+
+    }
+  }
+  const [imagePreview, setImagePreview] = useState(null);
+  console.log("pol", imagePreview)
+  // Fetch image from API
+  const getImage = async (mobile) => {
+    if (typeof window === "undefined") return;
+    try {
+      const res = await axios.get(`${url}/api/get_image`, {
+        headers: headers,
+        params: {
+          phone_number: mobile,
+          file_path: "user",
+        },
+      });
+
+      const respdata = res.data.data;
+      console.log("Fetched Image URL:", respdata.image_url);
+      setImagePreview(respdata.image_url);
+    } catch (error) {
+      console.log("Error fetching image:", error);
+      // setImagePreview("/default-profile.png");
+    }
+  };
+  useEffect(() => {
+    if (typeof window === undefined) return
+    getImage(JSON.parse(window.localStorage.getItem("phone_number")))
+  }, [])
+
   return (
     <>
       <section className="w-full px-3 bg-[#f0eff2] min-h-screen  pb-12 font-arial">
-
-        <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
-          <span className="text-black flex flex-row gap-4 font-bold   ">
+        <div className="w-full flex h-12 bg-blue-500 justify-between items-center px-4  shadow-lg lg:flex-col  ">
+          <span className="text-white flex flex-row gap-4 font-bold   ">
             <FaArrowLeftLong
               className="self-center "
               onClick={() =>
@@ -35,61 +178,36 @@ const Dashboard = () => {
                 })
               }
             />
-            <span>Sales Dashboard</span>
+            <span>My KPI Dashboard</span>
           </span>{" "}
-          <span className="text-white self-center">
-            <Popover as="div" className="relative border-none outline-none mt-2">
-              {({ open }) => (
-                <>
-                  <Popover.Button className="focus:outline-none">
-                    <PiDotsThreeOutlineVerticalFill
-                      className="text-[#626364] cursor-pointer"
-                      size={20}
-                    />
-                  </Popover.Button>
 
-                  <Popover.Panel
-                    as="div"
-                    className={`${open ? "block" : "hidden"
-                      } absolute z-40 top-1 right-0 mt-2 w-36 bg-white  text-black border rounded-md shadow-md`}
-                  >
-                    <ul className=" text-black text-sm flex flex-col gap-4 py-4  font-Rale cursor-pointer ">
-                      <li
-                        className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2   items-center whitespace-nowrap "
-                        onClick={() =>
-                          router.push({
-                            pathname: "/MR_Portal_Apps/MRHome",
-                          })
-                        }
-                      >
-                        <BsCalendar2Month
-                          className="text-[#626364] cursor-pointer"
-                          size={20}
-                        />{" "}
-                        Approval Req.
-                      </li>
-
-                      <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:hidden ">
-                        <FaHandsHelping
-                          className="text-[#626364] cursor-pointer"
-                          size={20}
-                        />{" "}
-                        Help
-                      </li>
-                      <li className="hover:bg-gray-100 px-2 py-1 rounded-md flex flex-row gap-2  items-center lg:flex-col ">
-                        <IoSettingsOutline
-                          className="text-[#626364] cursor-pointer"
-                          size={20}
-                        />{" "}
-                        Setting
-                      </li>
-                    </ul>
-                  </Popover.Panel>
-                </>
-              )}
-            </Popover>
-          </span>
         </div>
+
+        <div className="flex mb-4 mt-2 mb-2 bg-white">
+          <div className="w-40 h-30 flex justify-center items-center">
+            <img src={imagePreview} className="h-20 w-20 rounded-full text-orange-500 mt-4" size={80}></img>
+          </div>
+          <div className="flex  flex-col  w-full mt-4 md:hidden">
+            <div className="flex w-full  w-28">
+              <div className="flex">
+                <p className=" font-bold text-sm text-blue-800 w-24">
+                  Emp Code
+                </p>
+                <span>:</span>
+              </div>
+              <span className="w-32 ml-3">{localStorageItems.empCode}</span>
+            </div>
+            <div className="flex   w-full  w-28 ">
+              <div className="flex">
+                <p className=" font-bold text-sm text-blue-800 w-24">Name</p>
+                <span>:</span>
+              </div>
+              <span className="w-32 ml-3 whitespace-nowrap"> {localStorageItems.clName}</span>
+            </div>
+            {getUserItem()}
+          </div>
+        </div>
+
 
 
         <div
@@ -99,16 +217,17 @@ const Dashboard = () => {
           <FilterComponent></FilterComponent>
         </div>
 
-        <div className="cardgraphwrapper w-full px- mt-4 flex lg:flex-row flex-col gap-3 font-arial   rounded-md">
 
+        <div className="cardgraphwrapper w-full px- mt-4 flex lg:flex-row flex-col gap-3 font-arial   rounded-md">
           <div className="leftwrapper lg:w-[65%]  rounded-md">
 
 
-            <CustomerCards></CustomerCards>
+            <CustomerCards>
 
+            </CustomerCards>
+
+            <RollingTable></RollingTable>
             <RollingCards></RollingCards>
-
-
             <SaleCards></SaleCards>
             <SaleSummary></SaleSummary>
 
@@ -122,10 +241,6 @@ const Dashboard = () => {
           <div className="rightwrapper h-64 flex-1  mt- border-green rounded-md">
 
             <CreditBalance></CreditBalance>
-
-
-
-
             <ChartOne></ChartOne>
 
 
@@ -139,11 +254,8 @@ const Dashboard = () => {
 
 
         <div className="h- bg-white rounded-l-md rounded-r-md flex justify-between w-full items-center px-2  mt-3">
-          <h2 className="text-[0.85rem] font-semibold py-2 ">Top Sale Products</h2>
-          <button className="flex items-center bg-[#9BB456] rounded-sm py-1 px-1 gap-1">
-            <LiaFileDownloadSolid className="text-white" size={20}></LiaFileDownloadSolid>
-            <h2 className="text-white text-[0.7rem] font-bold">Export Excel</h2>
-          </button>
+          <h2 className=" font-semibold py-2 text-[0.7rem]">Top 20 Products Trends</h2>
+
         </div>
         <div
           className="filterwrap w-full flex items-center justify-center  font-arial  rounded-b-md bg-white  py-1 "
@@ -156,7 +268,7 @@ const Dashboard = () => {
 
       </section>
     </>
-  );
+  ); 1
 };
 
 export default Dashboard;

@@ -27,8 +27,9 @@ const Layout = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [showSubmenu, setSubmenu] = useState(null);
   const [profileImg, setUserImage] = useState("");
-  const [loading, setLoading] = useState(true);
+
   const [isUser, setUser] = useState(false);
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -43,53 +44,12 @@ const Layout = ({ children }) => {
   };
 
   useEffect(() => {
-    const checkLocalStorage = () => {
-      if (window.localStorage) {
-        const isLoggedInInLocalStorage = !!localStorage.getItem("uid");
-        const user_name = localStorage.getItem("user_name");
-        const uid = localStorage.getItem("uid");
-        const email_id = localStorage.getItem("email_id");
-        const phone_number = localStorage.getItem("phone_number");
-        const userinfoo = localStorage.getItem("userinfo");
-        const sidemenus = localStorage.getItem("SideMenus");
-        const logoutTime = localStorage.getItem("logout_time");
-        const loginTime = localStorage.getItem("login_in_time");
-        const mode = localStorage.getItem("mode");
-
-        setLogOutTime(logoutTime);
-        setLogInTime(loginTime);
-        setMode(mode);
-        setUser(isLoggedInInLocalStorage);
-        setEmailId(email_id);
-        setUsername(user_name);
-        setUid(uid);
-        setMenus(JSON.parse(sidemenus));
-        setUserInfo(JSON.parse(userinfoo));
-        setPhoneNumber(phone_number);
-
-        if (!isLoggedInInLocalStorage) {
-          router.push("/login");
-          return;
-        }
-
-        if (mode === "mobile") {
-          // router.push("/mrhome");
-          router.push("/MR_Portal_Apps/MRHome");
-          return;
-        }
-      }
-      setLoading(false);
+    handleWindowSizeChange();
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
     };
-    checkLocalStorage();
-  }, [router]);
-
-  // useEffect(() => {
-  //   handleWindowSizeChange();
-  //   window.addEventListener("resize", handleWindowSizeChange);
-  //   return () => {
-  //     window.removeEventListener("resize", handleWindowSizeChange);
-  //   };
-  // }, []);
+  }, []);
 
   const [email_id, setEmailId] = useState("");
   const [user_name, setUsername] = useState("");
@@ -98,42 +58,45 @@ const Layout = ({ children }) => {
   const [menusItems, setMenus] = useState([]);
   const [phone_number, setPhoneNumber] = useState("");
   const [mode, setMode] = useState("");
-  const [loctimeOut, setLogOutTime] = useState("");
-  const [loctimeIn, setLogInTime] = useState("");
 
-  // useEffect(() => {
-  //   if (window.localStorage) {
-  //     const isLoggedInInLocalStorage = !!localStorage.getItem("uid");
-  //     const user_name = localStorage.getItem("user_name");
-  //     const uid = localStorage.getItem("uid");
-  //     const email_id = localStorage.getItem("email_id");
-  //     const phone_number = localStorage.getItem("phone_number");
-  //     const userinfoo = localStorage.getItem("userinfo");
-  //     const sidemenus = localStorage.getItem("SideMenus");
-  //     const logoutTime = localStorage.getItem("logout_time");
-  //     const loginTime = localStorage.getItem("login_in_time");
-  //     const mode = localStorage.getItem("mode");
-  //     setLogOutTime(logoutTime);
-  //     setLogInTime(loginTime);
-  //     setMode(mode);
-  //     setUser(isLoggedInInLocalStorage);
-  //     setEmailId(email_id);
-  //     setUsername(user_name);
-  //     setUid(uid);
-  //     setMenus(JSON.parse(sidemenus));
-  //     setUserInfo(JSON.parse(userinfoo));
-  //     setPhoneNumber(phone_number);
-  //   }
+  useEffect(() => {
+    if (window.localStorage) {
+      const isLoggedInInLocalStorage = !!localStorage.getItem("uid");
+      const user_name = localStorage.getItem("user_name");
+      const uid = localStorage.getItem("uid");
+      const email_id = localStorage.getItem("email_id");
+      const phone_number = localStorage.getItem("phone_number");
+      const userinfoo = localStorage.getItem("userinfo");
+      const sidemenus = localStorage.getItem("SideMenus");
+      const mode = localStorage.getItem("mode");
+      setMode(mode);
+      setUser(isLoggedInInLocalStorage);
+      setEmailId(email_id);
+      setUsername(user_name);
+      setUid(uid);
+      setMenus(JSON.parse(sidemenus));
+      setUserInfo(JSON.parse(userinfoo));
+      setPhoneNumber(phone_number);
+    }
 
-  //   if (!localStorage.getItem("uid")) {
-  //     router.push("/login");
-  //     return;
-  //   }
+    if (!localStorage.getItem("uid")) {
+      router.push("/login");
+      return;
+    }
 
-  //   if (localStorage.getItem("mode") == "mobile") {
+    if (localStorage.getItem("mode") == "mobile") {
+      router.push("/mrhome");
+    }
+  }, []);
+
+
+  // useEffect(()=>{
+  //   if(mode){
   //     router.push("/mrhome");
   //   }
-  // }, []);
+  // },[mode])
+
+
 
   const headers = {
     "Content-Type": "application/json",
@@ -147,39 +110,40 @@ const Layout = ({ children }) => {
         { headers: headers }
       );
       const respData = await resp.data.data;
+      console.log("laymenus", respData);
       setMenus(respData);
-    } catch (error) {}
+    } catch (error) {
+      console.log("error : ", error);
+    }
   };
 
   const payload = {
     user_id: uid
   };
-
   const handleLogout = async () => {
+    console.log("pay", payload);
     try {
       const resp = await axios.get(`${url}/api/logout?user_id=${uid}`, {
         headers: headers
       });
       const respdata = await resp.data;
+      console.log("Logo", respdata);
       if (!respdata) {
         return;
       }
       if (respdata.status) {
         localStorage.removeItem("uid");
-        sessionStorage.removeItem("uid");
         localStorage.removeItem("user_name");
         localStorage.removeItem("email_id");
         localStorage.removeItem("userinfo");
         localStorage.removeItem("phone_number");
         localStorage.removeItem("mode");
-        localStorage.removeItem("c_id");
-        localStorage.removeItem("emp_code");
-        localStorage.removeItem("expireTime");
-        sessionStorage.removeItem("expireTime");
         toast.success(respdata.message);
         setTimeout(() => router.push("/logoutsuccess"), 1000);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log("logoeee", error);
+    }
   };
 
   useEffect(() => {
@@ -194,9 +158,12 @@ const Layout = ({ children }) => {
         headers: headers
       });
       const respData = await res.data;
+      console.log("Image", respData?.data?.image_url);
       setUserImage(respData?.data?.image_url);
       localStorage.setItem("ImageLink", respData?.data?.image_url);
-    } catch (error) {}
+    } catch (error) {
+      console.log("Error", error);
+    }
   };
 
   useEffect(() => {
@@ -216,8 +183,11 @@ const Layout = ({ children }) => {
         headers: headers
       });
       const respData = await res.data;
+      console.log("Image", respData?.data?.image_url);
       setUserImage(respData?.data?.image_url);
-    } catch (error) {}
+    } catch (error) {
+      console.log("Error", error);
+    }
   };
 
   const messageContent = `
@@ -242,83 +212,6 @@ Application End User
     window.open(`https://wa.me/+917428086211?text=${encodedMessage}`, "_blank");
     whatsAppMsg();
   };
-
-  //********************Logging out after few minutes***********************//
-
-  const [isLogged, setLogged] = useState(false);
-  const [expireTime, setExpireTime] = useState(null);
-
-  useEffect(() => {
-    if (window.localStorage) {
-      const getExpireTime = localStorage.getItem("expireTime");
-      // const getExpireTime = sessionStorage.getItem("expireTime");
-      setExpireTime(getExpireTime);
-      setLogged(true);
-      // console.log("locExpire", getExpireTime);
-    }
-  }, []);
-
-  const checkForInactive = () => {
-    if (expireTime && expireTime < Date.now()) {
-      setLogged(false);
-      handleLogout();
-    }
-  };
-
-  const updateExpireTime = () => {
-    const newExpireTime = Date.now() + 1200000;
-    setExpireTime(newExpireTime);
-  };
-
-  // SideEffect to check the User Inactivity
-
-  useEffect(() => {
-    const intervalId = setInterval(checkForInactive, 3000);
-    return () => clearInterval(intervalId);
-  }, [expireTime]);
-
-  // Update Expire Time on User Activity
-
-  useEffect(() => {
-    updateExpireTime();
-    const events = ["click", "keypress", "scroll", "onkeypress", "mousemove", "mousedown"];
-    const eventListener = () => updateExpireTime();
-    events.forEach((event) => window.addEventListener(event, eventListener));
-    return () => {
-      events.forEach((event) => window.removeEventListener(event, eventListener));
-    };
-  }, []);
-
-  // Function to handle user login
-  const handleLogin = () => {
-    const apiExpireTime = Date.now() + 60000;
-    // localStorage.setItem("expireTime", apiExpireTime)
-    setExpireTime(apiExpireTime);
-    setLogged(true);
-  };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <svg
-          aria-hidden="true"
-          className="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-red-600"
-          viewBox="0 0 100 101"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-            fill="currentColor"
-          />
-          <path
-            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-            fill="currentFill"
-          />
-        </svg>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -479,6 +372,7 @@ Application End User
                     ></Image>
                   </div>
                 </div>
+
                 <div className="flex items-center justify-center  ">
                   {!isMobile && (
                     <div className="icons mx-4 lg:mx-8">
@@ -555,27 +449,24 @@ Application End User
                 <Image src={WhatsAppChat} alt="whatsapp" />
               </div>
             </div> */}
-            {/* WhatsApp Blink Button  */}
 
-            {router.pathname == "/dealerform_details" ? null : (
-              <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 group">
+            <div className="fixed bottom-12 right-9  rounded-full animate-pulse z-9999 group">
+              <div
+                onClick={sendWhatsApp}
+                className="cursor-pointer w-12 h-12 rounded-full px-2 py-2 bg-green-600 "
+              >
                 <div
-                  onClick={sendWhatsApp}
-                  className="cursor-pointer w-12 h-12 rounded-full px-2 py-2 bg-green-600 "
+                  id="tooltip-default"
+                  role="tooltip"
+                  className="absolute whitespace-nowrap z-800 bottom-14 -left-32 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 group-hover:opacity-100"
                 >
-                  <div
-                    id="tooltip-default"
-                    role="tooltip"
-                    className="absolute whitespace-nowrap z-800 bottom-14 -left-32 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 group-hover:opacity-100"
-                  >
-                    Willowood Helpdesk Support
-                    <div className="tooltip-arrow" data-popper-arrow></div>
-                  </div>
-                  <Image data-tooltip-target="tooltip-default" src={WhatsAppChat} alt="whatsapp" />
+                  Willowood Helpdesk Support
+                  <div className="tooltip-arrow" data-popper-arrow></div>
                 </div>
-                <contentMessage />
+                <Image data-tooltip-target="tooltip-default" src={WhatsAppChat} alt="whatsapp" />
               </div>
-            )}
+              <contentMessage />
+            </div>
           </div>
         </div>
         <Toaster position="bottom-center" reverseOrder={false} />

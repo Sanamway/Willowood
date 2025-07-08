@@ -1,20 +1,14 @@
+ 
 import React, { useState, useEffect, Fragment } from "react";
-
 import { TbFileDownload } from "react-icons/tb";
-
 import { url } from "@/constants/url";
-
 import axios from "axios";
-
 import { useRouter } from "next/router";
-
 import { Dialog, Transition } from "@headlessui/react";
-
 import * as XLSX from "xlsx";
 
 const RPTable = (props) => {
   const [nextValidation, setNextValidation] = useState(false);
-
   const [successMsg, setSuccessMsg] = useState({ msg1: "", msg2: "" });
 
   const handleNextClick = () => {
@@ -23,12 +17,10 @@ const RPTable = (props) => {
       !(totalSumObject[Object.keys(totalSumObject)[26]] / 100000) <= 0
     ) {
       setNextValidation(true);
-
       setSuccessMsg({
         msg1: `Revise Current Month ${
           props.headerData[Object.keys(props.headerData)[19]]
         } is Greater than 0 Required, Please fill proper revised FCST QTY.`,
-
         msg2: "",
       });
     } else if (
@@ -39,7 +31,6 @@ const RPTable = (props) => {
 
       setSuccessMsg({
         msg1: "",
-
         msg2: `Revise Next Month ${
           props.headerData[Object.keys(props.headerData)[25]]
         } is Greater than 0 Required, Please fill proper revised FCST QTY.`,
@@ -49,79 +40,66 @@ const RPTable = (props) => {
       totalSumObject[Object.keys(totalSumObject)[26]] / 100000 <= 0
     ) {
       setNextValidation(true);
-
       setSuccessMsg({
         msg1: `Revise Current Month ${
           props.headerData[Object.keys(props.headerData)[19]]
         } is Greater than 0 Required, Please fill proper revised FCST QTY.`,
-
         msg2: `Revise Next Month ${
           props.headerData[Object.keys(props.headerData)[25]]
         } is Greater than 0 Required, Please fill proper revised FCST QTY.`,
       });
     } else {
       props.setTableData(result);
-
       props.formType("RPSummary");
     }
   };
-
   const [formActive, setFormActive] = useState(false);
-
   const router = useRouter();
-
   const headers = {
     "Content-Type": "application/json",
-
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
   let header;
-
   useEffect(() => {
+    console.log("njkl", props.tableData);
     if (Array.isArray(props.tableData[0])) {
       header = props.tableData[0]?.map((item) => item.trim());
-      let po = 0;
       props.setHeaderData(props.tableData[0]?.map((item) => item.trim()));
 
       setResult(
         props.tableData.slice(1).map((row) => {
           const obj = {};
-
           header.forEach((header, index) => {
             if (index === 20) {
               // Change the value at index 20 to the value at index 19 multiplied by the value at index 43
-
               obj[header] = row[19] * row[43];
 
-              po = po + row[19] * row[43];
-            } else if (index === 26) {
+            }
+            else if (index === 26) {
               // Change the value at index 20 to the value at index 19 multiplied by the value at index 43
-
               obj[header] = row[25] * row[43];
-            } else {
+
+            }
+           
+           
+            else {
               obj[header] = row[index];
             }
           });
-
           return obj;
         })
       );
-      console.log("joye", po);
     } else {
       setResult(props.tableData);
     }
   }, [props.tableData]);
 
   const [result, setResult] = useState([]);
-
   console.log("bnmkl", result);
-
   const [totalSumObject, setTotalSumObject] = useState({});
-
   useEffect(() => {
     if (!result.length) return;
-
     function sumNumericValues(data) {
       const sumObject = {};
 
@@ -137,19 +115,14 @@ const RPTable = (props) => {
 
       return sumObject;
     }
-
     const totalResult = sumNumericValues(result);
-
     setTotalSumObject(totalResult);
   }, [result]);
 
   const [sumValues, setSumValues] = useState({
     "Dec 23-24 Revised Fcst Qty": 0,
-
     "Dec 23-24 Urgent Qty": 0,
-
     "Jan 23-24 Fcst Qty": 0,
-
     "Expected Return Qty": 0,
   });
 
@@ -158,24 +131,16 @@ const RPTable = (props) => {
       (acc, entry) => {
         acc["Dec 23-24 Revised Fcst Qty"] +=
           Number(entry["Dec 23-24 Revised Fcst Qty"]) || 0;
-
         acc["Dec 23-24 Urgent Qty"] +=
           Number(entry["Dec 23-24 Urgent Qty"]) || 0;
-
         acc["Jan 23-24 Fcst Qty"] += Number(entry["Jan 23-24 Fcst Qty"]) || 0;
-
         acc["Expected Return Qty"] += Number(entry["Expected Return Qty"]) || 0;
-
         return acc;
       },
-
       {
         "Dec 23-24 Revised Fcst Qty": 0,
-
         "Dec 23-24 Urgent Qty": 0,
-
         "Jan 23-24 Fcst Qty": 0,
-
         "Expected Return Qty": 0,
       }
     );
@@ -185,27 +150,18 @@ const RPTable = (props) => {
 
   useEffect(() => {
     if (!result.length) return;
-
     calculateSum(result);
   }, [result]);
-
   const handledownloadExcel = (data) => {
     console.log("mlop", data);
-
     const ws = XLSX.utils.json_to_sheet(data);
-
     const wb = XLSX.utils.book_new();
-
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
     XLSX.writeFile(wb, `RSP.xlsx`);
   };
-
   const [recievedObject, setRecievedObject] = useState({});
-
   useEffect(() => {
     if (!router.query.filterState) return;
-
     setRecievedObject(JSON.parse(decodeURIComponent(router.query.filterState)));
   }, [router]);
 
@@ -213,9 +169,7 @@ const RPTable = (props) => {
     const newArray = result.map((item) => {
       return {
         ...item,
-
         [Object.keys(item)[19]]: item[Object.keys(item)[17]],
-
         [Object.keys(item)[20]]: item[Object.keys(item)[18]],
       };
     });
@@ -225,30 +179,24 @@ const RPTable = (props) => {
 
   const handleColourBlock = (fcst, revised) => {
     const colorNum = (revised / fcst) * 100 - 100;
-
     const positiveColorNum = Math.abs(colorNum);
 
     let color;
-
     switch (true) {
       case positiveColorNum < 10:
         color = "bg-white";
-
         break;
 
       case positiveColorNum >= 10 && positiveColorNum <= 19:
         color = "bg-green-500";
-
         break;
 
       case positiveColorNum >= 20 && positiveColorNum <= 49:
         color = "bg-yellow-500";
-
         break;
 
       case positiveColorNum >= 50:
         color = "bg-red-500";
-
         break;
 
       default:
@@ -257,18 +205,14 @@ const RPTable = (props) => {
 
     return color;
   };
-
   return (
     <section className="mt-1 mb-24 outer flex flex-col items-center justify-center w-full font-arial ">
       <div className=" flex justify-center w-full my-">
         <div className="headingtext">
           {/* <h2 className="text-lg text-teal-400 font-bold">Rolling Sales Plan - Apr 2023</h2> */}
         </div>
-
         {/* <div className="bcbtn px-2">
-
         <button className="px-4 py-1 bg-white border-2 border-teal-400 rounded-md text-teal-400">Next</button>
-
         </div> */}
       </div>
 
@@ -281,10 +225,8 @@ const RPTable = (props) => {
               ZRT: {router.query.zrt?.map((item) => item).join(" ")}
             </h2>
           </div>
-
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xs text-gray-700">Depot:</h2>
-
             <h2 className="font-bold text-xs text-gray-700">
               {router.query.depotType === "All"
                 ? "All Depot"
@@ -292,77 +234,41 @@ const RPTable = (props) => {
             </h2>
           </div>
         </div>
-
         {/* <div className="categoryoptions flex items-center justify-center w-full">
-
           <div className="category flex items-center justify-center px-2">
-
             <h2 className="text-xs text-gray-700 font-bold">Segment</h2>
-
             <select
-
               className="w-full text-xs text-gray-700 px-3 py- border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-
               id="stateSelect"
-
             >
-
               <option
-
                 value=""
-
                 className="focus:outline-none focus:border-b bg-white"
-
               >
-
                 Option
-
               </option>
-
               <option value="Cat1">Cat1</option>
-
               <option value="Cat2">Cat2</option>
-
               <option value="Cat3">Cat3</option>
-
             </select>
-
           </div>
-
           <div className="category flex items-center justify-center px-2">
-
             <h2 className="text-xs text-gray-700 font-bold">Brand</h2>
-
             <select
-
               className="w-full px-3 text-xs text-gray-700 py- border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
-
               id="stateSelect"
-
             >
-
               <option
-
                 value=""
-
                 className="focus:outline-none focus:border-b bg-white"
-
               >
-
                 Option
-
               </option>
-
               <option value="Prod">Prod 1</option>
-
               <option value="Prod">Prod 1</option>
-
               <option value="Prod">Prod 1</option>
-
             </select>
-
           </div>
-
         </div> */}
 
         <div className="status xls download flex items-center justify-end w-full gap-8">
@@ -375,27 +281,21 @@ const RPTable = (props) => {
             ></TbFileDownload>
             <div className="text-xs whitespace-nowrap">Download XLS</div>
           </div>
-
           <div className="status flex">
             <h2 className="text-xs text-gray-700"> Stage :</h2>
-
             <h2 className="font-bold text-xs text-gray-700">
               {router.query.status}
             </h2>
           </div>
-
           <div className="status flex gap-1">
             <h2 className="text-xs text-gray-700"> Status :</h2>
-
             <h2 className="font-bold text-xs text-gray-700">
               {router.query.stage}
             </h2>
           </div>
         </div>
       </div>
-
       <br />
-
       <div className="flex items-center justify-end w-full gap-4 ">
         {router.query.formType !== "View" && (
           <button
@@ -408,18 +308,13 @@ const RPTable = (props) => {
           </button>
         )}
       </div>
-
       {/* table layout */}
-
       <div className="table mb-4 w-full">
         {/* <h3>Table Layout</h3> */}
-
         <section className="bg-white p-2">
           {/* <div className="mx-auto max-w-screen-2xl px-4 lg:px-12"> */}
-
           <div className="mx-auto max-w-full px- ">
             {/* Start coding here */}
-
             <div className="bg-white dark:bg-gray-800 relative shadow-md  overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -428,7 +323,6 @@ const RPTable = (props) => {
                       <th scope="col" className="px-2 py-1 text-blue-600">
                         {props.headerData[Object.keys(props.headerData)[0]]}
                       </th>
-
                       <th scope="col" className="px-2 py-1 text-blue-600">
                         {props.headerData[Object.keys(props.headerData)[3]]}
                       </th>
@@ -436,43 +330,33 @@ const RPTable = (props) => {
                       <th scope="col" className="px-2 py-1 text-blue-600">
                         {props.headerData[Object.keys(props.headerData)[5]]}
                       </th>
-
                       <th scope="col" className="px-2 py-1 text-blue-600">
                         {props.headerData[Object.keys(props.headerData)[4]]}
                       </th>
-
                       <th scope="col" className="px-2 py-1    text-blue-600">
                         {props.headerData[Object.keys(props.headerData)[43]]}
                       </th>
-
                       <th scope="col" className="px-2 py-1 text-blue-600">
                         {props.headerData[Object.keys(props.headerData)[6]]}
                       </th>
-
                       <th scope="col" className="px-2 py-1 text-blue-600">
                         {props.headerData[Object.keys(props.headerData)[8]]}
                       </th>
-
                       <th scope="col" className="px-2 py-1 text-blue-600">
                         {props.headerData[Object.keys(props.headerData)[10]]}
                       </th>
-
                       <th scope="col" className="px-2 py-1 text-blue-600">
                         {props.headerData[Object.keys(props.headerData)[12]]}
                       </th>
-
                       <th scope="col" className="px-2 py-1 text-blue-600">
                         {props.headerData[Object.keys(props.headerData)[14]]}
                       </th>
-
                       <th scope="col" className="px-2 py-1 text-blue-600">
                         {props.headerData[Object.keys(props.headerData)[15]]}
                       </th>
-
                       <th scope="col" className="px-2 py-1 text-blue-600">
                         {props.headerData[Object.keys(props.headerData)[17]]}
                       </th>
-
                       {!recievedObject.tId && (
                         <th scope="col" className="px-2 py-1 text-blue-600">
                           {props.headerData[Object.keys(props.headerData)[37]]}
@@ -485,22 +369,18 @@ const RPTable = (props) => {
                       >
                         {props.headerData[Object.keys(props.headerData)[19]]}
                       </th>
-
                       <th
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
                         {props.headerData[Object.keys(props.headerData)[21]]}
                       </th>
-
                       <th scope="col" className="px-2 py-1 text-blue-600 ">
                         {props.headerData[Object.keys(props.headerData)[22]]}
                       </th>
-
                       <th scope="col" className="px-2 py-1 text-blue-600">
                         {props.headerData[Object.keys(props.headerData)[23]]}
                       </th>
-
                       {!recievedObject?.tId && (
                         <th scope="col" className="px-2 py-1 text-blue-600">
                           {props.headerData[Object.keys(props.headerData)[39]]}
@@ -513,14 +393,12 @@ const RPTable = (props) => {
                       >
                         {props.headerData[Object.keys(props.headerData)[25]]}
                       </th>
-
                       <th
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
                       >
                         {props.headerData[Object.keys(props.headerData)[27]]}
                       </th>
-
                       {router.query.depotType === "All" ? (
                         <th scope="col" className="px-2 py-1 text-blue-600">
                           {props.headerData[Object.keys(props.headerData)[28]]}
@@ -541,7 +419,6 @@ const RPTable = (props) => {
                           >
                             {item[Object.keys(item)[0]]}
                           </th>
-
                           <td className="px-4 py-1 text-left  whitespace-nowrap">
                             {item[Object.keys(item)[3]]}
                           </td>
@@ -552,37 +429,29 @@ const RPTable = (props) => {
                           >
                             {item[Object.keys(item)[5]]}
                           </th>
-
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[4]]}
                           </td>
-
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[43]]
                               ? item[Object.keys(item)[43]].toFixed(2)
                               : "-"}
                           </td>
-
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[6]]}
                           </td>
-
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[8]]}
                           </td>
-
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[10]]}
                           </td>
-
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[12]]}
                           </td>
-
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[14]]}
                           </td>
-
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[15]]}
                           </td>
@@ -600,7 +469,6 @@ const RPTable = (props) => {
                           <td
                             className={`${"px-2 py-1  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right "} ${handleColourBlock(
                               item[Object.keys(item)[17]],
-
                               item[Object.keys(item)[19]]
                             )}`}
                           >
@@ -623,12 +491,10 @@ const RPTable = (props) => {
                                     el[`${Object.keys(el)[4]}`]
                                       ? {
                                           ...el,
-
                                           [Object.keys(item)[19]]: e.target
                                             .value
                                             ? Number(e.target.value)
                                             : "",
-
                                           [Object.keys(item)[20]]:
                                             Number(e.target.value) *
                                             item[Object.keys(item)[43]],
@@ -639,7 +505,6 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-
                           <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right text-right">
                             <input
                               type="number"
@@ -660,7 +525,6 @@ const RPTable = (props) => {
                                     el[`${Object.keys(el)[4]}`]
                                       ? {
                                           ...el,
-
                                           [Object.keys(item)[21]]: e.target
                                             .value
                                             ? Number(e.target.value)
@@ -672,11 +536,9 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[22]]}
                           </td>
-
                           <td className="px-4 py-1 text-right">
                             {item[Object.keys(item)[23]]}
                           </td>
@@ -707,12 +569,10 @@ const RPTable = (props) => {
                                     el[`${Object.keys(el)[4]}`]
                                       ? {
                                           ...el,
-
                                           [Object.keys(item)[25]]: e.target
                                             .value
                                             ? Number(e.target.value)
                                             : "",
-
                                           [Object.keys(item)[26]]:
                                             Number(e.target.value) *
                                             item[Object.keys(item)[43]],
@@ -723,7 +583,6 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-
                           <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right ">
                             <input
                               value={item[Object.keys(item)[27]]}
@@ -744,7 +603,6 @@ const RPTable = (props) => {
                                     el[`${Object.keys(el)[4]}`]
                                       ? {
                                           ...el,
-
                                           [Object.keys(item)[27]]: e.target
                                             .value
                                             ? Number(e.target.value)
@@ -756,7 +614,6 @@ const RPTable = (props) => {
                               }
                             />
                           </td>
-
                           {router.query.depotType === "All" ? (
                             <td className="px-4 py-1 text-left">
                               {item[Object.keys(item)[28]]}
@@ -772,7 +629,6 @@ const RPTable = (props) => {
                       <td className="px-4 py-1 text-left  whitespace-nowrap">
                         QTY
                       </td>
-
                       <td className="px-4 py-1 text-left  whitespace-nowrap">
                         -
                       </td>
@@ -783,45 +639,34 @@ const RPTable = (props) => {
                       >
                         -
                       </th>
-
                       <td className="px-4 py-1 text-right">-</td>
-
                       <td className="px-2 py-1    text-blue-600  text-right ">
                         -
                       </td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[Object.keys(totalSumObject)[6]]}
                       </td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[Object.keys(totalSumObject)[8]]}
                       </td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[Object.keys(totalSumObject)[10]]}
                       </td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[Object.keys(totalSumObject)[12]]}
                       </td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[Object.keys(totalSumObject)[14]]}
                       </td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[Object.keys(totalSumObject)[15]]}
                       </td>
-
                       {console.log("hi", Object.keys(totalSumObject)[17])}
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[Object.keys(totalSumObject)[17]]}
                       </td>
 
                       {/* {console.log("hello", recievedObject)} */}
-
                       {!recievedObject?.tId && (
                         <td className="px-4 py-1 text-right">
                           {totalSumObject[Object.keys(totalSumObject)[37]]}
@@ -838,7 +683,6 @@ const RPTable = (props) => {
                           className="px-auto outline-none border-b-2 w-12 "
                         />
                       </td>
-
                       <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200  text-right">
                         <input
                           type="number"
@@ -849,11 +693,9 @@ const RPTable = (props) => {
                           className="px-auto outline-none border-b-2 w-16"
                         />
                       </td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[Object.keys(totalSumObject)[22]]}
                       </td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[Object.keys(totalSumObject)[23]]}
                       </td>
@@ -874,7 +716,6 @@ const RPTable = (props) => {
                           className="px-auto outline-none border-b-2 w-16"
                         />
                       </td>
-
                       <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right ">
                         <input
                           value={
@@ -894,7 +735,6 @@ const RPTable = (props) => {
                       >
                         Value Total(in LAC)
                       </td>
-
                       <td className="px-4 py-1 text-left  whitespace-nowrap">
                         -
                       </td>
@@ -905,31 +745,25 @@ const RPTable = (props) => {
                       >
                         -
                       </th>
-
                       <td className="px-4 py-1 text-right">-</td>
-
                       <td className="px-2 py-1    text-blue-600 text-right ">
                         -
                       </td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[
                           Object.keys(totalSumObject)[7]
                         ]?.toFixed(2)}
                       </td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[
                           Object.keys(totalSumObject)[9]
                         ]?.toFixed(2)}
                       </td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[
                           Object.keys(totalSumObject)[11]
                         ]?.toFixed(2)}
                       </td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[
                           Object.keys(totalSumObject)[13]
@@ -937,7 +771,6 @@ const RPTable = (props) => {
                       </td>
 
                       <td className="px-4 py-1 text-right">-</td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[
                           Object.keys(totalSumObject)[16]
@@ -952,13 +785,10 @@ const RPTable = (props) => {
                       </td>
 
                       {/* {console.log("hello", recievedObject)} */}
-
                       {!recievedObject?.tId && (
                         <td className="px-4 py-1 text-right">
                           {/* {totalSumObject[
-
                           Object.keys(totalSumObject)[20]
-
                         ]?.toFixed(2)} */}
                           -
                         </td>
@@ -970,13 +800,10 @@ const RPTable = (props) => {
                           100000
                         )?.toFixed(2)}
                       </td>
-
                       <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right">
                         -
                       </td>
-
                       <td className="px-4 py-1 text-right">-</td>
-
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[
                           Object.keys(totalSumObject)[24]
@@ -1002,7 +829,6 @@ const RPTable = (props) => {
                           className="px-auto outline-none border-b-2 w-16"
                         />
                       </td>
-
                       <td className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 text-right ">
                         -
                       </td>
@@ -1025,7 +851,6 @@ const RPTable = (props) => {
           >
             Back to Rolling Page
           </button>
-
           {router.query.formType === "Add" && (
             <button
               onClick={() => props.formType("Upload")}
@@ -1047,7 +872,6 @@ const RPTable = (props) => {
           </button>
         </div>
       </div>
-
       <Transition appear show={nextValidation} as={Fragment}>
         <Dialog
           as="div"
@@ -1085,19 +909,15 @@ const RPTable = (props) => {
 
                   <div className="mt-2 text-red-800">
                     {successMsg.msg1}
-
                     <br />
-
                     {successMsg.msg2}
                   </div>
-
                   <div className="mt-4 flex items-center justify-center">
                     <button
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       onClick={() => {
                         setNextValidation(false);
-
                         setSuccessMsg({ msg1: "", msg2: "" });
                       }}
                     >

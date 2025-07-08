@@ -1,18 +1,20 @@
+ 
+ 
 import React, { useState, useEffect } from "react";
-
+  
 const GraphTable = (props) => {
   const { data, datas } = props;
   //function to get Keys
-
+  
   const keys = Object?.keys(data[0] || []);
-
+  
   const [resultSum, setresultSum] = useState({});
   const dataSum = (tableData) => {
     if (!tableData.length) return;
-
+  
     // Initialize an object to store the sum of values for each key
     const sumObject = {};
-
+  
     // Loop through each object in the data array
     data.forEach((item, index) => {
       // Loop through each key in the object
@@ -21,23 +23,23 @@ const GraphTable = (props) => {
         if (!sumObject[key]) {
           sumObject[key] = 0;
         }
-
+  
         // Add the value of the current object's key to the sumObject's key
         sumObject[key] += Number(item[key]);
       });
     });
     setresultSum(sumObject);
   };
-
+  
   useEffect(() => {
     dataSum(data);
   }, [data]);
-
+  
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
   }, []);
-
+  
   // let arr = [1, 2, 3, 4];
   // Array.prototype.sanam = function (cb) {
   //   let newArray = [];
@@ -47,14 +49,14 @@ const GraphTable = (props) => {
   //   }
   //   return newArray;
   // };
-
+  
   // const arrres = arr.sanam((it) => it * 2);
   // console.log("Yahoooo", arrres);
-
+  
   // function getThis() {
   //   return this;
   // }
-
+  
   // const obj1 = {
   //   name: "obj1",
   //   ex: () => {
@@ -62,10 +64,10 @@ const GraphTable = (props) => {
   //   },
   // };
   // const obj2 = { name: "obj2" };
-
+  
   // obj1.w = obj1.ex;
   // obj2.getThis = getThis;
-
+  
   // console.log(obj1.w); // { name: 'obj1', getThis: [Function: getThis] }
   // console.log(obj2.getThis()); // { name: 'obj2', getThis: [Function: getThis] }
   const handleFilterBrand = () => {};
@@ -88,13 +90,13 @@ const GraphTable = (props) => {
                 <th className="px-4 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
                   {props.heading}
                 </th>
-
+  
                 {console.log("njkl", props)}
                 <th className="px-4 py-1 text-center text-[0.6rem]  border font-medium text-gray-800 t">
                   FY Sales Val {(props.filterState.yr - 2) % 100} -{" "}
                   {(props.filterState.yr - 1) % 100}
                 </th>
-
+  
                 <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
                   FY Sales Val {(props.filterState.yr - 1) % 100} -{" "}
                   {props.filterState.yr % 100}
@@ -104,7 +106,7 @@ const GraphTable = (props) => {
                     Annual Budget Qty
                   </th>
                 )}
-
+  
                 <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
                   Annual Budget Val
                 </th>
@@ -113,7 +115,7 @@ const GraphTable = (props) => {
                     MTD Sale Qty
                   </th>
                 )}
-
+  
                 <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
                   MTD Budget Val
                 </th>
@@ -134,11 +136,11 @@ const GraphTable = (props) => {
                     YTD Sale Qty
                   </th>
                 )}
-
+  
                 <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
                   YTD Budget Value
                 </th>
-
+  
                 <th className="px-2 py-1 text-center text-[0.6rem]  border font-medium text-gray-800   ">
                   YTD RSP Value
                 </th>
@@ -151,7 +153,7 @@ const GraphTable = (props) => {
                 <th className="px-2 py-1 text-center text-[0.6rem] bg-green-200 border font-medium text-gray-800   ">
                   YTD Sales Achivement %
                 </th>
-
+  
                 <th className="px-2 py-1 text-center text-[0.6rem] bg-orange-100 border font-medium text-gray-800   ">
                   Anual Value Achivement %
                 </th>
@@ -169,7 +171,7 @@ const GraphTable = (props) => {
                         {item["category"]}
                       </td>
                     )}
-
+  
                     <td
                       className={`px-2 text-left whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
@@ -190,42 +192,42 @@ const GraphTable = (props) => {
                     </td>
                     {props.heading === "Product Brand" && (
                       <td
-                        className={`px-2 text-center whitespace-nowrap 
+                        className={`px-2 text-center whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
                       >
                         {item[Object.keys(item)[5]]}
                       </td>
                     )}
-
+  
                     <td
-                      className={`px-2 text-center whitespace-nowrap 
+                      className={`px-2 text-center whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[6]]}
                     </td>
                     {props.heading === "Product Brand" && (
                       <td
-                        className={`px-2 text-center whitespace-nowrap 
+                        className={`px-2 text-center whitespace-nowrap
                py-1 text-[0.6rem] text-gray-900 border `}
                       >
                         {item[Object.keys(item)[33]]}
                       </td>
                     )}
-
+  
                     <td
-                      className={`px-2 text-center whitespace-nowrap 
+                      className={`px-2 text-center whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[11]]}
                     </td>
                     <td
-                      className={`px-2 text-center whitespace-nowrap 
+                      className={`px-2 text-center whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[15]]}
                     </td>
                     <td
-                      className={`px-2 text-center whitespace-nowrap 
+                      className={`px-2 text-center whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[23]]}
@@ -268,13 +270,13 @@ const GraphTable = (props) => {
                     </td>
                     {props.heading === "Product Brand" && (
                       <td
-                        className={`px-2 text-center whitespace-nowrap 
+                        className={`px-2 text-center whitespace-nowrap
                py-1 text-[0.6rem] text-gray-900 border `}
                       >
                         {item[Object.keys(item)[7]]}
                       </td>
                     )}
-
+  
                     <td
                       className={`px-2 text-center whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
@@ -282,13 +284,13 @@ const GraphTable = (props) => {
                       {item[Object.keys(item)[25]]}
                     </td>
                     <td
-                      className={`px-2 text-center whitespace-nowrap 
+                      className={`px-2 text-center whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[36]]}
                     </td>
                     <td
-                      className={`px-2 text-center whitespace-nowrap 
+                      className={`px-2 text-center whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[8]]}
@@ -311,7 +313,7 @@ const GraphTable = (props) => {
                           ).toFixed(2) + " %"
                         : "0 %"}
                     </td>
-
+  
                     <td
                       className={`px-2 text-center whitespace-nowrap ${
                         index == 9 || index == 10
@@ -330,9 +332,9 @@ const GraphTable = (props) => {
                           ).toFixed(2) + " %"
                         : "0 %"}
                     </td>
-
+  
                     <td
-                      className={`px-2 text-center whitespace-nowrap 
+                      className={`px-2 text-center whitespace-nowrap
                    py-1 text-[0.6rem] text-gray-900 border `}
                     >
                       {item[Object.keys(item)[6]] !== 0
@@ -453,5 +455,5 @@ onClick={()=> handleFilterBrand()}
     </>
   );
 };
-
+  
 export default GraphTable;

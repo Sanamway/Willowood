@@ -6,7 +6,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { url } from "@/constants/url";
 import axios from "axios";
-import ConfirmModal from "../modals/ConfirmModal";
+import UserProfileModal from "../modals/UserProfileModal";
 import { CSVLink } from "react-csv";
 
 const UserProfile = () => {
@@ -17,25 +17,59 @@ const UserProfile = () => {
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
 
+  // const gettingMenusData = async () => {
+  //   try {
+  //     const resp = await axios.get(`${url}/api/get_menu_rights`, {
+  //       headers: headers,
+       
+  //     });
+  //     const respData = resp.data.data;
+  //     const uniqueRecords = {};
+  //     respData.forEach((record) => {
+  //       const roleId = record.role_id;
+  //       const app_type = record.app_type
+  //       if (!uniqueRecords[roleId] || !uniqueRecords[app_type]) {
+  //         uniqueRecords[roleId] = record;
+  //         uniqueRecords[app_type] = record;
+  //       }
+  //     });
+  //     const uniqueRecordsArray = Object.values(uniqueRecords);
+  //     setMenuRecords(uniqueRecordsArray);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
+
+
   const gettingMenusData = async () => {
     try {
       const resp = await axios.get(`${url}/api/get_menu_rights`, {
         headers: headers,
       });
+  
+      if (!resp.data || !resp.data.data) {
+        console.error("Invalid response structure");
+        return;
+      }
+  
       const respData = resp.data.data;
-      const uniqueRecords = {};
+      const uniqueRecords = new Map();
+  
       respData.forEach((record) => {
-        const roleId = record.role_id;
-        if (!uniqueRecords[roleId]) {
-          uniqueRecords[roleId] = record;
+        const uniqueKey = `${record.role_id}-${record.mode}`;
+        if (!uniqueRecords.has(uniqueKey)) {
+          uniqueRecords.set(uniqueKey, record);
         }
       });
-      const uniqueRecordsArray = Object.values(uniqueRecords);
+  
+      const uniqueRecordsArray = Array.from(uniqueRecords.values());
       setMenuRecords(uniqueRecordsArray);
+  
     } catch (error) {
       console.error("Error:", error);
     }
   };
+  
 
   useEffect(() => {
     gettingMenusData();
@@ -45,10 +79,13 @@ const UserProfile = () => {
 
   const [isOpen, setisOpen] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [userMode, setUserMode] = useState(null);
+  console.log("Modeee", userMode)
 
-  const deleteHandler = (id) => {
+  const deleteHandler = (id, mode) => {
     setisOpen(true);
     setUserId(id);
+    setUserMode(mode)
   };
 
   const resetData = () => {
@@ -60,6 +97,7 @@ const UserProfile = () => {
     { label: "Id", key: "pseg_id" },
     { label: "Role ID", key: "role_id" },
     { label: "User Profile", key: "U_profile_name" },
+    { label: "Company", key: "U_profile_name" },
   ];
 
   const rowdisable = (menu) => {
@@ -75,16 +113,17 @@ const UserProfile = () => {
   return (
     <>
       <Layout>
-        <div className="h-screen overflow-auto w-full ">
-          <ConfirmModal
+        <div className="min-h-screen overflow-y-auto w-full ">
+          <UserProfileModal
             isOpen={isOpen}
             onClose={() => setisOpen(false)}
             onOpen={() => setisOpen(true)}
             userId={userId}
-            method="delete"
+            mode={userMode}
+            method="get"
             endpoints="delete_menu_rights"
             onDeletedData={resetData}
-          ></ConfirmModal>
+          ></UserProfileModal>
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
           <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name ? name :"User Role"}</h2>
             <div className="flex items-center gap-2 cursor-pointer">
@@ -152,6 +191,15 @@ const UserProfile = () => {
                   <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     User Profile
                   </th>
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Company
+                  </th>
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Mode
+                  </th>
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    App Type
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
@@ -163,7 +211,7 @@ const UserProfile = () => {
                           onClick={() => {
                             router.push({
                               pathname: "/form/user_profile_form",
-                              query: { type: "view", role_id: item?.role_id },
+                              query: { type: "view", role_id: item?.role_id, mode:item?.mode, app_type: item?.app_type },
                             });
                           }}
                           className="b text-black   hover:text-blue-500  "
@@ -173,7 +221,7 @@ const UserProfile = () => {
 
                         <button
                           onClick={() => {
-                            deleteHandler(item?.role_id);
+                            deleteHandler(item?.role_id, item?.mode);
                           }}
                           className="b text-black hover:text-red-500 ml-2"
                         >
@@ -185,6 +233,15 @@ const UserProfile = () => {
                       </td>
                       <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                         {item.U_profile_name}
+                      </td>
+                      <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                        {item?.comp_name}
+                      </td>
+                      <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                        {item.mode}
+                      </td>
+                      <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
+                        {item.app_type}
                       </td>
                     </tr>
                   ))}

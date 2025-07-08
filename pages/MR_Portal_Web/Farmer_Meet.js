@@ -87,6 +87,7 @@ const FarmerMeet = () => {
       verified: modalData.isTrue,
       verified_date: new Date(),
       verified_user: currentUser,
+      f_meet_id: modalData.id
     };
 
     try {
@@ -121,6 +122,7 @@ const FarmerMeet = () => {
       approved: modalData.isTrue,
       approved_date: new Date(),
       approved_user: currentUser,
+      f_meet_id: modalData.id
     };
     try {
       const respond = await axios.put(
@@ -851,7 +853,7 @@ const FarmerMeet = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.f_meet_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -870,7 +872,7 @@ const FarmerMeet = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.f_meet_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -887,7 +889,7 @@ const FarmerMeet = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.f_meet_id,
               });
             }}
           >
@@ -907,7 +909,7 @@ const FarmerMeet = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.f_meet_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -926,7 +928,7 @@ const FarmerMeet = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.f_demo_id,
+              id: item.f_meet_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -943,7 +945,7 @@ const FarmerMeet = () => {
             setModalData({
               ...modalData,
 
-              id: item.f_demo_id,
+              id: item.f_meet_id,
             });
           }}
         >
@@ -964,7 +966,7 @@ const FarmerMeet = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.f_demo_id,
+              id: item.f_meet_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -983,7 +985,7 @@ const FarmerMeet = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.f_meet_id,
               });
             }}
             disabled
@@ -1002,7 +1004,7 @@ const FarmerMeet = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.f_meet_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -1019,7 +1021,7 @@ const FarmerMeet = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.f_meet_id,
               });
             }}
           >
@@ -1039,7 +1041,7 @@ const FarmerMeet = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.f_meet_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1062,7 +1064,7 @@ const FarmerMeet = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.f_meet_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1086,7 +1088,7 @@ const FarmerMeet = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.f_meet_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -1105,7 +1107,7 @@ const FarmerMeet = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.f_meet_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -1122,7 +1124,7 @@ const FarmerMeet = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.f_meet_id,
               });
             }}
           >

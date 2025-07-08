@@ -1,3 +1,5 @@
+ 
+
 import React, { useState, useEffect } from "react";
 import { TbFileDownload } from "react-icons/tb";
 import SubmitModal from "../modals/SubmitModal";
@@ -1036,7 +1038,7 @@ const RPSummary = (props) => {
                             ]
                           }
                         </td>
-
+                        {console.log("hi", Object.keys(totalNamewiseData)[17])}
                         <td className="px-4 py-1 text-right">
                           {
                             totalNamewiseData[

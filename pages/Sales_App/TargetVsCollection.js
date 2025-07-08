@@ -15,10 +15,12 @@ import { IoSettingsOutline } from "react-icons/io5";
 
 import Profile from "../../public/userimg.jpg";
 import { FaArrowAltCircleUp } from "react-icons/fa";
-import ChartOne from "./ChartOne";
+import ChartOne from "../../components/Sales_Portal_Apps/ChartOne";
 import toast from "react-hot-toast";
 import { FiMinus, FiPlus } from "react-icons/fi";
-
+import TargetVsCollectionGraph from "@/components/Sales_Portal_Apps/TargetVsCollectionGraph";
+import TargetVsCollectionTwoGraph from "@/components/Sales_Portal_Apps/TargetVsCollectionTwoGraph";
+import { useRef } from "react";
 
 
 
@@ -26,9 +28,10 @@ import { BsCashCoin } from "react-icons/bs";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { GiAlarmClock } from "react-icons/gi";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
-import TotalOutStandPop from "./TotalOsPopup";
-import { totalOsData } from "./sampleData";
-import TotalOverDueAmtPop from "./TotalOverDueAmtPop";
+import TotalOutStandPop from "../../components/Sales_Portal_Apps/TargetVsCollection/TotalOsPopup";
+import CollectionPieChart from "@/components/Sales_Portal_Apps/TargetVsCollection/CollectionPieChart";
+import TotalOverDueAmtPop from "../../components/Sales_Portal_Apps/TargetVsCollection/TotalOverDueAmtPop";
+
 
 const AdditionalInfo = (props) => {
     const router = useRouter();
@@ -36,6 +39,12 @@ const AdditionalInfo = (props) => {
         "Content-Type": "application/json",
         secret: "fsdhfgsfuiweifiowefjewcewcebjw",
     };
+    const tableTopRef = useRef(null);
+
+    const scrollToTop = () => {
+        tableTopRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
 
     const [localStorageItems, setLocalStorageItems] = useState({
         uId: "",
@@ -191,12 +200,12 @@ const AdditionalInfo = (props) => {
                 break;
             case 4:
                 setLocalStorageItems({
-                    cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
-                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
-                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                    cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id || "",
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id || "",
+                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id || "",
+                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id || "",
+                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id || "",
+                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id || "",
                     roleId: JSON.parse(window.localStorage.getItem("userinfo"))?.role_id,
                     clName: window.localStorage.getItem("user_name"),
                     ulName: window.localStorage.getItem("phone_number"),
@@ -209,23 +218,23 @@ const AdditionalInfo = (props) => {
                 });
 
                 setFilterState({
-                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
-                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id || "",
+                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id || "",
+                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id || "",
+                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id || "",
+                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id || "",
                     yr: Math.max(...allYearData),
                     month: moment().startOf('month').startOf('day').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
                 });
                 break;
             case 3:
                 setLocalStorageItems({
-                    cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id,
-                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
-                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                    cId: JSON.parse(window.localStorage.getItem("userinfo"))?.c_id || "",
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id || "",
+                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id || "",
+                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id || "",
+                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id || "",
+                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id || "",
                     roleId: JSON.parse(window.localStorage.getItem("userinfo"))?.role_id,
                     clName: window.localStorage.getItem("user_name"),
                     ulName: window.localStorage.getItem("phone_number"),
@@ -238,11 +247,11 @@ const AdditionalInfo = (props) => {
                 });
 
                 setFilterState({
-                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id,
-                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id,
-                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id,
-                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id,
-                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id,
+                    bgId: JSON.parse(window.localStorage.getItem("userinfo"))?.bg_id || "",
+                    buId: JSON.parse(window.localStorage.getItem("userinfo"))?.bu_id || "",
+                    rId: JSON.parse(window.localStorage.getItem("userinfo"))?.r_id || "",
+                    zId: JSON.parse(window.localStorage.getItem("userinfo"))?.z_id || "",
+                    tId: JSON.parse(window.localStorage.getItem("userinfo"))?.t_id || "",
                     yr: Math.max(...allYearData),
                     month: moment().startOf('month').startOf('day').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
                 });
@@ -555,7 +564,7 @@ const AdditionalInfo = (props) => {
 
             endPoint = "api/get_collectiondata_based_on_roll_t";
         } else if (bgId && buId && zId && rId && !tId) {
-            if (tId === "" || tId === 0 || tId === null) {
+            if (tId === "" || tId === 0 || tId === null || tId === undefined) {
                 endPoint = "api/get_collectiondata_based_on_roll_t"; // tId is an empty string
             } else {
                 endPoint = "api/get_collectiondata_based_on_roll_r"; // tId holds some value
@@ -707,7 +716,7 @@ const AdditionalInfo = (props) => {
         return Object.values(data).reduce((acc, val) => acc + Number(val), 0);
     };
 
-    const bsLabelData = ["Apr-24",
+    const [bsLabelData, setBsLabelData] = useState(["Apr-24",
         "May-24",
         "Jun-24",
         "Jul-24",
@@ -718,7 +727,25 @@ const AdditionalInfo = (props) => {
         "Dec-24",
         "Jan-25",
         "Feb-25",
-        "Mar-25"];
+        "Mar-25"]);
+
+    const generateFiscalLabels = (year) => {
+
+        const labels = [];
+
+        // Fiscal year starts in April of the given year
+        for (let i = 3; i < 15; i++) {
+            const date = moment(`${year}-04-01`).add(i - 3, 'months');
+            labels.push(date.format("MMM-YY"));
+        }
+        setBsLabelData(labels)
+
+    };
+    useEffect(() => {
+        generateFiscalLabels(filterState.yr)
+    }, [filterState.yr])
+
+
 
 
     const getUserItem = () => {
@@ -989,6 +1016,41 @@ const AdditionalInfo = (props) => {
     };
 
     const [collectionTableData, setCollectionTableData] = useState([])
+    const [totalCollection, setTotalCollection] = useState({
+        "0-60": 0,
+        "61-90": 0,
+        "91-120": 0,
+        "121-180": 0,
+        "180-365": 0,
+        "366-720": 0,
+        "720 And Above": 0,
+        "Net Balance Amt(INR)": 0,
+    })
+    useEffect(() => {
+        const totals = {
+            "0-60": 0,
+            "61-90": 0,
+            "91-120": 0,
+            "121-180": 0,
+            "180-365": 0,
+            "366-720": 0,
+            "720 And Above": 0,
+            "Net Balance Amt(INR)": 0,
+        };
+
+        collectionTableData.forEach((item) => {
+            totals["0-60"] += Number(item["0-60"]) || 0;
+            totals["61-90"] += Number(item["61-90"]) || 0;
+            totals["91-120"] += Number(item["91-120"]) || 0;
+            totals["121-180"] += Number(item["121-180"]) || 0;
+            totals["180-365"] += Number(item["180-365"]) || 0;
+            totals["366-720"] += Number(item["366-720"]) || 0;
+            totals["720 And Above"] += Number(item["720 And Above"]) || 0;
+            totals["Net Balance Amt(INR)"] += Number(item["Net Balance Amt(INR)"]) || 0;
+        });
+
+        setTotalCollection(totals);
+    }, [collectionTableData]);
 
     const handleDownloadExcelNew = async (
         yr,
@@ -1133,59 +1195,6 @@ const AdditionalInfo = (props) => {
 
     ])
 
-
-
-
-    // useEffect(() => {
-    //     if (filterState.zId &&
-    //         filterState.rId &&
-    //         filterState.tId) {
-
-    //         if (territoryData.length && zoneData.length && regionData.length) {
-    //             setCollectionTableData([])
-    //             handleDownloadExcelNew(filterState.yr || null,
-    //                 filterState.month || null,
-    //                 filterState.bgId || null,
-    //                 filterState.buId || null,
-    //                 filterState.zId || null,
-    //                 filterState.rId || null,
-    //                 filterState.tId || null,
-    //             );
-    //         }
-    //     }
-    //     else {
-    //         setCollectionTableData([])
-    //         handleDownloadExcelNew(filterState.yr || null,
-    //             filterState.month || null,
-    //             filterState.bgId || null,
-    //             filterState.buId || null,
-    //             filterState.zId || null,
-    //             filterState.rId || null,
-    //             filterState.tId || null,
-    //         );
-    //     }
-
-
-
-
-
-
-    // }, [
-
-    //     filterState.yr,
-    //     filterState.month,
-    //     filterState.bgId,
-    //     filterState.buId,
-    //     filterState.zId,
-    //     filterState.rId,
-    //     filterState.tId,
-
-    //     territoryData,
-    //     zoneData,
-    //     regionData,
-    //     buData
-
-    // ])
     useEffect(() => {
         const { yr, month, bgId, buId, zId, rId, tId } = filterState;
         console.log("zbnm", yr, month, bgId, buId, zId, rId, tId, !rId && zId && zoneData.length > 0, tId && territoryData.length > 0, !tId && rId && regionData.length > 0, !zId && buId && buData.length > 0)
@@ -1278,14 +1287,49 @@ const AdditionalInfo = (props) => {
             setOpenTwo(true);
         }
     };
+    const [userImg, setUserImg] = useState(null);
+    useEffect(() => {
+        // Ensure this runs only on the client
+        if (typeof window === "undefined") return;
+        setUserImg(localStorage.getItem("ImageLink"));
+    }, []);
+
+
+
+    const [imagePreview, setImagePreview] = useState(null);
+    console.log("pol", imagePreview)
+    // Fetch image from API
+    const getImage = async (mobile) => {
+        if (typeof window === "undefined") return;
+        try {
+            const res = await axios.get(`${url}/api/get_image`, {
+                headers: headers,
+                params: {
+                    phone_number: mobile,
+                    file_path: "user",
+                },
+            });
+
+            const respdata = res.data.data;
+            console.log("Fetched Image URL:", respdata.image_url);
+            setImagePreview(respdata.image_url);
+        } catch (error) {
+            console.log("Error fetching image:", error);
+            // setImagePreview("/default-profile.png");
+        }
+    };
+    useEffect(() => {
+        if (typeof window === undefined) return
+        getImage(JSON.parse(window.localStorage.getItem("phone_number")))
+    }, [])
 
     return (
         <form
             className=" bg-white rounded  w-full  overflow-auto pb-4"
             onSubmit={(e) => e.preventDefault()}
         >
-            <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
-                <span className="text-black flex flex-row gap-4 font-bold   ">
+            <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col   bg-blue-600  ">
+                <span className="text-black flex flex-row gap-4 font-bold  text-white  ">
                     <FaArrowLeftLong
                         className="self-center "
                         onClick={() =>
@@ -1294,7 +1338,7 @@ const AdditionalInfo = (props) => {
                             })
                         }
                     />
-                    <span>Target VS Collection</span>
+                    <span>Collection Target V/s Achievement</span>
                 </span>{" "}
                 <span className="text-white self-center">
                     <Popover as="div" className="relative border-none outline-none mt-2">
@@ -1333,13 +1377,11 @@ const AdditionalInfo = (props) => {
             </div>
 
             <div className="flex mb-4 mt-2 mb-8">
+
                 <div className="w-40 h-30 flex justify-center items-center">
-                    <Image
-                        className="h-[5.1rem] w-[5.1rem] rounded-full mt-2"
-                        src={Profile}
-                        alt="img"
-                    />
+                    <img src={imagePreview} className="h-20 w-20 rounded-full text-orange-500 mt-4" size={80}></img>
                 </div>
+
 
                 <div className="flex  flex-col  w-full mt-4 md:hidden">
                     <div className="flex w-full  w-28">
@@ -1592,8 +1634,8 @@ const AdditionalInfo = (props) => {
 
 
                 <div className="overflow-x-auto">
-                    <h1 className="font-bold text-center bg-yellow-300 flex justify-between items-center ">
-                        <span className="flex-grow text-center">Target Vs Collection</span>
+                    <h1 className="font-bold text-center bg-yellow-300 flex justify-between items-center  bg-blue-600">
+                        <span className="flex-grow text-center">Collection Target V/s Achievement</span>
 
                         {isCollapsed ? (
                             <button onClick={toggleCollapse} className="ml-auto">
@@ -1612,25 +1654,25 @@ const AdditionalInfo = (props) => {
                             <div className=" bg-gray-200  flex flex-col">
                                 <div className="creditwrapper mt-2 flex flex-col gap-2 ">
                                     <div className="h-6 bg-white rounded-t-md flex items-center px-2 ">
-                                        <h2 className="text-[0.95rem] text-gray-600 font-bold">Credit Balance Details</h2>
+                                        <h2 className="text-[0.95rem] text-gray-600 font-bold">Customer Ageing Insight (All figure in Lac)</h2>
                                     </div>
 
                                     <div className="flex-row flex-col gap-3 font-arial   rounded-md bg-white ">
                                         <div className="flex items-center justify-center gap-4 rounded-md shadow-md text-white text-center">
                                             <div className="flex-col  items-start justify-between w-full gap-2 p-1">
-                                                <h2 className="text-[0.75rem] text-gray-600 font-semibold font-arial whitespace-nowrap">
-                                                    Allocated Credit Limit{" "}
+                                                <h2 className="text-[0.65rem] text-gray-600 font-semibold font-arial whitespace-nowrap">
+                                                    Available Credit Limit{" "}
                                                 </h2>
                                                 <h2 className="text-sm text-[#ADBD5B] font-bold whitespace-nowrap">&#8377;{parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["Credit Limit "], 0).toFixed(2))}</h2>
                                             </div>
                                             <div className="flex-col items-start justify-between w-full gap-2 p-1 border-l-[3px] ">
-                                                <h2 className="text-[0.75rem] text-gray-600 font-semibold whitespace-nowrap">
+                                                <h2 className="text-[0.65rem] text-gray-600 font-semibold whitespace-nowrap">
                                                     Utilized Credit Limit
                                                 </h2>
                                                 <h2 className="text-sm text-[#F5A05D] font-bold whitespace-nowrap">&#8377;{parseFloat(parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["Credit Limit "], 0).toFixed(2)) - parseFloat(collectionTableData.reduce((acc, curr) => acc + curr["Net Balance Amt(INR)"], 0).toFixed(2))).toFixed(2)}</h2>
                                             </div>
                                             <div className="flex-col items-start justify-between w-full gap-2 p-1 border-l-[3px] ">
-                                                <h2 className="text-[0.75rem] text-gray-600 font-semibold whitespace-nowrap">
+                                                <h2 className="text-[0.65rem] text-gray-600 font-semibold whitespace-nowrap">
                                                     Balance Credit Limit
                                                 </h2>
                                                 <h2 className="text-sm text-[#E55769] font-bold whitespace-nowrap">&#8377;{
@@ -1704,8 +1746,12 @@ const AdditionalInfo = (props) => {
                                             </div>
                                         </div>
                                     </div>
+                                    <div className="w-full px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md">
+
+                                        <CollectionPieChart data={totalCollection} />
+                                    </div>
                                     {open && <TotalOutStandPop closeModal={closeModal} dueData={collectionTableData || []}></TotalOutStandPop>}
-                                    {openTwo && <TotalOverDueAmtPop closeModal={closeModal} dueData={collectionTableData || []}></TotalOverDueAmtPop>}
+                                    {openTwo && <TotalOverDueAmtPop closeModal={closeModal} specialColumn={filterState.buId === 3 ? true : false} dueData={collectionTableData || []}></TotalOverDueAmtPop>}
                                 </div>
                             </div>
                             <table className="w-full border-collapse border border-gray-200 text-[10px] font-bold">
@@ -1783,86 +1829,151 @@ const AdditionalInfo = (props) => {
                         <thead>
                             <tr className="bg-blue-800 text-white">
                                 <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">Month</th>
-                                <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">BST</th>
-
-                                <th className="border border-gray-200  py-2">Target</th>
-                                <th className="border border-gray-200  py-2">Total Collection</th>
-                                <th className="border border-gray-200  py-2">ACH%</th>
+                                <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold w-28">BST</th>
+                                <th className="border border-gray-200 py-2 w-10">Target</th>
+                                <th className="border border-gray-200 py-2 w-10">Total Collection</th>
+                                <th className="border border-gray-200 py-2 w-[5.5rem]">ACH%</th>
                             </tr>
                         </thead>
                         <tbody>
                             {allTeamData.map((item) => (
                                 <tr className="font-bold">
-                                    <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
-                                        {
-                                            moment(item.m_year).format('MMMM')
-                                        }
-
+                                    <td className="border border-gray-200 px-2 py-2 whitespace-nowrap">
+                                        {moment(item.m_year).format('MMMM')}
                                     </td>
-                                    <td className="border border-gray-200 w-48 px-2 py-2">
-                                        {[item.business_segment || ""
-                                            ,
-                                        item.business_unit_name || ""
-                                            ,
-                                        item.zone_name || ""
-                                            ,
-                                        item.region_name || ""
-                                            ,
-                                        item.territory_name
-                                        || ""].reverse().find(value => value !== "")}
-                                        -
-                                        {[item.business_segment || ""
-                                            ,
-                                        item.business_unit_hod_name || ""
-                                            ,
-                                        item.zone_hod_name || ""
-                                            ,
-                                        item.region_hod_name || ""
-                                            ,
-                                        item.territory_hod_name || ""].reverse().find(value => value !== "")}
-
-
-
-
+                                    <td className="border border-gray-200 px-2 py-2 text-xs w-28 break-words">
+                                        {[
+                                            item.business_segment || "",
+                                            item.business_unit_name || "",
+                                            item.zone_name || "",
+                                            item.region_name || "",
+                                            item.territory_name || ""
+                                        ].reverse().find(value => value !== "")}
+                                        <br />
+                                        {[
+                                            item.business_segment || "",
+                                            item.business_unit_hod_name || "",
+                                            item.zone_hod_name || "",
+                                            item.region_hod_name || "",
+                                            item.territory_hod_name || ""
+                                        ].reverse().find(value => value !== "")}
                                     </td>
-                                    <td className="border border-gray-200  py-2">{item.target}</td>
-                                    <td className="border border-gray-200 py-2">{item.actual}</td>
-
-                                    <td className="border border-gray-200  py-2">
+                                    <td className="border border-gray-200 py-2 w-10 text-right">{item.target}</td>
+                                    <td className="border border-gray-200 py-2 w-10 text-right">{item.actual}</td>
+                                    <td className="border border-gray-200 py-2 w-[5.5rem] text-right">
                                         {(item.actual / item.target * 100).toFixed(2)} %
-
                                     </td>
                                 </tr>
                             ))}
 
-
-
-                            {/* Row for Totals (appears at the end) */}
                             <tr className="font-bold bg-blue-800 text-white">
                                 <td className="border border-gray-200 px-2 py-2">MTD Total</td>
-                                <td className="border border-gray-200 px-2 py-2">
-
-                                </td>
-                                <td className="border border-gray-200 py-2">
+                                <td className="border border-gray-200 px-2 py-2"></td>
+                                <td className="border border-gray-200 py-2 w-10 text-right">
                                     {Number(TeamTarget).toFixed(2)}
                                 </td>
-                                <td className="border border-gray-200  py-2">
+                                <td className="border border-gray-200 py-2 w-10 text-right">
                                     {Number(TeamActual).toFixed(2)}
                                 </td>
-                                <td className="border border-gray-200  py-2">
+                                <td className="border border-gray-200 py-2 w-[5.5rem] text-right">
                                     {TeamPercentage} %
                                 </td>
                             </tr>
-
                         </tbody>
                     </table>
                     )}
+                    <TargetVsCollectionGraph
+                        title={"Target Vs Sales"}
+                        color={"bg-blue-800"}
+                        data={allTeamData}
+                    />
+                    <div className="relative w-full">
+                        {/* Top Reference Point */}
+                        <div ref={tableTopRef}></div>
+
+                        {/* Table */}
+                        <table className="w-full text-sm text-left text-gray-500 rounded-full">
+                            <thead className="text-xs text-gray-900 text-center bg-blue-50 rounded-md">
+                                <tr>
+                                    {
+                                        (filterState.buId === 3 ? [
+                                            { label: "Id" },
+                                            { label: "Account" },
+                                            { label: "Net Balance Amount" },
+                                            { label: "120-180" },
+                                            { label: "180-365" },
+                                            { label: "366-720" },
+                                            { label: "720 And Above" },
+                                        ] : [
+                                            { label: "Id" },
+                                            { label: "Account" },
+                                            { label: "Net Balance Amount" },
+                                            { label: "180-365" },
+                                            { label: "366-720" },
+                                            { label: "720 And Above" },
+                                        ]).map(({ label }) => (
+                                            <th
+                                                key={label}
+                                                className="px-2 py-1 cursor-pointer text-[0.78rem] text-blue-400 font-bold"
+                                            >
+                                                <span className="flex items-center justify-center w-full">
+                                                    {label}
+                                                </span>
+                                            </th>
+                                        ))
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200 break-normal">
+                                {collectionTableData
+                                    .filter((item) => {
+                                        const val180 = Number(item["180-365"]) || 0;
+                                        const val366 = Number(item["366-720"]) || 0;
+                                        const val720 = Number(item["720 And Above"]) || 0;
+
+                                        return val180 !== 0 || val366 !== 0 || val720 !== 0;
+                                    })
+                                    .map((item, idx) => (
+                                        <tr key={idx}>
+                                            <td className="px-4 font-normal text-left py-1 text-[0.66rem] text-gray-500 border">
+                                                {item._id}
+                                            </td>
+                                            <td className="px-2 text-left py-1 text-[0.75rem] text-gray-600 border">
+                                                {item.Account}
+                                            </td>
+                                            <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border">
+                                                {item["Net Balance Amt(INR)"]}
+                                            </td>
+                                            {filterState.buId === 3 && <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border">
+                                                {item["121-180"]}
+                                            </td>}
+                                            <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border">
+                                                {item["180-365"]}
+                                            </td>
+                                            <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border">
+                                                {item["366-720"]}
+                                            </td>
+                                            <td className="px-2 text-center py-1 text-[0.75rem] text-gray-600 border">
+                                                {item["720 And Above"]}
+                                            </td>
+                                        </tr>
+                                    ))}
+                            </tbody>
+                        </table>
+
+                        {/* Scroll to Top Button */}
+                        <div className="flex justify-end mt-4">
+                            <button
+                                onClick={scrollToTop}
+                                className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded shadow"
+                            >
+                                ⬆ Scroll to Top
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
             </div>
-
-
-
             {localStorageItems.roleId === 6 || localStorageItems.roleId === 5
                 ?
                 <div>
@@ -1900,9 +2011,6 @@ const AdditionalInfo = (props) => {
                                         return (
                                             <tr key={idx} className="font-bold">
                                                 <td className="border border-gray-200 ">{item.customer_name}</td>
-
-
-
                                                 <td className="border border-gray-200">
                                                     {item.category_result?.map((categoryItem, index) => (
                                                         <li key={index} className="border-b-2 border-black flex justify-left text-black p-1">
@@ -1927,13 +2035,9 @@ const AdditionalInfo = (props) => {
                                             </tr>
                                         );
                                     })}
-
                                     {/* Add the final row that shows the grand total */}
                                     <tr className="font-bold bg-gray-100">
                                         <td className="border border-gray-200">Grand Total</td>
-                                        <td className="border border-gray-200">
-                                            {/* Empty because category names don't have a total */}
-                                        </td>
                                         <td className="border border-gray-200">
                                             <input
                                                 className="p-0 w-14 text h-6"
@@ -1952,23 +2056,16 @@ const AdditionalInfo = (props) => {
                                 </tbody>
                             </table>
                         )}
-
                     </div>
-
                 </div>
                 : ""
             }
-
-
-
-
-
             <h1 className=" font-bold text-center  bg-yellow-300">
-                Monthly Graph
+                Monthly Collection Graph
             </h1>
 
-            <ChartOne
-                title={"Target Vs Collection"}
+            <TargetVsCollectionTwoGraph
+                title={"Collection Target V/s Achievement"}
                 color={"bg-blue-800"}
                 lab={bsLabelData}
                 datasets={bsGraphData || []}
@@ -1976,11 +2073,11 @@ const AdditionalInfo = (props) => {
             <div className="flex justify-end w-full">
                 <FaArrowAltCircleUp
                     size={42}
-                    className="self-center size-120 text-black-400 text-blue-400  "
+                    className="fixed bottom-4 right-4 z-50 text-blue-500 cursor-pointer hover:scale-110 transition-transform duration-200"
                     onClick={() =>
                         window.scrollTo({
                             top: 0,
-                            behavior: "smooth", // Smooth scrolling animation
+                            behavior: "smooth",
                         })
                     }
                 />

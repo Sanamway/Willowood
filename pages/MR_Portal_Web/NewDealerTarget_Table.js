@@ -987,7 +987,7 @@ const NewDealer = () => {
             className="border rounded px-2 py-1 w-1/2 h-8"
             id="stateSelect"
             value={filterState.tId}
-            disabled={filterDisableOption("Territory")}
+            disabled={filterDisableOption("Teritory")}
             onChange={(e) =>
               setFilterState({
                 ...filterState,

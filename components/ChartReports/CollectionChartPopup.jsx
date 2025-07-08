@@ -1,3 +1,5 @@
+ 
+ 
 import React, { useState, useEffect } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
@@ -33,12 +35,12 @@ const CollectionChartPopup = ({
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-
+  
   const springProps = useSpring({
     from: { opacity: 0, scale: 0.8 },
     to: { opacity: 1, scale: 1 },
   });
-
+  
   const [filterState, setFilterState] = useState({
     from: new Date(
       new Date(backgorundFilters.month).getFullYear(),
@@ -52,10 +54,10 @@ const CollectionChartPopup = ({
     ),
     custInfo: "",
   });
-
+  
   const [custSearch, setCustSearch] = useState("");
   const [filteredOptn, setFilteredOptn] = useState([]);
-
+  
   const getCityData = async (cust) => {
     try {
       const resp = await axios.get(`${url}/api/get_customer_name_collection`, {
@@ -77,7 +79,7 @@ const CollectionChartPopup = ({
       );
     } catch (error) {}
   };
-
+  
   useEffect(() => {
     if (custSearch) {
       getCityData(custSearch);
@@ -104,7 +106,7 @@ const CollectionChartPopup = ({
               : regionData.filter(
                   (item) => Number(item.r_id) === Number(backgorundFilters.rId)
                 )[0].region_name,
-
+  
           z_des:
             backgorundFilters.zId === "All" || !backgorundFilters.zId
               ? null
@@ -146,7 +148,7 @@ const CollectionChartPopup = ({
     const ws = XLSX.utils.json_to_sheet(tableData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
+  
     XLSX.writeFile(wb, `Collection.xlsx`);
   };
   return (
@@ -171,7 +173,7 @@ const CollectionChartPopup = ({
                         Number(item.bg_id) === Number(backgorundFilters.bgId)
                     )[0].business_segment
                   : "",
-
+  
                 backgorundFilters.buId !== "All" &&
                 backgorundFilters.buId !== ""
                   ? buData.filter(
@@ -179,21 +181,21 @@ const CollectionChartPopup = ({
                         Number(item.bu_id) === Number(backgorundFilters.buId)
                     )[0].business_unit_name
                   : "",
-
+  
                 backgorundFilters.zId !== "All" && backgorundFilters.zId !== ""
                   ? zoneData.filter(
                       (item) =>
                         Number(item.z_id) === Number(backgorundFilters.zId)
                     )[0].zone_name
                   : "",
-
+  
                 backgorundFilters.rId !== "All" && backgorundFilters.rId !== ""
                   ? regionData.filter(
                       (item) =>
                         Number(item.r_id) === Number(backgorundFilters.rId)
                     )[0].region_name
                   : "",
-
+  
                 backgorundFilters.tId !== "All" && backgorundFilters.tId !== ""
                   ? tData.filter(
                       (item) =>
@@ -210,7 +212,7 @@ const CollectionChartPopup = ({
               ></IoCloseOutline>
             </button>
           </div>
-
+  
           <div className="flex flex-col  mt-4 px-6  w-full  lg:flex-row justify-between">
             <div className="flex flex-row gap-2 w-full items-center lg:w-[80%]">
               <DatePicker
@@ -229,9 +231,9 @@ const CollectionChartPopup = ({
                 }
                 dropdownMode="select"
               />
-
+  
               <span>To</span>
-
+  
               <DatePicker
                 className="w-24 px-3 text-xs h-8  rounded-lg  border-2 border-blue-400 focus:outline-none focus:border-indigo-500 "
                 dateFormat="dd-MM-yyyy"
@@ -264,7 +266,7 @@ const CollectionChartPopup = ({
                 onInputChange={(searchVal) => setCustSearch(searchVal)}
               />
             </div>
-
+  
             <div className="flex flex-row gap-2 items-center">
               <button
                 className="bg-blue-500 px-4 py-1 text-white"
@@ -289,9 +291,9 @@ const CollectionChartPopup = ({
               ></TbFileDownload>
             </div>
           </div>
-
+  
           {/* tables  */}
-
+  
           <div className="orderwrapper px-2 py-2  ">
             <div className="w-full px- mt-2 flex lg:flex-row flex-col gap-3 font-arial rounded-md">
               <div className="bg-white  flex-1 md:flex items-center justify-center gap-4 rounded-md shadow- text-white text-center w-full">

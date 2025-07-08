@@ -53,7 +53,7 @@ const TabsTwo = () => {
                 }  py-1.5 px-2 text-white `}
                 disabled={true}
               >
-                <span className="text-sm">2. Validate Collection Plan</span>
+                <span className="text-sm">2.  Validate Collection Plan</span>
               </button>
             </li>
           </ul>
@@ -76,11 +76,7 @@ const TabsTwo = () => {
           />
         )}
         {formType === "RPSummary" && (
-          <RPSummary
-            formType={setFormType}
-            tableData={tableData}
-            headerData={headerData}
-          />
+          <RPSummary formType={setFormType} tableData={tableData}    headerData={headerData} />
         )}
       </section>
     </>

@@ -33,7 +33,7 @@ const AssignRole = () => {
 
       const uniqueRecords = {};
       respData.forEach((record) => {
-        const roleId = record.role_id;
+        const roleId = record.user_id;
                   if (!uniqueRecords[roleId]) {
           uniqueRecords[roleId] = record;
         }

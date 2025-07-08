@@ -140,6 +140,9 @@ const ProductSegment = () => {
                   <th className="px-6 w-[7%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Segment ID
                   </th>
+                  <th className="px-1 w-[1%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Image
+                  </th>
                   <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Product Segment
                   </th>
@@ -188,6 +191,9 @@ const ProductSegment = () => {
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.pseg_id}
+                    </td>
+                    <td className="px-6 py-2  dark:border-2 whitespace-nowrap">
+                      <img width={20} className="rounded-full " height={20} src={item?.image_name} alt={"name"}></img>
                     </td>
                     <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                       {item.pseg_name}

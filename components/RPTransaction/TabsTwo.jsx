@@ -15,7 +15,7 @@ const TabsTwo = () => {
       setFormType("Upload");
     } else {
       setFormType("RPTable");
-      if (JSON.parse(window.localStorage.getItem("RSP"))?.length) {
+      if (JSON.parse(window.localStorage.getItem("RSP")).length) {
         setTableData(JSON.parse(window.localStorage.getItem("RSP")));
       } else {
         setTableData([]);
@@ -105,11 +105,7 @@ const TabsTwo = () => {
           />
         )}
         {formType === "RPSummary" && (
-          <RPSummary
-            formType={setFormType}
-            tableData={tableData}
-            headerData={headerData}
-          />
+          <RPSummary formType={setFormType} tableData={tableData}    headerData={headerData} />
         )}
       </section>
     </>

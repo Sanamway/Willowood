@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import Layout from "../Layout";
 import { AiTwotoneHome } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
@@ -6,27 +6,48 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { url } from "@/constants/url";
 import toast, { Toaster } from "react-hot-toast";
+import Select from "react-select";
 
-     const UserProfileForm = () => {
+const UserProfileForm = () => {
   const router = useRouter();
   const [menuRole, setMenusRole] = useState([]);
   const [menus, setMenus] = useState([]);
   const [isSelect, setSelect] = useState(false);
   const [check, setCheck] = useState([]);
 
+  const [user, setUser] = useState("");
+  const [userName, setUsername] = useState("");
+  const [ui, setUid] = useState("");
+  const [email_id, setEmailId] = useState("");
+  const [compList, setCompList] = useState("");
 
+  const [comDisable, setcomDisable] = useState(true);
+  const [clearCompList, setClearCompList] = useState(false);
+  const [cid, setCid] = useState(null);
 
-  const [user, setUser] = useState("")
-  const [userName, setUsername] = useState("")
-  const [ui, setUid] = useState("")
-  const [email_id, setEmailId] = useState("")
-
-  let { role_id, view, CREATE } = router.query;
+  let { role_id, view, CREATE, mode, app_type } = router.query;
 
   const [selectedRole, setSelectedRole] = useState({
     role_id: "",
     description: ""
   });
+
+  const [formState, setFormState] = useState({
+    mode: "",
+    app_type: "Field Force Apps"
+  });
+
+  
+  
+
+  const [ciid, setciid] = useState({
+    ciid: []
+  });
+
+  const handleCompChange = (selectedOptions) => {
+    const arr = selectedOptions.map((option) => ({ label: option.label, value: option.value }));
+    setciid({ ...ciid, ciid: arr });
+  };
 
   const handleSelectRole = (e) => {
     const [role_id, description] = e.target.value.split(",");
@@ -53,9 +74,11 @@ import toast, { Toaster } from "react-hot-toast";
 
   const getMenusById = async (id) => {
     try {
-      const resp = await axios.get(`${url}/api/get_menu_rights/?role_id=${role_id}`, { headers: headers });
+      const resp = await axios.get(`${url}/api/get_menu_rights/?role_id=${role_id}`, {
+        headers: headers,
+        params: { mode }
+      });
       const respData = await resp.data.data;
-      console.log("apires", respData);
 
       setCheck(respData);
     } catch (error) {
@@ -63,25 +86,50 @@ import toast, { Toaster } from "react-hot-toast";
     }
   };
 
-  console.log("role id", role_id);
-
   useEffect(() => {
     if (router.query.type === "CREATE") return;
     if (role_id) getMenusById(role_id);
   }, [role_id]);
-
+  
+  console.log("hcdvberv", formState?.app_type)
   const gettingMenuName = async () => {
     try {
       const respond = await axios.get(`${url}/api/menus`, { headers: headers });
       const apires = await respond.data.data;
-      setMenus(
-        apires.map((item) => {
-          return {
-            ...item,
-            isEditable: false
-          };
-        })
-      );
+
+      let updatedMenus = apires.map((item) => ({
+        ...item,
+        isEditable: false
+      }));
+
+      // if (formState?.mode === "web") {
+      //   updatedMenus = updatedMenus.filter((item) => item.Ul_name === "Web");
+      //   // updatedMenus = updatedMenus.filter((item) => item.mode === "Web");
+      // }else if(formState?.mode== "mobile"){
+      //   updatedMenus = updatedMenus.filter((item) => item.Ul_name == formState?.app_type  );
+      // }
+      // setMenus(updatedMenus);
+      // // setMenus(
+      // //   apires.map((item) => {
+      // //     return {
+      // //       ...item,
+      // //       isEditable: false
+      // //     };
+      // //   })
+      // // );
+
+      if (formState?.mode === "web") {
+        updatedMenus = updatedMenus.filter((item) => item.Ul_name === "Web");
+        setMenus(updatedMenus);
+      } else if (formState?.mode === "mobile" && formState?.app_type) {
+        updatedMenus = updatedMenus.filter(
+          (item) => item.Ul_name.toLowerCase() === formState.app_type.toLowerCase()
+        );
+        setMenus(updatedMenus);
+      } else {
+        setMenus(updatedMenus);
+      }
+      
     } catch (error) {
       console.log(error);
     }
@@ -89,8 +137,11 @@ import toast, { Toaster } from "react-hot-toast";
 
   useEffect(() => {
     gettingMenuRole();
-    gettingMenuName();
   }, []);
+
+  useEffect(() => {
+    gettingMenuName();
+  }, [formState.mode, formState?.app_type]);
 
   const payload = menus
     .filter((item) => item && item.isEditable === true)
@@ -98,6 +149,8 @@ import toast, { Toaster } from "react-hot-toast";
       menu_id: item?.menu_id,
       role_id: selectedRole?.role_id,
       U_profile_name: selectedRole?.description,
+      app_type: formState?.mode =="web" ? "" :formState?.app_type,
+      mode: formState?.mode,
       umenu_Name: item.menu_name,
       New: item.AddRight,
       modify: item.EditRight,
@@ -106,22 +159,33 @@ import toast, { Toaster } from "react-hot-toast";
       wf_approval: item.ApproveRight,
       menutype: item?.type_menu,
       c_name: userName,
-      ul_name: userName
+      ul_name: userName,
+      mode: formState?.mode,
+      c_id: ciid.ciid
     }));
 
+  console.log("Payload", payload);
+
   async function makingLoopApi(datas) {
-    if(datas.length<=0){
-      toast.error("Select Options")
-      return 
+    console.log("datas", datas);
+    if (datas.length <= 0) {
+      toast.error("Select Options");
+      return;
     }
     if (!isSelect) {
       return;
     } else {
       try {
         let toastDisplayed = false;
+
+      //  return
         for (const item of datas) {
           const response = await axios.post(`${url}/api/assign_menu_rights`, JSON.stringify(item), {
-            headers: headers
+            headers: headers,
+            params: {
+              app_type: formState?.app_type,
+              mode: formState?.mode
+            }
           });
           const responseData = response.data;
           console.log("fdvfv", responseData.message);
@@ -161,10 +225,6 @@ import toast, { Toaster } from "react-hot-toast";
     makingLoopApi(payload);
   };
 
-  console.log("nerev", check);
-
-  console.log("iveee", router.query.type == "view");
-
   const rowdisable = (menu) => {
     if (menu?.type_menu === "0" || menu?.type_menu === "1") {
       return true;
@@ -180,7 +240,6 @@ import toast, { Toaster } from "react-hot-toast";
     }
   };
 
-
   //getting user local
 
   useEffect(() => {
@@ -189,18 +248,42 @@ import toast, { Toaster } from "react-hot-toast";
       const userName = localStorage.getItem("user_name");
       const uid = localStorage.getItem("uid");
       setUser(isLoggedInInLocalStorage);
-      setEmailId(email_id)
-      setUsername(userName)
-      setUid(uid)
+      setEmailId(email_id);
+      setUsername(userName);
+      setUid(uid);
     }
 
-    if(!localStorage.getItem("uid")){
-      router.push('/login')
+    if (!localStorage.getItem("uid")) {
+      router.push("/login");
     }
-  
   }, []);
 
-  console.log("userporof",userName)
+  // get all companies list
+
+  const getAllCompIds = async (ciiid, cid) => {
+    const res = await axios.get(`${url}/api/get_company_information${ciiid}${cid}`, { headers: headers });
+    const respdata = await res.data.data;
+    setCompList(respdata);
+    console.log("complist", respdata);
+  };
+
+  useEffect(() => {
+    switch (selectedRole.role_id) {
+      case "1":
+        getAllCompIds("", "");
+        break;
+      default:
+        const ciiid = "?c_id=";
+        getAllCompIds(ciiid, cid);
+    }
+  }, [selectedRole?.role_id, cid]);
+
+  useEffect(() => {
+    if (window.localStorage) {
+      const c_id = localStorage.getItem("c_id");
+      setCid(c_id);
+    }
+  }, []);
 
   return (
     <>
@@ -245,6 +328,7 @@ import toast, { Toaster } from "react-hot-toast";
                     className="px-2 py-1 bg-gray-100 w-full"
                   />
                 </div>
+
                 {router.query.type == "Edit" && (
                   <div
                     onClick={() => {
@@ -259,6 +343,9 @@ import toast, { Toaster } from "react-hot-toast";
                   </div>
                 )}
               </div>
+
+              {/* user profile  */}
+
               <div className=" text-black flex items-center justify-start mt-4">
                 {router.query.type == "CREATE" && (
                   <div className="w-1/2 flex items-center justify-center">
@@ -270,7 +357,14 @@ import toast, { Toaster } from "react-hot-toast";
                       className="w-full px-1 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus-border-indigo-500"
                       id="userName"
                       value={`${selectedRole.role_id},${selectedRole.description}`}
-                      onChange={handleSelectRole}
+                      onChange={(e) => {
+                        if (e) {
+                          setcomDisable(false);
+                          setClearCompList(true);
+                          setciid({ ...ciid, ciid: [] });
+                        }
+                        handleSelectRole(e);
+                      }}
                     >
                       <option
                         className="focus:outline-none focus:border-b bg-white whitespace-nowrap w-full"
@@ -319,6 +413,161 @@ import toast, { Toaster } from "react-hot-toast";
                   </div>
                 )}
               </div>
+
+              {router.query.type == "view" ? (
+                <div className="w-full flex mt-4 ">
+                  <div className="w-1/2 px-2 relative  ">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                      <span className="text-red-500">*</span> Mode
+                    </label>
+                    <select
+                      className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-gray-500"
+                      id="statusSelect"
+                      disabled
+                      name="status"
+                      value={mode}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          mode: e.target.value
+                        })
+                      }
+                    >
+                      <option
+                        // defaultValue="enabled"
+                        className="focus:outline-none focus:border-b bg-white"
+                      >
+                        Select Option
+                      </option>
+                      <option value="mobile">Mobile</option>
+                      <option value="web">Web</option>
+                    </select>
+                  </div>
+                  {mode == "mobile" && (
+                    <div className="w-1/2 px-2 relative ">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                        <span className="text-red-500">*</span> Application Type
+                      </label>
+                      <select
+                        className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-gray-500"
+                        id="statusSelect"
+                        name="status"
+                        disabled
+                        value={app_type}
+                        onChange={(e) =>
+                          setFormState({
+                            ...formState,
+                            app_type: e.target.value
+                          })
+                        }
+                      >
+                        <option value="Field Force Apps">Field Force Apps</option>
+                        <option value="Sales Force Automation Apps">Sales Force Automation Apps</option>
+                        <option value="B-2-B Dealer Apps">B-2-B Dealer Apps</option>
+                        <option value="Crop Advisor Apps">Crops Advisor Apps</option>
+                        <option value="Loyalty Program Apps">Loyalty Program Apps</option>
+                        <option value="Farmer Apps">Farmer Apps</option>
+                      </select>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="w-full flex mt-4 ">
+                  <div className="w-1/2 px-2 relative  ">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                      <span className="text-red-500">*</span> Mode
+                    </label>
+                    <select
+                      className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-gray-500"
+                      id="statusSelect"
+                      name="status"
+                      value={formState.mode}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          mode: e.target.value
+                        })
+                      }
+                    >
+                      <option
+                        // defaultValue="enabled"
+                        className="focus:outline-none focus:border-b bg-white"
+                      >
+                        Select Option
+                      </option>
+                      <option value="mobile">Mobile</option>
+                      <option value="web">Web</option>
+                    </select>
+                  </div>
+                  {formState.mode == "mobile" && (
+                    <div className="w-1/2 px-2 relative ">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                        <span className="text-red-500">*</span> Application Type
+                      </label>
+                      <select
+                        className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-gray-500"
+                        id="statusSelect"
+                        name="status"
+                        value={formState?.app_type}
+                        onChange={(e) =>
+                          setFormState({
+                            ...formState,
+                            app_type: e.target.value
+                          })
+                        }
+                      >
+                        <option value="Field Force Apps">Field Force Apps</option>
+                        <option value="Sales Force Automation Apps">Sales Force Automation Apps</option>
+                        <option value="B-2-B Dealer Apps">B-2-B Dealer Apps</option>
+                        <option value="Crop Advisor Apps">Crops Advisor Apps</option>
+                        <option value="Loyalty Program Apps">Loyalty Program Apps</option>
+                        <option value="Farmer Apps">Farmer Apps</option>
+                      </select>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* company dropdown */}
+
+              {/* <div className=" text-black flex items-center justify-start mt-4">
+                {router.query.type == "CREATE" && (
+                  <div className="w-1/2 flex items-center justify-center">
+                    <label className="w-1/2 text-gray-700 text-sm font-bold mb-2" htmlFor="userName">
+                      <span className="text-red-500 p-1">*</span>Company
+                    </label>
+                    <Select
+                      isDisabled={comDisable}
+                      isMulti
+                      isClearable={clearCompList}
+                      value={ciid.ciid}
+                      options={compList}
+                      onChange={handleCompChange}
+                      className="border-b-2 w-full"
+                    />
+                  </div>
+                )}
+
+                {router.query.type == "view" && (
+                  <div className="w-1/2 flex items-center justify-center">
+                    <label className="w-1/2 text-gray-700 text-sm font-bold mb-2" htmlFor="userName">
+                      <span className="text-red-500 p-1">*</span>Company
+                    </label>
+                    <Select
+                      isDisabled={comDisable}
+                      isMulti
+                      isClearable={clearCompList}
+                      value={check[0]?.c_names}
+                      options={compList}
+                      onChange={handleCompChange}
+                      className="border-b-2 w-full"
+                    />
+                  </div>
+                )}
+              </div> */}
+
+              {/* Assign Menu Rights  */}
+
               <div className="mt-8 font-arial">
                 <h2 className="text-sm mb-4">Assign Menu Rights</h2>
                 <div className="overflow-x-auto">
@@ -346,112 +595,114 @@ import toast, { Toaster } from "react-hot-toast";
                         <td className="px-6 py-2 text-center dark:border-2 text-xs whitespace-nowrap font-medium text-gray-500  tracking-wider">
                           Approve
                         </td>
-                        {/* <td className="px-6 py-2 text-center dark:border-2 text-xs whitespace-nowrap font-medium text-gray-500  tracking-wider">
-                          Select All
-                        </td> */}
+                        {router.query.type=="view" &&(
+                          <td className="px-6 py-2 text-center dark:border-2 text-xs whitespace-nowrap font-medium text-gray-500  tracking-wider">
+                          App Type
+                          </td>
+                        )}
                       </tr>
                     </thead>
                     <tbody className="font-arial text- text-center">
                       {router.query.type == "CREATE" &&
-                        menus?.map(
-                          (menu, index) => (
-                            (
-                              <tr
-                                className={`bg-white divide-y ${rowdisable(menu) ? 'border-2 border-red-200':""}  text-xs`}
-                                key={menu._id}
-                              >
-                                <td className={`border-b px-4 py-2 flex items-center gap-4 `}>
-                                  <input
-                                    type="checkbox"
-                                    checked={menu?.isEditable}
-                                    // disabled={rowdisable(menu)}
-                                    onChange={() => {
-                                      setMenus(
-                                        menus.map((el) =>
-                                          el._id === menu._id ? { ...el, isEditable: !el.isEditable } : el
-                                        )
-                                      );
-                                      setSelect(true);
-                                    }}
-                                  />
-                                  {menu.menu_id}
-                                </td>
-                                <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-left text-xs">
-                                  {menu?.menu_name}
-                                </td>
-                                <td className="border px-4 py-2">
-                                  <input
-                                    type="checkbox"
-                                    disabled={!menu.isEditable}
-                                    checked={menu.isEditable ? menu.AddRight : false}
-                                    onChange={() => {
-                                      setMenus(
-                                        menus.map((el) =>
-                                          el._id === menu._id ? { ...el, AddRight: !el.AddRight } : el
-                                        )
-                                      );
-                                    }}
-                                  />
-                                </td>
-                                <td className="border px-4 py-2">
-                                  <input
-                                    type="checkbox"
-                                    disabled={!menu.isEditable}
-                                    // checked={menu.EditRight}
-                                    checked={menu.isEditable ? menu.EditRight : false}
-                                    onChange={() => {
-                                      setMenus(
-                                        menus.map((el) =>
-                                          el._id === menu._id ? { ...el, EditRight: !el.EditRight } : el
-                                        )
-                                      );
-                                    }}
-                                  />
-                                </td>
-                                <td className="border px-4 py-2">
-                                  <input
-                                    type="checkbox"
-                                    disabled={!menu.isEditable}
-                                    checked={menu.isEditable ? menu.ViewRight : false}
-                                    onChange={() => {
-                                      setMenus(
-                                        menus.map((el) =>
-                                          el._id === menu._id ? { ...el, ViewRight: !el.ViewRight } : el
-                                        )
-                                      );
-                                    }}
-                                  />
-                                </td>
-                                <td className="border px-4 py-2">
-                                  <input
-                                    type="checkbox"
-                                    disabled={!menu.isEditable}
-                                    checked={menu.isEditable ? menu.DeleteRight : false}
-                                    onChange={() => {
-                                      setMenus(
-                                        menus.map((el) =>
-                                          el._id === menu._id ? { ...el, DeleteRight: !el.DeleteRight } : el
-                                        )
-                                      );
-                                    }}
-                                  />
-                                </td>
-                                <td>
-                                  <input
-                                    type="checkbox"
-                                    className="border px-4 py-2"
-                                    disabled={!menu.isEditable}
-                                    checked={menu.isEditable ? menu.ApproveRight : false}
-                                    onChange={() => {
-                                      setMenus(
-                                        menus.map((el) =>
-                                          el._id === menu._id ? { ...el, ApproveRight: !el.ApproveRight } : el
-                                        )
-                                      );
-                                    }}
-                                  />
-                                </td>
-                                {/* <td className="border px-4 py-2">
+                        menus?.map((menu, index) => (
+                          <tr
+                            className={`bg-white divide-y ${
+                              rowdisable(menu) ? "border-2 border-red-200" : ""
+                            }  text-xs`}
+                            key={menu._id}
+                          >
+                            <td className={`border-b px-4 py-2 flex items-center gap-4 `}>
+                              <input
+                                type="checkbox"
+                                checked={menu?.isEditable}
+                                // disabled={rowdisable(menu)}
+                                onChange={() => {
+                                  setMenus(
+                                    menus.map((el) =>
+                                      el._id === menu._id ? { ...el, isEditable: !el.isEditable } : el
+                                    )
+                                  );
+                                  setSelect(true);
+                                }}
+                              />
+                              {menu.menu_id}
+                            </td>
+                            <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-left text-xs">
+                              {menu?.menu_name}
+                            </td>
+                            <td className="border px-4 py-2">
+                              <input
+                                type="checkbox"
+                                disabled={!menu.isEditable}
+                                checked={menu.isEditable ? menu.AddRight : false}
+                                onChange={() => {
+                                  setMenus(
+                                    menus.map((el) =>
+                                      el._id === menu._id ? { ...el, AddRight: !el.AddRight } : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td className="border px-4 py-2">
+                              <input
+                                type="checkbox"
+                                disabled={!menu.isEditable}
+                                // checked={menu.EditRight}
+                                checked={menu.isEditable ? menu.EditRight : false}
+                                onChange={() => {
+                                  setMenus(
+                                    menus.map((el) =>
+                                      el._id === menu._id ? { ...el, EditRight: !el.EditRight } : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td className="border px-4 py-2">
+                              <input
+                                type="checkbox"
+                                disabled={!menu.isEditable}
+                                checked={menu.isEditable ? menu.ViewRight : false}
+                                onChange={() => {
+                                  setMenus(
+                                    menus.map((el) =>
+                                      el._id === menu._id ? { ...el, ViewRight: !el.ViewRight } : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td className="border px-4 py-2">
+                              <input
+                                type="checkbox"
+                                disabled={!menu.isEditable}
+                                checked={menu.isEditable ? menu.DeleteRight : false}
+                                onChange={() => {
+                                  setMenus(
+                                    menus.map((el) =>
+                                      el._id === menu._id ? { ...el, DeleteRight: !el.DeleteRight } : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="checkbox"
+                                className="border px-4 py-2"
+                                disabled={!menu.isEditable}
+                                checked={menu.isEditable ? menu.ApproveRight : false}
+                                onChange={() => {
+                                  setMenus(
+                                    menus.map((el) =>
+                                      el._id === menu._id ? { ...el, ApproveRight: !el.ApproveRight } : el
+                                    )
+                                  );
+                                }}
+                              />
+                            </td>
+                            {/* <td className="border px-4 py-2">
                             <input
                               type="checkbox"
                               disabled={!menu?.isEditable}
@@ -466,17 +717,19 @@ import toast, { Toaster } from "react-hot-toast";
                               }}
                             />
                           </td> */}
-                              </tr>
-                            )
-                          )
-                        )}
+                          </tr>
+                        ))}
 
                       {check?.map(
                         (menu, index) => (
                           console.log("dd", menu.menutype),
                           (
-                            <tr  className={`bg-white divide-y ${rowdisable2(menu) ? 'border-2 border-red-200':""}  text-xs`}
-                            key={menu._id}>
+                            <tr
+                              className={`bg-white divide-y ${
+                                rowdisable2(menu) ? "border-2 border-red-200" : ""
+                              }  text-xs`}
+                              key={menu._id}
+                            >
                               <td className="border-b px-4 py-2 flex items-center gap-4">
                                 {/* <input
                                   type="checkbox"
@@ -525,6 +778,9 @@ import toast, { Toaster } from "react-hot-toast";
                                   disabled={!menu.isEditable}
                                   checked={menu.wf_approval}
                                 />
+                              </td>
+                              <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial text-left text-xs">
+                                {menu?.app_type ? menu?.app_type : "NA"}
                               </td>
                             </tr>
                           )

@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef, use } from "react";
 import Layout from "../Layout";
-import {
-  AiTwotoneHome,
-  AiOutlineEyeInvisible,
-  AiOutlineEye,
-} from "react-icons/ai";
+import { AiTwotoneHome, AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useRouter } from "next/router";
 import userimg from "../../public/userimg.jpg";
@@ -20,11 +16,40 @@ const UserInformation = () => {
   const [userImage, setUserImage] = useState("");
   const [userOptions, setUserOptions] = useState([]);
   const [showPass, setShowPass] = useState(false);
+  const [compList, setCompList] = useState("");
   const { id, view } = router.query;
+  const [cid, setCid] = useState(null);
+  const [comDisable, setcomDisable] = useState(true);
+  const [clearCompList, setClearCompList] = useState(false);
+
+  const modeList = [
+    {
+      value: "mobile",
+      label: "mobile"
+    },
+    {
+      value: "web",
+      label: "web"
+    }
+  ];
+
+  const [comSelect, setCompSelect] = useState({
+    comp: []
+  });
+
+  const handleCompChange = (selectedOptions) => {
+    const arr = selectedOptions.map((option) => ({ label: option.label, value: option.value }));
+    setFormState({ ...formState, c_id: arr });
+  };
+
+  const handleModeChange = (selectedOptions) => {
+    const arr = selectedOptions.map((option) => ({ label: option.label, value: option.value }));
+    setFormState({ ...formState, modes: arr });
+  };
 
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
   };
 
   //getlocaldta
@@ -34,11 +59,12 @@ const UserInformation = () => {
   const [email_id, setEmailId] = useState("");
 
   const [tempImage, setTempImage] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
 
   const getDataById = async (id) => {
     try {
       const respond = await axios.get(`${url}/api/get_user/${id}`, {
-        headers: headers,
+        headers: headers
       });
       const apires = await respond.data.data;
       console.log("ff", apires);
@@ -55,7 +81,7 @@ const UserInformation = () => {
           value: apires[0].value,
           label: apires[0].city,
           state: apires[0].state,
-          country: apires[0].country,
+          country: apires[0].country
         },
         phone_number: apires[0].phone_number,
         password: apires[0].password,
@@ -66,9 +92,17 @@ const UserInformation = () => {
         status: apires[0].status,
         position: apires[0].position,
         about_me: apires[0].about_me,
+        otp_enable: apires[0].otp_enable,
+        // mode: apires[0].mode,
+        modes: apires[0].mode,
+        app_type: apires[0]?.app_type,
+        image: apires[0].image_url,
+        c_id: apires[0].c_names,
+        emp_code: apires[0].emp_code
       });
+      setImagePreview(apires[0]?.image_url);
 
-      getImage(apires[0].phone_number);
+      getImage(apires[0]?.phone_number);
     } catch (error) {
       console.log(error);
     }
@@ -83,6 +117,8 @@ const UserInformation = () => {
 
   // const searchCity=""
 
+  const [selectRoleId, setSelectedRoleId] = useState("");
+
   const [formState, setFormState] = useState({
     cId: "",
     empCode: "",
@@ -93,7 +129,7 @@ const UserInformation = () => {
       value: "",
       label: "",
       state: "",
-      country: "",
+      country: ""
     },
     // state: "",
     email: "",
@@ -104,9 +140,16 @@ const UserInformation = () => {
     position: "",
     about_me: "",
     status: "",
+    otp_enable: "",
+    mode: "",
+    app_type: "",
     c_name: userName,
     ul_name: userName,
     image: tempImage,
+    c_id: [],
+    role_id: "",
+    emp_code: "",
+    modes: []
   });
 
   // console.log("form", formState);
@@ -115,9 +158,9 @@ const UserInformation = () => {
   const validationSchema = Yup.object().shape({
     user_name: Yup.string().required("User name is required"),
     address: Yup.string().required("Address is required"),
-    email: Yup.string()
-      .email("Invalid email format")
-      .required("Email is required"),
+    otp_enable: Yup.string().required("OTP is required"),
+    mode: Yup.string().required("Mode is required"),
+    email: Yup.string().email("Invalid email format").required("Email is required"),
     phone_number: Yup.number()
       .transform((value, originalValue) => {
         if (originalValue === "") return undefined;
@@ -142,14 +185,18 @@ const UserInformation = () => {
     status: Yup.string().required("Status is required"),
     // city: Yup.string().required("City is required"),
     // state: Yup.string().required("State is required"),
-    position: Yup.string().required("Designation is required"),
+    position: Yup.string().required("Designation is required")
   });
   const [formErrors, setFormErrors] = useState({});
 
   const handleSaveCompanyInfo = async (e, tempImage) => {
+    if (!tempImage) {
+      toast.error("Please select an image");
+      return;
+    }
     e.preventDefault();
     try {
-      await validationSchema.validate(formState, { abortEarly: false });
+      // await validationSchema.validate(formState, { abortEarly: false });
       const data = {
         user_name: formState.user_name,
         address: formState.address,
@@ -166,9 +213,16 @@ const UserInformation = () => {
         status: formState.status,
         position: formState.position,
         about_me: formState.about_me,
+        otp_enable: formState.otp_enable,
+        // mode: formState.mode,
+        mode: formState.modes,
+        app_type: formState.app_type,
         image: tempImage,
         c_name: userName,
         ul_name: userName,
+        c_id: formState.c_id,
+        role_id: formState.role_id,
+        emp_code: formState.emp_code
       };
 
       //Image uploading
@@ -187,99 +241,69 @@ const UserInformation = () => {
         }
       }
 
+      console.log("NewWid", data);
+
       // return;
-      // const respond = await axios
-      //   .post(`${url}/api/create_user`, JSON.stringify(data), {
-      //     headers: headers
-      //   })
-      //   .then((res) => {
-      //     console.log("newFf", res);
-      //     if (!res) return;
-      //     toast.success("User added successfully!");
-      //     setTimeout(() => {
-      //       router.push("/table/table_user_information");
-      //     }, [3000]);
-      //   });
-      // if (tempImage && respond) {
-      //   console.log("Inside", tempImage);
-      //   const renamedBlob = new Blob([tempImage], { type: tempImage?.type });
-      //   if (!checkFileSize(tempImage)) return;
-      //   const formData = new FormData();
-      //   formData.append(
-      //     "myFile",
-      //     renamedBlob,
-      //     `${formState?.phone_number}.${getFileExtension(tempImage?.name)}`
-      //     );
-      //     console.log("Named", formData);
 
-      //     if (tempImage) {
-      //       console.error("Error creating renamed file.");
-      //       return;
-      //     }
-
-      //     const res = await axios.post(`${url}/api/upload_file/?file_path=user`, formData);
-      //     const respo = await res.data;
-      //   }
-
-      const respond = await axios.post(
-        `${url}/api/create_user`,
-        JSON.stringify(data),
-        {
-          headers: headers,
-        }
-      );
+      const respond = await axios.post(`${url}/api/create_user`, JSON.stringify(data), {
+        headers: headers
+      });
       const response = await respond.data.data;
       const phoneNumber = response.phone_number;
-      console.log("POHIBV", phoneNumber);
-      if (tempImage) {
-        toast.error("Upload Image");
-      }
 
-      if (tempImage && phoneNumber) {
-        console.log("Inside", tempImage);
-        const renamedBlob = new Blob([tempImage], { type: tempImage?.type });
-        if (!checkFileSize(tempImage)) return;
-        const formData = new FormData();
-        formData.append(
-          "myFile",
-          renamedBlob,
-          `${phoneNumber}.${getFileExtension(tempImage?.name)}`
-        );
+      // console.log("APIRESP", phoneNumber);
+
+      if (phoneNumber) {
+        // toast.success(respdata.message);
 
         if (tempImage) {
-          console.error("Error creating renamed file.");
-          return;
+          const imageFormData = new FormData();
+          const timestamp = Date.now();
+          imageFormData.append(
+            "myFile",
+            tempImage,
+            `${phoneNumber}_${timestamp}.${getFileExtension(tempImage?.name)}`
+          );
+          const imageUploadResp = await axios.post(
+            `${url}/api/upload_file/?file_path=user&mob_no=${phoneNumber}`,
+            imageFormData,
+            {
+              headers: {
+                ...headers,
+                "Content-Type": "multipart/form-data"
+              }
+            }
+          );
+
+          console.log("Image uploaded", imageUploadResp.data);
+
+          if (imageUploadResp.data) {
+            toast.success("Image uploaded successfully");
+          }
         }
-
-        const res = await axios.post(
-          `${url}/api/upload_file/?file_path=user`,
-          formData
-        );
-        const respo = await res.data;
-
-        console.log("Image Upload", respo);
       }
 
-      // return
+      // return;
       if (respond) {
         toast.success("User added successfully!");
         whatsAppMsg();
         setTimeout(() => {
           router.push("/table/table_user_information");
-        }, 4000);
+        }, 2000);
       }
     } catch (errors) {
       const messageError = errors?.response?.data?.message;
       console.log("userinf", messageError);
-      // if (messageError) {
-      //   toast.error(messageError);
-      //   return;
-      // }
+
+      if (messageError) {
+        toast.error(messageError);
+        return;
+      }
       const errorMessage = errors?.response?.data?.error;
       if (errorMessage?.includes("email_1")) {
         toast.error("Email already exist");
       } else if (errorMessage?.includes("phone_number_1")) {
-        toast.error("Phone Number already exist");
+        toast.error("User Mobile Number already exist");
       }
       const newErrors = {};
       errors?.inner?.forEach((error) => {
@@ -289,13 +313,17 @@ const UserInformation = () => {
     }
   };
 
+  /////////////////Uploding Image/////////////////////////
+
+  const fileInputRef = useRef(null);
+
   const handleEditCompanyInfo = async (e, id) => {
     console.log("ff");
     e.preventDefault();
     try {
       // Validate the form data
-      const uid = formState?._id;
-      await validationSchema.validate(formState, { abortEarly: false });
+      // const uid = formState?._id;
+      // await validationSchema.validate(formState, { abortEarly: false });
       const data = {
         user_name: formState.user_name,
         address: formState.address,
@@ -312,30 +340,98 @@ const UserInformation = () => {
         status: formState.status,
         position: formState.position,
         about_me: formState.about_me,
+        otp_enable: formState.otp_enable,
+        // mode: formState.mode,
+        mode: formState.modes,
+        // mode: apires[0].modes,
+        app_type: formState?.app_type ?? "Field Force Apps",
+        // app_type: apires[0]?.app_type,
+        c_id: formState.c_id,
+        role_id: formState.role_id,
+        emp_code: formState.emp_code,
+        image: userImage
       };
 
-      // console.log("EditData", data)
+      console.log("EditData", data);
+
+      // return;
+
+      // const res = await axios.put(`${url}/api/update_user/${id}`, JSON.stringify(data), {
+      //   headers: headers
+      // });
+      // const resp = await res.data;
 
       // return
+      const respond = await axios.put(`${url}/api/update_user/${id}`, JSON.stringify(data), {
+        headers: headers
+      });
+      const response = await respond.data;
+      // const phoneNumber = response?.data?.phone_number;
+      const phoneNumber = formState?.phone_number;
 
-      const res = await axios.put(
-        `${url}/api/update_user/${id}`,
-        JSON.stringify(data),
-        {
-          headers: headers,
+      console.log("APIRESP", formState?.phone_number);
+
+      function getFileExtension(filename) {
+        if (typeof filename !== "string") {
+          console.error("Invalid input. Expected a string.");
+          return "";
         }
-      );
-      const resp = await res.data;
 
-      toast.success(resp.message);
-      if (resp.message) {
+        const parts = filename.split(".");
+        if (parts.length > 1) {
+          return parts[parts.length - 1];
+        } else {
+          return "";
+        }
+      }
+
+      console.log(getFileExtension(tempImage?.name));
+
+      if (response) {
+        toast.success(response.message);
+        if (tempImage) {
+          const imageFormData = new FormData();
+          const timestamp = Date.now();
+          imageFormData.append(
+            "myFile",
+            tempImage,
+            `${phoneNumber}_${timestamp}.${getFileExtension(tempImage?.name)}`
+          );
+
+          const imageUploadResp = await axios.post(
+            `${url}/api/upload_file/?file_path=user&mob_no=${phoneNumber}`,
+            imageFormData,
+            {
+              headers: {
+                ...headers,
+                "Content-Type": "multipart/form-data"
+              }
+            }
+          );
+
+          console.log("Image uploaded", imageUploadResp.data);
+
+          if (imageUploadResp.data) {
+            toast.success("Image uploaded successfully");
+          }
+        }
+      }
+
+      // toast.success(response.message);
+      if (response.message) {
         setTimeout(() => {
           router.push("/table/table_user_information");
-        }, 2000);
+        }, 1000);
       }
     } catch (errors) {
-      console.log("rr", errors);
+      // toast.error(errors.message);
+      // console.log("rr", errors.message);
       const errorMessage = errors?.response?.data?.error;
+
+      // if (errorMessage) {
+      //   toast.error(errorMessage);
+      //   return;
+      // }
 
       if (errorMessage?.includes("email_1")) {
         toast.error("Email already exist");
@@ -343,6 +439,8 @@ const UserInformation = () => {
         toast.error("GST number already exist");
       } else if (errorMessage?.includes("cmpny_name_1")) {
         toast.error("Company Name already exist");
+      } else if (errorMessage?.includes(" phone_number_1")) {
+        toast.error("User Mobile Number already exist");
       }
 
       const newErrors = {};
@@ -369,102 +467,13 @@ const UserInformation = () => {
 
   //check file size
 
-  const checkFileSize = (file) => {
-    const maxSize = 200000;
-    if (file.size > maxSize) {
-      toast.error("Image Size Must be Less than 200 KB");
-      return false;
-    }
-    return true;
-  };
-
-  // Uploading Image....................................
-
-  const fileInputRef = useRef(null);
-
-  const handleImageUpload = async (e) => {
-    try {
-      const file = e.target.files[0];
-      const renamedBlob = new Blob([file], { type: file?.type });
-      if (!checkFileSize(file)) {
-        return;
-      }
-
-      function getFileExtension(filename) {
-        if (typeof filename !== "string") {
-          console.error("Invalid input. Expected a string.");
-          return "";
-        }
-
-        const parts = filename.split(".");
-        if (parts.length > 1) {
-          return parts[parts.length - 1];
-        } else {
-          return "";
-        }
-      }
-
-      if (file) {
-        setUserImage(URL.createObjectURL(file));
-      }
-      if (renamedBlob) {
-        const formData = new FormData();
-        formData.append(
-          "myFile",
-          renamedBlob,
-          `${formState?.phone_number}.${getFileExtension(file?.name)}`
-        );
-        console.log("Named", formData);
-
-        if (!renamedBlob) {
-          console.error("Error creating renamed file.");
-          return;
-        }
-
-        // return;
-        const res = await axios.post(
-          `${url}/api/upload_file/?file_path=user`,
-          formData
-        );
-        const respo = await res.data;
-      }
-      if (file) {
-        setUserImage(URL.createObjectURL(file));
-        // setUserImage(file);
-      }
-    } catch (error) {
-      console.log("Error", error);
-    }
-  };
-
-  // Second Handle Image Upload
-
-  const handleImageCreate = async (e) => {
-    try {
-      const file = e.target.files[0];
-      if (!checkFileSize(file)) {
-        return;
-      }
-      setTempImage(file);
-
-      if (file) {
-        setUserImage(URL.createObjectURL(file));
-      }
-    } catch (error) {
-      console.log("Error", error);
-    }
-  };
-
   //getting Image from the API
 
   const getImage = async (phone_number) => {
     try {
-      const res = await axios.get(
-        `${url}/api/get_image?phone_number=${phone_number}&file_path=user`,
-        {
-          headers: headers,
-        }
-      );
+      const res = await axios.get(`${url}/api/get_image?phone_number=${phone_number}&file_path=user`, {
+        headers: headers
+      });
       const respData = await res.data;
       console.log("Image", respData?.data?.image_url);
       setUserImage(respData?.data?.image_url);
@@ -479,12 +488,12 @@ const UserInformation = () => {
   //   }
   // },[])
 
-  //getting dropdown menus
+  //getting user profile dropdown menus
 
   const gettingDropdown = async () => {
     try {
-      const resoptions = await axios.get(`${url}/api/user_profiles`, {
-        headers: headers,
+      const resoptions = await axios.get(`${url}/api/user_profiles?c_id=${cid}`, {
+        headers: headers
       });
       const respData = await resoptions.data.data;
       setUserOptions(respData);
@@ -494,7 +503,16 @@ const UserInformation = () => {
   };
 
   useEffect(() => {
-    gettingDropdown();
+    if (cid) {
+      gettingDropdown();
+    }
+  }, [cid]);
+
+  useEffect(() => {
+    if (window.localStorage) {
+      const c_id = localStorage.getItem("c_id");
+      setCid(c_id);
+    }
   }, []);
 
   useEffect(() => {
@@ -522,7 +540,7 @@ const UserInformation = () => {
     try {
       const resp = await axios.get(`${url}/api/get_citystate`, {
         params: { city: city, search: true },
-        headers: headers,
+        headers: headers
       });
       const response = await resp.data.data;
       setFilteredCity(
@@ -530,8 +548,8 @@ const UserInformation = () => {
           return {
             value: item?.city,
             label: item?.city,
-            state: item?.State,
-            country: item?.country,
+            state: item?.state,
+            country: item?.country
           };
         })
       );
@@ -545,15 +563,91 @@ const UserInformation = () => {
     }
   }, [citySearch]);
 
+  //WhatsApp Message Send Handler
+
+  async function whatsAppMsg() {
+    try {
+      const payLoad = {
+        recipient: formState.phone_number,
+        tem_id: "142599",
+        placeholders: [formState.user_name, formState.phone_number, "http://digital.willowood.com"]
+      };
+      const res = await axios.post(`${url}/api/whatsAppChat`, JSON.stringify(payLoad), {
+        headers: headers
+      });
+      const respData = await res.data;
+      console.log("Image", respData?.data?.image_url);
+      setUserImage(respData?.data?.image_url);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  }
+
+  //get All Companies List
+
+  const getAllCompIds = async (ciid, cid) => {
+    const res = await axios.get(`${url}/api/get_company_information${ciid}${cid}`, { headers: headers });
+    const respdata = await res.data.data;
+    // const filtered = respdata.map((item)=> [...item])
+    setCompList(respdata);
+    console.log("getAllcompids", respdata);
+    // console.log("filtereCOmpo", filtered)
+  };
+
+  useEffect(() => {
+    switch (formState.role_id) {
+      case 1:
+        getAllCompIds("", "");
+        break;
+      default:
+        const ciid = "?c_id=";
+        getAllCompIds(ciid, cid);
+    }
+  }, [formState.role_id, cid]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    if (!allowedTypes.includes(file?.type)) {
+      toast.error("Please upload only JPG, JPEG or PNG images");
+      return;
+    }
+
+    const maxSize = 2 * 1024 * 1024;
+    if (file?.size > maxSize) {
+      toast.error("Image size should be less than 2MB");
+      return;
+    }
+
+    setTempImage(file);
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
+  };
+
+  
+
+  useEffect(() => {
+    if(router.query.type=="CREATE"){
+    const hasMobile = formState.modes.some((item) => item.value === "mobile");
+    const hasWeb = formState.modes.some((item) => item.value === "web");
+  
+    setFormState((prevState) => ({
+      ...prevState,
+      app_type: hasMobile ? "Field Force Apps" : "",
+    }));
+  }
+
+  }, [formState.modes]);
+  
+
+
   return (
     <>
       <Layout>
         <Toaster position="bottom-center" reverseOrder={false} />
         <div className="  w-full font-arial bg-white ">
           <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-            <h2 className="font-arial font-normal text-3xl tabletitle py-2">
-              User Information
-            </h2>
+            <h2 className="font-arial font-normal text-3xl tabletitle py-2">User Information</h2>
             <div className="flex items-center gap-2 cursor-pointer">
               <h2>
                 <TiArrowBack
@@ -587,10 +681,7 @@ const UserInformation = () => {
                 <div className="flex items-center justify-between w-full">
                   <div className="flex gap-4 items-start justify-between mb-4 w-3/4">
                     <div className="w-1/2 ">
-                      <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="emailField"
-                      >
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="emailField">
                         Employee
                       </label>
                       <input
@@ -598,20 +689,23 @@ const UserInformation = () => {
                         type="text"
                         id="inputField"
                         placeholder="Employee Code"
-                        value={formState?.user_id}
-                        onChange={(e) =>
-                          setFormState({
-                            ...formState,
-                            empCode: e.target.value,
-                          })
-                        }
+                        value={formState?.emp_code}
+                        onChange={(e) => {
+                          {
+                            if (e.target.value.length > 20) {
+                              console.log(e.target.value);
+                              return;
+                            }
+                            setFormState({
+                              ...formState,
+                              emp_code: e.target.value.toUpperCase()
+                            });
+                          }
+                        }}
                       />
                     </div>
                     <div className="w-1/2 relative ">
-                      <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="phoneField"
-                      >
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneField">
                         <span className="text-red-500">*</span> User name
                       </label>
                       <input
@@ -624,7 +718,7 @@ const UserInformation = () => {
                         onChange={(e) =>
                           setFormState({
                             ...formState,
-                            user_name: e.target.value,
+                            user_name: e.target.value
                           })
                         }
                       />
@@ -635,52 +729,45 @@ const UserInformation = () => {
                       )}
                     </div>
                   </div>
-                  <div className="profpic relative group">
-                    <img
-                      src={userImage ? userImage : userImage}
-                      // src={userImage}
-                      // src={userImage}
-                      // src={'https://picsum.photos/200/300'}
-                      className="h-32 w-32 rounded-full bg-gray-200"
-                      // alt="Profile"
-                      width={100}
-                      height={100}
-                    />
-                    <input
-                      type="file"
-                      accept=".jpeg,.jpg"
-                      onChange={
-                        router.query.type == "CREATE"
-                          ? handleImageCreate
-                          : handleImageUpload
-                      }
-                      style={{ display: "none" }}
-                      id="fileInput"
-                      ref={fileInputRef}
-                      disabled={router.query.type == "view"}
-                    />
 
-                    <label
-                      htmlFor="fileInput"
-                      // here make the opacity-0 to get hover text effect
-                      className={`text-black absolute text-center font-semibold top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer ${
-                        userImage == "" ? "opacity-50" : "opacity-0"
-                      } ${
-                        userImage !== ""
-                          ? "group-hover:opacity-100"
-                          : "group-hover:opacity-0"
-                      }  transition-opacity duration-300`}
-                    >
-                      <span className="text-red-500">*</span> Upload Image
-                    </label>
+                  <div className="flex items-center flex-col space-x-4">
+                    {imagePreview && (
+                      <div className="relative">
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="lg:w-32 lg:h-32 w-20 h-20 object-cover rounded-full"
+                        />
+                        {router.query.type !== "view" && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setTempImage("");
+                              setImagePreview("");
+                            }}
+                            className="absolute lg:w-8 lg:h-8 w-4 h-4 top-1 right-2 lg:top-0 lg:right-0 bg-red-500 text-white rounded-full "
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                    )}
+                    {router.query.type !== "view" && (
+                      <input
+                        type="file"
+                        accept=".jpg,.jpeg,.png"
+                        onChange={handleImageChange}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold
+        file:bg-violet-50 file:text-violet-700
+        hover:file:bg-violet-100"
+                        // disabled={!formState.brand_name || !formState.c_name}
+                      />
+                    )}
                   </div>
                 </div>
 
                 <div className="mb-4 designation relative ">
-                  <label
-                    className="block text-gray-700 text-sm font-bold mb-2"
-                    htmlFor="inputField"
-                  >
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inputField">
                     <span className="text-red-500">*</span> Designation
                   </label>
                   <input
@@ -693,7 +780,7 @@ const UserInformation = () => {
                     onChange={(e) =>
                       setFormState({
                         ...formState,
-                        position: e.target.value,
+                        position: e.target.value
                       })
                     }
                   />
@@ -704,10 +791,7 @@ const UserInformation = () => {
                   )}
                 </div>
                 <div className="mb-1 relative">
-                  <label
-                    className="block text-gray-700 text-sm font-bold mb-2"
-                    htmlFor="textareaField"
-                  >
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="textareaField">
                     <span className="text-red-500">*</span> Address
                   </label>
                   <textarea
@@ -720,7 +804,7 @@ const UserInformation = () => {
                     onChange={(e) =>
                       setFormState({
                         ...formState,
-                        address: e.target.value,
+                        address: e.target.value
                       })
                     }
                   ></textarea>
@@ -760,10 +844,7 @@ const UserInformation = () => {
                     )}
                   </div> */}
                   <div className="w-1/2 px-2 relative">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="userSelect"
-                    >
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
                       <small className="text-red-600">*</small> City
                     </label>
                     <Select
@@ -775,7 +856,7 @@ const UserInformation = () => {
                       onChange={(value) =>
                         setFormState({
                           ...formState,
-                          searchCity: value,
+                          searchCity: value
                         })
                       }
                       onInputChange={(searchVal) => setCitySearch(searchVal)}
@@ -783,10 +864,7 @@ const UserInformation = () => {
                   </div>
 
                   <div className="w-1/2 px-2 relative ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="stateSelect"
-                    >
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="stateSelect">
                       <span className="text-red-500">*</span> State
                     </label>
                     <input
@@ -797,7 +875,7 @@ const UserInformation = () => {
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          state: value,
+                          state: value
                         })
                       }
                       disabled
@@ -818,10 +896,7 @@ const UserInformation = () => {
 
                 <div className="flex gap-4 items-center justify-between mb-4">
                   <div className="w-1/2 relative">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="emailField"
-                    >
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="emailField">
                       <span className="text-red-500">*</span> Email
                     </label>
                     <input
@@ -834,7 +909,7 @@ const UserInformation = () => {
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          email: e.target.value,
+                          email: e.target.value
                         })
                       }
                     />
@@ -845,27 +920,26 @@ const UserInformation = () => {
                     )}
                   </div>
                   <div className="w-1/2 relative ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="phoneField"
-                    >
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneField">
                       <span className="text-red-500">*</span> Mobile No
                     </label>
                     <input
                       className="w-full px-3 py-2 border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                      type="tel"
+                      type="number"
                       id="phoneField"
                       name="phone_number"
                       placeholder="Mobile"
-                      minLength={10}
                       maxLength={10}
                       value={formState.phone_number}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        if (e.target.value.length > 10) {
+                          return;
+                        }
                         setFormState({
                           ...formState,
-                          phone_number: e.target.value,
-                        })
-                      }
+                          phone_number: e.target.value
+                        });
+                      }}
                     />
                     {formErrors.phone_number && (
                       <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
@@ -877,10 +951,7 @@ const UserInformation = () => {
 
                 <div className="flex gap-4 items-center justify-between mb-4">
                   <div className="w-1/2 relative ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="emailField"
-                    >
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="emailField">
                       <span className="text-red-500">*</span> Password
                     </label>
                     <input
@@ -893,14 +964,11 @@ const UserInformation = () => {
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          password: e.target.value,
+                          password: e.target.value
                         })
                       }
                     />
-                    <span
-                      className="absolute bottom-2 right-3 cursor-pointer"
-                      onClick={togglePassword}
-                    >
+                    <span className="absolute bottom-2 right-3 cursor-pointer" onClick={togglePassword}>
                       {showPass ? (
                         <AiOutlineEye className="text-green-500" size={23} />
                       ) : (
@@ -914,10 +982,7 @@ const UserInformation = () => {
                     )}
                   </div>
                   <div className="w-1/2 relative ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="phoneField"
-                    >
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneField">
                       <span className="text-red-500">*</span> Confirm Password
                     </label>
                     <input
@@ -930,14 +995,11 @@ const UserInformation = () => {
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          confirm_password: e.target.value,
+                          confirm_password: e.target.value
                         })
                       }
                     />
-                    <span
-                      className="absolute bottom-2 right-3 cursor-pointer"
-                      onClick={togglePassword}
-                    >
+                    <span className="absolute bottom-2 right-3 cursor-pointer" onClick={togglePassword}>
                       {showPass ? (
                         <AiOutlineEye className="text-green-500" size={23} />
                       ) : (
@@ -953,27 +1015,37 @@ const UserInformation = () => {
                 </div>
                 <div className="flex -mx-2 mb-4">
                   <div className="w-1/2 px-2 relative ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="userSelect"
-                    >
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
                       <span className="text-red-500">*</span> User Profile
                     </label>
+
                     <select
                       className="w-full px-3 py-2 border-b border-gray-500 bg-white focus:outline-none focus:border-b focus-border-indigo-500"
                       id="userSelect"
                       name="t_user"
                       value={formState.t_user}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        if (e) {
+                          setcomDisable(false);
+                          setClearCompList(true);
+                          setFormState((formState.c_id = []));
+                        }
+                        const selectedOption = userOptions.find(
+                          (option) => option.description == e.target.value
+                        );
+                        if (selectedOption) {
+                          setSelectedRoleId(selectedOption.role_id);
+                        }
                         setFormState({
                           ...formState,
                           t_user: e.target.value,
-                        })
-                      }
+                          role_id: selectedOption ? selectedOption.role_id : null
+                        });
+                      }}
                     >
                       <option value="">Select User</option>
                       {userOptions.map((option) => (
-                        <option key={option.id} value={option.id}>
+                        <option key={option.id} value={option.description}>
                           {option.description}
                         </option>
                       ))}
@@ -985,11 +1057,124 @@ const UserInformation = () => {
                       </p>
                     )}
                   </div>
+
                   <div className="w-1/2 px-2 relative ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="statusSelect"
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="statusSelect">
+                      <span className="text-red-500">*</span> OTP
+                    </label>
+                    <select
+                      className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-gray-500"
+                      id="statusSelect"
+                      name="status"
+                      value={formState.otp_enable}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          otp_enable: e.target.value
+                        })
+                      }
                     >
+                      <option
+                        // defaultValue="enabled"
+                        className="focus:outline-none focus:border-b bg-white"
+                      >
+                        Select Option
+                      </option>
+                      <option value={1}>Enable</option>
+                      <option value={0}>Disable</option>
+                    </select>
+                    {formErrors.otp_enable && (
+                      <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                        {formErrors.otp_enable}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex -mx-2 mb-4">
+                  <div className="w-full flex ">
+                    <div className="w-3/4 px-2 relative ">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                        <span className="text-red-500">*</span> Mode
+                      </label>
+                      {/* <select
+                        className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-gray-500"
+                        id="statusSelect"
+                        name="status"
+                        value={formState.mode}
+                        onChange={(e) =>
+                          setFormState({
+                            ...formState,
+                            mode: e.target.value
+                          })
+                        }
+                      >
+                        <option
+                        
+                          className="focus:outline-none focus:border-b bg-white"
+                        >
+                          Select Option
+                        </option>
+                        <option value="mobile">Mobile</option>
+                        <option value="web">Web</option>
+                      </select> */}
+                      <Select
+                        // isDisabled={comDisable}
+                        isMulti
+                        isClearable={clearCompList}
+                        value={formState.modes}
+                        options={modeList}
+                        onChange={handleModeChange}
+                        className="border-b-2"
+                      />
+
+                      {formErrors.mode && (
+                        <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                          {formErrors.mode}
+                        </p>
+                      )}
+                    </div>
+                    {formState?.modes?.some((mode) => mode.value == "mobile") && (
+                      <div className="w-3/4 px-2 relative ">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userSelect">
+                          <span className="text-red-500">*</span> Application Type
+                        </label>
+                        <select
+                          className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-gray-500"
+                          id="statusSelect"
+                          name="status"
+                          value={formState?.app_type}
+                          onChange={(e) =>
+                            setFormState({
+                              ...formState,
+                              app_type: e.target.value
+                            })
+                          }
+                        >
+                          {/* <option
+                          className="focus:outline-none focus:border-b bg-white"
+                        >
+                          Select Option
+                        </option> */}
+                          <option value="Field Force Apps">Field Force Apps</option>
+                          <option value="Sales Force Automation Apps">Sales Force Automation Apps</option>
+                          <option value="B-2-B Dealer Apps">B-2-B Dealer Apps</option>
+                          <option value="Crop Advisor Apps">Crops Advisor Apps</option>
+                          <option value="Loyalty Program Apps">Loyalty Program Apps</option>
+                          <option value="Farmer Apps">Farmer Apps</option>
+                        </select>
+
+                        {formErrors.mode && (
+                          <p className="text-red-500 text-sm absolute bottom-12 right-3 cursor-pointer">
+                            {formErrors.mode}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="w-1/2 px-2 relative ">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="statusSelect">
                       <span className="text-red-500">*</span> Status
                     </label>
                     <select
@@ -1000,16 +1185,11 @@ const UserInformation = () => {
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          status: e.target.value,
+                          status: e.target.value
                         })
                       }
                     >
-                      <option
-                        // defaultValue="enabled"
-                        className="focus:outline-none focus:border-b bg-white"
-                      >
-                        Select Option
-                      </option>
+                      <option className="focus:outline-none focus:border-b bg-white">Select Option</option>
                       <option value={1}>Active</option>
                       <option value={0}>Not Active</option>
                       <option value={2}>Frozen</option>
@@ -1023,48 +1203,48 @@ const UserInformation = () => {
                   </div>
                 </div>
 
-                <div className="mb-1">
-                  <label
-                    className="block text-gray-700 text-sm font-bold mb-2"
-                    htmlFor="textareaField"
-                  >
-                    About Me
-                  </label>
-                  <textarea
-                    rows={5}
-                    className="w-full px-3 py-1.5  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
-                    id="textareaField"
-                    placeholder="About"
-                    name="about_me"
-                    value={formState.about_me}
-                    onChange={(e) =>
-                      setFormState({
-                        ...formState,
-                        about_me: e.target.value,
-                      })
-                    }
-                  ></textarea>
-                </div>
+                <div className="flex -mx-2 mb-4">
+                  <div className="w-1/2 px-2 relative ">
+                    <label className="block  text-gray-700 text-sm font-bold mb-2" htmlFor="textareaField">
+                      Company
+                    </label>
+                    <Select
+                      isDisabled={comDisable}
+                      isMulti
+                      isClearable={clearCompList}
+                      value={formState.c_id}
+                      options={compList}
+                      onChange={handleCompChange}
+                      className="border-b-2"
+                    />
+                  </div>
 
-                {/* <div className="button flex items-center gap-3 mt-6">
-                  <button type="submit" className="bg-green-700 px-4 py-1 text-white">
-                    {"Save"}
-                  </button>
-                  <button
-                    onClick={() => {
-                      router.push("/table/table_user_information");
-                    }}
-                    className="bg-yellow-500 px-4 py-1 text-white"
-                  >
-                    Close
-                  </button>
-                </div> */}
+                  <div className="w-1/2 px-2 relative">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="textareaField">
+                      About Me
+                    </label>
+                    <textarea
+                      rows={2}
+                      className="w-full px-3 py-1.5  border rounded-lg border-gray-300 focus:outline-none focus:border-indigo-500"
+                      id="textareaField"
+                      placeholder="About"
+                      name="about_me"
+                      value={formState.about_me}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          about_me: e.target.value
+                        })
+                      }
+                    ></textarea>
+                  </div>
+                </div>
 
                 {router.query.type !== "view" && (
                   <div className="button flex items-center gap-3 mt-6">
                     <div
                       className="bg-green-700 px-4 py-1 text-white cursor-pointer"
-                      onClick={(e) => handleSave(e)}
+                      onClick={(e) => handleSave(e, tempImage)}
                     >
                       {router.query.type === "Edit" ? "Update" : "Save"}{" "}
                     </div>

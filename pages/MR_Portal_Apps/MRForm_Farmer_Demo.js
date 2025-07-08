@@ -78,13 +78,15 @@ const AdditionalInfo = (props) => {
   const [allSegmentData, setAllSegmentData] = useState([]);
   const [allBrandData, setAllBrandData] = useState([]);
 
-  const getDelaerData = async () => {
+  const getDelaerData = async (id) => {
     try {
       const respond = await axios.get(`${url}/api/mr_dealer_map`, {
         headers: headers,
         params: {
           c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
           t_id: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+          e_id: id,
+
           emp_code: window.localStorage.getItem("emp_code")
         },
       });
@@ -158,7 +160,7 @@ const AdditionalInfo = (props) => {
     getSegmentInfo(productDemoState.crop.value,)
   }, [productDemoState.crop?.value])
   useEffect(() => {
-    getDelaerData();
+
     getCropInfo();
     getNewCropInfo();
   }, []);
@@ -639,6 +641,34 @@ const AdditionalInfo = (props) => {
   useEffect(() => {
     generateEmpCode();
   }, []);
+
+  const [idforPost, setIdforPost] = useState(null);
+  const generateIdForPost = async () => {
+    try {
+      const respond = await axios.get(`${url}/api/get_employee`, {
+        headers: headers,
+        params: {
+          empcode: window.localStorage.getItem("emp_code"),
+          search: true
+        },
+      });
+      const apires = await respond.data.data;
+      setIdforPost(apires[0].e_id)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!idforPost) return
+
+    getDelaerData(idforPost)
+  }, [idforPost])
+  useEffect(() => {
+    if (!window) return
+    generateIdForPost();
+  }, []);
+
 
 
 

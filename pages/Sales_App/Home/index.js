@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "@/components/MR_Portal_Apps/SalesNavbar";
-import Hero from "@/components/MR_Portal_Apps/SalesHero";
+import Navbar from "@/components/Sales_Portal_Home/SalesNavbar";
+import Hero from "@/components/Sales_Portal_Home/SalesHero";
 import { useRouter } from "next/router";
 const index = () => {
 
@@ -15,8 +15,6 @@ const index = () => {
       if (!uid) {
         router.push("/login");
       }
-      console.log("mode", mode)
-
       router.push("/Sales_App/Home")
 
     }

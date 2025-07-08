@@ -8,6 +8,8 @@ import { url } from "@/constants/url";
 import axios from "axios";
 import { CSVLink } from "react-csv";
 import ConfirmModal from "../modals/ConfirmModal";
+import toast, { Toaster } from "react-hot-toast";
+import ConversionModal from "../modals/ConversionModal";
 
 const MaterialSku = () => {
   const router = useRouter();
@@ -15,13 +17,13 @@ const MaterialSku = () => {
 
   const headers = {
     "Content-Type": "application/json",
-    secret: "fsdhfgsfuiweifiowefjewcewcebjw",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
   };
 
   const getMateSKUData = async () => {
     try {
       const res = await axios.get(`${url}/api/get_product_material_sku`, {
-        headers: headers,
+        headers: headers
       });
       const respData = await res.data.data;
       setMateSku(respData);
@@ -51,15 +53,35 @@ const MaterialSku = () => {
     { label: "Pack Size", key: "packsize" },
     { label: "Packing Description", key: "packing_size" },
     { label: "Batch", key: "batch" },
-    { label: "Company", key: "company" },
+    { label: "Company", key: "company" }
   ];
 
+  const dummy = [{
+    // id:1,
+    // x_uom:"test",
+    // measure:"measure",
+    // sign:"sign",
+    // y_uom:"yuom",
+    // y_qty:"yqty"
+
+  }]
+
   const [isOpen, setisOpen] = useState(false);
+  const [isOpenTwo, setisOpenTwo] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [tableData, setTableData] = useState(null);
 
   const deleteHandler = (id) => {
     setisOpen(true);
     setUserId(id);
+  };
+
+  const convertHandler = (item) => {
+    if(item){
+      setisOpenTwo(true);
+    }
+    // setUserId(id);
+    setTableData(item);
   };
 
   const resetData = () => {
@@ -67,7 +89,7 @@ const MaterialSku = () => {
     setisOpen(false);
   };
 
-  const {name} = router.query
+  const { name } = router.query;
 
   return (
     <Layout>
@@ -81,8 +103,23 @@ const MaterialSku = () => {
           endpoints="delete_product_material_sku"
           onDeletedData={resetData}
         ></ConfirmModal>
+
+
+        <ConversionModal
+          isOpenTwo={isOpenTwo}
+          onClose={() => setisOpenTwo(false)}
+          onOpen={() => setisOpenTwo(true)}
+          userId={userId}
+          method="delete"
+          dummy={dummy}
+          item={tableData}
+          endpoints="delete_product_material_sku"
+          onDeletedData={resetData}
+        ></ConversionModal>
+
+
         <div className="text-black flex items-center justify-between bg-white max-w-full font-arial h-[52px] px-5">
-        <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name ?name :"Material SKU"}</h2>
+          <h2 className="font-arial font-normal text-xl tabletitle  py-2">{name ? name : "Material SKU"}</h2>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="search gap-2 mx-8">
               <div className="container">
@@ -92,24 +129,15 @@ const MaterialSku = () => {
                     placeholder="Search"
                     className="bg-white border rounded-l-md p-1 outline-none  w-48 sm:w-72"
                   />
-                  <button
-                    type="submit"
-                    className="bg-blue-500 text-white rounded-r-md p-1 "
-                  >
-                    <AiOutlineSearch
-                      className="mx-2 my-1"
-                      size={20}
-                    ></AiOutlineSearch>
+                  <button type="submit" className="bg-blue-500 text-white rounded-r-md p-1 ">
+                    <AiOutlineSearch className="mx-2 my-1" size={20}></AiOutlineSearch>
                   </button>
                 </form>
               </div>
             </div>
             <h2>
               <CSVLink data={mateSku} headers={csvHeaders}>
-                <TbFileDownload
-                  className="text-green-600"
-                  size={34}
-                ></TbFileDownload>
+                <TbFileDownload className="text-green-600" size={34}></TbFileDownload>
               </CSVLink>
             </h2>
 
@@ -143,6 +171,9 @@ const MaterialSku = () => {
                   </th>
                   <th className="px-6 w-[7%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Mat ID
+                  </th>
+                  <th className="px-1 py-2 whitespace-nowrap text-center dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    Image
                   </th>
                   <th className="px-6 w-[7%] py-2 whitespace-nowrap text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Material Code
@@ -199,6 +230,9 @@ const MaterialSku = () => {
                     Company
                   </th>
                   <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
+                    View
+                  </th>
+                  <th className="px-6 w-[10%] py-2 text-left dark:border-2 text-xs font-medium text-gray-500  tracking-wider">
                     Status
                   </th>
                 </tr>
@@ -206,7 +240,6 @@ const MaterialSku = () => {
               <tbody className="bg-white divide-y divide-gray-200 text-xs">
                 {mateSku?.map(
                   (item) => (
-                    console.log("item", item),
                     (
                       <tr key={item._id}>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap font-arial ">
@@ -214,7 +247,7 @@ const MaterialSku = () => {
                             onClick={() => {
                               router.push({
                                 pathname: "/form/material_sku_info",
-                                query: { type: "view", id: item?.mat_id },
+                                query: { type: "view", id: item?.mat_id }
                               });
                             }}
                             className="b text-black   hover:text-blue-500  "
@@ -225,7 +258,7 @@ const MaterialSku = () => {
                             onClick={() => {
                               router.push({
                                 pathname: "/form/material_sku_info",
-                                query: { type: "Edit", id: item?.mat_id },
+                                query: { type: "Edit", id: item?.mat_id }
                               });
                             }}
                             className="b text-black hover:text-yellow-400 ml-2"
@@ -240,58 +273,40 @@ const MaterialSku = () => {
                           >
                             Delete
                           </button>
+                          <button
+                            onClick={() => {
+                              convertHandler(item);
+                            }}
+                            className="b text-black hover:text-red-500 ml-2"
+                          >
+                            Conversion
+                          </button>
                         </td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.mat_id}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.mat_id}
+                          <div>
+                            <img className="rounded-full" src={item?.product_banner} alt="image" />
+                          </div>
                         </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.matnr}
-                        </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.mat_name}
-                        </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.techn_spec}
-                        </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.uom}
-                        </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.pcat_name}
-                        </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.pseg_name}
-                        </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.brand_code}
-                        </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.division}
-                        </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.crop_id}
-                        </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.gross_wgt}
-                        </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.net_wgt}
-                        </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.wgt_uom}
-                        </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.pack_size}
-                        </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.packing_size}
-                        </td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.matnr}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.mat_name}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.techn_spec}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.uom}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.pcat_name}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.pseg_name}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.brand_code}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.division}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.crop_id}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.gross_wgt}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.net_wgt}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.wgt_uom}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.pack_size}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.packing_size}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                           {item?.batch ? "true" : "false"}
                         </td>
-                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
-                          {item?.cmpny_name}
-                        </td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{item?.cmpny_name}</td>
+                        <td className="px-6 py-2 dark:border-2 whitespace-nowrap">{"View"}</td>
                         <td className="px-6 py-2 dark:border-2 whitespace-nowrap">
                           {item?.isDeleted ? "Disable" : "Enable"}
                         </td>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 import { url } from "@/constants/url";
@@ -15,24 +15,16 @@ import { IoSettingsOutline } from "react-icons/io5";
 
 import Profile from "../../public/userimg.jpg";
 import { FaArrowAltCircleUp } from "react-icons/fa";
-import ChartOne from "./ChartOne";
+import ChartOne from "../../components/Sales_Portal_Apps/ChartOne";
+import BrandChart from "@/components/Sales_Portal_Apps/BrandChart";
+import PPChart from "@/components/Sales_Portal_Apps/PPChart";
+import SegementChart from "@/components/Sales_Portal_Apps/SegmentChart";
 import { FiMaximize, FiMinimize, FiMinus, FiPlus } from "react-icons/fi";
+import MyTeam from "@/components/Sales_Portal_Apps/MyTeamChart";
+import TargetVsSales from "@/components/Sales_Portal_Apps/TargetVsSales";
 
 const AdditionalInfo = (props) => {
 
-
-    let obj1 = {
-        name: "Sanamway",
-        printName: function (abc) {
-            console.log(this.name + abc)
-        }
-
-    }
-    let obj2 = {
-        name: "Dhanraj",
-    }
-    obj1.printName.call(obj2);
-    console.log("pop",)
     const router = useRouter();
     const headers = {
         "Content-Type": "application/json",
@@ -75,6 +67,9 @@ const AdditionalInfo = (props) => {
         }
 
     ])
+
+
+
 
 
 
@@ -128,7 +123,7 @@ const AdditionalInfo = (props) => {
         if (!filterState.yr) return;
         getAllTransactionYear(filterState.yr);
     }, [filterState.yr]);
-    console.log("zz", filterState.month, allMonthData)
+
 
     useEffect(() => {
 
@@ -315,9 +310,6 @@ const AdditionalInfo = (props) => {
         }
     }, [allYearData]);
 
-    // const toggleDropdown = () => {
-    //   setIsDropdownOpen(!isDropdownOpen);
-    // };
 
     const [bgData, setBgData] = useState([]);
 
@@ -455,33 +447,8 @@ const AdditionalInfo = (props) => {
         );
     }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
 
-    const [depotData, setDepotData] = useState([]);
 
-    const getAllDepotData = async (bgId, buId, zId, rId) => {
-        try {
-            const respond = await axios.get(`${url}/api/get_dipot`, {
-                headers: headers,
-                params: {
-                    bg_id: bgId,
-                    bu_id: buId,
-                    z_id: zId,
-                    r_id: rId,
-                },
-            });
 
-            const apires = await respond.data.data;
-            setDepotData(apires);
-        } catch (error) { }
-    };
-
-    useEffect(() => {
-        getAllDepotData(
-            filterState.bgId,
-            filterState.buId,
-            filterState.zId,
-            filterState.rId
-        );
-    }, [filterState.bgId, filterState.buId, filterState.zId, filterState.rId]);
 
 
     const [allTableData, setAllTableData] = useState([]);
@@ -518,8 +485,7 @@ const AdditionalInfo = (props) => {
 
                 params: {
                     t_year: yr || null,
-                    // m_year:
-                    //     month === "All" || !month ? null : moment(month).format("YYYY-MM"),
+
                     bg_id: bgId === "All" || !bgId ? null : bgId,
                     bu_id: buId === "All" || !buId ? null : buId,
                     z_id: zId === "All" || !zId ? null : zId,
@@ -541,6 +507,7 @@ const AdditionalInfo = (props) => {
 
     const [allTeamData, setAllTeamData] = useState([]);
 
+
     const getAllTeamStatus = async (
         yr,
         month,
@@ -550,14 +517,16 @@ const AdditionalInfo = (props) => {
         rId,
         tId
     ) => {
+        setAllTeamData([]); // clear old
         let endPoint;
-        console.log("mjklo", yr,
+        console.log("nji", yr,
             month,
             bgId,
             buId,
             zId,
             rId,
             tId)
+
         if (bgId && buId && zId && rId && tId) {
 
             endPoint = "api/get_rollingdata_based_on_roll_t";
@@ -602,8 +571,10 @@ const AdditionalInfo = (props) => {
                     bg_id: bgId === "All" || !bgId ? null : bgId,
                     bu_id: buId === "All" || !buId ? null : buId,
                     z_id: zId === "All" || !zId ? null : zId,
+
                     r_id: rId === "All" || !rId ? null : rId,
                     t_id: tId === "All" || !tId ? null : tId,
+
                 },
             });
 
@@ -619,6 +590,7 @@ const AdditionalInfo = (props) => {
 
 
     useEffect(() => {
+        console.log("jkl", allTableData)
         if (!allTableData.length) return
         setBsGraphData(
             [
@@ -626,19 +598,19 @@ const AdditionalInfo = (props) => {
                     label: "Budget",
                     backgroundColor: "rgba(34, 197, 94, 1)",  // Full opacity (green-400)
                     backgroundColor: "rgba(34, 197, 94, 0.6)", // 60% opacity
-                    data: allTableData.map((item) => item.budget),
+                    data: allTableData.sort((a, b) => new Date(a.m_year) - new Date(b.m_year)).map((item) => item.budget),
                 },
                 {
-                    label: "RSP Budget",
+                    label: "Target",
                     backgroundColor: "rgba(59, 130, 246, 1)",  // Full opacity (blue)
                     backgroundColor: "rgba(59, 130, 246, 0.6)", // 60% opacity
-                    data: allTableData.map((item) => item.target),
+                    data: allTableData.sort((a, b) => new Date(a.m_year) - new Date(b.m_year)).map((item) => item.target),
                 },
                 {
-                    label: "Total Sales",
+                    label: "Sales",
                     backgroundColor: "rgba(249, 115, 22, 1)",  // Full opacity (orange)
                     borderColor: "rgba(249, 115, 22, 0.6)",    // 60% opacity
-                    data: allTableData.map((item) => item.actual),
+                    data: allTableData.sort((a, b) => new Date(a.m_year) - new Date(b.m_year)).map((item) => item.actual),
                 }
 
 
@@ -650,38 +622,44 @@ const AdditionalInfo = (props) => {
     }, [
         allTableData
     ])
-    useEffect(() => {
-        if (JSON.parse(window.localStorage.getItem("userinfo"))?.role_id === 11)
-            return;
+    // useEffect(() => {
 
-        getAllSalesPlanStatus(
-            filterState.yr || null,
-            filterState.month || null,
-            filterState.bgId || null,
-            filterState.buId || null,
-            filterState.zId || null,
-            filterState.rId || null,
-            filterState.tId
-        );
+    //     if (typeof window === "undefined") return;
 
-        getAllTeamStatus(
-            filterState.yr || null,
-            filterState.month || null,
-            filterState.bgId || null,
-            filterState.buId || null,
-            filterState.zId || null,
-            filterState.rId || null,
-            filterState.tId
-        )
-    }, [
-        filterState.yr,
-        filterState.month,
-        filterState.bgId,
-        filterState.buId,
-        filterState.zId,
-        filterState.rId,
-        filterState.tId,
-    ]);
+    //     const userInfo = JSON.parse(window.localStorage.getItem("userinfo"));
+
+
+    //     if (userInfo?.role_id === 11) return;
+
+    //     getAllSalesPlanStatus(
+    //         filterState.yr || null,
+    //         filterState.month || null,
+    //         filterState.bgId || null,
+    //         filterState.buId || null,
+    //         filterState.zId || null,
+    //         filterState.rId || null,
+    //         filterState.tId || null,
+    //     );
+
+    //     getAllTeamStatus(
+    //         filterState.yr || null,
+    //         filterState.month || null,
+    //         filterState.bgId || null,
+    //         filterState.buId || null,
+    //         filterState.zId || null,
+    //         filterState.rId || null,
+    //         filterState.tId || null,
+    //     );
+    // }, [
+    //     filterState.yr,
+    //     filterState.month,
+    //     filterState.bgId,
+    //     filterState.buId,
+    //     filterState.zId,
+    //     filterState.rId,
+    //     filterState.tId,
+    // ]);
+
 
 
 
@@ -701,7 +679,7 @@ const AdditionalInfo = (props) => {
         setIsCollapsed2(!isCollapsed2);
     };
 
-    const [isCollapsed3, setIsCollapsed3] = useState(true); // State to manage collapsibility
+    const [isCollapsed3, setIsCollapsed3] = useState(false); // State to manage collapsibility
 
     // Function to toggle collapsibility
     const toggleCollapse3 = () => {
@@ -709,7 +687,7 @@ const AdditionalInfo = (props) => {
     };
 
 
-    const [isCollapsed4, setIsCollapsed4] = useState(true); // State to manage collapsibility
+    const [isCollapsed4, setIsCollapsed4] = useState(false); // State to manage collapsibility
 
     // Function to toggle collapsibility
     const toggleCollapse4 = () => {
@@ -723,7 +701,7 @@ const AdditionalInfo = (props) => {
         return Object.values(data).reduce((acc, val) => acc + Number(val), 0);
     };
 
-    const bsLabelData = ["Apr-24",
+    const [bsLabelData, setBsLabelData] = useState(["Apr-24",
         "May-24",
         "Jun-24",
         "Jul-24",
@@ -734,7 +712,24 @@ const AdditionalInfo = (props) => {
         "Dec-24",
         "Jan-25",
         "Feb-25",
-        "Mar-25"];
+        "Mar-25"]);
+
+    const generateFiscalLabels = (year) => {
+
+        const labels = [];
+
+        // Fiscal year starts in April of the given year
+        for (let i = 3; i < 15; i++) {
+            const date = moment(`${year}-04-01`).add(i - 3, 'months');
+            labels.push(date.format("MMM-YY"));
+        }
+        setBsLabelData(labels)
+
+    };
+    useEffect(() => {
+        generateFiscalLabels(filterState.yr)
+    }, [filterState.yr])
+
 
 
     const getUserItem = () => {
@@ -906,21 +901,33 @@ const AdditionalInfo = (props) => {
     const [categoryData, setCategoryData] = useState([]);
     const [segmentData, setSegementData] = useState([]);
 
-    const getThreeTableData = async (
-        yr, month, bgId, buId, zId, rId, tId
 
-    ) => {
+
+    const getThreeTableData = async (yr, month, bgId, buId, zId, rId, tId) => {
         let endPoint = "SA_sales_Analytical";
-        let paramsData
+        let paramsData;
+
         const tName = territoryData.find(item => Number(item.t_id) === Number(tId))?.territory_name || '';
         const rName = regionData.find(item => Number(item.r_id) === Number(rId))?.region_name || '';
         const zName = zoneData.find(item => Number(item.z_id) === Number(zId))?.zone_name || '';
         const buName = buData.find(item => Number(item.bu_id) === Number(buId))?.business_unit_name || '';
+
+        // 🚫 Prevent API call if required descriptive names are missing
+        if (
+            (filterState.tId && filterState.tId !== "All" && !tName) ||
+            (filterState.rId && !filterState.tId && !rName) ||
+            (filterState.zId && !filterState.rId && !zName) ||
+            (filterState.buId && !filterState.zId && !buName)
+        ) {
+            console.warn("Required descriptive name missing. API call aborted.");
+            return;
+        }
+
+        // ✅ Build paramsData based on filters
         if (filterState.tId && filterState.tId !== "All") {
             paramsData = {
                 year: yr || null,
-                month:
-                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                month: month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
                 bg_id: bgId === "All" || !bgId ? null : bgId,
                 bu_id: buId === "All" || !buId ? null : buId,
                 z_id: zId === "All" || !zId ? null : zId,
@@ -928,103 +935,375 @@ const AdditionalInfo = (props) => {
                 t_id: tId === "All" || !tId ? null : tId,
                 t_des: tName,
                 c_id: 1,
-
             };
-        } else if (
-            (filterState.rId && !filterState.tId)
-        ) {
+        } else if (filterState.rId && !filterState.tId) {
             paramsData = {
                 year: yr || null,
-                month:
-                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                month: month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
                 bg_id: bgId === "All" || !bgId ? null : bgId,
                 bu_id: buId === "All" || !buId ? null : buId,
                 z_id: zId === "All" || !zId ? null : zId,
                 r_id: rId === "All" || !rId ? null : rId,
                 r_des: rName,
                 c_id: 1,
-
             };
-        } else if ((filterState.zId && !filterState.rId)) {
+        } else if (filterState.zId && !filterState.rId) {
             paramsData = {
                 year: yr || null,
-                month:
-                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                month: month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
                 bg_id: bgId === "All" || !bgId ? null : bgId,
                 bu_id: buId === "All" || !buId ? null : buId,
                 z_id: zId === "All" || !zId ? null : zId,
                 z_des: zName,
                 c_id: 1,
-
             };
-        } else if ((filterState.buId && !filterState.zId)) {
+        } else if (filterState.buId && !filterState.zId) {
             paramsData = {
                 year: yr || null,
-                month:
-                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                month: month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
                 bg_id: bgId === "All" || !bgId ? null : bgId,
                 bu_id: buId === "All" || !buId ? null : buId,
                 bu_des: buName,
                 c_id: 1,
-
             };
         } else {
             paramsData = {
                 year: yr || null,
-                month:
-                    month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
+                month: month === "All" || !month ? null : moment(month).format("YYYY-MM-DD"),
                 bg_id: bgId === "All" || !bgId ? null : bgId,
                 bu_id: buId === "All" || !buId ? null : buId,
                 bu_des: buName,
                 c_id: 1,
-
-
             };
         }
 
+        // ✅ Safe to make API call now
         try {
             const respond = await axios.get(`${url}/api/${endPoint}`, {
                 headers: headers,
-
                 params: paramsData,
             });
 
-            const apires = await respond.data.data;
-            console.log("plki", apires)
-            setBrandData(apires.combined_brand)
-            setCategoryData(apires.combined_category)
-            setSegementData(apires.combined_segment)
+            const apires = respond.data.data;
+            console.log("plki", apires);
 
-
+            setBrandData(apires.combined_brand);
+            setCategoryData(apires.combined_category);
+            setSegementData(apires.combined_segment);
         } catch (error) {
-
-            if (!error) return;
-            console.log("vbn", error)
-
+            console.log("vbn", error);
         }
     };
     useEffect(() => {
-        if (localStorageItems.roleId === 6 || localStorageItems.roleId === 5) {
 
-            if (territoryData.length &&
-                zoneData.length &&
-                regionData.length &&
-                buData.length) {
-                getSaleData(filterState.yr || null,
+
+        if (localStorageItems.roleId === 6) {
+            getSaleData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                filterState.tId || null,
+                filterState.partyName || null);
+        }
+        else if (localStorageItems.roleId === 5) {
+            getSaleData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 4) {
+            getSaleData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 3) {
+            getSaleData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 10) {
+            getSaleData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else { return }
+
+
+
+    }, [
+
+        filterState.yr,
+        filterState.month,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.partyName,
+
+    ])
+
+
+    useEffect(() => {
+
+
+        if (localStorageItems.roleId === 6) {
+            getThreeTableData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                filterState.tId || null,
+                filterState.partyName || null);
+        }
+        else if (localStorageItems.roleId === 5) {
+            getThreeTableData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 4) {
+            getThreeTableData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 3) {
+            getThreeTableData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 10) {
+            getThreeTableData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else if (localStorageItems.roleId === 10) {
+            getThreeTableData(filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+                filterState.partyName || null)
+            return
+        }
+        else { return }
+
+
+
+
+    }, [
+
+        filterState.yr,
+        filterState.month,
+        filterState.bgId,
+        filterState.buId,
+        filterState.zId,
+        filterState.rId,
+        filterState.tId,
+        filterState.partyName,
+        territoryData,
+        zoneData,
+        regionData,
+        buData
+    ])
+
+
+
+    useEffect(() => {
+
+
+        if (localStorageItems.roleId === 6) {
+            getAllTeamStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                filterState.tId || null,
+            );
+            getAllSalesPlanStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                filterState.tId || null,
+            )
+
+
+        }
+        else if (localStorageItems.roleId === 5) {
+            getAllTeamStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                null,
+            );
+            getAllSalesPlanStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                filterState.zId || null,
+                filterState.rId || null,
+                null,
+            )
+            return
+        }
+        else if (localStorageItems.roleId === 4) {
+            if (
+                filterState.bgId &&
+                filterState.buId &&
+                filterState.zId) {
+                getAllTeamStatus(
+                    filterState.yr || null,
                     filterState.month || null,
                     filterState.bgId || null,
                     filterState.buId || null,
                     filterState.zId || null,
-                    filterState.rId || null,
-                    filterState.tId || null,
-                    filterState.partyName || null);
+                    null,
+                    null,
+                );
+                getAllSalesPlanStatus(
+                    filterState.yr || null,
+                    filterState.month || null,
+                    filterState.bgId || null,
+                    filterState.buId || null,
+                    filterState.zId || null,
+                    null,
+                    null,
+                )
             }
-            else {
-                return
-            }
+
+            return
+        }
+        else if (localStorageItems.roleId === 3) {
+            getAllTeamStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                null,
+                null,
+                null,
+            );
+            getAllSalesPlanStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                filterState.buId || null,
+                null,
+                null,
+                null,
+            )
+            return
+        }
+        else if (localStorageItems.roleId === 10) {
+            getAllTeamStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+            );
+            getAllSalesPlanStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+            )
+            return
+        }
+        else if (localStorageItems.roleId === 10) {
+            getAllSalesPlanStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+            )
+            getAllTeamStatus(
+                filterState.yr || null,
+                filterState.month || null,
+                filterState.bgId || null,
+                null,
+                null,
+                null,
+                null,
+            );
+            return
+        }
+        else {
+            return
+
         }
 
 
+
+
     }, [
 
         filterState.yr,
@@ -1042,35 +1321,8 @@ const AdditionalInfo = (props) => {
     ])
 
 
-    useEffect(() => {
-
-        getThreeTableData(filterState.yr || null,
-            filterState.month || null,
-            filterState.bgId || null,
-            filterState.buId || null,
-            filterState.zId || null,
-            filterState.rId || null,
-            filterState.tId || null,
-            filterState.partyName || null);
 
 
-
-    }, [
-
-        filterState.yr,
-        filterState.month,
-        filterState.bgId,
-        filterState.buId,
-        filterState.zId,
-        filterState.rId,
-        filterState.tId,
-        filterState.partyName,
-        territoryData,
-        zoneData,
-        regionData,
-        buData
-
-    ])
 
 
     const totalTarget = totalRow(allTableData.map(item => item.target));
@@ -1079,6 +1331,7 @@ const AdditionalInfo = (props) => {
     const totalPercentage = (totalActual / totalTarget * 100).toFixed(2);
     const TeamTarget = totalRow(allTeamData.map(item => item.target));
     const TeamActual = totalRow(allTeamData.map(item => item.actual));
+    const TeamBudget = totalRow(allTeamData.map(item => item.budget));
     const TeamPercentage = (TeamActual / TeamTarget * 100).toFixed(2);
 
 
@@ -1087,15 +1340,43 @@ const AdditionalInfo = (props) => {
     ));
     const productMtd = totalRow(brandData.map(item => item.total_mtd_new_budget_price_value
     ));
-    const productToday = totalRow(brandData.map(item => item.total_today_new_budget_price));
+    const productToday = totalRow(brandData.map(item => item.total_today_new_budget_price_value));
 
     const brandYtd = totalRow(segmentData.map(item => item.total_ytd_new_budget_price_value));
     const brandMtd = totalRow(segmentData.map(item => item.total_mtd_new_budget_price_value));
-    const brandToday = totalRow(segmentData.map(item => item.total_today_new_budget_price));
+    const brandToday = totalRow(segmentData.map(item => item.total_today_new_budget_price_value));
 
     const segementYtd = totalRow(categoryData.map(item => item.total_ytd_new_budget_price_value));
     const segementMtd = totalRow(categoryData.map(item => item.total_mtd_new_budget_price_value));
-    const segementToday = totalRow(categoryData.map(item => item.total_today_new_budget_price));
+    const segementToday = totalRow(categoryData.map(item => item.total_today_new_budget_price_value));
+
+    const [imagePreview, setImagePreview] = useState(null);
+    console.log("pol", imagePreview)
+    // Fetch image from API
+    const getImage = async (mobile) => {
+        if (typeof window === "undefined") return;
+        try {
+            const res = await axios.get(`${url}/api/get_image`, {
+                headers: headers,
+                params: {
+                    phone_number: mobile,
+                    file_path: "user",
+                },
+            });
+
+            const respdata = res.data.data;
+            console.log("Fetched Image URL:", respdata.image_url);
+            setImagePreview(respdata.image_url);
+        } catch (error) {
+            console.log("Error fetching image:", error);
+            // setImagePreview("/default-profile.png");
+        }
+    };
+    useEffect(() => {
+        if (typeof window === undefined) return
+        getImage(JSON.parse(window.localStorage.getItem("phone_number")))
+    }, [])
+
 
 
     return (
@@ -1103,17 +1384,17 @@ const AdditionalInfo = (props) => {
             className=" bg-white rounded  w-full  overflow-auto pb-4"
             onSubmit={(e) => e.preventDefault()}
         >
-            <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col  ">
+            <div className="w-full flex h-12 bg-white-800 justify-between items-center px-4  shadow-lg lg:flex-col bg-blue-600  ">
                 <span className="text-black flex flex-row gap-4 font-bold   ">
                     <FaArrowLeftLong
-                        className="self-center "
+                        className="self-center text-white "
                         onClick={() =>
                             router.push({
                                 pathname: "/Sales_App/Home",
                             })
                         }
                     />
-                    <span>Target VS Sales</span>
+                    <span className="text-white">Target VS Sales</span>
                 </span>{" "}
                 <span className="text-white self-center">
                     <Popover as="div" className="relative border-none outline-none mt-2">
@@ -1152,12 +1433,9 @@ const AdditionalInfo = (props) => {
             </div>
 
             <div className="flex mb-4 mt-2 mb-8">
+
                 <div className="w-40 h-30 flex justify-center items-center">
-                    <Image
-                        className="h-[5.1rem] w-[5.1rem] rounded-full mt-2"
-                        src={Profile}
-                        alt="img"
-                    />
+                    <img src={imagePreview} className="h-20 w-20 rounded-full text-orange-500 mt-4" size={80}></img>
                 </div>
 
                 <div className="flex  flex-col  w-full mt-4 md:hidden">
@@ -1202,6 +1480,7 @@ const AdditionalInfo = (props) => {
                                     setFilterState({
                                         ...filterState,
                                         yr: e.target.value,
+                                        month: "All"
                                     })
                                 }
                                 disabled={!filterState.yr}
@@ -1251,13 +1530,14 @@ const AdditionalInfo = (props) => {
                                         tId: '',
                                     })
                                 }
-                                disabled={
-                                    localStorageItems.roleId === 6 ||
-                                    localStorageItems.roleId === 5 ||
-                                    localStorageItems.roleId === 4 ||
-                                    localStorageItems.roleId === 3 ||
-                                    localStorageItems.roleId === 10
-                                }
+                                // disabled={
+                                //     localStorageItems.roleId === 6 ||
+                                //     localStorageItems.roleId === 5 ||
+                                //     localStorageItems.roleId === 4 ||
+                                //     localStorageItems.roleId === 3 ||
+                                //     localStorageItems.roleId === 10
+                                // }
+                                disabled={true}
                             >
                                 <option value={''} className="font-bold">
                                     - Business Segment -
@@ -1286,12 +1566,13 @@ const AdditionalInfo = (props) => {
                                         tId: '',
                                     })
                                 }
-                                disabled={
-                                    localStorageItems.roleId === 6 ||
-                                    localStorageItems.roleId === 5 ||
-                                    localStorageItems.roleId === 4 ||
-                                    localStorageItems.roleId === 3
-                                }
+                                // disabled={
+                                //     localStorageItems.roleId === 6 ||
+                                //     localStorageItems.roleId === 5 ||
+                                //     localStorageItems.roleId === 4 ||
+                                //     localStorageItems.roleId === 3
+                                // }
+                                disabled={true}
                             >
                                 <option value={''}>- Business Unit -</option>
 
@@ -1313,11 +1594,12 @@ const AdditionalInfo = (props) => {
                                         tId: '',
                                     })
                                 }
-                                disabled={
-                                    localStorageItems.roleId === 6 ||
-                                    localStorageItems.roleId === 5 ||
-                                    localStorageItems.roleId === 4
-                                }
+                                // disabled={
+                                //     localStorageItems.roleId === 6 ||
+                                //     localStorageItems.roleId === 5 ||
+                                //     localStorageItems.roleId === 4
+                                // }
+                                disabled={true}
                             >
                                 <option value={''}>- Zone -</option>
 
@@ -1331,9 +1613,10 @@ const AdditionalInfo = (props) => {
                                 className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                                 id="stateSelect"
                                 value={filterState.rId}
-                                disabled={
-                                    localStorageItems.roleId === 6 || localStorageItems.roleId === 5
-                                }
+                                // disabled={
+                                //     localStorageItems.roleId === 6 || localStorageItems.roleId === 5
+                                // }
+                                disabled={true}
                                 onChange={(e) =>
                                     setFilterState({
                                         ...filterState,
@@ -1357,9 +1640,10 @@ const AdditionalInfo = (props) => {
                                 className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                                 id="stateSelect"
                                 value={filterState.tId}
-                                disabled={
-                                    localStorageItems.roleId === 11 || localStorageItems.roleId === 6
-                                }
+                                // disabled={
+                                //     localStorageItems.roleId === 11 || localStorageItems.roleId === 6
+                                // }
+                                disabled={true}
                                 onChange={(e) =>
                                     setFilterState({
                                         ...filterState,
@@ -1381,6 +1665,7 @@ const AdditionalInfo = (props) => {
                                     className="w-full px-3 py-2 border-b border-gray-500 rounded-md bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                                     id="stateSelect"
                                     value={filterState.partyName}
+
 
                                     onChange={(e) =>
                                         setFilterState({
@@ -1420,7 +1705,7 @@ const AdditionalInfo = (props) => {
 
                 <div className="overflow-x-auto">
                     <h1 className="font-bold text-center bg-yellow-300 flex justify-between items-center ">
-                        <span className="flex-grow text-center">Target VS Sales</span>
+                        <span className="flex-grow text-center ">Target VS Sales</span>
 
                         {isCollapsed ? (
                             <button onClick={toggleCollapse} className="ml-auto">
@@ -1476,7 +1761,7 @@ const AdditionalInfo = (props) => {
                                     {Number(totalTarget).toFixed(2)}
                                 </td>
                                 <td className="border border-gray-200 px-2 py-2">
-                                    {Number(totalActual).toFixed(2)}
+                                    {Number(totalActual).toFixed(2) || "-"}
                                 </td>
                                 <td className="border border-gray-200 px-2 py-2">
                                     {totalPercentage} %
@@ -1501,84 +1786,90 @@ const AdditionalInfo = (props) => {
                             </button>
                         )}
                     </h1>
-                    {!isCollapsed2 && (<table className="w-full border-collapse border border-gray-200 text-[10px] font-bold">
-                        <thead>
-                            <tr className="bg-blue-800 text-white">
-                                <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">Month</th>
-                                <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">BST</th>
+                    {!isCollapsed2 && (
 
-                                <th className="border border-gray-200  py-2">RSP Target</th>
-                                <th className="border border-gray-200  py-2">Total Sales</th>
-                                <th className="border border-gray-200  py-2">ACH%</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {allTeamData.map((item) => (
-                                <tr className="font-bold">
-                                    <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
-                                        {
-                                            moment(item.m_year).format('MMMM')
-                                        }
+                        <div key={allTeamData.length}>
+                            <table className="w-full border-collapse border border-gray-200 text-[10px] font-bold">
+                                <thead>
+                                    <tr className="bg-blue-800 text-white">
+                                        <th className="border border-gray-200 px-2 w-12 py-2 whitespace-nowrap font-bold">Month</th>
+                                        <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">BST</th>
+                                        <th className="border border-gray-200 py-2 ">Budget</th>
 
-                                    </td>
-                                    <td className="border border-gray-200 w-48 px-2 py-2">
-                                        {[item.business_segment || ""
-                                            ,
-                                        item.business_unit_name || ""
-                                            ,
-                                        item.zone_name || ""
-                                            ,
-                                        item.region_name || ""
-                                            ,
-                                        item.territory_name
-                                        || ""].reverse().find(value => value !== "")}
-                                        -
-                                        {[item.business_segment || ""
-                                            ,
-                                        item.business_unit_hod_name || ""
-                                            ,
-                                        item.zone_hod_name || ""
-                                            ,
-                                        item.region_hod_name || ""
-                                            ,
-                                        item.territory_hod_name || ""].reverse().find(value => value !== "")}
+                                        <th className="border border-gray-200  py-2">RSP Target</th>
+                                        <th className="border border-gray-200  py-2">Total Sales</th>
+                                        <th className="border border-gray-200  py-2">ACH%</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {allTeamData.map((item) => (
 
+                                        <tr className="font-bold" key={item.id || item.m_year}>
 
-
-
-                                    </td>
-                                    <td className="border border-gray-200  py-2">{item.target}</td>
-                                    <td className="border border-gray-200 py-2">{item.actual}</td>
-
-                                    <td className="border border-gray-200  py-2">
-                                        {(item.actual / item.target * 100).toFixed(2)} %
-
-                                    </td>
-                                </tr>
-                            ))}
+                                            <td className="border border-gray-200 w-12 px-2 py-2 whitespace-nowrap">
+                                                {moment(item.m_year).format('MMMM')}
+                                            </td>
+                                            <td className="border border-gray-200 w-32 px-2 py-2">
+                                                {
+                                                    [
+                                                        item.business_segment || "",
+                                                        item.business_unit_name || "",
+                                                        item.zone_name || "",
+                                                        item.region_name || "",
+                                                        item.territory_name || ""
+                                                    ].reverse().find(value => value !== "")
+                                                }
+                                                <br />
+                                                {
+                                                    [
+                                                        item.business_segment || "",
+                                                        item.business_unit_hod_name || "",
+                                                        item.zone_hod_name || "",
+                                                        item.region_hod_name || "",
+                                                        item.territory_hod_name || ""
+                                                    ].reverse().find(value => value !== "")
+                                                }
 
 
+                                            </td>
+                                            <td className="border border-gray-200 py-2">{item.budget}</td>
+                                            <td className="border border-gray-200 py-2">{item.target}</td>
+                                            <td className="border border-gray-200 py-2">{item.actual}</td>
+                                            <td className="border border-gray-200 py-2">
+                                                {(item.actual / item.target * 100).toFixed(2)} %
+                                            </td>
+                                        </tr>
+                                    ))}
 
-                            {/* Row for Totals (appears at the end) */}
-                            <tr className="font-bold bg-blue-800 text-white">
-                                <td className="border border-gray-200 px-2 py-2">MTD Total</td>
-                                <td className="border border-gray-200 px-2 py-2">
 
-                                </td>
-                                <td className="border border-gray-200 py-2">
-                                    {Number(TeamTarget).toFixed(2)}
-                                </td>
-                                <td className="border border-gray-200  py-2">
-                                    {Number(TeamActual).toFixed(2)}
-                                </td>
-                                <td className="border border-gray-200  py-2">
-                                    {TeamPercentage} %
-                                </td>
-                            </tr>
+                                    <tr className="font-bold bg-blue-800 text-white">
+                                        <td className="border border-gray-200 w-12 px-2 py-2">MTD</td>
+                                        <td className="border border-gray-200 w-32 px-2 py-2">
 
-                        </tbody>
-                    </table>
+                                        </td>
+                                        <td className="border border-gray-200 text-center py-2">
+                                            {Number(TeamBudget).toFixed(2)}
+                                        </td>
+                                        <td className="border border-gray-200 text-center py-2">
+                                            {Number(TeamTarget).toFixed(2)}
+                                        </td>
+                                        <td className="border border-gray-200 text-center py-2">
+                                            {Number(TeamActual).toFixed(2)}
+                                        </td>
+                                        <td className="border border-gray-200 text-center py-2">
+                                            {TeamPercentage} %
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
                     )}
+                    <MyTeam
+                        title={"Target Vs Sales"}
+                        color={"bg-blue-800"}
+                        data={allTeamData}
+                    />
                 </div>
 
             </div>
@@ -1607,6 +1898,8 @@ const AdditionalInfo = (props) => {
                                     <th className="border border-gray-200 px-2 py-2">YTD Sale</th>
                                     <th className="border border-gray-200 px-2 py-2">MTD Sale</th>
                                     <th className="border border-gray-200 px-2 py-2">Today Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">Contri %</th>
+
 
                                 </tr>
                             </thead>
@@ -1629,28 +1922,37 @@ const AdditionalInfo = (props) => {
                                             {item.total_today_new_budget_price_value}
 
                                         </td>
+                                        <td className="border border-gray-200  px-2 py-2">
+                                            {(item.total_ytd_new_budget_price_value / Number(productYtd).toFixed(2) * 100).toFixed(2)}
+                                        </td>
                                     </tr>
                                 ))}
 
 
 
-                                {/* Row for Totals (appears at the end) */}
                                 <tr className="font-bold bg-blue-800 text-white">
                                     <td className="border border-gray-200 px-2 py-2">Total</td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(productYtd).toFixed(2)}
+                                        {productYtd != null && !isNaN(Number(productYtd)) ? Number(productYtd).toFixed(2) : "-"}
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(productMtd).toFixed(2)}
+                                        {productMtd != null && !isNaN(Number(productMtd)) ? Number(productMtd).toFixed(2) : "-"}
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(productToday).toFixed(2)}
+                                        {productToday != null && !isNaN(Number(productToday)) ? Number(productToday).toFixed(2) : "-"}
                                     </td>
-
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        -
+                                    </td>
                                 </tr>
 
                             </tbody>
                         </table>
+                        <PPChart
+                            title={"Target Vs Sales"}
+                            color={"bg-blue-800"}
+                            data={categoryData}
+                        />
 
 
 
@@ -1663,30 +1965,44 @@ const AdditionalInfo = (props) => {
                             <thead>
                                 <tr className="bg-blue-800 text-white">
                                     <th className="border border-gray-200 px-2 py-2 whitespace-nowrap font-bold">Brand</th>
+                                    <th className="border border-gray-200 px-2 py-2">YTD Qty</th>
                                     <th className="border border-gray-200 px-2 py-2">YTD Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">MTD Qty</th>
                                     <th className="border border-gray-200 px-2 py-2">MTD Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">Total Qty</th>
                                     <th className="border border-gray-200 px-2 py-2">Today Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">Contri %</th>
 
                                 </tr>
                             </thead>
+                            {console.log("zzz", brandData)}
                             <tbody>
                                 {brandData.map((item) => (
                                     <tr className="font-bold">
                                         <td className="border border-gray-200  px-2 py-2 whitespace-nowrap ">
                                             {item.product_brand}
 
+
                                         </td>
+
+                                        <td className="border border-gray-200  px-2 py-2">{Math.floor(item.total_ytd_qty)}</td>
+
                                         <td className="border border-gray-200  px-2 py-2">{item.total_ytd_new_budget_price_value
                                         }</td>
+
+                                        <td className="border border-gray-200  px-2 py-2">{Math.floor(item.total_mtd_qty)}</td>
 
                                         <td className="border border-gray-200  px-2 py-2">{item.
                                             total_mtd_new_budget_price_value}</td>
 
 
-
+                                        <td className="border border-gray-200  px-2 py-2">{item.total_today_qty}</td>
                                         <td className="border border-gray-200  px-2 py-2">
                                             {item.total_today_new_budget_price_value}
 
+                                        </td>
+                                        <td className="border border-gray-200  px-2 py-2">
+                                            {(item.total_ytd_new_budget_price_value / Number(brandYtd).toFixed(2) * 100).toFixed(2)}
                                         </td>
                                     </tr>
                                 ))}
@@ -1697,20 +2013,35 @@ const AdditionalInfo = (props) => {
                                 <tr className="font-bold bg-blue-800 text-white">
                                     <td className="border border-gray-200 px-2 py-2">Total</td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(brandYtd).toFixed(2)}
+                                        -
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(brandMtd).toFixed(2)}
+                                        {brandYtd != null && !isNaN(Number(brandYtd)) ? Number(brandYtd).toFixed(2) : "-"}
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(brandToday).toFixed(2)}
+                                        -
                                     </td>
-
-
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        {brandMtd != null && !isNaN(Number(brandMtd)) ? Number(brandMtd).toFixed(2) : "-"}
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        -
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        {brandToday != null && !isNaN(Number(brandToday)) ? Number(brandToday).toFixed(2) : "-"}
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        -
+                                    </td>
                                 </tr>
 
                             </tbody>
                         </table>
+                        <BrandChart
+                            title={"Target Vs Sales"}
+                            color={"bg-blue-800"}
+                            data={brandData}
+                        />
 
 
                         <h1 className="font-bold text-center bg-yellow-300 flex justify-between items-center ">
@@ -1725,6 +2056,7 @@ const AdditionalInfo = (props) => {
                                     <th className="border border-gray-200 px-2 py-2">YTD Sale</th>
                                     <th className="border border-gray-200 px-2 py-2">MTD Sale</th>
                                     <th className="border border-gray-200 px-2 py-2">Today Sale</th>
+                                    <th className="border border-gray-200 px-2 py-2">Contri %</th>
 
                                 </tr>
                             </thead>
@@ -1748,6 +2080,9 @@ const AdditionalInfo = (props) => {
                                             {item.total_today_new_budget_price_value}
 
                                         </td>
+                                        <td className="border border-gray-200  px-2 py-2">
+                                            {(item.total_ytd_new_budget_price_value / Number(segementYtd).toFixed(2) * 100).toFixed(2)}
+                                        </td>
                                     </tr>
                                 ))}
 
@@ -1757,18 +2092,26 @@ const AdditionalInfo = (props) => {
                                 <tr className="font-bold bg-blue-800 text-white">
                                     <td className="border border-gray-200 px-2 py-2">Total</td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(segementYtd).toFixed(2)}
+                                        {segementYtd != null && !isNaN(Number(segementYtd)) ? Number(segementYtd).toFixed(2) : "-"}
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(segementMtd).toFixed(2)}
+                                        {segementMtd != null && !isNaN(Number(segementMtd)) ? Number(segementMtd).toFixed(2) : "-"}
                                     </td>
                                     <td className="border border-gray-200 px-2 py-2">
-                                        {Number(segementToday).toFixed(2)}
+                                        {segementToday != null && !isNaN(Number(segementToday)) ? Number(segementToday).toFixed(2) : "-"}
+                                    </td>
+                                    <td className="border border-gray-200 px-2 py-2">
+                                        -
                                     </td>
                                 </tr>
 
                             </tbody>
                         </table>
+                        <SegementChart
+                            title={"Target Vs Sales"}
+                            color={"bg-blue-800"}
+                            data={segmentData}
+                        />
                     </div>)}
 
             </div>
@@ -1877,6 +2220,7 @@ const AdditionalInfo = (props) => {
 
                     </div>
 
+
                 </div>
                 : ""
             }
@@ -1889,7 +2233,7 @@ const AdditionalInfo = (props) => {
                 Monthly Graph
             </h1>
 
-            <ChartOne
+            <TargetVsSales
                 title={"Target Vs Sales"}
                 color={"bg-blue-800"}
                 lab={bsLabelData}
@@ -1898,35 +2242,16 @@ const AdditionalInfo = (props) => {
             <div className="flex justify-end w-full">
                 <FaArrowAltCircleUp
                     size={42}
-                    className="self-center size-120 text-black-400 text-blue-400  "
+                    className="fixed bottom-4 right-4 z-50 text-blue-500 cursor-pointer hover:scale-110 transition-transform duration-200"
                     onClick={() =>
                         window.scrollTo({
                             top: 0,
-                            behavior: "smooth", // Smooth scrolling animation
+                            behavior: "smooth",
                         })
                     }
                 />
             </div>
-            {/* Example row */}
 
-            {/* {tableData.map((item) => 
-         <tr className="bg-white whitespace-nowrap">
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-         <td className="border border-gray-200  px-2 py-2">{item.} </td>
-       </tr>
-      )} */}
         </form >
     );
 };

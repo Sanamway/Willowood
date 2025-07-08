@@ -23,6 +23,20 @@ const MaterialSkuInfo = () => {
   const banImage = new FormData();
   banImage.append("banner", banner);
 
+  //New State
+
+  const [tempBanner, setTempBanner] = useState([]);
+  const [BannerPrevImg, setBannerPrevImg] = useState([]);
+
+  const [tempImages, setTempImages] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
+
+  const [tempDocs, setTempDocs] = useState([]);
+  const [docsPreview, setDocsPreview] = useState([]);
+
+  const [tempVideos, setTempVideos] = useState([]);
+  const [vidsPreview, setVidsPreview] = useState([]);
+
   let { id, view, CREATE } = router.query;
 
   const [formData, setFormData] = useState({
@@ -44,25 +58,133 @@ const MaterialSkuInfo = () => {
     packing_size: "",
     pack_size: "",
     division: "",
-    brand_name:""
-
+    brand_name: ""
   });
 
   //appending Images
 
-  const handleImageUpload = (e) => {
-    e.preventDefault();
-    const files = e.target.files;
-    const newImages = Array.from(files);
-    setSelectedImages((prevImages) => [...prevImages, ...newImages]);
+  // const handleImageUpload = (e) => {
+  //   e.preventDefault();
+  //   const files = e.target.files;
+
+  //   const newImages = Array.from(files);
+  //   setSelectedImages((prevImages) => [...prevImages, ...newImages]);
+  // };
+
+  //////////////////////// Image Banner Handler ////////////////////////////////
+
+  const handleBannerChange = (e) => {
+    const file = e.target.files[0];
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    if (!allowedTypes.includes(file?.type)) {
+      toast.error("Please upload only JPG, JPEG or PNG images");
+      return;
+    }
+
+    const maxSize = 2 * 1024 * 1024;
+    if (file?.size > maxSize) {
+      toast.error("Image size should be less than 2MB");
+      return;
+    }
+
+    setTempBanner(file);
+    const previewUrl = URL.createObjectURL(file);
+    setBannerPrevImg(previewUrl);
   };
 
-  const handleDocsUpload = (e) => {
-    e.preventDefault();
-    const files = e.target.files;
-    const newDocs = Array.from(files);
+  /////////////////////Image Handler ////////////////////////
 
-    setSelectedDocs((prevImages) => [...prevImages, ...newDocs]);
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    const maxSize = 2 * 1024 * 1024;
+
+    const validFiles = files.filter((file) => {
+      if (!allowedTypes.includes(file?.type)) {
+        toast.error(`${file.name} is not a valid image. Only JPG, JPEG, or PNG allowed.`);
+        return false;
+      }
+      if (file?.size > maxSize) {
+        toast.error(`${file.name} exceeds the 2MB size limit.`);
+        return false;
+      }
+      return true;
+    });
+
+    if (validFiles.length === 0) return;
+
+    setTempImages((prevImages) => [...prevImages, ...validFiles]);
+
+    const newPreviewUrls = validFiles.map((file) => URL.createObjectURL(file));
+    setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviewUrls]);
+  };
+
+  const handleRemoveImage = (index) => {
+    setImagePreviews((prevPreviews) => prevPreviews.filter((_, i) => i !== index));
+    setTempImages((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
+
+  ////////////////////// Handle Documents Uplaoding     ////
+
+  const handleDocsChange = (e) => {
+    const files = Array.from(e.target.files);
+    const allowedTypes = ["application/pdf", "application/msword"];
+    const maxSize = 5 * 1024 * 1024;
+
+    const validFiles = files.filter((file) => {
+      if (!allowedTypes.includes(file?.type)) {
+        toast.error(`${file.name} is not a valid document. Only PDF, DOCX, or TXT allowed.`);
+        return false;
+      }
+      if (file?.size > maxSize) {
+        toast.error(`${file.name} exceeds the 5MB size limit.`);
+        return false;
+      }
+      return true;
+    });
+
+    if (validFiles.length === 0) return;
+
+    setTempDocs((prevDocs) => [...prevDocs, ...validFiles]);
+
+    setDocsPreview((prevPreviews) => [...prevPreviews, ...validFiles.map((file) => file.name)]);
+  };
+
+  const handleRemoveDocs = (index) => {
+    setDocsPreview((prevPreviews) => prevPreviews.filter((_, i) => i !== index));
+    setTempDocs((prevDocs) => prevDocs.filter((_, i) => i !== index));
+  };
+
+  ////////////////////// Handler For Video Upload ////////////////////
+
+  const handleVideoChange = (e) => {
+    const files = Array.from(e.target.files);
+    const allowedTypes = ["video/mp4"];
+    const maxSize = 50 * 1024 * 1024;
+
+    const validFiles = files.filter((file) => {
+      if (!allowedTypes.includes(file?.type)) {
+        toast.error(`${file.name} is not a valid video. Only MP4, AVI, or MOV allowed.`);
+        return false;
+      }
+      if (file?.size > maxSize) {
+        toast.error(`${file.name} exceeds the 50MB size limit.`);
+        return false;
+      }
+      return true;
+    });
+
+    if (validFiles.length === 0) return;
+
+    setTempVideos((prevVideos) => [...prevVideos, ...validFiles]);
+
+    const newPreviewUrls = validFiles.map((file) => URL.createObjectURL(file));
+    setVidsPreview((prevPreviews) => [...prevPreviews, ...newPreviewUrls]);
+  };
+
+  const handleRemoveVideo = (index) => {
+    setVidsPreview((prevPreviews) => prevPreviews.filter((_, i) => i !== index));
+    setTempVideos((prevVideos) => prevVideos.filter((_, i) => i !== index));
   };
 
   const openFileInput = (e) => {
@@ -75,6 +197,11 @@ const MaterialSkuInfo = () => {
   const openDocsInput = (e) => {
     e.preventDefault();
     const fileInput = document.getElementById("docsUpload");
+    fileInput.click();
+  };
+  const openVideoInput = (e) => {
+    e.preventDefault();
+    const fileInput = document.getElementById("videoUpload");
     fileInput.click();
   };
 
@@ -185,7 +312,7 @@ const MaterialSkuInfo = () => {
         net_wgt: formData?.net_wgt,
         packing_size: formData?.packing_size,
         pack_size: formData?.pack_size,
-        division: formData?.division,
+        division: formData?.division
       };
       const resp = await axios.post(`${url}/api/create_product_material_sku`, JSON.stringify(data), {
         headers: headers
@@ -197,17 +324,92 @@ const MaterialSkuInfo = () => {
       console.log("saved", respdata);
       if (respdata) {
         toast.success(respdata.message);
+
+        const uploadPromises = [];
+
+        if (tempBanner) {
+          const bannerFormData = new FormData();
+          bannerFormData.append("myFile", tempBanner);
+
+          uploadPromises.push(
+            axios.post(
+              `${url}/api/upload_file?matnr=${
+                formData?.matnr
+              }&c_id=${+formData?.c_id}&file_path=product_material&image_name=${tempBanner?.name}`,
+              bannerFormData,
+              {
+                headers: { ...headers, "Content-Type": "multipart/form-data" }
+              }
+            )
+          );
+        }
+
+        if (tempImages && tempImages.length > 0) {
+          const imageFormData = new FormData();
+          tempImages.forEach((image) => {
+            imageFormData.append("images", image);
+          });
+
+          uploadPromises.push(
+            axios.post(
+              `${url}/api/upload-multiple?matnr=${formData?.matnr}&c_id=${+formData?.c_id}`,
+              imageFormData,
+              {
+                headers: { ...headers, "Content-Type": "multipart/form-data" }
+              }
+            )
+          );
+        }
+
+        if (tempDocs && tempDocs.length > 0) {
+          const docsFormData = new FormData();
+          tempDocs.forEach((image) => {
+            docsFormData.append("docs", image);
+          });
+
+          uploadPromises.push(
+            axios.post(
+              `${url}/api/upload-multiple?matnr=${formData?.matnr}&c_id=${+formData?.c_id}`,
+              docsFormData,
+              {
+                headers: { ...headers, "Content-Type": "multipart/form-data" }
+              }
+            )
+          );
+        }
+
+        if (tempVideos && tempVideos.length > 0) {
+          const videoFormData = new FormData();
+          tempVideos.forEach((image) => {
+            videoFormData.append("videos", image);
+          });
+
+          uploadPromises.push(
+            axios.post(
+              `${url}/api/upload-multiple?matnr=${formData?.matnr}&c_id=${+formData?.c_id}`,
+              videoFormData,
+              {
+                headers: { ...headers, "Content-Type": "multipart/form-data" }
+              }
+            )
+          );
+        }
+
+        await Promise.all(uploadPromises);
+        console.log("All files uploaded successfully");
+        toast.success("All files uploaded successfully");
+
         setTimeout(() => {
           router.push("/table/table_material_sku");
-        }, 2500);
+        }, 300);
       }
     } catch (errors) {
-      const ermsg = errors.response.data.message;
-      if(ermsg){
-        toast.error(ermsg)
-        return
+      const ermsg = errors?.response?.data?.message;
+      if (ermsg) {
+        toast.error(ermsg);
+        return;
       }
-      const errmsg = errors.response.data.error;
+      const errmsg = errors?.response?.data?.error;
       console.log("fefef", errmsg);
       if (errmsg?.includes("mat_name_1")) {
         toast.error("Material Name already exist");
@@ -221,9 +423,164 @@ const MaterialSkuInfo = () => {
     }
   };
 
-  //Edit MatSku
+  /////////////////////Edit MatSku//////////////////////////////////////
+
+  // const handleEditMatSku = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const Editdata = {
+  //       mat_code: formData?.mat_code,
+  //       mat_name: formData?.mat_name,
+  //       matnr: formData?.matnr,
+  //       techn_spec: formData?.techn_spec,
+  //       uom: formData?.uom,
+  //       crop_id: formData?.crop_id,
+  //       pcat_id: formData?.pcat_id,
+  //       pseg_id: formData?.pseg_id,
+  //       brand_code: formData?.brand_code,
+  //       wgt_uom: formData?.wgt_uom,
+  //       batch: formData?.batch,
+  //       // c_name: formData?.c_name,
+  //       c_id: formData?.c_id,
+  //       net_wgt: formData?.net_wgt,
+  //       gross_wgt: formData?.gross_wgt,
+  //       packing_size: formData?.packing_size,
+  //       pack_size: formData?.pack_size,
+  //       division: formData?.division
+  //     };
+
+  //     try {
+  //       const uploadPromises = [tempBanner].map((image) => {
+  //         const bannerFormData = new FormData();
+  //         bannerFormData.append("banner", image);
+
+  //         return axios.post(
+  //           `${url}/api/upload-multiple?matnr=${formData?.matnr}&c_id=${+formData?.c_id}`,
+  //           bannerFormData,
+  //           {
+  //             headers: {
+  //               ...headers,
+  //               "Content-Type": "multipart/form-data"
+  //             }
+  //           }
+  //         );
+  //       });
+
+  //       const responses = await Promise.all(uploadPromises);
+  //       console.log("Image uploaded", responses);
+
+  //       toast.success("Image uploaded successfully");
+
+  //     } catch (error) {
+  //       console.error("Error uploading image", error);
+  //       toast.error("Failed to upload image");
+  //     }
+
+  //     try {
+  //       const uploadPromises = tempImages.map((image) => {
+  //         const imageFormData = new FormData();
+  //         imageFormData.append("images", image);
+
+  //         return axios.post(
+  //           `${url}/api/upload-multiple?matnr=${formData?.matnr}&c_id=${+formData?.c_id}`,
+
+  //           imageFormData,
+  //           {
+  //             headers: {
+  //               ...headers,
+  //               "Content-Type": "multipart/form-data"
+  //             }
+  //           }
+  //         );
+  //       });
+
+  //       const responses = await Promise.all(uploadPromises);
+  //       console.log("All images uploaded", responses);
+
+  //       toast.success("All images uploaded successfully");
+  //     } catch (error) {
+  //       console.error("Error uploading images", error);
+  //       toast.error("Failed to upload one or more images");
+  //     }
+
+  //     try {
+  //       const uploadPromises = tempDocs.map((doc) => {
+  //         const docsFormData = new FormData();
+  //         docsFormData.append("docs", doc);
+
+  //         return axios.post(
+  //           `${url}/api/upload-multiple?matnr=${formData?.matnr}&c_id=${+formData?.c_id}`,
+
+  //           docsFormData,
+  //           {
+  //             headers: {
+  //               ...headers,
+  //               "Content-Type": "multipart/form-data"
+  //             }
+  //           }
+  //         );
+  //       });
+
+  //       const responses = await Promise.all(uploadPromises);
+  //       console.log("All docs uploaded", responses);
+
+  //       toast.success("All docs uploaded successfully");
+  //     } catch (error) {
+  //       console.error("Error uploading images", error);
+  //       toast.error("Failed to upload one or more images");
+  //     }
+
+  //     return;
+  //     const emptyFields = Object.entries(Editdata)
+  //       .filter(([key, value]) => value === "")
+  //       .map(([key]) => key);
+  //     if (emptyFields.length > 0) {
+  //       const customMessages = {
+  //         mat_name: "Material Name",
+  //         matnr: "Material Code",
+  //         techn_spec: "Technical Spec"
+  //       };
+  //       const requiredFields = emptyFields.map((field) => customMessages[field] || field);
+  //       toast.error(`${requiredFields.join(", ")} is required.`);
+  //     } else {
+  //       const resp = await axios.put(
+  //         `${url}/api/update_product_material_sku/${id}`,
+  //         JSON.stringify(Editdata),
+  //         {
+  //           headers: headers
+  //         }
+  //       );
+  //       const respdata = await resp.data;
+  //       if (respdata) {
+  //         toast.success(respdata.message);
+  //         setTimeout(() => {
+  //           router.push("/table/table_material_sku");
+  //         }, 2500);
+  //       }
+  //     }
+  //   } catch (errors) {
+  //     const ermsg = errors.response.data.message;
+  //     // if(ermsg){
+  //     //   toast.error(ermsg)
+  //     //   return
+  //     // }
+  //     const errmsg = errors.response.data.error;
+  //     console.log("fefef", errors);
+  //     if (errmsg?.includes("mat_name_1")) {
+  //       toast.error("Material Name already exist");
+  //     } else if (errmsg?.includes("techn_spec_1")) {
+  //       toast.error("Technical Spec already exist");
+  //     } else if (errmsg?.includes("matnr_1")) {
+  //       toast.error("Material Code already exist.");
+  //     } else {
+  //       toast.error(errmsg);
+  //     }
+  //   }
+  // };
+
   const handleEditMatSku = async (e) => {
     e.preventDefault();
+
     try {
       const Editdata = {
         mat_code: formData?.mat_code,
@@ -237,7 +594,6 @@ const MaterialSkuInfo = () => {
         brand_code: formData?.brand_code,
         wgt_uom: formData?.wgt_uom,
         batch: formData?.batch,
-        // c_name: formData?.c_name,
         c_id: formData?.c_id,
         net_wgt: formData?.net_wgt,
         gross_wgt: formData?.gross_wgt,
@@ -245,46 +601,184 @@ const MaterialSkuInfo = () => {
         pack_size: formData?.pack_size,
         division: formData?.division
       };
-      const emptyFields = Object.entries(Editdata)
-        .filter(([key, value]) => value === "")
-        .map(([key]) => key);
-      if (emptyFields.length > 0) {
-        const customMessages = {
-          mat_name: "Material Name",
-          matnr: "Material Code",
-          techn_spec: "Technical Spec"
-          // brand_name: "Brand Name"
-        };
-        const requiredFields = emptyFields.map((field) => customMessages[field] || field);
-        toast.error(`${requiredFields.join(", ")} is required.`);
-      } else {
-        const resp = await axios.put(`${url}/api/update_product_material_sku/${id}`, JSON.stringify(Editdata), {
-          headers: headers
-        });
-        const respdata = await resp.data;
-        if (respdata) {
-          toast.success(respdata.message);
-          setTimeout(() => {
-            router.push("/table/table_material_sku");
-          }, 2500);
+
+      const resp = await axios.put(`${url}/api/update_product_material_sku/${id}`, JSON.stringify(Editdata), {
+        headers: headers
+      });
+
+      const respdata = await resp.data;
+      if (respdata) {
+        toast.success(respdata.message);
+
+        const uploadPromises = [];
+
+        // if (tempBanner) {
+        //   const bannerFormData = new FormData();
+        //   bannerFormData.append("myFile", tempBanner);
+
+        //   uploadPromises.push(
+        //     axios.post(
+        //       `${url}/api/upload_file?matnr=${
+        //         formData?.matnr
+        //       }&c_id=${+formData?.c_id}&file_path=product_material&image_name=${tempBanner?.name}`,
+        //       bannerFormData,
+        //       {
+        //         headers: { ...headers, "Content-Type": "multipart/form-data" }
+        //       }
+        //     )
+        //   );
+        // }
+
+        if (typeof tempBanner === "string") {
+          const response = await fetch(tempBanner);
+          const blob = await response.blob();
+
+          const file = new File([blob], "existing_banner.jpg", { type: blob.type });
+
+          const bannerFormData = new FormData();
+          bannerFormData.append("myFile", file);
+
+          uploadPromises.push(
+            axios.post(
+              `${url}/api/upload_file?matnr=${
+                formData?.matnr
+              }&c_id=${+formData?.c_id}&file_path=product_material&image_name=${file.name}`,
+              bannerFormData,
+              {
+                headers: { ...headers, "Content-Type": "multipart/form-data" }
+              }
+            )
+          );
+        } else if (tempBanner instanceof File) {
+          const bannerFormData = new FormData();
+          bannerFormData.append("myFile", tempBanner);
+
+          uploadPromises.push(
+            axios.post(
+              `${url}/api/upload_file?matnr=${
+                formData?.matnr
+              }&c_id=${+formData?.c_id}&file_path=product_material&image_name=${tempBanner?.name}`,
+              bannerFormData,
+              {
+                headers: { ...headers, "Content-Type": "multipart/form-data" }
+              }
+            )
+          );
         }
+
+        // if (tempImages && tempImages.length > 0) {
+        //   const imageFormData = new FormData();
+        //   imagePreviews.forEach((url) => {
+        //     imageFormData.append("previousImages", url);
+        //   });
+        //   tempImages.forEach((image) => {
+        //     imageFormData.append("images", image);
+        //   });
+
+        //   uploadPromises.push(
+        //     axios.post(
+        //       `${url}/api/upload-multiple?matnr=${formData?.matnr}&c_id=${+formData?.c_id}`,
+        //       imageFormData,
+        //       {
+        //         headers: { ...headers, "Content-Type": "multipart/form-data" }
+        //       }
+        //     )
+        //   );
+        // }
+
+        // if (tempDocs && tempDocs.length > 0) {
+        //   const docsFormData = new FormData();
+        //   tempDocs.forEach((image) => {
+        //     docsFormData.append("docs", image);
+        //   });
+
+        //   uploadPromises.push(
+        //     axios.post(
+        //       `${url}/api/upload-multiple?matnr=${formData?.matnr}&c_id=${+formData?.c_id}`,
+        //       docsFormData,
+        //       {
+        //         headers: { ...headers, "Content-Type": "multipart/form-data" }
+        //       }
+        //     )
+        //   );
+        // }
+
+        // if (tempVideos && tempVideos.length > 0) {
+        //   const videoFormData = new FormData();
+        //   tempVideos.forEach((image) => {
+        //     videoFormData.append("videos", image);
+        //   });
+
+        //   uploadPromises.push(
+        //     axios.post(
+        //       `${url}/api/upload-multiple?matnr=${formData?.matnr}&c_id=${+formData?.c_id}`,
+        //       videoFormData,
+        //       {
+        //         headers: { ...headers, "Content-Type": "multipart/form-data" }
+        //       }
+        //     )
+        //   );
+        // }
+
+        if (
+          (tempImages && tempImages.length > 0) ||
+          (tempDocs && tempDocs.length > 0) ||
+          (tempVideos && tempVideos.length > 0)
+        ) {
+          const combinedFormData = new FormData();
+
+          if (tempImages && tempImages.length > 0) {
+            imagePreviews.forEach((url) => {
+              combinedFormData.append("previousImages", url);
+            });
+            tempImages.forEach((image) => {
+              combinedFormData.append("images", image);
+            });
+          }
+
+          if (tempDocs && tempDocs.length > 0) {
+            tempDocs.forEach((doc) => {
+              combinedFormData.append("docs", doc);
+            });
+          }
+
+          if (tempVideos && tempVideos.length > 0) {
+            tempVideos.forEach((video) => {
+              combinedFormData.append("videos", video);
+            });
+          }
+
+          uploadPromises.push(
+            axios.post(
+              `${url}/api/upload-multiple?matnr=${formData?.matnr}&c_id=${+formData?.c_id}`,
+              combinedFormData,
+              {
+                headers: { ...headers, "Content-Type": "multipart/form-data" }
+              }
+            )
+          );
+        }
+
+        await Promise.all(uploadPromises);
+        console.log("All files uploaded successfully");
+        toast.success("All files uploaded successfully");
+
+        setTimeout(() => {
+          router.push("/table/table_material_sku");
+        }, 300);
       }
-    } catch (errors) {
-      const ermsg = errors.response.data.message;
-      // if(ermsg){
-      //   toast.error(ermsg)
-      //   return
-      // }
-      const errmsg = errors.response.data.error;
-      console.log("fefef", errors);
+    } catch (error) {
+      console.error("Error", error);
+      const errmsg = error.response?.data?.error || error.message;
+
       if (errmsg?.includes("mat_name_1")) {
-        toast.error("Material Name already exist");
+        toast.error("Material Name already exists");
       } else if (errmsg?.includes("techn_spec_1")) {
-        toast.error("Technical Spec already exist");
+        toast.error("Technical Spec already exists");
       } else if (errmsg?.includes("matnr_1")) {
-        toast.error("Material Code already exist.");
+        toast.error("Material Code already exists");
       } else {
-        toast.error(errmsg);
+        toast.error(errmsg || "Failed to update material");
       }
     }
   };
@@ -302,7 +796,7 @@ const MaterialSkuInfo = () => {
         crops: [],
         crop_id: respdata[0]?.crop_id,
         pcat_id: respdata[0]?.pcat_id,
-        pseg_id:respdata[0]?.pseg_id ,
+        pseg_id: respdata[0]?.pseg_id,
         brand_code: respdata[0]?.brand_code,
         wgt_uom: respdata[0]?.wgt_uom,
         batch: respdata[0]?.batch,
@@ -310,11 +804,18 @@ const MaterialSkuInfo = () => {
         c_id: respdata[0]?.c_id,
         gross_wgt: respdata[0]?.gross_wgt,
         packing_size: respdata[0]?.packing_size,
-        net_wgt:respdata[0]?.net_wgt, 
+        net_wgt: respdata[0]?.net_wgt,
         pack_size: respdata[0]?.pack_size,
         division: respdata[0]?.division,
-        brand_name:respdata[0]?.brand_name
+        brand_name: respdata[0]?.brand_name
       });
+      setBannerPrevImg(respdata[0]?.product_banner);
+      const validImages = respdata[0]?.images?.filter((image) => image !== null);
+      const validDocs = respdata[0]?.docs?.filter((doc) => doc !== null);
+      const validVideos = respdata[0]?.videos?.filter((vid) => vid !== null);
+      setDocsPreview(validDocs || []);
+      setImagePreviews(validImages || []);
+      setVidsPreview(validVideos || []);
       console.log("getbyid", respdata);
     } catch (error) {}
   };
@@ -325,8 +826,8 @@ const MaterialSkuInfo = () => {
 
   useEffect(() => {
     if (router.query.type === "CREATE") return;
-    if (id) gettingMatSkuid(id);
-  }, [id]);
+    if (id || view) gettingMatSkuid(id);
+  }, [id, view]);
 
   const handleSubmit = (e) => {
     if (router.query.type !== "Edit") {
@@ -335,6 +836,8 @@ const MaterialSkuInfo = () => {
       handleEditMatSku(e);
     }
   };
+
+  console.log("Images", imagePreviews);
 
   return (
     <>
@@ -458,12 +961,58 @@ const MaterialSkuInfo = () => {
                         />
                       </div>
                     </div>
-                    <div className="banner border- flex flex-col items-center justify-center w-1/3">
+                    {/* <div className="banner border- flex flex-col items-center justify-center w-1/3">
                       <div className=" ">
                         <h2 className="text-lg text-center mb-2">Upload Banner Image</h2>
-                        <input type="file" onChange={handleBannerUpload} />
+                        <input type="file" onChange={handleBannerChange} />
                       </div>
-                      {/* <Image className="w-auto h-32" src={WillLog} alt="" /> */}
+                      <Image className="w-auto h-32" src={WillLog} alt="" />
+                    </div> */}
+
+                    <div className="absolute right-20">
+                      <label className="block text-gray-700 text-center text-sm font-bold mb-2">
+                        Upload Banner Image
+                        <span className="text-red-500">*</span>
+                      </label>
+                      <div className="flex items-center flex-col space-x-4">
+                        {BannerPrevImg && (
+                          <div className="relative">
+                            <img
+                              src={BannerPrevImg}
+                              alt="Preview"
+                              className="lg:w-32 lg:h-32 w-20 h-20 object-cover rounded-full"
+                            />
+                            {router.query.type !== "view" && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setTempBanner("");
+                                  setBannerPrevImg("");
+                                }}
+                                className="absolute lg:w-8 lg:h-8 w-4 h-4 top-1 right-2 lg:top-0 lg:right-0 bg-red-500 text-white rounded-full "
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
+                        )}
+                        {router.query.type !== "view" && (
+                          <input
+                            type="file"
+                            accept=".jpg,.jpeg,.png"
+                            onChange={handleBannerChange}
+                            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold
+        file:bg-violet-50 file:text-violet-700
+        hover:file:bg-violet-100"
+                            // disabled={!formState.brand_name || !formState.c_name}
+                          />
+                        )}
+                      </div>
+                      {/* {(!formState.brand_name || !formState.c_name) && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        Please fill in Product Brand and Company first
+                      </p>
+                    )} */}
                     </div>
                   </div>
 
@@ -821,26 +1370,25 @@ const MaterialSkuInfo = () => {
                   </label>
                   <input
                     type="file"
-                    accept="image/*"
+                    accept=".jpg,.jpeg,.png"
+                    multiple
                     className="hidden"
                     id="imageUpload"
-                    onChange={handleImageUpload}
+                    onChange={handleImageChange}
                   />
                   <div className="borde border-gray-300 p-2 rounded mt-2 flex">
-                    {selectedImages.map((image, index) => (
+                    {imagePreviews?.map((image, index) => (
                       <div className="w-32 h-32  flex items-center justify-center gap-2 px-2">
                         <div key={index} className="mb-2 relative">
-                          <img
-                            src={URL.createObjectURL(image)}
-                            alt={`Uploaded Image ${index}`}
-                            className="max-w-full"
-                          />
-                          <button
-                            onClick={() => removeImage(index)}
-                            className="bg-red-500 text-white px-2 py-1 rounded-full absolute top-2 right-2"
-                          >
-                            X
-                          </button>
+                          <img src={image} alt={`Uploaded Image ${index}`} className="max-w-full" />
+                          {router.query.type !== "view" && (
+                            <button
+                              onClick={() => handleRemoveImage(index)}
+                              className="bg-red-500 text-white px-2 py-1 rounded-full absolute top-2 right-2"
+                            >
+                              X
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -859,26 +1407,25 @@ const MaterialSkuInfo = () => {
                   </label>
                   <input
                     type="file"
-                    accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"
+                    accept=".pdf"
                     className="hidden"
                     id="docsUpload"
-                    onChange={handleDocsUpload}
+                    onChange={handleDocsChange}
                   />
                   <div className="borde border-gray-300 p-2 rounded mt-2 flex">
-                    {selectedDocs.map((image, index) => (
+                    {docsPreview?.map((doc, index) => (
                       <div className="w-32 h-32  flex items-center justify-center gap-2 px-2">
                         <div key={index} className="mb-2 relative">
-                          <img
-                            src={URL.createObjectURL(image)}
-                            alt={`Uploaded Image ${index}`}
-                            className="max-w-full"
-                          />
-                          <button
-                            onClick={() => removeDocs(index)}
-                            className="bg-red-500 text-white px-2 py-1 rounded-full absolute top-2 right-2"
-                          >
-                            X
-                          </button>
+                          <iframe title="PDF Viewer" src={doc} width="100%" height="50px" />
+
+                          {router.query.type !== "view" && (
+                            <button
+                              onClick={() => handleRemoveDocs(index)}
+                              className="bg-red-500 text-white px-2 py-1 rounded-full absolute top-2 right-2"
+                            >
+                              X
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -897,33 +1444,32 @@ const MaterialSkuInfo = () => {
                   </label>
                   <input
                     type="file"
-                    accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"
+                    multiple
                     className="hidden"
-                    id="docsUpload"
-                    onChange={handleDocsUpload}
+                    accept="video/mp4"
+                    onChange={handleVideoChange}
+                    id="videoUpload"
                   />
                   <div className="borde border-gray-300 p-2 rounded mt-2 flex">
-                    {selectedDocs.map((image, index) => (
+                    {vidsPreview.map((video, index) => (
                       <div className="w-32 h-32  flex items-center justify-center gap-2 px-2">
                         <div key={index} className="mb-2 relative">
-                          <img
-                            src={URL.createObjectURL(image)}
-                            alt={`Uploaded Image ${index}`}
-                            className="max-w-full"
-                          />
-                          <button
-                            onClick={() => removeDocs(index)}
-                            className="bg-red-500 text-white px-2 py-1 rounded-full absolute top-2 right-2"
-                          >
-                            X
-                          </button>
+                          <video src={video} controls className="w-64 h-36 rounded-lg shadow-md" />
+                          {router.query.type !== "view" && (
+                            <button
+                              onClick={() => handleRemoveVideo(index)}
+                              className="bg-red-500 text-white px-2 py-1 rounded-full absolute top-2 right-2"
+                            >
+                              X
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}
                   </div>
                   <button
                     className="bg-indigo-500 hover-bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-2"
-                    onClick={openDocsInput}
+                    onClick={openVideoInput}
                   >
                     Select Video
                   </button>

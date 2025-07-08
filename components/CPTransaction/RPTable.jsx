@@ -1,3 +1,5 @@
+ 
+ 
 import React, { useState, useEffect, Fragment } from "react";
 import { TbFileDownload } from "react-icons/tb";
 import { url } from "@/constants/url";
@@ -159,19 +161,19 @@ const RPTable = (props) => {
       console.log(error);
     }
   };
-
+  
   const router = useRouter();
   const headers = {
     "Content-Type": "application/json",
     secret: "fsdhfgsfuiweifiowefjewcewcebjw",
   };
-
+  
   let header;
   useEffect(() => {
     if (Array.isArray(props.tableData[0])) {
       header = props.tableData[0]?.map((item) => item.trim());
       props.setHeaderData(props.tableData[0]?.map((item) => item.trim()));
-
+  
       setResult(
         props.tableData.slice(1).map((row) => {
           const obj = {};
@@ -185,15 +187,15 @@ const RPTable = (props) => {
       setResult(props.tableData.map || []);
     }
   }, [props.tableData]);
-
+  
   const [result, setResult] = useState([]);
-
+  
   const [totalSumObject, setTotalSumObject] = useState({});
   useEffect(() => {
     if (!result.length) return;
     function sumNumericValues(data) {
       const sumObject = {};
-
+  
       data.forEach((item) => {
         Object.keys(item).forEach((key) => {
           if (typeof item[key] === "number") {
@@ -203,20 +205,20 @@ const RPTable = (props) => {
           }
         });
       });
-
+  
       return sumObject;
     }
     const totalResult = sumNumericValues(result);
     setTotalSumObject(totalResult);
   }, [result]);
-
+  
   const [sumValues, setSumValues] = useState({
     "Dec 23-24 Revised Fcst Qty": 0,
     "Dec 23-24 Urgent Qty": 0,
     "Jan 23-24 Fcst Qty": 0,
     "Expected Return Qty": 0,
   });
-
+  
   const calculateSum = (data) => {
     const sum = data.reduce(
       (acc, entry) => {
@@ -235,10 +237,10 @@ const RPTable = (props) => {
         "Expected Return Qty": 0,
       }
     );
-
+  
     setSumValues(sum);
   };
-
+  
   useEffect(() => {
     if (!result.length) return;
     calculateSum(result);
@@ -254,36 +256,36 @@ const RPTable = (props) => {
     if (!router.query.filterState) return;
     setRecievedObject(JSON.parse(decodeURIComponent(router.query.filterState)));
   }, [router]);
-
+  
   const handleColourBlock = (fcst, revised) => {
     const colorNum = (revised / fcst) * 100 - 100;
     const positiveColorNum = Math.abs(colorNum);
-
+  
     let color;
     switch (true) {
       case positiveColorNum < 10:
         color = "bg-white";
         break;
-
+  
       case positiveColorNum >= 10 && positiveColorNum <= 19:
         color = "bg-green-500";
         break;
-
+  
       case positiveColorNum >= 20 && positiveColorNum <= 49:
         color = "bg-yellow-500";
         break;
-
+  
       case positiveColorNum >= 50:
         color = "bg-red-500";
         break;
-
+  
       default:
         color = "bg-white";
     }
-
+  
     return color;
   };
-
+  
   const handleSaveRsp = async (status) => {
     if (
       totalSumObject[Object.keys(totalSumObject)[13]] +
@@ -298,11 +300,11 @@ const RPTable = (props) => {
     }
     try {
       let endPoint;
-
+  
       const receivedObject = JSON.parse(
         decodeURIComponent(router.query.filterState)
       );
-
+  
       if (
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 6 ||
         receivedObject.tId
@@ -345,7 +347,7 @@ const RPTable = (props) => {
             Number(item[Object.keys(item)[15]]) +
             Number(item[Object.keys(item)[16]]) +
             Number(item[Object.keys(item)[17]]),
-
+  
           w_id: Number(router.query.wId),
           t_id: Number(router.query.tId),
           r_id: Number(router.query.rId),
@@ -443,7 +445,7 @@ const RPTable = (props) => {
             Number(item[Object.keys(item)[15]]) +
             Number(item[Object.keys(item)[16]]) +
             Number(item[Object.keys(item)[17]]),
-
+  
           w_id: Number(router.query.wId),
           t_id: Number(router.query.tId),
           r_id: Number(router.query.rId),
@@ -472,7 +474,7 @@ const RPTable = (props) => {
         });
     } catch (errors) {
       const errorMessage = errors?.response?.data?.message;
-
+  
       if (!errorMessage) return;
       setisOpen(true);
       setApiMessage(errorMessage);
@@ -480,7 +482,7 @@ const RPTable = (props) => {
     }
   };
   const [buttonLoadingState, setButtonLoadingState] = useState(false);
-
+  
   const [oneTimeMessage, setOneTimeMessage] = useState(
     router.query.formType === "Add" ? true : false
   );
@@ -519,9 +521,9 @@ const RPTable = (props) => {
         <button className="px-4 py-1 bg-white border-2 border-teal-400 rounded-md text-teal-400">Next</button>
         </div> */}
       </div>
-
+  
       {/* options  */}
-
+  
       <div className="options flex items-center justify-between w-full px-2 py-">
         <div className="zrtdepoty flex items-center justify-between w-full">
           <div className="flex items-center justify-between gap-2">
@@ -574,7 +576,7 @@ const RPTable = (props) => {
             </select>
           </div>
         </div> */}
-
+  
         <div className="status xls download flex items-center justify-end w-full gap-8">
           <div className="flex flex-row gap-2 ">
             {" "}
@@ -636,7 +638,7 @@ const RPTable = (props) => {
                       >
                         {props.headerData[Object.keys(props.headerData)[2]]}
                       </th>
-
+  
                       <th
                         scope="col"
                         className="px-2 py-1 text-blue-600 text-left border-l-2"
@@ -697,7 +699,7 @@ const RPTable = (props) => {
                       >
                         {props.headerData[Object.keys(props.headerData)[12]]}
                       </th>
-
+  
                       <th
                         scope="col"
                         className="px-2 py-1  bg-[#BBF7D0]  text-blue-600 border-l-2 border-r-2 border-b-2 border-blue-200 "
@@ -736,7 +738,7 @@ const RPTable = (props) => {
                       </th>
                     </tr>
                   </thead>
-
+  
                   <tbody>
                     {result?.map((item) => {
                       return (
@@ -756,7 +758,7 @@ const RPTable = (props) => {
                           <td className="px-4 py-1 text-left  whitespace-nowrap border-l-2">
                             {item[Object.keys(item)[2]]}
                           </td>
-
+  
                           <th
                             scope="row"
                             className="px-4  py-1 text-left  font-medium whitespace-nowrap border-l-2"
@@ -769,7 +771,7 @@ const RPTable = (props) => {
                           <td className="px-4 py-1 text-right border-l-2">
                             {item[Object.keys(item)[5]]?.toFixed(2)}
                           </td>
-
+  
                           <td className="px-4 py-1 text-right border-l-2">
                             {item[Object.keys(item)[6]]?.toFixed(2)}
                           </td>
@@ -952,7 +954,7 @@ const RPTable = (props) => {
                         </tr>
                       );
                     })}
-
+  
                     <tr className="border-b dark:border-gray-700 bg-gray-100 text-gray-600 text-xs font-bold">
                       <td className="px-4 py-1 text-left  whitespace-nowrap">
                         Total
@@ -960,14 +962,14 @@ const RPTable = (props) => {
                       <td className="px-4 py-1 text-left  whitespace-nowrap">
                         -
                       </td>
-
+  
                       <th
                         scope="row"
                         className="px-4  py-1 font-medium whitespace-nowrap  "
                       >
                         -
                       </th>
-
+  
                       <td className="px-2 py-1     text-right ">
                         {totalSumObject[
                           Object.keys(totalSumObject)[4]
@@ -1003,13 +1005,13 @@ const RPTable = (props) => {
                           Object.keys(totalSumObject)[10]
                         ]?.toFixed(2)}
                       </td>
-
+  
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[
                           Object.keys(totalSumObject)[11]
                         ]?.toFixed(2)}
                       </td>
-
+  
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[
                           Object.keys(totalSumObject)[12]
@@ -1035,7 +1037,7 @@ const RPTable = (props) => {
                           Object.keys(totalSumObject)[16]
                         ]?.toFixed(2)}
                       </td>
-
+  
                       <td className="px-4 py-1 text-right">
                         {totalSumObject[
                           Object.keys(totalSumObject)[17]
@@ -1058,7 +1060,7 @@ const RPTable = (props) => {
           </div>
         </section>
       </div>
-
+  
       <div className="my-2 flex self-end ">
         <div className="flex items-center justify-end w-full gap-4 ">
           <button
@@ -1111,7 +1113,7 @@ const RPTable = (props) => {
             </button>
           )}
       </div>
-
+  
       {JSON.parse(window.localStorage.getItem("userinfo")).role_id === 4 &&
         router.query.formType === "Edit" && (
           <button
@@ -1145,7 +1147,7 @@ const RPTable = (props) => {
             Approve
           </button>
         )}
-
+  
       {router.query.formType === "Review" &&
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 3 && (
           <button
@@ -1179,7 +1181,7 @@ const RPTable = (props) => {
             Reject as Draft
           </button>
         )}
-
+  
       {router.query.formType === "Review" &&
         JSON.parse(window.localStorage.getItem("userinfo")).role_id === 10 && (
           <button
@@ -1202,7 +1204,7 @@ const RPTable = (props) => {
             Reject as Draft
           </button>
         )}
-
+  
       <Transition appear show={oneTimeMessage} as={Fragment}>
         <Dialog
           as="div"
@@ -1220,7 +1222,7 @@ const RPTable = (props) => {
           >
             <div className="fixed inset-0 bg-black/25" />
           </Transition.Child>
-
+  
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child
@@ -1244,7 +1246,7 @@ const RPTable = (props) => {
                       Please Input Week 1 to Week 5 All figure in Lacs
                     </p>
                   </div>
-
+  
                   <div className="mt-4 flex items-center justify-center">
                     <button
                       type="button"
@@ -1263,5 +1265,5 @@ const RPTable = (props) => {
     </section>
   );
 };
-
+  
 export default RPTable;

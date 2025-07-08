@@ -14,7 +14,7 @@ import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { TbFileDownload } from "react-icons/tb";
-import * as XLSX from "xlsx";
+  import * as XLSX from "xlsx";
 const FarmerSHC = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
@@ -99,17 +99,17 @@ const FarmerSHC = () => {
       toast.success(apires);
 
       getFarmerDemo(
-        currentPage.selected + 1,
-        filterState.bgId,
-        filterState.buId,
-        filterState.zId,
-        filterState.rId,
-        filterState.tId,
-        filterState.startDate,
-        filterState.endDate,
-        filterState.empCode
-      );
-    } catch (error) { }
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
+    } catch (error) {}
   };
 
   const handleApprove = async () => {
@@ -131,17 +131,17 @@ const FarmerSHC = () => {
       handleCloseModal();
       toast.success(apires);
       getFarmerDemo(
-        currentPage.selected + 1,
-        filterState.bgId,
-        filterState.buId,
-        filterState.zId,
-        filterState.rId,
-        filterState.tId,
-        filterState.startDate,
-        filterState.endDate,
-        filterState.empCode
-      );
-    } catch (error) { }
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
+    } catch (error) {}
   };
 
   const handleDelete = async () => {
@@ -160,16 +160,16 @@ const FarmerSHC = () => {
       toast.success(apires);
 
       getFarmerDemo(
-        currentPage.selected + 1,
-        filterState.bgId,
-        filterState.buId,
-        filterState.zId,
-        filterState.rId,
-        filterState.tId,
-        filterState.startDate,
-        filterState.endDate,
-        filterState.empCode
-      );
+      currentPage.selected + 1,
+      filterState.bgId,
+      filterState.buId,
+      filterState.zId,
+      filterState.rId,
+      filterState.tId,
+      filterState.startDate,
+      filterState.endDate,
+      filterState.empCode
+    );
       handleCloseModal();
     } catch (error) {
       toast.error(error.message);
@@ -184,7 +184,7 @@ const FarmerSHC = () => {
   const handleCloseModal = () => {
     setModalData({
       ...modalData,
-
+     
       isTrue: "Yes",
       date: "",
       user: "",
@@ -273,7 +273,7 @@ const FarmerSHC = () => {
           .filter((item) => Number(item.bg_id) === Number(segmentId))
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
       );
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -298,7 +298,7 @@ const FarmerSHC = () => {
           .filter((item) => Number(item.bu_id) === Number(businessUnitId))
           .filter((item) => Number(item.z_id) === Number(zoneId))
       );
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -328,7 +328,7 @@ const FarmerSHC = () => {
           .filter((item) => Number(item.z_id) === Number(zoneId))
           .filter((item) => Number(item.r_id) === Number(regionId))
       );
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -505,7 +505,7 @@ const FarmerSHC = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-              "All",
+                "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -560,12 +560,12 @@ const FarmerSHC = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-              "All",
+                "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-              "All",
+                "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -619,12 +619,12 @@ const FarmerSHC = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-              "All",
+                "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-              "All",
+                "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -668,12 +668,12 @@ const FarmerSHC = () => {
             JSON.parse(window.localStorage.getItem("userinfo")).r_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).r_id ||
-              "All",
+                "All",
           tId:
             JSON.parse(window.localStorage.getItem("userinfo")).t_id === 0
               ? "All"
               : JSON.parse(window.localStorage.getItem("userinfo")).t_id ||
-              "All",
+                "All",
           roleId: JSON.parse(window.localStorage.getItem("userinfo")).role_id,
         });
 
@@ -737,387 +737,255 @@ const FarmerSHC = () => {
   ]);
   const { name } = router.query;
 
-  const getAllActionButton = (item) => {
+  const getAllActionButton = (item) =>{
     let role = localStorageItems.roleId
-
-    switch (role) {
-      case 1:
-        return <div className="flex items-center">
-          <input type="Checkbox"
-            className="ml-1 mr-1"
-            checked={item.isVerified}
-            disabled={item.verified === "Yes"}
-            onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
-          <button
-            onClick={() => {
-              setShowVerifyModal(true);
-              setModalData({
-                ...modalData,
-                type: "Verify",
-                id: item.f_demo_id,
-              });
-            }}
-            disabled={item.verified === "Yes"}
-
-          >
-            Verify
-          </button>
-          <input type="Checkbox"
-            className="ml-1 mr-1"
-            checked={item.isApproved}
-            disabled={item.approved === "Yes"}
-            onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
-          <button
-            onClick={() => {
-              setShowVerifyModal(true);
-              setModalData({
-                ...modalData,
-                type: "Approve",
-                id: item.f_demo_id,
-              });
-            }}
-            disabled={item.approved === "Yes"}
-            className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
-
-          >
-            Approve
-          </button>
-
-          <button
-            className="b text-black hover:text-red-500 ml-2"
-            onClick={() => {
-              setShowDeleteModal(true);
-              setModalData({
-                ...modalData,
-
-                id: item.f_demo_id,
-              });
-            }}
-          >
-            Delete
-          </button>
-        </div>
-
-      case 8: return <div className="flex items-center">
-        <input type="Checkbox"
-          className="ml-1 mr-1"
-          checked={item.isVerified}
-          disabled={item.verified === "Yes"}
-          onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
-        <button
-          onClick={() => {
-            setShowVerifyModal(true);
-            setModalData({
-              ...modalData,
-              type: "Verify",
-              id: item.f_demo_id,
-            });
-          }}
-          disabled={item.verified === "Yes"}
-
-        >
-          Verify
-        </button>
-        <input type="Checkbox"
-          className="ml-1 mr-1"
-          checked={item.isApproved}
-          disabled={item.approved === "Yes"}
-          onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
-        <button
-          onClick={() => {
-            setShowVerifyModal(true);
-            setModalData({
-              ...modalData,
-              type: "Approve",
-              id: item.f_demo_id,
-            });
-          }}
-          disabled={item.approved === "Yes"}
-          className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
-
-        >
-          Approve
-        </button>
-
-        <button
-          className="b text-black hover:text-red-500 ml-2"
-          onClick={() => {
-            setShowDeleteModal(true);
-            setModalData({
-              ...modalData,
-
-              id: item.f_demo_id,
-            });
-          }}
-        >
-          Delete
-        </button>
-      </div>
-
-      case 4: return <div className="flex items-center">
-
-        <input type="Checkbox"
-          className="ml-1 mr-1"
-          checked={item.isApproved}
-          disabled={item.approved === "Yes"}
-          onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
-        <button
-          onClick={() => {
-            setShowVerifyModal(true);
-            setModalData({
-              ...modalData,
-              type: "Approve",
-              id: item.f_demo_id,
-            });
-          }}
-          disabled={item.approved === "Yes"}
-          className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
-
-        >
-          Approve
-        </button>
-
-
-      </div>
-
-      case 5:
-        return <div className="flex items-center">
-
-          <button
-            onClick={() => {
-              setShowVerifyModal(true);
-              setModalData({
-                ...modalData,
-                type: "Verify",
-                id: item.f_demo_id,
-              });
-            }}
-            disabled
-
-          >
-            Verify
-          </button>
-          <input type="Checkbox"
-            className="ml-1 mr-1"
-            checked={item.isApproved}
-            disabled={item.approved === "Yes"}
-            onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
-          <button
-            onClick={() => {
-              setShowVerifyModal(true);
-              setModalData({
-                ...modalData,
-                type: "Approve",
-                id: item.f_demo_id,
-              });
-            }}
-            disabled={item.approved === "Yes"}
-            className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
-
-          >
-            Approve
-          </button>
-
-          <button
-            className="b text-black hover:text-red-500 ml-2"
-            onClick={() => {
-              setShowDeleteModal(true);
-              setModalData({
-                ...modalData,
-
-                id: item.f_demo_id,
-              });
-            }}
-          >
-            Delete
-          </button>
-        </div>
-
-      case 6: return <div className="flex items-center">
-        <input type="Checkbox"
-          className="ml-1 mr-1"
-          checked={item.isVerified}
-          disabled={item.verified === "Yes"}
-          onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
-        <button
-          onClick={() => {
-            setShowVerifyModal(true);
-            setModalData({
-              ...modalData,
-              type: "Verify",
-              id: item.f_demo_id,
-            });
-          }}
-          disabled={item.verified === "Yes"}
-
-        >
-          Verify
-        </button>
-
-      </div>
-
-      case 9: return <div className="flex items-center">
-        <input type="Checkbox"
-          className="ml-1 mr-1"
-          checked={item.isVerified}
-          disabled={item.verified === "Yes"}
-          onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
-        <button
-          onClick={() => {
-            setShowVerifyModal(true);
-            setModalData({
-              ...modalData,
-              type: "Verify",
-              id: item.f_demo_id,
-            });
-          }}
-          disabled={item.verified === "Yes"}
-
-        >
-          Verify
-        </button>
-
-      </div>
-
-      default:
-        return <div className="flex items-center">
-          <input type="Checkbox"
-            className="ml-1 mr-1"
-            checked={item.isVerified}
-            disabled={item.verified === "Yes"}
-            onChange={() => handleCheckboxChange('isVerified', !item.isVerified, item)} />
-          <button
-            onClick={() => {
-              setShowVerifyModal(true);
-              setModalData({
-                ...modalData,
-                type: "Verify",
-                id: item.f_demo_id,
-              });
-            }}
-            disabled={item.verified === "Yes"}
-
-          >
-            Verify
-          </button>
-          <input type="Checkbox"
-            className="ml-1 mr-1"
-            checked={item.isApproved}
-            disabled={item.approved === "Yes"}
-            onChange={() => handleCheckboxChange('isApproved', !item.isApproved, item)} />
-          <button
-            onClick={() => {
-              setShowVerifyModal(true);
-              setModalData({
-                ...modalData,
-                type: "Approve",
-                id: item.f_demo_id,
-              });
-            }}
-            disabled={item.approved === "Yes"}
-            className={`b text-black hover:text-yellow-400  ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
-
-          >
-            Approve
-          </button>
-
-          <button
-            className="b text-black hover:text-red-500 ml-2"
-            onClick={() => {
-              setShowDeleteModal(true);
-              setModalData({
-                ...modalData,
-
-                id: item.f_demo_id,
-              });
-            }}
-          >
-            Delete
-          </button>
-        </div>
-
-    }
-  }
-
-  const [excelLoading, setExcelLoading] = useState(false)
-  const getExcelsheet = async (
-    bg,
-    bu,
-    z,
-    r,
-    t,
-    from,
-    to,
-    empCode
-  ) => {
-    try {
-      setExcelLoading(true)
-      const respond = await axios.get(`${url}/api/get_mr_shc`, {
-        headers: headers,
-        params: {
-          t_id: t === "All" ? null : t,
-          bg_id: bg === "All" ? null : bg,
-          bu_id: bu === "All" ? null : bu,
-          z_id: z === "All" ? null : z,
-          r_id: r === "All" ? null : r,
-          from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
-          to: moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
-          c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
-          emp_code: empCode,
-          excel: true,
-        },
+ switch(role){
+  case 1: return <div>
+    
+ 
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Verify",
+        id:  item.f_shc_id,
       });
-      const apires = await respond.data.data;
-      const ws = XLSX.utils.json_to_sheet(apires.map((item) => {
-        return {
-          ["F SHC No"]: item.f_shc_no,
-          ["SHC Date"]: moment(item.shc_date).format("DD-MM-YYYY"),
-          ["Emp Code"]: item.emp_code,
-          ["Emp Name"]: item.emp_name,
-          ["Farmer Mobile No"]: item.farmer_mob_no,
-          ["Farmer Id"]: item.farmer_id,
-          ["Farmer Name"]: item.farmer_name,
-          ["Farmer Father Name"]: item.farmer_father_name,
-          ["Farmer Type"]: item.farmer_type,
-          ["Plot Size"]: item.plot_size,
-          ["Village"]: item.village,
-          ["Nitrogen"]: item.nitrogen,
-          ["Phosphorus"]: item.phosphorus,
-          ["Potassium"]: item.potassium,
-          ["PH"]: item.ph,
-          ["EC"]: item.ec,
-          ["Organic Carbon"]: item.organic_carbon,
-          ["Sulphur"]: item.sulphur,
-          ["Zinc"]: item.zinc,
-          ["Boron"]: item.boron,
-          ["Iron"]: item.iron,
-          ["Magnese"]: item.manganese,
-          ["Copper"]: item.copper,
-          ["Deleted"]: item.isDeleted ? "Yes" : "No",
-          ["Territory"]: item.territory_name,
-          ["Region"]: item.region_name,
-          ["Zone"]: item.zone_name,
-          ["Business_Unit"]: item.zone_name,
-          ["Company"]: item.cmpny_name,
-        }
-      }));
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-      XLSX.writeFile(wb, `SHC.xlsx`);
-      setExcelLoading(false)
-    } catch (error) {
-      setExcelLoading(false)
+    }}
+    disabled={item.verified === "Yes"}
+
+  >
+    Verify
+  </button>
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Approve",
+        id:  item.f_shc_id,
+      });
+    }}
+    disabled={item.approved === "Yes"}
+    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+    
+  >
+    Approve
+  </button>
+  <button
+    className="b text-black hover:text-red-500 ml-2"
+    onClick={() => {
+      setShowDeleteModal(true);
+      setModalData({
+        ...modalData,
+
+        id:  item.f_shc_id,
+      });
+    }}
+  >
+    Delete
+  </button>
+  </div>
+  case 8: return  <div>
+    
+  
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Verify",
+        id:  item.f_shc_id,
+      });
+    }}
+    disabled={item.verified === "Yes"}
+    
+
+  >
+    Verify
+  </button>
+  <button
+    onClick={() => {
+      setShowVerifyModal(true);
+      setModalData({
+        ...modalData,
+        type: "Approve",
+        id:  item.f_shc_id,
+      });
+    }}
+    disabled={item.approved === "Yes"}
+    className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+    
+  >
+    Approve
+  </button>
+  <button
+    className="b text-black hover:text-red-500 ml-2"
+    onClick={() => {
+      setShowDeleteModal(true);
+      setModalData({
+        ...modalData,
+
+        id:  item.f_shc_id,
+      });
+    }}
+  >
+    Delete
+  </button>
+  </div>
+
+case 4: return <div>
+  
+  
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id:  item.f_shc_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+case 5: return <div>
+  
+<button
+  onClick={() => {
+    setShowVerifyModal(true);
+    setModalData({
+      ...modalData,
+      type: "Approve",
+      id:  item.f_shc_id,
+    });
+  }}
+  disabled={item.approved === "Yes"}
+  className={`b text-black hover:text-yellow-400 ml-2 ${item.approved === "Yes" ? "text-green-400" : "text-red-400"}`}
+>
+  Approve
+</button>
+</div>
+
+case 6: return <div>
+  
+  
+  <button
+disabled={item.verified === "Yes"}
+onClick={() => {
+  setShowVerifyModal(true);
+  setModalData({
+    ...modalData,
+    type: "Verify",
+    id:  item.f_shc_id,
+  });
+}}
+>
+Verify
+</button>
+</div>
+
+case 9: return <div>
+<button
+disabled={item.verified === "Yes"}
+onClick={() => {
+  setShowVerifyModal(true);
+  setModalData({
+    ...modalData,
+    type: "Verify",
+    id:  item.f_shc_id,
+  });
+}}
+>
+Verify
+</button>
+</div> 
+
+}
     }
-  };
-  const LoaderExcel = () => {
-    return (
-      <div class="flex space-x-1   justify-center items-center bg-white  ">
-        <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-        <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-        <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce"></div>
-      </div>
-    );
-  };
+
+    const [excelLoading, setExcelLoading] = useState(false)
+    const getExcelsheet = async (
+      bg,
+      bu,
+      z,
+      r,
+      t,
+      from,
+      to,
+      empCode
+      ) => {
+      try {
+        setExcelLoading(true)
+        const respond = await axios.get(`${url}/api/get_mr_shc`, {
+          headers: headers,
+          params: {
+            t_id: t === "All" ?    null : t,
+            bg_id: bg === "All" ?  null : bg,
+            bu_id: bu === "All" ?  null : bu,
+            z_id: z === "All" ?    null : z,
+            r_id: r === "All" ?    null : r,
+            from: moment(from).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            to:   moment(to).format("YYYY-MM-DD[T00:00:00.000Z]"),
+            c_id: JSON.parse(window.localStorage.getItem("userinfo")).c_id,
+            emp_code: empCode,
+            excel: true, 
+          },
+        });
+        const apires = await respond.data.data;
+        const ws = XLSX.utils.json_to_sheet(apires.map((item)=> {return {
+        ["F SHC No"] :item.f_shc_no,                                        
+        ["SHC Date"]: moment(item.shc_date).format("DD-MM-YYYY"),
+        ["Emp Code"]: item.emp_code,
+        ["Emp Name"]: item.emp_name,   
+        ["Farmer Mobile No"]:item.farmer_mob_no ,
+        ["Farmer Id"]: item.farmer_id,
+        ["Farmer Name"]: item.farmer_name,
+        ["Farmer Father Name"]: item.farmer_father_name,
+        ["Farmer Type"]: item.farmer_type,
+        ["Plot Size"]: item.plot_size,
+        ["Village"]: item.village,
+        ["Nitrogen"]: item.nitrogen,
+        ["Phosphorus"]: item.phosphorus,
+        ["Potassium"]: item.potassium,
+        ["PH"]: item.ph,
+        ["EC"]: item.ec,
+        ["Organic Carbon"]: item.organic_carbon,
+        ["Sulphur"]: item.sulphur,
+        ["Zinc"]: item.zinc,
+        ["Boron"]: item.boron,
+        ["Iron"]: item.iron,
+        ["Magnese"]: item.manganese,
+        ["Copper"]: item.copper,
+        ["Deleted"]: item.isDeleted ? "Yes" : "No",
+        ["Territory"]: item.territory_name,
+        ["Region"]: item.region_name,
+        ["Zone"]: item.zone_name,
+        ["Business_Unit"]: item.zone_name,
+        ["Company"]: item.cmpny_name,            
+        }
+       } ));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        XLSX.writeFile(wb, `SHC.xlsx`);
+        setExcelLoading(false)
+      } catch (error) {
+        setExcelLoading(false)      
+      }
+    };
+    const LoaderExcel = () => {
+      return (
+        <div class="flex space-x-1   justify-center items-center bg-white  ">
+          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+          <div class="h-2 w-2 bg-blue-500 rounded-full animate-bounce"></div>
+        </div>
+      );
+    };
   return (
     <Layout>
       <div className="absolute h-full overflow-y-auto  mx-4 w-full overflow-x-hidden">
@@ -1127,27 +995,27 @@ const FarmerSHC = () => {
             {name ? name : "Farmer Soil Health Card"}
           </h2>
           <div className="status xls download flex items-center justify-end w-full gap-8">
-            <div className="flex flex-row gap-2 ">
-              {" "}
-              {excelLoading ? <LoaderExcel
-              /> : <TbFileDownload
-                className="text-green-600 cursor-pointer "
-                size={32}
-                onClick={() => getExcelsheet(
-                  filterState.bgId,
-                  filterState.buId,
-                  filterState.zId,
-                  filterState.rId,
-                  filterState.tId,
-                  filterState.startDate,
-                  filterState.endDate,
-                  filterState.empCode
-                )
-                }
-              ></TbFileDownload>}
-
-
-            </div>
+          <div className="flex flex-row gap-2 ">
+            {" "}
+            {excelLoading ? <LoaderExcel
+                  />   :    <TbFileDownload
+              className="text-green-600 cursor-pointer "
+              size={32}
+              onClick={() => getExcelsheet(
+                filterState.bgId,
+                filterState.buId,
+                filterState.zId,
+                filterState.rId,
+                filterState.tId,
+                filterState.startDate,
+                filterState.endDate,
+                filterState.empCode
+              ) 
+              }
+            ></TbFileDownload>}
+         
+            
+          </div>
             <h2>
               <AiTwotoneHome
                 className="text-black-500"
@@ -1472,8 +1340,8 @@ const FarmerSHC = () => {
               {data.map((item, idx) => (
                 <tr className="dark:border-2" key={idx}>
                   <td className={`px-4 py-2 text-left dark:border-2 whitespace-nowrap font-arial text-xs ${item.verified === "Yes" ? "text-green-400" : "text-red-400"}`}>
-                    {getAllActionButton(item)}
-                  </td>
+                    {getAllActionButton(item)}             
+                </td>
                   <td className="px-4 py-2 dark:border-2 whitespace-nowrap">
                     {item.f_shc_no}
                   </td>
@@ -1590,22 +1458,22 @@ const FarmerSHC = () => {
           </div> */}
         </div>
         <div className="w-full flex flex-row justify-between mx-4 pr-12 pb-10  bg-white z-10">
-          <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
-            Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
-            <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
-            <small className="font-bold px-2 self-center text-black">{currentPage.selected + 1}</small> results
-          </div>
-          <ReactPaginate
-            previousLabel={"Previous"}
-            nextLabel={"Next"}
-            breakLabel={"..."}
-            pageCount={pageCount}
-            onPageChange={handlePageChange}
-            containerClassName={"pagination"}
-            activeClassName={"active"}
-            className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
-          />
-        </div>
+        <div className="flex flex-row gap-1 px-2 py-1 mt-4 border border-black rounded-md text-slate-400">
+      Showing <small className="font-bold px-2 self-center text-black">1</small> to{" "}
+      <small className="font-bold px-2 self-center text-black">{data.length}</small> of{" "}
+      <small className="font-bold px-2 self-center text-black">{currentPage.selected+1}</small> results
+    </div>
+    <ReactPaginate
+      previousLabel={"Previous"}
+      nextLabel={"Next"}
+      breakLabel={"..."}
+      pageCount={pageCount}
+      onPageChange={handlePageChange}
+      containerClassName={"pagination"}
+      activeClassName={"active"}
+      className="flex flex-row gap-2 px-2 py-1 mt-4 border border-black rounded-md"
+    />
+  </div>
       </div>
 
       <Transition appear show={showImageModal} as={Fragment}>
@@ -1763,7 +1631,7 @@ const FarmerSHC = () => {
                     </div>
 
                     {modalData.type === "Verify" ? (
-                      <div className="mt-6 flex justify-center gap-1">
+                     <div className="mt-6 flex justify-center gap-1">
                         {" "}
                         <button
                           className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"

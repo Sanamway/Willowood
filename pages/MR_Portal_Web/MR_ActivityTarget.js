@@ -66,7 +66,7 @@ const BusinessSegment = () => {
       });
       const apires = await respond.data.data;
       setCompanyInfo(apires);
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -92,6 +92,7 @@ const BusinessSegment = () => {
   }, [filter.cId]);
 
   const [buData, setBuData] = useState([]);
+
   const getBusinessUnitInfo = async (businessSegmentId) => {
     try {
       const respond = await axios.get(
@@ -117,7 +118,7 @@ const BusinessSegment = () => {
 
   const [selectedYear, setSelectedYear] = useState(null);
   const [monthList, setMonthList] = useState([]);
-
+ 
   const handleYearChange = (date) => {
     if (date) {
       const selectedYear = date.getFullYear();
@@ -231,7 +232,7 @@ const BusinessSegment = () => {
       });
       const apires = await respond.data.data;
       setAllMrData(apires);
-    } catch (error) { }
+    } catch (error) {}
   };
   useEffect(() => {
     getMrCatData();
@@ -259,14 +260,14 @@ const BusinessSegment = () => {
             )[0].mr_Category_name,
 
             activity_score_demo:
-              (item.m_demo * item.w_demo) / 100,
+              (item.m_demo * item.w_demo ) / 100,
             activity_score_f_day:
-              (item.m_f_day * item.w_f_day) / 100,
-            activity_score_ifc: (item.m_ifc * item.w_ifc) / 100,
-            activity_score_fgm: (item.m_fgm * item.w_fgm) / 100,
-            activity_score_ofm: (item.m_ofm * item.w_ofm) / 100,
-            activity_score_mfm: (item.m_mfm * item.w_mfm) / 100,
-
+              (item.m_f_day * item.w_f_day ) / 100,
+            activity_score_ifc: (item.m_ifc  * item.w_ifc) / 100,
+            activity_score_fgm: (item.m_fgm  * item.w_fgm) / 100,
+            activity_score_ofm: (item.m_ofm  * item.w_ofm) / 100,
+            activity_score_mfm: (item.m_mfm  * item.w_mfm) / 100,
+          
           };
         }),
       };
@@ -314,14 +315,14 @@ const BusinessSegment = () => {
                 (item) => Number(item.mrc_id) === Number(filter.mrCat)
               )[0].mr_Category_name || null,
             activity_score_demo:
-              (item.m_demo * item.w_demo) / 100,
+              (item.m_demo * item.w_demo ) / 100,
             activity_score_f_day:
-              (item.m_f_day * item.w_f_day) / 100,
-            activity_score_ifc: (item.m_ifc * item.w_ifc) / 100,
-            activity_score_fgm: (item.m_fgm * item.w_fgm) / 100,
-            activity_score_ofm: (item.m_ofm * item.w_ofm) / 100,
-            activity_score_mfm: (item.m_mfm * item.w_mfm) / 100,
-
+              (item.m_f_day * item.w_f_day ) / 100,
+            activity_score_ifc: (item.m_ifc  * item.w_ifc) / 100,
+            activity_score_fgm: (item.m_fgm  * item.w_fgm) / 100,
+            activity_score_ofm: (item.m_ofm  * item.w_ofm) / 100,
+            activity_score_mfm: (item.m_mfm  * item.w_mfm) / 100,
+          
           };
         }),
       };
@@ -548,8 +549,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black   p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.t_demo ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_demo ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_demo}
                             onChange={(e) => {
@@ -566,9 +568,10 @@ const BusinessSegment = () => {
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center  text-black   p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.m_demo ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                        <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_demo ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_demo}
                             onChange={(e) => {
@@ -586,8 +589,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center  text-black p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.w_demo ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_demo ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_demo}
                             onChange={(e) => {
@@ -609,7 +613,7 @@ const BusinessSegment = () => {
                             className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
                             value={
-                              ((item.m_demo * item.w_demo) / 100).toFixed(2)
+                              ((item.m_demo * item.w_demo ) / 100).toFixed(2)
                             }
                           />
                         </li>
@@ -620,8 +624,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.t_f_day ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_f_day ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_f_day}
                             onChange={(e) => {
@@ -638,9 +643,10 @@ const BusinessSegment = () => {
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.m_f_day ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                        <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_f_day ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_f_day}
                             onChange={(e) => {
@@ -658,8 +664,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.w_f_day ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_f_day ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_f_day}
                             onChange={(e) => {
@@ -681,7 +688,7 @@ const BusinessSegment = () => {
                             type="number"
                             value={
                               ((item.m_f_day * item.w_f_day) /
-                                100).toFixed(2)
+                              100).toFixed(2)
                             }
                           />
                         </li>
@@ -691,8 +698,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.t_ifc ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_ifc ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_ifc}
                             onChange={(e) => {
@@ -709,9 +717,10 @@ const BusinessSegment = () => {
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.m_ifc ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                        <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_ifc ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_ifc}
                             onChange={(e) => {
@@ -729,8 +738,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.w_ifc ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_ifc ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_ifc}
                             onChange={(e) => {
@@ -761,8 +771,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.t_fgm ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_fgm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_fgm}
                             onChange={(e) => {
@@ -779,9 +790,10 @@ const BusinessSegment = () => {
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.m_fgm ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                        <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_fgm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_fgm}
                             onChange={(e) => {
@@ -799,8 +811,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.w_fgm ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_fgm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_fgm}
                             onChange={(e) => {
@@ -821,7 +834,7 @@ const BusinessSegment = () => {
                             className={`p-0 w-16 border-2 h-6 border-black text-right ${"bg-yellow-100"}`}
                             type="number"
                             value={
-                              ((item.m_fgm * item.w_fgm) / 100).toFixed(2)
+                              ((item.m_fgm * item.w_fgm ) / 100).toFixed(2)
                             }
                           />
                         </li>
@@ -831,8 +844,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.t_ofm ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_ofm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_ofm}
                             onChange={(e) => {
@@ -849,9 +863,10 @@ const BusinessSegment = () => {
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.m_ofm ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                        <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_ofm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_ofm}
                             onChange={(e) => {
@@ -869,8 +884,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.w_ofm ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_ofm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_ofm}
                             onChange={(e) => {
@@ -901,8 +917,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.t_mfm ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_mfm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_mfm}
                             onChange={(e) => {
@@ -919,9 +936,10 @@ const BusinessSegment = () => {
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.m_mfm ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                        <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_mfm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_mfm}
                             onChange={(e) => {
@@ -939,8 +957,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.w_mfm ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_mfm ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_mfm}
                             onChange={(e) => {
@@ -971,8 +990,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.t_rtp ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_rtp ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_rtp}
                             onChange={(e) => {
@@ -989,9 +1009,10 @@ const BusinessSegment = () => {
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.m_rtp ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                        <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_rtp ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_rtp}
                             onChange={(e) => {
@@ -1009,8 +1030,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.w_rtp ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_rtp ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_rtp}
                             onChange={(e) => {
@@ -1039,8 +1061,9 @@ const BusinessSegment = () => {
                       <ul>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.t_shc ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.t_shc ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.t_shc}
                             onChange={(e) => {
@@ -1057,9 +1080,10 @@ const BusinessSegment = () => {
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
-                          <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.m_shc ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                        <input
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.m_shc ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.m_shc}
                             onChange={(e) => {
@@ -1077,8 +1101,9 @@ const BusinessSegment = () => {
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  p-1">
                           <input
-                            className={`p-0 w-16 border-2 h-6 border-black text-right ${item.w_shc ? "bg-white-100" : "bg-yellow-100"
-                              }`}
+                            className={`p-0 w-16 border-2 h-6 border-black text-right ${
+                              item.w_shc ? "bg-white-100" : "bg-yellow-100"
+                            }`}
                             type="number"
                             value={item.w_shc}
                             onChange={(e) => {
@@ -1123,7 +1148,7 @@ const BusinessSegment = () => {
                           />
                         </li>
                         <li className="border-b-2 border-black  flex justify-center text-black  bg-gray-400  p-1">
-                          <input
+                        <input
                             className="p-0 w-16 text-white h-6  bg-gray-400 "
                             disabled
                             value={
@@ -1131,7 +1156,7 @@ const BusinessSegment = () => {
                               Number(item.m_f_day) +
                               Number(item.m_ifc) +
                               Number(item.m_fgm) +
-                              Number(item.m_ofm) +
+                                Number(item.m_ofm) +
                               Number(item.m_mfm) +
                               Number(item.m_rtp) +
                               Number(item.m_shc)}
@@ -1159,19 +1184,19 @@ const BusinessSegment = () => {
                             className="p-0 w-16 h-6   text-white  bg-gray-400"
                             disabled
                             value={
-                              Number(((item.m_demo * item.w_demo) /
-                                100).toFixed(2)) +
-                              Number(((item.m_f_day * item.w_f_day) /
-                                100).toFixed(2)) +
-                              Number(((item.m_ifc * item.w_ifc) /
-                                100).toFixed(2)) +
-                              Number(((item.m_fgm * item.w_fgm) /
-                                100).toFixed(2)) +
-                              Number(((item.m_ofm * item.w_ofm) /
-                                100).toFixed(2)) +
-                              Number(((item.m_mfm * item.w_mfm) /
-                                100).toFixed(2))
-
+                              Number(((item.m_demo * item.w_demo ) /
+                              100).toFixed(2)) +
+                              Number(((item.m_f_day * item.w_f_day ) /
+                              100).toFixed(2))+
+                              Number(((item.m_ifc * item.w_ifc ) /
+                              100).toFixed(2))+
+                              Number(((item.m_fgm * item.w_fgm ) /
+                              100).toFixed(2))+
+                              Number(((item.m_ofm * item.w_ofm ) /
+                              100).toFixed(2))+
+                              Number(((item.m_mfm * item.w_mfm ) /
+                              100).toFixed(2))
+                             
                             }
                           />
                         </li>

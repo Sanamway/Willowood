@@ -283,9 +283,9 @@ const UserAssignBusiness = () => {
     e.preventDefault();
     console.log("lkop", bstState);
     try {
-      await validationSchema.validate(bstState, {
-        abortEarly: false,
-      });
+      // await validationSchema.validate(bstState, {
+      //   abortEarly: false,
+      // });
       const data = {
         c_id: Number(bstState.companyId),
         bu_id: Number(bstState.buId),
@@ -301,6 +301,8 @@ const UserAssignBusiness = () => {
           ? localStorage.getItem("ul_name")
           : "No Man",
       };
+      console.log("SaveData", data)
+  //  return
       const respond = await axios
         .post(`${url}/api/add_bstuser`, JSON.stringify(data), {
           headers: headers,
@@ -330,11 +332,12 @@ const UserAssignBusiness = () => {
   };
 
   const handleEditBst = async (e) => {
+    
     e.preventDefault();
     try {
-      await validationSchema.validate(bstState, {
-        abortEarly: false,
-      });
+      // await validationSchema.validate(bstState, {
+      //   abortEarly: false,
+      // });
       const data = {
         c_id: Number(bstState.companyId),
         bu_id: Number(bstState.buId),
@@ -350,6 +353,7 @@ const UserAssignBusiness = () => {
           ? localStorage.getItem("ul_name")
           : "No Man",
       };
+      console.log("EditData", data)
       const respond = await axios
         .put(
           `${url}/api/update_bstuser/${router.query.id}`,
@@ -438,7 +442,7 @@ const UserAssignBusiness = () => {
                   value={
                     router.query.type === "Edit" || router.query.type === "View"
                       ? router.query.id
-                      : "Auto Generated"
+                      : "Auto Genrated"
                   }
                 />
               </div>
@@ -650,23 +654,23 @@ const UserAssignBusiness = () => {
                   <select
                     className="w-full px-3 py-2 border-b border-gray-500  bg-white focus:outline-none focus:border-b focus:border-indigo-500"
                     id="stateSelect"
-                    value={bstState.territoryId}
+                    value={bstState.territoryId ?? 0}
                     onChange={(e) =>
                       setBstState({
                         ...bstState,
-                        territoryId: e.target.value,
+                        territoryId: e.target.value ,
                       })
                     }
                   >
                     <option
-                      value={""}
+                      value={0}
                       className="focus:outline-none focus:border-b bg-white"
                     >
                       Select
                     </option>
                     {territoryData.map((item, idx) => (
                       <option
-                        value={item.t_id}
+                        value={item.t_id }
                         className="focus:outline-none focus:border-b bg-white"
                         key={idx}
                       >

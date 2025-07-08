@@ -1,29 +1,27 @@
 import React, { useState, useEffect } from "react";
-import FilterComponent from "./FilterComponent";
-import Layout from "../../Layout";
+import FilterComponent from "../../../../components/Sales_Portal_Apps/DealerFilterComponent";
+import Layout from "../../../../components/Sales_Portal_Apps/Layout";
 import { IoIosBasket } from "react-icons/io";
 import { useRouter } from "next/router";
-import { CiBookmark } from "react-icons/ci";
-import { LuRefreshCw } from "react-icons/lu";
+
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { Popover } from "@headlessui/react";
 import { FaHandsHelping } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
-import { useSelector } from "react-redux";
-import moment from "moment";
-import { Transition, Dialog } from "@headlessui/react";
-import { Fragment } from "react";
+
+
 import { IoCallOutline } from "react-icons/io5";
-import { CiBoxList } from "react-icons/ci";
+
 
 import { IoLocationOutline } from "react-icons/io5";
-import { IoBagCheckOutline } from "react-icons/io5";
+
 import { FcNeutralTrading } from "react-icons/fc";
 import { FcNews } from "react-icons/fc";
 import { FcMultipleSmartphones } from "react-icons/fc";
 import { FcCurrencyExchange } from "react-icons/fc";
 import { url } from "@/constants/url";
 import axios from "axios";
+import { FcConferenceCall } from "react-icons/fc";
 const Dashboard = () => {
 
     const router = useRouter();
@@ -47,10 +45,7 @@ const Dashboard = () => {
 
 
     useEffect(() => {
-
-
         const roleId = JSON.parse(window.localStorage.getItem("userinfo"))?.role_id;
-
         switch (roleId) {
             case 6:
 
@@ -120,6 +115,8 @@ const Dashboard = () => {
         }
     }, []);
 
+
+
     const gettingDealerData = async () => {
         const { bgId, buId, rId, zId, tId, partyName } = filterState
 
@@ -170,9 +167,9 @@ const Dashboard = () => {
 
     return (
 
-        <div className="bg-gray-200">
-            <div className="w-full flex h-12  justify-between items-center px-4  shadow-lg lg:flex-col  ">
-                <span className="text-black flex flex-row gap-4 font-bold   ">
+        <div className="bg-blue-200">
+            <div className="w-full flex h-12  justify-between items-center px-4  shadow-lg lg:flex-col  bg-blue-600  ">
+                <span className="text-black flex flex-row gap-4 font-bold  text-white text-sm">
                     <FaArrowLeftLong
                         className="self-center "
                         onClick={() =>
@@ -181,7 +178,12 @@ const Dashboard = () => {
                             })
                         }
                     />
-                    <span>List of Dealer</span>
+                    <FcConferenceCall
+                        className="self-center "
+                        size={25}
+                    />
+
+                    <span>List of Dealer ({dealerData.length})</span>
                 </span>{" "}
                 <span className="text-white self-center">
                     <Popover as="div" className="relative border-none outline-none mt-2">
@@ -295,15 +297,39 @@ const Dashboard = () => {
                             <FcNeutralTrading size={32} className="text-green-600" />
                             <span className="text-xs text-gray-700 mt-1">Sale Return</span>
                         </div>
-                        <div className="flex flex-col items-center cursor-pointer">
+                        <div className="flex flex-col items-center cursor-pointer"
+                            onClick={() => {
+                                router.push({
+                                    pathname: "/Sales_App/Dealer_Stock_Liqdation",
+                                    query: {
+                                        sap_code: item.SAP_customerSAPNo,
+                                        party_name: item.party_Name
+                                    },
+                                });
+                            }}
+
+
+                        >
                             <FcMultipleSmartphones size={32} className="text-blue-600" />
                             <span className="text-xs text-gray-700 mt-1">Stock</span>
                         </div>
-                        <div className="flex flex-col items-center cursor-pointer">
+                        <div className="flex flex-col items-center cursor-pointer"
+                            onClick={() => {
+                                router.push({
+                                    pathname: "/Sales_App/Payment_Collection",
+                                    query: {
+                                        sap_code: item.SAP_customerSAPNo,
+                                        party_name: item.party_Name
+                                    },
+                                });
+                            }}
+                        >
                             <FcCurrencyExchange size={32} className="text-purple-600" />
                             <span className="text-xs text-gray-700 mt-1">Payment</span>
                         </div>
-                        <div className="flex flex-col items-center cursor-pointer">
+                        <div className="flex flex-col items-center cursor-pointer"
+
+                        >
                             <IoLocationOutline size={32} className="text-red-600" />
                             <span className="text-xs text-gray-700 mt-1">Geo Tag</span>
                         </div>

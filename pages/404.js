@@ -67,18 +67,18 @@ const ErrorPage = (props) => {
 
         
         <div className="relative z-10 text-center p-8 space-y-8 md:hidden">
-           <h1 className="text-5xl font-bold text-green-900 animate-pulse">Unexpected Result!</h1>
-           <p className="text-lg  font-medium">
-           "Oops! Looks like you've wandered off the map. Let's get you back on track!"
-           </p>
+          <h1 className="text-5xl font-bold text-green-900 animate-pulse">Unexpected Result!</h1>
+          <p className="text-lg  font-medium">
+          "Oops! Looks like you've wandered off the map. Let's get you back on track!"
+          </p>
           <div onClick={() =>
               router.push({
                 pathname: "/MR_Portal_Apps/MRHome",
               })
             }>
-          <p className="bg-blue-500 text-white py-3 px-8 rounded-full text-lg shadow-lg transform transition-all hover:scale-105 hover:bg-orange-600">
+            <p className="bg-blue-500 text-white py-3 px-8 rounded-full text-lg shadow-lg transform transition-all hover:scale-105 hover:bg-orange-600">
               Go to Home
-          </p>
+            </p>
           </div>
         </div>
       </div>

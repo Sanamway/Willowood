@@ -85,6 +85,7 @@ const DemoTable = () => {
       verified: modalData.isTrue,
       verified_date: new Date(),
       verified_user: currentUser,
+      f_demo_followup_id: modalData.id
     };
 
     try {
@@ -119,6 +120,8 @@ const DemoTable = () => {
       approved: modalData.isTrue,
       approved_date: new Date(),
       approved_user: currentUser,
+      f_demo_followup_id: modalData.id
+
     };
     try {
       const respond = await axios.put(
@@ -858,7 +861,7 @@ const DemoTable = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.f_demo_followup_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -877,7 +880,7 @@ const DemoTable = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.f_demo_followup_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -894,7 +897,7 @@ const DemoTable = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.f_demo_followup_id,
               });
             }}
           >
@@ -914,7 +917,7 @@ const DemoTable = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.f_demo_followup_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -933,7 +936,7 @@ const DemoTable = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.f_demo_id,
+              id: item.f_demo_followup_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -950,7 +953,7 @@ const DemoTable = () => {
             setModalData({
               ...modalData,
 
-              id: item.f_demo_id,
+              id: item.f_demo_followup_id,
             });
           }}
         >
@@ -971,7 +974,7 @@ const DemoTable = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.f_demo_id,
+              id: item.f_demo_followup_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -993,7 +996,7 @@ const DemoTable = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.f_demo_followup_id,
               });
             }}
             disabled
@@ -1012,7 +1015,7 @@ const DemoTable = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.f_demo_followup_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -1029,7 +1032,7 @@ const DemoTable = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.f_demo_followup_id,
               });
             }}
           >
@@ -1049,7 +1052,7 @@ const DemoTable = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.f_demo_followup_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1072,7 +1075,7 @@ const DemoTable = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.f_demo_followup_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1096,7 +1099,7 @@ const DemoTable = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.f_demo_followup_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -1115,7 +1118,7 @@ const DemoTable = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.f_demo_followup_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -1132,7 +1135,7 @@ const DemoTable = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.f_demo_followup_id,
               });
             }}
           >

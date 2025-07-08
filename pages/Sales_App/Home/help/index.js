@@ -1,5 +1,5 @@
 import React from 'react'
-import Help from '@/components/MR_Portal_Apps/support'
+import Help from '@/components/Sales_Portal_Home/support'
 const index = () => {
   return (
     <Help></Help>

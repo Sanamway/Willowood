@@ -21,19 +21,19 @@ const Profile = () => {
   const [profData, setProfileData] = useState(null);
 
   const headers = {
-   "Content-Type": "application/json",
-   secret: "fsdhfgsfuiweifiowefjewcewcebjw"
- };
-  
+    "Content-Type": "application/json",
+    secret: "fsdhfgsfuiweifiowefjewcewcebjw"
+  };
+
   const [localStorageItems, setLocalStorageItems] = useState({
-    uId:"",
-    cId:"",
-    bgId:"",
-    buId:"",
-    rId:"",
-    zId:"",
-    tId:"",
-    empCode:""
+    uId: "",
+    cId: "",
+    bgId: "",
+    buId: "",
+    rId: "",
+    zId: "",
+    tId: "",
+    empCode: ""
   });
 
   useEffect(() => {
@@ -44,52 +44,73 @@ const Profile = () => {
       buId: JSON.parse(window.localStorage.getItem("userinfo")).bu_id,
       rId: JSON.parse(window.localStorage.getItem("userinfo")).r_id,
       zId: JSON.parse(window.localStorage.getItem("userinfo")).z_id,
-      tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,  
-      empCode: window.localStorage.getItem("emp_code"),    
+      tId: JSON.parse(window.localStorage.getItem("userinfo")).t_id,
+      empCode: window.localStorage.getItem("emp_code"),
     });
   }, []);
-    
+
 
   //Handling Side Effect of API
   const getDataEmp = async () => {
-   try {
-     const res = await axios.get(`${url}/api/get_employee`, {
-       headers: headers,
+    try {
+      const res = await axios.get(`${url}/api/get_employee`, {
+        headers: headers,
         params: {
-                empcode: localStorageItems.empCode,
-                c_id: localStorageItems.cId,        
-            }
-     });
-     const respdata = await res.data.data;
-     setProfileData(respdata);
-   } catch (error) {
-     console.log("Error", error);
-   }
- };
+          empcode: localStorageItems.empCode,
+          c_id: localStorageItems.cId,
+        }
+      });
+      const respdata = await res.data.data;
+      setProfileData(respdata);
+    } catch (error) {
+      console.log("prror", error);
+    }
+  };
 
- useEffect(() => {
-  if(localStorageItems.empCode &&localStorageItems.cId)   getDataEmp();
-   return
- }, [localStorageItems.empCode ,localStorageItems.cId ]);
- 
+  useEffect(() => {
+    if (localStorageItems.empCode && localStorageItems.cId) getDataEmp();
+    return
+  }, [localStorageItems.empCode, localStorageItems.cId]);
+  console.log("zas", profData)
+
   return (
     <div className="px-0">
       <div className="flex justify-between py-5 px-3">
         <div className="pb-2 flex gap-2 font-bold text-slate-500">
-          <IoIosArrowBack onClick={() => router.back()} className="pt-1 text-slate-500" size={24} /> My
-          Profile
-        </div>
+          <IoIosArrowBack onClick={() => router.back()} className="pt-1 text-slate-500" size={24} /> My Profile</div>
         <div>
           <IoHome size={25} className="text-slate-500" />{" "}
         </div>
       </div>
       <div className=" bg-white  w-full h-screen border-t-2">
+        <div className="flex gap-8 pt-4 pl-2 justify-end">
+          <button type="button"
+            onClick={() => {
+              router.push({
+                pathname: `/employee_details`,
+                query: { type: `Edit`, id: profData.e_id, profile: "yes" },
+              })
+            }}
+
+            className="mx-4"
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'blue',
+              textDecoration: 'underline',
+              cursor: 'pointer',
+              padding: 0,
+              font: 'inherit',
+            }} >
+            Agreement View
+          </button>
+        </div>
         <div className="flex gap-8 pt-4 pl-2">
           <div className="pt-4 pl-4">
             <FaBarcode className="text-blue-400" />
           </div>
           <div className="flex flex-col gap-2 font-bold flex-grow pr-20">
-            <label>Employee Code:  </label>
+            <label>Employee Code: </label>
             <p className="border-b-2 text-slate-400 font-normal">{profData?.empcode}</p>
           </div>
         </div>

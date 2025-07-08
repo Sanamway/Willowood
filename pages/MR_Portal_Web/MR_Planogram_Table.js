@@ -858,7 +858,7 @@ const FarmerSHC = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.f_planogram_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -877,7 +877,7 @@ const FarmerSHC = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.f_planogram_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -894,7 +894,7 @@ const FarmerSHC = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.f_planogram_id,
               });
             }}
           >
@@ -914,7 +914,7 @@ const FarmerSHC = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.f_planogram_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -933,7 +933,7 @@ const FarmerSHC = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.f_demo_id,
+              id: item.f_planogram_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -950,7 +950,7 @@ const FarmerSHC = () => {
             setModalData({
               ...modalData,
 
-              id: item.f_demo_id,
+              id: item.f_planogram_id,
             });
           }}
         >
@@ -971,7 +971,7 @@ const FarmerSHC = () => {
             setModalData({
               ...modalData,
               type: "Approve",
-              id: item.f_demo_id,
+              id: item.f_planogram_id,
             });
           }}
           disabled={item.approved === "Yes"}
@@ -993,7 +993,7 @@ const FarmerSHC = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.f_planogram_id,
               });
             }}
             disabled
@@ -1012,7 +1012,7 @@ const FarmerSHC = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.f_planogram_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -1029,7 +1029,7 @@ const FarmerSHC = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.f_planogram_id,
               });
             }}
           >
@@ -1049,7 +1049,7 @@ const FarmerSHC = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.f_planogram_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1072,7 +1072,7 @@ const FarmerSHC = () => {
             setModalData({
               ...modalData,
               type: "Verify",
-              id: item.f_demo_id,
+              id: item.f_planogram_id,
             });
           }}
           disabled={item.verified === "Yes"}
@@ -1096,7 +1096,7 @@ const FarmerSHC = () => {
               setModalData({
                 ...modalData,
                 type: "Verify",
-                id: item.f_demo_id,
+                id: item.f_planogram_id,
               });
             }}
             disabled={item.verified === "Yes"}
@@ -1115,7 +1115,7 @@ const FarmerSHC = () => {
               setModalData({
                 ...modalData,
                 type: "Approve",
-                id: item.f_demo_id,
+                id: item.f_planogram_id,
               });
             }}
             disabled={item.approved === "Yes"}
@@ -1132,7 +1132,7 @@ const FarmerSHC = () => {
               setModalData({
                 ...modalData,
 
-                id: item.f_demo_id,
+                id: item.f_planogram_id,
               });
             }}
           >

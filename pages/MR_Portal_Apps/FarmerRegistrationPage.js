@@ -293,7 +293,6 @@ const AdditionalInfo = (props) => {
   const handleSaveFarmer = async () => {
     if (cropGridData.length) {
       try {
-        s
         const data = {
           fr_id: autoFarmer,
           c_id: Number(localStorageItems.cId),
